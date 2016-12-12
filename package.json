@@ -1,0 +1,24 @@
+{
+  "name": "local-fluxgatet-common",
+  "version": "1.0.0",
+  "description": "Fluxgate Library client/server übergreifend",
+  "main": "lib/index.js",
+  "typings": "dts/index.d.ts",
+  "scripts": {
+    "prepublish": "npm run tsc:compile",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
+    "tslint": "tslint ./src/*.ts"
+  },
+  "author": "Walter Leinert <walter.leinert@outlook.com>",
+  "license": "ISC",
+  "devDependencies": {
+  },
+  "dependencies": {
+    "moment": "^2.17.1"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "rootDir": "./src",
+    "outDir": "./lib",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "declaration": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
+    "isolatedModules": false,
+    "noLib": false,
+    "suppressImplicitAnyIndexErrors": false,
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "noUnusedLocals": true,
+    "noUnusedParameters": false
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
