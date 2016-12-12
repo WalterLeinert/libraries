@@ -40,7 +40,6 @@
     "reflect-metadata": "^0.1.8"
   },
   "directories": {
-    "lib": "lib",
-    "test": "test"
+    "lib": "lib"
   }
 }
