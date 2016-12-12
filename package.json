@@ -6,16 +6,32 @@
   "typings": "dts/index.d.ts",
   "scripts": {
     "prepublish": "npm run tsc:compile",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "tslint": "tslint ./src/*.ts",
+    "release:major": "npm version major && npm publish && git push --follow-tags",
+    "release:minor": "npm version minor && npm publish && git push --follow-tags",
+    "release:patch": "npm version patch && npm publish && git push --follow-tags",
+    "test": "npm run tsc && mocha --reporter spec --check-leaks --bail test/",
+    "test:cov": "istanbul cover -x \"examples/**\" node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks test/ && npm run test:remap",
+    "test:remap": "./node_modules/.bin/remap-istanbul -i coverage/coverage.json -o coverage/lcov-report -t html",
+    "test:travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --reporter spec --check-leaks test/",
     "tsc": "tsc",
-    "tslint": "tslint ./src/*.ts"
+    "tsc:compile": "tsc --project tsconfig.compile.json"
   },
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
   "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.33",
+    "@types/node": "0.0.2",
+    "@types/supertest": "^2.0.0",
+    "chai": "^3.5.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "supertest": "^2.0.1"
   },
   "dependencies": {
-    "moment": "^2.17.1"
+    "moment": "^2.17.1",
+    "reflect-metadata": "^0.1.8"
   },
   "directories": {
     "lib": "lib",

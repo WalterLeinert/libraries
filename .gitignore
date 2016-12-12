@@ -46,7 +46,5 @@ test/spec/*.js.map
 /stderr
 /es6/
 
-/dist/
-server/dist/
-generated/
-migrations/
+/lib/
+/dts/
