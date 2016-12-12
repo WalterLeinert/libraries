@@ -1,4 +1,4 @@
-require("source-map-support").install();
+//require("source-map-support").install();
 require("reflect-metadata");
 
 export * from './base';
