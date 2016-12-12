@@ -1,6 +1,6 @@
 {
   "name": "local-fluxgate-common",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Fluxgate Library client/server übergreifend",
   "main": "lib/index.js",
   "typings": "dts/index.d.ts",
@@ -18,8 +18,8 @@
     "tsc:compile": "tsc --project tsconfig.compile.json"
   },
   "repository": {
-     "type": "git",
-	  "url": "git://C:\\Users\\Walter\\fluxGate\\Technologie\\fluxgate-common.git"
+    "type": "git",
+    "url": "git://C:\\Users\\Walter\\fluxGate\\Technologie\\fluxgate-common.git"
   },
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
