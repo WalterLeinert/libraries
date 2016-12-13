@@ -1,37 +1,6 @@
 import { Disposable, IDisposable } from '../base/disposable';
-//import { Logger, Level, levels } from 'log4js';
+import { Logger, Level } from '@types/log4js';
 
-let log4js = require('log4js');
-let levels = log4js.levels;
-
-export interface Logger {
-  setLevel(level: string): void;
-  setLevel(level: Level): void;
-
-  isLevelEnabled(level: Level): boolean;
-  isTraceEnabled(): boolean;
-  isDebugEnabled(): boolean;
-  isInfoEnabled(): boolean;
-  isWarnEnabled(): boolean;
-  isErrorEnabled(): boolean;
-  isFatalEnabled(): boolean;
-
-  trace(message: string, ...args: any[]): void;
-  debug(message: string, ...args: any[]): void;
-  info(message: string, ...args: any[]): void;
-  warn(message: string, ...args: any[]): void;
-  error(message: string, ...args: any[]): void;
-  fatal(message: string, ...args: any[]): void;
-}
-
-export interface Level {
-  isEqualTo(other: string): boolean;
-  isEqualTo(otherLevel: Level): boolean;
-  isLessThanOrEqualTo(other: string): boolean;
-  isLessThanOrEqualTo(otherLevel: Level): boolean;
-  isGreaterThanOrEqualTo(other: string): boolean;
-  isGreaterThanOrEqualTo(otherLevel: Level): boolean;
-}
 
 /**
  * Type of logging
@@ -61,6 +30,8 @@ export class XLog extends Disposable {
     private functionName: string;
     private level: Level;
     private logger: Logger;
+    
+    private static levels = require('log4js').log4js.levels;
 
     static initialize(): boolean {
         let indentString = '';
@@ -87,7 +58,7 @@ export class XLog extends Disposable {
      * @param {string} message - the message to belogged
      * @param {any[]} args - optional message arguments 
      */
-    constructor(logger: Logger, level: Level = levels.INFO, functionName: string, message?: string, ...args: any[]) {
+    constructor(logger: Logger, level: Level, functionName: string, message?: string, ...args: any[]) {
         super();
         this.logger = logger;
         this.level = level;
@@ -121,42 +92,42 @@ export class XLog extends Disposable {
      * logs a message for log level @see{levels.TRACE}.
      */
     public trace(message: string, ...args: any[]): void {
-        this.logInternal(EnterExit.Log, levels.TRACE, message, ...args);
+        this.logInternal(EnterExit.Log, XLog.levels.TRACE, message, ...args);
     }
 
     /**
      * logs a message for log level @see{levels.DEBUG}.
      */
     public debug(message: string, ...args: any[]): void {
-        this.logInternal(EnterExit.Log, levels.DEBUG, message, ...args);
+        this.logInternal(EnterExit.Log, XLog.levels.DEBUG, message, ...args);
     }
 
     /**
     * logs a message for log level @see{levels.INFO}.
     */
     public info(message: string, ...args: any[]): void {
-        this.logInternal(EnterExit.Log, levels.INFO, message, ...args);
+        this.logInternal(EnterExit.Log, XLog.levels.INFO, message, ...args);
     }
 
     /**
     * logs a message for log level @see{levels.WARN}.
     */
     public warn(message: string, ...args: any[]): void {
-        this.logInternal(EnterExit.Log, levels.WARN, message, ...args);
+        this.logInternal(EnterExit.Log, XLog.levels.WARN, message, ...args);
     }
 
     /**
     * logs a message for log level @see{levels.ERROR}.
     */
     public error(message: string, ...args: any[]): void {
-        this.logInternal(EnterExit.Log, levels.ERROR, message, ...args);
+        this.logInternal(EnterExit.Log, XLog.levels.ERROR, message, ...args);
     }
 
     /**
     * logs a message for log level @see{levels.FATAL}.
     */
     public fatal(message: string, ...args: any[]): void {
-        this.logInternal(EnterExit.Log, levels.FATAL, message, ...args);
+        this.logInternal(EnterExit.Log, XLog.levels.FATAL, message, ...args);
     }
 
     /**
@@ -182,22 +153,22 @@ export class XLog extends Disposable {
         }
 
         switch (level) {
-            case levels.TRACE:
+            case XLog.levels.TRACE:
                 this.logger.trace(prefixedMessage, ...args);
                 break;
-            case levels.DEBUG:
+            case XLog.levels.DEBUG:
                 this.logger.debug(prefixedMessage, ...args);
                 break;
-            case levels.INFO:
+            case XLog.levels.INFO:
                 this.logger.info(prefixedMessage, ...args);
                 break;
-            case levels.WARN:
+            case XLog.levels.WARN:
                 this.logger.warn(prefixedMessage, ...args);
                 break;
-            case levels.ERROR:
+            case XLog.levels.ERROR:
                 this.logger.error(prefixedMessage, ...args);
                 break;
-            case levels.FATAL:
+            case XLog.levels.FATAL:
                 this.logger.fatal(prefixedMessage, ...args);
                 break;
             default:
@@ -243,17 +214,17 @@ export class XLog extends Disposable {
      */
     private isEnabledFor(level: Level): boolean {
         switch (level) {
-            case levels.TRACE:
+            case XLog.levels.TRACE:
                 return this.logger.isTraceEnabled();
-            case levels.DEBUG:
+            case XLog.levels.DEBUG:
                 return this.logger.isDebugEnabled();
-            case levels.INFO:
+            case XLog.levels.INFO:
                 return this.logger.isInfoEnabled();
-            case levels.WARN:
+            case XLog.levels.WARN:
                 return this.logger.isWarnEnabled();
-            case levels.ERROR:
+            case XLog.levels.ERROR:
                 return this.logger.isErrorEnabled();
-            case levels.FATAL:
+            case XLog.levels.FATAL:
                 return this.logger.isFatalEnabled();
             default:
                 throw new Error('undefined log level: ' + level);
