@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/common",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Fluxgate Library client/server übergreifend",
   "main": "lib/index.js",
   "typings": "dts/index.d.ts",
@@ -24,20 +24,15 @@
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
   "devDependencies": {
-    "@types/chai": "^3.4.34",
     "@types/log4js": "0.0.32",
-    "@types/mocha": "^2.2.33",
     "@types/node": "0.0.2",
-    "@types/supertest": "^2.0.0",
     "chai": "^3.5.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "supertest": "^2.0.1"
   },
   "dependencies": {
-    "moment": "^2.17.1",
-    "reflect-metadata": "^0.1.8",
-    "source-map-support": "^0.4.6"
+    "moment": "^2.17.1"
   },
   "directories": {
     "lib": "lib"

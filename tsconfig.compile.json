@@ -19,11 +19,7 @@
     "declarationDir":"dts/",
     "noResolve": false,
     "types":[
-      "node",
-      "chai",
-      "mocha",      
-      "reflect-metadata",
-      "supertest"
+      "node"
     ]
   },
 

@@ -13,11 +13,7 @@
     "suppressImplicitAnyIndexErrors": false,
     "lib": ["es6", "dom"],
     "types":[
-      "node",
-      "chai",
-      "mocha",
-      "reflect-metadata",
-      "supertest"
+      "node"
     ]
   },
   
