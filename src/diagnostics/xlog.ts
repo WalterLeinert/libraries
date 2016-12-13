@@ -1,5 +1,37 @@
 import { Disposable, IDisposable } from '../base/disposable';
-import { Logger, Level, levels } from 'log4js';
+//import { Logger, Level, levels } from 'log4js';
+
+let log4js = require('log4js');
+let levels = log4js.levels;
+
+export interface Logger {
+  setLevel(level: string): void;
+  setLevel(level: Level): void;
+
+  isLevelEnabled(level: Level): boolean;
+  isTraceEnabled(): boolean;
+  isDebugEnabled(): boolean;
+  isInfoEnabled(): boolean;
+  isWarnEnabled(): boolean;
+  isErrorEnabled(): boolean;
+  isFatalEnabled(): boolean;
+
+  trace(message: string, ...args: any[]): void;
+  debug(message: string, ...args: any[]): void;
+  info(message: string, ...args: any[]): void;
+  warn(message: string, ...args: any[]): void;
+  error(message: string, ...args: any[]): void;
+  fatal(message: string, ...args: any[]): void;
+}
+
+export interface Level {
+  isEqualTo(other: string): boolean;
+  isEqualTo(otherLevel: Level): boolean;
+  isLessThanOrEqualTo(other: string): boolean;
+  isLessThanOrEqualTo(otherLevel: Level): boolean;
+  isGreaterThanOrEqualTo(other: string): boolean;
+  isGreaterThanOrEqualTo(otherLevel: Level): boolean;
+}
 
 /**
  * Type of logging
