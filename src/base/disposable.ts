@@ -1,12 +1,4 @@
-/**
- * Interface for disposable Resources
- */
-export interface IDisposable {
-    /**
-     * free resources
-     */
-    dispose();
-}
+import { IDisposable } from './disposable.interface';
 
 
 /**
@@ -35,7 +27,7 @@ export abstract class Disposable implements IDisposable {
             }
 
 
-            if (this.disposed) {                
+            if (this.disposed) {
                 if (Disposable.throwExceptionOnAlreadyDisposed) {
                     throw new Error('Instance already disposed: ' + JSON.stringify(this));
                 } else {
