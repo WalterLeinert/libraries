@@ -35,12 +35,26 @@ export interface IAppConfig {
   mode: SystemMode;
 }
 
+/**
+ * TODO: geht so nicht mit Konstruktor-Parameter wegen DI!!
+ * 
+ * @export
+ * @class __todo_ConfigService
+ */
 @Injectable()
-export class ConfigService  {
+export class __todo_ConfigService  {
   config: IAppConfig;
 
-  constructor() {
-    this.config = <IAppConfig>require('./config/config.json');
+  /**
+   * Creates an instance of ConfigService.
+   * 
+   * 
+   * @param {string} configPath - Pfad auf Json-Konfigurationsdatei
+   * 
+   * @memberOf ConfigService
+   */
+  constructor(configPath: string = './config/config.json') {
+    this.config = <IAppConfig>require(configPath);
     // console.log('app is running in mode %s, url = %s', this.config.mode, this.config.url);
   }
 }
