@@ -101,7 +101,7 @@ export abstract class Service<T> implements IRestUri {
     public create(item: T): Observable<T> {
         Assert.notNull(item, 'item');
 
-        return this.http.put(`${this.url}`, item)
+        return this.http.post(`${this.url}`, item)
             .map((response: Response) => this.createInstance(response.json()))
             .do(data => console.log('insertresult: ' + JSON.stringify(data)))
             .catch(Service.handleError);
