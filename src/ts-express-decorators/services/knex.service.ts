@@ -1,6 +1,7 @@
 import { Service } from 'ts-express-decorators';
 import * as Knex from 'knex';
 
+
 // -------------------------- logging -------------------------------
 import { Logger, levels, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
@@ -13,19 +14,36 @@ import { XLog, using } from 'enter-exit-logger';
 @Service()
 export class KnexService {
     static logger = getLogger('KnexService');
+    private static configPath: string;
+
+    /**
+     * Registriert die den Pfad auf die Knex-Config Datei.
+     * 
+     * ACHTUNG: muss vor erster Verwendung des Services aufgerufen werden!
+     * 
+     * @static
+     * @param {Function} user
+     * 
+     * @memberOf UserService
+     */
+    public static registerConfig(configPath: string) {
+        KnexService.configPath = configPath;
+    }
 
     private _knex: Knex;
 
     constructor() {
         using(new XLog(KnexService.logger, levels.INFO, 'ctor'), (log) => {
-
             //
             // setup knex
             //
-            let knexConfigFile = '../config/knexfile';
+            let knexConfigFile = KnexService.configPath;
             log.info(`reading knex config from ${knexConfigFile} for process.env.NODE_ENV = ${process.env.NODE_ENV}`);
 
-            let config = require(knexConfigFile);
+            let fs = require('fs');
+            let config = fs.readFileSync(knexConfigFile);
+
+            // let config = require(knexConfigFile);
             let knexConfig: Knex.Config = config[process.env.NODE_ENV];
 
             // logger.info(`read knex config: client = ${knexConfig.client}`)
