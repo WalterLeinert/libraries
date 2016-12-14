@@ -8,8 +8,10 @@ import { Logger, levels, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
+// Fluxgate
+import { IUser } from '@fluxgate/common';
+
 import { Messages } from '../../resources/messages';
-import { IUser } from '../../model/user.interface';
 import { UserService } from './user.service';
 
 @Service()

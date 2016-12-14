@@ -5,10 +5,10 @@ import { Logger, levels, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
-import { MetadataService } from './metadata.service';
-import { TableMetadata, ColumnMetadata } from '@fluxgate/common';
+// Fluxgate
+import { TableMetadata, ColumnMetadata, IToString } from '@fluxgate/common';
 
-import { IToString } from '../../util/interfaces';
+import { MetadataService } from './metadata.service';
 import { KnexService } from './knex.service';
 
 /**

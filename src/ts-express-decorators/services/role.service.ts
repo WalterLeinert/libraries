@@ -1,7 +1,9 @@
 import { Service } from 'ts-express-decorators';
 
+// Fluxgate
+import { IRole } from '@fluxgate/common';
+
 import { MetadataService } from './metadata.service';
-import { IRole } from '../../model/role.interface';
 import { BaseService } from './base.service';
 import { KnexService } from './knex.service';
 
@@ -23,7 +25,7 @@ export class RoleService extends BaseService<IRole, number> {
     public static registerRole(role: Function) {
         RoleService.role = role;
     }
-    
+
 
     constructor(knexSerice: KnexService, metadataService: MetadataService) {
         super(RoleService.role, knexSerice, metadataService);

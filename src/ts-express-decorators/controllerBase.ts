@@ -1,9 +1,10 @@
 // -------------------------- logging -------------------------------
 import { Logger, getLogger } from 'log4js';
-
 // -------------------------- logging -------------------------------
 
-import { IToString } from '../util/interfaces';
+// Fluxgate
+import { IToString } from '@fluxgate/common';
+
 import { BaseService } from './services/base.service';
 
 

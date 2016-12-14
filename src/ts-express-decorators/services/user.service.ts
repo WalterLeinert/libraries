@@ -6,11 +6,11 @@ import { Logger, levels, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
-import { Messages } from '../../resources/messages';
+// Fluxgate
+import { IUser, Encryption } from '@fluxgate/common';
 
+import { Messages } from '../../resources/messages';
 import { MetadataService } from './metadata.service';
-import { IUser } from '../../model/user.interface';
-import { Encryption } from '../../util/encryption';
 import { BaseService } from './base.service';
 import { KnexService } from './knex.service';
 
