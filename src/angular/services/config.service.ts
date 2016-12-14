@@ -56,7 +56,7 @@ export class ConfigService  {
    * @memberOf ConfigService
    */
   constructor() {
-    this.config = <IAppConfig>require(ConfigService.CONFIG_PATH);
+    //this.config = <IAppConfig>require(ConfigService.CONFIG_PATH);
     // console.log('app is running in mode %s, url = %s', this.config.mode, this.config.url);
   }
 }
