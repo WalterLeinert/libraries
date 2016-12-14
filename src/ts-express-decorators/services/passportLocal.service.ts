@@ -13,7 +13,7 @@ import { IUser } from '../../model/user.interface';
 import { UserService } from './user.service';
 
 @Service()
-export default class PassportLocalService {
+export class PassportLocalService {
     static logger = getLogger('PassportLocalService');
 
     /**
