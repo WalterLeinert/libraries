@@ -41,7 +41,15 @@ export class KnexService {
             log.info(`reading knex config from ${knexConfigFile} for process.env.NODE_ENV = ${process.env.NODE_ENV}`);
 
             let fs = require('fs');
-            let config = fs.readFileSync(knexConfigFile);
+            let data = fs.readFileSync(knexConfigFile);
+
+            let config;
+            try {
+                config = JSON.parse(data);
+            } catch (err) {
+                log.error('Die Knex-Konfiguration ${knexConfigFile} ist kein gültiges JSON-Format.')
+                throw err;
+            }
 
             // let config = require(knexConfigFile);
             let knexConfig: Knex.Config = config[process.env.NODE_ENV];
