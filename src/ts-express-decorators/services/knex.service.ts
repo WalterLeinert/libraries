@@ -7,6 +7,8 @@ import { Logger, levels, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
+// Fluxgate
+import { JsonReader } from '@fluxgate/common';
 
 /**
  * Service für den Zugriff auf die Datenbank über Knex
@@ -40,26 +42,18 @@ export class KnexService {
             let knexConfigFile = KnexService.configPath;
             log.info(`reading knex config from ${knexConfigFile} for process.env.NODE_ENV = ${process.env.NODE_ENV}`);
 
-            let fs = require('fs');
-            let data = fs.readFileSync(knexConfigFile);
+            JsonReader.readJson<any>(knexConfigFile, ((err, config) => {
+                // let config = require(knexConfigFile);
+                let knexConfig: Knex.Config = config[process.env.NODE_ENV];
 
-            let config;
-            try {
-                config = JSON.parse(data);
-            } catch (err) {
-                log.error('Die Knex-Konfiguration ${knexConfigFile} ist kein gültiges JSON-Format.')
-                throw err;
-            }
+                // logger.info(`read knex config: client = ${knexConfig.client}`)
 
-            // let config = require(knexConfigFile);
-            let knexConfig: Knex.Config = config[process.env.NODE_ENV];
+                this._knex = Knex(knexConfig);
 
-            // logger.info(`read knex config: client = ${knexConfig.client}`)
+                // TODO: ggf. kein Passwort ausgeben
+                log.info('Knex.config = ', knexConfig);
+            }));
 
-            this._knex = Knex(knexConfig);
-
-            // TODO: ggf. kein Passwort ausgeben
-            log.info('Knex.config = ', knexConfig);
         });
     }
 
