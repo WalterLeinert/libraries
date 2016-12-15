@@ -67,11 +67,16 @@ export class MetadataStorage {
      * 
      * @memberOf MetadataStorage
      */
-    public findTableMetadata(target: Function): TableMetadata {
+    public findTableMetadata(target: Function): TableMetadata;
+    public findTableMetadata(target: string): TableMetadata;
+
+    public findTableMetadata(target: Function|string): TableMetadata {
         Assert.notNull(target);
+        if (typeof(target) === 'string') {
+            return this.tableDict[target];
+        }
         return this.tableDict[target.name];
     }
-
 
 
     public dump() {
