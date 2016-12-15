@@ -15,7 +15,9 @@
     "outDir": "build/",
     "types":[
       "node"
-    ]
+    ],
+    "noUnusedLocals": true,
+    "noUnusedParameters": false
   },
   
   "exclude": [

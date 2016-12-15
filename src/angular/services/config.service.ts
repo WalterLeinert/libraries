@@ -1,5 +1,5 @@
+import path = require('path');
 import { Injectable } from '@angular/core';
-
 
 /**
  * 
@@ -35,28 +35,16 @@ export interface IAppConfig {
   mode: SystemMode;
 }
 
-
-/**
- * 
- * @export
- * @class __todo_ConfigService
- */
 @Injectable()
-export class ConfigService  {
-  public static readonly CONFIG_PATH = './config/config.json';
-
+export class ConfigService {
   config: IAppConfig;
 
-  /**
-   * Creates an instance of ConfigService.
-   * 
-   * 
-   * @param {string} configPath - Pfad auf Json-Konfigurationsdatei
-   * 
-   * @memberOf ConfigService
-   */
   constructor() {
-    //this.config = <IAppConfig>require(ConfigService.CONFIG_PATH);
-    // console.log('app is running in mode %s, url = %s', this.config.mode, this.config.url);
+    //this.config = <IAppConfig>require('./config/config.json');
+    //TODO: hart verdrahtet!!
+    this.config = <IAppConfig>{
+      url: "http://localhost:8000/rest/",
+      mode: "development"
+    };
   }
 }
