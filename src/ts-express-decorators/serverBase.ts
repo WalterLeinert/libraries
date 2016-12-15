@@ -135,7 +135,13 @@ export abstract class ServerBase extends ServerLoader {
 
                 log.info(`knexConfigPath = ${knexConfigPath}`)
 
+                
                 KnexService.registerConfig(knexConfigPath);
+
+                //
+                // TODO: in Klassen über MetadataService Model-Klassen ermitteln
+                //
+                
                 UserService.registerUser(this.configuration.user);
                 RoleService.registerRole(this.configuration.role);
 

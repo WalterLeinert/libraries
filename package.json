@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/server",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Fluxgate Server-Library ",
   "main": "lib/index.js",
   "typings": "dts/index.d.ts",
@@ -31,7 +31,7 @@
     "@types/passport-local": "^1.0.29"
   },
   "dependencies": {
-    "@fluxgate/common": "^1.0.19",
+    "@fluxgate/common": "^1.0.23",
     "enter-exit-logger": "^1.1.0",
     "knex": "^0.12.6",
     "log4js": "^1.0.1",
