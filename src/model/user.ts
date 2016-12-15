@@ -1,0 +1,36 @@
+//
+// Tabelle user
+//
+
+import { IUser, Table, Column } from '.';
+
+/**
+ * Modelliert User im System
+ */
+@Table({ name: 'user' })
+export class User implements IUser {
+
+  @Column({ name: 'user_id', primary: true, generated: true })
+  public id: number;
+
+  @Column({ name: 'firstname', nullable: true })
+  public firstname?: string;
+
+  @Column({ name: 'lastname', nullable: true })
+  public lastname?: string;
+
+  @Column({ name: 'username' })
+  public username: string;
+
+  @Column({ name: 'email', nullable: true })
+  public email?: string;
+
+  @Column({ name: 'id_role' })
+  public role: number;
+
+  @Column({ name: 'password' })
+  public password: string;
+
+  @Column({ name: 'password_salt' })
+  public password_salt: string;
+}

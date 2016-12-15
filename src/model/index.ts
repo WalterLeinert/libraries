@@ -5,3 +5,5 @@ export * from './metadata';
 export * from './entity.interface';
 export * from './role.interface';
 export * from './user.interface';
+export * from './user';
+export * from './role';
