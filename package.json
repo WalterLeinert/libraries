@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://C:\\Users\\Walter\\fluxGate\\Technologie\\fluxgate-client.git"
+    "url": "http://server.fluxgate.de:89/fluxgate/server.git"
   },
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
