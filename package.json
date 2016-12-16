@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/client",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Fluxgate Client-Library ",
   "main": "lib/index.js",
   "typings": "dts/index.d.ts",
@@ -25,6 +25,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/jasmine": "^2.5.38",
+    "@types/log4js": "0.0.32",
     "@types/node": "0.0.2",
     "jasmine": "^2.5.2",
     "jasmine-core": "^2.5.2"
@@ -38,7 +39,9 @@
     "@angular/router": "^3.3.0",
     "@fluxgate/common": "^1.1.2",
     "@types/http-status-codes": "^1.0.29",
+    "enter-exit-logger": "^1.1.0",
     "http-status-codes": "^1.0.6",
+    "log4js": "^1.0.1",
     "moment": "^2.17.1",
     "primeng": "^1.0.1",
     "rxjs": "^5.0.1"
