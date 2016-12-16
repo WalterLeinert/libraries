@@ -2,8 +2,8 @@
 import { Injectable } from '@angular/core';
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, getLogger } from 'log4js';
-import { XLog, using } from 'enter-exit-logger';
+// import { Logger, levels, getLogger } from 'log4js';
+// import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
@@ -60,17 +60,17 @@ export interface IAppConfig {
 
 @Injectable()
 export class ConfigService {
-  static logger = getLogger('ConfigService');
+  // static logger = getLogger('ConfigService');
   public static readonly APP_CONFIG_KEY = 'IAppConfig';
 
   private _config: IAppConfig;
 
   constructor() {
-    using(new XLog(ConfigService.logger, levels.INFO, 'ctor'), (log) => {
+    // using(new XLog(ConfigService.logger, levels.INFO, 'ctor'), (log) => {
       let key = ConfigService.APP_CONFIG_KEY;   
       this._config = AppRegistry.instance.get<IAppConfig>(key);
-      log.info(`configured: key = ${key} -> ${JSON.stringify(this._config)}`);
-    });
+      console.info(`configured: key = ${key} -> ${JSON.stringify(this._config)}`);
+    // });
   }
 
   /**
