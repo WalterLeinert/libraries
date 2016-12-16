@@ -15,8 +15,8 @@ import { KnexService } from './knex.service';
 @Service()
 export class RoleService extends BaseService<IRole, number> {
 
-    constructor(knexSerice: KnexService, metadataService: MetadataService, appRegistryService: AppRegistry) {
-        super(appRegistryService.get<Function>(Role.ROLE_CONFIG_KEY), knexSerice, metadataService);
+    constructor(knexSerice: KnexService, metadataService: MetadataService) {
+        super(AppRegistry.instance.get<Function>(Role.ROLE_CONFIG_KEY), knexSerice, metadataService);
     }
 
     // ----------------------------------------------------------------

@@ -18,8 +18,8 @@ import { KnexService } from './knex.service';
 export class UserService extends BaseService<IUser, number> {
     static logger = getLogger('UserService');
 
-    constructor(knexSerice: KnexService, metadataService: MetadataService, appRegistryService: AppRegistry) {
-        super(appRegistryService.get<Function>(User.USER_CONFIG_KEY), knexSerice, metadataService);
+    constructor(knexSerice: KnexService, metadataService: MetadataService) {
+        super(AppRegistry.instance.get<Function>(User.USER_CONFIG_KEY), knexSerice, metadataService);
     }
 
 
