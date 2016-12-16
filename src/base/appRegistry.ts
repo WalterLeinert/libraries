@@ -60,5 +60,16 @@ export class AppRegistry {
         Assert.notNullOrEmpty(key);
         return this.dataDict[key] !== undefined;
     }
-    
+
+     /**
+     * Liefert die Singleton-Instanz.
+     * 
+     * @readonly
+     * @static
+     * @type {AppRegistry}
+     * @memberOf AppRegistry
+     */
+    public static get instance(): AppRegistry {
+        return AppRegistry._instance;
+    }    
 }
