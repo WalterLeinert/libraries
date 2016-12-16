@@ -16,12 +16,17 @@ export class AppRegistry {
      * 
      * @memberOf AppRegistry
      */
-    public add<T>(key: string, data: T) {
+    public add<T>(key: string, data: T, replace: boolean = false) {
         Assert.notNullOrEmpty(key);
         Assert.notNull(data);
 
+        if (!replace) {
+            Assert.that(!this.exists(key), `Für Key ${key} ist bereits eine Dateninstanz registriert.`);
+        }
+
         this.dataDict[key] = data;
     }
+
 
     /**
      * liefert für den Key @param{key} die entsprechende Dateninstanz.
@@ -58,7 +63,7 @@ export class AppRegistry {
      */
     public exists(key: string): boolean {
         Assert.notNullOrEmpty(key);
-        return this.dataDict[key] !== undefined;
+        return (key in this.dataDict);
     }
 
      /**

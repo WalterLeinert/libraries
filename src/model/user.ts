@@ -1,14 +1,16 @@
-//
-// Tabelle user
-//
-
+import { AppRegistry } from '../base';
 import { IUser, Table, Column } from '.';
 
 /**
- * Modelliert User im System
+ * Modelliert User im System (Defaultimplemetierung)
  */
 @Table({ name: 'user' })
 export class User implements IUser {
+
+  /**
+  * der Key für den Zugriff über @see{AppRegistry}
+  */
+  public static readonly USER_CONFIG_KEY = 'IUser';
 
   @Column({ name: 'user_id', primary: true, generated: true })
   public id: number;
@@ -34,3 +36,8 @@ export class User implements IUser {
   @Column({ name: 'password_salt' })
   public password_salt: string;
 }
+
+/**
+ * User Klasse registrieren
+ */
+AppRegistry.instance.add<Function>(User.USER_CONFIG_KEY, User);
