@@ -1,5 +1,5 @@
 import { AppRegistry } from '../base';
-import { IUser, Table, Column } from '.';
+import { IUser, UserRoleId, Table, Column } from '.';
 
 /**
  * Modelliert User im System (Defaultimplemetierung)
@@ -28,7 +28,7 @@ export class User implements IUser {
   public email?: string;
 
   @Column({ name: 'id_role' })
-  public role: number;
+  public role: number = UserRoleId.User;
 
   @Column({ name: 'password' })
   public password: string;
