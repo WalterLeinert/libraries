@@ -7,7 +7,7 @@ import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IUser, Encryption } from '@fluxgate/common';
+import { User, IUser, Encryption, AppRegistry } from '@fluxgate/common';
 
 import { Messages } from '../../resources/messages';
 import { MetadataService } from './metadata.service';
@@ -17,26 +17,11 @@ import { KnexService } from './knex.service';
 @Service()
 export class UserService extends BaseService<IUser, number> {
     static logger = getLogger('UserService');
-    static user: Function = undefined;
 
-
-    /**
-     * Registriert die User-Klasse der Anwendung beim Service.
-     * 
-     * ACHTUNG: muss vor erster Verwendung des Services aufgerufen werden!
-     * 
-     * @static
-     * @param {Function} user
-     * 
-     * @memberOf UserService
-     */
-    public static registerUser(user: Function) {
-        UserService.user = user;
+    constructor(knexSerice: KnexService, metadataService: MetadataService, appRegistryService: AppRegistry) {
+        super(appRegistryService.get<Function>(User.USER_CONFIG_KEY), knexSerice, metadataService);
     }
 
-    constructor(knexSerice: KnexService, metadataService: MetadataService) {
-        super(UserService.user, knexSerice, metadataService);
-    }
 
     // ----------------------------------------------------------------
     // überschriebene Methoden (Passwort-Info zurücksetzen bzw. User anlegen)

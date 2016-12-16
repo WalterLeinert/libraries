@@ -1,7 +1,12 @@
 import { Service } from 'ts-express-decorators';
 
+// -------------------------- logging -------------------------------
+import { Logger, levels, getLogger } from 'log4js';
+import { XLog, using } from 'enter-exit-logger';
+// -------------------------- logging -------------------------------
+
 // Fluxgate
-import { IRole } from '@fluxgate/common';
+import { Role, IRole, AppRegistry } from '@fluxgate/common';
 
 import { MetadataService } from './metadata.service';
 import { BaseService } from './base.service';
@@ -9,26 +14,9 @@ import { KnexService } from './knex.service';
 
 @Service()
 export class RoleService extends BaseService<IRole, number> {
-       static role: Function = undefined;
 
-
-    /**
-     * Registriert die Role-Klasse der Anwendung beim Service.
-     * 
-     * ACHTUNG: muss vor erster Verwendung des Services aufgerufen werden!
-     * 
-     * @static
-     * @param {Function} role
-     * 
-     * @memberOf RoleService
-     */
-    public static registerRole(role: Function) {
-        RoleService.role = role;
-    }
-
-
-    constructor(knexSerice: KnexService, metadataService: MetadataService) {
-        super(RoleService.role, knexSerice, metadataService);
+    constructor(knexSerice: KnexService, metadataService: MetadataService, appRegistryService: AppRegistry) {
+        super(appRegistryService.get<Function>(Role.ROLE_CONFIG_KEY), knexSerice, metadataService);
     }
 
     // ----------------------------------------------------------------

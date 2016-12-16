@@ -1,3 +1,4 @@
+export * from './appRegistry.service';
 export * from './base.service';
 export * from './knex.service';
 export * from './metadata.service';

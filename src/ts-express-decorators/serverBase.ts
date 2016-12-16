@@ -20,32 +20,6 @@ import { XLog, using } from 'enter-exit-logger';
 
 
 /**
- * alle Einstellungen für den Server
- * 
- * @export
- * @interface IServerConfiguration
- */
-export interface IServerConfiguration {
-
-    /**
-     * der Pfad auf die Knex Konfigurationsdatei
-     */
-    knexConfigPath: string;
-
-    /**
-     * die User-Klasse der Anwendung
-     */
-    user: Function;
-
-    /**
-     * die Role-Klasse der Anwendung
-     */
-    role: Function;
-
-    expressConfiguration?: IExpressConfiguration;
-}
-
-/**
  * Spezielle Einstellungen für den Express Webserver
  * 
  * @export
@@ -114,36 +88,20 @@ export abstract class ServerBase extends ServerLoader {
                 let cwd = process.cwd();
                 log.info(`cwd = ${cwd}`);
 
-                let controllers = this.configuration.expressConfiguration.controllers;
-                if (!path.isAbsolute(this.configuration.expressConfiguration.controllers)) {
-                    controllers = path.join(cwd, this.configuration.expressConfiguration.controllers);
+                let controllers = this.configuration.controllers;
+                if (!path.isAbsolute(this.configuration.controllers)) {
+                    controllers = path.join(cwd, this.configuration.controllers);
                 }
 
                 log.info(`controllers = ${controllers}`);
 
-                this.setEndpoint(this.configuration.expressConfiguration.endPoint)
+                this.setEndpoint(this.configuration.endPoint)
                     .scan(controllers)
-                    .createHttpServer(this.configuration.expressConfiguration.port)
+                    .createHttpServer(this.configuration.port)
                     .createHttpsServer({
-                        port: this.configuration.expressConfiguration.httpsPort
+                        port: this.configuration.httpsPort
                     });
 
-                let knexConfigPath = this.configuration.knexConfigPath;
-                if (!path.isAbsolute(this.configuration.knexConfigPath)) {
-                    knexConfigPath = path.join(cwd, this.configuration.knexConfigPath);
-                }
-
-                log.info(`knexConfigPath = ${knexConfigPath}`)
-
-                
-                KnexService.registerConfig(knexConfigPath);
-
-                //
-                // TODO: in Klassen über MetadataService Model-Klassen ermitteln
-                //
-                
-                UserService.registerUser(this.configuration.user);
-                RoleService.registerRole(this.configuration.role);
 
                 this.start()
                     .then(() => {
@@ -163,40 +121,40 @@ export abstract class ServerBase extends ServerLoader {
      * In your constructor set the global endpoint and configure the folder to scan the controllers.
      * You can start the http and https server.
      */
-    protected constructor(private configuration: IServerConfiguration) {
+    protected constructor(private configuration: IExpressConfiguration) {
         super();
 
         using(new XLog(ServerBase.logger, levels.INFO, 'ctor'), (log) => {
             Assert.notNull(configuration);
 
-            this.configure(this.configuration);
+            if (!configuration) {
+                configuration = ServerBase.DEFAULT_EXPRESS_CONFIGURATION;  // TODO: clone
+            } else {
+                this.configure(this.configuration);
+            }
         });
     }
 
     /**
      * 
      */
-    private configure(configuration: IServerConfiguration) {
+    private configure(configuration: IExpressConfiguration) {
         using(new XLog(ServerBase.logger, levels.DEBUG, 'configure'), (log) => {
-            if (configuration.expressConfiguration) {
-                if (!configuration.expressConfiguration.endPoint) {
-                    configuration.expressConfiguration.endPoint = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.endPoint;
-                }
 
-                if (!configuration.expressConfiguration.controllers) {
-                    configuration.expressConfiguration.controllers = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.controllers;
-                }
+            if (!configuration.endPoint) {
+                configuration.endPoint = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.endPoint;
+            }
 
-                if (!configuration.expressConfiguration.port) {
-                    configuration.expressConfiguration.port = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.port;
-                }
+            if (!configuration.controllers) {
+                configuration.controllers = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.controllers;
+            }
 
-                if (!configuration.expressConfiguration.httpsPort) {
-                    configuration.expressConfiguration.httpsPort = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.httpsPort;
-                }
+            if (!configuration.port) {
+                configuration.port = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.port;
+            }
 
-            } else {
-                configuration.expressConfiguration = ServerBase.DEFAULT_EXPRESS_CONFIGURATION;  // TODO: clone
+            if (!configuration.httpsPort) {
+                configuration.httpsPort = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.httpsPort;
             }
         });
     }

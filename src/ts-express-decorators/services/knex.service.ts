@@ -8,7 +8,9 @@ import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { JsonReader } from '@fluxgate/common';
+import { AppRegistry, JsonReader } from '@fluxgate/common';
+
+import { AppRegistryService } from './appRegistry.service';
 
 /**
  * Service für den Zugriff auf die Datenbank über Knex
@@ -16,44 +18,21 @@ import { JsonReader } from '@fluxgate/common';
 @Service()
 export class KnexService {
     static logger = getLogger('KnexService');
-    private static configPath: string;
 
     /**
-     * Registriert die den Pfad auf die Knex-Config Datei.
-     * 
-     * ACHTUNG: muss vor erster Verwendung des Services aufgerufen werden!
-     * 
-     * @static
-     * @param {Function} user
-     * 
-     * @memberOf UserService
+     * der Key für den Zugriff über @see{AppRegistry}
      */
-    public static registerConfig(configPath: string) {
-        KnexService.configPath = configPath;
-    }
+    public static readonly KNEX_CONFIG_KEY = 'knex-config';
 
     private _knex: Knex;
 
-    constructor() {
+    constructor(appRegistryService: AppRegistryService) {
         using(new XLog(KnexService.logger, levels.INFO, 'ctor'), (log) => {
             //
             // setup knex
             //
-            let knexConfigFile = KnexService.configPath;
-            log.info(`reading knex config from ${knexConfigFile} for process.env.NODE_ENV = ${process.env.NODE_ENV}`);
-
-            JsonReader.readJson<any>(knexConfigFile, ((err, config) => {
-                // let config = require(knexConfigFile);
-                let knexConfig: Knex.Config = config[process.env.NODE_ENV];
-
-                // logger.info(`read knex config: client = ${knexConfig.client}`)
-
-                this._knex = Knex(knexConfig);
-
-                // TODO: ggf. kein Passwort ausgeben
-                log.info('Knex.config = ', knexConfig);
-            }));
-
+            let config = appRegistryService.get(KnexService.KNEX_CONFIG_KEY);          
+            this._knex = Knex(config);
         });
     }
 
