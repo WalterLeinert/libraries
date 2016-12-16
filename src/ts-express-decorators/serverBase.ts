@@ -93,9 +93,10 @@ export abstract class ServerBase extends ServerLoader {
                     controllers = path.join(cwd, this.configuration.controllers);
                 }
 
-                log.info(`controllers = ${controllers}`);
+                log.info(`__dirname = ${__dirname}, controllers = ${controllers}`);
 
                 this.setEndpoint(this.configuration.endPoint)
+                    .scan(path.join(__dirname, 'controllers/**/*.js'))
                     .scan(controllers)
                     .createHttpServer(this.configuration.port)
                     .createHttpsServer({
