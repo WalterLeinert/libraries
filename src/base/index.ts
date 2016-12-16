@@ -1,5 +1,5 @@
-export * from './constants';
-export * from './ctor';
+export * from './appRegistry';
+export * from './constants';export * from './ctor';
 export * from './disposable.interface';
 export * from './disposable';
 export * from './stringBuilder';
