@@ -7,7 +7,7 @@ import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { User, IUser, Encryption, AppRegistry } from '@fluxgate/common';
+import { User, IUser, Role, Encryption, AppRegistry, Assert } from '@fluxgate/common';
 
 import { Messages } from '../../resources/messages';
 import { MetadataService } from './metadata.service';
@@ -55,6 +55,9 @@ export class UserService extends BaseService<IUser, number> {
     }
 
     public update(user: IUser): Promise<IUser> {
+        if (user.role) {
+            Assert.that(Role.isValidRole(user.role));
+        }
         return new Promise<IUser>((resolve, reject) => {
             super.update(user)
                 .then(u => {
@@ -78,6 +81,8 @@ export class UserService extends BaseService<IUser, number> {
      * @memberOf UserService
      */
     public create(user: IUser): Promise<IUser> {
+        Assert.that(Role.isValidRole(user.role));
+        
         user.password_salt = shortid.gen();
 
         return new Promise<IUser>((resolve, reject) => {
