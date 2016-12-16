@@ -12,7 +12,7 @@ import { BaseComponent} from '../../../common/base/base.component';
 import { PassportService } from './../passport.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'flx-login',
   template: `
     <div class="container col-md-6">
       <h1>Login</h1>

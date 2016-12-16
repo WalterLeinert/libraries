@@ -9,7 +9,7 @@ import { PassportService } from './../passport.service';
 
 
 @Component({
-  selector: 'app-logoff',
+  selector: 'flx-logoff',
   template: `
     <div>
         <p-messages [value]="messages"></p-messages>

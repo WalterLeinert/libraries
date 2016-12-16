@@ -13,7 +13,7 @@ import { MetadataService } from '../../../services';
 
 
 @Component({
-  selector: 'app-register',
+  selector: 'flx-register',
   template: `
     <div class="container col-md-6">
       <h1>Registrierung</h1>
