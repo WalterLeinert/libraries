@@ -1,13 +1,29 @@
-import path = require('path');
 import { Injectable } from '@angular/core';
+
+// Fluxgate
+import { AppRegistry } from '@fluxgate/common';
+
 
 /**
  * 
  */
 export type SystemMode =
-  'development' |
-  'production';
 
+  /**
+   * Entwicklung (lokaler Testserver)
+   */
+  'local' | 
+
+  /**
+   * Entwicklung (remote Testserver, ggf. in Docker)
+   */
+  'development' |
+
+  /**
+   * Produktion
+   */
+  'production'
+  ;
 
 
 /**
@@ -35,16 +51,21 @@ export interface IAppConfig {
   mode: SystemMode;
 }
 
+
 @Injectable()
 export class ConfigService {
-  config: IAppConfig;
+  public static readonly APP_CONFIG_KEY = 'IAppConfig';
+  
+  private _config: IAppConfig;
 
   constructor() {
-    //this.config = <IAppConfig>require('./config/config.json');
-    //TODO: hart verdrahtet!!
-    this.config = <IAppConfig>{
-      url: "http://localhost:8000/rest/",
-      mode: "development"
-    };
+    this._config = AppRegistry.instance.get<IAppConfig>(ConfigService.APP_CONFIG_KEY);
+  }
+
+  /**
+   * Liefert die Anwendungskonfiguration
+   */
+  public get config(): IAppConfig {
+    return this._config;
   }
 }
