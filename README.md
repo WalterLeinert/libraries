@@ -12,10 +12,10 @@ Alle Serverfeatures, die projektunabhängig sind:
 
 ## Installation
 
-Die Installation erfolgt über npm (und unseren verdaccio-Server):
+Die Installation in einem konkreten Projekt erfolgt über npm (und unseren verdaccio-Server).
 
 ```batch
-$ npm install --save @fluxgate/server
+$ npm install --save @fluxgate/server 
 ```
 
 > **Important!** TsExpressDecorators requires Node >= 4, Express >= 4, TypeScript >= 2.0 and 
@@ -76,6 +76,22 @@ Neben der generischen Basisklasse `ControllerBase` findet man im Verzeichnis ts-
   - passportLocal.service: Integration von passport.js für Authentifizierung der Benutzer
   - role.service: Zugriff auf Benutzerrollen
   - user.service: Zugriff auf Benutzer
+
+## Entwicklung
+
+Für die Weiterentwicklung von @fluxgate/server ist nach dem Clone zunächst ein `npm install` erforderlich.
+Nach Änderungen ist compiliert man mit `npm run tsc` bzw. `npm run prepublish` direkt vor einer Veröffentlichung auf unseren `verdaccio` npm-Proxy.
+Das eigentliche Veröffentlichen erfolgt mit `npm publish``.
+
+Wichtig dabei: vor dem Veröffentlichen die Package-Version erhöhen, da Verdaccion sonst einen Fehler liefert.
+
+Nach dem Veröffentlichen einer neuen Version, müssen natürlich alle betroffenen Projekte aktualisiert werden:
+
+```bash
+TODO: wann muss man jetzt welches Kommando absetzen? abhängig von major/minor Versionsänderung?
+$ npm update --save @fluxgate/server
+$ npm install --save @fluxgate/server
+```
 
 ## CHANGELOG
 
