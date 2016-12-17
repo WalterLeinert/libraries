@@ -80,10 +80,11 @@ Neben der generischen Basisklasse `ControllerBase` findet man im Verzeichnis ts-
 ## Entwicklung
 
 Für die Weiterentwicklung von @fluxgate/server ist nach dem Clone zunächst ein `npm install` erforderlich.
-Nach Änderungen ist compiliert man mit `npm run tsc` bzw. `npm run prepublish` direkt vor einer Veröffentlichung auf unseren `verdaccio` npm-Proxy.
-Das eigentliche Veröffentlichen erfolgt mit `npm publish``.
+Nach Änderungen ist compiliert man mit `npm run tsc` bzw. `npm run prepublish` direkt vor einer Veröffentlichung auf unseren 
+`verdaccio` npm-Proxy.
+Das eigentliche Veröffentlichen erfolgt mit `npm publish`.
 
-Wichtig dabei: vor dem Veröffentlichen die Package-Version erhöhen, da Verdaccion sonst einen Fehler liefert.
+Wichtig dabei: vor dem Veröffentlichen die Package-Version erhöhen, da verdaccio sonst einen Fehler liefert.
 
 Nach dem Veröffentlichen einer neuen Version, müssen natürlich alle betroffenen Projekte aktualisiert werden:
 
