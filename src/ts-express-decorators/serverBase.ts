@@ -4,18 +4,27 @@ import { ServerLoader } from 'ts-express-decorators';
 import { Forbidden } from 'ts-httpexceptions';
 
 // Fluxgate
-import { Assert, StringBuilder } from '@fluxgate/common';
+import { Assert, fromEnvironment, LoggingConfiguration, StringBuilder } from '@fluxgate/common';
 import { KnexService, UserService, RoleService } from './services';
 
 // lokale Komponenten
 import { Messages } from '../resources/messages';
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, /* configure, */ getLogger } from 'log4js';
+import { Logger, levels, configure, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 
-// configure('config/log4js.json');
-// configure(Path.dirname(process.argv[1]).concat('/config/log4js.json'));
+// Logging konfigurieren ...
+let systemMode = fromEnvironment('NODE_ENV', 'development');
+
+if (systemMode) {   
+    let configPath = LoggingConfiguration.getConfigurationPath(systemMode);
+    console.info(`log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)}, configPath = ${configPath}`);
+
+    configure(configPath, { reloadSecs: 10 });
+} else {
+    console.info(`log4js: no systemMode defined -> not reading configuration`)
+}
 // -------------------------- logging -------------------------------
 
 
