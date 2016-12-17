@@ -3,9 +3,7 @@ import { fromEnvironment } from '.';
 
 export class LoggingConfiguration {
 
-    public static getConfigurationPath(systemMode: string) {
-        console.info(`log4js: systemMode = ${systemMode}`);
-        
+    public static getConfigurationPath(systemMode: string) {     
         let configFile = 'log4js.' + systemMode + '.json';
         let configPath = path.join('/config', configFile);
         configPath = path.join(process.cwd(), configPath);
