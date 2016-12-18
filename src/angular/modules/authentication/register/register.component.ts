@@ -4,11 +4,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-// fluxgate
-import { User, IUser, Assert } from '@fluxgate/common';
+import { SelectItem } from 'primeng/primeng';
 
-import { BaseComponent } from '../../../common/base/base.component'
-import { PassportService } from './../passport.service';
+// fluxgate
+import { User, IUser, IRole, Assert } from '@fluxgate/common';
+
+import { Base2Component } from '../../../common/base'
+import { PassportService, RoleService } from './..';
 import { MetadataService } from '../../../services';
 
 
@@ -32,21 +34,44 @@ import { MetadataService } from '../../../services';
           <label for="email">Email</label>
           <input type="text" class="form-control" required id="email" required [(ngModel)]="user.email" name="email" placeholder="Email">
         </div>
+        <div class="form-group">
+          <label for="role">Rolle</label>
+          <p-dropdown [options]="roles" [(ngModel)]="selectedRole" required id="role" name="role"></p-dropdown>
+        </div>
         <button type="submit" class="btn btn-default" (click)='signup()'>Registrieren</button>
       </form>
     </div>  
   `,
   styles: []
 })
-export class RegisterComponent extends BaseComponent<PassportService> {
+export class RegisterComponent extends Base2Component<PassportService, RoleService> {
   public user: IUser;
+  public selectedRole: IRole;
+  public roles: SelectItem[] = [];
 
-  constructor(router: Router, service: PassportService, metadataService: MetadataService) {
-    super(router, service);
+  constructor(router: Router, service: PassportService, roleService: RoleService, metadataService: MetadataService) {
+    super(router, service, roleService);
     let userTableMetadata = metadataService.findTableMetadata(User.name);
     Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name}`);
 
     this.user = userTableMetadata.createEntity<IUser>();
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+
+    this.service2.find()
+      .subscribe(
+      roles => {
+        roles.forEach(item => {
+          this.roles.push(
+            { label: item.name, value: item }
+        )}); 
+  
+      },
+      (error: Error) => {
+        this.handleInfo(error);
+      });
   }
 
   signup() {

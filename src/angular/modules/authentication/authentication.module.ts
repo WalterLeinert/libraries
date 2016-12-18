@@ -5,10 +5,11 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { GrowlModule } from 'primeng/primeng';
 import { MessagesModule } from 'primeng/primeng';
+import { DropdownModule } from 'primeng/primeng';
 
 import { AutofocusModule, HighlightModule } from '../../common/directives';
 
-import { PassportService } from './passport.service';
+import { PassportService, RoleService } from '.';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { LogoffComponent } from './logoff/logoff.component';
@@ -19,6 +20,7 @@ import { LogoffComponent } from './logoff/logoff.component';
     FormsModule,
     GrowlModule,
     MessagesModule,
+    DropdownModule,
     RouterModule.forChild([
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
@@ -33,7 +35,8 @@ import { LogoffComponent } from './logoff/logoff.component';
     LogoffComponent
   ],
   providers: [
-    PassportService
+    PassportService,
+    RoleService
   ]
 })
 export class AuthenticationModule { }
