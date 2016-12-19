@@ -8,6 +8,7 @@ import { MessagesModule } from 'primeng/primeng';
 
 import { AutofocusModule, HighlightModule } from '../../common/directives';
 
+import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { PassportService } from './passport.service';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -19,13 +20,9 @@ import { LogoffComponent } from './logoff/logoff.component';
     FormsModule,
     GrowlModule,
     MessagesModule,
-    RouterModule.forChild([
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
-      { path: 'logout', component: LogoffComponent }
-    ]),
     HighlightModule,
-    AutofocusModule
+    AutofocusModule,
+    AuthenticationRoutingModule
   ],
   declarations: [
     LoginComponent,

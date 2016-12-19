@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 // fluxgate
 import { User, IUser, Assert } from '@fluxgate/common';
 
-import { BaseComponent } from '../../../common/base/base.component'
+import { BaseComponent } from '../../../common/base'
 import { PassportService } from './../passport.service';
 import { MetadataService } from '../../../services';
 
@@ -43,6 +43,7 @@ export class RegisterComponent extends BaseComponent<PassportService> {
 
   constructor(router: Router, service: PassportService, metadataService: MetadataService) {
     super(router, service);
+
     let userTableMetadata = metadataService.findTableMetadata(User.name);
     Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name}`);
 
