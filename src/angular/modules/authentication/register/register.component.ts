@@ -4,8 +4,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { SelectItem } from 'primeng/primeng'
+
 // fluxgate
-import { User, IUser, Assert } from '@fluxgate/common';
+import { User, IUser, IRole, Assert } from '@fluxgate/common';
 
 import { Base2Component } from '../../../common/base'
 import { PassportService } from './../passport.service';
@@ -32,6 +34,10 @@ import { MetadataService } from '../../../services';
           <label for="email">Email</label>
           <input type="text" class="form-control" required id="email" required [(ngModel)]="user.email" name="email" placeholder="Email">
         </div>
+        <div class="form-group">
+          <label for="role">Rolle</label>
+          <p-dropdown [options]="roles" [(ngModel)]="selectedRole" required id="role" name="role"></p-dropdown>
+        </div>
         <button type="submit" class="btn btn-default" (click)='signup()'>Registrieren</button>
       </form>
     </div>  
@@ -40,6 +46,8 @@ import { MetadataService } from '../../../services';
 })
 export class RegisterComponent extends Base2Component<PassportService, PassportService> {
   public user: IUser;
+  public selectedRole: IRole;
+  public roles: SelectItem[] = [];
 
   constructor(router: Router, service: PassportService, metadataService: MetadataService) {
     super(router, service, service);
