@@ -1,10 +1,10 @@
 import { Router } from '@angular/router';
 import { BaseComponent } from './base.component';
 
-export abstract class Base2Component<TService1, TService2> extends BaseComponent<TService1> {
+export abstract class Base2Component<TService, TService2> extends BaseComponent<TService> {
 
-  protected constructor(router: Router, service1: TService1, private _service2, TService2) {
-    super(router, service1);
+  protected constructor(router: Router, service: TService, private _service2: TService2) {
+    super(router, service);
   }
 
   /**
