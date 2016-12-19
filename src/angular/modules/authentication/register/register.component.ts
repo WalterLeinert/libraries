@@ -11,6 +11,7 @@ import { User, IUser, IRole, Assert } from '@fluxgate/common';
 
 import { Base2Component } from '../../../common/base'
 import { PassportService } from './../passport.service';
+import { RoleService } from './../role.service';
 import { MetadataService } from '../../../services';
 
 
@@ -44,18 +45,36 @@ import { MetadataService } from '../../../services';
   `,
   styles: []
 })
-export class RegisterComponent extends Base2Component<PassportService, PassportService> {
+export class RegisterComponent extends Base2Component<PassportService, RoleService> {
   public user: IUser;
   public selectedRole: IRole;
   public roles: SelectItem[] = [];
 
-  constructor(router: Router, service: PassportService, metadataService: MetadataService) {
-    super(router, service, service);
+  constructor(router: Router, service: PassportService, roleService: RoleService, metadataService: MetadataService) {
+    super(router, service, roleService);
 
     let userTableMetadata = metadataService.findTableMetadata(User.name);
     Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name}`);
 
     this.user = userTableMetadata.createEntity<IUser>();
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+
+    this.service2.find()
+      .subscribe(
+      roles => {
+        roles.forEach(item => {
+          this.roles.push(
+            { label: item.description, value: item }
+          )
+        });
+
+      },
+      (error: Error) => {
+        this.handleInfo(error);
+      });
   }
 
   signup() {
