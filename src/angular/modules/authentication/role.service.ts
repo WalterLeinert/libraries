@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-
-
 // Fluxgate
 import { Role } from '@fluxgate/common';
 
@@ -18,7 +13,7 @@ import { ConfigService } from '../../services/config.service';
  * 
  * @export
  * @class RoleService
- * @extends {Service<Artikel>}
+ * @extends {Service<Role>}
  */
 @Injectable()
 export class RoleService extends Service<Role> {

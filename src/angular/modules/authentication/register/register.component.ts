@@ -10,7 +10,8 @@ import { SelectItem } from 'primeng/primeng';
 import { User, IUser, IRole, Assert } from '@fluxgate/common';
 
 import { Base2Component } from '../../../common/base'
-import { PassportService, RoleService } from './..';
+import { PassportService } from './../passport.service';
+import { RoleService } from './../role.service';
 import { MetadataService } from '../../../services';
 
 
@@ -36,7 +37,7 @@ import { MetadataService } from '../../../services';
         </div>
         <div class="form-group">
           <label for="role">Rolle</label>
-          <p-dropdown [options]="roles" [(ngModel)]="selectedRole" required id="role" name="role"></p-dropdown>
+          <p-dropdown [options]="roles" [(ngModel)]="selectedRole" [style]="{'width':'200px'}" required id="role" name="role"></p-dropdown>
         </div>
         <button type="submit" class="btn btn-default" (click)='signup()'>Registrieren</button>
       </form>
@@ -51,6 +52,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
 
   constructor(router: Router, service: PassportService, roleService: RoleService, metadataService: MetadataService) {
     super(router, service, roleService);
+
     let userTableMetadata = metadataService.findTableMetadata(User.name);
     Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name}`);
 
@@ -65,9 +67,10 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
       roles => {
         roles.forEach(item => {
           this.roles.push(
-            { label: item.name, value: item }
-        )}); 
-  
+            { label: item.description, value: item }
+          )
+        });
+
       },
       (error: Error) => {
         this.handleInfo(error);
