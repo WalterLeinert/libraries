@@ -8,8 +8,10 @@ import { DropdownModule } from 'primeng/primeng';
 
 import { AutofocusModule, HighlightModule } from '../../common/directives';
 
+// import { Service } from '../../services';
 import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { PassportService } from './passport.service';
+import { RoleService } from './role.service';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { LogoffComponent } from './logoff/logoff.component';
@@ -31,7 +33,8 @@ import { LogoffComponent } from './logoff/logoff.component';
     LogoffComponent
   ],
   providers: [
-    PassportService
+    PassportService,
+    RoleService
   ]
 })
 export class AuthenticationModule { }
