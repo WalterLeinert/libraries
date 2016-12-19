@@ -5,5 +5,3 @@ export * from './register/register.component';
 export * from './authentication.module';
 export * from './passport.service';
 export * from './role.service';
-
-export * from './dummy.service';
