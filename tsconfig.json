@@ -14,7 +14,8 @@
     "lib": ["es6", "dom"],
     "outDir": "build/",
     "types":[
-      "node"
+      "node",
+      "mocha"
     ]
   },
   

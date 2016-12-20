@@ -1,0 +1,66 @@
+{
+  "commentLocal": "lokale Testumgebung (DB lokal)",
+  "local": {
+    "debug": true,
+    "client": "mysql",
+    "connection": {
+      "host": "localhost",
+      "user": "root",
+      "password": "root",
+      "port": 3306,
+      "database": "griso"
+    },
+    "pool": {
+      "min": 0,
+      "max": 7
+    }
+  },
+  "commentDevelopment": "Testumgebung für Entwicklung (DB remote, z.B. in Dockercontainer)",
+  "development": {
+    "debug": true,
+    "client": "mysql",
+    "connection": {
+      "host": "griso-mysql",
+      "user": "root",
+      "password": "root",
+      "port": 3306,
+      "database": "griso"
+    },
+    "pool": {
+      "min": 0,
+      "max": 7
+    }
+  },
+  "commentProduction": "Testumgebung für Produktion (DB remote, z.B. in Dockercontainer)",
+  "production": {
+    "debug": true,
+    "client": "mysql",
+    "connection": {
+      "host": "griso-mysql",
+      "user": "root",
+      "password": "prod",
+      "port": 3306,
+      "database": "griso"
+    },
+    "pool": {
+      "min": 0,
+      "max": 7
+    }
+  },
+  "commentChristian": "Christian im Büro",
+  "christian": {
+    "debug": true,
+    "client": "mysql",
+    "connection": {
+      "host": "10.10.11.5",
+      "user": "griso",
+      "password": "h9xA24hva",
+      "port": 3306,
+      "database": "griso"
+    },
+    "pool": {
+      "min": 0,
+      "max": 7
+    }
+  }
+}
