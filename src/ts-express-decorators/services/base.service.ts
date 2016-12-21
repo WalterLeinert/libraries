@@ -59,9 +59,16 @@ export abstract class BaseService<T, TId extends IToString>  {
     ): Promise<T> {
 
         return using(new XLog(BaseService.logger, levels.INFO, 'create', `[${this.tableName}]`), (log) => {
-            log.debug('subject: ', subject);
+            if (log.isDebugEnabled) {
+                log.debug('subject: ', subject);
+            }
+            
 
             let dbSubject = this.createDatabaseInstance(subject);
+
+            if (log.isDebugEnabled()) {
+                log.debug('dbSubject: ', dbSubject);
+            }
 
             return new Promise<T>((resolve, reject) => {
                 this.fromTable()
@@ -70,15 +77,17 @@ export abstract class BaseService<T, TId extends IToString>  {
 
                         if (ids.length <= 0) {
                             log.error(`ids empty`);
-                            console.log('create failed: ids empty');
+                            // console.log('create failed: ids empty');
                             reject(new Error('create failed: ids empty'));
                         } else if (ids.length > 1) {
                             reject(new Error('create failed: ids.length > 1'));
                         } else {
                             let id = ids[0];
                             log.debug(`created new ${this.tableName} with id: ${id}`);
-                            console.log(`created new ${this.tableName} with id: ${id}`);
-                            dbSubject[this.idColumnName] = id;
+                            // console.log(`created new ${this.tableName} with id: ${id}`);
+                            
+                            // TODO: id == 0?
+                            // dbSubject[this.idColumnName] = id;
 
                             subject = this.createModelInstance(dbSubject);
                             resolve(subject);
@@ -241,7 +250,7 @@ export abstract class BaseService<T, TId extends IToString>  {
         query: Knex.QueryBuilder
     ): Promise<T[]> {
 
-        return using(new XLog(BaseService.logger, levels.INFO, 'findById', `[${this.tableName}]`), (log) => {
+        return using(new XLog(BaseService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
 
             return new Promise<T[]>((resolve, reject) => {
                 query
@@ -307,7 +316,7 @@ export abstract class BaseService<T, TId extends IToString>  {
      * @type {Knex.QueryBuilder}
      * @memberOf ServiceBase
      */
-    protected fromTable(): Knex.QueryBuilder {
+    public fromTable(): Knex.QueryBuilder {
         return this.knexService.knex(this.tableName);
     }
 
@@ -329,7 +338,7 @@ export abstract class BaseService<T, TId extends IToString>  {
      * @type {string}
      * @memberOf ServiceBase
      */
-    protected get idColumnName(): string {
+    public get idColumnName(): string {
         if (!this.primaryKeyColumn) {
             throw new Error(`Table ${this.tableName}: no primary key column`);
         }

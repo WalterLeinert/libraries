@@ -1,7 +1,14 @@
 let path = require('path');
 import 'reflect-metadata';
 import * as Mocha from 'mocha';
+import * as chai from 'chai';
+import { expect, should } from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
+import { } from 'chai-as-promised';
 import * as Knex from 'knex';
+
+chai.use(chaiAsPromised);
+chai.should();
 
 
 // -------------------------- logging -------------------------------
@@ -10,62 +17,112 @@ import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 
-import { AppRegistry, User, Role, JsonReader, fromEnvironment } from '@fluxgate/common';
+import { AppRegistry, User, Role, IRole, JsonReader, fromEnvironment } from '@fluxgate/common';
 
 import { AppRegistryService, KnexService, MetadataService, RoleService } from '../../../src/ts-express-decorators/services';
 
 let logger = getLogger('first.spec');
 
+
+function createRole(id: number): IRole {
+    let role: IRole = {
+        id: id,
+        name: `Test-Rolename-${id}`,
+        description: `Test-Roledescription-${id}`
+    };
+
+    return role;
+}
+
+
 describe('first test', () => {
+    let knexService: KnexService;
     let roleService: RoleService;
 
-    beforeEach(() => {
-        let knexConfigPath = path.join(__dirname, '../../../../test/config/knexfile.json');
-        logger.info(`knexConfigPath = ${knexConfigPath}`);
+    before(() => {
+        using(new XLog(logger, levels.DEBUG, 'before'), (log) => {
+            let knexConfigPath = path.join(__dirname, '../../../../test/config/knexfile.json');
+            log.log(`knexConfigPath = ${knexConfigPath}`);
 
-        //
-        // Konfiguration lesen und in AppRegistry ablegen
-        //
+            //
+            // Konfiguration lesen und in AppRegistry ablegen
+            //
 
-        let config = JsonReader.readJsonSync<any>(knexConfigPath);
-
-
-        logger.info(`read knex config from ${knexConfigPath} for process.env.NODE_ENV = ${process.env.NODE_ENV}`);
-
-        let systemEnv = fromEnvironment('NODE_ENV', 'development');
-        systemEnv = 'local';        // TODO
-        logger.info(`systemEnv = ${systemEnv}`);
-
-        let knexConfig: Knex.Config = config[systemEnv];
-        AppRegistry.instance.add(KnexService.KNEX_CONFIG_KEY, knexConfig);
-
-        let appRegistryService: AppRegistryService = new AppRegistryService();
-        let cfg = appRegistryService.get(KnexService.KNEX_CONFIG_KEY);
-        logger.info(`cfg = ${JSON.stringify(cfg)}`);
+            let config = JsonReader.readJsonSync<any>(knexConfigPath);
 
 
-        let knexService: KnexService = new KnexService(appRegistryService);
-        let metadataService: MetadataService = new MetadataService();
+            log.log(`read knex config from ${knexConfigPath} for process.env.NODE_ENV = ${process.env.NODE_ENV}`);
+
+            let systemEnv = fromEnvironment('NODE_ENV', 'development');
+            systemEnv = 'local';        // TODO
+            log.log(`systemEnv = ${systemEnv}`);
+
+            let knexConfig: Knex.Config = config[systemEnv];
+            AppRegistry.instance.add(KnexService.KNEX_CONFIG_KEY, knexConfig);
+
+            let appRegistryService: AppRegistryService = new AppRegistryService();
+            let cfg = appRegistryService.get(KnexService.KNEX_CONFIG_KEY);
+            log.log(`cfg = ${JSON.stringify(cfg)}`);
 
 
+            knexService = new KnexService(appRegistryService);
+            let metadataService: MetadataService = new MetadataService();
 
-        roleService = new RoleService(knexService, metadataService);
-    });
-
-    afterEach(() => {
+            roleService = new RoleService(knexService, metadataService);
+        })
 
     });
 
-    it('should ...', () => {
-        roleService.find()
-            .then((roles => {
-                logger.info(`${roles.length} roles found`);
-            }))
-            .catch((err) => {
-                logger.error(err);
-            })
 
-        //expect('')
-    })
+    function closeDb(log: XLog, knex: Knex) {
+        knex.destroy((err) => {
+            log.error(err);
+        });
+    }
 
+    after(() => {
+        using(new XLog(logger, levels.DEBUG, 'after'), (log) => {
+
+            // alle Testrollen löschen
+            roleService.query(
+                roleService.fromTable().where(roleService.idColumnName, '>=', 1000).delete())
+                .then((rowsAffected) => {
+                    closeDb(log, knexService.knex);
+                })
+                .catch(err => {
+                    log.error(err);
+                    closeDb(log, knexService.knex);
+                });
+        });
+    });
+
+
+    it('should find 3 roles', () => {
+        return expect(roleService.find()
+            .then(function (roles) { return roles.length }))
+            .to.become(3);
+    });
+
+    it('should create new role', () => {
+        let role = createRole(1000);
+        return expect(roleService.create(role)).to.become(role);
+    });
+
+    it('should now find 4 roles', () => {
+        return expect(roleService.find()
+            .then(function (roles) { return roles.length }))
+            .to.become(4);
+    });
+
+
+    it('should create new role', () => {
+        let role = createRole(1001);
+        return expect(roleService.create(role)).to.become(role);
+    });
+
+    it('should delete test role', () => {
+        let roleIdToDelete = 1000;
+        return expect(roleService.delete(roleIdToDelete))
+            .to.become(roleIdToDelete);
+    });
 });
