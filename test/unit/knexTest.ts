@@ -1,4 +1,5 @@
 let path = require('path');
+import 'reflect-metadata';
 import * as Knex from 'knex';
 
 // -------------------------- logging -------------------------------
@@ -9,6 +10,7 @@ import { XLog, using } from 'enter-exit-logger';
 
 import { AppRegistry, JsonReader, fromEnvironment } from '@fluxgate/common';
 import { KnexService, MetadataService, AppRegistryService } from '../../src/ts-express-decorators/services';
+import { BaseService } from '../../src/ts-express-decorators/services/base.service';
 
 import { BaseTest } from './baseTest';
 
@@ -101,6 +103,16 @@ export abstract class KnexTest extends BaseTest {
 
     protected static get knexService(): KnexService {
         return KnexTest._knexService;
+    }
+
+    protected static createService<T, TId>(model: Function): BaseService<T, TId> {
+        class Service<T, TId> extends BaseService<T, TId> {
+            constructor(knexService: KnexService, metadataService: MetadataService) {
+                super(model, knexService, metadataService);
+            }
+
+        }
+        return new Service<T, TId>(KnexTest.knexService, KnexTest.metadataService);
     }
 
 }
