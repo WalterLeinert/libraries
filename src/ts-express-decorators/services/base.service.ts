@@ -302,9 +302,9 @@ export abstract class BaseService<T, TId extends IToString>  {
      */
     protected createModelInstances(rows: any[]): T[] {
         let result = new Array<T>();
-        rows.forEach(row => {
+        for (let row of rows) {
             result.push(this.metadata.createModelInstance<T>(row));
-        });
+        }
         return result;
     }
 
