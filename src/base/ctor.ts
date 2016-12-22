@@ -1,4 +1,3 @@
-
 /**
  * Helperinterface um generisch eine Instanz vom Typ {T} zu erzeugen.
  * 
@@ -7,5 +6,11 @@
  * @template T
  */
 export interface ICtor<T>  { 
-    new (): T 
+
+    /**
+     * "Construktor" für Typ @see{T}
+     *  
+     *  @param {any[]} [args] - Argumente
+     */
+    new (...args: any[]): T 
 };
