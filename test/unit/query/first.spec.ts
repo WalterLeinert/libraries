@@ -12,16 +12,31 @@ chai.should();
 
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, getLogger } from 'log4js';
+import { Logger, levels, getLogger, configure } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
-
 import { AppRegistry, User, Role, IRole, JsonReader, fromEnvironment } from '@fluxgate/common';
-
 import { AppRegistryService, KnexService, MetadataService, RoleService } from '../../../src/ts-express-decorators/services';
 
 let logger = getLogger('first.spec');
+
+// Logging konfigurieren ...
+let systemMode = fromEnvironment('NODE_ENV', 'development');
+
+if (systemMode) {
+    let configFile = 'log4js.' + systemMode + '.json';
+    let configPath = path.join('/test/config', configFile);
+    configPath = path.join(process.cwd(), configPath);
+    console.info(`log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)}, configPath = ${configPath}`);
+
+    configure(configPath);
+} else {
+    console.info(`log4js: no systemMode defined -> not reading configuration`)
+}
+
+
+
 
 
 function createRole(id: number): IRole {
