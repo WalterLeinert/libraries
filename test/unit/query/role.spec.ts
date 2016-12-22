@@ -18,7 +18,7 @@ import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 import { Role, IRole } from '@fluxgate/common';
-//import { RoleService } from '../../../src/ts-express-decorators/services';
+import { RoleService } from '../../../src/ts-express-decorators/services';
 import { BaseService } from '../../../src/ts-express-decorators/services/base.service';
 
 import { KnexTest } from '../knexTest';
@@ -39,7 +39,7 @@ class RoleTest extends KnexTest {
         using(new XLog(RoleTest.logger, levels.INFO, 'static.before'), (log) => {
             super.before();
 
-            RoleTest.roleService = KnexTest.createService<Role, number>(Role);
+            RoleTest.roleService = new RoleService(KnexTest.knexService, KnexTest.metadataService);
         });
     }
 
