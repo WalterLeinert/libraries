@@ -6,7 +6,10 @@ import * as chai from 'chai';
 import { expect, should } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import { } from 'chai-as-promised';
+import { suite, test, slow, timeout, skip, only } from 'mocha-typescript';
 import * as Knex from 'knex';
+
+
 
 // Chai mit Promises verwenden (... to.become() ... etc.)
 chai.use(chaiAsPromised);
@@ -21,121 +24,93 @@ import { XLog, using } from 'enter-exit-logger';
 import { AppRegistry, User, Role, IRole, JsonReader, fromEnvironment } from '@fluxgate/common';
 import { AppRegistryService, KnexService, MetadataService, RoleService } from '../../../src/ts-express-decorators/services';
 
-let logger = getLogger('first.spec');
-
-// Logging konfigurieren ...
-let systemMode = fromEnvironment('NODE_ENV', 'development');
-
-if (systemMode) {
-    let configFile = 'log4js.' + systemMode + '.json';
-    let configPath = path.join('/test/config', configFile);
-    configPath = path.join(process.cwd(), configPath);
-    logger.info(`log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)}, configPath = ${configPath}`);
-
-    configure(configPath);
-} else {
-    logger.info(`log4js: no systemMode defined -> not reading configuration`)
-}
+import { BaseTest } from '../baseTest';
 
 
 
 
 
-function createRole(id: number): IRole {
-    let role: IRole = {
-        id: id,
-        name: `Test-Rolename-${id}`,
-        description: `Test-Roledescription-${id}`
-    };
+@suite('erste Role Tests')
+class RoleTest extends BaseTest {
+    static readonly logger = getLogger('RoleTest');
 
-    return role;
-}
+    static readonly FIRST_ROLE_ID = 1000;
+    private roleService: RoleService;
+
+    constructor() {
+        super();
+    }
+
+    static before() {
+        super.before();
+    }
+
+    before() {
+        using(new XLog(RoleTest.logger, levels.DEBUG, 'before'), (log) => {
+            this.roleService = new RoleService(BaseTest.knexService, BaseTest.metadataService);
+        })
+    }
+
+    private createRole(id: number): IRole {
+        let role: IRole = {
+            id: id,
+            name: `Test-Rolename-${id}`,
+            description: `Test-Roledescription-${id}`
+        };
+
+        return role;
+    }
 
 
-describe('first test', () => {
-    let knexService: KnexService;
-    let roleService: RoleService;
-
-    before('Setup', () => {
-        using(new XLog(logger, levels.DEBUG, 'before'), (log) => {
-            let knexConfigPath = path.join(__dirname, '../../../../test/config/knexfile.json');
-            log.log(`knexConfigPath = ${knexConfigPath}`);
-
-            //
-            // Konfiguration lesen und in AppRegistry ablegen
-            //
-
-            let config = JsonReader.readJsonSync<any>(knexConfigPath);
-
-
-            log.log(`read knex config from ${knexConfigPath} for process.env.NODE_ENV = ${process.env.NODE_ENV}`);
-
-            let systemEnv = fromEnvironment('NODE_ENV', 'development');
-            systemEnv = 'local';        // TODO
-            log.log(`systemEnv = ${systemEnv}`);
-
-            let knexConfig: Knex.Config = config[systemEnv];
-            AppRegistry.instance.add(KnexService.KNEX_CONFIG_KEY, knexConfig);
-
+    static after() {
+        return using(new XLog(RoleTest.logger, levels.INFO, 'after'), (log) => {
             let appRegistryService: AppRegistryService = new AppRegistryService();
             let cfg = appRegistryService.get(KnexService.KNEX_CONFIG_KEY);
             log.log(`cfg = ${JSON.stringify(cfg)}`);
 
-
-            knexService = new KnexService(appRegistryService);
+            let knexService = new KnexService(appRegistryService);
             let metadataService: MetadataService = new MetadataService();
 
-            roleService = new RoleService(knexService, metadataService);
-        })
-
-    });
-
-
-    function closeDb(log: XLog, knex: Knex) {
-        knex.destroy((done) => {
-            //log.info(done);
-        });
-    }
-
-    after('Cleanup', () => {
-        return using(new XLog(logger, levels.DEBUG, 'after'), (log) => {
+            let roleService = new RoleService(knexService, metadataService);
 
             // alle Testrollen löschen
             roleService.query(
-                roleService.fromTable().where(roleService.idColumnName, '>=', 1000).delete())
+                roleService.fromTable().where(roleService.idColumnName, '>=', RoleTest.FIRST_ROLE_ID).delete())
                 .then((rowsAffected) => {
-                    closeDb(log, knexService.knex);
+                    knexService.knex.destroy((done) => {
+                        //log.info(done);
+                    });
                 });
-        });        
-    });
+        });
+    }
 
 
-    it('should find 3 roles', () => {
-        return expect(roleService.find()
+
+    @test 'should find 3 roles'() {
+        return expect(this.roleService.find()
             .then(function (roles) { return roles.length }))
             .to.become(3);
-    });
+    }
 
-    it('should create new role', () => {
-        let role = createRole(1000);
-        return expect(roleService.create(role)).to.become(role);
-    });
+    @test 'should create new role'() {
+        let role = this.createRole(RoleTest.FIRST_ROLE_ID);
+        return expect(this.roleService.create(role)).to.become(role);
+    }
 
-    it('should now find 4 roles', () => {
-        return expect(roleService.find()
+    @test 'should now find 4 roles'() {
+        return expect(this.roleService.find()
             .then(function (roles) { return roles.length }))
             .to.become(4);
-    });
+    }
 
+    @test 'should create new role 1001'() {
+        let role = this.createRole(RoleTest.FIRST_ROLE_ID + 1);
+        return expect(this.roleService.create(role)).to.become(role);
+    }
 
-    it('should create new role', () => {
-        let role = createRole(1001);
-        return expect(roleService.create(role)).to.become(role);
-    });
-
-    it('should delete test role', () => {
-        let roleIdToDelete = 1000;
-        return expect(roleService.delete(roleIdToDelete))
+    @test 'should delete test role'() {
+        let roleIdToDelete = RoleTest.FIRST_ROLE_ID;
+        return expect(this.roleService.delete(roleIdToDelete))
             .to.become(roleIdToDelete);
-    });
-});
+    }
+}
