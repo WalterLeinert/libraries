@@ -1,5 +1,5 @@
 // -------------------------- logging -------------------------------
-import { getLogger } from 'log4js';
+import { Logger, getLogger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 // Fluxgate

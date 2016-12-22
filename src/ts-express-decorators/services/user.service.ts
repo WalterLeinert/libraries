@@ -2,7 +2,7 @@ import { Service } from 'ts-express-decorators';
 let shortid = require('js-shortid');
 
 // -------------------------- logging -------------------------------
-import { levels, getLogger } from 'log4js';
+import { Logger, levels, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 

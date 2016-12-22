@@ -10,7 +10,7 @@ import { Assert, fromEnvironment, LoggingConfiguration, StringBuilder } from '@f
 import { Messages } from '../resources/messages';
 
 // -------------------------- logging -------------------------------
-import { levels, configure, getLogger } from 'log4js';
+import { Logger, levels, configure, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 
 // Logging konfigurieren ...

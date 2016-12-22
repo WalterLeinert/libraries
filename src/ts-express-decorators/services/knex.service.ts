@@ -3,7 +3,7 @@ import * as Knex from 'knex';
 
 
 // -------------------------- logging -------------------------------
-import { levels, getLogger } from 'log4js';
+import { Logger, levels, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 

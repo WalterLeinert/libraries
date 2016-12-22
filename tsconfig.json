@@ -20,7 +20,7 @@
       "node",
       "mocha"
     ],
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": false
   },
   "exclude": [
