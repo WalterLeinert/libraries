@@ -24,14 +24,14 @@ import { XLog, using } from 'enter-exit-logger';
 import { AppRegistry, User, Role, IRole, JsonReader, fromEnvironment } from '@fluxgate/common';
 import { AppRegistryService, KnexService, MetadataService, RoleService } from '../../../src/ts-express-decorators/services';
 
-import { BaseTest } from '../baseTest';
+import { KnexTest } from '../knexTest';
 
 
 
 
 
 @suite('erste Role Tests')
-class RoleTest extends BaseTest {
+class RoleTest extends KnexTest {
     static readonly logger = getLogger('RoleTest');
 
     static readonly FIRST_ROLE_ID = 1000;
@@ -47,7 +47,7 @@ class RoleTest extends BaseTest {
 
     before() {
         using(new XLog(RoleTest.logger, levels.DEBUG, 'before'), (log) => {
-            this.roleService = new RoleService(BaseTest.knexService, BaseTest.metadataService);
+            this.roleService = new RoleService(KnexTest.knexService, KnexTest.metadataService);
         })
     }
 

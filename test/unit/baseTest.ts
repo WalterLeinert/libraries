@@ -18,23 +18,41 @@ import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 
-import { AppRegistry, User, Role, IRole, JsonReader, fromEnvironment } from '@fluxgate/common';
-import { KnexService, MetadataService, AppRegistryService } from '../../src/ts-express-decorators/services';
+import { fromEnvironment } from '@fluxgate/common';
 
+
+/**
+ * Basisklasse für alle Unit-Tests
+ */
 export abstract class BaseTest {
     static readonly logger = getLogger('BaseTest');
 
-    static appRegistryService: AppRegistryService;
-    static knexService: KnexService;
-    static metadataService: MetadataService;
+   
+    protected constructor() {
+    }
 
-    private static intialized = BaseTest.initialize();
+
+    protected static after() {
+    }
+
+    protected before() {
+    }
+
+    protected after() {
+    }
+
 
     /**
-     * statischer Initializer
+     * wird einmal vor allen Tests ausgeführt
      */
-    private static initialize(): boolean {
-       using(new XLog(BaseTest.logger, levels.INFO, 'initialize'), (log) => {
+    protected static before() {
+        using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
+            BaseTest.initializeLogging(); 
+        });
+    }
+
+    private static initializeLogging() {
+        using(new XLog(BaseTest.logger, levels.INFO, 'initializeLogging'), (log) => {
             // Logging konfigurieren ...
             let systemMode = fromEnvironment('NODE_ENV', 'development');
 
@@ -48,38 +66,6 @@ export abstract class BaseTest {
             } else {
                 log.warn(`log4js: no systemMode defined -> not reading configuration`)
             }
-        });
-        return true;
-    }
-
-    protected constructor() {
-    }
-
-    
-    protected static before() {
-        using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
-            let knexConfigPath = path.join(process.cwd(), '/test/config/knexfile.json');
-            log.log(`knexConfigPath = ${knexConfigPath}`);
-
-            //
-            // Konfiguration lesen und in AppRegistry ablegen
-            //
-
-            let config = JsonReader.readJsonSync<any>(knexConfigPath);
-
-
-            log.log(`read knex config from ${knexConfigPath} for process.env.NODE_ENV = ${process.env.NODE_ENV}`);
-
-            let systemEnv = fromEnvironment('NODE_ENV', 'development');
-            systemEnv = 'local';        // TODO
-            log.log(`systemEnv = ${systemEnv}`);
-
-            let knexConfig: Knex.Config = config[systemEnv];
-            AppRegistry.instance.add(KnexService.KNEX_CONFIG_KEY, knexConfig);
-
-            BaseTest.appRegistryService = new AppRegistryService();
-            BaseTest.knexService = new KnexService(BaseTest.appRegistryService);
-            BaseTest.metadataService = new MetadataService();
         });
     }
 

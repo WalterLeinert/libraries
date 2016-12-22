@@ -1,0 +1,116 @@
+let path = require('path');
+import 'reflect-metadata';
+
+import * as Mocha from 'mocha';
+import * as chai from 'chai';
+import { expect, should } from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
+import { } from 'chai-as-promised';
+import * as Knex from 'knex';
+
+// Chai mit Promises verwenden (... to.become() ... etc.)
+chai.use(chaiAsPromised);
+chai.should();
+
+// -------------------------- logging -------------------------------
+import { Logger, levels, getLogger, configure } from 'log4js';
+import { XLog, using } from 'enter-exit-logger';
+// -------------------------- logging -------------------------------
+
+
+import { AppRegistry, User, Role, IRole, JsonReader, fromEnvironment } from '@fluxgate/common';
+import { KnexService, MetadataService, AppRegistryService } from '../../src/ts-express-decorators/services';
+
+import { BaseTest } from './baseTest';
+
+
+/**
+ * Basisklasse für alle Service-Klassen, die mit Knex auf die DB zugreifen.
+ */
+export abstract class KnexTest extends BaseTest {
+    static readonly logger = getLogger('KnexTest');
+
+    static _appRegistryService: AppRegistryService;
+    static _knexService: KnexService;
+    static _metadataService: MetadataService;
+
+    constructor() {
+        super();
+    }
+
+
+    /**
+      * wird einmal vor allen Tests ausgeführt
+      * - Knex-Initialisierung
+      */
+    protected static before() {
+        using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
+            super.before();
+
+            let knexConfigPath = path.join(process.cwd(), '/test/config/knexfile.json');
+            log.log(`knexConfigPath = ${knexConfigPath}`);
+
+            //
+            // Konfiguration lesen und in AppRegistry ablegen
+            //
+            let config = JsonReader.readJsonSync<any>(knexConfigPath);
+
+            let systemEnv = fromEnvironment('NODE_ENV', 'development');
+            systemEnv = 'local';        // TODO
+
+            log.log(`read knex config from ${knexConfigPath} for systemEnv = ${systemEnv}`);
+
+            let knexConfig: Knex.Config = config[systemEnv];
+            AppRegistry.instance.add(KnexService.KNEX_CONFIG_KEY, knexConfig);
+
+            KnexTest._appRegistryService = new AppRegistryService();
+            KnexTest._knexService = new KnexService(KnexTest.appRegistryService);
+            KnexTest._metadataService = new MetadataService();
+        });
+    }
+
+
+    /**
+      * wird einmal nach allen Tests ausgeführt
+      * - Knex-Cleanup
+      */
+    protected static after() {
+        using(new XLog(BaseTest.logger, levels.DEBUG, 'after'), (log) => {
+            super.after();
+            KnexTest.knexService.knex.destroy();
+        });
+    }
+
+
+    /**
+     * wird vor jedem Test aufgerufen
+     */
+    protected before() {
+        using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
+            super.before();            
+        });
+    }
+
+    /**
+     * wird nach jedem Test aufgerufen
+     */
+    protected after() {
+        using(new XLog(BaseTest.logger, levels.DEBUG, 'after'), (log) => {
+            super.after();
+        });
+    }
+
+
+    protected static get appRegistryService(): AppRegistryService {
+        return KnexTest._appRegistryService;
+    }
+
+    protected static get metadataService(): MetadataService {
+        return KnexTest._metadataService;
+    }
+
+    protected static get knexService(): KnexService {
+        return KnexTest._knexService;
+    }
+
+}
