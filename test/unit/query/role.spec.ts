@@ -45,7 +45,7 @@ class RoleTest extends KnexTest {
 
     static after() {
         return using(new XLog(RoleTest.logger, levels.INFO, 'static.after'), (log) => {
-        
+
             // alle Testrollen löschen
             RoleTest.roleService.query(
                 RoleTest.roleService.fromTable().where(RoleTest.roleService.idColumnName, '>=', RoleTest.FIRST_ROLE_ID).delete())
@@ -55,7 +55,7 @@ class RoleTest extends KnexTest {
         });
     }
 
-    
+
     before() {
         using(new XLog(RoleTest.logger, levels.INFO, 'before'), (log) => {
             super.before();
@@ -92,7 +92,7 @@ class RoleTest extends KnexTest {
             .then(function (roles) { return roles.length }))
             .to.become(4);
     }
-    
+
     @test 'should find new role'() {
         let role = this.createRole(RoleTest.FIRST_ROLE_ID);
         return expect(RoleTest.roleService.findById(RoleTest.FIRST_ROLE_ID))
@@ -118,6 +118,33 @@ class RoleTest extends KnexTest {
             .to.become(5);
     }
 
+    @test 'should query roles'() {
+        return expect(RoleTest.roleService.query(
+            RoleTest.roleService.fromTable()
+                .where(RoleTest.roleService.idColumnName, '>=', RoleTest.FIRST_ROLE_ID))
+            .then(function (roles) { return roles.length }))
+            .to.become(2);
+    }
+
+
+    @test 'should query roles by name'() {
+        return expect(RoleTest.roleService.query(
+            RoleTest.roleService.fromTable()
+                .where('role_name', '=', 'admin'))
+            .then(function (roles) { return roles.length; }))
+            .to.become(1);
+    }
+
+    @test 'should query and test role by name'() {
+        return expect(RoleTest.roleService.query(
+            RoleTest.roleService.fromTable()
+                .where('role_name', '=', 'admin'))
+            .then(function (roles) { return roles[0].id; }))
+            .to.become(1);
+    }
+
+
+
     @test 'should delete test role'() {
         let roleIdToDelete = RoleTest.FIRST_ROLE_ID;
         return expect(RoleTest.roleService.delete(roleIdToDelete))
@@ -129,4 +156,5 @@ class RoleTest extends KnexTest {
             .then(function (roles) { return roles.length }))
             .to.become(4);
     }
+
 }
