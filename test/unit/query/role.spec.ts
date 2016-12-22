@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
@@ -15,8 +17,9 @@ import { levels, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
-import { IRole } from '@fluxgate/common';
-import { RoleService } from '../../../src/ts-express-decorators/services';
+import { Role, IRole } from '@fluxgate/common';
+//import { RoleService } from '../../../src/ts-express-decorators/services';
+import { BaseService } from '../../../src/ts-express-decorators/services/base.service';
 
 import { KnexTest } from '../knexTest';
 
@@ -26,7 +29,7 @@ class RoleTest extends KnexTest {
     static readonly logger = getLogger('RoleTest');
 
     static readonly FIRST_ROLE_ID = 1000;
-    static roleService: RoleService;
+    static roleService: BaseService<Role, number>;
 
     constructor() {
         super();
@@ -36,7 +39,7 @@ class RoleTest extends KnexTest {
         using(new XLog(RoleTest.logger, levels.INFO, 'static.before'), (log) => {
             super.before();
 
-            RoleTest.roleService = new RoleService(KnexTest.knexService, KnexTest.metadataService);
+            RoleTest.roleService = KnexTest.createService<Role, number>(Role);
         });
     }
 
@@ -79,7 +82,7 @@ class RoleTest extends KnexTest {
             .to.become(3);
     }
 
-    @test 'should create new role'() {
+    @test 'should create new role with id 1000'() {
         let role = this.createRole(RoleTest.FIRST_ROLE_ID);
         return expect(RoleTest.roleService.create(role)).to.become(role);
     }
@@ -89,15 +92,41 @@ class RoleTest extends KnexTest {
             .then(function (roles) { return roles.length }))
             .to.become(4);
     }
+    
+    @test 'should find new role'() {
+        let role = this.createRole(RoleTest.FIRST_ROLE_ID);
+        return expect(RoleTest.roleService.findById(RoleTest.FIRST_ROLE_ID))
+            .to.become(role);
+    }
+
+    @test 'should update new role'() {
+        let role = this.createRole(RoleTest.FIRST_ROLE_ID);
+        role.name = role.name + '-updated';
+        role.description = role.description + '-updated';
+        return expect(RoleTest.roleService.update(role))
+            .to.become(role);
+    }
 
     @test 'should create new role 1001'() {
         let role = this.createRole(RoleTest.FIRST_ROLE_ID + 1);
         return expect(RoleTest.roleService.create(role)).to.become(role);
     }
 
+    @test 'should now find 5 roles'() {
+        return expect(RoleTest.roleService.find()
+            .then(function (roles) { return roles.length }))
+            .to.become(5);
+    }
+
     @test 'should delete test role'() {
         let roleIdToDelete = RoleTest.FIRST_ROLE_ID;
         return expect(RoleTest.roleService.delete(roleIdToDelete))
             .to.become(roleIdToDelete);
+    }
+
+    @test 'should now find 4 roles again'() {
+        return expect(RoleTest.roleService.find()
+            .then(function (roles) { return roles.length }))
+            .to.become(4);
     }
 }
