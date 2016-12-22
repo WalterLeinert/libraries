@@ -4,7 +4,7 @@ import * as Passport from 'passport';
 import { Strategy } from 'passport-local';
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, getLogger } from 'log4js';
+import { levels, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 

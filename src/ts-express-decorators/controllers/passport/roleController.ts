@@ -7,7 +7,7 @@ import {
 // Fluxgate
 import { ControllerBase } from '../../controllerBase';
 
-import { Role, IRole } from '@fluxgate/common';
+import { Role } from '@fluxgate/common';
 import { RoleService } from '../../services/role.service';
 
 

@@ -20,7 +20,9 @@
     "noResolve": false,
     "types":[
       "node"
-    ]
+    ],
+    "noUnusedLocals": true,
+    "noUnusedParameters": false
   },
 
   "exclude": [

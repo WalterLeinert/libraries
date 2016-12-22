@@ -1,19 +1,8 @@
 let path = require('path');
 import 'reflect-metadata';
 
-import * as Mocha from 'mocha';
-import * as chai from 'chai';
-import { expect, should } from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-import { } from 'chai-as-promised';
-import * as Knex from 'knex';
-
-// Chai mit Promises verwenden (... to.become() ... etc.)
-chai.use(chaiAsPromised);
-chai.should();
-
 // -------------------------- logging -------------------------------
-import { Logger, levels, getLogger, configure } from 'log4js';
+import { levels, getLogger, configure } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
@@ -27,18 +16,7 @@ import { fromEnvironment } from '@fluxgate/common';
 export abstract class BaseTest {
     static readonly logger = getLogger('BaseTest');
 
-   
     protected constructor() {
-    }
-
-
-    protected static after() {
-    }
-
-    protected before() {
-    }
-
-    protected after() {
     }
 
 
@@ -46,13 +24,29 @@ export abstract class BaseTest {
      * wird einmal vor allen Tests ausgeführt
      */
     protected static before() {
+        using(new XLog(BaseTest.logger, levels.DEBUG, 'static.before'), (log) => {
+            BaseTest.initializeLogging();
+        });
+    }
+
+
+    protected static after() {
+        using(new XLog(BaseTest.logger, levels.DEBUG, 'static.after'), (log) => {
+        });
+    }
+
+    protected before() {
         using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
-            BaseTest.initializeLogging(); 
+        });
+    }
+
+    protected after() {
+         using(new XLog(BaseTest.logger, levels.DEBUG, 'after'), (log) => {
         });
     }
 
     private static initializeLogging() {
-        using(new XLog(BaseTest.logger, levels.INFO, 'initializeLogging'), (log) => {
+        using(new XLog(BaseTest.logger, levels.DEBUG, 'initializeLogging'), (log) => {
             // Logging konfigurieren ...
             let systemMode = fromEnvironment('NODE_ENV', 'development');
 

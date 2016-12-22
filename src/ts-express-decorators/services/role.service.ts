@@ -1,10 +1,5 @@
 import { Service } from 'ts-express-decorators';
 
-// -------------------------- logging -------------------------------
-import { Logger, levels, getLogger } from 'log4js';
-import { XLog, using } from 'enter-exit-logger';
-// -------------------------- logging -------------------------------
-
 // Fluxgate
 import { Role, IRole, AppRegistry } from '@fluxgate/common';
 

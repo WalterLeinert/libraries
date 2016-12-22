@@ -1,24 +1,13 @@
 let path = require('path');
-import 'reflect-metadata';
-
-import * as Mocha from 'mocha';
-import * as chai from 'chai';
-import { expect, should } from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-import { } from 'chai-as-promised';
 import * as Knex from 'knex';
 
-// Chai mit Promises verwenden (... to.become() ... etc.)
-chai.use(chaiAsPromised);
-chai.should();
-
 // -------------------------- logging -------------------------------
-import { Logger, levels, getLogger, configure } from 'log4js';
+import { levels, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 
-import { AppRegistry, User, Role, IRole, JsonReader, fromEnvironment } from '@fluxgate/common';
+import { AppRegistry, JsonReader, fromEnvironment } from '@fluxgate/common';
 import { KnexService, MetadataService, AppRegistryService } from '../../src/ts-express-decorators/services';
 
 import { BaseTest } from './baseTest';
@@ -44,7 +33,7 @@ export abstract class KnexTest extends BaseTest {
       * - Knex-Initialisierung
       */
     protected static before() {
-        using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
+        using(new XLog(KnexTest.logger, levels.INFO, 'static.before'), (log) => {
             super.before();
 
             let knexConfigPath = path.join(process.cwd(), '/test/config/knexfile.json');
@@ -75,9 +64,10 @@ export abstract class KnexTest extends BaseTest {
       * - Knex-Cleanup
       */
     protected static after() {
-        using(new XLog(BaseTest.logger, levels.DEBUG, 'after'), (log) => {
-            super.after();
+        using(new XLog(KnexTest.logger, levels.INFO, 'static.after'), (log) => {            
             KnexTest.knexService.knex.destroy();
+
+            super.after();
         });
     }
 
@@ -86,7 +76,7 @@ export abstract class KnexTest extends BaseTest {
      * wird vor jedem Test aufgerufen
      */
     protected before() {
-        using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
+        using(new XLog(KnexTest.logger, levels.INFO, 'before'), (log) => {
             super.before();            
         });
     }
@@ -95,7 +85,7 @@ export abstract class KnexTest extends BaseTest {
      * wird nach jedem Test aufgerufen
      */
     protected after() {
-        using(new XLog(BaseTest.logger, levels.DEBUG, 'after'), (log) => {
+        using(new XLog(KnexTest.logger, levels.INFO, 'after'), (log) => {
             super.after();
         });
     }

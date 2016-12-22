@@ -5,13 +5,12 @@ import { Forbidden } from 'ts-httpexceptions';
 
 // Fluxgate
 import { Assert, fromEnvironment, LoggingConfiguration, StringBuilder } from '@fluxgate/common';
-import { KnexService, UserService, RoleService } from './services';
 
 // lokale Komponenten
 import { Messages } from '../resources/messages';
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, configure, getLogger } from 'log4js';
+import { levels, configure, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 
 // Logging konfigurieren ...
@@ -89,8 +88,6 @@ export abstract class ServerBase extends ServerLoader {
      * @returns {Promise<U>|Promise<TResult>}
      */
     public Initialize(): Promise<ServerBase> {
-        let server: Promise<any> = undefined;
-
         return using(new XLog(ServerBase.logger, levels.INFO, 'Initialize'), (log) => {
 
             return new Promise<ServerBase>((resolve, reject) => {

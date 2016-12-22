@@ -3,12 +3,9 @@ import * as Knex from 'knex';
 
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, getLogger } from 'log4js';
+import { levels, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
-
-// Fluxgate
-import { AppRegistry, JsonReader } from '@fluxgate/common';
 
 import { AppRegistryService } from './appRegistry.service';
 
