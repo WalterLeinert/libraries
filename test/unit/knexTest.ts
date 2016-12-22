@@ -21,9 +21,9 @@ import { BaseTest } from './baseTest';
 export abstract class KnexTest extends BaseTest {
     static readonly logger = getLogger('KnexTest');
 
-    static _appRegistryService: AppRegistryService;
-    static _knexService: KnexService;
-    static _metadataService: MetadataService;
+    private static _appRegistryService: AppRegistryService;
+    private static _knexService: KnexService;
+    private static _metadataService: MetadataService;
 
     constructor() {
         super();
