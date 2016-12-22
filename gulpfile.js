@@ -15,7 +15,7 @@ gulp.task('test', function() {
     .pipe(gulp.dest('build'))
     /*execute tests*/
     .pipe(mocha({
-        reporter: 'progress'
+        reporter: 'spec'
     }));
 });
 /* single command to hook into VS Code */

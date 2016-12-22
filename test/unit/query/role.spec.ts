@@ -1,5 +1,6 @@
 let path = require('path');
 import 'reflect-metadata';
+
 import * as Mocha from 'mocha';
 import * as chai from 'chai';
 import { expect, should } from 'chai';
@@ -7,6 +8,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 import { } from 'chai-as-promised';
 import * as Knex from 'knex';
 
+// Chai mit Promises verwenden (... to.become() ... etc.)
 chai.use(chaiAsPromised);
 chai.should();
 
@@ -28,11 +30,11 @@ if (systemMode) {
     let configFile = 'log4js.' + systemMode + '.json';
     let configPath = path.join('/test/config', configFile);
     configPath = path.join(process.cwd(), configPath);
-    console.info(`log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)}, configPath = ${configPath}`);
+    logger.info(`log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)}, configPath = ${configPath}`);
 
     configure(configPath);
 } else {
-    console.info(`log4js: no systemMode defined -> not reading configuration`)
+    logger.info(`log4js: no systemMode defined -> not reading configuration`)
 }
 
 
@@ -54,7 +56,7 @@ describe('first test', () => {
     let knexService: KnexService;
     let roleService: RoleService;
 
-    before(() => {
+    before('Setup', () => {
         using(new XLog(logger, levels.DEBUG, 'before'), (log) => {
             let knexConfigPath = path.join(__dirname, '../../../../test/config/knexfile.json');
             log.log(`knexConfigPath = ${knexConfigPath}`);
@@ -90,25 +92,21 @@ describe('first test', () => {
 
 
     function closeDb(log: XLog, knex: Knex) {
-        knex.destroy((err) => {
-            log.error(err);
+        knex.destroy((done) => {
+            //log.info(done);
         });
     }
 
-    after(() => {
-        using(new XLog(logger, levels.DEBUG, 'after'), (log) => {
+    after('Cleanup', () => {
+        return using(new XLog(logger, levels.DEBUG, 'after'), (log) => {
 
             // alle Testrollen löschen
             roleService.query(
                 roleService.fromTable().where(roleService.idColumnName, '>=', 1000).delete())
                 .then((rowsAffected) => {
                     closeDb(log, knexService.knex);
-                })
-                .catch(err => {
-                    log.error(err);
-                    closeDb(log, knexService.knex);
                 });
-        });
+        });        
     });
 
 
