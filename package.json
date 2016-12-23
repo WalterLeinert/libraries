@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/common",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "description": "Fluxgate Library client/server übergreifend",
   "main": "lib/index.js",
   "typings": "dts/index.d.ts",
@@ -27,6 +27,7 @@
     "@types/node": "0.0.2"
   },
   "dependencies": {
+    "dashdash": "^1.14.1",
     "moment": "^2.17.1",
     "reflect-metadata": "^0.1.9"
   },
