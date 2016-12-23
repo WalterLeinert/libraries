@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import path = require('path');
 import * as Express from 'express';
 import { ServerLoader } from 'ts-express-decorators';
@@ -18,11 +19,16 @@ let systemMode = fromEnvironment('NODE_ENV', 'development');
 
 if (systemMode) {   
     let configPath = LoggingConfiguration.getConfigurationPath(systemMode);
-    console.info(`log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)}, configPath = ${configPath}`);
 
-    configure(configPath, { reloadSecs: 10 });
+    if (fs.exists(configPath)) {
+        console.info(`log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)}, configPath = ${configPath}`);
+        configure(configPath, { reloadSecs: 10 });
+    } else {
+        console.warn(`log4js: cannot read configuration: ${configPath}`);
+    } 
+    
 } else {
-    console.info(`log4js: no systemMode defined -> not reading configuration`)
+    console.warn(`log4js: no systemMode defined -> not reading configuration`);
 }
 // -------------------------- logging -------------------------------
 
