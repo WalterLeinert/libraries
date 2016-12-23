@@ -11,6 +11,6 @@ export class Activator {
      * @param{any[]} [args] - Constructor-Argumente
      */
     public static createInstance<T>(type: ICtor<T>, ...args: any[]): T {
-        return new type(args);
+        return new type(...args);
     }
 }
