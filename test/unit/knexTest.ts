@@ -96,14 +96,17 @@ export abstract class KnexTest extends BaseTest {
         return KnexTest._appRegistryService;
     }
 
-    protected static get metadataService(): MetadataService {
+    private static get metadataService(): MetadataService {
         return KnexTest._metadataService;
     }
 
-    protected static get knexService(): KnexService {
+    private static get knexService(): KnexService {
         return KnexTest._knexService;
     }
 
+    /**
+     * Helpermethode zum Erzeugen von Service-Klassen 
+     */
     protected static createService<T>(model: ICtor<T>): T {       
         return Activator.createInstance<T>(model, KnexTest.knexService, KnexTest.metadataService);
     }

@@ -8,9 +8,11 @@
             "type": "node",
             "request": "launch",
             "name": "Programm starten",
-            "program": "${workspaceRoot}\\build\\test\\unit\\query\\first.spec.js",
+            "program": "${workspaceRoot}\\build\\test\\main.js",
             "cwd": "${workspaceRoot}",
-            "outFiles": [],
+            "outFiles": [
+                "${workspaceRoot}\\build\\test\\**\\*.js"
+            ],
             "sourceMaps": true
         },
         {
