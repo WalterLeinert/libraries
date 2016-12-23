@@ -34,7 +34,7 @@ export class PojoGenerator extends GeneratorBase {
                 fs.open(filePath, 'w', (err, fd) => {
                     if (err) {
                         if (err.code === "EEXIST") {
-                            console.info('overwriting file %s', filePath);
+                            log.info('overwriting file %s', filePath);
                         } else {
                             throw err;
                         }
@@ -109,8 +109,7 @@ export class PojoGenerator extends GeneratorBase {
         GeneratorBase.writeCommentline(fd);
 
         GeneratorBase.writeLineSync(fd);
-        GeneratorBase.writeLineSync(fd, "import { Table } from './decorator/table';");
-        GeneratorBase.writeLineSync(fd, "import { Column } from './decorator/column';");
+        GeneratorBase.writeLineSync(fd, "import { Table, Column } from '@fluxgate/common';");
         GeneratorBase.writeLineSync(fd);
 
         //GeneratorBase.writeLineSync(fd, "import { ITableInfo, TableInfo } from './tableInfo';");
@@ -244,6 +243,15 @@ export class PojoGenerator extends GeneratorBase {
         if (colInfo.hasAutoIncrement) {
             sb.append(`, generated: true`);
         }
+        
+        switch (colInfo.type) {
+            case DataType.Date:
+                sb.append(`, propertyType: 'date'`);
+                break;
+            default:
+                break;
+        }
+
         sb.append(' })');
 
         GeneratorBase.writeLineSync(fd, sb.toString());

@@ -64,7 +64,7 @@ export class SchemaExtractor {
                             columnSchema.EXTRA === 'auto_increment');
 
                         tableInfo.addColumn(colInfo);
-                        console.debug("Column: ", colInfo);
+                        log.debug("Column: ", colInfo);
                     }
 
                     for (let table in tableInfos) {
