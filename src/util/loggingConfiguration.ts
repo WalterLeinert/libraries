@@ -1,5 +1,7 @@
 import path = require('path');
-import { fromEnvironment } from '.';
+import process = require('process');
+
+import { fromEnvironment } from './env';
 
 export class LoggingConfiguration {
 
