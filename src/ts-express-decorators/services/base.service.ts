@@ -77,17 +77,15 @@ export abstract class BaseService<T, TId extends IToString>  {
 
                         if (ids.length <= 0) {
                             log.error(`ids empty`);
-                            // console.log('create failed: ids empty');
                             reject(new Error('create failed: ids empty'));
                         } else if (ids.length > 1) {
                             reject(new Error('create failed: ids.length > 1'));
                         } else {
                             let id = ids[0];
                             log.debug(`created new ${this.tableName} with id: ${id}`);
-                            // console.log(`created new ${this.tableName} with id: ${id}`);
                             
-                            // TODO: id == 0?
-                            // dbSubject[this.idColumnName] = id;
+                            // Id der neuen Instanz zuweisen
+                            dbSubject[this.idColumnName] = id;
 
                             subject = this.createModelInstance(dbSubject);
                             resolve(subject);
