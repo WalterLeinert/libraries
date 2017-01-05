@@ -92,7 +92,12 @@ gulp.task('test', function () {
 });
 
 
+gulp.task('bundle', function (cb) {
+    execCommand('webpack', '.', null, cb);
+})
+
+
 gulp.task('update-fluxgate', ['update-fluxgate-common'])
 
 /* single command to hook into VS Code */
-gulp.task('default', ['build', 'test']);
+gulp.task('default', gulpSequence(['compile', 'test'], 'bundle'));
