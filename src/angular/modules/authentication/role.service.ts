@@ -16,7 +16,7 @@ import { ConfigService } from '../../services/config.service';
  * @extends {Service<Role>}
  */
 @Injectable()
-export class RoleService extends Service<Role> {
+export class RoleService extends Service<Role, number> {
 
     constructor(metadataService: MetadataService, http: Http, configService: ConfigService) {
         super(Role, metadataService, http, configService);
