@@ -13,6 +13,7 @@ export class TableMetadata {
     private _columnMetadata: ColumnMetadata[] = [];
     private propertyMap: { [propertyName: string]: ColumnMetadata } = {};
     private dbColMap: { [dbColName: string]: ColumnMetadata } = {};
+    private _primaryKeyColumn; ColumnMetadata;
 
     constructor(public target: Function, public options: TableOptions) {
     }
@@ -28,6 +29,10 @@ export class TableMetadata {
         this._columnMetadata.push(metadata);
         this.propertyMap[metadata.propertyName] = metadata;
         this.dbColMap[metadata.options.name] = metadata;
+
+        if (metadata.options.primary) {
+            this._primaryKeyColumn = metadata;
+        }
     }
 
 
@@ -133,5 +138,11 @@ export class TableMetadata {
     public getColumnMetadataByDbCol(dbColName: string) {
         return this.dbColMap[dbColName];
     }
-}
 
+    /**
+     * Liefert die Primary Key Column oder undefined
+     */
+    public get primaryKeyColumn(): ColumnMetadata {
+        return this._primaryKeyColumn;
+    }
+}
