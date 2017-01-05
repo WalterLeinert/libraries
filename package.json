@@ -47,7 +47,7 @@
     "@angular/http": "^2.3.0",
     "@angular/platform-browser": "^2.3.0",
     "@angular/router": "^3.3.0",
-    "@fluxgate/common": "^1.5.0",
+    "@fluxgate/common": "^1.5.3",
     "@types/http-status-codes": "^1.0.29",
     "http-status-codes": "^1.0.6",
     "moment": "^2.17.1",
