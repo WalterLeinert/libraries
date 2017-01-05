@@ -10,8 +10,9 @@ import { SelectItem } from 'primeng/primeng';
 import { User, IUser, IRole, Assert } from '@fluxgate/common';
 
 import { Base2Component } from '../../../common/base'
-import { PassportService } from './../passport.service';
-import { RoleService } from './../role.service';
+import { PassportService } from '../passport.service';
+import { RoleService } from '../role.service';
+import { NavigationService } from '../navigation.service';
 import { MetadataService } from '../../../services';
 
 
@@ -50,7 +51,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
   public selectedRole: IRole;
   public roles: SelectItem[] = [];
 
-  constructor(router: Router, service: PassportService, roleService: RoleService, metadataService: MetadataService) {
+  constructor(router: Router, private navigationService: NavigationService, service: PassportService, roleService: RoleService, metadataService: MetadataService) {
     super(router, service, roleService);
 
     let userTableMetadata = metadataService.findTableMetadata(User.name);
@@ -81,7 +82,10 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
     this.service.signup(this.user)
       .subscribe(result => {
         console.log(result);
-        this.navigate(['/artikel']);
+
+        this.navigate([
+          this.navigationService.navigationPath
+        ]);
       },
       (error: Error) => {
         this.handleInfo(error);

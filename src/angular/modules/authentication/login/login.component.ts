@@ -6,10 +6,11 @@ import { Router } from '@angular/router';
 import { ViewChildren } from '@angular/core';
 
 import { AutofocusDirective } from '../../../common/directives/autofocus.directive';
-import { BaseComponent} from '../../../common/base/base.component';
+import { BaseComponent } from '../../../common/base/base.component';
 
 
-import { PassportService } from './../passport.service';
+import { PassportService } from '../passport.service';
+import { NavigationService } from '../navigation.service';
 
 @Component({
   selector: 'flx-login',
@@ -44,7 +45,7 @@ export class LoginComponent extends BaseComponent<PassportService> {
   username: string;
   password: string;
 
-  constructor(router: Router, service: PassportService) {
+  constructor(router: Router, private navigationService: NavigationService, service: PassportService) {
     super(router, service);
   }
 
@@ -52,7 +53,9 @@ export class LoginComponent extends BaseComponent<PassportService> {
     this.service.login(this.username, this.password)
       .subscribe(result => {
         console.log(result);
-        this.navigate(['/artikel']);
+        this.navigate([
+          this.navigationService.navigationPath
+        ]);
       },
       (error: Error) => {
         this.handleInfo(error);
