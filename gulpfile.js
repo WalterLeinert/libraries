@@ -4,10 +4,41 @@
 
 const gulp = require('gulp');
 const del = require('del');
+const gulpSequence = require('gulp-sequence');
+const exec = require('child_process').exec;
+
 const typescript = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const mocha = require('gulp-mocha');
 const tscConfig = require('./tsconfig.compile.json');
+
+/**
+    * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
+    * 
+    * command      - der Kommandostring (z.B. 'gulp clean')
+    * cwd          - das Arbeitsverzeichnis (z.B. 'client')
+    * maxBuffer    - die Größe des Puffers für Ausgaben
+    * cb           - Callbackfunktion
+    */
+function execCommand(command, cwd, maxBuffer, cb) {
+    let execOpts = {};
+    if (cwd) {
+        execOpts.cwd = cwd;
+    }
+
+    if (maxBuffer) {
+        execOpts.maxBuffer = maxBuffer;
+    }
+
+    // console.log('ops = ', execOpts);
+
+    exec(command, execOpts, function (err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+}
+
 
 // var jsdoc = require("gulp-jsdoc");
 
@@ -58,5 +89,12 @@ gulp.task('test', function() {
         reporter: 'spec'
     }));
 });
+
+
+gulp.task('bundle', function (cb) {
+    execCommand('webpack', '.', null, cb);
+})
+
+
 /* single command to hook into VS Code */
-gulp.task('default', ['compile', 'test']);
+gulp.task('default', gulpSequence(['compile', 'test'], 'bundle'));
