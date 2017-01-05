@@ -31,13 +31,17 @@ export class MetadataStorage {
             let colMetadata: ColumnMetadata[] = this.tableColumnDict[targetName];
 
             colMetadata.forEach(item => {
-                metadata.add(item);
+                metadata.add(item);            
             })
+
+            if (!metadata.primaryKeyColumn) {
+                console.info(`Table ${metadata.options.name}: no primary key column`);
+            }
 
             this.tableDict[targetName] = metadata;
         }
     }
-    
+
 
     /**
      * Fügt eine neue {ColumnMetadata} hinzu.
@@ -70,9 +74,9 @@ export class MetadataStorage {
     public findTableMetadata(target: Function): TableMetadata;
     public findTableMetadata(target: string): TableMetadata;
 
-    public findTableMetadata(target: Function|string): TableMetadata {
+    public findTableMetadata(target: Function | string): TableMetadata {
         Assert.notNull(target);
-        if (typeof(target) === 'string') {
+        if (typeof (target) === 'string') {
             return this.tableDict[target];
         }
         return this.tableDict[target.name];
