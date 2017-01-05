@@ -1,4 +1,4 @@
-import {ColumnType} from "../metadata/columnTypes";
+import { ColumnType } from "../metadata/columnTypes";
 
 export interface ColumnOptions {
 
@@ -6,6 +6,11 @@ export interface ColumnOptions {
      * Workaround für Metadata-Problem mit Date: Typ der Property
      */
     propertyType?: ColumnType;
+
+    /**
+   * Anzeigename (z.B. auf einer Form)
+   */
+    displayName?: string;
 
     /**
      * DB-Spaltenname
