@@ -11,6 +11,12 @@ import { ColumnTypes } from './columnTypes';
  */
 export class ColumnMetadata {
 
+    /**
+     * @param {Function} target - Modelklasse
+     * @param {string} propertyName - Name der Modelproperty
+     * @param {string} propertyType - Typ der Modelproperty
+     * @param {ColumnOptions} options - weitere Propertyeigenschaften
+     */
     constructor(public target: Function, public propertyName: string, public propertyType: string, public options: ColumnOptions) {
     }
 
