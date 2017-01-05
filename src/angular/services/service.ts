@@ -9,7 +9,7 @@ import 'rxjs/add/operator/map';
 
 import * as HttpStatusCodes from 'http-status-codes';
 
-import { TableMetadata } from '@fluxgate/common';
+import { TableMetadata, IToString } from '@fluxgate/common';
 import { Constants, Assert, StringBuilder } from '@fluxgate/common';
 
 import { ConfigService } from './config.service';
@@ -25,7 +25,7 @@ import { IRestUri } from './restUri.interface';
  * @class Service
  * @template T
  */
-export abstract class Service<T> implements IRestUri {
+export abstract class Service<T, TId extends IToString> implements IRestUri {
     private _url: string;
     private _tableMetadata: TableMetadata;
 
@@ -127,12 +127,14 @@ export abstract class Service<T> implements IRestUri {
     /**
      * Find the entity with the given id and return {Observable<T>}
      * 
-     * @param {number} id -- entity id.
+     * @param {TId} id -- entity id.
      * @returns {Observable<T>}
      * 
      * @memberOf Service
      */
-    public findById(id: number): Observable<T> {
+    public findById(id: TId): Observable<T> {
+        Assert.notNull(id, 'id');
+
         return this.http.get(`${this.url}/${id}`)
             .map((response: Response) => this.createInstance(response.json()))
             .do(data => console.log('result: ' + JSON.stringify(data)))
@@ -143,13 +145,12 @@ export abstract class Service<T> implements IRestUri {
     /**
      * Update the entity {item} with the given id and return {Observable<T>}
      * 
-     * @param {number} id
      * @param {T} item
      * @returns {Observable<T>}
      * 
      * @memberOf Service
      */
-    public update(id: number, item: T): Observable<T> {
+    public update(item: T): Observable<T> {
         Assert.notNull(item, 'item');
 
         return this.http.put(`${this.url}`, item)
@@ -162,12 +163,14 @@ export abstract class Service<T> implements IRestUri {
     /**
      * Delete the entity with the given id and return {Observable<T>}
      * 
-     * @param {number} id
+     * @param {TId} id
      * @returns {Observable<T>}
      * 
      * @memberOf Service
      */
-    public delete(id: number): Observable<T> {
+    public delete(id: TId): Observable<T> {
+        Assert.notNull(id, 'id');
+
         return this.http.delete(`${this.url}/${id}`)
             .map((response: Response) => <T>response.json())
             .do(data => console.log('result: ' + JSON.stringify(data)))
@@ -238,6 +241,21 @@ export abstract class Service<T> implements IRestUri {
      */
     public get topic(): string {
         return this._topic;
+    }
+
+
+    /**
+     * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
+     * Sonst wird ein Error geworfen.
+     * 
+     * @type {any}
+     * @memberOf Service
+     */
+    public getEntityId(item: T): any {
+        if (!this._tableMetadata.primaryKeyColumn) {
+            throw new Error(`Table ${this._tableMetadata.options.name}: no primary key column`);            
+        }
+        return item[this._tableMetadata.primaryKeyColumn.propertyName];
     }
 
 }
