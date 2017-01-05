@@ -1,5 +1,5 @@
 {
-  "name": "@fluxgat1",
+  "name": "@fluxgate/common",
   "description": "Fluxgate Library client/server übergreifend",
   "main": "dist/bundle.js",
   "typings": "dts/index.d.ts",
