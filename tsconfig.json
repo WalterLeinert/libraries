@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "src/",
     "module": "commonjs",
     "target": "es5",
     "noImplicitAny": false,
     "sourceMap": true,
-    "declaration":false,
-    "experimentalDecorators":true,
+    "declaration": true,
+    "declarationDir": "dts/",
+    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "moduleResolution": "node",
     "isolatedModules": false,
@@ -16,11 +17,10 @@
       "dom"
     ],
     "outDir": "build/",
-    "types":[
+    "types": [
       "node"
     ]
   },
-  
   "exclude": [
     "node_modules",
     "dts"

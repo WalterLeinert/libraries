@@ -3,30 +3,36 @@ var path = require('path');
 var failPlugin = require('webpack-fail-plugin');
 
 module.exports = {
-  context: __dirname + '/src',
+  debug: true,
+  context: path.join(__dirname, '.'),
   entry: {
-    index: './index'
+    index: './src/index'
   },
   output: {
-    path: __dirname + '/dist',
+    path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
     libraryTarget: "commonjs"
   },
   resolve: {
-    root: __dirname,
-    // Add `.ts` as a resolvable extension.
     extensions: ['', '.ts', '.js'],
     modules: [
       //'node_modules',
-      'src',
+      //path.join(__dirname, 'src'),
     ]
   },
   module: {
     loaders: [
       {
         test: /\.ts$/,
-        loader: 'ts-loader',
-        exclude: /node_modules/
+
+        include: [
+          path.resolve(__dirname, 'src')
+        ],
+        loader: 'ts',
+        exclude: [
+          /node_modules/,
+          /dts/
+        ]
       }
     ]
   },

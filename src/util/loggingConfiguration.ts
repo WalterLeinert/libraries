@@ -48,7 +48,7 @@ export class LoggingConfiguration {
             }
         }
 
-        console.info(`options = ${JSON.stringify(options)}`);
+        // console.info(`options = ${JSON.stringify(options)}`);
 
         if (!options.filename) {
             options.filename = LoggingConfiguration.DEFAULT_FILENAME;

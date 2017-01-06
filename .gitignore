@@ -48,3 +48,5 @@ test/spec/*.js.map
 
 /lib/
 /dts/
+/build/
+/dist/

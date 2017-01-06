@@ -1,4 +1,4 @@
-import 'reflect-metadata';
+require('reflect-metadata');
 
 import * as chai from 'chai';
 import { expect } from 'chai';

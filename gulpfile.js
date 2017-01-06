@@ -9,6 +9,7 @@ const exec = require('child_process').exec;
 
 const typescript = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
+const merge = require('merge2');  // Requires separate installation 
 const mocha = require('gulp-mocha');
 const tscConfig = require('./tsconfig.json');
 
@@ -54,39 +55,44 @@ gulp.task('really-clean', ['clean'], function (cb) {
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-  return del(['dist', 'build', 'lib', 'dts']);
+    return del(['dist', 'build', 'lib', 'dts']);
 })
 
 /**
  * kompiliert den Server
  */
 gulp.task('compile', function () {
-  var tsResult = gulp
-    .src('src/**/*.ts')
-    .pipe(sourcemaps.init()) // This means sourcemaps will be generated
-    .pipe(typescript(tscConfig.compilerOptions));
+    var tsResult = gulp
+        .src('src/**/*.ts')
+        .pipe(sourcemaps.init()) // This means sourcemaps will be generated
+        .pipe(typescript(tscConfig.compilerOptions));
 
-  return tsResult.js
-    .pipe(sourcemaps.write('.', {
-      sourceRoot: ".",
-      includeContent: true
-    }))
-    .pipe(gulp.dest('build/src'));
+    return merge([
+        tsResult.dts.pipe(
+            gulp.dest('dts')
+        ),
+        tsResult.js.pipe(
+            sourcemaps.write('.', {
+                sourceRoot: ".",
+                includeContent: true
+            }))
+            .pipe(gulp.dest('build/src')),
+    ]);
 })
 
 
 //optional - use a tsconfig file
-gulp.task('test', function() {
+gulp.task('test', function () {
     //find test code - note use of 'base'
     return gulp.src('./test/**/*.spec.ts', { base: '.' })
-    /*transpile*/
-    .pipe(typescript(tscConfig.compilerOptions))
-    /*flush to disk*/
-    .pipe(gulp.dest('build'))
-    /*execute tests*/
-    .pipe(mocha({
-        reporter: 'spec'
-    }));
+        /*transpile*/
+        .pipe(typescript(tscConfig.compilerOptions))
+        /*flush to disk*/
+        .pipe(gulp.dest('build'))
+        /*execute tests*/
+        .pipe(mocha({
+            reporter: 'spec'
+        }));
 });
 
 
@@ -96,4 +102,4 @@ gulp.task('bundle', ['compile'], function (cb) {
 
 
 /* single command to hook into VS Code */
-gulp.task('default', gulpSequence('compile', 'test', 'bundle'));
+gulp.task('default', gulpSequence('clean', 'compile', 'test', 'bundle'));
