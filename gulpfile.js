@@ -10,7 +10,7 @@ const exec = require('child_process').exec;
 const typescript = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const mocha = require('gulp-mocha');
-const tscConfig = require('./tsconfig.compile.json');
+const tscConfig = require('./tsconfig.json');
 
 /**
     * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
@@ -71,17 +71,16 @@ gulp.task('compile', function () {
       sourceRoot: ".",
       includeContent: true
     }))
-    .pipe(gulp.dest('lib'));
+    .pipe(gulp.dest('build/src'));
 })
 
 
 //optional - use a tsconfig file
-var tsProject = typescript.createProject('./tsconfig.json');
 gulp.task('test', function() {
     //find test code - note use of 'base'
     return gulp.src('./test/**/*.spec.ts', { base: '.' })
     /*transpile*/
-    .pipe(tsProject())
+    .pipe(typescript(tscConfig.compilerOptions))
     /*flush to disk*/
     .pipe(gulp.dest('build'))
     /*execute tests*/

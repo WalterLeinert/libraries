@@ -63,7 +63,7 @@ class LoggingConfigurationTest {
         return path.join(
             process.cwd(),
             options.relativePath ? options.relativePath : LoggingConfiguration.DEFAULT_RELATIVE_PATH,
-            options.filename + LoggingConfiguration.DEFAULT_EXTENSION
+            (options.filename ? options.filename : LoggingConfiguration.DEFAULT_FILENAME) + LoggingConfiguration.DEFAULT_EXTENSION
         );
     }
 
