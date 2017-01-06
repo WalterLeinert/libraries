@@ -7,11 +7,17 @@ export class JsonReader {
      */
     public static readJsonSync<T>(jsonPath: string): T {
         try {
+            fs.accessSync(jsonPath, fs.constants.R_OK);
+        } catch (err) {
+            throw new Error(`Die Json-Konfiguration ${jsonPath} ist nicht lesbar oder existiert nicht.`);
+        }
+        
+        try {
             let data = fs.readFileSync(jsonPath);
             return <T>JSON.parse(data.toString());
         } catch (err) {
-            console.error('Die Json-Konfiguration ${jsonPath} ist kein gültiges JSON-Format.')
-            throw err;
+            // console.error(`Die Json-Konfiguration ${jsonPath} ist kein gültiges JSON-Format.`)
+            throw new Error(`Die Json-Konfiguration ${jsonPath} ist kein gültiges JSON-Format.`);
         }
     }
 
