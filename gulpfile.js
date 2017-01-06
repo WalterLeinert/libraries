@@ -91,10 +91,10 @@ gulp.task('test', function() {
 });
 
 
-gulp.task('bundle', function (cb) {
+gulp.task('bundle', ['compile'], function (cb) {
     execCommand('webpack', '.', null, cb);
 })
 
 
 /* single command to hook into VS Code */
-gulp.task('default', gulpSequence(['compile', 'test'], 'bundle'));
+gulp.task('default', gulpSequence('compile', 'test', 'bundle'));

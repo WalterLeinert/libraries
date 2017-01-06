@@ -1,19 +1,12 @@
 {
   "name": "@fluxgate/common",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Fluxgate Library client/server übergreifend",
   "main": "dist/bundle.js",
   "typings": "dts/index.d.ts",
   "scripts": {
     "prepublish": "npm run tsc:compile",
-    "tslint": "tslint ./src/*.ts",
-    "release:major": "npm version major && npm publish && git push --follow-tags",
-    "release:minor": "npm version minor && npm publish && git push --follow-tags",
-    "release:patch": "npm version patch && npm publish && git push --follow-tags",
-    "test": "npm run tsc && mocha --reporter spec --check-leaks --bail test/",
-    "test:cov": "istanbul cover -x \"examples/**\" node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks test/ && npm run test:remap",
-    "test:remap": "./node_modules/.bin/remap-istanbul -i coverage/coverage.json -o coverage/lcov-report -t html",
-    "test:travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --reporter spec --check-leaks test/",
+    "tslint": "tslint ./src/**/*.ts",
     "tsc": "tsc",
     "tsc:compile": "tsc --project tsconfig.compile.json"
   },

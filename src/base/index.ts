@@ -6,4 +6,5 @@ export * from './disposable.interface';
 export * from './disposable';
 export * from './enumHelper';
 export * from './stringBuilder';
+export * from './stringUtil';
 export * from './toString.interface';
