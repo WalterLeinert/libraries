@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { NgModule, Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'flx-popup',
@@ -64,3 +65,11 @@ export class PopupComponent {
   }
 
 }
+
+
+@NgModule({
+  imports: [CommonModule],
+  exports: [PopupComponent],
+  declarations: [PopupComponent]
+})
+export class PopupModule { }
