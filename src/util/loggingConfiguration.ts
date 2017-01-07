@@ -48,7 +48,9 @@ export class LoggingConfiguration {
             }
         }
 
-        // console.info(`options = ${JSON.stringify(options)}`);
+        if (fromEnvironment('LOG4JS_DEBUG', '-not-set-') !== '-not-set-') {
+            console.info(`options = ${JSON.stringify(options)}`);
+        }
 
         if (!options.filename) {
             options.filename = LoggingConfiguration.DEFAULT_FILENAME;
