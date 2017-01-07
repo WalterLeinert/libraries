@@ -14,6 +14,7 @@ export class TableMetadata {
     private propertyMap: { [propertyName: string]: ColumnMetadata } = {};
     private dbColMap: { [dbColName: string]: ColumnMetadata } = {};
     private _primaryKeyColumn; ColumnMetadata;
+    private _service: Function;
 
     constructor(public target: Function, public options: TableOptions) {
     }
@@ -145,4 +146,19 @@ export class TableMetadata {
     public get primaryKeyColumn(): ColumnMetadata {
         return this._primaryKeyColumn;
     }
+
+    
+  /**
+   * Registriert den zugehörigen Service (Class/Constructor Function)
+   */
+  public registerService(service: Function) {
+    this._service = service;
+  }
+
+  /**
+   * Liefert den zugehörigen Service (Class/Constructor Function)
+   */
+  public get service(): Function {
+      return this._service;
+  }
 }
