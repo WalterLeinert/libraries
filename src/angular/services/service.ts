@@ -86,6 +86,8 @@ export abstract class Service<T, TId extends IToString> implements IRestUri {
 
         sb.append(this._topic);
         this._url = sb.toString();
+
+        this._tableMetadata.registerService(this.constructor);
     }
 
 
@@ -241,6 +243,16 @@ export abstract class Service<T, TId extends IToString> implements IRestUri {
      */
     public get topic(): string {
         return this._topic;
+    }
+
+    /**
+     * Liefert die Modellklasse der zugehörigen Entity als Function.
+     * 
+     * @readonly
+     * @type {Function}
+     */
+    public get modelClass(): Function {
+        return this._tableMetadata.target;
     }
 
 
