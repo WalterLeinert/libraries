@@ -11,6 +11,7 @@ import { AutofocusModule, HighlightModule } from '../../common/directives';
 import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { PassportService } from './passport.service';
 import { RoleService } from './role.service';
+import { NavigationService } from './navigation.service';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { LogoffComponent } from './logoff/logoff.component';
@@ -32,6 +33,7 @@ import { LogoffComponent } from './logoff/logoff.component';
     LogoffComponent
   ],
   providers: [
+    NavigationService,
     PassportService,
     RoleService
   ]
