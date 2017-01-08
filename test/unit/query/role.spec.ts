@@ -13,15 +13,15 @@ chai.should();
 
 
 // -------------------------- logging -------------------------------
-import { levels, getLogger } from 'log4js';
+import { levels, getLogger, Logger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 import { Role, IRole } from '@fluxgate/common';
-import { RoleService } from '../../../src/ts-express-decorators/services';
-import { BaseService } from '../../../src/ts-express-decorators/services/base.service';
+import { RoleService } from '../../../src/ts-express-decorators-flx/services';
+import { BaseService } from '../../../src/ts-express-decorators-flx/services/base.service';
 
-import { KnexTest } from '../knexTest';
+import { KnexTest } from '../knexTest.spec';
 
 
 @suite('erste Role Tests')

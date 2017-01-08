@@ -1,8 +1,8 @@
 let path = require('path');
-import 'reflect-metadata';
+require('reflect-metadata');
 
 // -------------------------- logging -------------------------------
-import { levels, getLogger, configure } from 'log4js';
+import { Logger, levels, getLogger, configure } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 

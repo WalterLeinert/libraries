@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "src/",
     "module": "commonjs",
     "target": "es5",
     "noImplicitAny": false,
     "sourceMap": true,
-    "declaration": false,
+    "declaration": true,
+    "declarationDir": "dts/",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "moduleResolution": "node",
@@ -17,11 +18,8 @@
     ],
     "outDir": "build/",
     "types": [
-      "node",
-      "mocha"
-    ],
-    "noUnusedLocals": false,
-    "noUnusedParameters": false
+      "node"
+    ]
   },
   "exclude": [
     "node_modules",

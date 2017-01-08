@@ -1,17 +1,18 @@
 let path = require('path');
-import 'reflect-metadata';
+require('reflect-metadata');
+
 import * as Knex from 'knex';
 
 // -------------------------- logging -------------------------------
-import { levels, getLogger } from 'log4js';
+import { Logger, levels, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 
 import { AppRegistry, JsonReader, fromEnvironment, ICtor, Activator } from '@fluxgate/common';
-import { KnexService, MetadataService, AppRegistryService } from '../../src/ts-express-decorators/services';
+import { KnexService, MetadataService, AppRegistryService } from '../../src/ts-express-decorators-flx/services';
 
-import { BaseTest } from './baseTest';
+import { BaseTest } from './baseTest.spec';
 
 
 /**
