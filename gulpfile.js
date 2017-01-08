@@ -1,5 +1,5 @@
 /**
- * Gulp Buildfile für den Server
+ * Gulp Buildfile
  */
 
 const gulp = require('gulp');
@@ -9,7 +9,7 @@ const exec = require('child_process').exec;
 
 const typescript = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
-const merge = require('merge2');  // Requires separate installation 
+const merge = require('merge2');
 const mocha = require('gulp-mocha');
 const tscConfig = require('./tsconfig.json');
 

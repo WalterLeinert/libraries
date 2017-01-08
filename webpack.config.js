@@ -3,7 +3,6 @@ var path = require('path');
 var failPlugin = require('webpack-fail-plugin');
 
 module.exports = {
-  debug: true,
   context: path.join(__dirname, '.'),
   entry: {
     index: './src/index'
@@ -41,6 +40,8 @@ module.exports = {
 
   target: 'node', // important in order not to bundle built-in modules like path, fs, etc. 
   externals: [
-    'dashdash', 'moment', 'reflect-metadata'
+    'dashdash',
+    'moment',
+    'reflect-metadata'
   ],
 }
