@@ -245,6 +245,19 @@ export abstract class Service<T, TId extends IToString> implements IRestUri {
         return this._topic;
     }
 
+    
+    /**
+     * Liefert den Topicpfad (z.B. '/artikel' bei Topic 'artikel').
+     * 
+     * @readonly
+     * @type {string}
+     * @memberOf IRestUri
+     */
+    public get topicPath(): string {
+        return Constants.PATH_SEPARATOR + this.topic;
+    }
+
+
     /**
      * Liefert die Modellklasse der zugehörigen Entity als Function.
      * 

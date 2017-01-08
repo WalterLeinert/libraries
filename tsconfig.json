@@ -1,25 +1,26 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "src/",
     "module": "commonjs",
     "target": "es5",
     "noImplicitAny": false,
     "sourceMap": true,
-    "declaration":false,
-    "experimentalDecorators":true,
+    "declaration": true,
+    "declarationDir": "dts/",
+    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "moduleResolution": "node",
     "isolatedModules": false,
     "suppressImplicitAnyIndexErrors": false,
-    "lib": ["es6", "dom"],
-    "outDir": "build/",
-    "types":[
-      "node"
+    "lib": [
+      "es6",
+      "dom"
     ],
-    "noUnusedLocals": true,
-    "noUnusedParameters": false
+    "outDir": "build/",
+    "types": [
+      "node"
+    ]
   },
-  
   "exclude": [
     "node_modules",
     "dts"
