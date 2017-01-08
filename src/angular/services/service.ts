@@ -276,7 +276,7 @@ export abstract class Service<T, TId extends IToString> implements IRestUri {
      * @type {any}
      * @memberOf Service
      */
-    public getEntityId(item: T): any {
+    public getEntityId(item: T): TId {
         if (!this._tableMetadata.primaryKeyColumn) {
             throw new Error(`Table ${this._tableMetadata.options.name}: no primary key column`);            
         }
