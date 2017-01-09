@@ -16,8 +16,7 @@ import { MetadataService } from '../../services';
 import { BaseComponent } from '../../common/base';
 import { PopupModule } from '../../modules/common';
 
-//import { Artikel } from '../../../../common/src/model';
-//import { ArtikelService } from '../artikel/artikel.service';
+import { AutoformRoutingModule } from './autoform-routing.module';
 import { ProxyService } from './proxy.service';
 
 @Component({
@@ -108,10 +107,10 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     this.sub = this.route.params.subscribe(
       params => {
         let idParams = <string>params[AutoformComponent.GENERIC_ID];
-        
+
         let parts = idParams.split('-');
         Assert.that(parts.length == 2);
-      
+
         //
         // in parts[0] findet sich der Name der Modellklasse (z.B. 'Artikel') -> ProxyService entsprechend intialisieren
         // Entity-Id aus parts[1] übernehmen
@@ -120,7 +119,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
         let id = parts[1];
 
         this.setupProxy(entityName);
-        
+
         this.getItem(id);
       });
   }
@@ -171,7 +170,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
    * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
    */
   cancel(): void {
-    this.navigate([ this.service.getTopicPath() ]);
+    this.navigate([this.service.getTopicPath()]);
   }
 
   /**
@@ -213,7 +212,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   }
 
   public static formatGenericId(item: any): string {
-    return 
+    return
   }
 
 }
@@ -230,10 +229,15 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     MessagesModule,
     // Fluxgate
     ConfirmDialogModule,
-    PopupModule
+    PopupModule,
+    AutoformRoutingModule
   ],
-  exports: [AutoformComponent],
-  declarations: [AutoformComponent],
+  exports: [
+    AutoformComponent
+  ],
+  declarations: [
+    AutoformComponent
+  ],
   providers: [
     ProxyService
   ]
