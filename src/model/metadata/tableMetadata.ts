@@ -161,4 +161,12 @@ export class TableMetadata {
   public get service(): Function {
       return this._service;
   }
+
+
+  /**
+   * Liefert den Klassennamen des zugehörigen Modells (z.B. 'Artikel')
+   */
+  public get className(): string {
+      return this.target.name;
+  }
 }
