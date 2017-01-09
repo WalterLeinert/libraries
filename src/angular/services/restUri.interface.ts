@@ -1,24 +1,27 @@
 /**
  * Interface für alle REST-Api-Implementierungen
  * 
- * @export
- * @interface IRestUri
  */
 export interface IRestUri {
 
     /**
-     * Das Topic des REST-Api (z.B. 'passport' oder 'artikel')
+     * Liefert das Topic des REST-Api (z.B. 'passport' oder 'artikel')
      * 
      * @type {string}
-     * @memberOf IRestUri
      */
-    topic: string;
+    getTopic(): string;
 
     /**
-     * die resultierende Url (baseUrl + topic, z.B. http://localhost;8000/rest/artikel)
+     * Liefert den Topicpfad (z.B. '/artikel' bei Topic 'artikel').
      * 
      * @type {string}
-     * @memberOf IRestUri
      */
-    url: string;
+    getTopicPath(): string;
+
+    /**
+     * Liefert die resultierende Url (baseUrl + topic, z.B. http://localhost;8000/rest/artikel)
+     * 
+     * @type {string}
+     */
+    getUrl(): string;
 }

@@ -1,5 +1,7 @@
 import { Router } from '@angular/router';
 import { BaseComponent } from './base.component';
+import { IServiceBase } from '../../services';
+
 
 /**
  * Basisklasse (Komponente) für alle GUI-Komponenten mit 2 Services.
@@ -9,7 +11,7 @@ import { BaseComponent } from './base.component';
  * @implements {OnInit}
  * @template TService - der konkrete Service
  */
-export abstract class Base2Component<TService1, TService2> extends BaseComponent<TService1> {
+export abstract class Base2Component<TService1 extends IServiceBase, TService2 extends IServiceBase> extends BaseComponent<TService1> {
     /**
    * Creates an instance of BaseComponent.
    * 

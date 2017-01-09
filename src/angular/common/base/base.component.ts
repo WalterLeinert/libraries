@@ -2,6 +2,9 @@ import { OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 import { Message } from 'primeng/primeng';
 
+import { AutoformComponent } from '../../modules/autoform/autoform.component';
+import { IServiceBase } from '../../services';
+
 /**
  * Basisklasse (Komponente) für alle GUI-Komponenten
  * 
@@ -16,7 +19,7 @@ import { Message } from 'primeng/primeng';
   templateUrl: './base.component.html',
   styleUrls: ['./base.component.css']
 })*/
-export abstract class BaseComponent<TService> implements OnInit, OnDestroy {
+export abstract class BaseComponent<TService extends IServiceBase> implements OnInit, OnDestroy {
   private messages: Message[] = [];
 
   /**
@@ -154,6 +157,13 @@ export abstract class BaseComponent<TService> implements OnInit, OnDestroy {
     return this._router.navigate(commands, extras);
   }
 
+ /**
+   * Navigiert auf die Detailseite für die Entity-Instanz @para{item}.
+   * Die Details werden über ein generisch aufgebautes Formular Autoform (@see {AutoformComponent}) angezeigt
+   */
+  protected navigateToDetailGeneric<T>(item: T): Promise<boolean> {
+    return this.navigate([AutoformComponent.GENERIC_PATH, `${this.formatGenericId(item)}`]);
+  }
 
   /**
    * Liefert den zugehörigen Service
@@ -166,5 +176,14 @@ export abstract class BaseComponent<TService> implements OnInit, OnDestroy {
   protected get service(): TService {
     return this._service;
   }
+
+
+  /**
+   * Liefert die Entity-Id für den Navigationspfad.
+   * Format: <Entity-Classname>-<Item-Id>
+   */
+  protected formatGenericId(item: any): string {
+    return `${this.service.getModelClassName() + '-' + this.service.getEntityId(item)}`;
+  } 
 
 }

@@ -14,7 +14,7 @@ import { Constants, Assert, StringBuilder } from '@fluxgate/common';
 
 import { ConfigService } from './config.service';
 import { MetadataService } from './metadata.service';
-import { IRestUri } from './restUri.interface';
+import { IService } from './service.interface';
 
 
 /**
@@ -25,7 +25,7 @@ import { IRestUri } from './restUri.interface';
  * @class Service
  * @template T
  */
-export abstract class Service<T, TId extends IToString> implements IRestUri {
+export abstract class Service<T, TId extends IToString> implements IService {
     private _url: string;
     private _tableMetadata: TableMetadata;
 
@@ -103,7 +103,7 @@ export abstract class Service<T, TId extends IToString> implements IRestUri {
     public create(item: T): Observable<T> {
         Assert.notNull(item, 'item');
 
-        return this.http.post(`${this.url}`, item)
+        return this.http.post(`${this.getUrl()}`, item)
             .map((response: Response) => this.createInstance(response.json()))
             .do(data => console.log('insertresult: ' + JSON.stringify(data)))
             .catch(Service.handleError);
@@ -119,7 +119,7 @@ export abstract class Service<T, TId extends IToString> implements IRestUri {
      * @memberOf Service
      */
     public find(): Observable<T[]> {
-        return this.http.get(this.url)
+        return this.http.get(this.getUrl())
             .map((response: Response) => this.createInstances(response.json()))
             // .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
@@ -137,7 +137,7 @@ export abstract class Service<T, TId extends IToString> implements IRestUri {
     public findById(id: TId): Observable<T> {
         Assert.notNull(id, 'id');
 
-        return this.http.get(`${this.url}/${id}`)
+        return this.http.get(`${this.getUrl()}/${id}`)
             .map((response: Response) => this.createInstance(response.json()))
             .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
@@ -155,7 +155,7 @@ export abstract class Service<T, TId extends IToString> implements IRestUri {
     public update(item: T): Observable<T> {
         Assert.notNull(item, 'item');
 
-        return this.http.put(`${this.url}`, item)
+        return this.http.put(`${this.getUrl()}`, item)
             .map((response: Response) => this.createInstance(response.json()))
             .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
@@ -173,7 +173,7 @@ export abstract class Service<T, TId extends IToString> implements IRestUri {
     public delete(id: TId): Observable<T> {
         Assert.notNull(id, 'id');
 
-        return this.http.delete(`${this.url}/${id}`)
+        return this.http.delete(`${this.getUrl()}/${id}`)
             .map((response: Response) => <T>response.json())
             .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
@@ -212,7 +212,7 @@ export abstract class Service<T, TId extends IToString> implements IRestUri {
 
 
     /**
-     * Liefert die zugehörige ee{TableMetadata} 
+     * Liefert die zugehörige @see{TableMetadata} 
      * 
      * @readonly
      * @protected
@@ -226,22 +226,18 @@ export abstract class Service<T, TId extends IToString> implements IRestUri {
     /**
      * Liefert die Url inkl. Topic
      * 
-     * @readonly
      * @type {string}
-     * @memberOf IRestUri
      */
-    public get url(): string {
+    public getUrl(): string {
         return this._url;
     }
 
     /**
      * Liefert das Topic.
      * 
-     * @readonly
      * @type {string}
-     * @memberOf IRestUri
      */
-    public get topic(): string {
+    public getTopic(): string {
         return this._topic;
     }
 
@@ -249,25 +245,20 @@ export abstract class Service<T, TId extends IToString> implements IRestUri {
     /**
      * Liefert den Topicpfad (z.B. '/artikel' bei Topic 'artikel').
      * 
-     * @readonly
      * @type {string}
-     * @memberOf IRestUri
      */
-    public get topicPath(): string {
-        return Constants.PATH_SEPARATOR + this.topic;
+    public getTopicPath(): string {
+        return Constants.PATH_SEPARATOR + this.getTopic();
     }
-
 
     /**
-     * Liefert die Modellklasse der zugehörigen Entity als Function.
+     * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
      * 
-     * @readonly
-     * @type {Function}
+     * @type {string}
      */
-    public get modelClass(): Function {
-        return this._tableMetadata.target;
+    public getModelClassName(): string {
+        return this._tableMetadata.className;
     }
-
 
     /**
      * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.

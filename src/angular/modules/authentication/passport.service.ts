@@ -10,12 +10,12 @@ import 'rxjs/add/operator/map';
 // Fluxgate
 import { Constants, Assert, StringBuilder, User, IUser } from '@fluxgate/common';
 
-import { IRestUri, Service, MetadataService } from '../../services';
+import { IRestUri, IServiceBase, Service, MetadataService } from '../../services';
 import { ConfigService } from '../../services/config.service';
 
 
 @Injectable()
-export class PassportService implements IRestUri {
+export class PassportService implements IServiceBase{
     public static get LOGIN() { return '/login'; }
     public static get SIGNUP() { return '/signup'; }
     public static get LOGOFF() { return '/logout'; }
@@ -69,7 +69,7 @@ export class PassportService implements IRestUri {
         user.username = username;
         user.password = password;
 
-        return this.http.post(this.url + PassportService.LOGIN, user)
+        return this.http.post(this.getUrl() + PassportService.LOGIN, user)
             .map((response: Response) => {
                 <IUser>response.json();
             })
@@ -89,7 +89,7 @@ export class PassportService implements IRestUri {
     public signup(user: User): Observable<User> {
         Assert.notNull(user, 'user');
 
-        return this.http.post(this.url + PassportService.SIGNUP, user)
+        return this.http.post(this.getUrl() + PassportService.SIGNUP, user)
             .map((response: Response) => {
                 <User>response.json();
             })
@@ -105,7 +105,7 @@ export class PassportService implements IRestUri {
      * @memberOf PassportService
      */
     public logoff() {
-        return this.http.get(this.url + PassportService.LOGOFF)
+        return this.http.get(this.getUrl() + PassportService.LOGOFF)
             .map((response: Response) => {
             })
             // .do(data => console.log('result: ' + JSON.stringify(data)))
@@ -116,22 +116,43 @@ export class PassportService implements IRestUri {
     /**
      * Liefert die Url inkl. Topic
      * 
-     * @readonly
      * @type {string}
-     * @memberOf IRestUri
      */
-    public get url(): string {
+    public getUrl(): string {
         return this._url;
     }
 
     /**
      * Liefert das Topic.
-     * 
-     * @readonly
+     *
      * @type {string}
-     * @memberOf IRestUri
      */
-    public get topic(): string {
+    public getTopic(): string {
         return this._topic;
     }
+
+    public getTopicPath(): string {
+        return Constants.PATH_SEPARATOR + this.getTopic();
+    }
+
+       /**
+     * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
+     * 
+     * @type {string}
+     */
+    public getModelClassName(): string {
+        throw new Error(`Not supported`);
+    }
+
+    /**
+     * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
+     * Sonst wird ein Error geworfen.
+     * 
+     * @type {any}
+     * @memberOf Service
+     */
+    public getEntityId(item: any): any {
+        throw new Error(`Not supported`);
+    }
+
 }
