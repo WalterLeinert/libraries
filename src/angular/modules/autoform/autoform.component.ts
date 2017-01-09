@@ -14,10 +14,9 @@ import { TableMetadata, ColumnMetadata, ColumnTypes, Constants, Assert } from '@
 
 import { MetadataService } from '../../services';
 import { BaseComponent } from '../../common/base';
-import { PopupModule } from '../../modules/common';
 
-import { AutoformRoutingModule } from './autoform-routing.module';
 import { ProxyService } from './proxy.service';
+import { AutoformConstants } from './autoformConstants';
 
 @Component({
   selector: 'flx-autoform',
@@ -64,24 +63,6 @@ import { ProxyService } from './proxy.service';
   providers: [ConfirmationService]
 })
 export class AutoformComponent extends BaseComponent<ProxyService> {
-
-  /**
-   * Das Topic für generische Formulare 
-   */
-  public static readonly GENERIC_TOPIC = 'generic';
-
-  /**
-   * Der Topicpfad für generische Formulare 
-   */
-  public static readonly GENERIC_PATH = Constants.PATH_SEPARATOR + 'generic';
-
-
-  /**
-   * Der Pfad-Parameter für generische Entity-Ids; 
-   */
-  public static readonly GENERIC_ID = 'autoform-id';
-
-
   public static DETAILS = 'Details';
 
   public pageTitle: string = AutoformComponent.DETAILS;
@@ -106,7 +87,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
     this.sub = this.route.params.subscribe(
       params => {
-        let idParams = <string>params[AutoformComponent.GENERIC_ID];
+        let idParams = <string>params[AutoformConstants.GENERIC_ID];
 
         let parts = idParams.split('-');
         Assert.that(parts.length == 2);
@@ -216,30 +197,3 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   }
 
 }
-
-
-@NgModule({
-  imports: [
-    // Angular
-    CommonModule,
-    FormsModule,
-    // PrimeNG
-    ButtonModule,
-    SharedModule,
-    MessagesModule,
-    // Fluxgate
-    ConfirmDialogModule,
-    PopupModule,
-    AutoformRoutingModule
-  ],
-  exports: [
-    AutoformComponent
-  ],
-  declarations: [
-    AutoformComponent
-  ],
-  providers: [
-    ProxyService
-  ]
-})
-export class AutoformModule { }

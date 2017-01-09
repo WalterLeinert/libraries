@@ -2,7 +2,7 @@ import { OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 import { Message } from 'primeng/primeng';
 
-import { AutoformComponent } from '../../modules/autoform/autoform.component';
+import { AutoformConstants } from '../../modules/autoform/autoformConstants';
 import { IServiceBase } from '../../services';
 
 /**
@@ -162,7 +162,7 @@ export abstract class BaseComponent<TService extends IServiceBase> implements On
    * Die Details werden über ein generisch aufgebautes Formular Autoform (@see {AutoformComponent}) angezeigt
    */
   protected navigateToDetailGeneric<T>(item: T): Promise<boolean> {
-    return this.navigate([AutoformComponent.GENERIC_PATH, `${this.formatGenericId(item)}`]);
+    return this.navigate([AutoformConstants.GENERIC_PATH, `${this.formatGenericId(item)}`]);
   }
 
   /**
