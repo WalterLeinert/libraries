@@ -1,9 +1,9 @@
 {
   "name": "@fluxgate/server",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Fluxgate Server-Library ",
   "main": "dist/bundle.js",
-  "typings": "dist/dts/index.d.ts",
+  "typings": "dist/dts/src/index.d.ts",
   "scripts": {
     "tslint": "tslint ./src/**/*.ts",
     "debug_test": "node-debug _mocha -t 0 test/index.js"
