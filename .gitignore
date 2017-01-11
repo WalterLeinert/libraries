@@ -40,6 +40,7 @@ index.js.map
 **/*.js.map
 test/spec/*.js
 test/spec/*.js.map
+symbols.json
 
 # Test
 /stdout

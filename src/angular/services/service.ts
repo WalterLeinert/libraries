@@ -103,8 +103,8 @@ export abstract class Service<T, TId extends IToString> implements IService {
     public create(item: T): Observable<T> {
         Assert.notNull(item, 'item');
 
-        return this.http.post(`${this.getUrl()}`, item)
-            .map((response: Response) => this.createInstance(response.json()))
+        return this.http.post(this.getUrl(), this.serialize(item))
+            .map((response: Response) => this.deserialize(response.json()))
             .do(data => console.log('insertresult: ' + JSON.stringify(data)))
             .catch(Service.handleError);
     }
@@ -120,7 +120,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
      */
     public find(): Observable<T[]> {
         return this.http.get(this.getUrl())
-            .map((response: Response) => this.createInstances(response.json()))
+            .map((response: Response) => this.deserializeArray(response.json()))
             // .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
     }
@@ -138,7 +138,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
         Assert.notNull(id, 'id');
 
         return this.http.get(`${this.getUrl()}/${id}`)
-            .map((response: Response) => this.createInstance(response.json()))
+            .map((response: Response) => this.deserialize(response.json()))
             .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
     }
@@ -155,8 +155,8 @@ export abstract class Service<T, TId extends IToString> implements IService {
     public update(item: T): Observable<T> {
         Assert.notNull(item, 'item');
 
-        return this.http.put(`${this.getUrl()}`, item)
-            .map((response: Response) => this.createInstance(response.json()))
+        return this.http.put(`${this.getUrl()}`, this.serialize(item))
+            .map((response: Response) => this.deserialize(response.json()))
             .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
     }
@@ -179,32 +179,50 @@ export abstract class Service<T, TId extends IToString> implements IService {
             .catch(Service.handleError);
     }
 
+    /**
+     * Serialisiert das @param{item} für die Übertragung zum Server über das REST-Api.
+     * 
+     * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
+     * 
+     * @param {T} item - Entity-Instanz
+     * @returns {any}
+     */
+    private serialize(item: T): any {
+        Assert.notNull(item);
+        return item;
+    }
+
 
     /**
+     * Deserialisiert das Json-Objekt, welches über das REST-Api vom Server zum Client übertragen wurde
      * 
-     * 
-     * @private
-     * @param {*} json
+     * @param {any} json - Json-Objekt vom Server
      * @returns {T}
      * 
      * @memberOf Service
      */
-    private createInstance(json: any): T {
+    private deserialize(json: any): T {
         Assert.notNull(json);
         // Die Properties im Json-Objekt haben dieselben Namen wie die Modellinstanz -> mapColumns = false
         return this.tableMetadata.createModelInstance<T>(json, false);
     }
 
-    private createInstances(json: any): T[] {
-        Assert.notNull(json);
+    /**
+     * Deserialisiert ein Array von Json-Objekten, welches über das REST-Api vom Server zum Client übertragen wurde
+     * 
+     * @param {any} json - Array von Json-Objekten vom Server
+     * @returns {T[]}
+     */
+    private deserializeArray(jsonArray: any): T[] {
+        Assert.notNull(jsonArray);
 
-        if (!Array.isArray(json)) {
+        if (!Array.isArray(jsonArray)) {
             throw new Error('json: ist kein Array');
         }
 
         let result = new Array<T>();
-        json.forEach(item => {
-            result.push(this.createInstance(item));
+        jsonArray.forEach(item => {
+            result.push(this.deserialize(item));
         });
 
         return result;
