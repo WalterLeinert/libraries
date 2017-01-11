@@ -1,4 +1,6 @@
 import { NgModule, Component, Injector } from '@angular/core';
+import { IFieldOptions } from './autoformConfig.interface';
+import { IAutoformConfig } from './autoformConfig.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -29,11 +31,11 @@ import { AutoformConstants } from './autoformConstants';
 
       <div>
         <ul *ngFor="let metadata of columnMetadata">
-          <div class="form-group" *ngIf="item[metadata.propertyName] && metadata.propertyType === 'string'">
+          <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'string'">
             <label>{{metadata.options.displayName}}</label>
             <input type="text" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
           </div>
-          <div class="form-group" *ngIf="item[metadata.propertyName] && metadata.propertyType === 'number'">
+          <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'number'">
             <label>{{metadata.options.displayName}}</label>
             <input type="text" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
           </div>
@@ -71,7 +73,9 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   public submitted: boolean = false;
   public active: boolean = true;
   public columnTypes: ColumnTypes = ColumnTypes;
+
   public columnMetadata: ColumnMetadata[];
+  private config: IAutoformConfig;
 
 
   private sub: Subscription;
@@ -87,17 +91,9 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
     this.sub = this.route.params.subscribe(
       params => {
-        let idParams = <string>params[AutoformConstants.GENERIC_ID];
-
-        let parts = idParams.split('-');
-        Assert.that(parts.length == 2);
-
-        //
-        // in parts[0] findet sich der Name der Modellklasse (z.B. 'Artikel') -> ProxyService entsprechend intialisieren
-        // Entity-Id aus parts[1] übernehmen
-        // 
-        let entityName = parts[0];
-        let id = parts[1];
+        let id = <string>params[AutoformConstants.GENERIC_ENTITY_ID];
+        let entityName = <string>params[AutoformConstants.GENERIC_ENTITY];
+        this.config = JSON.parse(params[AutoformConstants.GENERIC_CONFIG]);
 
         this.setupProxy(entityName);
 
@@ -125,7 +121,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
    */
   private setupProxy(entityName: string) {
     let tableMetadata: TableMetadata = this.metadataService.findTableMetadata(entityName);
-    //console.log(`table = ${tableMetadata.options.name}`);
+    // console.log(`table = ${tableMetadata.options.name}`);
     this.columnMetadata = tableMetadata.columnMetadata;
 
     let service = this.injector.get(tableMetadata.service);
@@ -190,5 +186,29 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   showmodal() {
     this.askuser = true;
+  }
+
+
+  public displayName(metadata: ColumnMetadata): string {
+    let displayName = metadata.propertyName;
+    if (metadata.options.displayName) {
+      displayName = metadata.options.displayName;
+    }
+
+    let columnConfig = <IFieldOptions>this.config[metadata.propertyName];
+    if (columnConfig) {
+      displayName = columnConfig.displayName;
+    }
+
+    return displayName;
+  }
+
+  public isNotHidden(metadata: ColumnMetadata): boolean {
+    let rval = metadata.options.displayName !== undefined;
+
+    if (this.config.hiddenFields.indexOf(metadata.propertyName) >= 0) {
+      rval = false;
+    }
+    return rval;
   }
 }

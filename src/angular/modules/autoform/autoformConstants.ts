@@ -18,6 +18,12 @@ export class AutoformConstants {
   /**
    * Der Pfad-Parameter für generische Entity-Ids; 
    */
-  public static readonly GENERIC_ID = 'autoform-id';
+  public static readonly GENERIC_ENTITY_ID = 'entityId';
 
+  /**
+   * Der Pfad-Parameter für generische Entity-Ids; 
+   */
+  public static readonly GENERIC_ENTITY = 'entity';
+
+  public static readonly GENERIC_CONFIG = 'autoformConfig';
 }

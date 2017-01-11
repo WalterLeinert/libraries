@@ -10,7 +10,7 @@ import { AutoformComponent } from './autoform.component';
 
 const routes: Routes = [
     {
-        path: AutoformConstants.GENERIC_TOPIC + Constants.PATH_SEPARATOR + ':' + AutoformConstants.GENERIC_ID,
+        path: AutoformConstants.GENERIC_TOPIC,
         component: AutoformComponent
     }
 ];

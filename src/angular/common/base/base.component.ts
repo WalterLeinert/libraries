@@ -3,7 +3,9 @@ import { Router, NavigationExtras } from '@angular/router';
 import { Message } from 'primeng/primeng';
 
 import { AutoformConstants } from '../../modules/autoform/autoformConstants';
+import { IAutoformConfig, IAutoformNavigation } from '../../modules/autoform/autoformConfig.interface';
 import { IServiceBase } from '../../services';
+
 
 /**
  * Basisklasse (Komponente) für alle GUI-Komponenten
@@ -138,11 +140,6 @@ export abstract class BaseComponent<TService extends IServiceBase> implements On
     this.addInfoMessage(info.message, summary);
   }
 
-  /*protected get router(): Router {
-    return this._router;
-  }*/
-
-
   /**
    * Navigiert über den zugehörigen Router
    * 
@@ -157,12 +154,20 @@ export abstract class BaseComponent<TService extends IServiceBase> implements On
     return this._router.navigate(commands, extras);
   }
 
- /**
+
+  /**
    * Navigiert auf die Detailseite für die Entity-Instanz @para{item}.
    * Die Details werden über ein generisch aufgebautes Formular Autoform (@see {AutoformComponent}) angezeigt
    */
-  protected navigateToDetailGeneric<T>(item: T): Promise<boolean> {
-    return this.navigate([AutoformConstants.GENERIC_PATH, `${this.formatGenericId(item)}`]);
+  protected navigateToDetailGeneric<T>(item: T, config: IAutoformConfig): Promise<boolean> {
+
+    let navigationConfig: IAutoformNavigation = {
+      entityId: this.service.getEntityId(item),
+      entity: this.service.getModelClassName(),
+      autoformConfig: JSON.stringify(config)
+    };
+
+    return this.navigate([AutoformConstants.GENERIC_TOPIC, navigationConfig]);
   }
 
   /**
@@ -184,6 +189,6 @@ export abstract class BaseComponent<TService extends IServiceBase> implements On
    */
   protected formatGenericId(item: any): string {
     return `${this.service.getModelClassName() + '-' + this.service.getEntityId(item)}`;
-  } 
+  }
 
 }
