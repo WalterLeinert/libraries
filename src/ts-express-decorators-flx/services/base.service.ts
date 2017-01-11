@@ -6,7 +6,7 @@ import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { TableMetadata, ColumnMetadata, IToString } from '@fluxgate/common';
+import { TableMetadata, ColumnMetadata, IToString, Assert } from '@fluxgate/common';
 
 import { MetadataService } from './metadata.service';
 import { KnexService } from './knex.service';
@@ -62,7 +62,9 @@ export abstract class BaseService<T, TId extends IToString>  {
             if (log.isDebugEnabled) {
                 log.debug('subject: ', subject);
             }
-            
+
+            subject = this.deserialize(subject);
+
 
             let dbSubject = this.createDatabaseInstance(subject);
 
@@ -83,12 +85,12 @@ export abstract class BaseService<T, TId extends IToString>  {
                         } else {
                             let id = ids[0];
                             log.debug(`created new ${this.tableName} with id: ${id}`);
-                            
+
                             // Id der neuen Instanz zuweisen
                             dbSubject[this.idColumnName] = id;
 
                             subject = this.createModelInstance(dbSubject);
-                            resolve(subject);
+                            resolve(this.serialize(subject));
                         }
                     })
                     .catch(err => {
@@ -128,7 +130,7 @@ export abstract class BaseService<T, TId extends IToString>  {
                             // let result = Reflection.copyProperties(rows[0], this.ctor);
 
                             log.debug('result = ', result);
-                            resolve(result);
+                            resolve(this.deserialize(result));
                         }
                     })
                     .catch(err => {
@@ -161,7 +163,7 @@ export abstract class BaseService<T, TId extends IToString>  {
                             let result = this.createModelInstances(rows);
 
                             log.debug('result = ', result);
-                            resolve(result);
+                            resolve(this.serializeArray(result));
                         }
                     })
                     .catch(err => {
@@ -188,6 +190,8 @@ export abstract class BaseService<T, TId extends IToString>  {
         return using(new XLog(BaseService.logger, levels.INFO, 'update', `[${this.tableName}]`), (log) => {
             log.debug('subject: ', subject);
 
+            subject = this.deserialize(subject);
+
             let dbSubject = this.createDatabaseInstance(subject);
             return new Promise<T>((resolve, reject) => {
                 this.fromTable()
@@ -195,7 +199,7 @@ export abstract class BaseService<T, TId extends IToString>  {
                     .update(dbSubject)
                     .then((affectedRows: number) => {
                         log.debug(`updated ${this.tableName} with id: ${dbSubject[this.idColumnName]} (affectedRows: ${affectedRows})`, );
-                        resolve(subject);
+                        resolve(this.serialize(subject));
                     })
                     .catch(err => {
                         log.error(err);
@@ -260,7 +264,7 @@ export abstract class BaseService<T, TId extends IToString>  {
                             let result = this.createModelInstances(rows);
 
                             log.debug('result = ', result);
-                            resolve(result);
+                            resolve(this.serializeArray(result));
                         }
                     })
                     .catch(err => {
@@ -285,7 +289,7 @@ export abstract class BaseService<T, TId extends IToString>  {
      * 
      * @memberOf BaseService
      */
-    protected createModelInstance(row: any): T {
+    public createModelInstance(row: any): T {
         return this.metadata.createModelInstance<T>(row);
     }
 
@@ -342,4 +346,47 @@ export abstract class BaseService<T, TId extends IToString>  {
         }
         return this.primaryKeyColumn.options.name;
     }
+
+
+    /**
+     * Serialisiert das @param{item} für die Übertragung zum Client über das REST-Api.
+     *  
+     * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
+     * 
+     * @param {T} item - Entity-Instanz
+     * @returns {any}
+    */
+    private serialize(item: T): any {
+        Assert.notNull(item);
+        return item;
+    }
+
+    /**
+     * Serialisiert das @param{items}-Array für die Übertragung zum Client über das REST-Api.
+     *  
+     * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
+     * 
+     * @param {T} items - Array von Entity-Instanzen
+     * @returns {any}
+    */
+    private serializeArray(items: T[]): any {
+        Assert.notNull(items);
+        return items;
+    }
+
+    /**
+     * Deserialisiert das Json-Objekt, welches über das REST-Api vom Client zum Server übertragen wurde
+     * 
+     * TODO: ggf. die Deserialisierung von speziellen Attributtypen (wie Date) implementieren 
+     * 
+     * @param {any} json - Json-Objekt vom Client
+     * @returns {T}
+     * 
+     */
+    private deserialize(json: any): T {
+        Assert.notNull(json);
+        // Die Properties im Json-Objekt haben dieselben Namen wie die Modellinstanz -> mapColumns = false
+        return this.metadata.createModelInstance<T>(json, false);
+    }
+
 }
