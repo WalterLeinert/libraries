@@ -191,9 +191,4 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   showmodal() {
     this.askuser = true;
   }
-
-  public static formatGenericId(item: any): string {
-    return
-  }
-
 }
