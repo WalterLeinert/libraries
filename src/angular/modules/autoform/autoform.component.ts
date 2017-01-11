@@ -32,11 +32,11 @@ import { AutoformConstants } from './autoformConstants';
       <div>
         <ul *ngFor="let metadata of columnMetadata">
           <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'string'">
-            <label>{{metadata.options.displayName}}</label>
+            <label>{{displayName(metadata)}}</label>
             <input type="text" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
           </div>
           <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'number'">
-            <label>{{metadata.options.displayName}}</label>
+            <label>{{displayName(metadata)}}</label>
             <input type="text" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
           </div>
 
@@ -189,13 +189,16 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   }
 
 
+  /**
+   * Liefert den Anzeigenamen für das Feld zu @param{metadata}.
+   */
   public displayName(metadata: ColumnMetadata): string {
     let displayName = metadata.propertyName;
     if (metadata.options.displayName) {
       displayName = metadata.options.displayName;
     }
 
-    let columnConfig = <IFieldOptions>this.config[metadata.propertyName];
+    let columnConfig = <IFieldOptions>this.config.fields[metadata.propertyName];
     if (columnConfig) {
       displayName = columnConfig.displayName;
     }
@@ -203,6 +206,9 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     return displayName;
   }
 
+  /**
+   * Liefert true, falls Feld zu @param{metadata} anzuzeigen ist
+   */
   public isNotHidden(metadata: ColumnMetadata): boolean {
     let rval = metadata.options.displayName !== undefined;
 
