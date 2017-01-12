@@ -1,4 +1,4 @@
-var dashdash = require('dashdash');
+let dashdash = require('dashdash');
 import { format } from 'util';
 
 export enum OptionType {
@@ -38,23 +38,25 @@ export interface IOption {
 
 
 export class Option<T> implements IOption {
+
+    private static optionType2TypeMap = {
+        [OptionType.Bool]: 'bool',
+        [OptionType.String]: 'string',
+        [OptionType.Number]: 'number',
+        [OptionType.Integer]: 'integer',
+        [OptionType.PositiveInteger]: 'positiveInteger',
+        [OptionType.Date]: 'date',
+        [OptionType.ArrayOfBool]: 'arrayOfBool',
+        [OptionType.ArrayOfString]: 'arrayOfString',
+        [OptionType.ArrayOfNumber]: 'arrayOfNumber',
+        [OptionType.ArrayOfInteger]: 'arrayOfInteger',
+        [OptionType.ArrayOfPositiveInteger]: 'arrayOfPositiveInteger',
+        [OptionType.ArrayOfDate]: 'arrayOfDate',
+    };
+
     public default: T;
     public type: string;
 
-    private static optionType2TypeMap = {
-        [OptionType.Bool]: "bool",
-        [OptionType.String]: "string",
-        [OptionType.Number]: "number",
-        [OptionType.Integer]: "integer",
-        [OptionType.PositiveInteger]: "positiveInteger",
-        [OptionType.Date]: "date",
-        [OptionType.ArrayOfBool]: "arrayOfBool",
-        [OptionType.ArrayOfString]: "arrayOfString",
-        [OptionType.ArrayOfNumber]: "arrayOfNumber",
-        [OptionType.ArrayOfInteger]: "arrayOfInteger",
-        [OptionType.ArrayOfPositiveInteger]: "arrayOfPositiveInteger",
-        [OptionType.ArrayOfDate]: "arrayOfDate",
-    }
 
     constructor(
         public names: string[],
@@ -115,7 +117,7 @@ export class CustomTypeInfo<T> implements ICustomTypeInfo {
  * Standardimplementierung für Custom-Options
  */
 export class CustomOption extends Option<any> {
-    
+
     constructor(
        public names: string[],
         private _customType: ICustomTypeInfo,
@@ -145,8 +147,8 @@ export class OptionParser {
         let customOptionTypes = new Array<ICustomTypeInfo>();
 
         for (let option of options) {
-            if (option.isCustom()) { 
-                let copt = option as CustomOption;               
+            if (option.isCustom()) {
+                let copt = option as CustomOption;
                 customOptionTypes.push(copt.customType);
             }
         }
@@ -164,7 +166,7 @@ export class OptionParser {
         return this.parser.parse({ options: this.options });
     }
 
-    public help(includeEnv: boolean = true, includeDefault: boolean = true): string {
+    public help(includeEnv = true, includeDefault = true): string {
         return this.parser.help(
             { includeEnv, includeDefault }
         ).trimRight();

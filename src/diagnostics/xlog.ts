@@ -1,8 +1,9 @@
 // import { Disposable, IDisposable } from '../base/disposable';
 // import { Logger, Level } from '@types/log4js';
 
+// tslint:disable-next-line:class-name
 export class ___XLog {
-    
+
 }
 
 
@@ -34,7 +35,7 @@ export class ___XLog {
 //     private functionName: string;
 //     private level: Level;
 //     private logger: Logger;
-    
+
 //     private static levels = require('log4js').log4js.levels;
 
 //     static initialize(): boolean {

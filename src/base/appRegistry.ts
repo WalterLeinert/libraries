@@ -16,7 +16,7 @@ export class AppRegistry {
      * 
      * @memberOf AppRegistry
      */
-    public add<T>(key: string, data: T, replace: boolean = false) {
+    public add<T>(key: string, data: T, replace = false) {
         Assert.notNullOrEmpty(key);
         Assert.notNull(data);
 
@@ -76,5 +76,5 @@ export class AppRegistry {
      */
     public static get instance(): AppRegistry {
         return AppRegistry._instance;
-    }    
+    }
 }

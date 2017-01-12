@@ -5,7 +5,7 @@ import { IDisposable } from './disposable.interface';
  * Abstract base class for disposable resources
  */
 export abstract class Disposable implements IDisposable {
-    //static logger: Logger = getLogger("Disposable");
+    // static logger: Logger = getLogger("Disposable");
 
     /** if true, throw Error on double dispose */
     static throwExceptionOnAlreadyDisposed = false;
@@ -13,14 +13,14 @@ export abstract class Disposable implements IDisposable {
     /** if true, log method entry/exit */
     static doMethodTraces = false;
 
-    private disposed = false;;
+    private disposed = false;
 
     /**
      * frees required resources
      */
     dispose() {
-        //NOTE: EnterExitLogger not available due to recursion
-        //using(new EnterExitLogger(Disposable.logger, levels.DEBUG, 'dispose'), (log) => {
+        // NOTE: EnterExitLogger not available due to recursion
+        // using(new EnterExitLogger(Disposable.logger, levels.DEBUG, 'dispose'), (log) => {
         try {
             if (Disposable.doMethodTraces) {
                 console.log('>> dispose');
@@ -43,7 +43,7 @@ export abstract class Disposable implements IDisposable {
             }
             this.disposed = true;
         }
-        //});
+        // });
     }
 
     /**

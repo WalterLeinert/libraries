@@ -13,8 +13,8 @@ import { ColumnTypeUndefinedError } from '../error/columnTypeUndefinedError';
  */
 export function Column(options?: ColumnOptions) {
     return function (target: any, propertyName: string) {
-    
-        let propertyType: Function = (Reflect as any).getMetadata("design:type", target, propertyName);
+
+        let propertyType: Function = (Reflect as any).getMetadata('design:type', target, propertyName);
 
         //
         // TODO: Workaround: da der Propertytype bei Date als Object und nicht als Date geliefert wird,
@@ -28,7 +28,7 @@ export function Column(options?: ColumnOptions) {
         }
 
 
-        var reflectedType = ColumnTypes.typeToString(propertyType);
+        let reflectedType = ColumnTypes.typeToString(propertyType);
         // console.log(`${propertyName} reflectedType: ${reflectedType}`);
 
         let type = ColumnTypes.determineTypeFromFunction(propertyType);
@@ -52,7 +52,7 @@ export function Column(options?: ColumnOptions) {
         if (!options.displayName) {
             options.displayName = propertyName;
         }
- 
+
         MetadataStorage.instance.addColumnMetadata(new ColumnMetadata(target.constructor, propertyName, reflectedType, options));
-    }
+    };
 }

@@ -1,8 +1,8 @@
 /**
  * All data types that column can be.
  */
-export type ColumnType = "string"|"text"|"number"|"integer"|"int"|"smallint"|"bigint"|"float"|"double"|
-                         "decimal"|"date"|"time"|"datetime"|"boolean"|"json"|"simple_array";
+export type ColumnType = 'string' | 'text' | 'number' | 'integer' | 'int' | 'smallint' | 'bigint' | 'float' | 'double' |
+    'decimal' | 'date' | 'time' | 'datetime' | 'boolean' | 'json' | 'simple_array';
 
 /**
  * All data types that column can be.
@@ -12,89 +12,89 @@ export class ColumnTypes {
     /**
      * SQL VARCHAR type. Your class's property type should be a "string".
      */
-    static STRING: ColumnType = "string";
+    static STRING: ColumnType = 'string';
 
     /**
      * SQL CLOB type. Your class's property type should be a "string".
      */
-    static TEXT: ColumnType = "text";
+    static TEXT: ColumnType = 'text';
 
     /**
      * SQL FLOAT type. Your class's property type should be a "number".
      */
-    static NUMBER: ColumnType = "number";
+    static NUMBER: ColumnType = 'number';
 
     /**
      * SQL INT type. Your class's property type should be a "number".
      */
-    static INTEGER: ColumnType = "integer";
+    static INTEGER: ColumnType = 'integer';
 
     /**
      * SQL INT type. Your class's property type should be a "number".
      */
-    static INT: ColumnType = "int";
+    static INT: ColumnType = 'int';
 
     /**
      * SQL SMALLINT type. Your class's property type should be a "number".
      */
-    static SMALLINT: ColumnType = "smallint";
+    static SMALLINT: ColumnType = 'smallint';
 
     /**
      * SQL BIGINT type. Your class's property type should be a "number".
      */
-    static BIGINT: ColumnType = "bigint";
+    static BIGINT: ColumnType = 'bigint';
 
     /**
      * SQL FLOAT type. Your class's property type should be a "number".
      */
-    static FLOAT: ColumnType = "float";
+    static FLOAT: ColumnType = 'float';
 
     /**
      * SQL FLOAT type. Your class's property type should be a "number".
      */
-    static DOUBLE: ColumnType = "double";
+    static DOUBLE: ColumnType = 'double';
 
     /**
      * SQL DECIMAL type. Your class's property type should be a "string".
      */
-    static DECIMAL: ColumnType = "decimal";
+    static DECIMAL: ColumnType = 'decimal';
 
     /**
      * SQL DATETIME type. Your class's property type should be a "Date" object.
      */
-    static DATE: ColumnType = "date";
+    static DATE: ColumnType = 'date';
 
     /**
      * SQL TIME type. Your class's property type should be a "Date" object.
      */
-    static TIME: ColumnType = "time";
+    static TIME: ColumnType = 'time';
 
     /**
      * SQL DATETIME/TIMESTAMP type. Your class's property type should be a "Date" object.
      */
-    static DATETIME: ColumnType = "datetime";
+    static DATETIME: ColumnType = 'datetime';
 
     /**
      * SQL BOOLEAN type. Your class's property type should be a "boolean".
      */
-    static BOOLEAN: ColumnType = "boolean";
+    static BOOLEAN: ColumnType = 'boolean';
 
     /**
      * SQL CLOB type. Your class's property type should be any Object.
      */
-    static JSON: ColumnType = "json";
+    static JSON: ColumnType = 'json';
 
     /**
      * SQL CLOB type. Your class's property type should be array of string. Note: value in this column should not contain
      * a comma (",") since this symbol is used to create a string from the array, using .join(",") operator.
      */
-    static SIMPLE_ARRAY: ColumnType = "simple_array";
+    static SIMPLE_ARRAY: ColumnType = 'simple_array';
 
     /**
      * Checks if given type in a string format is supported by ORM.
      */
     static isTypeSupported(type: string) {
-        return this.supportedTypes.indexOf(<ColumnType> type) !== -1;
+        return this.supportedTypes.indexOf(<ColumnType>type) !== -1;
     }
 
     /**
@@ -131,15 +131,15 @@ export class ColumnTypes {
         } else if (type instanceof Function) {
             const typeName = (<any>type).name.toLowerCase();
             switch (typeName) {
-                case "number":
+                case 'number':
                     return ColumnTypes.NUMBER;
-                case "boolean":
+                case 'boolean':
                     return ColumnTypes.BOOLEAN;
-                case "string":
+                case 'string':
                     return ColumnTypes.STRING;
-                case "date":
+                case 'date':
                     return ColumnTypes.DATETIME;
-                case "object":
+                case 'object':
                     return ColumnTypes.JSON;
             }
 
@@ -159,13 +159,13 @@ export class ColumnTypes {
      * Checks if column type is numeric.
      */
     static isNumeric(type: ColumnType) {
-        return  type === ColumnTypes.NUMBER ||
-                type === ColumnTypes.INT ||
-                type === ColumnTypes.INTEGER ||
-                type === ColumnTypes.BIGINT ||
-                type === ColumnTypes.SMALLINT ||
-                type === ColumnTypes.DOUBLE ||
-                type === ColumnTypes.FLOAT;
+        return type === ColumnTypes.NUMBER ||
+            type === ColumnTypes.INT ||
+            type === ColumnTypes.INTEGER ||
+            type === ColumnTypes.BIGINT ||
+            type === ColumnTypes.SMALLINT ||
+            type === ColumnTypes.DOUBLE ||
+            type === ColumnTypes.FLOAT;
     }
 
 }

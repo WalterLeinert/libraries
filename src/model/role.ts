@@ -20,10 +20,25 @@ export enum UserRoleId {
  */
 @Table({ name: 'role' })
 export class Role implements IRole {
-  private static roleIdMap: { [id: number]: boolean } = {};
 
+  /**
+  * der Key für den Zugriff über @see{AppRegistry}
+  */
+  public static readonly ROLE_CONFIG_KEY = 'IRole';
+
+  private static roleIdMap: { [id: number]: boolean } = {};
   private static ___initRole: boolean = Role.initialize();
-  
+
+
+  @Column({ name: 'role_id', primary: true, generated: true })
+  public id: number;
+
+  @Column({ name: 'role_name' })
+  public name: string;
+
+  @Column({ name: 'role_description' })
+  public description: string;
+
   static initialize(): boolean {
     EnumHelper.getValues(UserRoleId).map((e) => {
       Role.roleIdMap[e] = true;
@@ -42,19 +57,6 @@ export class Role implements IRole {
   }
 
 
-  /**
-  * der Key für den Zugriff über @see{AppRegistry}
-  */
-  public static readonly ROLE_CONFIG_KEY = 'IRole';
-
-  @Column({ name: 'role_id', primary: true, generated: true })
-  public id: number;
-
-  @Column({ name: 'role_name' })
-  public name: string;
-
-  @Column({ name: 'role_description' })
-  public description: string;
 }
 
 /**

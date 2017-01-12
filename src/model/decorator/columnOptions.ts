@@ -1,4 +1,4 @@
-import { ColumnType } from "../metadata/columnTypes";
+import { ColumnType } from '../metadata/columnTypes';
 
 export interface ColumnOptions {
 

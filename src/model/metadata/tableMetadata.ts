@@ -72,7 +72,7 @@ export class TableMetadata {
      * 
      * @memberOf TableMetadata
      */
-    public createModelInstance<T>(json: any, mapColumns: boolean = true): T {
+    public createModelInstance<T>(json: any, mapColumns = true): T {
         let instance = this.createEntity();
 
         // alle Properties der Row über Reflection ermitteln        
@@ -83,9 +83,9 @@ export class TableMetadata {
             let colMetadata = null;
 
             if (mapColumns) {
-                colMetadata = this.getColumnMetadataByDbCol(propName.toString());    
+                colMetadata = this.getColumnMetadataByDbCol(propName.toString());
             } else {
-                colMetadata = this.getColumnMetadataByProperty(propName.toString());                
+                colMetadata = this.getColumnMetadataByProperty(propName.toString());
             }
             Assert.notNull(colMetadata);
 
@@ -147,7 +147,7 @@ export class TableMetadata {
         return this._primaryKeyColumn;
     }
 
-    
+
   /**
    * Registriert den zugehörigen Service (Class/Constructor Function)
    */

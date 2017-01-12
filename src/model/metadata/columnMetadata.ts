@@ -38,7 +38,7 @@ export class ColumnMetadata {
             case ColumnTypes.DATE:
                 if (value instanceof Date) {
                     rval = value;
-                } else if (typeof value === "string") {
+                } else if (typeof value === 'string') {
                     rval = new Date(value);
                 } else {
                     throw new Error(`Column ${this.propertyName}: Konvertierung von Datumswert ${value} nicht möglich.`);
@@ -68,19 +68,22 @@ export class ColumnMetadata {
                 return value === true ? 1 : 0;
 
             case ColumnTypes.DATE:
-                if (moment(value).isValid())
-                    return moment(value).format("YYYY-MM-DD");
-                else return "0000-00-00";
+                if (moment(value).isValid()) {
+                    return moment(value).format('YYYY-MM-DD');
+                }
+                return '0000-00-00';
 
             case ColumnTypes.TIME:
-                if (moment(value).isValid())
-                    return moment(value).format("HH:mm:ss");
-                else return "00:00:00";
+                if (moment(value).isValid()) {
+                    return moment(value).format('HH:mm:ss');
+                }
+                return '00:00:00';
 
             case ColumnTypes.DATETIME:
-                if (moment(value).isValid())
-                    return moment(value).format("YYYY-MM-DD HH:mm:ss");
-                else return "0000-00-00 00:00:00";
+                if (moment(value).isValid()) {
+                    return moment(value).format('YYYY-MM-DD HH:mm:ss');
+                }
+                return '0000-00-00 00:00:00';
 
             case ColumnTypes.JSON:
                 return JSON.stringify(value);

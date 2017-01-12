@@ -11,7 +11,7 @@ export class JsonReader {
         } catch (err) {
             throw new Error(`Die Json-Konfiguration ${jsonPath} ist nicht lesbar oder existiert nicht.`);
         }
-        
+
         try {
             let data = fs.readFileSync(jsonPath);
             return <T>JSON.parse(data.toString());
@@ -30,7 +30,7 @@ export class JsonReader {
                 let config = <T>JSON.parse(data.toString());
                 cb(null, config);
             } catch (err) {
-                console.error('Die Json-Konfiguration ${jsonPath} ist kein gültiges JSON-Format.')
+                console.error('Die Json-Konfiguration ${jsonPath} ist kein gültiges JSON-Format.');
                 cb(err, null);
             }
         });

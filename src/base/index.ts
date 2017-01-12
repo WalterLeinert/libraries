@@ -1,4 +1,5 @@
 export * from './activator';
+export * from './appConfig';
 export * from './appRegistry';
 export * from './constants';
 export * from './ctor';

@@ -1,5 +1,5 @@
 export class ColumnTypeUndefinedError extends Error {
-    name = "ColumnTypeUndefinedError";
+    name = 'ColumnTypeUndefinedError';
 
     constructor(object: Object, propertyName: string) {
         super();

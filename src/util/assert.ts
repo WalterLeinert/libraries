@@ -15,7 +15,7 @@ export class AssertionError extends Error {
      * @memberOf AssertionError
      */
     constructor(message?: string) {
-        super(message)
+        super(message);
     }
 
 }
@@ -31,7 +31,7 @@ export class AssertionError extends Error {
 export class Assert {
     public static ok(condition: boolean, message?: string) {
         if (!condition) {
-            throw new AssertionError("condition not met" + (message ? ': ' + message : ''));
+            throw new AssertionError('condition not met' + (message ? ': ' + message : ''));
         }
     }
 
@@ -47,7 +47,7 @@ export class Assert {
      */
     public static that(condition: boolean, message?: string) {
         if (!condition) {
-            throw new AssertionError("condition not met" + (message ? ': ' + message : ''));
+            throw new AssertionError('condition not met' + (message ? ': ' + message : ''));
         }
     }
 
@@ -63,7 +63,7 @@ export class Assert {
      * @memberOf Assert
      */
     public static equal<T>(value1: T, value2: T, message?: string) {
-        if (value1 != value2) {
+        if (value1 !== value2) {
             throw new AssertionError(`value1 ${value1} not equal ${value1}` + (message ? ': ' + message : ''));
         }
     }

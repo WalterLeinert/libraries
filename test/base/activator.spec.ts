@@ -21,13 +21,13 @@ class Test2 {
 class ActivatorTest {
 
     @test 'should create instance of class Test'() {
-        let expectedTest = new Test("hugo", 4711);
+        let expectedTest = new Test('hugo', 4711);
         return expect(Activator.createInstance<Test>(Test, expectedTest.name, expectedTest.id)).to.be.eql(expectedTest);
     }
 
 
     @test 'should create instance of class Test: 2nd parameter missing'() {
-        let expectedTest = new Test("hugo", undefined);
+        let expectedTest = new Test('hugo', undefined);
         return expect(Activator.createInstance<Test>(Test, expectedTest.name)).to.be.eql(expectedTest);
     }
 

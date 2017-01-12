@@ -31,10 +31,11 @@ export class MetadataStorage {
             let colMetadata: ColumnMetadata[] = this.tableColumnDict[targetName];
 
             colMetadata.forEach(item => {
-                metadata.add(item);            
-            })
+                metadata.add(item);
+            });
 
             if (!metadata.primaryKeyColumn) {
+                // tslint:disable-next-line:no-console
                 console.info(`Table ${metadata.options.name}: no primary key column`);
             }
 
@@ -59,7 +60,7 @@ export class MetadataStorage {
             colMetadata = [];
             this.tableColumnDict[targetName] = colMetadata;
         }
-        colMetadata.push(metadata)
+        colMetadata.push(metadata);
     }
 
 
@@ -85,14 +86,16 @@ export class MetadataStorage {
 
     public dump() {
         for (let name in this.tableDict) {
-            let table = this.tableDict[name];
+            if (name) {
+                let table = this.tableDict[name];
 
-            console.log();
-            console.log(`${table.options.name}, ${table.target}`);
+                console.log();
+                console.log(`${table.options.name}, ${table.target}`);
 
-            table.columnMetadata.forEach(col => {
-                console.log(`  ${col.propertyName}/${col.options.name}: ${col.propertyType}`);
-            })
+                table.columnMetadata.forEach(col => {
+                    console.log(`  ${col.propertyName}/${col.options.name}: ${col.propertyType}`);
+                });
+            }
         }
     }
 

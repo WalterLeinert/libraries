@@ -4,11 +4,11 @@ export class EnumHelper {
     }
 
     static getNames(e: any) {
-        return EnumHelper.getObjValues(e).filter(v => typeof v === "string") as string[];
+        return EnumHelper.getObjValues(e).filter(v => typeof v === 'string') as string[];
     }
 
     static getValues<T extends number>(e: any) {
-        return EnumHelper.getObjValues(e).filter(v => typeof v === "number") as T[];
+        return EnumHelper.getObjValues(e).filter(v => typeof v === 'number') as T[];
     }
 
     private static getObjValues(e: any): (number | string)[] {

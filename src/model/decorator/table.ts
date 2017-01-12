@@ -24,5 +24,5 @@ export function Table(options?: TableOptions) {
     }
 
     MetadataStorage.instance.addTableMetadata(new TableMetadata(target, options));
-  }
+  };
 }

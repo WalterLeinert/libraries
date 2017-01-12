@@ -36,7 +36,7 @@
             "type": "node",
             "request": "attach",
             "name": "An den Prozess anfügen",
-            "port": 5858,
+            "port": 3000,
             "outFiles": [],
             "sourceMaps": true
         }

@@ -49,6 +49,7 @@ export class LoggingConfiguration {
         }
 
         if (fromEnvironment('LOG4JS_DEBUG', '-not-set-') !== '-not-set-') {
+            // tslint:disable-next-line:no-console
             console.info(`options = ${JSON.stringify(options)}`);
         }
 
@@ -58,7 +59,7 @@ export class LoggingConfiguration {
         if (!options.relativePath) {
             options.relativePath = LoggingConfiguration.DEFAULT_RELATIVE_PATH;
         }
-       
+
         let sb = new StringBuilder(options.filename);
         if (!StringUtil.isNullOrEmpty(options.systemMode)) {
             sb.append('.');
