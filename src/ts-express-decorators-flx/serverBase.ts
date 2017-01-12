@@ -5,7 +5,7 @@ import { ServerLoader } from 'ts-express-decorators';
 import { Forbidden } from 'ts-httpexceptions';
 
 // Fluxgate
-import { Assert, fromEnvironment, LoggingConfiguration, StringBuilder } from '@fluxgate/common';
+import { AppConfig, IAppConfig, Assert, fromEnvironment, LoggingConfiguration, StringBuilder, JsonReader } from '@fluxgate/common';
 
 // lokale Komponenten
 import { Messages } from '../resources/messages';
@@ -32,6 +32,11 @@ if (systemMode) {
     console.warn(`log4js: no systemMode defined -> not reading configuration`);
 }
 // -------------------------- logging -------------------------------
+
+
+let appConfigPath = path.join(process.cwd(), 'app/config/config.json');
+let appConfig = JsonReader.readJsonSync<IAppConfig>(appConfigPath);
+AppConfig.register(appConfig);
 
 
 /**
@@ -213,6 +218,14 @@ export abstract class ServerBase extends ServerLoader {
         authorization?: any): boolean {
         return using(new XLog(ServerBase.logger, levels.DEBUG,
             `isAuthenticated: authorization = ${JSON.stringify(authorization)}`), (log) => {
+
+                //
+                // TODO: AppConfig.config.userCredentials auswerten
+                //
+                if (AppConfig.config.mode === 'development' && AppConfig.config.userCredentials) {
+                    return true;
+                }
+
                 // Just use passport strategy method to know if the user is Authenticated :)
                 return request.isAuthenticated();
             });
