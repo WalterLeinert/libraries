@@ -12,7 +12,7 @@ import { XLog, using } from 'enter-exit-logger';
 
 
 export class SchemaExtractor {
-    static logger = getLogger("Extractor");
+    static logger = getLogger('Extractor');
 
     constructor(private knex: Knex) {
     }
@@ -23,7 +23,7 @@ export class SchemaExtractor {
 
         return using(new XLog(SchemaExtractor.logger, levels.INFO, 'extractData'), (log) => {
             let tableInfos: { [name: string]: TableInfo; } = {};
-            //let x: Map<string, TableInfo> = new Map;
+            // let x: Map<string, TableInfo> = new Map;
 
             return new Promise((resolve, reject) => {
 
@@ -43,7 +43,7 @@ export class SchemaExtractor {
                     this.knex.destroy();
 
                     let columnsSchema = <any>res[0];
-                    let constraintsSchema = <any>res[1];    //TODO: unused
+                    let constraintsSchema = <any>res[1];    // TODO: unused
 
                     // $log.debug(data);
 
@@ -64,11 +64,13 @@ export class SchemaExtractor {
                             columnSchema.EXTRA === 'auto_increment');
 
                         tableInfo.addColumn(colInfo);
-                        log.debug("Column: ", colInfo);
+                        log.debug('Column: ', colInfo);
                     }
 
                     for (let table in tableInfos) {
-                        rval.push(tableInfos[table]);
+                        if (table) {
+                            rval.push(tableInfos[table]);
+                        }
                     }
 
                     resolve(rval);

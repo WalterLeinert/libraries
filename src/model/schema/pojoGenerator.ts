@@ -33,7 +33,7 @@ export class PojoGenerator extends GeneratorBase {
 
                 fs.open(filePath, 'w', (err, fd) => {
                     if (err) {
-                        if (err.code === "EEXIST") {
+                        if (err.code === 'EEXIST') {
                             log.info('overwriting file %s', filePath);
                         } else {
                             throw err;
@@ -50,9 +50,9 @@ export class PojoGenerator extends GeneratorBase {
                     }
                     this.dumpClass(fd, tableInfo, dumpInterface);
 
-                    fs.close(fd, (err) => {
-                        if (err) {
-                            throw err;
+                    fs.close(fd, (exc) => {
+                        if (exc) {
+                            throw exc;
                         }
                     });
                 });
@@ -76,7 +76,7 @@ export class PojoGenerator extends GeneratorBase {
 
             fs.open(filePath, 'w', (err, fd) => {
                 if (err) {
-                    if (err.code === "EEXIST") {
+                    if (err.code === 'EEXIST') {
                         log.info('overwriting file %s', filePath);
                     } else {
                         throw err;
@@ -88,7 +88,7 @@ export class PojoGenerator extends GeneratorBase {
                     GeneratorBase.writeLineSync(fd, `export * from './${tableName}';`);
                 }
             });
-        })
+        });
     }
 
     public generateFile(fileName: string, tableInfos: TableInfo[]) {
@@ -109,11 +109,11 @@ export class PojoGenerator extends GeneratorBase {
         GeneratorBase.writeCommentline(fd);
 
         GeneratorBase.writeLineSync(fd);
-        GeneratorBase.writeLineSync(fd, "import { Table, Column } from '@fluxgate/common';");
+        GeneratorBase.writeLineSync(fd, 'import { Table, Column } from \'@fluxgate/common\';');
         GeneratorBase.writeLineSync(fd);
 
-        //GeneratorBase.writeLineSync(fd, "import { ITableInfo, TableInfo } from './tableInfo';");
-        //GeneratorBase.writeLineSync(fd);
+        // GeneratorBase.writeLineSync(fd, "import { ITableInfo, TableInfo } from './tableInfo';");
+        // GeneratorBase.writeLineSync(fd);
     }
 
     /**
@@ -137,7 +137,7 @@ export class PojoGenerator extends GeneratorBase {
                 sb.append(colName + (colInfo.isNullable ? '?' : ''));
                 sb.append(': ');
                 sb.append(GeneratorBase.mapDataType(colInfo.type));
-                sb.append(';')
+                sb.append(';');
 
                 if (colInfo.isPrimaryKey || colInfo.hasAutoIncrement) {
                     sb.append('    // ');
@@ -179,12 +179,13 @@ export class PojoGenerator extends GeneratorBase {
             sb.append(`export class ${GeneratorBase.getClassName(info)}`);
 
             if (dumpInterface) {
-                sb.append(` implements ${GeneratorBase.getInterfaceName(info)}`)
+                sb.append(` implements ${GeneratorBase.getInterfaceName(info)}`);
             }
             sb.append(' {');
             GeneratorBase.writeLineSync(fd, sb.toString());
 
-            //GeneratorBase.writeLineSync(fd, `  public static tableInfo = new TableInfo(${GeneratorBase.getClassName(info)}, '${info.name}', '${GeneratorBase.getPrimaryKeyName(info)}');`);
+            // GeneratorBase.writeLineSync(fd, `  public static tableInfo = 
+            //      new TableInfo(${GeneratorBase.getClassName(info)}, '${info.name}', '${GeneratorBase.getPrimaryKeyName(info)}');`);
 
 
             for (let colInfo of info.columns) {
@@ -243,7 +244,7 @@ export class PojoGenerator extends GeneratorBase {
         if (colInfo.hasAutoIncrement) {
             sb.append(`, generated: true`);
         }
-        
+
         switch (colInfo.type) {
             case DataType.Date:
                 sb.append(`, propertyType: 'date'`);

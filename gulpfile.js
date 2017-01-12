@@ -6,7 +6,7 @@ const gulp = require('gulp');
 const del = require('del');
 const gulpSequence = require('gulp-sequence');
 const exec = require('child_process').exec;
-
+const tslint = require("gulp-tslint");
 const typescript = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
@@ -58,6 +58,17 @@ gulp.task('really-clean', ['clean'], function (cb) {
 gulp.task('clean', function () {
     return del(['dist', 'build', 'lib', 'dts']);
 })
+
+
+gulp.task('lint', function (cb) {  
+  gulp.src("src/**/*.ts")
+    .pipe(tslint({
+      configuration: "./tslint.json",
+      formatter: "verbose"
+    }))
+    .pipe(tslint.report())
+})
+
 
 /**
  * kompiliert den Server

@@ -17,16 +17,17 @@ import { XLog, using } from 'enter-exit-logger';
 // Logging konfigurieren ...
 let systemMode = fromEnvironment('NODE_ENV', 'development');
 
-if (systemMode) {   
+if (systemMode) {
     let configPath = LoggingConfiguration.getConfigurationPath(systemMode);
 
     if (fs.exists(configPath)) {
+        // tslint:disable-next-line:no-console
         console.info(`log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)}, configPath = ${configPath}`);
         configure(configPath, { reloadSecs: 10 });
     } else {
         console.warn(`log4js: cannot read configuration: ${configPath}`);
-    } 
-    
+    }
+
 } else {
     console.warn(`log4js: no systemMode defined -> not reading configuration`);
 }
@@ -86,7 +87,7 @@ export abstract class ServerBase extends ServerLoader {
         controllers: 'controllers/**/*.js',
         port: 8000,
         httpsPort: 8080
-    }
+    };
 
     /**
      * Initialisierung und Start
@@ -124,7 +125,7 @@ export abstract class ServerBase extends ServerLoader {
                     .catch(err => {
                         log.error(err);
                         reject(err);
-                    })
+                    });
             });
         });
     }

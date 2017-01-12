@@ -28,7 +28,7 @@ export class KnexService {
             //
             // setup knex
             //
-            let config = appRegistryService.get(KnexService.KNEX_CONFIG_KEY);          
+            let config = appRegistryService.get(KnexService.KNEX_CONFIG_KEY);
             this._knex = Knex(config);
         });
     }

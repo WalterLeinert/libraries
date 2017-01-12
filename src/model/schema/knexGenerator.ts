@@ -32,7 +32,7 @@ export class KnexGenerator extends GeneratorBase {
 
                 fs.open(filePath, 'w', (err, fd) => {
                     if (err) {
-                        if (err.code === "EEXIST") {
+                        if (err.code === 'EEXIST') {
                             log.info('overwriting file %s', filePath);
                         } else {
                             throw err;
@@ -42,21 +42,22 @@ export class KnexGenerator extends GeneratorBase {
                     this.dumpHeader(fd);
                     this.dumpCreateTable(fd, tableInfo);
 
-                    fs.close(fd, (err) => {
-                        if (err) {
-                            throw err;
+                    fs.close(fd, (exc) => {
+                        if (exc) {
+                            throw exc;
                         }
                     });
                 });
             }
         });
     }
+
     public generateFile(fileName: string, tableInfos: TableInfo[]) {
     }
 
     private dumpCreateTable(fd, tableInfo: TableInfo) {
         using(new XLog(KnexGenerator.logger, levels.DEBUG, 'dumpCreateTable', 'table = ', tableInfo.name), (log) => {
-            
+
              //
             // up function: create table
             //
@@ -68,7 +69,7 @@ export class KnexGenerator extends GeneratorBase {
             GeneratorBase.writeLineSync(fd, `    .createTable('${tableInfo.name}', function(table) {`);
 
             for (let colInfo of tableInfo.columns) {
-                //WL: nur für pks
+                // WL: nur für pks
 
                 let f = false;
                 if (colInfo.isPrimaryKey) {

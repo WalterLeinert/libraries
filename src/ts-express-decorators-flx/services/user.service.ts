@@ -82,7 +82,7 @@ export class UserService extends BaseService<IUser, number> {
      */
     public create(user: IUser): Promise<IUser> {
         Assert.that(Role.isValidRole(user.role));
-        
+
         user.password_salt = shortid.gen();
 
         return new Promise<IUser>((resolve, reject) => {
