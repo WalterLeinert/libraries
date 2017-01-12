@@ -4,7 +4,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { BaseComponent} from '../../../common/base/base.component'
+import { BaseComponent} from '../../../common/base/base.component';
 import { PassportService } from './../passport.service';
 
 

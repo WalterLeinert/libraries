@@ -19,7 +19,7 @@ export class NavigationService {
       this._navigationPath = AppRegistry.instance.get<string>(NavigationService.NAVIGATION_PATH_KEY);
       if (! this._navigationPath) {
           throw new Error(`Key ${NavigationService.NAVIGATION_PATH_KEY} not found in AppRegistry.`);
-      }  
+      }
     }
 
     public get navigationPath(): string {

@@ -5,5 +5,5 @@ import { IServiceCrud } from './serviceCrud.interface';
 /**
  * Interface für alle Services
  */
-export interface IService extends IServiceCrud, IServiceBase {    
+export interface IService extends IServiceCrud, IServiceBase {
 }

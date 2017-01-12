@@ -5,7 +5,7 @@
  * generisch in Zusammenhang mit Reflection un Metadaten verwenden kann.
  */
 export interface IServiceCrud {
-    
+
     /**
      * Create the entity {item} and return {Observable<T>}
      * 
@@ -15,12 +15,12 @@ export interface IServiceCrud {
      */
     create(item: any): any;
 
-     /**
-     * Find all entities of type T and return {Observable<T[]>}.
-     * 
-     * @returns {Observable<T[]>}
-     * 
-     */
+    /**
+    * Find all entities of type T and return {Observable<T[]>}.
+    * 
+    * @returns {Observable<T[]>}
+    * 
+    */
     find(): any;
 
     /**
@@ -39,9 +39,9 @@ export interface IServiceCrud {
      * @returns {Observable<T>}
      * 
      */
-    update(item: any):any;
+    update(item: any): any;
 
-    
+
     /**
      * Delete the entity with the given id and return {Observable<T>}
      * 

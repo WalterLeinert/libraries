@@ -22,7 +22,7 @@ export class ProxyService implements IServiceCrud, IServiceBase {
     public proxyService(service: any) {
         this.service = service;
     }
-    
+
     public create(item: any): any {
         return this.service.create(item);
     }

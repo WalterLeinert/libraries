@@ -259,7 +259,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
         return this._topic;
     }
 
-    
+
     /**
      * Liefert den Topicpfad (z.B. '/artikel' bei Topic 'artikel').
      * 
@@ -287,7 +287,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
      */
     public getEntityId(item: T): TId {
         if (!this._tableMetadata.primaryKeyColumn) {
-            throw new Error(`Table ${this._tableMetadata.options.name}: no primary key column`);            
+            throw new Error(`Table ${this._tableMetadata.options.name}: no primary key column`);
         }
         return item[this._tableMetadata.primaryKeyColumn.propertyName];
     }

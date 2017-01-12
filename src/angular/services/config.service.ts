@@ -67,8 +67,9 @@ export class ConfigService {
 
   constructor() {
     // using(new XLog(ConfigService.logger, levels.INFO, 'ctor'), (log) => {
-      let key = ConfigService.APP_CONFIG_KEY;   
+      let key = ConfigService.APP_CONFIG_KEY;
       this._config = AppRegistry.instance.get<IAppConfig>(key);
+      // tslint:disable-next-line:no-console
       console.info(`configured: key = ${key} -> ${JSON.stringify(this._config)}`);
     // });
   }

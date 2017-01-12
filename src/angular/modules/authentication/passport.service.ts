@@ -15,7 +15,7 @@ import { ConfigService } from '../../services/config.service';
 
 
 @Injectable()
-export class PassportService implements IServiceBase{
+export class PassportService implements IServiceBase {
     public static get LOGIN() { return '/login'; }
     public static get SIGNUP() { return '/signup'; }
     public static get LOGOFF() { return '/logout'; }

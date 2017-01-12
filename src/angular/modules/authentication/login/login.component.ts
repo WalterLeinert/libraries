@@ -22,11 +22,13 @@ import { NavigationService } from '../navigation.service';
       <form>
         <div class="form-group">
           <label [flxHighlight] for="username">Name</label>
-          <input flxAutofocus type="text" class="form-control" id="username" required [(ngModel)]="username" name="username" placeholder="Benutzername">
+          <input flxAutofocus type="text" class="form-control" id="username" required 
+            [(ngModel)]="username" name="username" placeholder="Benutzername">
         </div>
         <div class="form-group">
           <label for="password">Password:</label>
-          <!--     <input flxAutofocus type="password" class="form-control" id="password" [(ngModel)]="password" name="password" placeholder="Passwort"> -->
+          <!--     <input flxAutofocus type="password" class="form-control" id="password" 
+            [(ngModel)]="password" name="password" placeholder="Passwort"> -->
           <input type="password" class="form-control" id="password" required [(ngModel)]="password" name="password" placeholder="Passwort">
         </div>
         <button type="submit" class="btn btn-default" (click)='login()'>Anmelden</button>

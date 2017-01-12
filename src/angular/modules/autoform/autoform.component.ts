@@ -6,13 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 // PrimeNG
-import { ButtonModule, SharedModule, ConfirmDialogModule } from 'primeng/primeng'
+import { ButtonModule, SharedModule, ConfirmDialogModule } from 'primeng/primeng';
 import { MessagesModule, ConfirmationService } from 'primeng/primeng';
 
 import { Subscription } from 'rxjs/Subscription';
 
 // Fluxgate
-import { TableMetadata, ColumnMetadata, ColumnTypes, Constants, Assert } from '@fluxgate/common'
+import { TableMetadata, ColumnMetadata, ColumnTypes, Constants, Assert } from '@fluxgate/common';
 
 import { MetadataService } from '../../services';
 import { BaseComponent } from '../../common/base';

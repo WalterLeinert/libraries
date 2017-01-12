@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // Fluxgate
-import { Constants } from '@fluxgate/common'
+import { Constants } from '@fluxgate/common';
 
 import { AutoformConstants } from './autoformConstants';
 import { AutoformComponent } from './autoform.component';

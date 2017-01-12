@@ -22,7 +22,8 @@ import { IServiceBase } from '../../services';
   styleUrls: ['./base.component.css']
 })*/
 export abstract class BaseComponent<TService extends IServiceBase> implements OnInit, OnDestroy {
-  private messages: Message[] = [];
+  private _messages: Message[] = [];
+
 
   /**
    * Creates an instance of BaseComponent.
@@ -54,6 +55,12 @@ export abstract class BaseComponent<TService extends IServiceBase> implements On
   public ngOnDestroy() {
   }
 
+  /**
+   * Liefert die aktuellen Meldungen
+   */
+  public get messages(): Message[] {
+    return this._messages;
+  }
 
   /**
    * löscht alle Messages
@@ -63,7 +70,7 @@ export abstract class BaseComponent<TService extends IServiceBase> implements On
    * @memberOf BaseComponent
    */
   protected clearMessages() {
-    this.messages = [];
+    this._messages = [];
   }
 
   /**
@@ -102,7 +109,7 @@ export abstract class BaseComponent<TService extends IServiceBase> implements On
    */
   protected addMessage(message: Message) {
     let doAddMessage = true;
-    this.messages.forEach(msg => {
+    this._messages.forEach(msg => {
       if (msg.detail === message.detail && msg.severity === message.severity && msg.summary === message.summary) {
         doAddMessage = false;
         return;
@@ -110,7 +117,7 @@ export abstract class BaseComponent<TService extends IServiceBase> implements On
     });
 
     if (doAddMessage) {
-      this.messages.push(message);
+      this._messages.push(message);
     }
   }
 
