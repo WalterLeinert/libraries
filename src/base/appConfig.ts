@@ -28,6 +28,10 @@ export type SystemMode =
   'production'
   ;
 
+export interface IUserCredentials {
+  username: string;
+  password: string;
+}
 
 /**
  * Interface für Applikationskonfiguration
@@ -52,6 +56,12 @@ export interface IAppConfig {
    * @memberOf IAppConfig
    */
   mode: SystemMode;
+
+  /**
+   * zum Testen mit SystemMode == 'development': ist @see{userCredentials} gesetzt,
+   * wird versucht damit ein automatisches Login durchzuführen.
+   */
+  userCredentials?: IUserCredentials;
 }
 
 
