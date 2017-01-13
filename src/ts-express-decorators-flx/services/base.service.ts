@@ -6,7 +6,7 @@ import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { TableMetadata, ColumnMetadata, IToString, Assert } from '@fluxgate/common';
+import { IQuery, TableMetadata, ColumnMetadata, IToString, Assert } from '@fluxgate/common';
 
 import { MetadataService } from './metadata.service';
 import { KnexService } from './knex.service';
@@ -248,11 +248,11 @@ export abstract class BaseService<T, TId extends IToString>  {
      * 
      * @memberOf ServiceBase
      */
-    public query(
+    public queryKnex(
         query: Knex.QueryBuilder
     ): Promise<T[]> {
 
-        return using(new XLog(BaseService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
+        return using(new XLog(BaseService.logger, levels.INFO, 'queryKnex', `[${this.tableName}]`), (log) => {
 
             return new Promise<T[]>((resolve, reject) => {
                 query
@@ -274,6 +274,19 @@ export abstract class BaseService<T, TId extends IToString>  {
             });
         });
     }
+
+
+    public query(
+        query: IQuery
+    ): Promise<T[]> {
+        return using(new XLog(BaseService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
+            return this.queryKnex(
+                this.fromTable()
+                    .where(query.selector.name, query.selector.operator, query.selector.value)
+            );
+        });
+    }
+
 
 
     protected createDatabaseInstance(entity: T): any {

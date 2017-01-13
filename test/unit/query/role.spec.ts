@@ -31,9 +31,6 @@ class RoleTest extends KnexTest {
     static readonly FIRST_ROLE_ID = 1000;
     static roleService: BaseService<Role, number>;
 
-    constructor() {
-        super();
-    }
 
     static before() {
         using(new XLog(RoleTest.logger, levels.INFO, 'static.before'), (log) => {
@@ -47,7 +44,7 @@ class RoleTest extends KnexTest {
         return using(new XLog(RoleTest.logger, levels.INFO, 'static.after'), (log) => {
 
             // alle Testrollen löschen
-            RoleTest.roleService.query(
+            RoleTest.roleService.queryKnex(
                 RoleTest.roleService.fromTable().where(RoleTest.roleService.idColumnName, '>=', RoleTest.FIRST_ROLE_ID).delete())
                 .then((rowsAffected) => {
                     super.after();
@@ -56,12 +53,16 @@ class RoleTest extends KnexTest {
     }
 
 
+    constructor() {
+        super();
+    }
+
+
     before() {
         using(new XLog(RoleTest.logger, levels.INFO, 'before'), (log) => {
             super.before();
-
             // ok
-        })
+        });
     }
 
 
@@ -78,7 +79,7 @@ class RoleTest extends KnexTest {
 
     @test 'should find 3 roles'() {
         return expect(RoleTest.roleService.find()
-            .then(function (roles) { return roles.length }))
+            .then(function (roles) { return roles.length; }))
             .to.become(3);
     }
 
@@ -89,7 +90,7 @@ class RoleTest extends KnexTest {
 
     @test 'should now find 4 roles'() {
         return expect(RoleTest.roleService.find()
-            .then(function (roles) { return roles.length }))
+            .then(function (roles) { return roles.length; }))
             .to.become(4);
     }
 
@@ -114,21 +115,21 @@ class RoleTest extends KnexTest {
 
     @test 'should now find 5 roles'() {
         return expect(RoleTest.roleService.find()
-            .then(function (roles) { return roles.length }))
+            .then(function (roles) { return roles.length; }))
             .to.become(5);
     }
 
     @test 'should query roles'() {
-        return expect(RoleTest.roleService.query(
+        return expect(RoleTest.roleService.queryKnex(
             RoleTest.roleService.fromTable()
                 .where(RoleTest.roleService.idColumnName, '>=', RoleTest.FIRST_ROLE_ID))
-            .then(function (roles) { return roles.length }))
+            .then(function (roles) { return roles.length; }))
             .to.become(2);
     }
 
 
     @test 'should query roles by name'() {
-        return expect(RoleTest.roleService.query(
+        return expect(RoleTest.roleService.queryKnex(
             RoleTest.roleService.fromTable()
                 .where('role_name', '=', 'admin'))
             .then(function (roles) { return roles.length; }))
@@ -136,7 +137,7 @@ class RoleTest extends KnexTest {
     }
 
     @test 'should query and test role by name'() {
-        return expect(RoleTest.roleService.query(
+        return expect(RoleTest.roleService.queryKnex(
             RoleTest.roleService.fromTable()
                 .where('role_name', '=', 'admin'))
             .then(function (roles) { return roles[0].id; }))
@@ -153,7 +154,7 @@ class RoleTest extends KnexTest {
 
     @test 'should now find 4 roles again'() {
         return expect(RoleTest.roleService.find()
-            .then(function (roles) { return roles.length }))
+            .then(function (roles) { return roles.length; }))
             .to.become(4);
     }
 

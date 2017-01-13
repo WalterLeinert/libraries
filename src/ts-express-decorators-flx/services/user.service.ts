@@ -121,7 +121,7 @@ export class UserService extends BaseService<IUser, number> {
             const message = Messages.WRONG_CREDENTIALS('Benutzername');
 
             return new Promise<IUser>((resolve, reject) => {
-                super.query(
+                super.queryKnex(
                     super.fromTable()
                         .where('username', username))
 
@@ -271,7 +271,7 @@ export class UserService extends BaseService<IUser, number> {
             const message = Messages.WRONG_CREDENTIALS('Email');
 
             return new Promise<IUser>((resolve, reject) => {
-                super.query(
+                super.queryKnex(
                     super.fromTable()
                         .where('email', email)
                 )

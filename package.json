@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/server",
-  "version": "1.5.6",
+  "version": "1.5.8",
   "description": "Fluxgate Server-Library ",
   "main": "dist/bundle.js",
   "typings": "dist/dts/src/index.d.ts",
@@ -43,7 +43,7 @@
     "webpack-fail-plugin": "^1.0.5"
   },
   "dependencies": {
-    "@fluxgate/common": "^1.5.13",
+    "@fluxgate/common": "^1.5.14",
     "enter-exit-logger": "^1.1.0",
     "express": "^4.14.0",
     "js-shortid": "^0.1.1",

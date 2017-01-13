@@ -3,7 +3,7 @@ import { Logger, getLogger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IToString } from '@fluxgate/common';
+import { IQuery, IToString } from '@fluxgate/common';
 
 import { BaseService } from './services/base.service';
 
@@ -96,6 +96,19 @@ export abstract class ControllerBase<T, TId extends IToString> {
         id: TId
     ): Promise<TId> {
         return this.service.delete(id);
+    }
+
+    /**
+     * Führt die Query @param{query} durch und liefert alle Entities vom Typ {T}.
+     * 
+     * @returns {Promise<T[]>}
+     * 
+     * @memberOf ControllerBase
+     */
+    protected queryInternal(
+        query: IQuery
+    ): Promise<T[]> {
+        return this.service.query(query);
     }
 
     /**
