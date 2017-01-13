@@ -1,4 +1,4 @@
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/Observable/ErrorObservable';
@@ -190,11 +190,15 @@ export abstract class Service<T, TId extends IToString> implements IService {
      public query(query: IQuery): Observable<T[]> {
         Assert.notNull(query, 'query');
 
-        return this.http.post(`${this.getUrl()}`, query)
+        let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let options       = new RequestOptions({ headers: headers });           // Create a request option
+
+        return this.http.post(`${this.getUrl()}`, query, options)
             .map((response: Response) => this.deserializeArray(response.json()))
             .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
     }
+
 
     /**
      * Serialisiert das @param{item} für die Übertragung zum Server über das REST-Api.
