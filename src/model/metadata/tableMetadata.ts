@@ -1,3 +1,4 @@
+import { Assert } from './../../util/assert';
 import { Assert } from '../../util/assert';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { TableOptions } from '../decorator/tableOptions';
@@ -138,6 +139,18 @@ export class TableMetadata {
      */
     public getColumnMetadataByDbCol(dbColName: string) {
         return this.dbColMap[dbColName];
+    }
+
+    /**
+     * Liefert den DB-Spaltennamen für den Propertynamen @param{propertyName}
+     */
+    public getDbColumnName(propertyName: string) {
+        Assert.notNullOrEmpty(propertyName);
+
+        let colMetadata = this.propertyMap[propertyName];
+        Assert.notNull(colMetadata, `Propertyname ${propertyName} nicht definiert.`);
+
+        return colMetadata.options.name;
     }
 
     /**
