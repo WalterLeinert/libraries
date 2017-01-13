@@ -7,77 +7,16 @@ import { Injectable } from '@angular/core';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { AppRegistry } from '@fluxgate/common';
-
-
-/**
- * 
- */
-export type SystemMode =
-
-  /**
-   * Entwicklung (lokaler Testserver)
-   */
-  'local' |
-
-  /**
-   * Entwicklung (remote Testserver, ggf. in Docker)
-   */
-  'development' |
-
-  /**
-   * Produktion
-   */
-  'production'
-  ;
-
-
-/**
- * Interface für Applikationskonfiguration
- * 
- * @export
- * @interface IAppConfig
- */
-export interface IAppConfig {
-
-  /**
-   * Basis-Url des Servers (REST-Api)
-   * 
-   * @type {string}
-   * @memberOf IAppConfig
-   */
-  url: string;
-
-  /**
-   * Der Modus, in dem das komplette System läuft (Client + Server)
-   * 
-   * @type {RunMode}
-   * @memberOf IAppConfig
-   */
-  mode: SystemMode;
-}
+import { AppRegistry, IAppConfig, AppConfig } from '@fluxgate/common';
 
 
 @Injectable()
 export class ConfigService {
-  // static logger = getLogger('ConfigService');
-  public static readonly APP_CONFIG_KEY = 'IAppConfig';
-
-  private _config: IAppConfig;
-
-  constructor() {
-    // using(new XLog(ConfigService.logger, levels.INFO, 'ctor'), (log) => {
-      let key = ConfigService.APP_CONFIG_KEY;
-      this._config = AppRegistry.instance.get<IAppConfig>(key);
-      // tslint:disable-next-line:no-console
-      console.info(`configured: key = ${key} -> ${JSON.stringify(this._config)}`);
-    // });
-  }
 
   /**
    * Liefert die Anwendungskonfiguration
    */
   public get config(): IAppConfig {
-    return this._config;
+    return AppConfig.config;
   }
 }
