@@ -9,7 +9,7 @@ import 'rxjs/add/operator/map';
 
 import * as HttpStatusCodes from 'http-status-codes';
 
-import { TableMetadata, IToString } from '@fluxgate/common';
+import { IQuery, TableMetadata, IToString } from '@fluxgate/common';
 import { Constants, Assert, StringBuilder } from '@fluxgate/common';
 
 import { ConfigService } from './config.service';
@@ -175,6 +175,23 @@ export abstract class Service<T, TId extends IToString> implements IService {
 
         return this.http.delete(`${this.getUrl()}/${id}`)
             .map((response: Response) => <T>response.json())
+            .do(data => console.log('result: ' + JSON.stringify(data)))
+            .catch(Service.handleError);
+    }
+
+    /**
+     * Finds all entities for the given query @param{query}
+     * 
+     * @param {IQuery} query
+     * @returns {Observable<T[]>}
+     * 
+     * @memberOf Service
+     */
+     public query(query: IQuery): Observable<T[]> {
+        Assert.notNull(query, 'query');
+
+        return this.http.post(`${this.getUrl()}`, query)
+            .map((response: Response) => this.deserializeArray(response.json()))
             .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
     }
