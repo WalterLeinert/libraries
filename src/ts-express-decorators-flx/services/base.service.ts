@@ -259,7 +259,7 @@ export abstract class BaseService<T, TId extends IToString>  {
                     .then(rows => {
                         if (rows.length <= 0) {
                             log.debug('result: no item found');
-                            resolve(null);
+                            resolve(new Array<T>());
                         } else {
                             let result = this.createModelInstances(rows);
 
@@ -280,9 +280,11 @@ export abstract class BaseService<T, TId extends IToString>  {
         query: IQuery
     ): Promise<T[]> {
         return using(new XLog(BaseService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
+            let dbColumnName = this.metadata.getDbColumnName(query.selector.name);
+
             return this.queryKnex(
                 this.fromTable()
-                    .where(query.selector.name, query.selector.operator, query.selector.value)
+                    .where(dbColumnName, query.selector.operator, query.selector.value)
             );
         });
     }
