@@ -9,7 +9,7 @@ import { IDropdownAdapter } from '../../common/adapter';
 <p-dropdown [options]="dropDownAdapter.data" [(ngModel)]="selectedItem" (onChange)="onSelectionChanged($event)"></p-dropdown>
 <p>Selected Item: {{selectedItem | json}}</p>
   `,
-  styleUrls: ['./drop-down-selector.component.css']
+  styles: []
 })
 export class DropdownSelectorComponent implements OnInit {
   @Input() allowNoSelectionText: string = 'Auswahl';
