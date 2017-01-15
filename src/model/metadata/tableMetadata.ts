@@ -1,4 +1,3 @@
-import { Assert } from './../../util/assert';
 import { Assert } from '../../util/assert';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { TableOptions } from '../decorator/tableOptions';
