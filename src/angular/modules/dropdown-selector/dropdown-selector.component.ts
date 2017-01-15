@@ -6,7 +6,7 @@ import { IDropdownAdapter } from '../../common/adapter';
 @Component({
   selector: 'flx-dropdown-selector',
   template: `
-<p-dropdown [options]="dropDownAdapter.data" [(ngModel)]="selectedItem" (onChange)="onSelectionChanged($event)"></p-dropdown>
+<p-dropdown [options]="dropdownAdapter.data" [(ngModel)]="selectedItem" (onChange)="onSelectionChanged($event)"></p-dropdown>
 <p>Selected Item: {{selectedItem | json}}</p>
   `,
   styles: []
