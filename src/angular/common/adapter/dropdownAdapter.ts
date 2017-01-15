@@ -61,7 +61,7 @@ export abstract class DropdownAdapter<T> implements IDropdownAdapter {
      * Liefert die Liste der anzubindenden Werte 
      */
     protected getItems(): T[] {
-        return this.listAdapter.getItems();;
+        return this.listAdapter.getItems();
     }
 
     /**
