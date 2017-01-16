@@ -23,11 +23,14 @@ export class PrimeNgDropdownAdapter<T> extends DropdownAdapter<T> {
             });
         }
 
-        for (const item of this.getItems()) {
-            this.data.push({
-                label: this.getText(item),
-                value: this.getValue(item)
+        this.getItems()
+            .subscribe(items => {
+                for (const item of items) {
+                    this.data.push({
+                        label: this.getText(item),
+                        value: this.getValue(item)
+                    });
+                }
             });
-        }
     }
 }

@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/Observable';
 
 /**
  * Interface für Adapter zur Anbindung von Wertelisten an DropDown-Controls 
@@ -11,5 +12,5 @@ export interface IDropdownAdapter {
     /**
      * Liefert den Wert der ursprünglich angebundenen Werteliste für den Index @param{index}.
      */
-    getValueAt(index: number): any;
+    getValueAt(index: number): Observable<any>;
 }

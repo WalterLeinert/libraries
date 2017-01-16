@@ -50,3 +50,4 @@ symbols.json
 /lib/
 /dts/
 /dist/
+/build/

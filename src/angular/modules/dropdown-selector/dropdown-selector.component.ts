@@ -24,7 +24,8 @@ export class DropdownSelectorComponent implements OnInit {
 
   ngOnInit() {
     if (this.selectedIndex >= 0 && this.selectedIndex < this.dropdownAdapter.data.length) {
-      this.selectedItem = this.dropdownAdapter.getValueAt(this.selectedIndex);
+      this.dropdownAdapter.getValueAt(this.selectedIndex)
+        .subscribe(item => this.selectedItem = item);
     }
   }
 
