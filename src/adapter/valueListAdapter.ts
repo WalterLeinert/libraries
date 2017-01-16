@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+
 import { Assert } from '../util';
 
 import { IListAdapter } from './listAdapter.interface';
@@ -8,6 +11,11 @@ import { IListAdapter } from './listAdapter.interface';
 export class ValueListAdapter<T> implements IListAdapter<T> {
     private items: T[] = [];
 
+    /**
+     * Intialisiert eine neue Instanz
+     * 
+     * @param{T[]} items - Array von Items vom Typ @type{T}
+     */
     constructor(items: T[]) {
         Assert.notNull(items);
 
@@ -16,7 +24,13 @@ export class ValueListAdapter<T> implements IListAdapter<T> {
         }
     }
 
-    public getItems(): T[] {
-        return this.items;
+
+    /**
+     * Liefert ein Array von Items vom Typ @type{T} als @see{Observable}
+     * 
+     * @returns{Observable<T[]>}
+     */
+    public getItems(): Observable<T[]> {
+        return Observable.of(this.items);
     }
 }

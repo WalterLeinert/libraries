@@ -1,12 +1,14 @@
+import { Observable } from 'rxjs/Observable';
+
 /**
  * Interface für Adapter zum Bereitstellen von Listen des Typs {T}
  */
 export interface IListAdapter<T> {
 
     /**
-     * Liefert ein Array von Items vom Typ @type{T}
+     * Liefert ein Array von Items vom Typ @type{T} als @see{Observable}
      * 
-     * @returns{T[]}
+     * @returns{Observable<T[]>}
      */
-    getItems(): T[];
+    getItems(): Observable<T[]>;
 }
