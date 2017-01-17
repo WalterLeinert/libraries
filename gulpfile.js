@@ -77,11 +77,11 @@ gulp.task('compile', function () {
 
     return merge([
         tsResult.dts.pipe(
-            gulp.dest('dts')
+            gulp.dest('build/dts')
         ),
         tsResult.js.pipe(
             sourcemaps.write('.', {
-                sourceRoot: ".",
+                sourceRoot: '.',
                 includeContent: true
             }))
             .pipe(gulp.dest('build/src')),
