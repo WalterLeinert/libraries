@@ -3,13 +3,14 @@ var path = require('path');
 var failPlugin = require('webpack-fail-plugin');
 
 module.exports = {
-  context: path.join(__dirname, '.'),
+  // context: path.join(__dirname, '.'),
   entry: {
-    index: './src/index'
+    main: './src/index',
+    controller: './src/ts-express-decorators-flx/controllers/index'
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     libraryTarget: "commonjs"
   },
   resolve: {

@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/server",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "Fluxgate Server-Library ",
   "main": "dist/bundle.js",
   "typings": "dist/dts/src/index.d.ts",
@@ -55,6 +55,9 @@
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.9",
     "ts-express-decorators": "^1.2.6"
+  },
+  "peerDependencies": {
+    "@fluxgate/common": "^1.6.x"
   },
   "directories": {
     "lib": "lib"

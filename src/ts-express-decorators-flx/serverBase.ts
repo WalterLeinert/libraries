@@ -148,9 +148,9 @@ export abstract class ServerBase extends ServerLoader {
 
             if (!configuration) {
                 configuration = ServerBase.DEFAULT_EXPRESS_CONFIGURATION;  // TODO: clone
-            } else {
-                this.configure(this.configuration);
             }
+
+            this.configure(this.configuration);
         });
     }
 
