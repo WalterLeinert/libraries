@@ -106,7 +106,7 @@ export abstract class ServerBase extends ServerLoader {
                 let cwd = process.cwd();
                 log.info(`cwd = ${cwd}`);
 
-                let serverControllers = path.join(cwd, '../../../node_modules/@fluxgate/server/dist/bundle.js');
+                let serverControllers = path.join(cwd, '../../node_modules/@fluxgate/server/dist/bundle.js');
 
                 let controllers = this.configuration.controllers;
                 if (!path.isAbsolute(this.configuration.controllers)) {
