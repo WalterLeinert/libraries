@@ -12,31 +12,15 @@ import {
 
 // lokale Komponenten
 import { Messages } from '../resources/messages';
+import { Logging } from './util';
 
 // -------------------------- logging -------------------------------
 import { Logger, levels, configure, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 
-let packageName = '@fluxgate/server';
-
 // Logging konfigurieren ...
-let systemMode = fromEnvironment('NODE_ENV', 'development');
+Logging.configureLogging('@fluxgate/server', fromEnvironment('NODE_ENV', 'development'));
 
-if (systemMode) {
-    let configPath = LoggingConfiguration.getConfigurationPath(systemMode);
-
-    if (FileSystem.fileExists(configPath)) {
-        // tslint:disable-next-line:no-console
-        $log.info(
-            `[${packageName}]: log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)}, configPath = ${configPath}`);
-        configure(configPath, { reloadSecs: 10 });
-    } else {
-       $log.warn(`[${packageName}]: log4js: cannot read configuration: ${configPath}`);
-    }
-
-} else {
-    $log.warn(`[${packageName}]: log4js: no systemMode defined -> not reading configuration`);
-}
 // -------------------------- logging -------------------------------
 
 
@@ -238,5 +222,6 @@ export abstract class ServerBase extends ServerLoader {
                 return request.isAuthenticated();
             });
     };
+
 
 }
