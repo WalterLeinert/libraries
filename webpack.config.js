@@ -5,12 +5,11 @@ var failPlugin = require('webpack-fail-plugin');
 module.exports = {
   // context: path.join(__dirname, '.'),
   entry: {
-    main: './src/index',
-    controller: './src/ts-express-decorators-flx/controllers/index'
+    main: './src/index'
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: '[name].bundle.js',
+    filename: 'bundle.js',
     libraryTarget: "commonjs"
   },
   resolve: {

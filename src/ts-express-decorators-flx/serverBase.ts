@@ -106,6 +106,8 @@ export abstract class ServerBase extends ServerLoader {
                 let cwd = process.cwd();
                 log.info(`cwd = ${cwd}`);
 
+                let serverControllers = path.join(cwd, '../../../node_modules/@fluxgate/server/dist/bundle.js');
+
                 let controllers = this.configuration.controllers;
                 if (!path.isAbsolute(this.configuration.controllers)) {
                     controllers = path.join(cwd, this.configuration.controllers);
@@ -114,7 +116,7 @@ export abstract class ServerBase extends ServerLoader {
                 log.info(`__dirname = ${__dirname}, controllers = ${controllers}`);
 
                 this.setEndpoint(this.configuration.endPoint)
-                    .scan(path.join(__dirname, 'controllers/**/*.js'))
+                    .scan(serverControllers)
                     .scan(controllers)
                     .createHttpServer(this.configuration.port)
                     .createHttpsServer({
