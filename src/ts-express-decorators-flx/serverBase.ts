@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import path = require('path');
 import * as Express from 'express';
+import { $log } from 'ts-log-debug';
 import { ServerLoader } from 'ts-express-decorators';
 import { Forbidden } from 'ts-httpexceptions';
 
@@ -14,6 +15,8 @@ import { Messages } from '../resources/messages';
 import { Logger, levels, configure, getLogger } from 'log4js';
 import { XLog, using } from 'enter-exit-logger';
 
+let packageName = '@fluxgate/server';
+
 // Logging konfigurieren ...
 let systemMode = fromEnvironment('NODE_ENV', 'development');
 
@@ -22,14 +25,15 @@ if (systemMode) {
 
     if (fs.exists(configPath)) {
         // tslint:disable-next-line:no-console
-        console.info(`log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)}, configPath = ${configPath}`);
+        $log.info(
+            `[${packageName}]: log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)}, configPath = ${configPath}`);
         configure(configPath, { reloadSecs: 10 });
     } else {
-        console.warn(`log4js: cannot read configuration: ${configPath}`);
+       $log.warn(`[${packageName}]: log4js: cannot read configuration: ${configPath}`);
     }
 
 } else {
-    console.warn(`log4js: no systemMode defined -> not reading configuration`);
+    $log.warn(`[${packageName}]: log4js: no systemMode defined -> not reading configuration`);
 }
 // -------------------------- logging -------------------------------
 

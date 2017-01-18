@@ -135,6 +135,7 @@ export class PassportLocalService {
                     return done(null, user);
                 })
                 .catch(err => {
+                    log.error(err);
                     done(err, false);
                 });
         });

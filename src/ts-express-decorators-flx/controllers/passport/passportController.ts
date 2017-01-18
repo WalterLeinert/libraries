@@ -3,6 +3,11 @@ import * as Express from 'express';
 import { Controller, Get, Post, BodyParams, Required, Request, Response, Next } from 'ts-express-decorators';
 import * as Passport from 'passport';
 
+// -------------------------- logging -------------------------------
+import { Logger, levels, getLogger } from 'log4js';
+import { XLog, using } from 'enter-exit-logger';
+// -------------------------- logging -------------------------------
+
 // Fluxgate
 import { IUser } from '@fluxgate/common';
 import { PassportLocalService } from '../../services/passportLocal.service';
@@ -15,6 +20,7 @@ import { PassportLocalService } from '../../services/passportLocal.service';
  */
 @Controller('/passport')
 export class PassportController {
+    static logger = getLogger('PassportController');
 
     constructor(passportLocalService: PassportLocalService) {
         passportLocalService.initLocalSignup();
@@ -39,35 +45,37 @@ export class PassportController {
         @Next() next: Express.NextFunction
         ): Promise<IUser> {
 
-        return new Promise<IUser>((resolve, reject) => {
+        return using(new XLog(PassportController.logger, levels.INFO, 'login', `username = ${username}`), (log) => {
+            return new Promise<IUser>((resolve, reject) => {
 
-            try {
-                Passport
-                    .authenticate('login', (err, user: IUser) => {
-                        if (err) {
-                            return reject(err);
-                        }
-
-                        request.logIn(user, (loginErr) => {
-                            if (loginErr) {
-                                return reject(loginErr);
+                try {
+                    Passport
+                        .authenticate('login', (err, user: IUser) => {
+                            if (err) {
+                                return reject(err);
                             }
 
-                            resolve(user);
-                        });
+                            request.logIn(user, (loginErr) => {
+                                if (loginErr) {
+                                    return reject(loginErr);
+                                }
 
-                    })(request, response, next);
-            } catch (err) {
-                console.error(err);
-                return reject(err);
-            }
-        })
-            .catch((err) => {
-                if (err && err.message === 'Failed to serialize user into session') {
-                    throw new NotFound('user not found');
+                                resolve(user);
+                            });
+
+                        })(request, response, next);
+                } catch (err) {
+                    log.error(err);
+                    return reject(err);
                 }
-                return Promise.reject(err);
-            });
+            })
+                .catch((err) => {
+                    if (err && err.message === 'Failed to serialize user into session') {
+                        throw new NotFound('user not found');
+                    }
+                    return Promise.reject(err);
+                });
+        });
     }
 
 
@@ -84,25 +92,28 @@ export class PassportController {
         @Response() response: Express.Response,
         @Next() next: Express.NextFunction
         ): Promise<IUser> {
-        return new Promise<IUser>((resolve, reject) => {
 
-            Passport.authenticate('signup', (err, user: IUser) => {
-                if (err) {
-                    return reject(err);
-                }
-                if (!user) {
-                    return reject(!!err);
-                }
+        return using(new XLog(PassportController.logger, levels.INFO, 'signup'), (log) => {
+            return new Promise<IUser>((resolve, reject) => {
 
-                request.logIn(user, (loginErr) => {
-                    if (loginErr) {
-                        return reject(loginErr);
+                Passport.authenticate('signup', (err, user: IUser) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    if (!user) {
+                        return reject(!!err);
                     }
 
-                    return resolve(user);
-                });
+                    request.logIn(user, (loginErr) => {
+                        if (loginErr) {
+                            return reject(loginErr);
+                        }
 
-            })(request, response, next);
+                        return resolve(user);
+                    });
+
+                })(request, response, next);
+            });
         });
     }
 
@@ -112,7 +123,9 @@ export class PassportController {
      */
     @Get('/logout')
     public logout( @Request() request: Express.Request) {
-        request.logout();
-        return 'Disconnected';
+        return using(new XLog(PassportController.logger, levels.INFO, 'logout'), (log) => {
+            request.logout();
+            return 'Disconnected';
+        });
     }
 }
