@@ -11,26 +11,20 @@ import { IDropdownAdapter, IDropdownAdapterOptions, DropdownAdapter } from '../.
  * Adapter für PrimeNG DropDown-Control
  */
 export class PrimeNgDataTableAdapter<T> extends DropdownAdapter<T> {
-    public data: SelectItem[] = [];
+    public data: any[] = [];
 
     constructor(listAdapter: IListAdapter<T>, adapterOptions: IDropdownAdapterOptions) {
         super(listAdapter, adapterOptions);
 
-        if (this.adapterOptions.allowNoSelection) {
+        /*  TODO: überflüssig?
+            if (this.adapterOptions.allowNoSelection) {
             this.data.push({
                 label: this.adapterOptions.allowNoSelectionText,
                 value: null
             });
-        }
+        }*/
 
         this.getItems()
-            .subscribe(items => {
-                for (const item of items) {
-                    this.data.push({
-                        label: this.getText(item),
-                        value: this.getValue(item)
-                    });
-                }
-            });
+            .subscribe(items => this.data = items);
     }
 }

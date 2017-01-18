@@ -20,10 +20,11 @@ export class Tuple<T1, T2, T3> {
     <input #gb type="text" pInputText size="20" style="float:left" placeholder="search...">
   </div>
 
-  <p-dataTable [value]="dropdownAdapter.data" sortMode="multiple" resizableColumns="true" [rows]="20" [paginator]="true" [globalFilter]="gb"
+  <p-dataTable [value]="dropdownAdapter.data" sortMode="multiple" resizableColumns="true" [rows]="10" [paginator]="true" [globalFilter]="gb"
     selectionMode="single" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event)">
-    <p-column field="lastname" header="Lastname" [sortable]="true"></p-column>
-    <p-column field="firstname" header="Firstname" [sortable]="true"></p-column>
+    <ul *ngFor="let info of columnInfos">
+      <p-column field="{{info.field}}" header="{{info.label}}" [sortable]="true"></p-column>
+    </ul>
     </p-dataTable>
 </div>
   `,
@@ -41,6 +42,12 @@ export class DataTableSelectorComponent implements OnInit {
   @Output() selectionChanged = new EventEmitter<any>();
   @Output() selectedValue: any = {};
 
+  public columnInfos = [
+    { label: 'Name', field: 'name' },
+    { label: 'Nummer', field: 'nummer' },
+    { label: 'Saison', field: 'saison' }
+  ];
+
   constructor() {
   }
 
@@ -55,8 +62,8 @@ export class DataTableSelectorComponent implements OnInit {
   }
 
   public onRowSelect(event) {
-    console.log(`onSelectionChanged: ${JSON.stringify(event.value)}`);
-    this.selectedValue = event.value;
-    this.selectionChanged.emit(event.value);
+    console.log(`onSelectionChanged: ${JSON.stringify(event.data)}`);
+    this.selectedValue = event.data;
+    this.selectionChanged.emit(event.data);
   }
 }
