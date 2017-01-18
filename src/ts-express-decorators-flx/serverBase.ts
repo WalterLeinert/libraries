@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import path = require('path');
 import * as Express from 'express';
 import { $log } from 'ts-log-debug';
@@ -6,7 +5,10 @@ import { ServerLoader } from 'ts-express-decorators';
 import { Forbidden } from 'ts-httpexceptions';
 
 // Fluxgate
-import { AppConfig, IAppConfig, Assert, fromEnvironment, LoggingConfiguration, StringBuilder, JsonReader } from '@fluxgate/common';
+import {
+    AppConfig, IAppConfig, Assert, fromEnvironment,
+    LoggingConfiguration, StringBuilder, JsonReader, FileSystem
+} from '@fluxgate/common';
 
 // lokale Komponenten
 import { Messages } from '../resources/messages';
@@ -23,7 +25,7 @@ let systemMode = fromEnvironment('NODE_ENV', 'development');
 if (systemMode) {
     let configPath = LoggingConfiguration.getConfigurationPath(systemMode);
 
-    if (fs.exists(configPath)) {
+    if (FileSystem.fileExists(configPath)) {
         // tslint:disable-next-line:no-console
         $log.info(
             `[${packageName}]: log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)}, configPath = ${configPath}`);
