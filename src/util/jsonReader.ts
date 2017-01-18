@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { FilesSystem } from './fileSystem';
 
 export class JsonReader {
 
@@ -6,9 +7,7 @@ export class JsonReader {
      * Liest eine Json-Datei @param{jsonPath} und liefert das entsprechede Json-Objekt als @see{T} 
      */
     public static readJsonSync<T>(jsonPath: string): T {
-        try {
-            fs.accessSync(jsonPath, fs.constants.R_OK);
-        } catch (err) {
+        if (! FilesSystem.fileExists(jsonPath)) {
             throw new Error(`Die Json-Konfiguration ${jsonPath} ist nicht lesbar oder existiert nicht.`);
         }
 
