@@ -2,9 +2,9 @@ import * as fs from 'fs';
 import { Assert } from './assert';
 
 /**
- * Hilfsklasse für Filesystemoperationen
+ * Hilfsklasse für Filesystem-Operationen
  */
-export class FilesSystem {
+export class FileSystem {
 
     /**
      * Liefert true, falls die Datei @param{path} existiert und lesbar ist.
