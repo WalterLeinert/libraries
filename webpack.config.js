@@ -54,11 +54,5 @@ module.exports = {
     /^primeng\/*/,
     'rxjs',
     /rxjs\/*/
-    /*'rxjs',
-    'rxjs/Observable',
-    'rxjs/Subscriber',
-    'rxjs/add/operator/do',
-    'rxjs/add/operator/catch',
-    'rxjs/add/operator/map'*/
   ],
 }
