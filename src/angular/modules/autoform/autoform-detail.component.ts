@@ -1,9 +1,8 @@
 import { NgModule, Component, Injector, Input, Output } from '@angular/core';
-import { IFieldOptions } from './autoformConfig.interface';
-import { IAutoformConfig } from './autoformConfig.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+
 
 // PrimeNG
 import { ButtonModule, SharedModule, ConfirmDialogModule } from 'primeng/primeng';
@@ -19,6 +18,10 @@ import { BaseComponent } from '../../common/base';
 
 import { ProxyService } from './proxy.service';
 import { AutoformConstants } from './autoformConstants';
+import { IFieldOptions } from './autoformConfig.interface';
+import { IAutoformConfig } from './autoformConfig.interface';
+
+
 
 @Component({
   selector: 'flx-autoform-detail',
@@ -85,22 +88,34 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    * @type {string}
    * @memberOf AutoformDetailComponent
    */
-  @Input() entityName: string;
+  @Input() entityName: string = '';
+
+
+  /**
+   * Konfiguration der Formularfelder
+   * 
+   * @type {IAutoformConfig}
+   * @memberOf AutoformDetailComponent
+   */
+  @Input() public config: IAutoformConfig;
+
+
+  /**
+   * Metainformation für alle Modelspalten (-> entityName)
+   * 
+   * @type {ColumnMetadata[]}
+   * @memberOf AutoformDetailComponent
+   */
+  public columnMetadata: ColumnMetadata[];
+
 
 
   public askuser: boolean;
   public submitted: boolean = false;
   public active: boolean = true;
-  public columnTypes: ColumnTypes = ColumnTypes;
-
-  public columnMetadata: ColumnMetadata[];
-  private config: IAutoformConfig;
 
 
-  private sub: Subscription;
-
-  constructor(router: Router, service: ProxyService, private route: ActivatedRoute,
-    private injector: Injector,
+  constructor(router: Router, service: ProxyService, private injector: Injector,
     private confirmationService: ConfirmationService, private metadataService: MetadataService) {
     super(router, service);
   }
@@ -108,26 +123,8 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   ngOnInit() {
     super.ngOnInit();
 
-    this.sub = this.route.params.subscribe(
-      params => {
-        let id = <string>params[AutoformConstants.GENERIC_ENTITY_ID];
-        let entityName = <string>params[AutoformConstants.GENERIC_ENTITY];
-
-        if (entityName && id) {
-          this.config = JSON.parse(params[AutoformConstants.GENERIC_CONFIG]);
-
-          this.setupProxy(entityName);
-
-          this.getItem(id);
-        }
-      });
+    this.setupProxy(this.entityName);
   }
-
-  ngOnDestroy() {
-    super.ngOnDestroy();
-    this.sub.unsubscribe();
-  }
-
 
   private getItem(id: any) {
     this.service.findById(id).subscribe(
@@ -137,12 +134,16 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
       });
   }
 
+
   /**
    * mittels MetadataService für die Entity @see{entityName} den zugehörigen Service ermitteln und 
    * den ProxyService damit initialisieren
    */
   private setupProxy(entityName: string) {
     let tableMetadata: TableMetadata = this.metadataService.findTableMetadata(entityName);
+
+    Assert.notNull(tableMetadata);
+
     // console.log(`table = ${tableMetadata.options.name}`);
     this.columnMetadata = tableMetadata.columnMetadata;
 
@@ -220,9 +221,11 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
       displayName = metadata.options.displayName;
     }
 
-    let columnConfig = <IFieldOptions>this.config.fields[metadata.propertyName];
-    if (columnConfig) {
-      displayName = columnConfig.displayName;
+    if (this.config) {
+      let columnConfig = <IFieldOptions>this.config.fields[metadata.propertyName];
+      if (columnConfig) {
+        displayName = columnConfig.displayName;
+      }
     }
 
     return displayName;
@@ -234,8 +237,10 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   public isNotHidden(metadata: ColumnMetadata): boolean {
     let rval = metadata.options.displayName !== undefined;
 
-    if (this.config.hiddenFields.indexOf(metadata.propertyName) >= 0) {
-      rval = false;
+    if (this.config) {
+      if (this.config.hiddenFields && this.config.hiddenFields.indexOf(metadata.propertyName) >= 0) {
+        rval = false;
+      }
     }
     return rval;
   }
