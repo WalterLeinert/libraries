@@ -27,41 +27,39 @@ import { IAutoformConfig } from './autoformConfig.interface';
   selector: 'flx-autoform-detail',
   template: `
 <div class="container">
-  <div [hidden]="submitted">
-    <h1>{{pageTitle}}</h1>
-    <form *ngIf="active && item">
-      <p-messages [value]="messages"></p-messages>
+  <h1>{{pageTitle}}</h1>
+  <form *ngIf="value">
+    <p-messages [value]="messages"></p-messages>
 
-      <div>
-        <ul *ngFor="let metadata of columnMetadata">
-          <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'string'">
-            <label>{{displayName(metadata)}}</label>
-            <input type="text" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
-          </div>
-          <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'number'">
-            <label>{{displayName(metadata)}}</label>
-            <input type="text" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
-          </div>
+    <div>
+      <ul *ngFor="let metadata of columnMetadata">
+        <div class="form-group" *ngIf="isNotHidden(metadata) && value[metadata.propertyName] && metadata.propertyType === 'string'">
+          <label>{{displayName(metadata)}}</label>
+          <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+        </div>
+        <div class="form-group" *ngIf="isNotHidden(metadata) && value[metadata.propertyName] && metadata.propertyType === 'number'">
+          <label>{{displayName(metadata)}}</label>
+          <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+        </div>
 
-          <!--<div class="form-group" *ngIf="info.typeInfo.dataType == enumEnum && info.isVisible">
-            <label>{{info.name}}</label>
-            <select type="text" class="form-control">
-              <option *ngFor="let o of info.typeInfo.options" [value]="o">{{o.name}}</option>
-            </select>
-          </div>-->
+        <!--<div class="form-group" *ngIf="info.typeInfo.dataType == enumEnum && info.isVisible">
+          <label>{{info.name}}</label>
+          <select type="text" class="form-control">
+            <option *ngFor="let o of info.typeInfo.options" [value]="o">{{o.name}}</option>
+          </select>
+        </div>-->
 
-        </ul>
-      </div>
+      </ul>
+    </div>
 
-      <button pButton type="submit" class="btn btn-default" (click)='cancel()' label="Abbruch"></button>
-      <button pButton type="submit" class="btn btn-default" (click)='submit()' label="Speichern"></button>
-      <button pButton type="submit" class="btn" (click)='confirm()' icon="fa-trash-o" label="Löschen"></button>
-      <button pButton type="text" (click)="showmodal()" icon="fa-trash-o" label="Löschen mit eigener Komponente"></button>
-      <flx-popup (onAnswer)="delete($event)" [title]="'Löschen?'" [message]="'Soll wirklich gelöscht werden?'"
-        *ngIf="askuser">Löschbestätigung</flx-popup>
+    <button pButton type="submit" class="btn btn-default" (click)='cancel()' label="Abbruch"></button>
+    <button pButton type="submit" class="btn btn-default" (click)='submit()' label="Speichern"></button>
+    <button pButton type="submit" class="btn" (click)='confirm()' icon="fa-trash-o" label="Löschen"></button>
+    <button pButton type="text" (click)="showmodal()" icon="fa-trash-o" label="Löschen mit eigener Komponente"></button>
+    <flx-popup (onAnswer)="delete($event)" [title]="'Löschen?'" [message]="'Soll wirklich gelöscht werden?'"
+      *ngIf="askuser">Löschbestätigung</flx-popup>
 
-    </form>
-  </div>
+  </form>
 </div>  
 `,
   styles: [],
@@ -79,7 +77,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    * @type {*}
    * @memberOf AutoformDetailComponent
    */
-  @Input() item: any;
+  @Input() value: any;
 
 
   /**
@@ -108,11 +106,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    */
   public columnMetadata: ColumnMetadata[];
 
-
-
   public askuser: boolean;
-  public submitted: boolean = false;
-  public active: boolean = true;
 
 
   constructor(router: Router, service: ProxyService, private injector: Injector,
@@ -128,7 +122,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
 
   private getItem(id: any) {
     this.service.findById(id).subscribe(
-      item => this.item = item,
+      value => this.value = value,
       (error: Error) => {
         this.handleError(error);
       });
@@ -178,9 +172,9 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    */
   submit() {
     let me = this;
-    this.service.update(this.item).subscribe(
-      item => {
-        this.item = item;
+    this.service.update(this.value).subscribe(
+      value => {
+        this.value = value;
         me.cancel();
       },
       (error: Error) => {
@@ -194,9 +188,9 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   delete(event) {
     if (event === true) {
       let me = this;
-      this.service.delete(this.service.getEntityId(this.item)).subscribe(
-        item => {
-          this.item = item;
+      this.service.delete(this.service.getEntityId(this.value)).subscribe(
+        value => {
+          this.value = value;
           me.cancel();
         },
         (error: Error) => {
