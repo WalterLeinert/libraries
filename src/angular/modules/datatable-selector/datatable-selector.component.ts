@@ -1,5 +1,6 @@
 // Angular
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import {ChangeDetectorRef} from '@angular/core';
 
 import { IDropdownAdapter } from '../../common/adapter';
 
@@ -9,7 +10,13 @@ export class Tuple<T1, T2, T3> {
 }
 
 
-
+/**
+ * Komponente DataTableSelector (Selektion eines Objekts aus einer Objektliste über eine PrimeNG-DataTable)
+ * 
+ * @export
+ * @class DataTableSelectorComponent
+ * @implements {OnInit}
+ */
 @Component({
   selector: 'flx-datatable-selector',
   template: `
@@ -20,27 +27,87 @@ export class Tuple<T1, T2, T3> {
     <input #gb type="text" pInputText size="20" style="float:left" placeholder="search...">
   </div>
 
-  <p-dataTable [value]="dropdownAdapter.data" sortMode="multiple" resizableColumns="true" [rows]="10" [paginator]="true" [globalFilter]="gb"
-    selectionMode="single" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event)">
+  <p-dataTable [value]="dropdownAdapter.data" sortMode="sortMode" resizableColumns="true" [rows]="rows" 
+    [paginator]="true" [globalFilter]="gb"
+    selectionMode="single" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event.data)">
     <ul *ngFor="let info of columnInfos">
       <p-column field="{{info.field}}" header="{{info.label}}" [sortable]="true"></p-column>
     </ul>
     </p-dataTable>
 </div>
+<div *ngIf="debug">
+  <p>Selected Item: {{selectedValue | json}}</p>
+</div>
   `,
   styles: []
 })
 export class DataTableSelectorComponent implements OnInit {
+
+  /**
+   * falls true, wird Debug-Info beim Control angezeigt
+   * 
+   * @type {boolean}
+   * @memberOf DataTableSelectorComponent
+   */
   @Input() debug: boolean = true;     // TODO: wenn implementierung fertig auf false setzen
-  @Input() allowNoSelectionText: string = 'Auswahl';
-  @Input() allowNoSelection: boolean = false;
-  @Input() selectedIndex: number = -1;
+
+
+
+  /**
+   * Sortmodus: single|multiple 
+   * 
+   * @type {string}
+   * @memberOf DataTableSelectorComponent
+   */
+  @Input() sortMode: string = 'single';
+
+  /**
+   * Anzahl der anzuzeigenden Gridzeilen
+   * 
+   * @type {number}
+   * @memberOf DataTableSelectorComponent
+   */
+  @Input() rows: number = 5;
+
   @Input() dropdownAdapter: IDropdownAdapter;
 
-  @Input() textField: string = 'text';
-  @Input() valueField: string = 'value';
+
+  /**
+   *  angebundene Objektliste
+   * 
+   * @type {any[]}
+   * @memberOf DataTableSelectorComponent
+   */
+  @Input() data: any[] = [];
+
+
+  /**
+   * Index der initial zu selektierenden Zeile (0..n-1)
+   * 
+   * @type {number}
+   * @memberOf DataTableSelectorComponent
+   */
+  @Input() selectedIndex: number = -1;
+
+
+  /**
+   * selectionChanged Event: wird bei jeder Selektionsänderung gefeuert.
+   * 
+   * Eventdaten: @type{any} - selektiertes Objekt.
+   * 
+   * @memberOf DataTableSelectorComponent
+   */
   @Output() selectionChanged = new EventEmitter<any>();
+
+
+  /**
+   * das aktuell selektierte Objekt
+   * 
+   * @type {*}
+   * @memberOf DataTableSelectorComponent
+   */
   @Output() selectedValue: any = {};
+
 
   public columnInfos = [
     { label: 'Name', field: 'name' },
@@ -48,7 +115,7 @@ export class DataTableSelectorComponent implements OnInit {
     { label: 'Saison', field: 'saison' }
   ];
 
-  constructor() {
+  constructor(private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -61,9 +128,9 @@ export class DataTableSelectorComponent implements OnInit {
   ngOnDestroy() {
   }
 
-  public onRowSelect(event) {
-    console.log(`onSelectionChanged: ${JSON.stringify(event.data)}`);
-    this.selectedValue = event.data;
-    this.selectionChanged.emit(event.data);
+  public onRowSelect(row) {
+    this.changeDetectorRef.detectChanges();
+    console.log(`onSelectionChanged: ${JSON.stringify(row)}`);
+    this.selectionChanged.emit(row);
   }
 }
