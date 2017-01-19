@@ -40,7 +40,7 @@ export class DropdownSelectorComponent implements OnInit {
 
   public onSelectionChanged(value) {
     if (this.debug) {
-      console.log(`onSelectionChanged: ${JSON.stringify(value)}`);
+      console.log(`DropdownSelectorComponent.onSelectionChanged: ${JSON.stringify(value)}`);
     }
     this.selectionChanged.emit(value);
   }
