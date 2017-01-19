@@ -13,6 +13,7 @@ import { PopupModule } from '../../modules/common';
 
 import { ProxyService } from './proxy.service';
 import { AutoformComponent } from './autoform.component';
+import { AutoformDetailComponent } from './autoform-detail.component';
 import { AutoformRoutingModule } from './autoform-routing.module';
 
 @NgModule({
@@ -30,10 +31,12 @@ import { AutoformRoutingModule } from './autoform-routing.module';
     AutoformRoutingModule
   ],
   exports: [
-    AutoformComponent
+    AutoformComponent,
+    AutoformDetailComponent
   ],
   declarations: [
-    AutoformComponent
+    AutoformComponent,
+    AutoformDetailComponent
   ],
   providers: [
     ProxyService
