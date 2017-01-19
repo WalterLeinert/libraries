@@ -6,7 +6,7 @@ import { IDropdownAdapter } from '../../common/adapter';
 @Component({
   selector: 'flx-dropdown-selector',
   template: `
-<p-dropdown [options]="dropdownAdapter.data" [(ngModel)]="selectedValue" (onChange)="onSelectionChanged($event)"></p-dropdown>
+<p-dropdown [options]="dropdownAdapter.data" [(ngModel)]="selectedValue" (onChange)="onSelectionChanged($event.value)"></p-dropdown>
 <div *ngIf="debug">
   <p>Selected Item: {{selectedValue | json}}</p>
 </div>
@@ -38,9 +38,10 @@ export class DropdownSelectorComponent implements OnInit {
   ngOnDestroy() {
   }
 
-  public onSelectionChanged(event) {
-    console.log(`onSelectionChanged: ${JSON.stringify(event.value)}`);
-    this.selectedValue = event.value;
-    this.selectionChanged.emit(event.value);
+  public onSelectionChanged(value) {
+    if (this.debug) {
+      console.log(`onSelectionChanged: ${JSON.stringify(value)}`);
+    }
+    this.selectionChanged.emit(value);
   }
 }

@@ -130,7 +130,9 @@ export class DataTableSelectorComponent implements OnInit {
 
   public onRowSelect(row) {
     this.changeDetectorRef.detectChanges();
-    console.log(`onSelectionChanged: ${JSON.stringify(row)}`);
+    if (this.debug) {
+      console.log(`onSelectionChanged: ${JSON.stringify(row)}`);
+    }
     this.selectionChanged.emit(row);
   }
 }
