@@ -136,7 +136,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   private setupProxy(entityName: string) {
     let tableMetadata: TableMetadata = this.metadataService.findTableMetadata(entityName);
 
-    Assert.notNull(tableMetadata);
+    Assert.notNull(tableMetadata, `No metadata for entity ${entityName}`);
 
     // console.log(`table = ${tableMetadata.options.name}`);
     this.columnMetadata = tableMetadata.columnMetadata;
