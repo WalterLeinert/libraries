@@ -42,6 +42,8 @@ module.exports = {
   externals: [
     'dashdash',
     'moment',
-    'reflect-metadata'
+    'reflect-metadata',
+    'rxjs',
+    /rxjs\/*/
   ],
 }
