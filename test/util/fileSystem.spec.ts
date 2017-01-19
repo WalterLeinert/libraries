@@ -1,5 +1,4 @@
 import path = require('path');
-import { ColumnTypeUndefinedError } from "./../src../model/error/columnTypeUndefinedError";
 import process = require('process');
 
 import * as chai from 'chai';
