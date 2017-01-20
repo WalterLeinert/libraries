@@ -49,9 +49,9 @@ export function Column(options?: ColumnOptions) {
             options.name = propertyName;
         }
 
-        if (!options.displayName) {
-            options.displayName = propertyName;
-        }
+        // if (!options.displayName) {
+        //     options.displayName = propertyName;
+        // }
 
         MetadataStorage.instance.addColumnMetadata(new ColumnMetadata(target.constructor, propertyName, reflectedType, options));
     };

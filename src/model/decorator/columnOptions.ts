@@ -8,8 +8,9 @@ export interface ColumnOptions {
     propertyType?: ColumnType;
 
     /**
-   * Anzeigename (z.B. auf einer Form)
-   */
+     * Anzeigename (z.B. auf einer Form)
+     * Ist displayName nicht definiert, wird standardmäßig die Spalte nicht angzeigt. 
+     */
     displayName?: string;
 
     /**
