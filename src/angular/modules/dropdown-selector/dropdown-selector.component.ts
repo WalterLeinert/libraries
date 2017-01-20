@@ -108,11 +108,11 @@ export class DropdownSelectorComponent implements OnInit {
 
 
   /**
-   * der selectedValueChanged-Event: Event-Parameter ist der selectedValue.
+   * der selectedValueChange-Event: Event-Parameter ist der selectedValue.
    * 
    * @memberOf DropdownSelectorComponent
    */
-  @Output() selectedValueChanged = new EventEmitter<any>();
+  @Output() selectedValueChange = new EventEmitter<any>();
 
 
   /**
@@ -122,7 +122,7 @@ export class DropdownSelectorComponent implements OnInit {
    * @memberOf DropdownSelectorComponent
    */
   @Input() selectedValue: any = {};
-  
+
 
   constructor() {
   }
@@ -141,6 +141,6 @@ export class DropdownSelectorComponent implements OnInit {
     if (this.debug) {
       console.log(`DropdownSelectorComponent.onSelectionChanged: ${JSON.stringify(value)}`);
     }
-    this.selectedValueChanged.emit(value);
+    this.selectedValueChange.emit(value);
   }
 }
