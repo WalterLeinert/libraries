@@ -1,8 +1,9 @@
 // Angular
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import {ChangeDetectorRef} from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 
 import { IDropdownAdapter } from '../../common/adapter';
+import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 
 export class Tuple<T1, T2, T3> {
   constructor(public v1: T1, public v2: T2, public v3?: T3) {
@@ -30,7 +31,7 @@ export class Tuple<T1, T2, T3> {
   <p-dataTable [value]="dropdownAdapter.data" sortMode="sortMode" resizableColumns="true" [rows]="rows" 
     [paginator]="true" [globalFilter]="gb"
     selectionMode="single" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event.data)">
-    <ul *ngFor="let info of columnInfos">
+    <ul *ngFor="let info of config.columnInfos">
       <p-column field="{{info.field}}" header="{{info.label}}" [sortable]="true"></p-column>
     </ul>
     </p-dataTable>
@@ -52,7 +53,6 @@ export class DataTableSelectorComponent implements OnInit {
   @Input() debug: boolean = true;     // TODO: wenn implementierung fertig auf false setzen
 
 
-
   /**
    * Sortmodus: single|multiple 
    * 
@@ -69,11 +69,31 @@ export class DataTableSelectorComponent implements OnInit {
    */
   @Input() rows: number = 5;
 
+  /**
+   * der zugehörige Adapter für die Anbindung der Daten für die Werteliste
+   * 
+   * @type {IDropdownAdapter}
+   * @memberOf DropdownSelectorComponent
+   */
   @Input() dropdownAdapter: IDropdownAdapter;
 
 
   /**
-   *  angebundene Objektliste
+   * 
+   * 
+   * @type {IDataTableSelectorConfig}
+   * @memberOf DataTableSelectorComponent
+   */
+  @Input() config: IDataTableSelectorConfig = {
+    columnInfos: [
+      { label: 'Name', field: 'name' },
+      { label: 'Nummer', field: 'nummer' },
+      { label: 'Saison', field: 'saison' }
+    ]
+  };
+
+  /**
+   *  angebundene Objektliste (TODO: nur zum Test)
    * 
    * @type {any[]}
    * @memberOf DataTableSelectorComponent
@@ -108,12 +128,6 @@ export class DataTableSelectorComponent implements OnInit {
    */
   @Output() selectedValue: any = {};
 
-
-  public columnInfos = [
-    { label: 'Name', field: 'name' },
-    { label: 'Nummer', field: 'nummer' },
-    { label: 'Saison', field: 'saison' }
-  ];
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
   }
