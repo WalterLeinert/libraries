@@ -1,4 +1,4 @@
-# @fluxgate/server -- Support für Client-Entwicklung
+# @fluxgate/client -- Support für Client-Entwicklung
 
 ### Walter Leinert, Christian Lehmeier, Dez 2016
 
