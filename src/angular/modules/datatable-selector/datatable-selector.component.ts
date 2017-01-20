@@ -111,13 +111,13 @@ export class DataTableSelectorComponent implements OnInit {
 
 
   /**
-   * selectionChanged Event: wird bei jeder Selektionsänderung gefeuert.
+   * selectedValueChanged Event: wird bei jeder Selektionsänderung gefeuert.
    * 
    * Eventdaten: @type{any} - selektiertes Objekt.
    * 
    * @memberOf DataTableSelectorComponent
    */
-  @Output() selectionChanged = new EventEmitter<any>();
+  @Output() selectedValueChanged = new EventEmitter<any>();
 
 
   /**
@@ -126,7 +126,7 @@ export class DataTableSelectorComponent implements OnInit {
    * @type {*}
    * @memberOf DataTableSelectorComponent
    */
-  @Output() selectedValue: any = {};
+  @Input() selectedValue: any = {};
 
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
@@ -147,6 +147,6 @@ export class DataTableSelectorComponent implements OnInit {
     if (this.debug) {
       console.log(`DataTableSelectorComponent.onSelectionChanged: ${JSON.stringify(row)}`);
     }
-    this.selectionChanged.emit(row);
+    this.selectedValueChanged.emit(row);
   }
 }
