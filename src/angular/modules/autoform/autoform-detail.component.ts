@@ -26,18 +26,18 @@ import { IAutoformConfig } from './autoformConfig.interface';
 @Component({
   selector: 'flx-autoform-detail',
   template: `
-<div class="container">
-  <h1>{{pageTitle}}</h1>
+<div class="container-fluid">
+  <!-- <h1>{{pageTitle}}</h1> -->
   <form *ngIf="value">
     <p-messages [value]="messages"></p-messages>
 
     <div>
       <ul *ngFor="let metadata of columnMetadata">
-        <div class="form-group" *ngIf="isNotHidden(metadata) && value[metadata.propertyName] && metadata.propertyType === 'string'">
+        <div class="form-group" *ngIf="! isHidden(metadata) && value[metadata.propertyName] && metadata.propertyType === 'string'">
           <label>{{displayName(metadata)}}</label>
           <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
         </div>
-        <div class="form-group" *ngIf="isNotHidden(metadata) && value[metadata.propertyName] && metadata.propertyType === 'number'">
+        <div class="form-group" *ngIf="! isHidden(metadata) && value[metadata.propertyName] && metadata.propertyType === 'number'">
           <label>{{displayName(metadata)}}</label>
           <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
         </div>
@@ -52,13 +52,21 @@ import { IAutoformConfig } from './autoformConfig.interface';
       </ul>
     </div>
 
-    <button pButton type="submit" class="btn btn-default" (click)='cancel()' label="Abbruch"></button>
-    <button pButton type="submit" class="btn btn-default" (click)='submit()' label="Speichern"></button>
-    <button pButton type="submit" class="btn" (click)='confirm()' icon="fa-trash-o" label="Löschen"></button>
-    <button pButton type="text" (click)="showmodal()" icon="fa-trash-o" label="Löschen mit eigener Komponente"></button>
+  <div class="container">
+    <button type="submit" class="btn btn-primary" (click)='cancel()'>Abbruch</button>
+    <button type="submit" class="btn btn-primary" (click)='submit()'>
+      <span class="glyphicon glyphicon-save"></span> Speichern
+    </button>
+    <button type="submit" class="btn btn-primary" (click)='confirm()'>    
+      <span class="glyphicon glyphicon-trash"></span> Löschen
+    </button>
+    <button type="submit" class="btn btn-primary" (click)="showmodal()">
+      <span class="glyphicon glyphicon-trash"></span> Löschen mit eigener Komponente
+    </button>
     <flx-popup (onAnswer)="delete($event)" [title]="'Löschen?'" [message]="'Soll wirklich gelöscht werden?'"
       *ngIf="askuser">Löschbestätigung</flx-popup>
 
+    </div>
   </form>
 </div>  
 `,
@@ -216,7 +224,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
     }
 
     if (this.config) {
-      let columnConfig = <IFieldOptions>this.config.fields[metadata.propertyName];
+      let columnConfig = this.config.fields[metadata.propertyName];
       if (columnConfig) {
         displayName = columnConfig.displayName;
       }
@@ -226,14 +234,22 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   }
 
   /**
-   * Liefert true, falls Feld zu @param{metadata} anzuzeigen ist
+   * Liefert true, falls Feld zu @param{metadata} nicht anzuzeigen ist
    */
-  public isNotHidden(metadata: ColumnMetadata): boolean {
-    let rval = metadata.options.displayName !== undefined;
+  public isHidden(metadata: ColumnMetadata): boolean {
+    // Default: Anzeige, falls displayName im Model gesetzt ist
+    let rval = metadata.options.displayName === undefined;
 
+    // sonst steuert die Konfiguration, ob das Feld angezeigt oder verborgen werden soll 
     if (this.config) {
-      if (this.config.hiddenFields && this.config.hiddenFields.indexOf(metadata.propertyName) >= 0) {
+      // Wert aus Konfig überschreibt Model-Konfig
+      if (this.config.fields && this.config.fields[metadata.propertyName]) {
         rval = false;
+      }
+
+      // Feld aber nicht anzeigen, falls in hiddenFileds angegeben
+      if (this.config.hiddenFields && this.config.hiddenFields.indexOf(metadata.propertyName) >= 0) {
+        rval = true;
       }
     }
     return rval;
