@@ -20,7 +20,7 @@ export class Tuple<T1, T2, T3> {
 @Component({
   selector: 'flx-datatable-selector',
   template: `
-<div class="ui-g-3">
+<div>
   <!-- filter -->
   <div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
     <i class="fa fa-search" style="float:left;margin:4px 4px 0 0"></i>
