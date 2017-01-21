@@ -1,5 +1,4 @@
 // Angular
-import { IColumnInfo } from "./datatable-selectorConfig.interface";
 import { Component, Injector, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -15,7 +14,7 @@ import { Service, IService } from '../../services';
 import { MetadataService } from '../../services';
 import { BaseComponent } from '../../common/base';
 
-import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
+import { IDataTableSelectorConfig, IColumnInfo } from './datatable-selectorConfig.interface';
 
 export class Tuple<T1, T2, T3> {
   constructor(public v1: T1, public v2: T2, public v3?: T3) {
