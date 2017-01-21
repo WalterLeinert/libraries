@@ -9,9 +9,8 @@ import 'rxjs/add/observable/throw';
 // Fluxgate
 import { TableMetadata, ColumnMetadata, ColumnTypes, Constants, Assert } from '@fluxgate/common';
 
-import { ProxyService } from '../autoform//proxy.service';
 import { Service, IService } from '../../services';
-import { MetadataService } from '../../services';
+import { MetadataService, ProxyService } from '../../services';
 import { BaseComponent } from '../../common/base';
 
 import { IDataTableSelectorConfig, IColumnInfo } from './datatable-selectorConfig.interface';

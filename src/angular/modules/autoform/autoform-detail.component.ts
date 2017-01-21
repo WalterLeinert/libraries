@@ -13,10 +13,9 @@ import { Subscription } from 'rxjs/Subscription';
 // Fluxgate
 import { TableMetadata, ColumnMetadata, ColumnTypes, Constants, Assert } from '@fluxgate/common';
 
-import { MetadataService } from '../../services';
+import { MetadataService, ProxyService } from '../../services';
 import { BaseComponent } from '../../common/base';
 
-import { ProxyService } from './proxy.service';
 import { AutoformConstants } from './autoformConstants';
 import { IFieldOptions } from './autoformConfig.interface';
 import { IAutoformConfig } from './autoformConfig.interface';

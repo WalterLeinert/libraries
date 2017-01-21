@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 // PrimeNG
 import { DataTableModule } from 'primeng/primeng';
 
+import { ProxyService } from '../../services';
 import { DataTableSelectorComponent } from './datatable-selector.component';
 
 
@@ -20,6 +21,9 @@ import { DataTableSelectorComponent } from './datatable-selector.component';
   ],
   declarations: [
     DataTableSelectorComponent
+  ],
+  providers: [
+    ProxyService
   ]
 })
 export class DataTableSelectorModule { }

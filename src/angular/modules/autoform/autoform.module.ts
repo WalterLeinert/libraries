@@ -7,11 +7,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ButtonModule, SharedModule, ConfirmDialogModule } from 'primeng/primeng';
 import { MessagesModule, ConfirmationService } from 'primeng/primeng';
 
-import { MetadataService } from '../../services';
+import { MetadataService, ProxyService } from '../../services';
 import { BaseComponent } from '../../common/base';
 import { PopupModule } from '../../modules/common';
 
-import { ProxyService } from './proxy.service';
 import { AutoformComponent } from './autoform.component';
 import { AutoformDetailComponent } from './autoform-detail.component';
 import { AutoformRoutingModule } from './autoform-routing.module';

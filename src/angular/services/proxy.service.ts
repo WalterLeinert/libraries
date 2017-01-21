@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 // Fluxgate
-import { Service, IService } from '../../services';
+import { Service, IService } from '.';
 
 
 /**
