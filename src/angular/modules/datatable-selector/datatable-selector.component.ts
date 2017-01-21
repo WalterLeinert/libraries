@@ -46,7 +46,7 @@ export class Tuple<T1, T2, T3> {
     
     <div *ngIf="config && config.columnInfos">
       <ul *ngFor="let info of config.columnInfos">
-        <p-column field="{{info.field}}" header="{{info.label}}" [sortable]="true"></p-column>
+        <p-column field="{{info.valueField}}" header="{{info.textField}}" [sortable]="true"></p-column>
       </ul>
     </div>
     </p-dataTable>
