@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 // Fluxgate
-import { Service, IServiceBase, IServiceCrud } from '../../services';
+import { Service, IService } from '../../services';
 
 
 /**
@@ -9,7 +9,7 @@ import { Service, IServiceBase, IServiceCrud } from '../../services';
  * Delegiert service calls an den eigentlichen Service.
  */
 @Injectable()
-export class ProxyService implements IServiceCrud, IServiceBase {
+export class ProxyService implements IService {
 
     /**
      * der eigentliche Service
