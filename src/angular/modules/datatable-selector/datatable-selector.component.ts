@@ -1,8 +1,17 @@
 // Angular
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Injector, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
-import { IDropdownAdapter } from '../../common/adapter';
+
+// Fluxgate
+import { TableMetadata, ColumnMetadata, ColumnTypes, Constants, Assert } from '@fluxgate/common';
+
+import { ProxyService } from '../autoform//proxy.service';
+import { Service, IService } from '../../services';
+import { MetadataService } from '../../services';
+import { BaseComponent } from '../../common/base';
+
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 
 export class Tuple<T1, T2, T3> {
@@ -28,7 +37,7 @@ export class Tuple<T1, T2, T3> {
     <input #gb type="text" pInputText size="20" style="float:left" placeholder="search...">
   </div>
 
-  <p-dataTable [value]="dropdownAdapter.data" sortMode="sortMode" resizableColumns="true" [rows]="rows" 
+  <p-dataTable [(value)]="data" sortMode="sortMode" resizableColumns="true" [rows]="rows" 
     [paginator]="true" [globalFilter]="gb"
     selectionMode="single" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event.data)">
     <ul *ngFor="let info of config.columnInfos">
@@ -42,7 +51,7 @@ export class Tuple<T1, T2, T3> {
   `,
   styles: []
 })
-export class DataTableSelectorComponent implements OnInit {
+export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
 
   /**
    * falls true, wird Debug-Info beim Control angezeigt
@@ -69,14 +78,6 @@ export class DataTableSelectorComponent implements OnInit {
    */
   @Input() rows: number = 5;
 
-  /**
-   * der zugehörige Adapter für die Anbindung der Daten für die Werteliste
-   * 
-   * @type {IDropdownAdapter}
-   * @memberOf DropdownSelectorComponent
-   */
-  @Input() dropdownAdapter: IDropdownAdapter;
-
 
   /**
    * 
@@ -100,6 +101,22 @@ export class DataTableSelectorComponent implements OnInit {
    */
   @Input() data: any[] = [];
 
+  /**
+   * dataChange Event: wird bei jeder SelektionÄänderung von data gefeuert.
+   * 
+   * Eventdaten: @type{any} - selektiertes Objekt.
+   * 
+   * @memberOf DataTableSelectorComponent
+   */
+  @Output() dataChange = new EventEmitter<any>();
+
+  /**
+   * der Service zum Bereitstellen der Daten
+   * 
+   * @type {IService}
+   * @memberOf DataTableSelectorComponent
+   */
+  @Input() dataService: IService;
 
   /**
    * Index der initial zu selektierenden Zeile (0..n-1)
@@ -129,18 +146,32 @@ export class DataTableSelectorComponent implements OnInit {
   @Input() selectedValue: any = {};
 
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) {
+  constructor(router: Router, service: ProxyService, private metadataService: MetadataService,
+    private injector: Injector, private changeDetectorRef: ChangeDetectorRef) {
+    super(router, service);
   }
 
   ngOnInit() {
-    if (this.selectedIndex >= 0 && this.selectedIndex < this.dropdownAdapter.data.length) {
-      this.dropdownAdapter.getValueAt(this.selectedIndex)
-        .subscribe(item => this.selectedValue = item);
-    }
+    this.service.proxyService(this.dataService);
+
+    // this.setupProxy(this.entityName);
+    this.service.find()
+      .subscribe(
+      items => {
+        this.data = items;
+
+        if (this.selectedIndex >= 0 && this.selectedIndex < this.data.length) {
+          this.selectedValue = this.data[this.selectedIndex];
+        }
+      },
+      (error: Error) => {
+        this.handleError(error);
+      });
   }
 
   ngOnDestroy() {
   }
+
 
   public onRowSelect(row) {
     this.changeDetectorRef.detectChanges();
