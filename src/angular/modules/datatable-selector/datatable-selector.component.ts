@@ -56,6 +56,7 @@ export class Tuple<T1, T2, T3> {
   styles: []
 })
 export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
+  private isPreselecting: boolean = false;
 
   /**
    * falls true, wird Debug-Info beim Control angezeigt
@@ -127,7 +128,16 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    * @type {number}
    * @memberOf DataTableSelectorComponent
    */
-  @Input() selectedIndex: number = -1;
+  private _selectedIndex: number = -1;
+
+  /**
+   * selectedIndexChange Event: wird bei jeder Änderung von selectedIndex gefeuert.
+   * 
+   * Eventdaten: @type{any} - selektiertes Objekt.
+   * 
+   * @memberOf DataTableSelectorComponent
+   */
+  @Output() selectedIndexChange = new EventEmitter<number>();
 
 
   /**
@@ -146,7 +156,9 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    * @type {*}
    * @memberOf DataTableSelectorComponent
    */
-  @Input() selectedValue: any = {};
+  private _selectedValue: any = {};
+
+
 
   constructor(router: Router, service: ProxyService, private metadataService: MetadataService,
     private injector: Injector, private changeDetectorRef: ChangeDetectorRef) {
@@ -183,6 +195,8 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
   }
 
 
+
+
   /**
    * Falls ein positiver und gültiger selectedIndex angegeben ist, wird der selectedValue auf des 
    * entsprechende Item gesetzt. 
@@ -192,12 +206,21 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    * @memberOf DataTableSelectorComponent
    */
   private preselectData() {
-    if (this.selectedIndex >= 0 && this.selectedIndex < this.data.length) {
-      this.selectedValue = this.data[this.selectedIndex];
-      this.onSelectedValueChange(this.selectedValue);
-    } else if (this.data.length > 0) {
-      this.selectedValue = this.data[0];
-      this.onSelectedValueChange(this.selectedValue);
+    if (!this.isPreselecting) {
+      this.isPreselecting = true;
+
+      try {
+        if (!this.data) {
+          return;
+        }
+        if (this.selectedIndex >= 0 && this.selectedIndex < this.data.length) {
+          this.selectedValue = this.data[this.selectedIndex];
+        } else if (this.data.length > 0) {
+          this.selectedValue = this.data[0];
+        }
+      } finally {
+        this.isPreselecting = false;
+      }
     }
   }
 
@@ -272,7 +295,52 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
     this.selectedValueChange.emit(row);
   }
 
+
+  // -------------------------------------------------------------------------------------
+  // selectedValue und der Change Event
+  // -------------------------------------------------------------------------------------
+
   protected onSelectedValueChange(value: any) {
     this.selectedValueChange.emit(value);
+
+    if (this.selectedValue) {
+      let index = this.data.indexOf(value);
+      this.selectedIndex = index;
+    }
+
+    this.preselectData();
+  }
+
+  public get selectedValue(): any {
+    return this._selectedValue;
+  }
+
+  @Input() public set selectedValue(value: any) {
+    if (this.selectedValue !== value) {
+      this._selectedValue = value;
+      this.onSelectedValueChange(this.selectedValue);
+    }
+  }
+
+
+  // -------------------------------------------------------------------------------------
+  // selectedIndex und der Change Event
+  // -------------------------------------------------------------------------------------
+
+  protected onSelectedIndexChange(index: number) {
+    this.selectedIndexChange.emit(index);
+
+    this.preselectData();
+  }
+
+  public get selectedIndex(): number {
+    return this._selectedIndex;
+  }
+
+  @Input() public set selectedIndex(index: number) {
+    if (this.selectedIndex !== index) {
+      this._selectedIndex = index;
+      this.onSelectedIndexChange(this.selectedIndex);
+    }
   }
 }
