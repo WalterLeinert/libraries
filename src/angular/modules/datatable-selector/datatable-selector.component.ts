@@ -101,7 +101,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    * @type {any[]}
    * @memberOf DataTableSelectorComponent
    */
-  @Input() data: any[];
+  @Input() _data: any[];
 
   /**
    * dataChange Event: wird bei jeder SelektionÄänderung von data gefeuert.
@@ -297,7 +297,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
 
 
   // -------------------------------------------------------------------------------------
-  // selectedValue und der Change Event
+  // Property selectedValue und der Change Event
   // -------------------------------------------------------------------------------------
 
   protected onSelectedValueChange(value: any) {
@@ -316,15 +316,15 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
   }
 
   @Input() public set selectedValue(value: any) {
-    if (this.selectedValue !== value) {
+    if (this._selectedValue !== value) {
       this._selectedValue = value;
-      this.onSelectedValueChange(this.selectedValue);
+      this.onSelectedValueChange(value);
     }
   }
 
 
   // -------------------------------------------------------------------------------------
-  // selectedIndex und der Change Event
+  // Property selectedIndex und der Change Event
   // -------------------------------------------------------------------------------------
 
   protected onSelectedIndexChange(index: number) {
@@ -338,9 +338,29 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
   }
 
   @Input() public set selectedIndex(index: number) {
-    if (this.selectedIndex !== index) {
+    if (this._selectedIndex !== index) {
       this._selectedIndex = index;
-      this.onSelectedIndexChange(this.selectedIndex);
+      this.onSelectedIndexChange(index);
+    }
+  }
+
+
+  // -------------------------------------------------------------------------------------
+  // Property data und der Change Event
+  // -------------------------------------------------------------------------------------
+
+  protected onDataChange(value: any) {
+    this.dataChange.emit(value);
+  }
+
+  public get data(): any {
+    return this._data;
+  }
+
+  @Input() public set data(data: any) {
+    if (this._data !== data) {
+      this._data = data;
+      this.onDataChange(data);
     }
   }
 }
