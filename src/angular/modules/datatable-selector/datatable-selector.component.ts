@@ -1,4 +1,5 @@
 // Angular
+import { IColumnInfo } from "./datatable-selectorConfig.interface";
 import { Component, Injector, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -42,9 +43,12 @@ export class Tuple<T1, T2, T3> {
   <p-dataTable [(value)]="data" sortMode="sortMode" resizableColumns="true" [rows]="rows" 
     [paginator]="true" [globalFilter]="gb"
     selectionMode="single" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event.data)">
-    <ul *ngFor="let info of config.columnInfos">
-      <p-column field="{{info.field}}" header="{{info.label}}" [sortable]="true"></p-column>
-    </ul>
+    
+    <div *ngIf="config && config.columnInfos">
+      <ul *ngFor="let info of config.columnInfos">
+        <p-column field="{{info.field}}" header="{{info.label}}" [sortable]="true"></p-column>
+      </ul>
+    </div>
     </p-dataTable>
 </div>
 <div *ngIf="debug">
@@ -82,18 +86,13 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
 
 
   /**
-   * 
+   * Die Spaltenkonfiguration.
    * 
    * @type {IDataTableSelectorConfig}
    * @memberOf DataTableSelectorComponent
    */
-  @Input() config: IDataTableSelectorConfig = {
-    columnInfos: [
-      { label: 'Name', field: 'name' },
- /*     { label: 'Nummer', field: 'nummer' },
-      { label: 'Saison', field: 'saison' }*/
-    ]
-  };
+  @Input() config: IDataTableSelectorConfig;
+
 
   /**
    * angebundene Objektliste statt Liste von Entities aus DB.
@@ -103,7 +102,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    * @type {any[]}
    * @memberOf DataTableSelectorComponent
    */
-  @Input() data: any[] = [];
+  @Input() data: any;
 
   /**
    * dataChange Event: wird bei jeder SelektionÄänderung von data gefeuert.
@@ -157,10 +156,13 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
   }
 
   ngOnInit() {
+    super.ngOnInit();
+
     if (this.data) {
-      Assert.that(! this.dataService, `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
+      Assert.that(!this.dataService, `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
 
       this.preselectData();
+      this.setupColumnInfos();
     } else {
       Assert.notNull(this.dataService, `Wenn Property data nicht gesetzt ist, muss dataService gesetzt sein.`);
 
@@ -173,6 +175,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
           this.data = items;
 
           this.preselectData();
+          this.setupColumnInfos();
         },
         (error: Error) => {
           this.handleError(error);
@@ -181,13 +184,51 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
 
   }
 
+
+  /**
+   * Falls ein positiver und gültiger selectedIndex angegeben ist, wird der selectedValue auf des 
+   * entsprechende Item gesetzt. 
+   * 
+   * @private
+   * 
+   * @memberOf DataTableSelectorComponent
+   */
   private preselectData() {
     if (this.selectedIndex >= 0 && this.selectedIndex < this.data.length) {
       this.selectedValue = this.data[this.selectedIndex];
     }
   }
 
-  ngOnDestroy() {
+
+  /**
+   * falls keine Column-Konfiguration angegeben ist, wird diese über Reflection erzeugt
+   * 
+   * @private
+   * 
+   * @memberOf DataTableSelectorComponent
+   */
+  private setupColumnInfos() {
+    if (!this.config) {
+      let columnInfos: IColumnInfo[] = [];
+
+      if (this.data.length > 0) {
+
+        // alle Properties des ersten Items über Reflection ermitteln        
+        let props = Reflect.ownKeys(this.data[0]);
+
+        // ... und dann entsprechende ColumnInfos erzeugen
+        for (let propName of props) {
+          columnInfos.push(<IColumnInfo>{
+            label: propName,
+            field: propName
+          });
+        }
+      }
+
+      this.config = {
+        columnInfos: columnInfos
+      }
+    }
   }
 
 
