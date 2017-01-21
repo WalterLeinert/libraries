@@ -3,6 +3,8 @@ import { Component, Injector, Input, Output, EventEmitter, OnInit, OnDestroy } f
 import { ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/throw';
 
 // Fluxgate
 import { TableMetadata, ColumnMetadata, ColumnTypes, Constants, Assert } from '@fluxgate/common';
@@ -59,7 +61,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    * @type {boolean}
    * @memberOf DataTableSelectorComponent
    */
-  @Input() debug: boolean = true;     // TODO: wenn implementierung fertig auf false setzen
+  @Input() debug: boolean = false;
 
 
   /**
@@ -88,13 +90,15 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
   @Input() config: IDataTableSelectorConfig = {
     columnInfos: [
       { label: 'Name', field: 'name' },
-      { label: 'Nummer', field: 'nummer' },
-      { label: 'Saison', field: 'saison' }
+ /*     { label: 'Nummer', field: 'nummer' },
+      { label: 'Saison', field: 'saison' }*/
     ]
   };
 
   /**
-   *  angebundene Objektliste (TODO: nur zum Test)
+   * angebundene Objektliste statt Liste von Entities aus DB.
+   * 
+   * Hinweis: data und dataService dürfen nicht gleichzeitig gesetzt sein!
    * 
    * @type {any[]}
    * @memberOf DataTableSelectorComponent
@@ -112,6 +116,8 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
 
   /**
    * der Service zum Bereitstellen der Daten
+   * 
+   * Hinweis: data und dataService dürfen nicht gleichzeitig gesetzt sein!
    * 
    * @type {IService}
    * @memberOf DataTableSelectorComponent
@@ -145,28 +151,40 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    */
   @Input() selectedValue: any = {};
 
-
   constructor(router: Router, service: ProxyService, private metadataService: MetadataService,
     private injector: Injector, private changeDetectorRef: ChangeDetectorRef) {
     super(router, service);
   }
 
   ngOnInit() {
-    this.service.proxyService(this.dataService);
+    if (this.data) {
+      Assert.that(! this.dataService, `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
 
-    // this.setupProxy(this.entityName);
-    this.service.find()
-      .subscribe(
-      items => {
-        this.data = items;
+      this.preselectData();
+    } else {
+      Assert.notNull(this.dataService, `Wenn Property data nicht gesetzt ist, muss dataService gesetzt sein.`);
 
-        if (this.selectedIndex >= 0 && this.selectedIndex < this.data.length) {
-          this.selectedValue = this.data[this.selectedIndex];
-        }
-      },
-      (error: Error) => {
-        this.handleError(error);
-      });
+      this.service.proxyService(this.dataService);
+
+      // this.setupProxy(this.entityName);
+      this.service.find()
+        .subscribe(
+        items => {
+          this.data = items;
+
+          this.preselectData();
+        },
+        (error: Error) => {
+          this.handleError(error);
+        });
+    }
+
+  }
+
+  private preselectData() {
+    if (this.selectedIndex >= 0 && this.selectedIndex < this.data.length) {
+      this.selectedValue = this.data[this.selectedIndex];
+    }
   }
 
   ngOnDestroy() {
