@@ -1,5 +1,5 @@
 // Angular
-import { Component, Injector, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -162,7 +162,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
 
 
   constructor(router: Router, service: ProxyService, private metadataService: MetadataService,
-    private injector: Injector, private changeDetectorRef: ChangeDetectorRef) {
+    private changeDetectorRef: ChangeDetectorRef) {
     super(router, service);
   }
 
