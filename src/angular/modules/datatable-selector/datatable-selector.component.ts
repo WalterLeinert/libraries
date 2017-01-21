@@ -162,7 +162,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
       Assert.that(!this.dataService, `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
 
       this.preselectData();
-      this.setupColumnInfos();
+      this.setupColumnInfosByReflection();
     } else {
       Assert.notNull(this.dataService, `Wenn Property data nicht gesetzt ist, muss dataService gesetzt sein.`);
 
@@ -175,7 +175,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
           this.data = items;
 
           this.preselectData();
-          this.setupColumnInfos();
+          this.setupColumnInfosByMetadata();
         },
         (error: Error) => {
           this.handleError(error);
@@ -201,13 +201,43 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
 
 
   /**
+   * falls keine Column-Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
+   * 
+   * @private
+   * 
+   * @memberOf DataTableSelectorComponent
+   */
+  private setupColumnInfosByMetadata() {
+    if (!this.config) {
+      let columnInfos: IColumnInfo[] = [];
+
+      let tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
+      let columnMetadata = tableMetadata.columnMetadata;
+
+      for (let cm of tableMetadata.columnMetadata) {
+        if (cm.options.displayName) {
+          columnInfos.push(<IColumnInfo>{
+            label: cm.options.displayName,
+            field: cm.propertyName
+          });
+        }
+      }
+
+      this.config = {
+        columnInfos: columnInfos
+      }
+    }
+  }
+
+
+  /**
    * falls keine Column-Konfiguration angegeben ist, wird diese über Reflection erzeugt
    * 
    * @private
    * 
    * @memberOf DataTableSelectorComponent
    */
-  private setupColumnInfos() {
+  private setupColumnInfosByReflection() {
     if (!this.config) {
       let columnInfos: IColumnInfo[] = [];
 
