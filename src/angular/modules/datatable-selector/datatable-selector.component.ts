@@ -15,10 +15,7 @@ import { BaseComponent } from '../../common/base';
 
 import { IDataTableSelectorConfig, IColumnInfo } from './datatable-selectorConfig.interface';
 
-export class Tuple<T1, T2, T3> {
-  constructor(public v1: T1, public v2: T2, public v3?: T3) {
-  }
-}
+export type sortMode = 'single' | 'muldiple';
 
 
 /**
@@ -56,6 +53,10 @@ export class Tuple<T1, T2, T3> {
   styles: []
 })
 export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
+
+  /**
+   * Schutz vor rekursivem Ping-Pong
+   */
   private isPreselecting: boolean = false;
 
   /**
@@ -101,7 +102,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    * @type {any[]}
    * @memberOf DataTableSelectorComponent
    */
-  @Input() _data: any[];
+  private _data: any[];
 
   /**
    * dataChange Event: wird bei jeder SelektionÄänderung von data gefeuert.
@@ -167,6 +168,10 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
 
   ngOnInit() {
     super.ngOnInit();
+
+    if (this.sortMode) {
+      Assert.that(this.sortMode === 'single' || this.sortMode === 'multiple');
+    }
 
     if (this.data) {
       Assert.that(!this.dataService, `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
