@@ -9,7 +9,7 @@ export interface IColumnInfo {
      * @type {string}
      * @memberOf IColumnInfo
      */
-    label: string;
+    textField: string;
 
     /**
      * der Propertyname der Spalte (-> Wert)
@@ -17,7 +17,7 @@ export interface IColumnInfo {
      * @type {string}
      * @memberOf IFieldOptions
      */
-    field: string;
+    valueField: string;
 }
 
 

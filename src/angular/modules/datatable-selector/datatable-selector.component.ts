@@ -217,8 +217,8 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
       for (let cm of tableMetadata.columnMetadata) {
         if (cm.options.displayName) {
           columnInfos.push(<IColumnInfo>{
-            label: cm.options.displayName,
-            field: cm.propertyName
+            textField: cm.options.displayName,
+            valueField: cm.propertyName
           });
         }
       }
@@ -249,8 +249,8 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
         // ... und dann entsprechende ColumnInfos erzeugen
         for (let propName of props) {
           columnInfos.push(<IColumnInfo>{
-            label: propName,
-            field: propName
+            textField: propName,
+            valueField: propName
           });
         }
       }
