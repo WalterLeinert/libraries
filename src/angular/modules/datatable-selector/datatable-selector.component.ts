@@ -100,7 +100,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    * @type {any[]}
    * @memberOf DataTableSelectorComponent
    */
-  @Input() data: any;
+  @Input() data: any[];
 
   /**
    * dataChange Event: wird bei jeder SelektionÄänderung von data gefeuert.
@@ -194,6 +194,10 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
   private preselectData() {
     if (this.selectedIndex >= 0 && this.selectedIndex < this.data.length) {
       this.selectedValue = this.data[this.selectedIndex];
+      this.onSelectedValueChange(this.selectedValue);
+    } else if (this.data.length > 0) {
+      this.selectedValue = this.data[0];
+      this.onSelectedValueChange(this.selectedValue);
     }
   }
 
@@ -266,5 +270,9 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
       console.log(`DataTableSelectorComponent.onRowSelect: ${JSON.stringify(row)}`);
     }
     this.selectedValueChange.emit(row);
+  }
+
+  protected onSelectedValueChange(value: any) {
+    this.selectedValueChange.emit(value);
   }
 }
