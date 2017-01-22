@@ -220,7 +220,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
       let metaDataWithDisplayName = tableMetadata.columnMetadata.filter(item => item.options.displayName && item.propertyType === 'string');
       if (metaDataWithDisplayName && metaDataWithDisplayName.length > 0) {
         // erste string-Propery mit gesetztem Displaynamen
-        displayMetadataName = metaDataWithDisplayName[0].options.displayName;
+        displayMetadataName = metaDataWithDisplayName[0].propertyName;
       }
 
       this.config.displayInfo.textField = displayMetadataName;
