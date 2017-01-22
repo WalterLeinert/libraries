@@ -1,4 +1,4 @@
-import { IDisplayInfo } from '../../../angular/common/base';
+import { IDisplayInfo } from '../../../base';
 
 /**
  * Optionen für den Aufbau der Anzeigeliste

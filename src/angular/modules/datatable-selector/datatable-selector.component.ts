@@ -1,17 +1,18 @@
 // Angular
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { TableMetadata, ColumnMetadata, ColumnTypes, Constants, Assert } from '@fluxgate/common';
+import { Assert } from '@fluxgate/common';
 
-import { Service, IService } from '../../services';
+import { IService } from '../../services';
 import { MetadataService, ProxyService } from '../../services';
-import { BaseComponent, IDisplayInfo, DisplayInfo } from '../../common/base';
+
+import { IDisplayInfo } from '../../../base';
+import { BaseComponent } from '../../common/base';
 
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 

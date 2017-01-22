@@ -4,11 +4,13 @@ import { ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 // Fluxgate
-import { TableMetadata, ColumnMetadata, ColumnTypes, Constants, Assert } from '@fluxgate/common';
+import { Assert } from '@fluxgate/common';
 
-import { Service, IService } from '../../services';
+import { IService } from '../../services';
 import { MetadataService, ProxyService } from '../../services';
-import { BaseComponent, IDisplayInfo, DisplayInfo } from '../../common/base';
+
+import { DisplayInfo } from '../../../base';
+import { BaseComponent } from '../../common/base';
 
 import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
 
