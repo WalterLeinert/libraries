@@ -12,9 +12,9 @@ import { IService } from '../../services';
 import { MetadataService, ProxyService } from '../../services';
 
 import { IDisplayInfo } from '../../../base';
-import { BaseComponent } from '../../common/base';
 
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
+import {ListSelectorComponent} from '../common/list-selector.component';
 
 export type sortMode = 'single' | 'multiple';
 
@@ -53,21 +53,7 @@ export type sortMode = 'single' | 'multiple';
   `,
   styles: []
 })
-export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
-
-  /**
-   * Schutz vor rekursivem Ping-Pong
-   */
-  private isPreselecting: boolean = false;
-
-  /**
-   * falls true, wird Debug-Info beim Control angezeigt
-   * 
-   * @type {boolean}
-   * @memberOf DataTableSelectorComponent
-   */
-  @Input() debug: boolean = false;
-
+export class DataTableSelectorComponent extends ListSelectorComponent {
 
   /**
    * Sortmodus: single|multiple 
@@ -95,76 +81,9 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
   @Input() config: IDataTableSelectorConfig;
 
 
-  /**
-   * angebundene Objektliste statt Liste von Entities aus DB.
-   * 
-   * Hinweis: data und dataService dürfen nicht gleichzeitig gesetzt sein!
-   * 
-   * @type {any[]}
-   * @memberOf DataTableSelectorComponent
-   */
-  private _data: any[];
 
-  /**
-   * dataChange Event: wird bei jeder SelektionÄänderung von data gefeuert.
-   * 
-   * Eventdaten: @type{any} - selektiertes Objekt.
-   * 
-   * @memberOf DataTableSelectorComponent
-   */
-  @Output() dataChange = new EventEmitter<any>();
-
-  /**
-   * der Service zum Bereitstellen der Daten
-   * 
-   * Hinweis: data und dataService dürfen nicht gleichzeitig gesetzt sein!
-   * 
-   * @type {IService}
-   * @memberOf DataTableSelectorComponent
-   */
-  @Input() dataService: IService;
-
-  /**
-   * Index der initial zu selektierenden Zeile (0..n-1)
-   * 
-   * @type {number}
-   * @memberOf DataTableSelectorComponent
-   */
-  private _selectedIndex: number = -1;
-
-  /**
-   * selectedIndexChange Event: wird bei jeder Änderung von selectedIndex gefeuert.
-   * 
-   * Eventdaten: @type{any} - selektiertes Objekt.
-   * 
-   * @memberOf DataTableSelectorComponent
-   */
-  @Output() selectedIndexChange = new EventEmitter<number>();
-
-
-  /**
-   * selectedValueChange Event: wird bei jeder Selektionsänderung gefeuert.
-   * 
-   * Eventdaten: @type{any} - selektiertes Objekt.
-   * 
-   * @memberOf DataTableSelectorComponent
-   */
-  @Output() selectedValueChange = new EventEmitter<any>();
-
-
-  /**
-   * das aktuell selektierte Objekt
-   * 
-   * @type {*}
-   * @memberOf DataTableSelectorComponent
-   */
-  private _selectedValue: any = {};
-
-
-
-  constructor(router: Router, service: ProxyService, private metadataService: MetadataService,
-    private changeDetectorRef: ChangeDetectorRef) {
-    super(router, service);
+  constructor(router: Router, service: ProxyService, metadataService: MetadataService, changeDetectorRef: ChangeDetectorRef) {
+    super(router, service, metadataService, changeDetectorRef);
   }
 
   ngOnInit() {
@@ -172,30 +91,6 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
 
     if (this.sortMode) {
       Assert.that(this.sortMode === 'single' || this.sortMode === 'multiple');
-    }
-
-    if (this.data) {
-      Assert.that(!this.dataService, `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
-
-      this.preselectData();
-      this.setupColumnInfosByReflection();
-    } else {
-      Assert.notNull(this.dataService, `Wenn Property data nicht gesetzt ist, muss dataService gesetzt sein.`);
-
-      this.service.proxyService(this.dataService);
-
-      // this.setupProxy(this.entityName);
-      this.service.find()
-        .subscribe(
-        items => {
-          this.data = items;
-
-          this.preselectData();
-          this.setupColumnInfosByMetadata();
-        },
-        (error: Error) => {
-          this.handleError(error);
-        });
     }
 
   }
@@ -210,23 +105,26 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    * 
    * @memberOf DataTableSelectorComponent
    */
-  private preselectData() {
-    if (!this.isPreselecting) {
-      this.isPreselecting = true;
+  protected preselectData() {
+    super.preselectData();
 
-      try {
-        if (!this.data) {
-          return;
-        }
-        if (this.selectedIndex >= 0 && this.selectedIndex < this.data.length) {
-          this.selectedValue = this.data[this.selectedIndex];
-        } else if (this.data.length > 0) {
-          this.selectedValue = this.data[0];
-        }
-      } finally {
-        this.isPreselecting = false;
-      }
-    }
+    // TODO
+    // if (!this.isPreselecting) {
+    //   this.isPreselecting = true;
+    //
+    //   try {
+    //     if (!this.data) {
+    //       return;
+    //     }
+    //     if (this.selectedIndex >= 0 && this.selectedIndex < this.data.length) {
+    //       this.selectedValue = this.data[this.selectedIndex];
+    //     } else if (this.data.length > 0) {
+    //       this.selectedValue = this.data[0];
+    //     }
+    //   } finally {
+    //     this.isPreselecting = false;
+    //   }
+    // }
   }
 
 
@@ -237,7 +135,9 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    * 
    * @memberOf DataTableSelectorComponent
    */
-  private setupColumnInfosByMetadata() {
+  protected setupColumnInfosByMetadata() {
+    super.setupColumnInfosByMetadata();
+
     if (!this.config) {
       let columnInfos: IDisplayInfo[] = [];
 
@@ -255,7 +155,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
 
       this.config = {
         columnInfos: columnInfos
-      }
+      };
     }
   }
 
@@ -267,7 +167,9 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    * 
    * @memberOf DataTableSelectorComponent
    */
-  private setupColumnInfosByReflection() {
+  protected setupColumnInfosByReflection() {
+    super.setupColumnInfosByReflection();
+
     if (!this.config) {
       let columnInfos: IDisplayInfo[] = [];
 
@@ -287,7 +189,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
 
       this.config = {
         columnInfos: columnInfos
-      }
+      };
     }
   }
 
@@ -300,72 +202,4 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
     this.selectedValueChange.emit(row);
   }
 
-
-  // -------------------------------------------------------------------------------------
-  // Property selectedValue und der Change Event
-  // -------------------------------------------------------------------------------------
-
-  protected onSelectedValueChange(value: any) {
-    this.selectedValueChange.emit(value);
-
-    if (this.selectedValue) {
-      let index = this.data.indexOf(value);
-      this.selectedIndex = index;
-    }
-
-    this.preselectData();
-  }
-
-  public get selectedValue(): any {
-    return this._selectedValue;
-  }
-
-  @Input() public set selectedValue(value: any) {
-    if (this._selectedValue !== value) {
-      this._selectedValue = value;
-      this.onSelectedValueChange(value);
-    }
-  }
-
-
-  // -------------------------------------------------------------------------------------
-  // Property selectedIndex und der Change Event
-  // -------------------------------------------------------------------------------------
-
-  protected onSelectedIndexChange(index: number) {
-    this.selectedIndexChange.emit(index);
-
-    this.preselectData();
-  }
-
-  public get selectedIndex(): number {
-    return this._selectedIndex;
-  }
-
-  @Input() public set selectedIndex(index: number) {
-    if (this._selectedIndex !== index) {
-      this._selectedIndex = index;
-      this.onSelectedIndexChange(index);
-    }
-  }
-
-
-  // -------------------------------------------------------------------------------------
-  // Property data und der Change Event
-  // -------------------------------------------------------------------------------------
-
-  protected onDataChange(value: any) {
-    this.dataChange.emit(value);
-  }
-
-  public get data(): any {
-    return this._data;
-  }
-
-  @Input() public set data(data: any) {
-    if (this._data !== data) {
-      this._data = data;
-      this.onDataChange(data);
-    }
-  }
 }
