@@ -104,7 +104,7 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
 
 
     constructor(router: Router, service: ProxyService, private _metadataService: MetadataService,
-                private _changeDetectorRef: ChangeDetectorRef) {
+        private _changeDetectorRef: ChangeDetectorRef) {
         super(router, service);
     }
 
@@ -122,6 +122,7 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
         if (this.data) {
             Assert.that(!this.dataService, `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
 
+            this.setupData(this.data);
             this.preselectData();
             this.setupColumnInfosByReflection();
         } else {
@@ -132,19 +133,18 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
             // this.setupProxy(this.entityName);
             this.service.find()
                 .subscribe(
-                    items => {
-                        this.data = items;
-
-                        this.preselectData();
-                        this.setupColumnInfosByMetadata();
-                    },
-                    (error: Error) => {
-                        this.handleError(error);
-                    });
+                items => {
+                    this.setupData(items);
+                    this.preselectData();
+                    this.setupColumnInfosByMetadata();
+                },
+                (error: Error) => {
+                    this.handleError(error);
+                });
         }
-
     }
 
+    protected abstract setupData(items: any[]);
 
 
     /**
@@ -187,7 +187,7 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
      * @memberOf DataTableSelectorComponent
      */
     protected setupColumnInfosByMetadata() {
-      // TODO
+
     }
 
 
@@ -200,15 +200,6 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
      */
     protected setupColumnInfosByReflection() {
         // TODO
-    }
-
-
-    public onRowSelect(row) {
-        this._changeDetectorRef.detectChanges();
-        if (this.debug) {
-            console.log(`DataTableSelectorComponent.onRowSelect: ${JSON.stringify(row)}`);
-        }
-        this.selectedValueChange.emit(row);
     }
 
 
