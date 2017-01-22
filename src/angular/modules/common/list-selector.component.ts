@@ -131,6 +131,7 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
                 items => {
                     this.setupConfig(items, true);
                     this.setupData(items);
+                    this.data = items;
 
                     this.preselectData();
                 },
