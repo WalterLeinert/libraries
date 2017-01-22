@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 
 // Fluxgate
-import { Assert, StringUtil, Clone } from '@fluxgate/common';
+import { Assert, StringUtil, Clone, ColumnMetadata } from '@fluxgate/common';
 
 import { MetadataService, ProxyService } from '../../services';
 
@@ -101,7 +101,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
    * @type {string}
    * @memberOf DropdownSelectorComponent
    */
-  @Input() textField: string = 'text';
+  @Input() textField: string;
 
   /**
    * Die Property in der angebundenen Werteliste, welche nach Auswahl
@@ -110,7 +110,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
    * @type {string}
    * @memberOf DropdownSelectorComponent
    */
-  @Input() valueField: string = 'value';
+  @Input() valueField: string;
 
   /**
    * Die an die PrimtNG angebundenen Werte
@@ -131,8 +131,8 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     super.ngOnInit();
   }
 
-  setupConfig() {
-    super.setupConfig();
+
+  protected setupConfig(items: any[], useService: boolean) {
 
     //
     // config überschreibt text/valueField Settings ???
@@ -161,20 +161,28 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
       }
     } else {
 
+      //
+      // 
+      //
       if (StringUtil.isNullOrEmpty(this.textField) && StringUtil.isNullOrEmpty(this.valueField)) {
-        throw new Error(`Wenn Property config nicht gesetzt ist, muss textField und valueField gesetzt sein`);
-      }
+        // metadata/reflect
+        if (useService) {
+          this.setupColumnInfosByMetadata(items);
+        } else {
+          this.setupColumnInfosByReflection(items);
+        }
+      } else {
+        this.config = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
+        this.config.displayInfo.textField = this.textField;
+        this.config.displayInfo.valueField = this.valueField;
 
-      this.config = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
-      this.config.displayInfo.textField = this.textField;
-      this.config.displayInfo.valueField = this.valueField;
+        if (this.allowNoSelection) {
+          this.config.allowNoSelection = this.allowNoSelection;
+        }
 
-      if (this.allowNoSelection) {
-        this.config.allowNoSelection = this.allowNoSelection;
-      }
-
-      if (this.allowNoSelectionText) {
-        this.config.allowNoSelectionText = this.allowNoSelectionText;
+        if (this.allowNoSelectionText) {
+          this.config.allowNoSelectionText = this.allowNoSelectionText;
+        }
       }
     }
   }
@@ -194,18 +202,75 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
 
   /**
-   * falls keine Column-Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
+   * falls keine Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
    *
-   * @private
-   *
-   * @memberOf DataTableSelectorComponent
    */
-  protected setupColumnInfosByMetadata() {
+  private setupColumnInfosByMetadata(items: any[]) {
 
+    if (!this.config) {
+      this.config = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
+
+      let columnInfos: IDisplayInfo[] = [];
+
+      let tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
+
+      // default: erste Property
+      let displayMetadataName: string = tableMetadata.columnMetadata[0].propertyName;
+
+      let metaDataWithDisplayName = tableMetadata.columnMetadata.filter(item => item.options.displayName && item.propertyType === 'string');
+      if (metaDataWithDisplayName && metaDataWithDisplayName.length > 0) {
+        // erste string-Propery mit gesetztem Displaynamen
+        displayMetadataName = metaDataWithDisplayName[0].options.displayName;
+      }
+
+      this.config.displayInfo.textField = displayMetadataName;
+      this.config.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
+    }
   }
 
 
-  protected setupColumnInfosByReflection() {
+  /**
+    * falls keine Konfiguration angegeben ist, wird diese über die Reflection erzeugt
+    *
+    */
+  private setupColumnInfosByReflection(items: any[]) {
+    if (!this.config) {
+      if (items && items.length > 0) {
+        this.config = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
+
+        let firstItem = items[0];
+        let firstPropName: string;
+
+        if (typeof firstItem === 'object') {
+          // alle Properties des ersten Items über Reflection ermitteln        
+          let props = Reflect.ownKeys(firstItem);
+
+          // ... und dann entsprechende ColumnInfos erzeugen
+          for (let prop of props) {
+
+            // erste Property merken: default
+            if (!firstPropName) {
+              firstPropName = prop.toString();
+            }
+
+            let value = firstItem[prop];
+
+            // erste string Property merken
+            if (typeof value === 'string') {
+              firstPropName = prop.toString();
+              break;
+            }
+          }
+
+          this.config.displayInfo.textField = firstPropName;
+          this.config.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
+        } else {
+          // primitive Typen direkt anzeigen/anbinden
+          this.config.displayInfo.textField = DisplayInfo.CURRENT_ITEM;
+          this.config.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
+        }
+      }
+    }
   }
 
 

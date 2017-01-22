@@ -112,31 +112,27 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
         super.ngOnInit();
 
         /**
-         * Konfiguration vorbereiten
-         */
-        this.setupConfig();
-
-        /**
          * Werteliste vorbereiten
          */
         if (this.data) {
             Assert.that(!this.dataService, `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
 
+            this.setupConfig(this.data, false);
             this.setupData(this.data);
+
             this.preselectData();
-            this.setupColumnInfosByReflection();
         } else {
             Assert.notNull(this.dataService, `Wenn Property data nicht gesetzt ist, muss dataService gesetzt sein.`);
 
             this.service.proxyService(this.dataService);
 
-            // this.setupProxy(this.entityName);
             this.service.find()
                 .subscribe(
                 items => {
+                    this.setupConfig(items, true);
                     this.setupData(items);
+
                     this.preselectData();
-                    this.setupColumnInfosByMetadata();
                 },
                 (error: Error) => {
                     this.handleError(error);
@@ -145,6 +141,8 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
     }
 
     protected abstract setupData(items: any[]);
+
+    protected abstract setupConfig(items: any[], useService: boolean);
 
 
     /**
@@ -174,33 +172,6 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
         }
     }
 
-
-    protected setupConfig() {
-
-    }
-
-    /**
-     * falls keine Column-Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
-     *
-     * @private
-     *
-     * @memberOf DataTableSelectorComponent
-     */
-    protected setupColumnInfosByMetadata() {
-
-    }
-
-
-    /**
-     * falls keine Column-Konfiguration angegeben ist, wird diese über Reflection erzeugt
-     *
-     * @private
-     *
-     * @memberOf DataTableSelectorComponent
-     */
-    protected setupColumnInfosByReflection() {
-        // TODO
-    }
 
 
     // -------------------------------------------------------------------------------------

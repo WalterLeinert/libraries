@@ -14,7 +14,7 @@ import { MetadataService, ProxyService } from '../../services';
 import { IDisplayInfo } from '../../../base';
 
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
-import {ListSelectorComponent} from '../common/list-selector.component';
+import { ListSelectorComponent } from '../common/list-selector.component';
 
 export type sortMode = 'single' | 'multiple';
 
@@ -81,7 +81,6 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   @Input() config: IDataTableSelectorConfig;
 
 
-
   constructor(router: Router, service: ProxyService, metadataService: MetadataService, changeDetectorRef: ChangeDetectorRef) {
     super(router, service, metadataService, changeDetectorRef);
   }
@@ -100,6 +99,19 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   }
 
 
+  protected setupConfig(items: any[], useService: boolean) {
+
+    if (!this.config) {
+      // metadata/reflect
+      if (useService) {
+        this.setupColumnInfosByMetadata(items);
+      } else {
+        this.setupColumnInfosByReflection(items);
+      }
+
+    }
+  }
+
   /**
    * falls keine Column-Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
    * 
@@ -107,28 +119,25 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    * 
    * @memberOf DataTableSelectorComponent
    */
-  protected setupColumnInfosByMetadata() {
-    super.setupColumnInfosByMetadata();
+  protected setupColumnInfosByMetadata(items: any[]) {
+    Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
 
-    if (!this.config) {
-      let columnInfos: IDisplayInfo[] = [];
+    let columnInfos: IDisplayInfo[] = [];
 
-      let tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
-      let columnMetadata = tableMetadata.columnMetadata;
+    let tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
 
-      for (let cm of tableMetadata.columnMetadata) {
-        if (cm.options.displayName) {
-          columnInfos.push(<IDisplayInfo>{
-            textField: cm.options.displayName,
-            valueField: cm.propertyName
-          });
-        }
+    for (let metaData of tableMetadata.columnMetadata) {
+      if (metaData.options.displayName) {
+        columnInfos.push(<IDisplayInfo>{
+          textField: metaData.options.displayName,
+          valueField: metaData.propertyName
+        });
       }
-
-      this.config = {
-        columnInfos: columnInfos
-      };
     }
+
+    this.config = {
+      columnInfos: columnInfos
+    };
   }
 
 
@@ -139,30 +148,28 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    * 
    * @memberOf DataTableSelectorComponent
    */
-  protected setupColumnInfosByReflection() {
-    super.setupColumnInfosByReflection();
+  protected setupColumnInfosByReflection(items: any[]) {
+    Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
 
-    if (!this.config) {
-      let columnInfos: IDisplayInfo[] = [];
+    let columnInfos: IDisplayInfo[] = [];
 
-      if (this.data.length > 0) {
+    if (items && items.length > 0) {
 
-        // alle Properties des ersten Items über Reflection ermitteln        
-        let props = Reflect.ownKeys(this.data[0]);
+      // alle Properties des ersten Items über Reflection ermitteln        
+      let props = Reflect.ownKeys(items[0]);
 
-        // ... und dann entsprechende ColumnInfos erzeugen
-        for (let propName of props) {
-          columnInfos.push(<IDisplayInfo>{
-            textField: propName,
-            valueField: propName
-          });
-        }
+      // ... und dann entsprechende ColumnInfos erzeugen
+      for (let propName of props) {
+        columnInfos.push(<IDisplayInfo>{
+          textField: propName,
+          valueField: propName
+        });
       }
-
-      this.config = {
-        columnInfos: columnInfos
-      };
     }
+
+    this.config = {
+      columnInfos: columnInfos
+    };
   }
 
 
@@ -173,5 +180,4 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     }
     this.selectedValueChange.emit(row);
   }
-
 }
