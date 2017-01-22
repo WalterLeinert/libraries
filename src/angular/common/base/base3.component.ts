@@ -11,7 +11,10 @@ import { IServiceBase } from '../../services';
  * @implements {OnInit}
  * @template TService - der konkrete Service
  */
-export abstract class Base3Component<TService1 extends IServiceBase, TService2 extends IServiceBase, TService3 extends IServiceBase> extends Base2Component<TService1, TService2> {
+export abstract class Base3Component<
+  TService1 extends IServiceBase,
+  TService2 extends IServiceBase,
+  TService3 extends IServiceBase> extends Base2Component<TService1, TService2> {
     /**
    * Creates an instance of BaseComponent.
    * 
