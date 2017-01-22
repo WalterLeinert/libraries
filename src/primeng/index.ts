@@ -1,2 +1,2 @@
 export * from './calendarLocale';
-export * from './adapter';
+// export * from './adapter';
