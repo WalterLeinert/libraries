@@ -305,6 +305,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
   }
 
   public onChange(value) {
+    this.changeDetectorRef.detectChanges();
     if (this.debug) {
       console.log(`DropdownSelectorComponent.onChange: ${JSON.stringify(value)}`);
     }

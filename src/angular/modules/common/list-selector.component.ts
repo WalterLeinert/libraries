@@ -180,6 +180,7 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
     // -------------------------------------------------------------------------------------
 
     protected onSelectedValueChange(value: any) {
+        this.changeDetectorRef.detectChanges();
         this.selectedValueChange.emit(value);
 
         if (this.selectedValue) {
