@@ -11,11 +11,11 @@ import { TableMetadata, ColumnMetadata, ColumnTypes, Constants, Assert } from '@
 
 import { Service, IService } from '../../services';
 import { MetadataService, ProxyService } from '../../services';
-import { BaseComponent } from '../../common/base';
+import { BaseComponent, IDisplayInfo, DisplayInfo } from '../../common/base';
 
-import { IDataTableSelectorConfig, IColumnInfo } from './datatable-selectorConfig.interface';
+import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 
-export type sortMode = 'single' | 'muldiple';
+export type sortMode = 'single' | 'multiple';
 
 
 /**
@@ -201,7 +201,6 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
 
 
 
-
   /**
    * Falls ein positiver und gültiger selectedIndex angegeben ist, wird der selectedValue auf des 
    * entsprechende Item gesetzt. 
@@ -239,14 +238,14 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    */
   private setupColumnInfosByMetadata() {
     if (!this.config) {
-      let columnInfos: IColumnInfo[] = [];
+      let columnInfos: IDisplayInfo[] = [];
 
       let tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
       let columnMetadata = tableMetadata.columnMetadata;
 
       for (let cm of tableMetadata.columnMetadata) {
         if (cm.options.displayName) {
-          columnInfos.push(<IColumnInfo>{
+          columnInfos.push(<IDisplayInfo>{
             textField: cm.options.displayName,
             valueField: cm.propertyName
           });
@@ -269,7 +268,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
    */
   private setupColumnInfosByReflection() {
     if (!this.config) {
-      let columnInfos: IColumnInfo[] = [];
+      let columnInfos: IDisplayInfo[] = [];
 
       if (this.data.length > 0) {
 
@@ -278,7 +277,7 @@ export class DataTableSelectorComponent extends BaseComponent<ProxyService> {
 
         // ... und dann entsprechende ColumnInfos erzeugen
         for (let propName of props) {
-          columnInfos.push(<IColumnInfo>{
+          columnInfos.push(<IDisplayInfo>{
             textField: propName,
             valueField: propName
           });

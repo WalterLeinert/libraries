@@ -1,25 +1,4 @@
-/**
- * Die Konfiguration einer Tabellenspalte
- */
-export interface IColumnInfo {
-
-    /**
-     * der Anzeigename der Spalte
-     * 
-     * @type {string}
-     * @memberOf IColumnInfo
-     */
-    textField: string;
-
-    /**
-     * der Propertyname der Spalte (-> Wert)
-     * 
-     * @type {string}
-     * @memberOf IFieldOptions
-     */
-    valueField: string;
-}
-
+import { IDisplayInfo } from '../../../angular/common/base/displayInfo.interface';
 
 /**
  * Die Konfiguration der Komponente @see{DataTableSelectorComponent}
@@ -27,10 +6,10 @@ export interface IColumnInfo {
 export interface IDataTableSelectorConfig {
 
     /**
-     * Die Spaltenkonfiguration
+     * Die Spaltenkonfiguration für Anzeige/Wertebinding
      * 
-     * @type {IColumnInfo[]}
+     * @type {IDisplayInfo[]}
      * @memberOf IDataTableSelectorOptions
      */
-    columnInfos: IColumnInfo[];
+    columnInfos: IDisplayInfo[];
 }
