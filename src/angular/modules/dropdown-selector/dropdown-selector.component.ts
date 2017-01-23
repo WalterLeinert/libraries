@@ -118,7 +118,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
    * @type {any[]}
    * @memberOf DropdownSelectorComponent
    */
-  public options: SelectItem[] = [];
+  public options: SelectItem[];
 
 
   constructor(router: Router, service: ProxyService, metadataService: MetadataService,
@@ -189,6 +189,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
   protected setupData(items: any[]) {
     if (items && items.length > 0) {
+      this.options = [];
 
       // ... und dann entsprechende Option-Objekte erzeugen
       for (let item of items) {
@@ -291,6 +292,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
   /**
    * Liefert den Wert für das Item @param{item} (wird bei Änderung der Selektion angebunden)
+   * Konfiguration muss berücksichtigt werden.
    */
   protected getValue(item: any): any {
     let value: any;
@@ -303,6 +305,32 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
     return value;
   }
+
+
+  /**
+   * Liefert den Index des Werts (selectedValue) in der Optionsliste
+   * 
+   * @protected
+   * @param {*} value
+   * @returns {number}
+   * 
+   * @memberOf DropdownSelectorComponent
+   */
+  protected indexOfValue(value: any): number {
+    let indexFound = -1;
+    if (this.options) {
+      for (let index = 0; index < this.options.length; index++) {
+        let option = this.options[index];
+        if (option.value === value) {
+          indexFound = index;
+          break;
+        }
+      }
+    }
+
+    return indexFound;
+  }
+
 
   public onChange(value) {
     this.changeDetectorRef.detectChanges();

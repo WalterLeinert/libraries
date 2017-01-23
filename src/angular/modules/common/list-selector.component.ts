@@ -141,9 +141,45 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
         }
     }
 
+
+    /**
+     * Intialisiert die Daten fürs Databinding
+     * 
+     * @protected
+     * @abstract
+     * @param {any[]} items
+     * 
+     * @memberOf ListSelectorComponent
+     */
     protected abstract setupData(items: any[]);
 
+
+    /**
+     * Initialisiert die Konfiguration der Anzeigewerte und Werte
+     * 
+     * @protected
+     * @abstract
+     * @param {any[]} items
+     * @param {boolean} useService
+     * 
+     * @memberOf ListSelectorComponent
+     */
     protected abstract setupConfig(items: any[], useService: boolean);
+
+    /**
+      * Liefert den Index des Items (selectedValue) in der Wertelist
+      * 
+      * TODO: Achtung: funktionert nicht nach Umsortierung der DataTable !!
+      * 
+      * @protected
+      * @param {*} value
+      * @returns {number}
+      * 
+      * @memberOf DropdownSelectorComponent
+      */
+    protected abstract indexOfValue(value: any): number;
+
+    protected abstract getValue(item: any): any;
 
 
     /**
@@ -163,7 +199,7 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
                     return;
                 }
                 if (this.selectedIndex >= 0 && this.selectedIndex < this.data.length) {
-                    this.selectedValue = this.data[this.selectedIndex];
+                    this.selectedValue = this.getValue(this.data[this.selectedIndex]);
                 } else if (this.data.length > 0) {
                     this.selectedValue = this.data[0];
                 }
@@ -183,13 +219,16 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
         this.changeDetectorRef.detectChanges();
         this.selectedValueChange.emit(value);
 
+        let index = -1;
         if (this.selectedValue) {
-            let index = this.data.indexOf(value);
-            this.selectedIndex = index;
+            index = this.indexOfValue(value);
         }
+        this.selectedIndex = index;
 
         this.preselectData();
     }
+
+
 
     public get selectedValue(): any {
         return this._selectedValue;

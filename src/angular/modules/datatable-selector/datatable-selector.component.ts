@@ -48,7 +48,7 @@ export type sortMode = 'single' | 'multiple';
     </p-dataTable>
 </div>
 <div *ngIf="debug">
-  <p>Selected Item: {{selectedValue | json}}</p>
+  <p>selectedIndex: {{selectedIndex}}, selectedValue: {{selectedValue | json}}</p>
 </div>
   `,
   styles: []
@@ -172,6 +172,40 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     };
   }
 
+
+  /**
+   * Liefert den Index des Items (selectedValue) in der Wertelist
+   * 
+   * TODO: Achtung: funktionert nicht nach Umsortierung der DataTable !!
+   * 
+   * @protected
+   * @param {*} value
+   * @returns {number}
+   * 
+   * @memberOf DropdownSelectorComponent
+   */
+  protected indexOfValue(value: any): number {
+    let indexFound = -1;
+    if (this.data) {
+      for (let index = 0; index < this.data.length; index++) {
+        let item = this.data[index];
+        if (item === value) {
+          indexFound = index;
+          break;
+        }
+      }
+    }
+
+    return indexFound;
+  }
+
+  /**
+   * Liefert den Wert für das Item @param{item} (wird bei Änderung der Selektion angebunden)
+   * DataTable: es kann immer nur eine Zeile ausgewählt werden -> item
+   */
+  protected getValue(item: any): any {
+    return item;
+  }
 
   public onRowSelect(row) {
     this.changeDetectorRef.detectChanges();
