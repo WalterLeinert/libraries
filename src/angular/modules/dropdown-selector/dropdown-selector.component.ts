@@ -34,7 +34,7 @@ import { ListSelectorComponent } from '../common/list-selector.component';
 </p-dropdown>
 
 <div *ngIf="debug">
-  <p>Selected Item: {{selectedValue | json}}</p>
+  <p>selectedIndex: {{selectedIndex}}, selectedValue: {{selectedValue | json}}</p>
 </div>
 `,
   styles: []
@@ -307,9 +307,8 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
   public onChange(value) {
     this.changeDetectorRef.detectChanges();
     if (this.debug) {
-      console.log(`DropdownSelectorComponent.onChange: ${JSON.stringify(value)}`);
+      console.log(`DropdownSelectorComponent.onChange: selectedIndex = ${this.selectedIndex}, value = ${JSON.stringify(value)}`);
     }
   }
-
 
 }
