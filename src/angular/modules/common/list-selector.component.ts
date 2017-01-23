@@ -201,7 +201,7 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
                 if (this.selectedIndex >= 0 && this.selectedIndex < this.data.length) {
                     this.selectedValue = this.getValue(this.data[this.selectedIndex]);
                 } else if (this.data.length > 0) {
-                    this.selectedValue = this.data[0];
+                    this.selectedValue = this.getValue(this.data[0]);
                 }
             } finally {
                 this.isPreselecting = false;
