@@ -36,13 +36,13 @@ export type sortMode = 'single' | 'multiple';
     <input #gb type="text" pInputText size="20" style="float:left" placeholder="search...">
   </div>
 
-  <p-dataTable [(value)]="data" sortMode="sortMode" resizableColumns="true" [rows]="rows" 
+  <p-dataTable [(value)]="data" sortMode="sortMode" resizableColumns="true" [rows]="rows" [editable]="editable"
     [paginator]="true" [globalFilter]="gb"
     selectionMode="single" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event.data)">
     
     <div *ngIf="config && config.columnInfos">
       <ul *ngFor="let info of config.columnInfos">
-        <p-column field="{{info.valueField}}" header="{{info.textField}}" [sortable]="true"></p-column>
+        <p-column field="{{info.valueField}}" header="{{info.textField}}" [sortable]="true" [editable]="editable"></p-column>
       </ul>
     </div>
     </p-dataTable>
@@ -71,6 +71,13 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    */
   @Input() rows: number = 5;
 
+  /**
+   * Soll die Tabelle Editierbar sein? true/false
+   * 
+   * @type {boolean}
+   * @memberOf DataTableSelectorComponent
+   */
+  @Input() editable: boolean = false;
 
   /**
    * Die Spaltenkonfiguration.
