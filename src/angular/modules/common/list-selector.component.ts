@@ -99,7 +99,7 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
      * @type {*}
      * @memberOf DataTableSelectorComponent
      */
-    private _selectedValue: any = {};
+    private _selectedValue: any;
 
 
 
