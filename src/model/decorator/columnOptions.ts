@@ -54,4 +54,8 @@ export interface ColumnOptions {
      */
     readonly default?: any;
 
+    /**
+     * false: Spaltenwert wird nicht persistiert (default: true)
+     */
+    persisted?: boolean;
 }

@@ -49,6 +49,10 @@ export function Column(options?: ColumnOptions) {
             options.name = propertyName;
         }
 
+        if (!options.persisted) {
+            options.persisted = true;
+        }
+
         // if (!options.displayName) {
         //     options.displayName = propertyName;
         // }

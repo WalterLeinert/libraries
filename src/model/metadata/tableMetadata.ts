@@ -89,7 +89,9 @@ export class TableMetadata {
             }
             Assert.notNull(colMetadata);
 
-            instance[colMetadata.propertyName] = colMetadata.convertToProperty(json[propName]);
+            if (colMetadata.options.persisted) {
+                instance[colMetadata.propertyName] = colMetadata.convertToProperty(json[propName]);
+            }
         }
 
         return instance as T;
@@ -109,7 +111,9 @@ export class TableMetadata {
         let dbInstance = {};
 
         for (let col of this.columnMetadata) {
-            dbInstance[col.options.name] = col.convertFromProperty(entity[col.propertyName]);
+            if (col.options.persisted) {
+                dbInstance[col.options.name] = col.convertFromProperty(entity[col.propertyName]);
+            }
         }
 
         return dbInstance;
@@ -148,6 +152,7 @@ export class TableMetadata {
 
         let colMetadata = this.propertyMap[propertyName];
         Assert.notNull(colMetadata, `Propertyname ${propertyName} nicht definiert.`);
+        Assert.that(colMetadata.options.persisted, `Propertyname ${propertyName} muss Option persisted=true haben.`);
 
         return colMetadata.options.name;
     }
@@ -160,25 +165,25 @@ export class TableMetadata {
     }
 
 
-  /**
-   * Registriert den zugehörigen Service (Class/Constructor Function)
-   */
-  public registerService(service: Function) {
-    this._service = service;
-  }
+    /**
+     * Registriert den zugehörigen Service (Class/Constructor Function)
+     */
+    public registerService(service: Function) {
+        this._service = service;
+    }
 
-  /**
-   * Liefert den zugehörigen Service (Class/Constructor Function)
-   */
-  public get service(): Function {
-      return this._service;
-  }
+    /**
+     * Liefert den zugehörigen Service (Class/Constructor Function)
+     */
+    public get service(): Function {
+        return this._service;
+    }
 
 
-  /**
-   * Liefert den Klassennamen des zugehörigen Modells (z.B. 'Artikel')
-   */
-  public get className(): string {
-      return this.target.name;
-  }
+    /**
+     * Liefert den Klassennamen des zugehörigen Modells (z.B. 'Artikel')
+     */
+    public get className(): string {
+        return this.target.name;
+    }
 }

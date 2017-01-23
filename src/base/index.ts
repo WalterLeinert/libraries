@@ -2,6 +2,7 @@ export * from './activator';
 export * from './appConfig';
 export * from './appRegistry';
 export * from './constants';
+export * from './clone';
 export * from './ctor';
 export * from './disposable.interface';
 export * from './disposable';
