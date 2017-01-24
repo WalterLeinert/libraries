@@ -36,7 +36,7 @@ export type sortMode = 'single' | 'multiple';
     <input #gb type="text" pInputText size="20" style="float:left" placeholder="search...">
   </div>
 
-  <p-dataTable [(value)]="data" sortMode="sortMode" resizableColumns="true" [rows]="rows" [editable]="editable"
+  <p-dataTable [(value)]="data" sortMode="sortMode" resizableColumns="true" [rows]="rows"
     [paginator]="true" [globalFilter]="gb"
     selectionMode="single" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event.data)">
     
@@ -55,6 +55,7 @@ export type sortMode = 'single' | 'multiple';
 })
 export class DataTableSelectorComponent extends ListSelectorComponent {
 
+
   /**
    * Sortmodus: single|multiple 
    * 
@@ -70,14 +71,6 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    * @memberOf DataTableSelectorComponent
    */
   @Input() rows: number = 5;
-
-  /**
-   * Soll die Tabelle Editierbar sein? true/false
-   * 
-   * @type {boolean}
-   * @memberOf DataTableSelectorComponent
-   */
-  @Input() editable: boolean = false;
 
   /**
    * Die Spaltenkonfiguration.
@@ -98,7 +91,6 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     if (this.sortMode) {
       Assert.that(this.sortMode === 'single' || this.sortMode === 'multiple');
     }
-
   }
 
   protected setupData(items: any[]) {
