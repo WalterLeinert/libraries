@@ -1,3 +1,4 @@
+import { Time } from '../../types/time';
 import { ColumnOptions } from './columnOptions';
 import { ColumnTypes } from '../metadata/columnTypes';
 import { ColumnMetadata } from '../metadata/columnMetadata';
@@ -23,6 +24,10 @@ export function Column(options?: ColumnOptions) {
         if (options && options.propertyType) {
             if (options.propertyType === ColumnTypes.DATE) {
                 propertyType = Date;
+                console.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
+            }
+            if (options.propertyType === ColumnTypes.TIME) {
+                propertyType = Time;
                 console.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
             }
         }

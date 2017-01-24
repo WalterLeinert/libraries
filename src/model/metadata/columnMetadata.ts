@@ -42,7 +42,7 @@ export class ColumnMetadata {
                 } else if (typeof value === 'string') {
                     rval = new Date(value);
                 } else {
-                    throw new Error(`Column ${this.propertyName}: Konvertierung von Datumswert ${value} nicht möglich.`);
+                    throw new Error(`Column ${this.propertyName}: Konvertierung von Datumswert ${JSON.stringify(value)} nicht möglich.`);
                 }
                 break;
 
@@ -52,7 +52,7 @@ export class ColumnMetadata {
                 } else if (typeof value === 'string') {
                     rval = Time.parse(value);
                 } else {
-                    throw new Error(`Column ${this.propertyName}: Konvertierung von Zeitwert ${value} nicht möglich.`);
+                    throw new Error(`Column ${this.propertyName}: Konvertierung von Zeitwert ${JSON.stringify(value)} nicht möglich.`);
                 }
                 break;
 
