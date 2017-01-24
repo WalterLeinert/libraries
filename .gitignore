@@ -51,3 +51,6 @@ symbols.json
 /dts/
 /dist/
 /build/
+
+# Ausnahmen
+!gulpfile.js
