@@ -193,7 +193,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options       = new RequestOptions({ headers: headers });           // Create a request option
 
-        return this.http.post(`${this.getUrl()}`, query, options)
+        return this.http.post(`${this.getUrl()}/query`, query, options)
             .map((response: Response) => this.deserializeArray(response.json()))
             .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
