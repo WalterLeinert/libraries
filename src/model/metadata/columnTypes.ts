@@ -139,6 +139,8 @@ export class ColumnTypes {
                     return ColumnTypes.STRING;
                 case 'date':
                     return ColumnTypes.DATETIME;
+                case 'time':
+                    return ColumnTypes.TIME;
                 case 'object':
                     return ColumnTypes.JSON;
             }

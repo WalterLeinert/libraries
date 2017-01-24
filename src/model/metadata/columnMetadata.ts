@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import { ColumnOptions } from '../decorator/columnOptions';
 import { ColumnTypes } from './columnTypes';
-
+import { Time } from '../../types/time';
 
 /**
  * Modelliert Metadaten für Modell-/DB-Attribute
@@ -36,12 +36,23 @@ export class ColumnMetadata {
         switch (this.propertyType) {
 
             case ColumnTypes.DATE:
+            case ColumnTypes.DATETIME:
                 if (value instanceof Date) {
                     rval = value;
                 } else if (typeof value === 'string') {
                     rval = new Date(value);
                 } else {
                     throw new Error(`Column ${this.propertyName}: Konvertierung von Datumswert ${value} nicht möglich.`);
+                }
+                break;
+
+            case ColumnTypes.TIME:
+                if (value instanceof Time) {
+                    rval = value;
+                } else if (typeof value === 'string') {
+                    rval = Time.parse(value);
+                } else {
+                    throw new Error(`Column ${this.propertyName}: Konvertierung von Zeitwert ${value} nicht möglich.`);
                 }
                 break;
 
@@ -74,8 +85,8 @@ export class ColumnMetadata {
                 return '0000-00-00';
 
             case ColumnTypes.TIME:
-                if (moment(value).isValid()) {
-                    return moment(value).format('HH:mm:ss');
+                if (value instanceof Time) {
+                    return value.toString();
                 }
                 return '00:00:00';
 
