@@ -57,13 +57,13 @@ export class Time {
         let second: number = obj['second'];
 
         let sb = new StringBuilder();
-        if (!hour) {
+        if (hour === undefined) {
             sb.appendWithDelimiter('hour');
         }
-        if (!minute) {
+        if (minute === undefined) {
             sb.appendWithDelimiter('minute');
         }
-        if (!second) {
+        if (second === undefined) {
             sb.appendWithDelimiter('second');
         }
         Assert.that(sb.isEmpty, `Property ${sb} fehlt.`);
