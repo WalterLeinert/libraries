@@ -5,7 +5,7 @@ import {
 } from 'ts-express-decorators';
 
 // Fluxgate
-import { ControllerBase } from '../../controllerBase';
+import { ControllerBase } from '../controllerBase';
 
 import { Role } from '@fluxgate/common';
 import { RoleService } from '../../services/role.service';

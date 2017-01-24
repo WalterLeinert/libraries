@@ -5,7 +5,7 @@ import { Logger, getLogger } from 'log4js';
 // Fluxgate
 import { IQuery, IToString } from '@fluxgate/common';
 
-import { BaseService } from './services/base.service';
+import { BaseService } from '../services/base.service';
 
 
 /**
@@ -98,18 +98,6 @@ export abstract class ControllerBase<T, TId extends IToString> {
         return this.service.delete(id);
     }
 
-    /**
-     * Führt die Query @param{query} durch und liefert alle Entities vom Typ {T}.
-     * 
-     * @returns {Promise<T[]>}
-     * 
-     * @memberOf ControllerBase
-     */
-    protected queryInternal(
-        query: IQuery
-    ): Promise<T[]> {
-        return this.service.query(query);
-    }
 
     /**
      * Liefert den zugehörigen Tabellennamen
