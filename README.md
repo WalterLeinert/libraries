@@ -29,13 +29,28 @@ TODO
 ## Entwicklung
 
 Für die Weiterentwicklung von @fluxgate/common ist nach dem Clone zunächst ein `npm install` erforderlich.
-Nach Änderungen ist compiliert man mit `npm run tsc` bzw. `npm run prepublish` direkt vor einer Veröffentlichung auf unseren `verdaccio` npm-Proxy.
-Das eigentliche Veröffentlichen erfolgt mit `npm publish``.
 
-Wichtig dabei: vor dem Veröffentlichen die Package-Version erhöhen, da Verdaccio sonst einen Fehler liefert.
+Nach den Code-Änderungen Änderungen compiliert man mit 
+```bash
+$ gulp
+```
+
+Das eigentliche Veröffentlichen erfolgt mittels:
+```bash
+$ npm publish
+```
+
+Wichtig dabei: vor dem Veröffentlichen die Package-Version erhöhen, da Verdaccio sonst einen Fehler liefert (z.B. 1.6.3 -> 1.6.4 oder 1.4.34 -> 1.5.0).
+Muss man für eine die Libraryversion hintereinander verschiedene Fehler beheben, kann man testweise auch immer wieder mit derselben Versionsnummer publizieren:
+```bash
+# force: überschreibt existierendes Package!
+$ npm publish -f
+```
 
 Nach dem Veröffentlichen einer neuen Version, müssen natürlich alle betroffenen Projekte aktualisiert werden:
-
+```bash
+$ gulp update-fluxgate
+```
 
 ## CHANGELOG
 
