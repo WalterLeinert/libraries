@@ -47,6 +47,20 @@ class TimeTest {
         });
     }
 
+    @test 'should createFrom obj'() {
+        let timeObj = {
+            hour: 12,
+            minute: 10,
+            second: 15
+        };
+
+        expect(Time.createFrom(timeObj).hour).to.equal(timeObj.hour);
+        expect(Time.createFrom(timeObj).minute).to.equal(timeObj.minute);
+        expect(Time.createFrom(timeObj).second).to.equal(timeObj.second);
+    }
+
+
+
 
     @test 'should throw an exception for 60 minutes '() {
         return expect(() => new Time(8, 60, 0)).to.throw(Error);

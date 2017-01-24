@@ -52,7 +52,8 @@ export class ColumnMetadata {
                 } else if (typeof value === 'string') {
                     rval = Time.parse(value);
                 } else {
-                    throw new Error(`Column ${this.propertyName}: Konvertierung von Zeitwert ${JSON.stringify(value)} nicht möglich.`);
+                    rval = Time.createFrom(value);    // wir interpretieren den Wert als Time
+                    // throw new Error(`Column ${this.propertyName}: Konvertierung von Zeitwert ${JSON.stringify(value)} nicht möglich.`);
                 }
                 break;
 

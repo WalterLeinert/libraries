@@ -39,6 +39,14 @@ export class Time {
         return new Time(hour as Hour, minute, second);
     }
 
+    public static createFrom(obj: any) {
+        let hour: Hour = obj['hour'];
+        let minute: number = obj['minute'];
+        let second: number = obj['second'];
+
+        return new Time(hour, minute, second);
+    }
+
     /**
      * Creates an instance of Time.
      * 
@@ -48,10 +56,10 @@ export class Time {
      * 
      * @memberOf Time
      */
-    constructor(private _hour: Hour, private _minute: number, private _second: number) {
-        Assert.that(_hour >= 0 && _hour <= 23);
-        Assert.that(_minute >= 0 && _minute <= 59);
-        Assert.that(_second >= 0 && _second <= 59);
+    constructor(public hour: Hour, public minute: number, public second: number) {
+        Assert.that(hour >= 0 && hour <= 23);
+        Assert.that(minute >= 0 && minute <= 59);
+        Assert.that(second >= 0 && second <= 59);
     }
 
     /**
@@ -63,39 +71,5 @@ export class Time {
      */
     public toString(): string {
         return `${this.hour}:${this.minute}:${this.second}`;
-    }
-
-    /**
-     * Liefert die Stunden
-     * 
-     * @readonly
-     * @type {Hour}
-     * @memberOf Time
-     */
-    get hour(): Hour {
-        return this._hour;
-    }
-
-    /**
-     * Liefert die Minuten
-     * 
-     * @readonly
-     * @type {number}
-     * @memberOf Time
-     */
-    get minute(): number {
-        return this._minute;
-    }
-
-
-    /**
-     * Liefert die Sekunden
-     * 
-     * @readonly
-     * @type {number}
-     * @memberOf Time
-     */
-    get second(): number {
-        return this._second;
     }
 }
