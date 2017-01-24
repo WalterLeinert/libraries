@@ -38,7 +38,7 @@ export type sortMode = 'single' | 'multiple';
 
   <p-dataTable [(value)]="data" sortMode="sortMode" resizableColumns="true" [rows]="rows" [editable]="editable"
     [paginator]="true" [globalFilter]="gb"
-    selectionMode="single" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event.data)">
+    selectionMode="selectionmode" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event.data)">
     
     <div *ngIf="config && config.columnInfos">
       <ul *ngFor="let info of config.columnInfos">
@@ -54,6 +54,8 @@ export type sortMode = 'single' | 'multiple';
   styles: []
 })
 export class DataTableSelectorComponent extends ListSelectorComponent {
+public selectionmode: string = 'single';
+
 
   /**
    * Sortmodus: single|multiple 
@@ -97,6 +99,10 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
     if (this.sortMode) {
       Assert.that(this.sortMode === 'single' || this.sortMode === 'multiple');
+    }
+
+    if (this.editable) {
+      this.selectionmode = 'false';  // da eine Tabelle nicht editierbar ist, wenn Option Selectionmode gesetzt wurde.
     }
 
   }
