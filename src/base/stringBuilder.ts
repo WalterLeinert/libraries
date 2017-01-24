@@ -35,6 +35,22 @@ export class StringBuilder {
 
 
     /**
+     * Falls der StringBuilder noch leer ist, wird vor dem @param{text}
+     * der Delimiter @param{delimiter} eingefügt.
+     * 
+     * @param {string} text
+     * @param {string} [delimiter=', ']
+     * 
+     * @memberOf StringBuilder
+     */
+    public appendWithDelimiter(text: string, delimiter = ', ') {
+        if (! this.isEmpty) {
+            this.append(delimiter);
+        }
+        this.strings.push(text);
+    }
+
+    /**
      * Fügt den angegeben Text hinzu und hängt ein EOL an.
      * 
      * @param {string} [text]
@@ -54,5 +70,17 @@ export class StringBuilder {
      */
     public toString(): string {
         return this.strings.join('');
+    }
+
+
+    /**
+     * Liefert true, falls der StringBuilder noch leer ist. 
+     * 
+     * @readonly
+     * @type {boolean}
+     * @memberOf StringBuilder
+     */
+    public get isEmpty(): boolean {
+        return this.strings.length <= 0;
     }
 }
