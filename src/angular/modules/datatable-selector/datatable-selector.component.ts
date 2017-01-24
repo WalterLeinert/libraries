@@ -36,9 +36,9 @@ export type sortMode = 'single' | 'multiple';
     <input #gb type="text" pInputText size="20" style="float:left" placeholder="search...">
   </div>
 
-  <p-dataTable [(value)]="data" sortMode="sortMode" resizableColumns="true" [rows]="rows" [editable]="editable"
+  <p-dataTable [(value)]="data" sortMode="sortMode" resizableColumns="true" [rows]="rows"
     [paginator]="true" [globalFilter]="gb"
-    selectionMode="selectionmode" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event.data)">
+    selectionMode="single" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event.data)">
     
     <div *ngIf="config && config.columnInfos">
       <ul *ngFor="let info of config.columnInfos">
@@ -54,7 +54,6 @@ export type sortMode = 'single' | 'multiple';
   styles: []
 })
 export class DataTableSelectorComponent extends ListSelectorComponent {
-public selectionmode: string = 'single';
 
 
   /**
@@ -72,14 +71,6 @@ public selectionmode: string = 'single';
    * @memberOf DataTableSelectorComponent
    */
   @Input() rows: number = 5;
-
-  /**
-   * Soll die Tabelle Editierbar sein? true/false
-   * 
-   * @type {boolean}
-   * @memberOf DataTableSelectorComponent
-   */
-  @Input() editable: boolean = false;
 
   /**
    * Die Spaltenkonfiguration.
@@ -100,11 +91,6 @@ public selectionmode: string = 'single';
     if (this.sortMode) {
       Assert.that(this.sortMode === 'single' || this.sortMode === 'multiple');
     }
-
-    if (this.editable) {
-      this.selectionmode = '';  // da eine Tabelle nicht editierbar ist, wenn Option Selectionmode gesetzt wurde.
-    }
-
   }
 
   protected setupData(items: any[]) {
