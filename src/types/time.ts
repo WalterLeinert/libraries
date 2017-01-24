@@ -1,10 +1,11 @@
+import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
 
 /**
  * Modelliert einen Stundentyp
  */
 export type Hour = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
-     12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23;
+    12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23;
 
 
 /**
@@ -39,10 +40,33 @@ export class Time {
         return new Time(hour as Hour, minute, second);
     }
 
+
+    /**
+     * Erzeugt eine @see{Time}-Instanz aus dem angegebenen Objekt, falls dieses
+     * die Properties der @see{Time}-Klasse enthält.
+     * 
+     * @static
+     * @param {*} obj
+     * @returns
+     * 
+     * @memberOf Time
+     */
     public static createFrom(obj: any) {
         let hour: Hour = obj['hour'];
         let minute: number = obj['minute'];
         let second: number = obj['second'];
+
+        let sb = new StringBuilder();
+        if (!hour) {
+            sb.appendWithDelimiter('hour');
+        }
+        if (!minute) {
+            sb.appendWithDelimiter('minute');
+        }
+        if (!second) {
+            sb.appendWithDelimiter('second');
+        }
+        Assert.that(sb.isEmpty, `Property ${sb} fehlt.`);
 
         return new Time(hour, minute, second);
     }

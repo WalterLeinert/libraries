@@ -59,6 +59,20 @@ class TimeTest {
         expect(Time.createFrom(timeObj).second).to.equal(timeObj.second);
     }
 
+    @test 'should throw exceptions from createFromj'() {
+        expect(() => Time.createFrom({
+        })).to.throw(Error, 'Property hour, minute, second fehlt');
+
+        expect(() => Time.createFrom({
+            hour: 12
+        })).to.throw(Error, 'Property minute, second fehlt.');
+
+        expect(() => Time.createFrom({
+            hour: 12,
+            minute: 15
+        })).to.throw(Error, 'Property second fehlt');
+    }
+
 
 
 
