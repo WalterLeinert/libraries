@@ -50,7 +50,7 @@ TODO
 
 Für die Weiterentwicklung von @fluxgate/client ist nach dem Clone zunächst ein `npm install` erforderlich.
 
-Wird zum Bauen oder Testen eine aktuelle Version von `@fluxgate/common`benötigt, so führt man folgendes Kommando aus:
+Wird zum Bauen oder Testen eine aktuelle Version von `@fluxgate/common` benötigt, so führt man folgendes Kommando aus:
 ```bash
 $ gulp update-fluxgate
 ```
@@ -59,7 +59,7 @@ Nach den Code-Änderungen Änderungen compiliert man mit
 $ gulp
 ```
 
-Das eigentliche Veröffentlichen erfolgt mit `npm publish``.
+Das eigentliche Veröffentlichen erfolgt mittels:
 ```bash
 $ npm publish
 ```
