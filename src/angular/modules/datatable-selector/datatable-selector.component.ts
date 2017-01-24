@@ -102,7 +102,7 @@ public selectionmode: string = 'single';
     }
 
     if (this.editable) {
-      this.selectionmode = 'false';  // da eine Tabelle nicht editierbar ist, wenn Option Selectionmode gesetzt wurde.
+      this.selectionmode = '';  // da eine Tabelle nicht editierbar ist, wenn Option Selectionmode gesetzt wurde.
     }
 
   }
