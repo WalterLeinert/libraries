@@ -7,11 +7,11 @@ export class LengthValidator extends Validator {
     }
 
     public validate(value: number): boolean {
-        if (length < this.min) { 
-            return false; 
+        if (length < this.min) {
+            return false;
         }
 
-        if (this.max && length > this.max) { 
+        if (this.max && length > this.max) {
             return false;
         }
 

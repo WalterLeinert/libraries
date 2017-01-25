@@ -1,3 +1,4 @@
+let leftPad = require('left-pad');
 import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
 
@@ -94,6 +95,6 @@ export class Time {
      * @memberOf Time
      */
     public toString(): string {
-        return `${this.hour}:${this.minute}:${this.second}`;
+        return `${leftPad(this.hour, 2, 0)}:${leftPad(this.minute, 2, 0)}:${leftPad(this.second, 2, 0)}`;
     }
 }

@@ -11,15 +11,15 @@ import { Time } from '../../src/types/time';
 let expedtedTimes = [
     {
         time: new Time(0, 0, 0),
-        text: '0:0:0'
+        text: '00:00:00'
     },
     {
         time: new Time(8, 30, 0),
-        text: '8:30:0'
+        text: '08:30:00'
     },
     {
         time: new Time(18, 0, 15),
-        text: '18:0:15'
+        text: '18:00:15'
     },
     {
         time: new Time(23, 59, 59),

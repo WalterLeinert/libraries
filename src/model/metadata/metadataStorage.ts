@@ -14,6 +14,7 @@ export class MetadataStorage {
 
     private tableColumnDict: { [name: string]: ColumnMetadata[] } = {};
     private tableDict: { [name: string]: TableMetadata } = {};
+    private dbTableDict: { [name: string]: TableMetadata } = {};
 
     /**
      * fügt eine neue {TableMetadata} hinzu.
@@ -40,7 +41,9 @@ export class MetadataStorage {
             }
 
             this.tableDict[targetName] = metadata;
+            this.dbTableDict[metadata.options.name] = metadata;
         }
+
     }
 
 
@@ -81,6 +84,20 @@ export class MetadataStorage {
             return this.tableDict[target];
         }
         return this.tableDict[target.name];
+    }
+
+    /**
+     * Liefert für den angegebenen Tabellennamen @param{tableName} (z.B. Modellklasse 'Artikel' -> 'artikel')
+     * die Metadaten oder null.
+     * 
+     * @param {string} tableName
+     * @returns {TableMetadata}
+     * 
+     * @memberOf MetadataStorage
+     */
+    public findTableMetadataByDbTable(tableName: string): TableMetadata {
+        Assert.notNullOrEmpty(tableName);
+        return this.dbTableDict[tableName];
     }
 
 

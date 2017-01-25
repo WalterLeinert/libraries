@@ -133,7 +133,7 @@ export class TableMetadata {
     }
 
     /**
-     * Liefert eine {ColumnMetadata} oder null für den DB-SPaltennamen @param{dbColName}.
+     * Liefert eine {ColumnMetadata} oder null für den DB-Spaltennamen @param{dbColName}.
      * 
      * @param {string} dbColName
      * @returns
