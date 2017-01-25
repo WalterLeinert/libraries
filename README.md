@@ -80,19 +80,33 @@ Neben der generischen Basisklasse `ControllerBase` findet man im Verzeichnis ts-
 ## Entwicklung
 
 Für die Weiterentwicklung von @fluxgate/server ist nach dem Clone zunächst ein `npm install` erforderlich.
-Nach Änderungen ist compiliert man mit `npm run tsc` bzw. `npm run prepublish` direkt vor einer Veröffentlichung auf unseren 
-`verdaccio` npm-Proxy.
-Das eigentliche Veröffentlichen erfolgt mit `npm publish`.
 
-Wichtig dabei: vor dem Veröffentlichen die Package-Version erhöhen, da verdaccio sonst einen Fehler liefert.
+Wird zum Bauen oder Testen eine aktuelle Version von `@fluxgate/common` benötigt, so führt man folgendes Kommando aus:
+```bash
+$ gulp update-fluxgate
+```
+Nach den Code-Änderungen Änderungen compiliert man mit 
+```bash
+$ gulp
+```
+
+Das eigentliche Veröffentlichen erfolgt mittels:
+```bash
+$ npm publish
+```
+
+Wichtig dabei: vor dem Veröffentlichen die Package-Version erhöhen, da Verdaccio sonst einen Fehler liefert (z.B. 1.6.3 -> 1.6.4 oder 1.4.34 -> 1.5.0).
+Muss man für eine die Libraryversion hintereinander verschiedene Fehler beheben, kann man testweise auch immer wieder mit derselben Versionsnummer publizieren:
+```bash
+# force: überschreibt existierendes Package!
+$ npm publish -f
+```
 
 Nach dem Veröffentlichen einer neuen Version, müssen natürlich alle betroffenen Projekte aktualisiert werden:
-
 ```bash
-TODO: wann muss man jetzt welches Kommando absetzen? abhängig von major/minor Versionsänderung?
-$ npm update --save @fluxgate/server
-$ npm install --save @fluxgate/server
+$ gulp update-fluxgate
 ```
+
 
 ## CHANGELOG
 
