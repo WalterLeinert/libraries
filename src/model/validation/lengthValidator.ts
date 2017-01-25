@@ -1,3 +1,5 @@
+import { StringBuilder } from '../../base';
+import { Assert } from '../../util/assert';
 import { ValidationResult } from './validationResult';
 import { Validator } from './validator';
 import { ColumnMetadata } from '../metadata/columnMetadata';
@@ -6,15 +8,42 @@ export class LengthValidator extends Validator {
 
     constructor(columnMetadata: ColumnMetadata, private min?: number, private max?: number) {
         super(columnMetadata);
+        Assert.that(max !== undefined);
     }
 
-    public validate(value: number): ValidationResult {
-        if ((this.min !== undefined) && length < this.min) {
-            return ValidationResult.create(false, `${this.propertyName}: Der Wert ${value} muss mindestens ${this.min} sein.`);
+    public validate(value: string): ValidationResult {
+        if (this.min !== undefined) {
+            let error = true;
+            let sb = new StringBuilder(`${this.propertyName}: Der Text`);
+
+            if (value === undefined) {
+                sb.append(' fehlt und');
+            } else if (value.length < this.min) {
+                sb.append(` '${value}'`);
+            } else {
+                error = false;
+            }
+            if (error) {
+                sb.append(` muss mindestens ${this.min} Zeichen enthalten.`);
+                return ValidationResult.create(false, sb.toString());
+            }
         }
 
-        if (this.max && length > this.max) {
-            return ValidationResult.create(false, `${this.propertyName}: Der Wert ${value} darf höchstens ${this.max} sein.`);
+        if (this.max !== undefined) {
+            let error = true;
+            let sb = new StringBuilder(`${this.propertyName}: Der Text`);
+
+            if (value === undefined) {
+                sb.append(' fehlt und');
+            } else if (value.length > this.max) {
+                sb.append(` '${value}'`);
+            } else {
+                error = false;
+            }
+            if (error) {
+                sb.append(` darf höchstens ${this.max} Zeichen enthalten.`);
+                return ValidationResult.create(false, sb.toString());
+            }
         }
 
         return ValidationResult.Ok;
