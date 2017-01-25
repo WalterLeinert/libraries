@@ -9,11 +9,7 @@ import { ValidationMetadata } from '../../metadata/validationMetadata';
  * 
  */
 export function NotNull() {
-        return function (target: any, propertyName: string) {
-
-        let metadata = MetadataStorage.instance.findTableMetadata(target);
-        let cm = metadata.getColumnMetadataByProperty(propertyName);
-
+    return function (target: any, propertyName: string) {
         MetadataStorage.instance.addValidationMetadata(new ValidationMetadata(target.constructor, propertyName, new NotNullValidator()));
     };
 }
