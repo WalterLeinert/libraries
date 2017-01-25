@@ -48,7 +48,7 @@ import { MetadataService } from '../../../services';
   styles: []
 })
 export class RegisterComponent extends Base2Component<PassportService, RoleService> {
-  public user: IUser;
+  public user: User;
   public selectedRole: IRole;
   public roles: SelectItem[] = [];
 
@@ -60,7 +60,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
     let userTableMetadata = metadataService.findTableMetadata(User.name);
     Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name}`);
 
-    this.user = userTableMetadata.createEntity<IUser>();
+    this.user = userTableMetadata.createEntity<User>();
   }
 
   ngOnInit(): void {
