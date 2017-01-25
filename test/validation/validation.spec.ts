@@ -71,14 +71,18 @@ let expectedResults = [
 class ValidationTest {
 
     @test 'should validate length of string'() {
-        let validator = new LengthValidator(columnMetadata, 3, 10);
+        let validator = new LengthValidator(3, 10);
+        validator.attachColumnMetadata(columnMetadata);
+
         let res = validator.validate('ttt');
         return expect(res.ok).to.be.true;
     }
 
+
     @test 'should test LengthValidator'() {
         for (let expectedResult of expectedResults) {
-            let validator = new LengthValidator(expectedResult.columnMetadata, expectedResult.range.min, expectedResult.range.max);
+            let validator = new LengthValidator(expectedResult.range.min, expectedResult.range.max);
+            validator.attachColumnMetadata(expectedResult.columnMetadata);
             let res = validator.validate(expectedResult.text);
             expect(res).to.be.deep.equal(expectedResult.result);
         }

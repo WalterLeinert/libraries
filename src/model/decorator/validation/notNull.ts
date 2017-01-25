@@ -1,9 +1,11 @@
 import { MetadataStorage } from '../../metadata/metadataStorage';
+import { NotNullValidator } from '../../validation/notNullValidator';
 import { LengthValidator } from '../../validation/lengthValidator';
 import { ValidationMetadata } from '../../metadata/validationMetadata';
 
 /**
- * Length-Decorator zur Validierung von Modellproperties/-attributes
+ * NotNull-Decorator zur Validierung von Modellproperties/-attributes
+ * Hier: Prüfung auf fehlenden Wert
  * 
  */
 export function NotNull() {
@@ -12,6 +14,6 @@ export function NotNull() {
         let metadata = MetadataStorage.instance.findTableMetadata(target);
         let cm = metadata.getColumnMetadataByProperty(propertyName);
 
-        MetadataStorage.instance.addValidationMetadata(new ValidationMetadata(target.constructor, propertyName, this));
+        MetadataStorage.instance.addValidationMetadata(new ValidationMetadata(target.constructor, propertyName, new NotNullValidator()));
     };
 }

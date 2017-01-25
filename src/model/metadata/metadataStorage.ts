@@ -1,4 +1,5 @@
 import { Assert } from '../../util/assert';
+import { CompoundValidator, Validator } from './../validation';
 import { ValidationMetadata } from './validationMetadata';
 import { TableMetadata } from './tableMetadata';
 import { ColumnMetadata } from './columnMetadata';
@@ -33,8 +34,55 @@ export class MetadataStorage {
 
         if (!this.tableDict[targetName]) {
             let colMetadata: ColumnMetadata[] = this.tableColumnDict[targetName];
+            let valMetadata = this.tableValidationDict[targetName];
+
+
+            //
+            // Dictionary (propertyName, ValidationMetadata[]) aufbauen, um
+            // anschliessend die Validatoren mit ColumnMetadata verknüpfen zu können
+            //
+            let propNameToValidator: { [name: string]: ValidationMetadata[] } = {};
+
+            if (valMetadata) {
+                for (let vm of valMetadata) {
+                    let vms = propNameToValidator[vm.propertyName];
+                    if (!vms) {
+                        vms = [];
+                        propNameToValidator[vm.propertyName] = vms;
+                    }
+                    vms.push(vm);
+                }
+            }
+
 
             colMetadata.forEach(item => {
+
+                //
+                // Validierung ermitteln und attachen
+                //
+                let validationMetadatas = propNameToValidator[item.propertyName];
+
+
+                if (validationMetadatas) {
+                    let validator: Validator;
+
+                    //
+                    // falls mehrere Validation-Decorators an Modelproperty sind,
+                    // werden die Validatoren in einen CompoundValidator gekapselt.
+                    //
+                    if (validationMetadatas.length > 0) {
+                        for (let vm of validationMetadatas) {
+                            vm.validator.attachColumnMetadata(item);
+                        }
+                        let validators = validationMetadatas.map(v => v.validator);
+                        validator = new CompoundValidator(validators);
+                    } else {
+                        validator = validationMetadatas[0].validator;
+                    }
+                    validator.attachColumnMetadata(item);
+                    item.setValidation(validator);
+                }
+
                 metadata.add(item);
             });
 

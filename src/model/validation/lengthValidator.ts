@@ -6,8 +6,8 @@ import { ColumnMetadata } from '../metadata/columnMetadata';
 
 export class LengthValidator extends Validator {
 
-    constructor(columnMetadata: ColumnMetadata, private min?: number, private max?: number) {
-        super(columnMetadata);
+    constructor(private min?: number, private max?: number) {
+        super();
         Assert.that(max !== undefined);
     }
 

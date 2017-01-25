@@ -3,8 +3,9 @@ import { ColumnMetadata } from './../metadata/columnMetadata';
 import { IValidation } from './validation.interface';
 
 export abstract class Validator implements IValidation {
+    private _columnMetadata: ColumnMetadata;
 
-    protected constructor(private _columnMetadata: ColumnMetadata) {
+    protected constructor() {
     }
 
     abstract validate(value: any): ValidationResult;
@@ -15,5 +16,9 @@ export abstract class Validator implements IValidation {
 
     protected get propertyName(): string {
         return this._columnMetadata.options.displayName ? this._columnMetadata.options.displayName : this._columnMetadata.propertyName;
+    }
+
+    public attachColumnMetadata(columnMetadata: ColumnMetadata) {
+        this._columnMetadata = columnMetadata;
     }
 }

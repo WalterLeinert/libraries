@@ -5,8 +5,8 @@ import { ColumnMetadata } from '../metadata/columnMetadata';
 
 export class CompoundValidator extends Validator {
 
-    constructor(columnMetadata: ColumnMetadata, private validators: IValidation[]) {
-        super(columnMetadata);
+    constructor(private validators: IValidation[]) {
+        super();
     }
 
     validate(value: any): ValidationResult {
