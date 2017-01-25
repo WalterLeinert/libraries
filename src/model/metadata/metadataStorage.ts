@@ -1,4 +1,5 @@
 import { Assert } from '../../util/assert';
+import { ValidationMetadata } from './validationMetadata';
 import { TableMetadata } from './tableMetadata';
 import { ColumnMetadata } from './columnMetadata';
 
@@ -12,7 +13,9 @@ import { ColumnMetadata } from './columnMetadata';
 export class MetadataStorage {
     private static _instance = new MetadataStorage();
 
+    private tableValidationDict: { [name: string]: ValidationMetadata[] } = {};
     private tableColumnDict: { [name: string]: ColumnMetadata[] } = {};
+
     private tableDict: { [name: string]: TableMetadata } = {};
     private dbTableDict: { [name: string]: TableMetadata } = {};
 
@@ -48,7 +51,7 @@ export class MetadataStorage {
 
 
     /**
-     * Fügt eine neue {ColumnMetadata} hinzu.
+     * Fügt eine neue @see{ColumnMetadata} hinzu.
      * 
      * @param {ColumnMetadata} metadata
      * 
@@ -64,6 +67,26 @@ export class MetadataStorage {
             this.tableColumnDict[targetName] = colMetadata;
         }
         colMetadata.push(metadata);
+    }
+
+
+    /**
+     * Fügt eine neue @see{validationMetadata} hinzu.
+     * 
+     * @param {ValidationMetadata} metadata
+     * 
+     * @memberOf MetadataStorage
+     */
+    public addValidationMetadata(metadata: ValidationMetadata) {
+        Assert.notNull(metadata);
+
+        let targetName = metadata.target.name;
+        let valMetadata: ValidationMetadata[] = this.tableValidationDict[targetName];
+        if (!valMetadata) {
+            valMetadata = [];
+            this.tableValidationDict[targetName] = valMetadata;
+        }
+        valMetadata.push(metadata);
     }
 
 

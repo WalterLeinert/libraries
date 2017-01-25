@@ -1,6 +1,6 @@
 import { Assert } from '../../util/assert';
 import { ColumnMetadata } from '../metadata/columnMetadata';
-import { TableOptions } from '../decorator/tableOptions';
+import { TableOptions } from '../decorator/model/tableOptions';
 
 
 /**

@@ -1,6 +1,6 @@
 import { TableOptions } from './tableOptions';
-import { MetadataStorage } from '../metadata/metadataStorage';
-import { TableMetadata } from '../metadata/tableMetadata';
+import { MetadataStorage } from '../../metadata/metadataStorage';
+import { TableMetadata } from '../../metadata/tableMetadata';
 
 
 /**

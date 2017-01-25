@@ -1,5 +1,8 @@
 import * as moment from 'moment';
-import { ColumnOptions } from '../decorator/columnOptions';
+import { Assert } from '../../util/assert';
+import { ValidationResult } from './../validation/validationResult';
+import { IValidation } from './../validation/validation.interface';
+import { ColumnOptions } from '../decorator/model/columnOptions';
 import { ColumnTypes } from './columnTypes';
 import { Time } from '../../types/time';
 
@@ -10,6 +13,7 @@ import { Time } from '../../types/time';
  * @class ColumnMetadata
  */
 export class ColumnMetadata {
+    private validator: IValidation;
 
     /**
      * @param {Function} target - Modelklasse
@@ -104,5 +108,13 @@ export class ColumnMetadata {
         return value;
     }
 
-}
+    public setValidation(validator: IValidation) {
+        this.validator = validator;
+    }
 
+    public validate(value: any): ValidationResult {
+        Assert.notNull(this.validator);
+        return this.validator.validate(value);
+    }
+
+}

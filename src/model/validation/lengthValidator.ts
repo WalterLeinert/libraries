@@ -1,20 +1,22 @@
+import { ValidationResult } from './validationResult';
 import { Validator } from './validator';
+import { ColumnMetadata } from '../metadata/columnMetadata';
 
 export class LengthValidator extends Validator {
 
-    constructor(private min: number, private max: number) {
-        super();
+    constructor(columnMetadata: ColumnMetadata, private min?: number, private max?: number) {
+        super(columnMetadata);
     }
 
-    public validate(value: number): boolean {
-        if (length < this.min) {
-            return false;
+    public validate(value: number): ValidationResult {
+        if ((this.min !== undefined) && length < this.min) {
+            return ValidationResult.create(false, `${this.propertyName}: Der Wert ${value} muss mindestens ${this.min} sein.`);
         }
 
         if (this.max && length > this.max) {
-            return false;
+            return ValidationResult.create(false, `${this.propertyName}: Der Wert ${value} darf höchstens ${this.max} sein.`);
         }
 
-        return true;
+        return ValidationResult.Ok;
     }
 }

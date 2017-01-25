@@ -1,9 +1,9 @@
-import { Time } from '../../types/time';
+import { Time } from '../../../types/time';
 import { ColumnOptions } from './columnOptions';
-import { ColumnTypes } from '../metadata/columnTypes';
-import { ColumnMetadata } from '../metadata/columnMetadata';
-import { MetadataStorage } from '../metadata/metadataStorage';
-import { ColumnTypeUndefinedError } from '../error/columnTypeUndefinedError';
+import { ColumnTypes } from '../../metadata/columnTypes';
+import { ColumnMetadata } from '../../metadata/columnMetadata';
+import { MetadataStorage } from '../../metadata/metadataStorage';
+import { ColumnTypeUndefinedError } from '../../error/columnTypeUndefinedError';
 
 /**
  * Column-Decorator für Modellproperties/-attribute

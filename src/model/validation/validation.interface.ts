@@ -1,3 +1,5 @@
+import { ValidationResult } from './validationResult';
+
 export interface IValidation {
-    validate(value: any): boolean;
+    validate(value: any): ValidationResult;
 }
