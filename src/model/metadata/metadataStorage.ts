@@ -70,7 +70,7 @@ export class MetadataStorage {
                     // falls mehrere Validation-Decorators an Modelproperty sind,
                     // werden die Validatoren in einen CompoundValidator gekapselt.
                     //
-                    if (validationMetadatas.length > 0) {
+                    if (validationMetadatas.length > 1) {
                         for (let vm of validationMetadatas) {
                             vm.validator.attachColumnMetadata(item);
                         }
