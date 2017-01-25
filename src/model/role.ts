@@ -30,13 +30,13 @@ export class Role implements IRole {
   private static ___initRole: boolean = Role.initialize();
 
 
-  @Column({ name: 'role_id', primary: true, generated: true })
+  @Column({ name: 'role_id', primary: true, generated: true, displayName: 'Id' })
   public id: number;
 
-  @Column({ name: 'role_name' })
+  @Column({ name: 'role_name', displayName: 'Name' })
   public name: string;
 
-  @Column({ name: 'role_description' })
+  @Column({ name: 'role_description', displayName: 'Description' })
   public description: string;
 
   static initialize(): boolean {

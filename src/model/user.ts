@@ -12,29 +12,34 @@ export class User implements IUser {
   */
   public static readonly USER_CONFIG_KEY = 'IUser';
 
-  @Column({ name: 'user_id', primary: true, generated: true })
+  @Column({ name: 'user_id', primary: true, generated: true, displayName: 'Id' })
   public id: number;
 
-  @Column({ name: 'firstname', nullable: true })
+  @Column({ name: 'firstname', nullable: true, displayName: 'Firstname' })
   public firstname?: string;
 
-  @Column({ name: 'lastname', nullable: true })
+  @Column({ name: 'lastname', nullable: true, displayName: 'Lastname' })
   public lastname?: string;
 
-  @Column({ name: 'username' })
+  @Column({ name: 'username', displayName: 'Username' })
   public username: string;
 
-  @Column({ name: 'email', nullable: true })
+  @Column({ name: 'email', nullable: true, displayName: 'Email' })
   public email?: string;
 
-  @Column({ name: 'id_role' })
+  @Column({ name: 'id_role', displayName: 'Role-Id' })
   public role: number = UserRoleId.User;
 
-  @Column({ name: 'password' })
+  @Column({ name: 'password', displayName: 'Password' })
   public password: string;
 
   @Column({ name: 'password_salt' })
   public password_salt: string;
+
+  @Column({ displayName: 'Name', persisted: false })
+  public get fullName(): string {
+    return `${this.lastname}, ${this.firstname}`;
+  }
 }
 
 /**
