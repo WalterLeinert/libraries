@@ -8,6 +8,7 @@ import { DropdownModule } from 'primeng/primeng';
 
 import { AutofocusModule, HighlightModule } from '../../common/directives';
 
+import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
 import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { PassportService } from './passport.service';
 import { RoleService } from './role.service';
@@ -25,6 +26,7 @@ import { LogoffComponent } from './logoff/logoff.component';
     DropdownModule,
     HighlightModule,
     AutofocusModule,
+    DropdownSelectorModule,
     AuthenticationRoutingModule
   ],
   declarations: [
