@@ -162,7 +162,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     } else {
 
       //
-      // 
+      // es existiert keine Config und weder textField noch valueField sind angegeben
       //
       if (StringUtil.isNullOrEmpty(this.textField) && StringUtil.isNullOrEmpty(this.valueField)) {
         // metadata/reflect
@@ -172,6 +172,12 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
           this.setupColumnInfosByReflection(items);
         }
       } else {
+
+        // fehlt das valueField, wird als Default CURRENT_ITEM verwendet
+        if (StringUtil.isNullOrEmpty(this.valueField)) {
+          this.valueField = DisplayInfo.CURRENT_ITEM;
+        }
+
         this.config = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
         this.config.displayInfo.textField = this.textField;
         this.config.displayInfo.valueField = this.valueField;
