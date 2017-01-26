@@ -1,5 +1,5 @@
 // Angular
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { Http, Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -25,6 +25,8 @@ export class PassportService implements IServiceBase {
     private _url: string;
     private _topic: string = 'passport';
     private serializer: Serializer<IUser>;
+
+    @Output() currentUserChange: EventEmitter<IUser> = new EventEmitter();
 
     /**
      * Creates an instance of PassportService.
@@ -79,7 +81,10 @@ export class PassportService implements IServiceBase {
 
         return this.http.post(this.getUrl() + PassportService.LOGIN, user)
             .map((response: Response) => this.deserialize(response.json()))
-            // .do(data => console.log('result: ' + JSON.stringify(data)))
+            .do(u => {
+                // console.log('user: ' + JSON.stringify(u));
+                this.onSelectedValueChange(u);
+            })
             .catch(Service.handleError);
     }
 
@@ -97,7 +102,10 @@ export class PassportService implements IServiceBase {
 
         return this.http.post(this.getUrl() + PassportService.SIGNUP, user)
             .map((response: Response) => this.deserialize(response.json()))
-            // .do(data => console.log('result: ' + JSON.stringify(data)))
+            .do(u => {
+                // console.log('user: ' + JSON.stringify(u));
+                this.onSelectedValueChange(u);
+            })
             .catch(Service.handleError);
     }
 
@@ -112,6 +120,9 @@ export class PassportService implements IServiceBase {
     public logoff() {
         return this.http.get(this.getUrl() + PassportService.LOGOFF)
             .map((response: Response) => {
+            }).do(() => {
+                // console.log('user: ' + JSON.stringify(u));
+                this.onSelectedValueChange(null);
             })
             // .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
@@ -127,8 +138,15 @@ export class PassportService implements IServiceBase {
     public getCurrentUser(): Observable<User> {
         return this.http.get(this.getUrl() + PassportService.CURRENT_USER)
             .map((response: Response) => this.deserialize(response.json()))
-            // .do(data => console.log('result: ' + JSON.stringify(data)))
+            .do(data => {
+                console.log('result: ' + JSON.stringify(data));
+                this.onSelectedValueChange
+            })
             .catch(Service.handleError);
+    }
+
+    protected onSelectedValueChange(value: IUser) {
+        this.currentUserChange.emit(value);
     }
 
 
