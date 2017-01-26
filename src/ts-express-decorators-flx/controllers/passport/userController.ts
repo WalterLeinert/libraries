@@ -7,12 +7,12 @@ import {
 // Fluxgate
 import { ControllerBase } from '../controllerBase';
 
-import { User } from '@fluxgate/common';
+import { User, IUser } from '@fluxgate/common';
 import { UserService } from '../../services/user.service';
 
 
 @Controller('/user')
-export class UserController extends ControllerBase<User, number> {
+export class UserController extends ControllerBase<IUser, number> {
     constructor(service: UserService) {
         super(service, 'user', 'user_id');
     }
