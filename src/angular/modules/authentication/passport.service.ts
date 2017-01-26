@@ -10,6 +10,7 @@ import 'rxjs/add/operator/map';
 // Fluxgate
 import { Constants, Assert, StringBuilder, User, IUser } from '@fluxgate/common';
 
+import { Serializer } from '../../../base/serializer';
 import { IRestUri, IServiceBase, Service, MetadataService } from '../../services';
 import { ConfigService } from '../../services/config.service';
 
@@ -22,6 +23,7 @@ export class PassportService implements IServiceBase {
 
     private _url: string;
     private _topic: string = 'passport';
+    private serializer: Serializer<IUser>;
 
     /**
      * Creates an instance of PassportService.
@@ -46,8 +48,13 @@ export class PassportService implements IServiceBase {
 
         sb.append(this._topic);
         this._url = sb.toString();
-    }
 
+        // Metadaten zur Entity ermitteln
+        let tableMetadata = this.metadataService.findTableMetadata(User);
+        Assert.notNull(tableMetadata);
+
+        this.serializer = new Serializer<User>(tableMetadata);
+    }
 
 
     /**
@@ -70,9 +77,7 @@ export class PassportService implements IServiceBase {
         user.password = password;
 
         return this.http.post(this.getUrl() + PassportService.LOGIN, user)
-            .map((response: Response) => {
-                <IUser>response.json();
-            })
+            .map((response: Response) => this.deserialize(response.json()))
             // .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
     }
@@ -90,12 +95,11 @@ export class PassportService implements IServiceBase {
         Assert.notNull(user, 'user');
 
         return this.http.post(this.getUrl() + PassportService.SIGNUP, user)
-            .map((response: Response) => {
-                <User>response.json();
-            })
+            .map((response: Response) => this.deserialize(response.json()))
             // .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
     }
+
 
     /**
      * Meldet den aktuellen Benutzer ab
@@ -155,4 +159,28 @@ export class PassportService implements IServiceBase {
         throw new Error(`Not supported`);
     }
 
+
+    /**
+     * Serialisiert das @param{item} für die Übertragung zum Server über das REST-Api.
+     * 
+     * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
+     * 
+     * @param {T} item - Entity-Instanz
+     * @returns {any}
+     */
+    private serialize(item: IUser): any {
+        return this.serializer.serialize(item);
+    }
+
+    /**
+     * Deserialisiert das Json-Objekt, welches über das REST-Api vom Server zum Client übertragen wurde
+     * 
+     * @param {any} json - Json-Objekt vom Server
+     * @returns {T}
+     * 
+     * @memberOf Service
+     */
+    private deserialize(json: any): IUser {
+        return this.serializer.deserialize(json);
+    }
 }

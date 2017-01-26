@@ -12,6 +12,7 @@ import * as HttpStatusCodes from 'http-status-codes';
 import { IQuery, TableMetadata, IToString } from '@fluxgate/common';
 import { Constants, Assert, StringBuilder } from '@fluxgate/common';
 
+import { Serializer } from '../../base/serializer';
 import { ConfigService } from './config.service';
 import { MetadataService } from './metadata.service';
 import { IService } from './service.interface';
@@ -28,6 +29,7 @@ import { IService } from './service.interface';
 export abstract class Service<T, TId extends IToString> implements IService {
     private _url: string;
     private _tableMetadata: TableMetadata;
+    private serializer: Serializer<T>;
 
 
     /**
@@ -88,6 +90,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
         this._url = sb.toString();
 
         this._tableMetadata.registerService(this.constructor);
+        this.serializer = new Serializer<T>(this.tableMetadata);
     }
 
 
@@ -199,7 +202,6 @@ export abstract class Service<T, TId extends IToString> implements IService {
             .catch(Service.handleError);
     }
 
-
     /**
      * Serialisiert das @param{item} für die Übertragung zum Server über das REST-Api.
      * 
@@ -209,8 +211,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
      * @returns {any}
      */
     private serialize(item: T): any {
-        Assert.notNull(item);
-        return item;
+        return this.serializer.serialize(item);
     }
 
 
@@ -223,9 +224,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
      * @memberOf Service
      */
     private deserialize(json: any): T {
-        Assert.notNull(json);
-        // Die Properties im Json-Objekt haben dieselben Namen wie die Modellinstanz -> mapColumns = false
-        return this.tableMetadata.createModelInstance<T>(json, false);
+        return this.serializer.deserialize(json);
     }
 
     /**
@@ -235,19 +234,9 @@ export abstract class Service<T, TId extends IToString> implements IService {
      * @returns {T[]}
      */
     private deserializeArray(jsonArray: any): T[] {
-        Assert.notNull(jsonArray);
-
-        if (!Array.isArray(jsonArray)) {
-            throw new Error('json: ist kein Array');
-        }
-
-        let result = new Array<T>();
-        jsonArray.forEach(item => {
-            result.push(this.deserialize(item));
-        });
-
-        return result;
+        return this.serializer.deserializeArray(jsonArray);
     }
+
 
 
     /**
