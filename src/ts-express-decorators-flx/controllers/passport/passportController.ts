@@ -60,6 +60,7 @@ export class PassportController {
                                     return reject(loginErr);
                                 }
 
+                                user.resetCredentials();
                                 resolve(user);
                             });
 
@@ -109,6 +110,7 @@ export class PassportController {
                             return reject(loginErr);
                         }
 
+                        user.resetCredentials();
                         return resolve(user);
                     });
 

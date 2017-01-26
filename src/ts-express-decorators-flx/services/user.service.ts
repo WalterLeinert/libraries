@@ -30,7 +30,7 @@ export class UserService extends BaseService<IUser, number> {
         return new Promise<IUser>((resolve, reject) => {
             super.findById(id)
                 .then(user => {
-                    this.resetPasswort(user);
+                    user.resetCredentials();
                     resolve(user);
                 })
                 .catch(err => {
@@ -44,7 +44,7 @@ export class UserService extends BaseService<IUser, number> {
             super.find()
                 .then(users => {
                     users.forEach(user => {
-                        this.resetPasswort(user);
+                        user.resetCredentials();
                     });
                     resolve(users);
                 })
@@ -61,7 +61,7 @@ export class UserService extends BaseService<IUser, number> {
         return new Promise<IUser>((resolve, reject) => {
             super.update(user)
                 .then(u => {
-                    this.resetPasswort(u);
+                    u.resetCredentials();
                     resolve(u);
                 })
                 .catch(err => {
@@ -94,7 +94,7 @@ export class UserService extends BaseService<IUser, number> {
                 user.password = encryptedPassword;
 
                 super.create(user).then(u => {
-                    this.resetPasswort(u);
+                    u.resetCredentials();
                     resolve(u);
                 });
             });
@@ -159,7 +159,7 @@ export class UserService extends BaseService<IUser, number> {
                                         }
 
                                         if (encryptedPassword === user.password) {
-                                            this.resetPasswort(user);
+                                            user.resetCredentials();
                                             log.log('user: ', user);
                                             resolve(user);
                                         } else {
@@ -205,7 +205,7 @@ export class UserService extends BaseService<IUser, number> {
                             resolve(undefined);
                         } else {
                             let user = users[0];
-                            this.resetPasswort(user);
+                            user.resetCredentials();
                             log.log('user: ', user);
                             resolve(user);
                         }
@@ -241,7 +241,7 @@ export class UserService extends BaseService<IUser, number> {
                             resolve(undefined);
                         } else {
                             let user = users[0];
-                            this.resetPasswort(user);
+                            user.resetCredentials();
                             log.log('user: ', user);
                             resolve(user);
                         }
@@ -289,7 +289,7 @@ export class UserService extends BaseService<IUser, number> {
                             }
 
                             if (encryptedPassword === user.password) {
-                                this.resetPasswort(user);
+                                user.resetCredentials();
 
                                 log.log('user: ', user);
                                 resolve(user);
@@ -307,10 +307,4 @@ export class UserService extends BaseService<IUser, number> {
             });
         });
     }
-
-    private resetPasswort(user: IUser) {
-        user.password = undefined;
-        user.password_salt = undefined;
-    }
-
 }

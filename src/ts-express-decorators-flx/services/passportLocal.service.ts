@@ -96,8 +96,7 @@ export class PassportLocalService {
                     // Create new User
                     this.userService.create(<IUser>req.body)
                         .then(newUser => {
-                            newUser.password = undefined;
-                            newUser.password_salt = undefined;
+                            newUser.resetCredentials();
 
                             log.log(`user created: ${newUser}`);
                             done(null, newUser);
