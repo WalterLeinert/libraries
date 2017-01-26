@@ -6,3 +6,4 @@ export * from './authentication.module';
 export * from './navigation.service';
 export * from './passport.service';
 export * from './role.service';
+export * from './user.service';
