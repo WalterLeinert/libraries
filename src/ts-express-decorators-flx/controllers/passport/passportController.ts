@@ -130,4 +130,18 @@ export class PassportController {
             return 'Disconnected';
         });
     }
+
+    /**
+     * Liefert den aktuell angemeldeten User.
+     * 
+     * @param request
+     */
+    @Get('/currentUser')
+    public getCurrentUser( @Request() request: Express.Request): Promise<IUser> {
+        return using(new XLog(PassportController.logger, levels.INFO, 'currentUser'), (log) => {
+            return new Promise<IUser>((resolve, reject) => {
+                return resolve(request.user);
+            });
+        });
+    }
 }
