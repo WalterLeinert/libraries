@@ -21,4 +21,4 @@ cache:
 
 test:lint:
   script:
-    - npm run lint
+    - gulp tslint
