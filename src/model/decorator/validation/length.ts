@@ -10,8 +10,8 @@ export function Length(max: number);
  * Hier: Prüfung auf Stringlänge
  */
 export function Length(min?: number, max?: number) {
-        return function (target: any, propertyName: string) {
-        MetadataStorage.instance.addValidationMetadata(new ValidationMetadata(target.constructor, propertyName, 
+    return function (target: any, propertyName: string) {
+        MetadataStorage.instance.addValidationMetadata(new ValidationMetadata(target.constructor, propertyName,
             new LengthValidator(min, max)));
     };
 }
