@@ -55,7 +55,7 @@ export interface ColumnOptions {
     readonly default?: any;
 
     /**
-     * false: Spaltenwert wird nicht persistiert (default: true)
+     * false: Spaltenwert wird nicht persistiert (default: true); z.B. berechnete Property
      */
     persisted?: boolean;
 }
