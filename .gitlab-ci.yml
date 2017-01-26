@@ -11,4 +11,4 @@ cache:
   - node_modules/
 test:lint:
   script:
-    - npm run lint
+    - node node_modules/gulp/bin/gulp tslint
