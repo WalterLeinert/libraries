@@ -54,8 +54,8 @@ export function Column(options?: ColumnOptions) {
             options.name = propertyName;
         }
 
-        if (!options.persisted) {
-            options.persisted = true;
+        if (options.persisted === undefined) {
+            options.persisted = true;       // default: Persistieren
         }
 
         // if (!options.displayName) {
