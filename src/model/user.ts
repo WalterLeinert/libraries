@@ -40,6 +40,17 @@ export class User implements IUser {
   public get fullName(): string {
     return `${this.lastname}, ${this.firstname}`;
   }
+
+
+  /**
+   * Setzt Passwort und Salt zurück
+   * 
+   * @memberOf User
+   */
+  public resetCredentials() {
+    this.password = undefined;
+    this.password_salt = undefined;
+  }
 }
 
 /**
