@@ -14,7 +14,7 @@ import { RoleService } from '../../services/role.service';
 @Controller('/role')
 export class RoleController extends ControllerBase<Role, number> {
     constructor(service: RoleService) {
-        super(service, 'artikel', 'artikel_id');
+        super(service, 'role', 'role_id');
     }
 
     // @Authenticated()
@@ -37,7 +37,7 @@ export class RoleController extends ControllerBase<Role, number> {
     public update(
         @Request() request: Express.Request
         ): Promise<Role> {
-        throw new Error(`not supported`);
+        throw new Error(`currently not supported`);
     }
 
     @Authenticated({ role: 'admin' })
@@ -45,6 +45,6 @@ export class RoleController extends ControllerBase<Role, number> {
     public delete(
         @PathParams('id') id: number
         ): Promise<number> {
-        throw new Error(`not supported`);
+        throw new Error(`currently not supported`);
     }
 }
