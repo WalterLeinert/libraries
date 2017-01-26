@@ -26,16 +26,4 @@ export class UserService extends Service<User, number> {
     constructor(metadataService: MetadataService, http: Http, configService: ConfigService) {
         super(User, metadataService, http, configService);
     }
-
-
-    /**
-     * Liefert den aktuell angemeldeten User.
-     * 
-     * @returns {Observable<User>}
-     * 
-     * @memberOf UserService
-     */
-    public getCurrentUser(): Observable<User> {
-        throw Observable.throw(new Error(`Not implemented`));
-    }
 }

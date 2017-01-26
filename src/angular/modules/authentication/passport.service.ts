@@ -20,6 +20,7 @@ export class PassportService implements IServiceBase {
     public static get LOGIN() { return '/login'; }
     public static get SIGNUP() { return '/signup'; }
     public static get LOGOFF() { return '/logout'; }
+    public static get CURRENT_USER() { return '/currentUser'; }
 
     private _url: string;
     private _topic: string = 'passport';
@@ -116,6 +117,20 @@ export class PassportService implements IServiceBase {
             .catch(Service.handleError);
     }
 
+    /**
+     * Liefert den aktuell angemeldeten User.
+     * 
+     * @returns {Observable<User>}
+     * 
+     * @memberOf UserService
+     */
+    public getCurrentUser(): Observable<User> {
+        return this.http.get(this.getUrl() + PassportService.CURRENT_USER)
+            .map((response: Response) => this.deserialize(response.json()))
+            // .do(data => console.log('result: ' + JSON.stringify(data)))
+            .catch(Service.handleError);
+    }
+
 
     /**
      * Liefert die Url inkl. Topic
@@ -139,11 +154,11 @@ export class PassportService implements IServiceBase {
         return Constants.PATH_SEPARATOR + this.getTopic();
     }
 
-       /**
-     * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
-     * 
-     * @type {string}
-     */
+    /**
+  * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
+  * 
+  * @type {string}
+  */
     public getModelClassName(): string {
         throw new Error(`Not supported`);
     }
