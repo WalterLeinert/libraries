@@ -304,7 +304,7 @@ export abstract class BaseService<T, TId extends IToString>  {
      * 
      * @memberOf BaseService
      */
-    public createModelInstance(row: any): T {
+    protected createModelInstance(row: any): T {
         return this.metadata.createModelInstance<T>(row);
     }
 
