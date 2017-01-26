@@ -23,4 +23,11 @@ export interface IUser extends IEntity {
      * Das Passwort Salt (für Verschlüsselung)
      */
     password_salt: string;
+
+    /**
+     * Setzt Passwort und Salt zurück
+     * 
+     * @memberOf User
+     */
+    resetCredentials();
 }
