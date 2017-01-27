@@ -1,4 +1,5 @@
 let leftPad = require('left-pad');
+import { IAttributeSelector } from "./../model/query/attributeSelector.interface";
 import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
 
@@ -26,7 +27,12 @@ export class ShortTime {
         Assert.notNullOrEmpty(text);
 
         let parts = text.split(':');
-        Assert.that(parts.length === 2);
+        Assert.that(parts.length >= 2);
+
+        if (parts.length > 2) {
+            let seconds = +parts[2];
+            Assert.that(seconds === 0, `Zeit ${text}: Falls Sekunden angegeben sind, darf der Wert nur 00 sein.`);
+        }
 
         let hour = +parts[0];
         let minute = +parts[1];

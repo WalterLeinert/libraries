@@ -54,7 +54,7 @@ class TimeShortTest {
         };
 
         expect(ShortTime.createFrom(timeObj).hour).to.equal(timeObj.hour);
-        expect(ShortTime.createFrom(timeObj).minute).to.equal(timeObj.minute);      
+        expect(ShortTime.createFrom(timeObj).minute).to.equal(timeObj.minute);
     }
 
     @test 'should throw exceptions from createFromj'() {
@@ -71,6 +71,16 @@ class TimeShortTest {
         })).to.not.throw;
     }
 
+    @test 'should allow 00 seconds'() {
+        let time = '12:11';
+        expect(ShortTime.parse(`${time}:00`).toString()).to.be.equal(time);
+    }
+
+    @test 'should not allow ss seconds'() {
+        let time = '12:11:33';
+        expect(() => ShortTime.parse(time))
+            .to.throw(Error, `Zeit ${time}: Falls Sekunden angegeben sind, darf der Wert nur 00 sein.`);
+    }
 
 
 
