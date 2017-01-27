@@ -12,10 +12,10 @@ import { Time } from '../../src/types/time';
 import { Reflection } from '../../src/util';
 
 
-@suite('Reflection')
+@suite('Util.Reflection')
 class ReflectionTest {
 
-    @test 'should test '() {
+    @test 'should test copyProperties'() {
         // todo
     }
 }
