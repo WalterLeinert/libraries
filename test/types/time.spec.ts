@@ -28,7 +28,7 @@ let expedtedTimes = [
 ];
 
 
-@suite('Time')
+@suite('Time (HH:mm:ss)')
 class TimeTest {
 
     @test 'should create instance of class Time'() {

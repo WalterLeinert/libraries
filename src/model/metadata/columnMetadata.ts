@@ -1,10 +1,9 @@
 import * as moment from 'moment';
 import { Assert } from '../../util/assert';
-import { ValidationResult } from './../validation/validationResult';
-import { IValidation } from './../validation/validation.interface';
+import { ValidationResult, IValidation } from './../validation';
 import { ColumnOptions } from '../decorator/model/columnOptions';
 import { ColumnTypes } from './columnTypes';
-import { Time } from '../../types/time';
+import { Time, ShortTime } from '../../types';
 
 /**
  * Modelliert Metadaten für Modell-/DB-Attribute
@@ -61,6 +60,17 @@ export class ColumnMetadata {
                 }
                 break;
 
+            case ColumnTypes.SHORTTIME:
+                if (value instanceof ShortTime) {
+                    rval = value;
+                } else if (typeof value === 'string') {
+                    rval = ShortTime.parse(value);
+                } else {
+                    rval = ShortTime.createFrom(value);    // wir interpretieren den Wert als ShortTime
+                    // throw new Error(`Column ${this.propertyName}: Konvertierung von Zeitwert ${JSON.stringify(value)} nicht möglich.`);
+                }
+                break;
+
             default:
                 rval = value;
                 break;
@@ -94,6 +104,12 @@ export class ColumnMetadata {
                     return value.toString();
                 }
                 return '00:00:00';
+
+            case ColumnTypes.SHORTTIME:
+                if (value instanceof ShortTime) {
+                    return value.toString();
+                }
+                return '00:00';
 
             case ColumnTypes.DATETIME:
                 if (moment(value).isValid()) {

@@ -1,4 +1,5 @@
-import { Time } from '../../../types/time';
+
+import { Time, ShortTime } from '../../../types';
 import { ColumnOptions } from './columnOptions';
 import { ColumnTypes } from '../../metadata/columnTypes';
 import { ColumnMetadata } from '../../metadata/columnMetadata';
@@ -28,6 +29,10 @@ export function Column(options?: ColumnOptions) {
             }
             if (options.propertyType === ColumnTypes.TIME) {
                 propertyType = Time;
+                console.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
+            }
+            if (options.propertyType === ColumnTypes.SHORTTIME) {
+                propertyType = ShortTime;
                 console.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
             }
         }

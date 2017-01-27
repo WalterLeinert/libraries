@@ -1,8 +1,10 @@
+import { Time, ShortTime } from '../../types';
+
 /**
  * All data types that column can be.
  */
 export type ColumnType = 'string' | 'text' | 'number' | 'integer' | 'int' | 'smallint' | 'bigint' | 'float' | 'double' |
-    'decimal' | 'date' | 'time' | 'datetime' | 'boolean' | 'json' | 'simple_array';
+    'decimal' | 'date' | 'time' | 'shorttime' | 'datetime' | 'boolean' | 'json' | 'simple_array';
 
 /**
  * All data types that column can be.
@@ -70,6 +72,11 @@ export class ColumnTypes {
     static TIME: ColumnType = 'time';
 
     /**
+     * SQL TIME type. Your class's property type should be a "Date" object.
+     */
+    static SHORTTIME: ColumnType = 'shorttime';
+
+    /**
      * SQL DATETIME/TIMESTAMP type. Your class's property type should be a "Date" object.
      */
     static DATETIME: ColumnType = 'datetime';
@@ -114,6 +121,7 @@ export class ColumnTypes {
             this.DECIMAL,
             this.DATE,
             this.TIME,
+            this.SHORTTIME,
             this.DATETIME,
             this.BOOLEAN,
             this.JSON,
@@ -127,7 +135,10 @@ export class ColumnTypes {
     static determineTypeFromFunction(type: Function): ColumnType {
         if (type instanceof Date) {
             return ColumnTypes.DATETIME;
-
+        } if (type instanceof Time) {
+            return ColumnTypes.TIME;
+        } if (type instanceof ShortTime) {
+            return ColumnTypes.SHORTTIME;
         } else if (type instanceof Function) {
             const typeName = (<any>type).name.toLowerCase();
             switch (typeName) {
@@ -141,6 +152,8 @@ export class ColumnTypes {
                     return ColumnTypes.DATETIME;
                 case 'time':
                     return ColumnTypes.TIME;
+                case 'shorttime':
+                    return ColumnTypes.SHORTTIME;
                 case 'object':
                     return ColumnTypes.JSON;
             }
@@ -155,6 +168,14 @@ export class ColumnTypes {
 
     static typeToString(type: Function): string {
         return (type as any).name.toLowerCase();
+    }
+
+    static isTime(type: ColumnType) {
+        return type === ColumnTypes.TIME || type === ColumnTypes.SHORTTIME;
+    }
+
+    static isDate(type: ColumnType) {
+        return type === ColumnTypes.DATE || type === ColumnTypes.DATETIME;
     }
 
     /**

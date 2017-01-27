@@ -2,11 +2,7 @@ let leftPad = require('left-pad');
 import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
 
-/**
- * Modelliert einen Stundentyp
- */
-export type Hour = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
-    12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23;
+import { ShortTime, Hour } from '.';
 
 
 /**
@@ -15,7 +11,7 @@ export type Hour = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
  * @export
  * @class Time
  */
-export class Time {
+export class Time extends ShortTime {
 
     /**
      * Erzeugt aus dem String @param{text} eine @see{Time}-Instanz.
@@ -81,9 +77,9 @@ export class Time {
      * 
      * @memberOf Time
      */
-    constructor(public hour: Hour, public minute: number, public second: number) {
-        Assert.that(hour >= 0 && hour <= 23);
-        Assert.that(minute >= 0 && minute <= 59);
+    constructor(hour: Hour, minute: number, public second: number) {
+        super(hour, minute);
+
         Assert.that(second >= 0 && second <= 59);
     }
 
@@ -95,6 +91,6 @@ export class Time {
      * @memberOf Time
      */
     public toString(): string {
-        return `${leftPad(this.hour, 2, 0)}:${leftPad(this.minute, 2, 0)}:${leftPad(this.second, 2, 0)}`;
+        return `${super.toString()}:${leftPad(this.second, 2, 0)}`;
     }
 }
