@@ -140,7 +140,6 @@ export class PassportService implements IServiceBase {
             .map((response: Response) => this.deserialize(response.json()))
             .do(data => {
                 console.log('result: ' + JSON.stringify(data));
-                this.onSelectedValueChange
             })
             .catch(Service.handleError);
     }
