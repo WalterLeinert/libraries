@@ -1,4 +1,5 @@
 import { Assert } from '../util/assert';
+import { Dictionary } from './../types/dictionary';
 
 /**
  * Globale Registry für anwendungsweite Daten
@@ -6,7 +7,7 @@ import { Assert } from '../util/assert';
 export class AppRegistry {
     private static _instance = new AppRegistry();
 
-    private dataDict: { [name: string]: any } = {};
+    private dataDict: Dictionary<string, any> = new Dictionary<string, any>();
 
     /**
      * fügt unter dem Key @param{key} eine neue Dateninstanz @param{data} hinzu.

@@ -1,4 +1,5 @@
 import { Assert } from './../util/assert';
+import { Dictionary } from './../types/dictionary';
 import { PropertyReflector } from './propertyReflector';
 
 
@@ -11,7 +12,7 @@ export enum ReflectionType {
 export class TypeReflector {
     public static NoParent = new TypeReflector({});
     private reflectionType: ReflectionType;
-    private propertyDict: { [name: string]: PropertyReflector } = {};
+    private propertyDict: Dictionary<string, PropertyReflector> = new Dictionary<string, PropertyReflector>();
     private _parent: TypeReflector;
 
     constructor(obj: any) {

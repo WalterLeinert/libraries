@@ -1,4 +1,5 @@
 import { Assert } from '../../util/assert';
+import { Dictionary } from '../../types';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { TableOptions } from '../decorator/model/tableOptions';
 
@@ -11,8 +12,8 @@ import { TableOptions } from '../decorator/model/tableOptions';
  */
 export class TableMetadata {
     private _columnMetadata: ColumnMetadata[] = [];
-    private propertyMap: { [propertyName: string]: ColumnMetadata } = {};
-    private dbColMap: { [dbColName: string]: ColumnMetadata } = {};
+    private propertyMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
+    private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();;
     private _primaryKeyColumn; ColumnMetadata;
     private _service: Function;
 
@@ -28,8 +29,8 @@ export class TableMetadata {
      */
     public add(metadata: ColumnMetadata) {
         this._columnMetadata.push(metadata);
-        this.propertyMap[metadata.propertyName] = metadata;
-        this.dbColMap[metadata.options.name] = metadata;
+        this.propertyMap.add(metadata.propertyName, metadata);
+        this.dbColMap.add(metadata.options.name, metadata);
 
         if (metadata.options.primary) {
             this._primaryKeyColumn = metadata;

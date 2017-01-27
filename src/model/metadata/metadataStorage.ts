@@ -1,4 +1,5 @@
 import { Assert } from '../../util/assert';
+import { Dictionary } from '../../types';
 import { CompoundValidator, Validator } from './../validation';
 import { ValidationMetadata } from './validationMetadata';
 import { TableMetadata } from './tableMetadata';
@@ -14,11 +15,11 @@ import { ColumnMetadata } from './columnMetadata';
 export class MetadataStorage {
     private static _instance = new MetadataStorage();
 
-    private tableValidationDict: { [name: string]: ValidationMetadata[] } = {};
-    private tableColumnDict: { [name: string]: ColumnMetadata[] } = {};
+    private tableValidationDict: Dictionary<string, ValidationMetadata[]> = new Dictionary<string, ValidationMetadata[]>();
+    private tableColumnDict: Dictionary<string, ColumnMetadata[]> = new Dictionary<string, ColumnMetadata[]>();
 
-    private tableDict: { [name: string]: TableMetadata } = {};
-    private dbTableDict: { [name: string]: TableMetadata } = {};
+    private tableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
+    private dbTableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
 
     /**
      * fügt eine neue {TableMetadata} hinzu.
@@ -41,7 +42,7 @@ export class MetadataStorage {
             // Dictionary (propertyName, ValidationMetadata[]) aufbauen, um
             // anschliessend die Validatoren mit ColumnMetadata verknüpfen zu können
             //
-            let propNameToValidator: { [name: string]: ValidationMetadata[] } = {};
+            let propNameToValidator: Dictionary<string, ValidationMetadata[]> = new Dictionary<string, ValidationMetadata[]>();
 
             if (valMetadata) {
                 for (let vm of valMetadata) {
