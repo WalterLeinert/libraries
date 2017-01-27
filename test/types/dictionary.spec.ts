@@ -4,11 +4,7 @@ import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { AssertionError } from '../../src/util';
-
-import { Dictionary  } from '../../src/types/dictionary';
-
-
+import { Dictionary } from '../../src/types/dictionary';
 
 class BaseClass {
     constructor(public name: string) {
@@ -16,13 +12,22 @@ class BaseClass {
 }
 
 
-let expedtedTimes = [
+let expectedDict = [
+    {
+        dictCreator: () => new Dictionary<string, string>(),
+        keys: ['key-0', 'key-1'],
+        values: ['value-0', 'value-1']
+    },
+    {
+        dictCreator: () => new Dictionary<string, string>(),
+        keys: [],
+        values: []
+    }
 ];
 
 
 @suite('Types.Dictionary<string, string>')
-class DictionarySimpleTest {
-
+class DictionaryStringStringTest<TKey, TValue> {
     @test 'should create instance of Dictionary'() {
         return expect(new Dictionary<string, string>()).to.be.not.null;
     }
@@ -84,10 +89,131 @@ class DictionarySimpleTest {
     }
 }
 
+
 @suite('Types.Dictionary')
 class DictionaryTest {
 
-    @test 'should create instance of Dictionary'() {
-        return expect(new Dictionary<string, string>()).to.be.not.null;
+    @test 'validate keys vs values'() {
+        expectedDict.forEach(test => {
+            expect(test.keys.length).to.be.equal(test.values.length);
+        });
+    }
+
+    @test 'should add an item'() {
+        expectedDict.forEach(test => {
+            let dict = test.dictCreator();
+
+            for (let i = 0; i < test.keys.length; i++) {
+                let key = test.keys[i];
+                let value = test.values[i];
+
+                expect(dict.add(key, value)).not.to.throw;
+                expect(dict.count).to.be.equal(i + 1);
+            }
+        });
+    }
+
+
+    @test 'should remove an item'() {
+        expectedDict.forEach(test => {
+            let dict = test.dictCreator();
+
+            for (let i = 0; i < test.keys.length; i++) {
+                let key = test.keys[i];
+                let value = test.values[i];
+
+                dict.add(key, value);
+            }
+
+            for (let i = 0; i < test.keys.length; i++) {
+                let key = test.keys[i];
+                let value = test.values[i];
+
+                expect(dict.remove(key)).not.to.throw;
+                expect(dict.count).to.be.equal(test.keys.length - (i + 1));
+            }
+        });
+    }
+
+
+    @test 'should test for existence'() {
+        expectedDict.forEach(test => {
+            let dict = test.dictCreator();
+
+            for (let i = 0; i < test.keys.length; i++) {
+                let key = test.keys[i];
+                let value = test.values[i];
+
+                dict.add(key, value);
+            }
+
+            for (let i = 0; i < test.keys.length; i++) {
+                let key = test.keys[i];
+                let value = test.values[i];
+
+                expect(dict.containsKey(key)).to.be.true;
+            }
+        });
+    }
+
+    @test 'should test for non existence'() {
+        expectedDict.forEach(test => {
+            let dict = test.dictCreator();
+
+            for (let i = 0; i < test.keys.length; i++) {
+                let key = test.keys[i];
+                let value = test.values[i];
+
+                dict.add(key, value);
+            }
+
+            expect(dict.containsKey('no-such-key')).to.be.false;
+        });
+    }
+
+    @test 'should test empty keys'() {
+        expectedDict.forEach(test => {
+            let dict = test.dictCreator();
+            expect(dict.keys.length).to.be.equal(0);
+        });
+    }
+
+    @test 'should test empty values'() {
+        expectedDict.forEach(test => {
+            let dict = test.dictCreator();
+            expect(dict.values.length).to.be.equal(0);
+        });
+    }
+
+    @test 'should test keys'() {
+        expectedDict.forEach(test => {
+            let dict = test.dictCreator();
+
+            for (let i = 0; i < test.keys.length; i++) {
+                let key = test.keys[i];
+                let value = test.values[i];
+
+                dict.add(key, value);
+            }
+
+            expect(dict.keys.length).to.be.equal(test.keys.length);
+            expect(dict.keys).to.be.deep.equal(test.keys);
+        });
+    }
+
+    @test 'should test values'() {
+        expectedDict.forEach(test => {
+            let dict = test.dictCreator();
+
+            for (let i = 0; i < test.keys.length; i++) {
+                let key = test.keys[i];
+                let value = test.values[i];
+
+                dict.add(key, value);
+            }
+
+            expect(dict.values.length).to.be.equal(test.values.length);
+            expect(dict.values).to.be.deep.equal(test.values);
+        });
     }
 }
