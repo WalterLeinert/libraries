@@ -201,6 +201,18 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
 
 
     /**
+     * Leert das Dictionary
+     * 
+     * @memberOf Dictionary
+     */
+    public clear() {
+        this.stringDict = {};
+        this.numberDict = {};
+        this.stringToObjectMapper = {};
+    }
+
+
+    /**
      * Liefert die Anzahl der Einträge im Dictionary
      * 
      * @returns {number}
@@ -221,6 +233,19 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
 
         throw new Error(`Invalid Operation`);
     }
+
+
+    /**
+     * Liefert true, falls das Dictionary leer ist.
+     * 
+     * @returns {boolean}
+     * 
+     * @memberOf Dictionary
+     */
+    public get isEmpty(): boolean {
+        return this.count <= 0;
+    }
+
 
     private initialize(keyType: KeyType) {
         this.keyType = keyType;

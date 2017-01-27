@@ -216,4 +216,20 @@ class DictionaryTest {
             expect(dict.values).to.be.deep.equal(test.values);
         });
     }
+
+    @test 'should test clear'() {
+        expectedDict.forEach(test => {
+            let dict = test.dictCreator();
+
+            for (let i = 0; i < test.keys.length; i++) {
+                let key = test.keys[i];
+                let value = test.values[i];
+
+                dict.add(key, value);
+            }
+
+            expect(dict.clear()).to.not.throw;
+            expect(dict.count).to.be.equal(0);
+        });
+    }
 }

@@ -152,6 +152,40 @@ class DictionaryTester<TKey, TValue> {
             expect(dict.values.length).to.be.equal(test.values.length);
             expect(dict.values).to.be.deep.equal(test.values);
         });
+
+
+        // @test 'should test clear'() {
+        expected.forEach(test => {
+            let dict = new Dictionary<TKey, TValue>();
+
+            for (let i = 0; i < test.keys.length; i++) {
+                let key = test.keys[i];
+                let value = test.values[i];
+
+                dict.add(key, value);
+            }
+
+            expect(dict.clear()).to.not.throw;
+            expect(dict.count).to.be.equal(0);
+        });
+
+
+        // @test 'should test isEmpty'() {
+        expected.forEach(test => {
+            let dict = new Dictionary<TKey, TValue>();
+
+            expect(dict.isEmpty).to.be.true;
+
+            for (let i = 0; i < test.keys.length; i++) {
+                let key = test.keys[i];
+                let value = test.values[i];
+
+                dict.add(key, value);
+            }
+
+            dict.clear();
+            expect(dict.isEmpty).to.be.true;
+        });
     }
 }
 
