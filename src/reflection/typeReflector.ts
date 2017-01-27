@@ -29,7 +29,7 @@ export class TypeReflector {
                 let propertyType: Function = (Reflect as any).getMetadata('design:type', obj, key);
 
                 let descr = Reflect.getOwnPropertyDescriptor(obj, key);
-                this.propertyDict[key.toString()] = new PropertyReflector(key.toString(), descr);
+                this.propertyDict.set(key.toString(), new PropertyReflector(key.toString(), descr));
             });
 
             this._parent = Object.getPrototypeOf(obj);

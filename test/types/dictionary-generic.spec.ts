@@ -38,7 +38,7 @@ class DictionaryTester<TKey, TValue> {
         });
 
 
-        // @test 'should add an item'() {
+        // @test 'should set an item'() {
         expected.forEach(test => {
             let dict = new Dictionary<TKey, TValue>();
 
@@ -46,8 +46,27 @@ class DictionaryTester<TKey, TValue> {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                expect(dict.add(key, value)).not.to.throw;
+                expect(dict.set(key, value)).not.to.throw;
                 expect(dict.count).to.be.equal(i + 1);
+            }
+        });
+
+        // @test 'should get an item'() {
+        expected.forEach(test => {
+            let dict = new Dictionary<TKey, TValue>();
+
+            for (let i = 0; i < test.keys.length; i++) {
+                let key = test.keys[i];
+                let value = test.values[i];
+
+                expect(dict.set(key, value)).not.to.throw;
+            }
+
+            for (let i = 0; i < test.keys.length; i++) {
+                let key = test.keys[i];
+                let value = test.values[i];
+
+                expect(dict.get(key)).to.deep.equal(value);
             }
         });
 
@@ -60,7 +79,7 @@ class DictionaryTester<TKey, TValue> {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                dict.add(key, value);
+                dict.set(key, value);
             }
 
             for (let i = 0; i < test.keys.length; i++) {
@@ -82,7 +101,7 @@ class DictionaryTester<TKey, TValue> {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                dict.add(key, value);
+                dict.set(key, value);
             }
 
             for (let i = 0; i < test.keys.length; i++) {
@@ -102,7 +121,7 @@ class DictionaryTester<TKey, TValue> {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                dict.add(key, value);
+                dict.set(key, value);
             }
 
             expect(dict.containsKey(test.noSuchKey)).to.be.false;
@@ -131,7 +150,7 @@ class DictionaryTester<TKey, TValue> {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                dict.add(key, value);
+                dict.set(key, value);
             }
 
             expect(dict.keys.length).to.be.equal(test.keys.length);
@@ -146,7 +165,7 @@ class DictionaryTester<TKey, TValue> {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                dict.add(key, value);
+                dict.set(key, value);
             }
 
             expect(dict.values.length).to.be.equal(test.values.length);
@@ -162,7 +181,7 @@ class DictionaryTester<TKey, TValue> {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                dict.add(key, value);
+                dict.set(key, value);
             }
 
             expect(dict.clear()).to.not.throw;
@@ -180,7 +199,7 @@ class DictionaryTester<TKey, TValue> {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                dict.add(key, value);
+                dict.set(key, value);
             }
 
             dict.clear();

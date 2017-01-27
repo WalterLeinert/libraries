@@ -33,9 +33,9 @@ export class MetadataStorage {
 
         let targetName = metadata.target.name;
 
-        if (!this.tableDict[targetName]) {
-            let colMetadata: ColumnMetadata[] = this.tableColumnDict[targetName];
-            let valMetadata = this.tableValidationDict[targetName];
+        if (!this.tableDict.containsKey(targetName)) {
+            let colMetadata: ColumnMetadata[] = this.tableColumnDict.get(targetName);
+            let valMetadata = this.tableValidationDict.get(targetName);
 
 
             //
@@ -92,8 +92,8 @@ export class MetadataStorage {
                 console.info(`Table ${metadata.options.name}: no primary key column`);
             }
 
-            this.tableDict[targetName] = metadata;
-            this.dbTableDict[metadata.options.name] = metadata;
+            this.tableDict.set(targetName, metadata);
+            this.dbTableDict.set(metadata.options.name, metadata);
         }
 
     }
@@ -110,10 +110,10 @@ export class MetadataStorage {
         Assert.notNull(metadata);
 
         let targetName = metadata.target.name;
-        let colMetadata: ColumnMetadata[] = this.tableColumnDict[targetName];
+        let colMetadata: ColumnMetadata[] = this.tableColumnDict.get(targetName);
         if (!colMetadata) {
             colMetadata = [];
-            this.tableColumnDict[targetName] = colMetadata;
+            this.tableColumnDict.set(targetName, colMetadata);
         }
         colMetadata.push(metadata);
     }
@@ -130,10 +130,10 @@ export class MetadataStorage {
         Assert.notNull(metadata);
 
         let targetName = metadata.target.name;
-        let valMetadata: ValidationMetadata[] = this.tableValidationDict[targetName];
+        let valMetadata: ValidationMetadata[] = this.tableValidationDict.get(targetName);
         if (!valMetadata) {
             valMetadata = [];
-            this.tableValidationDict[targetName] = valMetadata;
+            this.tableValidationDict.set(targetName, valMetadata);
         }
         valMetadata.push(metadata);
     }
@@ -153,9 +153,9 @@ export class MetadataStorage {
     public findTableMetadata(target: Function | string): TableMetadata {
         Assert.notNull(target);
         if (typeof (target) === 'string') {
-            return this.tableDict[target];
+            return this.tableDict.get(target);
         }
-        return this.tableDict[target.name];
+        return this.tableDict.get(target.name);
     }
 
     /**
@@ -169,14 +169,14 @@ export class MetadataStorage {
      */
     public findTableMetadataByDbTable(tableName: string): TableMetadata {
         Assert.notNullOrEmpty(tableName);
-        return this.dbTableDict[tableName];
+        return this.dbTableDict.get(tableName);
     }
 
 
     public dump() {
-        for (let name in this.tableDict) {
+        for (let name in this.tableDict.keys) {
             if (name) {
-                let table = this.tableDict[name];
+                let table = this.tableDict.get(name);
 
                 console.log();
                 console.log(`${table.options.name}, ${table.target}`);

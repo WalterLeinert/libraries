@@ -47,7 +47,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
      * 
      * @memberOf Dictionary
      */
-    public add(key: TKey, value: TValue) {
+    public set(key: TKey, value: TValue) {
         if (Types.isString(key)) {
             Assert.that(!this.isInitialized || this.keyType === KeyType.String);
             this.stringDict[(<string><any>key)] = value;
@@ -68,6 +68,33 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
             this.stringDict[key.toString()] = value;
             this.initialize(KeyType.Object);
             return;
+        }
+
+        throw new Error(`Unsupported key: ${JSON.stringify(key)}`);
+    }
+
+    /**
+     * Liefert den Wert zum Key @param{key} oder undefined.
+     * 
+     * @param {TKey} key
+     * @returns {TValue} value
+     * 
+     * @memberOf Dictionary
+     */
+    public get(key: TKey): TValue {
+        if (Types.isString(key)) {
+            Assert.that(!this.isInitialized || this.keyType === KeyType.String);
+            return this.stringDict[(<string><any>key)];
+        }
+
+        if (Types.isNumber(key)) {
+            Assert.that(!this.isInitialized || this.keyType === KeyType.Number);
+            return this.numberDict[(<number><any>key)];
+        }
+
+        if (key.toString !== undefined) {
+            Assert.that(!this.isInitialized || this.keyType === KeyType.Object);
+            return this.stringDict[key.toString()];
         }
 
         throw new Error(`Unsupported key: ${JSON.stringify(key)}`);

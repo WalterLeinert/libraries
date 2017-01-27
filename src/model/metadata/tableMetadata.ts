@@ -29,8 +29,8 @@ export class TableMetadata {
      */
     public add(metadata: ColumnMetadata) {
         this._columnMetadata.push(metadata);
-        this.propertyMap.add(metadata.propertyName, metadata);
-        this.dbColMap.add(metadata.options.name, metadata);
+        this.propertyMap.set(metadata.propertyName, metadata);
+        this.dbColMap.set(metadata.options.name, metadata);
 
         if (metadata.options.primary) {
             this._primaryKeyColumn = metadata;
@@ -130,7 +130,7 @@ export class TableMetadata {
      * @memberOf TableMetadata
      */
     public getColumnMetadataByProperty(propertyName: string) {
-        return this.propertyMap[propertyName];
+        return this.propertyMap.get(propertyName);
     }
 
     /**
@@ -142,7 +142,7 @@ export class TableMetadata {
      * @memberOf TableMetadata
      */
     public getColumnMetadataByDbCol(dbColName: string) {
-        return this.dbColMap[dbColName];
+        return this.dbColMap.get(dbColName);
     }
 
     /**
@@ -151,7 +151,7 @@ export class TableMetadata {
     public getDbColumnName(propertyName: string) {
         Assert.notNullOrEmpty(propertyName);
 
-        let colMetadata = this.propertyMap[propertyName];
+        let colMetadata = this.propertyMap.get(propertyName);
         Assert.notNull(colMetadata, `Propertyname ${propertyName} nicht definiert.`);
         Assert.that(colMetadata.options.persisted, `Propertyname ${propertyName} muss Option persisted=true haben.`);
 

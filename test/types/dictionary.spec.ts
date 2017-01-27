@@ -32,16 +32,16 @@ class DictionaryStringStringTest<TKey, TValue> {
         return expect(new Dictionary<string, string>()).to.be.not.null;
     }
 
-    @test 'should add an item'() {
+    @test 'should set an item'() {
         let d = new Dictionary<string, string>();
-        expect(d.add('aaa', 'bbb')).not.to.throw;
+        expect(d.set('aaa', 'bbb')).not.to.throw;
         expect(d.count).to.be.equal(1);
     }
 
     @test 'should remove an item'() {
         let d = new Dictionary<string, string>();
         let key = 'aaa';
-        d.add(key, 'bbb');
+        d.set(key, 'bbb');
         expect(d.remove(key)).not.to.throw;
         expect(d.count).to.be.equal(0);
     }
@@ -49,14 +49,14 @@ class DictionaryStringStringTest<TKey, TValue> {
     @test 'should test for existence'() {
         let d = new Dictionary<string, string>();
         let key = 'aaa';
-        d.add(key, 'bbb');
+        d.set(key, 'bbb');
         expect(d.containsKey(key)).to.be.true;
     }
 
     @test 'should test for not existence'() {
         let d = new Dictionary<string, string>();
         let key = 'aaa';
-        d.add(key, 'bbb');
+        d.set(key, 'bbb');
         expect(d.containsKey('no-such-key')).to.be.false;
     }
 
@@ -74,7 +74,7 @@ class DictionaryStringStringTest<TKey, TValue> {
         let d = new Dictionary<string, string>();
         let key = 'aaa';
         let value = 'bbb';
-        d.add(key, value);
+        d.set(key, value);
         expect(d.keys.length).to.be.equal(1);
         expect(d.keys[0]).to.be.equal(key);
     }
@@ -83,7 +83,7 @@ class DictionaryStringStringTest<TKey, TValue> {
         let d = new Dictionary<string, string>();
         let key = 'aaa';
         let value = 'bbb';
-        d.add(key, value);
+        d.set(key, value);
         expect(d.values.length).to.be.equal(1);
         expect(d.values[0]).to.be.equal(value);
     }
@@ -99,7 +99,7 @@ class DictionaryTest {
         });
     }
 
-    @test 'should add an item'() {
+    @test 'should set an item'() {
         expectedDict.forEach(test => {
             let dict = test.dictCreator();
 
@@ -107,7 +107,7 @@ class DictionaryTest {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                expect(dict.add(key, value)).not.to.throw;
+                expect(dict.set(key, value)).not.to.throw;
                 expect(dict.count).to.be.equal(i + 1);
             }
         });
@@ -122,7 +122,7 @@ class DictionaryTest {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                dict.add(key, value);
+                dict.set(key, value);
             }
 
             for (let i = 0; i < test.keys.length; i++) {
@@ -144,7 +144,7 @@ class DictionaryTest {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                dict.add(key, value);
+                dict.set(key, value);
             }
 
             for (let i = 0; i < test.keys.length; i++) {
@@ -164,7 +164,7 @@ class DictionaryTest {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                dict.add(key, value);
+                dict.set(key, value);
             }
 
             expect(dict.containsKey('no-such-key')).to.be.false;
@@ -193,7 +193,7 @@ class DictionaryTest {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                dict.add(key, value);
+                dict.set(key, value);
             }
 
             expect(dict.keys.length).to.be.equal(test.keys.length);
@@ -209,7 +209,7 @@ class DictionaryTest {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                dict.add(key, value);
+                dict.set(key, value);
             }
 
             expect(dict.values.length).to.be.equal(test.values.length);
@@ -225,7 +225,7 @@ class DictionaryTest {
                 let key = test.keys[i];
                 let value = test.values[i];
 
-                dict.add(key, value);
+                dict.set(key, value);
             }
 
             expect(dict.clear()).to.not.throw;
