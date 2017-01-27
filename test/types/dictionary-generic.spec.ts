@@ -6,7 +6,17 @@ import { suite, test } from 'mocha-typescript';
 
 import { Dictionary } from '../../src/types/dictionary';
 
-class BaseClass {
+class KeyClass {
+    constructor(public id: number) {
+    }
+
+    toString(): string {
+        return `id-${this.id}`;
+    }
+}
+
+
+class ValueClass {
     constructor(public name: string) {
     }
 }
@@ -142,5 +152,108 @@ class DictionaryTester<TKey, TValue> {
             expect(dict.values.length).to.be.equal(test.values.length);
             expect(dict.values).to.be.deep.equal(test.values);
         });
+    }
+}
+
+
+@suite('Types.Dictionary-generic')
+class DictionaryGenericTest {
+
+    @test 'should perform tests on Dictionary<string, string>'() {
+        let tester = new DictionaryTester<string, string>();
+
+        let testData: ITestData<string, string>[] = [
+            {
+                keys: [],
+                values: [],
+                noSuchKey: 'no-such-key'
+            },
+            {
+                keys: ['key-00', 'key-01'],
+                values: ['value-00', 'value-01'],
+                noSuchKey: 'no-such-key'
+            }
+        ];
+
+        tester.doTest(testData);
+    }
+
+    @test 'should perform tests on Dictionary<string, number>'() {
+        let tester = new DictionaryTester<string, number>();
+
+        let testData: ITestData<string, number>[] = [
+            {
+                keys: [],
+                values: [],
+                noSuchKey: 'no-such-key'
+            },
+            {
+                keys: ['key-00', 'key-01'],
+                values: [0, 1],
+                noSuchKey: 'no-such-key'
+            }
+        ];
+
+        tester.doTest(testData);
+    }
+
+    @test 'should perform tests on Dictionary<number, number>'() {
+        let tester = new DictionaryTester<number, number>();
+
+        let testData: ITestData<number, number>[] = [
+            {
+                keys: [],
+                values: [],
+                noSuchKey: -1
+            },
+            {
+                keys: [0, 1],
+                values: [100, 101],
+                noSuchKey: -1
+            }
+        ];
+
+        tester.doTest(testData);
+    }
+
+
+    @test 'should perform tests on Dictionary<string, ValueClass>'() {
+        let tester = new DictionaryTester<string, ValueClass>();
+
+        let testData: ITestData<string, ValueClass>[] = [
+            {
+                keys: [],
+                values: [],
+                noSuchKey: 'no-such-key'
+            },
+            {
+                keys: ['key-00', 'key-01'],
+                values: [new ValueClass('a'), new ValueClass('b')],
+                noSuchKey: 'no-such-key'
+            }
+        ];
+
+        tester.doTest(testData);
+    }
+
+
+
+    @test 'should perform tests on Dictionary<KeyClass, ValueClass>'() {
+        let tester = new DictionaryTester<KeyClass, ValueClass>();
+
+        let testData: ITestData<KeyClass, ValueClass>[] = [
+            {
+                keys: [],
+                values: [],
+                noSuchKey: new KeyClass(-1)
+            },
+            {
+                keys: [new KeyClass(0), new KeyClass(1)],
+                values: [new ValueClass('a'), new ValueClass('b')],
+                noSuchKey: new KeyClass(-1)
+            }
+        ];
+
+        tester.doTest(testData);
     }
 }

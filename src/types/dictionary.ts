@@ -67,6 +67,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
             this.stringToObjectMapper[key.toString()] = key;
             this.stringDict[key.toString()] = value;
             this.initialize(KeyType.Object);
+            return;
         }
 
         throw new Error(`Unsupported key: ${JSON.stringify(key)}`);
@@ -98,6 +99,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
             Assert.that(this.keyType === KeyType.Object);
             delete this.stringToObjectMapper[key.toString()];
             delete this.stringDict[key.toString()];
+            return;
         }
 
         throw new Error(`Unsupported key: ${JSON.stringify(key)}`);
@@ -140,21 +142,15 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
      * @memberOf Dictionary
      */
     public get keys(): TKey[] {
-        let keys: Array<TKey> = new Array<TKey>();
+        let keys: TKey[] = new Array<TKey>();
 
         if (this.isInitialized) {
             if (this.keyType === KeyType.String) {
-                for (let k in this.stringDict) {
-                    if (k) {
-                        keys.push(<TKey> <any> k);
-                    }
-                }
+                keys = <TKey[]> <any> Object.keys(this.stringDict);
             } else if (this.keyType === KeyType.Number) {
-                for (let k in this.numberDict) {
-                    if (k) {
-                        keys.push(<TKey> <any> k);
-                    }
-                }
+               keys = Object.keys(this.numberDict).map(item => {
+                   return <TKey> <any> parseInt(item)
+               });
             } else {
                 for (let k in this.stringToObjectMapper) {
                     if (k) {
