@@ -37,7 +37,10 @@ export class Serializer<T> {
      * @memberOf Service
      */
     public deserialize(json: any): T {
-        Assert.notNull(json);
+        if (json === null) {
+            return null;
+        }
+
         // Die Properties im Json-Objekt haben dieselben Namen wie die Modellinstanz -> mapColumns = false
         return this.tableMetadata.createModelInstance<T>(json, false);
     }
