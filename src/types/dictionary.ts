@@ -49,21 +49,21 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
      */
     public add(key: TKey, value: TValue) {
         if (Types.isString(key)) {
-            Assert.that(this.keyType === KeyType.String);
+            Assert.that(!this.isInitialized || this.keyType === KeyType.String);
             this.stringDict[(<string><any>key)] = value;
             this.initialize(KeyType.String);
             return;
         }
 
         if (Types.isNumber(key)) {
-            Assert.that(this.keyType === KeyType.Number);
+            Assert.that(!this.isInitialized || this.keyType === KeyType.Number);
             this.numberDict[(<number><any>key)] = value;
             this.initialize(KeyType.Number);
             return;
         }
 
         if (key.toString !== undefined) {
-            Assert.that(this.keyType === KeyType.Object);
+            Assert.that(!this.isInitialized || this.keyType === KeyType.Object);
             this.stringToObjectMapper[key.toString()] = key;
             this.stringDict[key.toString()] = value;
             this.initialize(KeyType.Object);
@@ -84,20 +84,20 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     public remove(key: TKey) {
         if (Types.isString(key)) {
             Assert.that(this.keyType === KeyType.String);
-            this.stringDict[(<number><any>key)] = undefined;
+            delete this.stringDict[(<string><any>key)];
             return;
         }
 
         if (Types.isNumber(key)) {
             Assert.that(this.keyType === KeyType.Number);
-            this.numberDict[(<number><any>key)] = undefined;
+            delete this.numberDict[(<number><any>key)];
             return;
         }
 
         if (key.toString !== undefined) {
             Assert.that(this.keyType === KeyType.Object);
-            this.stringToObjectMapper[key.toString()] = undefined;
-            this.stringDict[key.toString()] = undefined;
+            delete this.stringToObjectMapper[key.toString()];
+            delete this.stringDict[key.toString()];
         }
 
         throw new Error(`Unsupported key: ${JSON.stringify(key)}`);
@@ -114,17 +114,17 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
      */
     public containsKey(key: TKey): boolean {
         if (Types.isString(key)) {
-            Assert.that(this.keyType === KeyType.String);
+            Assert.that(!this.isInitialized || this.keyType === KeyType.String);
             return this.stringDict[(<string><any>key)] !== undefined;
         }
 
         if (Types.isNumber(key)) {
-            Assert.that(this.keyType === KeyType.Number);
+            Assert.that(!this.isInitialized || this.keyType === KeyType.Number);
             return this.numberDict[(<number><any>key)] !== undefined;
         }
 
         if (key.toString !== undefined) {
-            Assert.that(this.keyType === KeyType.Object);
+            Assert.that(!this.isInitialized || this.keyType === KeyType.Object);
             return this.stringDict[key.toString()] !== undefined;
         }
 
@@ -211,15 +211,19 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
      * 
      * @memberOf Dictionary
      */
-    public count(): number {
-        Assert.that(this.isInitialized);
+    public get count(): number {
+       if (!this.isInitialized) {
+           return 0;
+       }
 
-        if (this.keyType === KeyType.String) {
+        if (this.keyType === KeyType.String || this.keyType === KeyType.Object) {
             return Object.keys(this.stringDict).length;
         }
         if (this.keyType === KeyType.Number) {
             return Object.keys(this.numberDict).length;
         }
+
+        throw new Error(`Invalid Operation`);
     }
 
     private initialize(keyType: KeyType) {
