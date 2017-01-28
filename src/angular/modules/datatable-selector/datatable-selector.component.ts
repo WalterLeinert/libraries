@@ -86,8 +86,8 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   @Input() config: IDataTableSelectorConfig;
 
 
-  constructor(router: Router, service: ProxyService, metadataService: MetadataService, changeDetectorRef: ChangeDetectorRef) {
-    super(router, service, metadataService, changeDetectorRef);
+  constructor(router: Router, metadataService: MetadataService, changeDetectorRef: ChangeDetectorRef) {
+    super(router, metadataService, changeDetectorRef);
   }
 
   ngOnInit() {

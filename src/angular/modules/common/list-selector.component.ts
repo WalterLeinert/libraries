@@ -19,7 +19,7 @@ export type sortMode = 'single' | 'multiple';
 
 
 
-export abstract class ListSelectorComponent extends BaseComponent<ProxyService> {
+export abstract class ListSelectorComponent extends BaseComponent<any> {
 
     /**
      * Schutz vor rekursivem Ping-Pong
@@ -66,6 +66,17 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
     @Input() dataService: IService;
 
     /**
+     * die Service-Methode zum Bereitstellen der Daten. Muss eine Methode von @see{dataService} sein.
+     *
+     * Hinweis: data und dataService dürfen nicht gleichzeitig gesetzt sein!
+     *
+     * @type {IService}
+     * @memberOf DataTableSelectorComponent
+     */
+    @Input() dataServiceFunction: Function;
+
+
+    /**
      * Index der initial zu selektierenden Zeile (0..n-1)
      *
      * @type {number}
@@ -103,9 +114,9 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
 
 
 
-    constructor(router: Router, service: ProxyService, private _metadataService: MetadataService,
+    constructor(router: Router, private _metadataService: MetadataService,
         private _changeDetectorRef: ChangeDetectorRef) {
-        super(router, service);
+        super(router, null);
     }
 
     ngOnInit() {
@@ -124,11 +135,16 @@ export abstract class ListSelectorComponent extends BaseComponent<ProxyService> 
         } else {
             Assert.notNull(this.dataService, `Wenn Property data nicht gesetzt ist, muss dataService gesetzt sein.`);
 
-            this.service.proxyService(this.dataService);
+            let serviceFunction: Function;
 
-            this.service.find()
-                .subscribe(
-                items => {
+            if (this.dataServiceFunction) {
+                serviceFunction = this.dataServiceFunction;
+            } else {
+                serviceFunction = this.dataService.find;
+            }
+
+            serviceFunction.call(this.dataService)
+                .subscribe(items => {
                     this.setupConfig(items, true);
                     this.setupData(items);
                     this.data = items;

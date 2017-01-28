@@ -121,9 +121,9 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
   public options: SelectItem[];
 
 
-  constructor(router: Router, service: ProxyService, metadataService: MetadataService,
+  constructor(router: Router, metadataService: MetadataService,
     changeDetectorRef: ChangeDetectorRef) {
-    super(router, service, metadataService, changeDetectorRef);
+    super(router, metadataService, changeDetectorRef);
   }
 
 
