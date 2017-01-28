@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert } from '@fluxgate/common';
+import { Assert, ColumnTypes } from '@fluxgate/common';
 
 import { IService } from '../../services';
 import { MetadataService, ProxyService } from '../../services';
@@ -42,7 +42,12 @@ export type sortMode = 'single' | 'multiple';
     
     <div *ngIf="config && config.columnInfos">
       <ul *ngFor="let info of config.columnInfos">
-        <p-column field="{{info.valueField}}" header="{{info.textField}}" [sortable]="true" [editable]="editable"></p-column>
+        <p-column field="{{info.valueField}}" header="{{info.textField}}" 
+          [sortable]="true" [editable]="editable">
+          <template let-col let-data="rowData" pTemplate="body">
+              <span>{{ data[col.field] }}</span>
+          </template>
+        </p-column>
       </ul>
     </div>
     </p-dataTable>
@@ -129,7 +134,9 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
       if (metaData.options.displayName) {
         columnInfos.push(<IDisplayInfo>{
           textField: metaData.options.displayName,
-          valueField: metaData.propertyName
+          valueField: metaData.propertyName,
+          style: (metaData.propertyType === ColumnTypes.NUMBER || metaData.propertyType === ColumnTypes.DATE) ? 
+            '{width: "180px", "text-align": "right"}' : '{width: "180px", "text-align": "left"}'
         });
       }
     }

@@ -19,4 +19,12 @@ export interface IDisplayInfo {
      * @memberOf IDisplayInfo
      */
     valueField: string;
+
+    /**
+     * Html-Style
+     * 
+     * @type {string}
+     * @memberOf IDisplayInfo
+     */
+    style?: string;
 }
