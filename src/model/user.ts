@@ -51,7 +51,20 @@ export class User implements IUser {
     this.password = undefined;
     this.password_salt = undefined;
   }
+
+
+  /**
+   * Liefert true, falls der User ein Admin ist.
+   * 
+   * @readonly
+   * @type {boolean}
+   * @memberOf User
+   */
+  public get isAdmin(): boolean {
+    return this.role === UserRoleId.Admin;
+  }
 }
+
 
 /**
  * User Klasse registrieren

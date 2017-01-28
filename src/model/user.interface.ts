@@ -25,6 +25,15 @@ export interface IUser extends IEntity {
     password_salt: string;
 
     /**
+     * Liefert true, falls der User ein Admin ist.
+     * 
+     * @readonly
+     * @type {boolean}
+     * @memberOf User
+     */
+    isAdmin: boolean;
+
+    /**
      * Setzt Passwort und Salt zurück
      * 
      * @memberOf User
