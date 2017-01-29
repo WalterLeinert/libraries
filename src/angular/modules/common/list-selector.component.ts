@@ -21,10 +21,11 @@ export type sortMode = 'single' | 'multiple';
 
 export abstract class ListSelectorComponent extends BaseComponent<any> {
 
+
     /**
      * Schutz vor rekursivem Ping-Pong
      */
-    private isPreselecting: boolean = false;
+    protected isPreselecting: boolean = false;
 
 
     /**
@@ -113,7 +114,6 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
     private _selectedValue: any;
 
 
-
     constructor(router: Router, private _metadataService: MetadataService,
         private _changeDetectorRef: ChangeDetectorRef) {
         super(router, null);
@@ -122,16 +122,8 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
     ngOnInit() {
         super.ngOnInit();
 
-        /**
-         * Werteliste vorbereiten
-         */
         if (this.data) {
-            Assert.that(!this.dataService, `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
-
-            this.setupConfig(this.data, false);
-            this.setupData(this.data);
-
-            this.preselectData();
+            this.initBoundData(this.data, false);
         } else {
             Assert.notNull(this.dataService, `Wenn Property data nicht gesetzt ist, muss dataService gesetzt sein.`);
 
@@ -145,16 +137,27 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
 
             serviceFunction.call(this.dataService)
                 .subscribe(items => {
-                    this.setupConfig(items, true);
-                    this.setupData(items);
-                    this.data = items;
-
-                    this.preselectData();
+                    this.initBoundData(items, true);
                 },
                 (error: Error) => {
                     this.handleError(error);
                 });
         }
+    }
+
+
+    private initBoundData(items: any[], useService: boolean) {
+        if (this.data) {
+            Assert.that(!this.dataService, `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
+        } else {
+            Assert.that(this.dataService !== undefined,
+                `Wenn Property data nicht gesetzt ist, muss dataService gesetzt sein.`);
+        }
+
+        this.setupConfig(items, useService);
+        this.setupData(items);
+
+        this.preselectData();
     }
 
 
@@ -206,25 +209,7 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
      *
      * @memberOf DataTableSelectorComponent
      */
-    protected preselectData() {
-        if (!this.isPreselecting) {
-            this.isPreselecting = true;
-
-            try {
-                if (!this.data) {
-                    return;
-                }
-                if (this.selectedIndex >= 0 && this.selectedIndex < this.data.length) {
-                    this.selectedValue = this.getValue(this.data[this.selectedIndex]);
-                } else if (this.data.length > 0) {
-                    this.selectedValue = this.getValue(this.data[0]);
-                }
-            } finally {
-                this.isPreselecting = false;
-            }
-        }
-    }
-
+    protected abstract preselectData();
 
 
     // -------------------------------------------------------------------------------------
@@ -284,20 +269,24 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
     // Property data und der Change Event
     // -------------------------------------------------------------------------------------
 
-    protected onDataChange(value: any) {
-        this.dataChange.emit(value);
+    protected onDataChange(values: any[]) {
+        this.dataChange.emit(values);
+
+        this.initBoundData(values, false);
     }
 
-    public get data(): any {
+    public get data(): any[] {
         return this._data;
     }
 
-    @Input() public set data(data: any) {
+    @Input() public set data(data: any[]) {
         if (this._data !== data) {
             this._data = data;
             this.onDataChange(data);
         }
     }
+
+
 
     protected get metadataService(): MetadataService {
         return this._metadataService;

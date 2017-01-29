@@ -120,6 +120,8 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
    */
   public options: SelectItem[];
 
+  private dataItems: any[];
+
 
   constructor(router: Router, metadataService: MetadataService,
     changeDetectorRef: ChangeDetectorRef) {
@@ -194,6 +196,8 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
   }
 
   protected setupData(items: any[]) {
+    this.dataItems = items;
+
     if (items && items.length > 0) {
       this.options = [];
 
@@ -276,6 +280,33 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
           this.config.displayInfo.textField = DisplayInfo.CURRENT_ITEM;
           this.config.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
         }
+      }
+    }
+  }
+
+  /**
+* Falls ein positiver und gültiger selectedIndex angegeben ist, wird der selectedValue auf des
+* entsprechende Item gesetzt.
+*
+* @private
+*
+* @memberOf DataTableSelectorComponent
+*/
+  protected preselectData() {
+    if (!this.isPreselecting) {
+      this.isPreselecting = true;
+
+      try {
+        if (!this.dataItems) {
+          return;
+        }
+        if (this.selectedIndex >= 0 && this.selectedIndex < this.dataItems.length) {
+          this.selectedValue = this.getValue(this.dataItems[this.selectedIndex]);
+        } else if (this.dataItems.length > 0) {
+          this.selectedValue = this.getValue(this.dataItems[0]);
+        }
+      } finally {
+        this.isPreselecting = false;
       }
     }
   }

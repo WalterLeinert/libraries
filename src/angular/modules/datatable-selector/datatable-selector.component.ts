@@ -36,7 +36,7 @@ export type sortMode = 'single' | 'multiple';
     <input #gb type="text" pInputText size="20" style="float:left" placeholder="search...">
   </div>
 
-  <p-dataTable [(value)]="data" sortMode="sortMode" resizableColumns="true" [rows]="rows"
+  <p-dataTable [(value)]="dataItems" sortMode="sortMode" resizableColumns="true" [rows]="rows"
     [paginator]="true" [globalFilter]="gb"
     selectionMode="single" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event.data)">
     
@@ -85,6 +85,9 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    */
   @Input() config: IDataTableSelectorConfig;
 
+  public dataItems: any[];
+
+
 
   constructor(router: Router, metadataService: MetadataService, changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, changeDetectorRef);
@@ -99,7 +102,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   }
 
   protected setupData(items: any[]) {
-    this.data = items;
+    this.dataItems = items;
   }
 
 
@@ -178,6 +181,34 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     };
   }
 
+     /**
+     * Falls ein positiver und gültiger selectedIndex angegeben ist, wird der selectedValue auf des
+     * entsprechende Item gesetzt.
+     *
+     * @private
+     *
+     * @memberOf DataTableSelectorComponent
+     */
+    protected preselectData() {
+        if (!this.isPreselecting) {
+            this.isPreselecting = true;
+
+            try {
+                if (!this.dataItems) {
+                    return;
+                }
+                if (this.selectedIndex >= 0 && this.selectedIndex < this.dataItems.length) {
+                    this.selectedValue = this.getValue(this.dataItems[this.selectedIndex]);
+                } else if (this.dataItems.length > 0) {
+                    this.selectedValue = this.getValue(this.dataItems[0]);
+                }
+            } finally {
+                this.isPreselecting = false;
+            }
+        }
+    }
+
+
 
   /**
    * Liefert den Index des Items (selectedValue) in der Wertelist
@@ -192,9 +223,9 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    */
   protected indexOfValue(value: any): number {
     let indexFound = -1;
-    if (this.data) {
-      for (let index = 0; index < this.data.length; index++) {
-        let item = this.data[index];
+    if (this.dataItems) {
+      for (let index = 0; index < this.dataItems.length; index++) {
+        let item = this.dataItems[index];
         if (item === value) {
           indexFound = index;
           break;
