@@ -16,7 +16,7 @@ export abstract class Base2Component<TService1 extends IServiceBase, TService2 e
    * Creates an instance of BaseComponent.
    * 
    * @param {Router} _router - der zugehörige Router
-   * @param {*} _service - der zugehörige Service
+   * @param {*} _service2 - der zugehörige Service
    * 
    * @memberOf BaseComponent
    */

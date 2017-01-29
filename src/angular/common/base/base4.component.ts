@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Base2Component } from './base2.component';
+import { Base3Component } from '.';
 import { IServiceBase } from '../../services';
 
 
@@ -11,31 +11,32 @@ import { IServiceBase } from '../../services';
  * @implements {OnInit}
  * @template TService - der konkrete Service
  */
-export abstract class Base3Component<
+export abstract class Base4Component<
   TService1 extends IServiceBase,
   TService2 extends IServiceBase,
-  TService3 extends IServiceBase> extends Base2Component<TService1, TService2> {
+  TService3 extends IServiceBase,
+  TService4 extends IServiceBase> extends Base3Component<TService1, TService2, TService3> {
     /**
    * Creates an instance of BaseComponent.
    * 
    * @param {Router} _router - der zugehörige Router
-   * @param {*} _service3 - der zugehörige Service
+   * @param {*} _service4 - der zugehörige Service
    * 
    * @memberOf BaseComponent
    */
-  protected constructor(router: Router, service: TService1, service2: TService2, private _service3: TService3) {
-      super(router, service, service2);
+  protected constructor(router: Router, service: TService1, service2: TService2, service3: TService3, private _service4: TService4) {
+      super(router, service, service2, service3);
   }
 
    /**
-   * Liefert den zugehörigen Service3
+   * Liefert den zugehörigen Service4
    * 
    * @readonly
    * @protected
-   * @type {TService3}
+   * @type {TService4}
    * @memberOf BaseComponent
    */
-  protected get service3(): TService3 {
-    return this._service3;
+  protected get service4(): TService4 {
+    return this._service4;
   }
 }
