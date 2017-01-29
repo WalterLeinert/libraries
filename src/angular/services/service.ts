@@ -64,10 +64,10 @@ export abstract class Service<T, TId extends IToString> implements IService {
      * @memberOf Service
      */
     protected constructor(model: Function, private metadataService: MetadataService,
-        private http: Http, configService: ConfigService, private _topic?: string) {
+        private _http: Http, configService: ConfigService, private _topic?: string) {
         Assert.notNull(model, 'model');
         Assert.notNull(metadataService, 'metadataService');
-        Assert.notNull(http, 'http');
+        Assert.notNull(_http, 'http');
         Assert.notNull(configService, 'configService');
 
         let baseUrl = configService.config.url;
@@ -300,6 +300,18 @@ export abstract class Service<T, TId extends IToString> implements IService {
             throw new Error(`Table ${this._tableMetadata.options.name}: no primary key column`);
         }
         return item[this._tableMetadata.primaryKeyColumn.propertyName];
+    }
+
+    /**
+     * Liefert den Http-Clientservice
+     * 
+     * @readonly
+     * @protected
+     * @type {Http}
+     * @memberOf Service
+     */
+    protected get http(): Http {
+        return this._http;
     }
 
 }
