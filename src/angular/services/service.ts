@@ -210,7 +210,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
      * @param {T} item - Entity-Instanz
      * @returns {any}
      */
-    private serialize(item: T): any {
+    protected serialize(item: T): any {
         return this.serializer.serialize(item);
     }
 
@@ -223,7 +223,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
      * 
      * @memberOf Service
      */
-    private deserialize(json: any): T {
+    protected deserialize(json: any): T {
         return this.serializer.deserialize(json);
     }
 
@@ -233,7 +233,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
      * @param {any} json - Array von Json-Objekten vom Server
      * @returns {T[]}
      */
-    private deserializeArray(jsonArray: any): T[] {
+    protected deserializeArray(jsonArray: any): T[] {
         return this.serializer.deserializeArray(jsonArray);
     }
 
