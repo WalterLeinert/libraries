@@ -186,19 +186,69 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
     protected abstract setupConfig(items: any[], useService: boolean);
 
     /**
-      * Liefert den Index des Items (selectedValue) in der Wertelist
-      * 
-      * TODO: Achtung: funktionert nicht nach Umsortierung der DataTable !!
-      * 
-      * @protected
-      * @param {*} value
-      * @returns {number}
-      * 
-      * @memberOf DropdownSelectorComponent
-      */
+     * Liefert den Index des Items (selectedValue) in der Wertelist
+     * 
+     * TODO: Achtung: funktionert nicht nach Umsortierung der DataTable !!
+     * 
+     * @protected
+     * @param {*} value
+     * @returns {number}
+     * 
+     * @memberOf DropdownSelectorComponent
+     */
     protected abstract indexOfValue(value: any): number;
 
+    /**
+     * Liefert den Wert für das @param{item} der Liste. Der Wert ist das Item selbst oder eine entsprechende Property,
+     * falls die valueField-Property einen entsprechenden Propertynamen enthält (nur bei @see{DropdownSelectorComponent})
+     * 
+     * @protected
+     * @abstract
+     * @param {*} item
+     * @returns {*}
+     * 
+     * @memberOf ListSelectorComponent
+     */
     protected abstract getValue(item: any): any;
+
+
+    /**
+     * Liefert true, falls im konkreten Control keine Daten angebunden sind oder die Liste keine Items enthält
+     * 
+     * @readonly
+     * @protected
+     * @abstract
+     * @type {boolean}
+     * @memberOf ListSelectorComponent
+     */
+    protected abstract get isDataEmpty(): boolean;
+
+
+    /**
+     * Liefert die Anzahl der Data-Items beim konkreten Control
+     * 
+     * @readonly
+     * @protected
+     * @abstract
+     * @type {number}
+     * @memberOf ListSelectorComponent
+     */
+    protected abstract get dataLength(): number;
+
+
+    /**
+     * Liefert den Wert des Items an der Position @param{index}.
+     * Hierbei wird ggf. die valueField-Property ausgewertet.
+     * 
+     * @protected
+     * @abstract
+     * @param {number} index
+     * @returns {*}
+     * 
+     * @memberOf ListSelectorComponent
+     */
+    protected abstract getDataValue(index: number): any;
+
 
 
     /**
@@ -209,7 +259,24 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
      *
      * @memberOf DataTableSelectorComponent
      */
-    protected abstract preselectData();
+    protected preselectData() {
+        if (!this.isPreselecting) {
+            this.isPreselecting = true;
+
+            try {
+                if (this.isDataEmpty) {
+                    return;
+                }
+                if (this.selectedIndex >= 0 && this.selectedIndex < this.dataLength) {
+                    this.selectedValue = this.getDataValue(this.selectedIndex);
+                } else if (this.dataLength > 0) {
+                    this.selectedValue = this.getDataValue(0);
+                }
+            } finally {
+                this.isPreselecting = false;
+            }
+        }
+    }
 
 
     // -------------------------------------------------------------------------------------
@@ -243,15 +310,16 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
     }
 
 
-    // -------------------------------------------------------------------------------------
-    // Property selectedIndex und der Change Event
-    // -------------------------------------------------------------------------------------
+    // // -------------------------------------------------------------------------------------
+    // // Property selectedIndex und der Change Event
+    // // -------------------------------------------------------------------------------------
 
-    protected onSelectedIndexChange(index: number) {
-        this.selectedIndexChange.emit(index);
+    // protected onSelectedIndexChange(index: number) {
+    //     this.changeDetectorRef.detectChanges();
+    //     this.selectedIndexChange.emit(index);
 
-        this.preselectData();
-    }
+    //     this.preselectData();
+    // }
 
     public get selectedIndex(): number {
         return this._selectedIndex;
@@ -260,7 +328,7 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
     @Input() public set selectedIndex(index: number) {
         if (this._selectedIndex !== index) {
             this._selectedIndex = index;
-            this.onSelectedIndexChange(index);
+            // TODO: this.onSelectedIndexChange(index);
         }
     }
 

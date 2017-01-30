@@ -191,31 +191,20 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     };
   }
 
-  /**
-  * Falls ein positiver und gültiger selectedIndex angegeben ist, wird der selectedValue auf des
-  * entsprechende Item gesetzt.
-  *
-  * @private
-  *
-  * @memberOf DataTableSelectorComponent
-  */
-  protected preselectData() {
-    if (!this.isPreselecting) {
-      this.isPreselecting = true;
 
-      try {
-        if (!this.dataItems) {
-          return;
-        }
-        if (this.selectedIndex >= 0 && this.selectedIndex < this.dataItems.length) {
-          this.selectedValue = this.getValue(this.dataItems[this.selectedIndex]);
-        } else if (this.dataItems.length > 0) {
-          this.selectedValue = this.getValue(this.dataItems[0]);
-        }
-      } finally {
-        this.isPreselecting = false;
-      }
+  protected get isDataEmpty(): boolean {
+    return this.dataItems && this.dataItems.length > 0;
+  }
+
+  protected getDataValue(index: number): any {
+    return this.getValue(this.dataItems[index]);
+  }
+
+  protected get dataLength(): number {
+    if (this.isDataEmpty) {
+      return 0;
     }
+    return this.dataItems.length;
   }
 
 
