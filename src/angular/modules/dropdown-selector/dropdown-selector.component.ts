@@ -142,29 +142,31 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     // config überschreibt text/valueField Settings ???
     //
     if (this.config) {
-      this.configInternal = Clone.clone(this.config);
+      let config = Clone.clone(this.config);
 
       // TODO: Wegen defaults bei text/valueField nicht notwendig -> ist das so ok? 
       //  Assert.that(!this.textField, `Wenn Property config gesetzt ist, darf textField nicht gleichzeitig gesetzt sein.`);
       //  Assert.that(!this.valueField, `Wenn Property config gesetzt ist, darf valueField nicht gleichzeitig gesetzt sein.`);
 
-      if (!this.configInternal.displayInfo) {
-        this.configInternal.displayInfo = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo;
+      if (! config.displayInfo) {
+        config.displayInfo = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo;
       }
 
-      if (!this.configInternal.displayInfo.textField) {
-        this.configInternal.displayInfo.textField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.textField;
+      if (! config.displayInfo.textField) {
+        config.displayInfo.textField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.textField;
       }
-      if (!this.configInternal.displayInfo.valueField) {
-        this.configInternal.displayInfo.valueField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.valueField;
+      if (! config.displayInfo.valueField) {
+        config.displayInfo.valueField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.valueField;
       }
 
-      if (!this.configInternal.allowNoSelection) {
-        this.configInternal.allowNoSelection = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelection;
+      if (! config.allowNoSelection) {
+        config.allowNoSelection = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelection;
       }
-      if (!this.configInternal.allowNoSelectionText) {
-        this.configInternal.allowNoSelectionText = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelectionText;
+      if (! config.allowNoSelectionText) {
+        config.allowNoSelectionText = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelectionText;
       }
+
+      this.configInternal = config;
 
       return;
     }
@@ -228,7 +230,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
   private setupColumnInfosByMetadata(items: any[]) {
     Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
 
-    this.configInternal = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
+    let config = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
 
     let columnInfos: IDisplayInfo[] = [];
 
@@ -243,8 +245,10 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
       displayMetadataName = metaDataWithDisplayName[0].propertyName;
     }
 
-    this.configInternal.displayInfo.textField = displayMetadataName;
-    this.configInternal.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
+    config.displayInfo.textField = displayMetadataName;
+    config.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
+
+    this.configInternal = config;
   }
 
 
@@ -256,7 +260,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
 
     if (items && items.length > 0) {
-      this.configInternal = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
+      let config = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
 
       let firstItem = items[0];
       let firstPropName: string;
@@ -282,13 +286,15 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
           }
         }
 
-        this.configInternal.displayInfo.textField = firstPropName;
-        this.configInternal.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
+        config.displayInfo.textField = firstPropName;
+        config.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
       } else {
         // primitive Typen direkt anzeigen/anbinden
-        this.configInternal.displayInfo.textField = DisplayInfo.CURRENT_ITEM;
-        this.configInternal.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
+        config.displayInfo.textField = DisplayInfo.CURRENT_ITEM;
+        config.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
       }
+
+      this.configInternal = config;
     }
   }
 

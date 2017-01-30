@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert, ColumnTypes } from '@fluxgate/common';
+import { Assert, ColumnTypes, Clone } from '@fluxgate/common';
 
 import { IService } from '../../services';
 import { MetadataService, ProxyService } from '../../services';
@@ -116,7 +116,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   protected setupConfig(items: any[], useService: boolean) {
     if (this.config) {
-      this.configInternal = this.config;
+      this.configInternal = Clone.clone(this.config);
       return;
     }
 
