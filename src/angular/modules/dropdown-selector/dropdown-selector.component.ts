@@ -58,7 +58,9 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
    * @type {IDropdownAdapterOptions}
    * @memberOf DropdownSelectorComponent
    */
-  @Input() config: IDropdownSelectorConfig;
+  private _config: IDropdownSelectorConfig;
+
+  public configInternal: IDropdownSelectorConfig;
 
 
   /**
@@ -140,60 +142,67 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     // config überschreibt text/valueField Settings ???
     //
     if (this.config) {
+      this.configInternal = Clone.clone(this.config);
+
       // TODO: Wegen defaults bei text/valueField nicht notwendig -> ist das so ok? 
       //  Assert.that(!this.textField, `Wenn Property config gesetzt ist, darf textField nicht gleichzeitig gesetzt sein.`);
       //  Assert.that(!this.valueField, `Wenn Property config gesetzt ist, darf valueField nicht gleichzeitig gesetzt sein.`);
 
-      if (!this.config.displayInfo) {
-        this.config.displayInfo = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo;
+      if (!this.configInternal.displayInfo) {
+        this.configInternal.displayInfo = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo;
       }
 
-      if (!this.config.displayInfo.textField) {
-        this.config.displayInfo.textField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.textField;
+      if (!this.configInternal.displayInfo.textField) {
+        this.configInternal.displayInfo.textField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.textField;
       }
-      if (!this.config.displayInfo.valueField) {
-        this.config.displayInfo.valueField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.valueField;
+      if (!this.configInternal.displayInfo.valueField) {
+        this.configInternal.displayInfo.valueField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.valueField;
       }
 
-      if (!this.config.allowNoSelection) {
-        this.config.allowNoSelection = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelection;
+      if (!this.configInternal.allowNoSelection) {
+        this.configInternal.allowNoSelection = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelection;
       }
-      if (!this.config.allowNoSelectionText) {
-        this.config.allowNoSelectionText = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelectionText;
+      if (!this.configInternal.allowNoSelectionText) {
+        this.configInternal.allowNoSelectionText = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelectionText;
+      }
+
+      return;
+    }
+
+
+
+    //
+    // es existiert keine Config und weder textField noch valueField sind angegeben
+    //
+    if (StringUtil.isNullOrEmpty(this.textField) && StringUtil.isNullOrEmpty(this.valueField)) {
+      // metadata/reflect
+      if (useService) {
+        this.setupColumnInfosByMetadata(items);
+      } else {
+        this.setupColumnInfosByReflection(items);
       }
     } else {
 
-      //
-      // es existiert keine Config und weder textField noch valueField sind angegeben
-      //
-      if (StringUtil.isNullOrEmpty(this.textField) && StringUtil.isNullOrEmpty(this.valueField)) {
-        // metadata/reflect
-        if (useService) {
-          this.setupColumnInfosByMetadata(items);
-        } else {
-          this.setupColumnInfosByReflection(items);
-        }
-      } else {
+      // fehlt das valueField, wird als Default CURRENT_ITEM verwendet
+      if (StringUtil.isNullOrEmpty(this.valueField)) {
+        this.valueField = DisplayInfo.CURRENT_ITEM;
+      }
 
-        // fehlt das valueField, wird als Default CURRENT_ITEM verwendet
-        if (StringUtil.isNullOrEmpty(this.valueField)) {
-          this.valueField = DisplayInfo.CURRENT_ITEM;
-        }
+      this.configInternal = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
+      this.configInternal.displayInfo.textField = this.textField;
+      this.configInternal.displayInfo.valueField = this.valueField;
 
-        this.config = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
-        this.config.displayInfo.textField = this.textField;
-        this.config.displayInfo.valueField = this.valueField;
+      if (this.allowNoSelection) {
+        this.configInternal.allowNoSelection = this.allowNoSelection;
+      }
 
-        if (this.allowNoSelection) {
-          this.config.allowNoSelection = this.allowNoSelection;
-        }
-
-        if (this.allowNoSelectionText) {
-          this.config.allowNoSelectionText = this.allowNoSelectionText;
-        }
+      if (this.allowNoSelectionText) {
+        this.configInternal.allowNoSelectionText = this.allowNoSelectionText;
       }
     }
+
   }
+
 
   protected setupData(items: any[]) {
     this.dataItems = items;
@@ -217,26 +226,25 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
    *
    */
   private setupColumnInfosByMetadata(items: any[]) {
+    Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
 
-    if (!this.config) {
-      this.config = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
+    this.configInternal = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
 
-      let columnInfos: IDisplayInfo[] = [];
+    let columnInfos: IDisplayInfo[] = [];
 
-      let tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
+    let tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
 
-      // default: erste Property
-      let displayMetadataName: string = tableMetadata.columnMetadata[0].propertyName;
+    // default: erste Property
+    let displayMetadataName: string = tableMetadata.columnMetadata[0].propertyName;
 
-      let metaDataWithDisplayName = tableMetadata.columnMetadata.filter(item => item.options.displayName && item.propertyType === 'string');
-      if (metaDataWithDisplayName && metaDataWithDisplayName.length > 0) {
-        // erste string-Propery mit gesetztem Displaynamen
-        displayMetadataName = metaDataWithDisplayName[0].propertyName;
-      }
-
-      this.config.displayInfo.textField = displayMetadataName;
-      this.config.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
+    let metaDataWithDisplayName = tableMetadata.columnMetadata.filter(item => item.options.displayName && item.propertyType === 'string');
+    if (metaDataWithDisplayName && metaDataWithDisplayName.length > 0) {
+      // erste string-Propery mit gesetztem Displaynamen
+      displayMetadataName = metaDataWithDisplayName[0].propertyName;
     }
+
+    this.configInternal.displayInfo.textField = displayMetadataName;
+    this.configInternal.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
   }
 
 
@@ -245,44 +253,45 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     *
     */
   private setupColumnInfosByReflection(items: any[]) {
-    if (!this.config) {
-      if (items && items.length > 0) {
-        this.config = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
+    Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
 
-        let firstItem = items[0];
-        let firstPropName: string;
+    if (items && items.length > 0) {
+      this.configInternal = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
 
-        if (typeof firstItem === 'object') {
-          // alle Properties des ersten Items über Reflection ermitteln        
-          let props = Reflect.ownKeys(firstItem);
+      let firstItem = items[0];
+      let firstPropName: string;
 
-          // ... und dann entsprechende ColumnInfos erzeugen
-          for (let prop of props) {
+      if (typeof firstItem === 'object') {
+        // alle Properties des ersten Items über Reflection ermitteln        
+        let props = Reflect.ownKeys(firstItem);
 
-            // erste Property merken: default
-            if (!firstPropName) {
-              firstPropName = prop.toString();
-            }
+        // ... und dann entsprechende ColumnInfos erzeugen
+        for (let prop of props) {
 
-            let value = firstItem[prop];
-
-            // erste string Property merken
-            if (typeof value === 'string') {
-              firstPropName = prop.toString();
-              break;
-            }
+          // erste Property merken: default
+          if (!firstPropName) {
+            firstPropName = prop.toString();
           }
 
-          this.config.displayInfo.textField = firstPropName;
-          this.config.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
-        } else {
-          // primitive Typen direkt anzeigen/anbinden
-          this.config.displayInfo.textField = DisplayInfo.CURRENT_ITEM;
-          this.config.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
+          let value = firstItem[prop];
+
+          // erste string Property merken
+          if (typeof value === 'string') {
+            firstPropName = prop.toString();
+            break;
+          }
         }
+
+        this.configInternal.displayInfo.textField = firstPropName;
+        this.configInternal.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
+      } else {
+        // primitive Typen direkt anzeigen/anbinden
+        this.configInternal.displayInfo.textField = DisplayInfo.CURRENT_ITEM;
+        this.configInternal.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
       }
     }
   }
+
 
   /**
 * Falls ein positiver und gültiger selectedIndex angegeben ist, wird der selectedValue auf des
@@ -318,10 +327,10 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
   protected getText(item: any): string {
     let text: string;
 
-    if (this.config.displayInfo.textField === DisplayInfo.CURRENT_ITEM) {
+    if (this.configInternal.displayInfo.textField === DisplayInfo.CURRENT_ITEM) {
       text = item.toString();
     } else {
-      text = item[this.config.displayInfo.textField];
+      text = item[this.configInternal.displayInfo.textField];
     }
 
     return text;
@@ -334,10 +343,10 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
   protected getValue(item: any): any {
     let value: any;
 
-    if (this.config.displayInfo.valueField === DisplayInfo.CURRENT_ITEM) {
+    if (this.configInternal.displayInfo.valueField === DisplayInfo.CURRENT_ITEM) {
       value = item;
     } else {
-      value = item[this.config.displayInfo.valueField];
+      value = item[this.configInternal.displayInfo.valueField];
     }
 
     return value;
@@ -366,6 +375,16 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     }
 
     return indexFound;
+  }
+
+
+  public get config(): IDropdownSelectorConfig {
+    return this._config;
+  }
+
+  @Input() public set config(value: IDropdownSelectorConfig) {
+    this._config = value;
+    this.setupConfig(this.dataItems, false);
   }
 
 

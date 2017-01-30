@@ -40,8 +40,8 @@ export type sortMode = 'single' | 'multiple';
     [paginator]="true" [globalFilter]="gb"
     selectionMode="single" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event.data)">
     
-    <div *ngIf="config && config.columnInfos">
-      <ul *ngFor="let info of config.columnInfos">
+    <div *ngIf="configInternal && configInternal.columnInfos">
+      <ul *ngFor="let info of configInternal.columnInfos">
         <p-column field="{{info.valueField}}" header="{{info.textField}}" 
           [sortable]="true" [editable]="editable">
           <template let-col let-data="rowData" pTemplate="body">
@@ -78,15 +78,23 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   @Input() rows: number = 5;
 
   /**
-   * Die Spaltenkonfiguration.
+   * Die Spaltenkonfiguration, die von aussen gesetzt werden kann.
    * 
    * @type {IDataTableSelectorConfig}
    * @memberOf DataTableSelectorComponent
    */
-  @Input() config: IDataTableSelectorConfig;
+  private _config: IDataTableSelectorConfig;
+
+  /**
+   * Die Spaltenkonfiguration, die intern verwendet wird.
+   * Entweder wird sie von @see{config} übernommen oder automatisch über die @see{dataItems} erzeugt.
+   * 
+   * @type {IDataTableSelectorConfig}
+   * @memberOf DataTableSelectorComponent
+   */
+  public configInternal: IDataTableSelectorConfig;
 
   public dataItems: any[];
-
 
 
   constructor(router: Router, metadataService: MetadataService, changeDetectorRef: ChangeDetectorRef) {
@@ -107,17 +115,19 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
 
   protected setupConfig(items: any[], useService: boolean) {
+    if (this.config) {
+      this.configInternal = this.config;
+      return;
+    }
 
-    if (!this.config) {
-      // metadata/reflect
-      if (useService) {
-        this.setupColumnInfosByMetadata(items);
-      } else {
-        this.setupColumnInfosByReflection(items);
-      }
-
+    // metadata/reflect
+    if (useService) {
+      this.setupColumnInfosByMetadata(items);
+    } else {
+      this.setupColumnInfosByReflection(items);
     }
   }
+
 
   /**
    * falls keine Column-Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
@@ -138,13 +148,13 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
         columnInfos.push(<IDisplayInfo>{
           textField: metaData.options.displayName,
           valueField: metaData.propertyName,
-          style: (metaData.propertyType === ColumnTypes.NUMBER || metaData.propertyType === ColumnTypes.DATE) ? 
+          style: (metaData.propertyType === ColumnTypes.NUMBER || metaData.propertyType === ColumnTypes.DATE) ?
             '{width: "180px", "text-align": "right"}' : '{width: "180px", "text-align": "left"}'
         });
       }
     }
 
-    this.config = {
+    this.configInternal = {
       columnInfos: columnInfos
     };
   }
@@ -176,37 +186,37 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
       }
     }
 
-    this.config = {
+    this.configInternal = {
       columnInfos: columnInfos
     };
   }
 
-     /**
-     * Falls ein positiver und gültiger selectedIndex angegeben ist, wird der selectedValue auf des
-     * entsprechende Item gesetzt.
-     *
-     * @private
-     *
-     * @memberOf DataTableSelectorComponent
-     */
-    protected preselectData() {
-        if (!this.isPreselecting) {
-            this.isPreselecting = true;
+  /**
+  * Falls ein positiver und gültiger selectedIndex angegeben ist, wird der selectedValue auf des
+  * entsprechende Item gesetzt.
+  *
+  * @private
+  *
+  * @memberOf DataTableSelectorComponent
+  */
+  protected preselectData() {
+    if (!this.isPreselecting) {
+      this.isPreselecting = true;
 
-            try {
-                if (!this.dataItems) {
-                    return;
-                }
-                if (this.selectedIndex >= 0 && this.selectedIndex < this.dataItems.length) {
-                    this.selectedValue = this.getValue(this.dataItems[this.selectedIndex]);
-                } else if (this.dataItems.length > 0) {
-                    this.selectedValue = this.getValue(this.dataItems[0]);
-                }
-            } finally {
-                this.isPreselecting = false;
-            }
+      try {
+        if (!this.dataItems) {
+          return;
         }
+        if (this.selectedIndex >= 0 && this.selectedIndex < this.dataItems.length) {
+          this.selectedValue = this.getValue(this.dataItems[this.selectedIndex]);
+        } else if (this.dataItems.length > 0) {
+          this.selectedValue = this.getValue(this.dataItems[0]);
+        }
+      } finally {
+        this.isPreselecting = false;
+      }
     }
+  }
 
 
 
@@ -242,6 +252,16 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    */
   protected getValue(item: any): any {
     return item;
+  }
+
+
+  public get config(): IDataTableSelectorConfig {
+    return this._config;
+  }
+
+  @Input() public set config(value: IDataTableSelectorConfig) {
+    this._config = value;
+    this.setupConfig(this.dataItems, false);
   }
 
   public onRowSelect(row) {
