@@ -83,7 +83,7 @@ export class PassportService implements IServiceBase {
             .map((response: Response) => this.deserialize(response.json()))
             .do(u => {
                 // console.log('user: ' + JSON.stringify(u));
-                this.onSelectedValueChange(u);
+                this.onCurrentUserChange(u);
             })
             .catch(Service.handleError);
     }
@@ -104,7 +104,7 @@ export class PassportService implements IServiceBase {
             .map((response: Response) => this.deserialize(response.json()))
             .do(u => {
                 // console.log('user: ' + JSON.stringify(u));
-                this.onSelectedValueChange(u);
+                this.onCurrentUserChange(u);
             })
             .catch(Service.handleError);
     }
@@ -122,7 +122,7 @@ export class PassportService implements IServiceBase {
             .map((response: Response) => {
             }).do(() => {
                 // console.log('user: ' + JSON.stringify(u));
-                this.onSelectedValueChange(null);
+                this.onCurrentUserChange(null);
             })
             // .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
@@ -144,7 +144,7 @@ export class PassportService implements IServiceBase {
             .catch(Service.handleError);
     }
 
-    protected onSelectedValueChange(value: IUser) {
+    protected onCurrentUserChange(value: IUser) {
         this.currentUserChange.emit(value);
     }
 
