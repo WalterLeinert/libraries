@@ -193,7 +193,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
 
   protected get isDataEmpty(): boolean {
-    return this.dataItems && this.dataItems.length > 0;
+    return !(this.dataItems && this.dataItems.length > 0);
   }
 
   protected getDataValue(index: number): any {
