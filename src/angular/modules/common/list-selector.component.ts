@@ -150,7 +150,7 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
     }
 
 
-    private initBoundData(items: any[], useService: boolean) {
+    protected initBoundData(items: any[], useService: boolean) {
         if (this.data) {
             Assert.that(!this.dataService, `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
         } else {

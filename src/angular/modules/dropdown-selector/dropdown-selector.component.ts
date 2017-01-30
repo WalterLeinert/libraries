@@ -379,7 +379,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
   @Input() public set config(value: IDropdownSelectorConfig) {
     this._config = value;
-    this.setupConfig(this.dataItems, false);
+    this.initBoundData(this.dataItems, false);
   }
 
 

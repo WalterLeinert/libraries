@@ -250,7 +250,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   @Input() public set config(value: IDataTableSelectorConfig) {
     this._config = value;
-    this.setupConfig(this.dataItems, false);
+    this.initBoundData(this.dataItems, false);
   }
 
   public onRowSelect(row) {
