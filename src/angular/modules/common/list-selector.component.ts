@@ -125,7 +125,11 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
         if (this.data) {
             this.initBoundData(this.data, false);
         } else {
-            Assert.notNull(this.dataService, `Wenn Property data nicht gesetzt ist, muss dataService gesetzt sein.`);
+
+            // Hinweis: dataService und dataServiceFunction dürfen während der Initialisierung auch undefiniert sein! 
+            if (!this.dataService && !this.dataServiceFunction) {
+                return;
+            }
 
             let serviceFunction: Function;
 
