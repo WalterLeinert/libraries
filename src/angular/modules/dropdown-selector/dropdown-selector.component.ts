@@ -135,6 +135,13 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     super.ngOnInit();
   }
 
+  protected initBoundData(items: any[], useService: boolean) {
+    this.options = undefined;
+    this.dataItems = undefined;
+
+    super.initBoundData(items, useService);
+  }
+
 
   protected setupConfig(items: any[], useService: boolean) {
 

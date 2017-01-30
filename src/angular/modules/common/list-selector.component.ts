@@ -158,6 +158,8 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
                 `Wenn Property data nicht gesetzt ist, muss dataService gesetzt sein.`);
         }
 
+        this.selectedValue = undefined;
+
         this.setupConfig(items, useService);
         this.setupData(items);
 

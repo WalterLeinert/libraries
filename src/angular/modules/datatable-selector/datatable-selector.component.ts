@@ -109,6 +109,12 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     }
   }
 
+  protected initBoundData(items: any[], useService: boolean) {
+    this.dataItems = undefined;
+
+    super.initBoundData(items, useService);
+  }
+
   protected setupData(items: any[]) {
     this.dataItems = items;
   }
