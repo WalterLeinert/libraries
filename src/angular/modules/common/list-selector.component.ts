@@ -143,7 +143,7 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
                 serviceFunction = this.dataService.find;
             }
 
-            let tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName);
+            let tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
 
             serviceFunction.call(this.dataService)
                 .subscribe(items => {
