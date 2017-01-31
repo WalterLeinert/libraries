@@ -9,7 +9,7 @@ import 'rxjs/add/operator/map';
 
 import * as HttpStatusCodes from 'http-status-codes';
 
-import { IQuery, TableMetadata, IToString } from '@fluxgate/common';
+import { ServiceResult, IQuery, TableMetadata, IToString } from '@fluxgate/common';
 import { Constants, Assert, StringBuilder } from '@fluxgate/common';
 
 import { Serializer } from '../../base/serializer';
@@ -108,7 +108,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
 
         return this.http.post(this.getUrl(), this.serialize(item))
             .map((response: Response) => this.deserialize(response.json()))
-            .do(data => console.log('insertresult: ' + JSON.stringify(data)))
+            .do(data => console.log(`Service.create: ${JSON.stringify(data)}`))
             .catch(Service.handleError);
     }
 
@@ -142,7 +142,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
 
         return this.http.get(`${this.getUrl()}/${id}`)
             .map((response: Response) => this.deserialize(response.json()))
-            .do(data => console.log('result: ' + JSON.stringify(data)))
+            .do(data => console.log(`Service.findById: id = ${id} -> ${JSON.stringify(data)}`))
             .catch(Service.handleError);
     }
 
@@ -160,7 +160,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
 
         return this.http.put(`${this.getUrl()}`, this.serialize(item))
             .map((response: Response) => this.deserialize(response.json()))
-            .do(data => console.log('result: ' + JSON.stringify(data)))
+            .do(data => console.log(`Service.update: ${JSON.stringify(data)}`))
             .catch(Service.handleError);
     }
 
@@ -169,18 +169,19 @@ export abstract class Service<T, TId extends IToString> implements IService {
      * Delete the entity with the given id and return {Observable<T>}
      * 
      * @param {TId} id
-     * @returns {Observable<T>}
+     * @returns {Observable<ServiceResult<TId>>}
      * 
      * @memberOf Service
      */
-    public delete(id: TId): Observable<T> {
+    public delete(id: TId): Observable<ServiceResult<TId>> {
         Assert.notNull(id, 'id');
 
         return this.http.delete(`${this.getUrl()}/${id}`)
-            .map((response: Response) => <T>response.json())
-            .do(data => console.log('result: ' + JSON.stringify(data)))
+            .map((response: Response) => response.json())
+            .do((serviceResult) => console.log(`Service.delete: ${JSON.stringify(serviceResult)}`))
             .catch(Service.handleError);
     }
+
 
     /**
      * Finds all entities for the given query @param{query}
@@ -190,17 +191,18 @@ export abstract class Service<T, TId extends IToString> implements IService {
      * 
      * @memberOf Service
      */
-     public query(query: IQuery): Observable<T[]> {
+    public query(query: IQuery): Observable<T[]> {
         Assert.notNull(query, 'query');
 
-        let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-        let options       = new RequestOptions({ headers: headers });           // Create a request option
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let options = new RequestOptions({ headers: headers });           // Create a request option
 
         return this.http.post(`${this.getUrl()}/query`, query, options)
             .map((response: Response) => this.deserializeArray(response.json()))
-            .do(data => console.log('result: ' + JSON.stringify(data)))
+            .do(data => console.log(`Service.query: query = ${JSON.stringify(query)} -> ${JSON.stringify(data)}`))
             .catch(Service.handleError);
     }
+
 
     /**
      * Serialisiert das @param{item} für die Übertragung zum Server über das REST-Api.
