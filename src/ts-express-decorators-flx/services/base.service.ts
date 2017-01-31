@@ -6,7 +6,7 @@ import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IQuery, TableMetadata, ColumnMetadata, IToString, Assert } from '@fluxgate/common';
+import { ServiceResult, IQuery, TableMetadata, ColumnMetadata, IToString, Assert } from '@fluxgate/common';
 
 import { MetadataService } from './metadata.service';
 import { KnexService } from './knex.service';
@@ -220,16 +220,18 @@ export abstract class BaseService<T, TId extends IToString>  {
      */
     public delete(
         id: TId
-    ): Promise<TId> {
+    ): Promise<ServiceResult<TId>> {
 
         return using(new XLog(BaseService.logger, levels.INFO, 'delete', `[${this.tableName}] id = ${id}`), (log) => {
-            return new Promise<TId>((resolve, reject) => {
+            return new Promise<ServiceResult<TId>>((resolve, reject) => {
                 this.fromTable()
                     .where(this.idColumnName, id.toString())
                     .del()
                     .then((affectedRows: number) => {
                         log.debug(`deleted from ${this.tableName} with id: ${id} (affectedRows: ${affectedRows})`);
-                        resolve(id);
+                        let res = new ServiceResult<TId>(id);
+                        // TODO: serialize z.Zt. nicht kompatibel
+                        resolve(res);
                     })
                     .catch(err => {
                         log.error(err);
@@ -237,8 +239,8 @@ export abstract class BaseService<T, TId extends IToString>  {
                     });
             });
         });
-
     }
+
 
     /**
      * Führt die Query {query} aus und liefert ein Array von Entity-Instanzen vom Typ {T} als @see{Promise}

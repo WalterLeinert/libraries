@@ -5,9 +5,9 @@ import {
 } from 'ts-express-decorators';
 
 // Fluxgate
-import { ControllerBase } from '../controllerBase';
+import { ServiceResult, User, IUser } from '@fluxgate/common';
 
-import { User, IUser } from '@fluxgate/common';
+import { ControllerBase } from '../controllerBase';
 import { UserService } from '../../services/user.service';
 
 
@@ -44,7 +44,7 @@ export class UserController extends ControllerBase<IUser, number> {
     @Delete('/:id')
     public delete(
         @PathParams('id') id: number
-        ): Promise<number> {
+        ): Promise<ServiceResult<number>> {
         throw new Error(`currently not supported`);
     }
 }

@@ -5,9 +5,9 @@ import {
 } from 'ts-express-decorators';
 
 // Fluxgate
-import { ControllerBase } from '../controllerBase';
+import { ServiceResult, Role } from '@fluxgate/common';
 
-import { Role } from '@fluxgate/common';
+import { ControllerBase } from '../controllerBase';
 import { RoleService } from '../../services/role.service';
 
 
@@ -44,7 +44,7 @@ export class RoleController extends ControllerBase<Role, number> {
     @Delete('/:id')
     public delete(
         @PathParams('id') id: number
-        ): Promise<number> {
+        ): Promise<ServiceResult<number>> {
         throw new Error(`currently not supported`);
     }
 }

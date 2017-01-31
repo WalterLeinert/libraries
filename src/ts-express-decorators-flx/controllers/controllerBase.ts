@@ -3,7 +3,7 @@ import { Logger, getLogger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IQuery, IToString } from '@fluxgate/common';
+import { ServiceResult, IQuery, IToString } from '@fluxgate/common';
 
 import { BaseService } from '../services/base.service';
 
@@ -94,7 +94,7 @@ export abstract class ControllerBase<T, TId extends IToString> {
      */
     protected deleteInternal(
         id: TId
-    ): Promise<TId> {
+    ): Promise<ServiceResult<TId>> {
         return this.service.delete(id);
     }
 

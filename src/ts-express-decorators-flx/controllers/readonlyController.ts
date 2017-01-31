@@ -4,7 +4,7 @@ import { Logger, getLogger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IQuery, IToString } from '@fluxgate/common';
+import { ServiceResult, IQuery, IToString } from '@fluxgate/common';
 
 import { BaseService } from '../services/base.service';
 
@@ -96,7 +96,7 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
      */
     protected deleteInternal(
         id: TId
-    ): Promise<TId> {
+    ): Promise<ServiceResult<TId>> {
         return Promise.reject(new Error(`readonly: delete Operation nicht unterstützt`));
     }
 
