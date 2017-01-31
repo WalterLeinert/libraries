@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert } from '@fluxgate/common';
+import { Assert, TableMetadata } from '@fluxgate/common';
 
 import { IService } from '../../services';
 import { MetadataService, ProxyService } from '../../services';
@@ -123,7 +123,11 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
         super.ngOnInit();
 
         if (this.data) {
-            this.initBoundData(this.data, false);
+            //
+            // wir prüfen, ob für die Items (nur das erste Element) Metadaten vorliegen ->
+            // ggf. autom. Konfiguration über Metadaten
+            //
+            this.initBoundData(this.data, this.getMetadataForValues(this.data));
         } else {
 
             // Hinweis: dataService und dataServiceFunction dürfen während der Initialisierung auch undefiniert sein! 
@@ -139,9 +143,11 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
                 serviceFunction = this.dataService.find;
             }
 
+            let tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName);
+
             serviceFunction.call(this.dataService)
                 .subscribe(items => {
-                    this.initBoundData(items, true);
+                    this.initBoundData(items, tableMetadata);
                 },
                 (error: Error) => {
                     this.handleError(error);
@@ -150,7 +156,18 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
     }
 
 
-    protected initBoundData(items: any[], useService: boolean) {
+    /**
+     * Setup des Databindings für die Liste @param{items} und der Spaltenkonfiguration.
+     * Ist @param{tableMetadata} angegeben und keine Konfiguration von "aussen" gesetzt,
+     * so wird über die Metadaten eine automatische Konfiguration durchgeführt.
+     * 
+     * @protected
+     * @param {any[]} items
+     * @param {TableMetadata} tableMetadata
+     * 
+     * @memberOf ListSelectorComponent
+     */
+    protected initBoundData(items: any[], tableMetadata: TableMetadata) {
         if (this.data) {
             Assert.that(!this.dataService, `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
         } else {
@@ -160,7 +177,7 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
 
         this.selectedValue = undefined;
 
-        this.setupConfig(items, useService);
+        this.setupConfig(items, tableMetadata);
         this.setupData(items);
 
         this.preselectData();
@@ -185,11 +202,11 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
      * @protected
      * @abstract
      * @param {any[]} items
-     * @param {boolean} useService
+     * @param {TableMetadatan} tableMetadata - Metadaten oder null/indefined
      * 
      * @memberOf ListSelectorComponent
      */
-    protected abstract setupConfig(items: any[], useService: boolean);
+    protected abstract setupConfig(items: any[], tableMetadata: TableMetadata);
 
     /**
      * Liefert den Index des Items (selectedValue) in der Wertelist
@@ -346,7 +363,11 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
     protected onDataChange(values: any[]) {
         this.dataChange.emit(values);
 
-        this.initBoundData(values, false);
+        //
+        // wir prüfen, ob für Items (nur das erste Element) Metadaten vorliegen ->
+        // ggf. autom. Konfiguration über Metadaten
+        //
+        this.initBoundData(values, this.getMetadataForValues(values));
     }
 
     public get data(): any[] {
@@ -360,6 +381,22 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
         }
     }
 
+
+    /**
+     * Liefert @see{TableMetadata}, falls für die @param{values} (nur das erste Element) Metadaten vorliegen ->
+     * ggf. autom. Konfiguration über Metadaten
+     */
+    protected getMetadataForValues(values: any[]): TableMetadata  {
+        let tableMetadata;
+        if (values && values.length > 0) {
+            let value = values[0];
+
+            if (value && value.constructor) {
+                let clazzName = value.constructor.name;
+                tableMetadata = this.metadataService.findTableMetadata(clazzName);            }
+        }
+        return tableMetadata;
+    }
 
 
     protected get metadataService(): MetadataService {

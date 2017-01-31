@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 
 // Fluxgate
-import { Assert, StringUtil, Clone, ColumnMetadata } from '@fluxgate/common';
+import { Assert, StringUtil, Clone, ColumnMetadata, TableMetadata } from '@fluxgate/common';
 
 import { MetadataService, ProxyService } from '../../services';
 
@@ -135,15 +135,15 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     super.ngOnInit();
   }
 
-  protected initBoundData(items: any[], useService: boolean) {
+  protected initBoundData(items: any[], tableMetadata: TableMetadata) {
     this.options = undefined;
     this.dataItems = undefined;
 
-    super.initBoundData(items, useService);
+    super.initBoundData(items, tableMetadata);
   }
 
 
-  protected setupConfig(items: any[], useService: boolean) {
+  protected setupConfig(items: any[], tableMetadata: TableMetadata) {
 
     //
     // config überschreibt text/valueField Settings ???
@@ -185,8 +185,8 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     //
     if (StringUtil.isNullOrEmpty(this.textField) && StringUtil.isNullOrEmpty(this.valueField)) {
       // metadata/reflect
-      if (useService) {
-        this.setupColumnInfosByMetadata(items);
+      if (tableMetadata) {
+        this.setupColumnInfosByMetadata(items, tableMetadata);
       } else {
         this.setupColumnInfosByReflection(items);
       }
@@ -234,14 +234,13 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
    * falls keine Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
    *
    */
-  private setupColumnInfosByMetadata(items: any[]) {
+  private setupColumnInfosByMetadata(items: any[], tableMetadata: TableMetadata) {
     Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
+    Assert.notNull(tableMetadata);
 
     let config = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
 
     let columnInfos: IDisplayInfo[] = [];
-
-    let tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
 
     // default: erste Property
     let displayMetadataName: string = tableMetadata.columnMetadata[0].propertyName;
@@ -386,7 +385,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
   @Input() public set config(value: IDropdownSelectorConfig) {
     this._config = value;
-    this.initBoundData(this.dataItems, false);
+    this.initBoundData(this.dataItems, this.getMetadataForValues(this.dataItems));
   }
 
 

@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert, ColumnTypes, Clone } from '@fluxgate/common';
+import { Assert, ColumnTypes, Clone, TableMetadata } from '@fluxgate/common';
 
 import { IService } from '../../services';
 import { MetadataService, ProxyService } from '../../services';
@@ -109,10 +109,10 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     }
   }
 
-  protected initBoundData(items: any[], useService: boolean) {
+  protected initBoundData(items: any[], tableMetadata: TableMetadata) {
     this.dataItems = undefined;
 
-    super.initBoundData(items, useService);
+    super.initBoundData(items, tableMetadata);
   }
 
   protected setupData(items: any[]) {
@@ -120,15 +120,15 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   }
 
 
-  protected setupConfig(items: any[], useService: boolean) {
+  protected setupConfig(items: any[], tableMetadata: TableMetadata) {
     if (this.config) {
       this.configInternal = Clone.clone(this.config);
       return;
     }
 
     // metadata/reflect
-    if (useService) {
-      this.setupColumnInfosByMetadata(items);
+    if (tableMetadata) {
+      this.setupColumnInfosByMetadata(items, tableMetadata);
     } else {
       this.setupColumnInfosByReflection(items);
     }
@@ -142,12 +142,11 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    * 
    * @memberOf DataTableSelectorComponent
    */
-  protected setupColumnInfosByMetadata(items: any[]) {
+  private setupColumnInfosByMetadata(items: any[], tableMetadata: TableMetadata) {
     Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
+    Assert.notNull(tableMetadata);
 
     let columnInfos: IDisplayInfo[] = [];
-
-    let tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
 
     for (let metaData of tableMetadata.columnMetadata) {
       if (metaData.options.displayName) {
@@ -173,7 +172,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    * 
    * @memberOf DataTableSelectorComponent
    */
-  protected setupColumnInfosByReflection(items: any[]) {
+  private setupColumnInfosByReflection(items: any[]) {
     Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
 
     let columnInfos: IDisplayInfo[] = [];
@@ -256,7 +255,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   @Input() public set config(value: IDataTableSelectorConfig) {
     this._config = value;
-    this.initBoundData(this.dataItems, false);
+    this.initBoundData(this.dataItems, super.getMetadataForValues(this.dataItems));
   }
 
   public onRowSelect(row) {
