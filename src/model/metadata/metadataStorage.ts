@@ -1,5 +1,5 @@
 import { Assert } from '../../util/assert';
-import { Dictionary } from '../../types';
+import { Dictionary, Types } from '../../types';
 import { CompoundValidator, Validator } from './../validation';
 import { ValidationMetadata } from './validationMetadata';
 import { TableMetadata } from './tableMetadata';
@@ -152,10 +152,12 @@ export class MetadataStorage {
 
     public findTableMetadata(target: Function | string): TableMetadata {
         Assert.notNull(target);
-        if (typeof (target) === 'string') {
-            return this.tableDict.get(target);
+        if (Types.isString(target)) {
+            return this.tableDict.get(<string>target);
         }
-        return this.tableDict.get(target.name);
+        Assert.that(Types.isFunction(target));
+
+        return this.tableDict.get((<Function>target).name);
     }
 
     /**
