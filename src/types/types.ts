@@ -14,12 +14,28 @@ export class Types {
         return typeof obj === 'number';
     }
 
+    public static isFunction(obj: any): boolean {
+        return typeof obj === 'function';
+    }
+
+    public static isSymbol(obj: any): boolean {
+        return typeof obj === 'symbol';
+    }
+
+    public static isObject(obj: any): boolean {
+        return typeof obj === 'object';
+    }
+
+    public static isArray(obj: any): boolean {
+        return Array.isArray(obj);
+    }
+
     public static isNull(obj: any): boolean {
-        return typeof obj === null;
+        return obj === null;
     }
 
     public static isUndefined(obj: any): boolean {
-        return typeof obj === undefined;
+        return obj === undefined;
     }
 
     public static hasMethod(obj: any, method: Function): boolean {
