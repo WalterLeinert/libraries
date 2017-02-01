@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { GrowlModule } from 'primeng/primeng';
 import { MessagesModule } from 'primeng/primeng';
 import { DropdownModule } from 'primeng/primeng';
+import { ConfirmDialogModule } from 'primeng/primeng';
 
 import { AutofocusModule, HighlightModule } from '../../common/directives';
 
@@ -15,9 +16,11 @@ import { RoleService } from './role.service';
 import { NavigationService } from './navigation.service';
 
 import { LoginComponent } from './login/login.component';
+import { ChangePasswordComponent } from './changePassword/changePassword.component';
 import { RegisterComponent } from './register/register.component';
 import { LogoffComponent } from './logoff/logoff.component';
 import { RegisterGuardService } from './register/register-guard.service';
+import { ChangePasswordGuardService } from './changePassword/changePassword-guard.service';
 
 @NgModule({
   imports: [
@@ -26,6 +29,7 @@ import { RegisterGuardService } from './register/register-guard.service';
     GrowlModule,
     MessagesModule,
     DropdownModule,
+    ConfirmDialogModule,
     HighlightModule,
     AutofocusModule,
     DropdownSelectorModule,
@@ -33,14 +37,16 @@ import { RegisterGuardService } from './register/register-guard.service';
   ],
   declarations: [
     LoginComponent,
-    RegisterComponent,
-    LogoffComponent
+    LogoffComponent,
+    ChangePasswordComponent,
+    RegisterComponent
   ],
   providers: [
     NavigationService,
     PassportService,
     RoleService,
-    RegisterGuardService
+    RegisterGuardService,
+    ChangePasswordGuardService
   ]
 })
 export class AuthenticationModule { }

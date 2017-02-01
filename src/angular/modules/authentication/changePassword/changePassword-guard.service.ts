@@ -8,15 +8,15 @@ import { PassportService } from '../passport.service';
 
 
 /**
- * Guard-Service, der die Register-Route nur zulässt,
- * falls ein user angemeldet ist und dieser ein Admin ist.
+ * Guard-Service, der die PasswordChange-Route nur zulässt,
+ * falls ein User angemeldet.
  * 
  * @export
- * @class RegisterGuardService
+ * @class PasswordChangeGuardService
  * @implements {CanActivate}
  */
 @Injectable()
-export class RegisterGuardService implements CanActivate {
+export class ChangePasswordGuardService implements CanActivate {
     private currentUser: IUser;
 
     constructor(private _router: Router, private passportService: PassportService) {
@@ -31,7 +31,7 @@ export class RegisterGuardService implements CanActivate {
     }
 
     canActivate(route: ActivatedRouteSnapshot): boolean {
-        if (this.currentUser && this.currentUser.isAdmin) {
+        if (this.currentUser) {
             return true;
         }
         return false;

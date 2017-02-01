@@ -8,7 +8,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 // Fluxgate
-import { Constants, Assert, StringBuilder, User, IUser } from '@fluxgate/common';
+import { Constants, Assert, StringBuilder, User, IUser, PasswordChange, ServiceResult } from '@fluxgate/common';
 
 import { Serializer } from '../../../base/serializer';
 import { IRestUri, IServiceBase, Service, MetadataService } from '../../services';
@@ -20,6 +20,7 @@ export class PassportService implements IServiceBase {
     public static get LOGIN() { return '/login'; }
     public static get SIGNUP() { return '/signup'; }
     public static get LOGOFF() { return '/logout'; }
+    public static get CHANGE_PASSWORD() { return '/changePassword'; }
     public static get CURRENT_USER() { return '/currentUser'; }
 
     private _url: string;
@@ -127,6 +128,31 @@ export class PassportService implements IServiceBase {
             // .do(data => console.log('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
     }
+
+
+    /**
+     * Ändert das Passwort des aktuellen Benutzers.
+     * 
+     * @param {string} username - aktueller Username
+     * @param {string} password - aktuelles Passwort
+     * @param {string} passwordNew - neues Passwort
+     * 
+     * @memberOf PassportService
+     */
+    public changePassword(username: string, password: string, passwordNew: string): Observable<IUser> {
+        Assert.notNullOrEmpty(password, 'password');
+        Assert.notNullOrEmpty(passwordNew, 'passwordNew');
+
+        let passwordChange = new PasswordChange(username, password, passwordNew);
+
+        return this.http.post(this.getUrl() + PassportService.CHANGE_PASSWORD, passwordChange)
+            .map((response: Response) => this.deserialize(response.json()))
+            .do(user => {
+                console.log(`PassportService.changePassword: user = ${JSON.stringify(user)}`);
+            })
+            .catch(Service.handleError);
+    }
+
 
     /**
      * Liefert den aktuell angemeldeten User.
