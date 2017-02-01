@@ -13,7 +13,7 @@ import { TableOptions } from '../decorator/model/tableOptions';
 export class TableMetadata {
     private _columnMetadata: ColumnMetadata[] = [];
     private propertyMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
-    private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();;
+    private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
     private _primaryKeyColumn; ColumnMetadata;
     private _service: Function;
 

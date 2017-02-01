@@ -1,5 +1,5 @@
 let leftPad = require('left-pad');
-import { IAttributeSelector } from "./../model/query/attributeSelector.interface";
+import { IAttributeSelector } from '../model/query/attributeSelector.interface';
 import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
 

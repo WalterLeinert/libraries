@@ -176,7 +176,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
                 keys = <TKey[]> <any> Object.keys(this.stringDict);
             } else if (this.keyType === KeyType.Number) {
                keys = Object.keys(this.numberDict).map(item => {
-                   return <TKey> <any> parseInt(item)
+                   return <TKey> <any> parseInt(item, 10);
                });
             } else {
                 for (let k in this.stringToObjectMapper) {
