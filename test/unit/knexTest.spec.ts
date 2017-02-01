@@ -25,9 +25,6 @@ export abstract class KnexTest extends BaseTest {
     private static _knexService: KnexService;
     private static _metadataService: MetadataService;
 
-    constructor() {
-        super();
-    }
 
 
     /**
@@ -66,20 +63,26 @@ export abstract class KnexTest extends BaseTest {
       * - Knex-Cleanup
       */
     protected static after() {
-        using(new XLog(KnexTest.logger, levels.INFO, 'static.after'), (log) => {            
+        using(new XLog(KnexTest.logger, levels.INFO, 'static.after'), (log) => {
             KnexTest.knexService.knex.destroy();
 
             super.after();
         });
     }
 
+    /**
+      * Helpermethode zum Erzeugen von Service-Klassen 
+      */
+    protected static createService<T>(model: ICtor<T>): T {
+        return Activator.createInstance<T>(model, KnexTest.knexService, KnexTest.metadataService);
+    }
 
     /**
      * wird vor jedem Test aufgerufen
      */
     protected before() {
         using(new XLog(KnexTest.logger, levels.INFO, 'before'), (log) => {
-            super.before();            
+            super.before();
         });
     }
 
@@ -103,13 +106,6 @@ export abstract class KnexTest extends BaseTest {
 
     private static get knexService(): KnexService {
         return KnexTest._knexService;
-    }
-
-    /**
-     * Helpermethode zum Erzeugen von Service-Klassen 
-     */
-    protected static createService<T>(model: ICtor<T>): T {       
-        return Activator.createInstance<T>(model, KnexTest.knexService, KnexTest.metadataService);
     }
 
 }

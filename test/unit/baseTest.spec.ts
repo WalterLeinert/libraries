@@ -16,9 +16,6 @@ import { fromEnvironment } from '@fluxgate/common';
 export abstract class BaseTest {
     static readonly logger = getLogger('BaseTest');
 
-    protected constructor() {
-    }
-
 
     /**
      * wird einmal vor allen Tests ausgeführt
@@ -35,15 +32,6 @@ export abstract class BaseTest {
         });
     }
 
-    protected before() {
-        using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
-        });
-    }
-
-    protected after() {
-         using(new XLog(BaseTest.logger, levels.DEBUG, 'after'), (log) => {
-        });
-    }
 
     private static initializeLogging() {
         using(new XLog(BaseTest.logger, levels.DEBUG, 'initializeLogging'), (log) => {
@@ -60,6 +48,17 @@ export abstract class BaseTest {
             } else {
                 log.warn(`log4js: no systemMode defined -> not reading configuration`)
             }
+        });
+    }
+
+
+    protected before() {
+        using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
+        });
+    }
+
+    protected after() {
+        using(new XLog(BaseTest.logger, levels.DEBUG, 'after'), (log) => {
         });
     }
 
