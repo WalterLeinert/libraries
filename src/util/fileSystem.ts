@@ -24,6 +24,7 @@ export class FileSystem {
      */
     public static directoryExists(path: string): boolean {
         Assert.notNullOrEmpty(path);
+
         try {
             return fs.statSync(path).isDirectory();
         } catch (err) {
@@ -34,4 +35,38 @@ export class FileSystem {
             }
         }
     }
+
+
+    /**
+     * Liefert den Inhalt der Datei unter dem Pfad @param{path} mit dem Encoding @param{encoding}.
+     * Fehler werden mit Hilfe des @param{errorLogger} Callbacks für ein bestimmtes Topic @param{topic}
+     * ausgeben.
+     * 
+     * @static
+     * @param {(message: string) => void} errorLogger
+     * @param {string} path
+     * @param {string} topic
+     * @returns {string} - undefined bei Fehler
+     * 
+     * @memberOf FileSystem
+     */
+    public static readTextFile(errorLogger: (message: string) => void, path: string, topic: string, encoding = 'utf8'): string {
+        if (!path) {
+            errorLogger(`Pfad auf ${topic} in Konfigration nicht gesetzt.`);
+        }
+
+        let result;
+        if (!FileSystem.fileExists(path)) {
+            errorLogger(`${topic} unter ${path} ist nicht lesbar oder existiert nicht.`);
+        } else {
+            try {
+                result = fs.readFileSync(path, encoding);
+            } catch (err) {
+               errorLogger(`${topic} unter ${path} kann nicht gelesen werden.`);
+            }
+        }
+
+        return result;
+    }
+
 }
