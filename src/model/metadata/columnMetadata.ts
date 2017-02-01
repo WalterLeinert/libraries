@@ -4,6 +4,7 @@ import { ValidationResult, IValidation } from './../validation';
 import { ColumnOptions } from '../decorator/model/columnOptions';
 import { ColumnTypes } from './columnTypes';
 import { Time, ShortTime } from '../../types';
+import { EnumMetadata } from '.';
 
 /**
  * Modelliert Metadaten für Modell-/DB-Attribute
@@ -13,6 +14,7 @@ import { Time, ShortTime } from '../../types';
  */
 export class ColumnMetadata {
     private validator: IValidation;
+    private _enumMetadata: EnumMetadata;
 
     /**
      * @param {Function} target - Modelklasse
@@ -131,6 +133,14 @@ export class ColumnMetadata {
     public validate(value: any): ValidationResult {
         Assert.notNull(this.validator);
         return this.validator.validate(value);
+    }
+
+    public setEnum(enumMetadata: EnumMetadata) {
+        this._enumMetadata = enumMetadata;
+    }
+
+    public get enumMetadata(): EnumMetadata {
+        return this._enumMetadata;
     }
 
 }

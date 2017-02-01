@@ -1,9 +1,11 @@
 import { Assert } from '../../util/assert';
+import { Enum } from "./../decorator/model/enum";
 import { Dictionary, Types } from '../../types';
 import { CompoundValidator, Validator } from './../validation';
 import { ValidationMetadata } from './validationMetadata';
 import { TableMetadata } from './tableMetadata';
 import { ColumnMetadata } from './columnMetadata';
+import { EnumMetadata } from './enumMetadata';
 
 /**
  * Verwaltet Metadaten zu Modellklassen und Attribute, die über die Decorators
@@ -17,6 +19,7 @@ export class MetadataStorage {
 
     private tableValidationDict: Dictionary<string, ValidationMetadata[]> = new Dictionary<string, ValidationMetadata[]>();
     private tableColumnDict: Dictionary<string, ColumnMetadata[]> = new Dictionary<string, ColumnMetadata[]>();
+    private tableEnumDict: Dictionary<string, EnumMetadata[]> = new Dictionary<string, EnumMetadata[]>();
 
     private tableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
     private dbTableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
@@ -35,7 +38,8 @@ export class MetadataStorage {
 
         if (!this.tableDict.containsKey(targetName)) {
             let colMetadata: ColumnMetadata[] = this.tableColumnDict.get(targetName);
-            let valMetadata = this.tableValidationDict.get(targetName);
+            let valMetadata: ValidationMetadata[]​​ = this.tableValidationDict.get(targetName);
+            let enumMetadata: EnumMetadata[] = this.tableEnumDict.get(targetName);
 
 
             //
@@ -55,8 +59,26 @@ export class MetadataStorage {
                 }
             }
 
+            //
+            // Dictionary (propertyName, EnumMetadata[]) aufbauen, um
+            // anschliessend die Enums mit ColumnMetadata verknüpfen zu können
+            //
+            let propNameToEnum: Dictionary<string, EnumMetadata> = new Dictionary<string, EnumMetadata>();
+
+            if (enumMetadata) {
+                for (let enmMeta of enumMetadata) {
+                    propNameToEnum.set(enmMeta.propertyName, enmMeta);
+                }
+            }
+
 
             colMetadata.forEach(item => {
+
+                // ggf. Enum-Metadaten setzen
+                let enmMeta = propNameToEnum.get(item.propertyName);
+                if (enmMeta) {
+                    item.setEnum(enmMeta);
+                }
 
                 //
                 // Validierung ermitteln und attachen
@@ -136,6 +158,18 @@ export class MetadataStorage {
             this.tableValidationDict.set(targetName, valMetadata);
         }
         valMetadata.push(metadata);
+    }
+
+    public addEnumMetadata(metadata: EnumMetadata) {
+        Assert.notNull(metadata);
+
+        let targetName = metadata.target.name;
+        let enumMetadata: EnumMetadata[] = this.tableEnumDict.get(targetName);
+        if (!enumMetadata) {
+            enumMetadata = [];
+            this.tableEnumDict.set(targetName, enumMetadata);
+        }
+        enumMetadata.push(metadata);
     }
 
 
