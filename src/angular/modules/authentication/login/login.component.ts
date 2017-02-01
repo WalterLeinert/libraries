@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 
 import { BaseComponent } from '../../../common/base/base.component';
 
+import { ChangePasswordGuardService } from '../changePassword/changePassword-guard.service';
+import { RegisterGuardService } from '../register/register-guard.service';
+
 import { PassportService } from '../passport.service';
 import { NavigationService } from '../navigation.service';
 
@@ -49,7 +52,24 @@ export class LoginComponent extends BaseComponent<PassportService> {
   username: string;
   password: string;
 
-  constructor(router: Router, private navigationService: NavigationService, service: PassportService) {
+
+  /**
+   * Creates an instance of LoginComponent.
+   * 
+   * Hinweis: Die Guard-Services @see{ChangePasswordGuardService} und 
+   * @see{RegisterGuardService} werden hier injiziert, damit diese dann korrekt
+   * über Änderungen des aktuellen Benutzers informiert werden.
+   * 
+   * @param {Router} router
+   * @param {NavigationService} navigationService
+   * @param {PassportService} service
+   * @param {ChangePasswordGuardService} changePasswordGuardService
+   * @param {RegisterGuardService} registerGuardService
+   * 
+   * @memberOf LoginComponent
+   */
+  constructor(router: Router, private navigationService: NavigationService, service: PassportService, 
+    changePasswordGuardService: ChangePasswordGuardService, registerGuardService: RegisterGuardService) {
     super(router, service);
   }
 
