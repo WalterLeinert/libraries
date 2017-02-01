@@ -30,6 +30,33 @@ let appConfig = JsonReader.readJsonSync<IAppConfig>(appConfigPath);
 AppConfig.register(appConfig);
 
 
+
+/**
+ * Konfiguration des Server v.a. für Https
+ * 
+ * @export
+ * @interface IServerConfiguration
+ */
+export interface IServerConfiguration {
+
+    /**
+     * Pfad auf die Zertifikatdatei
+     * 
+     * @type {string}
+     * @memberOf IServerConfiguration
+     */
+    certPath: string;
+
+    /**
+     * Pfad auf die Datei mit private Key
+     * 
+     * @type {string}
+     * @memberOf IServerConfiguration
+     */
+    keyPath: string;
+}
+
+
 /**
  * Spezielle Einstellungen für den Express Webserver
  * 
@@ -77,7 +104,7 @@ export interface IExpressConfiguration {
      * @type {string}
      * @memberOf IExpressConfiguration
      */
-    KeyPath?: string;
+    keyPath?: string;
 }
 
 
@@ -128,7 +155,7 @@ export abstract class ServerBase extends ServerLoader {
                 };
 
                 let cert = FileSystem.readTextFile(errorLogger, this.configuration.certPath, 'Zertifikat');
-                let key = FileSystem.readTextFile(errorLogger, this.configuration.KeyPath, 'Private Key');
+                let key = FileSystem.readTextFile(errorLogger, this.configuration.keyPath, 'Private Key');
 
 
                 this.setEndpoint(this.configuration.endPoint)
