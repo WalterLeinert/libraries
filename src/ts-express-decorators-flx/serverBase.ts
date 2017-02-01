@@ -1,4 +1,5 @@
 import path = require('path');
+import fs = require('fs');
 import * as Express from 'express';
 import { $log } from 'ts-log-debug';
 import { ServerLoader } from 'ts-express-decorators';
@@ -60,6 +61,23 @@ export interface IExpressConfiguration {
      * @example 8080
      */
     httpsPort?: number;
+
+
+    /**
+     * Pfad auf die Zertifikatdatei
+     * 
+     * @type {string}
+     * @memberOf IExpressConfiguration
+     */
+    certPath?: string;
+
+    /**
+     * Pfad auf die Datei mit private Key
+     * 
+     * @type {string}
+     * @memberOf IExpressConfiguration
+     */
+    KeyPath?: string;
 }
 
 
@@ -105,12 +123,18 @@ export abstract class ServerBase extends ServerLoader {
 
                 log.info(`__dirname = ${__dirname}, controllers = ${controllers}`);
 
+                let cert = this.readFile(log, this.configuration.certPath, 'Zertifikat');
+                let key = this.readFile(log, this.configuration.KeyPath, 'Private Key');
+
+
                 this.setEndpoint(this.configuration.endPoint)
                     .scan(serverControllers)
                     .scan(controllers)
                     .createHttpServer(this.configuration.port)
                     .createHttpsServer({
-                        port: this.configuration.httpsPort
+                        port: this.configuration.httpsPort,
+                        cert: cert,
+                        key: key
                     });
 
 
@@ -126,6 +150,27 @@ export abstract class ServerBase extends ServerLoader {
             });
         });
     }
+
+
+    private readFile(log: XLog, path: string, topic: string): string {
+        if (!path) {
+            log.error(`Pfad auf ${topic} in Konfigration nicht gesetzt.`);
+        }
+
+        let result;
+        if (!FileSystem.fileExists(path)) {
+            log.error(`${topic} unter ${path} ist nicht lesbar oder existiert nicht.`);
+        } else {
+            try {
+                result = fs.readFileSync(path, 'utf8');
+            } catch (err) {
+                log.error(`${topic} unter ${path} kann nicht gelesen werden.`);
+            }
+        }
+
+        return result;
+    }
+
 
 
     /**
