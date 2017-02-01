@@ -6,7 +6,7 @@ import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { ServiceResult, IQuery, TableMetadata, ColumnMetadata, IToString, Assert } from '@fluxgate/common';
+import { IUser, ServiceResult, IQuery, TableMetadata, ColumnMetadata, IToString, Assert, Clone, Types } from '@fluxgate/common';
 
 import { MetadataService } from './metadata.service';
 import { KnexService } from './knex.service';
@@ -127,9 +127,19 @@ export abstract class BaseService<T, TId extends IToString>  {
                         } else {
                             let result = this.createModelInstance(rows[0]);
 
-                            // let result = Reflection.copyProperties(rows[0], this.ctor);
+                            if (log.isDebugEnabled) {
+                                //
+                                // falls wir ein User-Objekt gefunden haben, wird für das Logging
+                                // die Passwort-Info zurückgesetzt
+                                //
+                                let logResult = this.createModelInstance(Clone.clone(rows[0]));
+                                if (Types.hasMethod(logResult, 'resetCredentials')) {
+                                    (<IUser><any>logResult).resetCredentials();
+                                }
 
-                            log.debug('result = ', result);
+                                log.debug('result = ', logResult);
+                            }
+
                             resolve(this.deserialize(result));
                         }
                     })
@@ -162,7 +172,20 @@ export abstract class BaseService<T, TId extends IToString>  {
                         } else {
                             let result = this.createModelInstances(rows);
 
-                            log.debug('result = ', result);
+                            if (log.isDebugEnabled) {
+                                let logResult = this.createModelInstances(Clone.clone(rows));
+                                //
+                                // falls wir User-Objekte gefunden haben, wird für das Logging
+                                // die Passwort-Info zurückgesetzt
+                                //                                
+                                if (logResult.length > 0) {
+                                    if (Types.hasMethod(logResult[0], 'resetCredentials')) {
+                                        logResult.forEach(item => (<IUser><any>item).resetCredentials());
+                                    }
+                                }
+                                log.debug('result = ', logResult);
+                            }
+
                             resolve(this.serializeArray(result));
                         }
                     })
@@ -265,7 +288,20 @@ export abstract class BaseService<T, TId extends IToString>  {
                         } else {
                             let result = this.createModelInstances(rows);
 
-                            log.debug('result = ', result);
+                            if (log.isDebugEnabled) {
+                                let logResult = this.createModelInstances(Clone.clone(rows));
+                                //
+                                // falls wir User-Objekte gefunden haben, wird für das Logging
+                                // die Passwort-Info zurückgesetzt
+                                //                                
+                                if (logResult.length > 0) {
+                                    if (Types.hasMethod(logResult[0], 'resetCredentials')) {
+                                        logResult.forEach(item => (<IUser><any>item).resetCredentials());
+                                    }
+                                }
+                                log.debug('result = ', logResult);
+                            }
+
                             resolve(this.serializeArray(result));
                         }
                     })
