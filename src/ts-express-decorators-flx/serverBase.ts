@@ -123,8 +123,12 @@ export abstract class ServerBase extends ServerLoader {
 
                 log.info(`__dirname = ${__dirname}, controllers = ${controllers}`);
 
-                let cert = this.readFile(log, this.configuration.certPath, 'Zertifikat');
-                let key = this.readFile(log, this.configuration.KeyPath, 'Private Key');
+                let errorLogger = (message: string):void => {
+                    log.error(message);
+                };
+
+                let cert = FileSystem.readTextFile(errorLogger, this.configuration.certPath, 'Zertifikat');
+                let key = FileSystem.readTextFile(errorLogger, this.configuration.KeyPath, 'Private Key');
 
 
                 this.setEndpoint(this.configuration.endPoint)
@@ -149,26 +153,6 @@ export abstract class ServerBase extends ServerLoader {
                     });
             });
         });
-    }
-
-
-    private readFile(log: XLog, path: string, topic: string): string {
-        if (!path) {
-            log.error(`Pfad auf ${topic} in Konfigration nicht gesetzt.`);
-        }
-
-        let result;
-        if (!FileSystem.fileExists(path)) {
-            log.error(`${topic} unter ${path} ist nicht lesbar oder existiert nicht.`);
-        } else {
-            try {
-                result = fs.readFileSync(path, 'utf8');
-            } catch (err) {
-                log.error(`${topic} unter ${path} kann nicht gelesen werden.`);
-            }
-        }
-
-        return result;
     }
 
 
