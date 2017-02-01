@@ -38,8 +38,15 @@ export class Types {
         return obj === undefined;
     }
 
-    public static hasMethod(obj: any, method: Function): boolean {
+    public static hasMethod(obj: any, methodName: string): boolean {
         Assert.notNull(obj);
-        return obj.method !== undefined;
+        Assert.notNullOrEmpty(methodName);
+        return !Types.isUndefined(obj[methodName]) && Types.isFunction(obj[methodName]);
+    }
+
+    public static hasProperty(obj: any, propertyName: string): boolean {
+        Assert.notNull(obj);
+        Assert.notNullOrEmpty(propertyName);
+        return !Types.isUndefined(obj[propertyName]);
     }
 }
