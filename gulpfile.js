@@ -60,7 +60,7 @@ gulp.task('clean', function () {
 })
 
 
-gulp.task('lint', function (cb) {  
+gulp.task('tslint', function (cb) {  
   gulp.src("src/**/*.ts")
     .pipe(tslint({
       configuration: "./tslint.json",
@@ -102,6 +102,7 @@ gulp.task('test', function () {
         .pipe(gulp.dest('build'))
         /*execute tests*/
         .pipe(mocha({
+            
             reporter: 'spec'
         }));
 });
