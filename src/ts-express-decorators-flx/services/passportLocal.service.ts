@@ -9,10 +9,10 @@ import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IUser } from '@fluxgate/common';
+import { IUser, Clone } from '@fluxgate/common';
 
 import { Messages } from '../../resources/messages';
-import { UserService } from './user.service';
+import { UserService, MetadataService } from '.';
 
 @Service()
 export class PassportLocalService {
@@ -30,7 +30,7 @@ export class PassportLocalService {
     }
 
 
-    constructor(private userService: UserService) {
+    constructor(private userService: UserService, private metadataService: MetadataService) {
 
         // used to serialize the user for the session
         Passport.serializeUser(PassportLocalService.serialize);
@@ -100,6 +100,58 @@ export class PassportLocalService {
 
                             log.log(`user created: ${newUser}`);
                             done(null, newUser);
+                        });
+
+                });
+        });
+    }
+
+    // =========================================================================
+    // LOCAL SIGNUP ============================================================
+    // =========================================================================
+    // we are using named strategies since we have one for login and one for signup
+    // by default, if there was no name, it would just be called 'local'
+    public initLocalChangePassword() {
+
+        Passport
+            .use('changePassword', new Strategy({
+                // by default, local strategy uses username and password, we will override with email
+                usernameField: 'username',
+                passwordField: 'password',
+                passReqToCallback: true // allows us to pass back the entire request to the callback
+            },
+                (req, username, password, done) => {
+                    // console.log('LOCAL SIGNUP', username, password);
+                    // asynchronous
+                    // User.findOne wont fire unless data is sent back
+                    process.nextTick(() => {
+                        this.onLocalChangePassword(req, username, password, done);
+                    });
+                })
+            );
+
+    }
+
+    private onLocalChangePassword(req: Express.Request, username: string, password: string, done): void {
+        using(new XLog(PassportLocalService.logger, levels.INFO, 'onLocalChangePassword', `username = ${username}`), (log) => {
+            this.userService.findByUsername(username)
+                .then(user => {
+                    if (!user) { // User does not exist (should not happen)
+                        log.log(`user does not exist: ${username}`);
+
+                        return done(Messages.USER_DOES_NOT_EXIST(username), false);
+                    }
+
+                    // neues Passwort übernehmen
+                    user.password = password;
+
+                    // Create new User
+                    this.userService.changePassword(user)
+                        .then(changedUser => {
+                            changedUser.resetCredentials();
+
+                            log.log(`user updated: ${changedUser}`);
+                            done(null, changedUser);
                         });
 
                 });

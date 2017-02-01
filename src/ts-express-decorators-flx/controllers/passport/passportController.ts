@@ -1,4 +1,5 @@
 import { NotFound } from 'ts-httpexceptions';
+
 import * as Express from 'express';
 import { Controller, Get, Post, BodyParams, Required, Request, Response, Next } from 'ts-express-decorators';
 import * as Passport from 'passport';
@@ -9,9 +10,10 @@ import { XLog, using } from 'enter-exit-logger';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IUser } from '@fluxgate/common';
+import { IUser, ServiceResult } from '@fluxgate/common';
 import { PassportLocalService } from '../../services/passportLocal.service';
 
+import { Messages } from '../../../resources/messages';
 
 /**
  * Controller zur Authentifizierung über Passport.js
@@ -25,6 +27,7 @@ export class PassportController {
     constructor(passportLocalService: PassportLocalService) {
         passportLocalService.initLocalSignup();
         passportLocalService.initLocalLogin();
+        passportLocalService.initLocalChangePassword();
     }
 
     /**
@@ -130,6 +133,73 @@ export class PassportController {
             return 'Disconnected';
         });
     }
+
+
+    /**
+     * Ändert das Passwort für den Benutzer mit @{username}
+     * 
+     * @param {string} username
+     * @param {string} password
+     * @param {string} passwordNew
+     * @param {Express.Request} request
+     * @param {Express.Response} response
+     * @param {Express.NextFunction} next
+     * @returns {Promise<IUser>}
+     * 
+     * @memberOf PassportController
+     */
+    @Post('/changePassword')
+    public changePassword(
+        @Required() @BodyParams('username') username: string,
+        @Required() @BodyParams('password') password: string,
+        @Required() @BodyParams('passwordNew') passwordNew: string,
+        @Request() request: Express.Request,
+        @Response() response: Express.Response,
+        @Next() next: Express.NextFunction
+        ): Promise<IUser> {
+
+        return using(new XLog(PassportController.logger, levels.INFO, 'changePassword'), (log) => {
+            return new Promise<IUser>((resolve, reject) => {
+
+                try {
+                    if (username !== request.user.username) {
+                        log.error(`username (${username}) !== request.user.username (${request.user.username})`);
+                        reject(new Error(`${Messages.USERS_DO_NOT_MATCH(username, request.user.username)}`));
+                        return;
+                    }
+
+                    request.user.password = passwordNew;
+
+                    Passport
+                        .authenticate('changePassword', (err, changedUser: IUser) => {
+                            if (err) {
+                                return reject(err);
+                            }
+
+                            request.logIn(changedUser, (loginErr) => {
+                                if (loginErr) {
+                                    return reject(loginErr);
+                                }
+
+                                changedUser.resetCredentials();
+                                resolve(changedUser);
+                            });
+
+                        })(request, response, next);
+                } catch (err) {
+                    log.error(err);
+                    return reject(err);
+                }
+            })
+                .catch((err) => {
+                    if (err && err.message === 'Failed to serialize user into session') {
+                        throw new NotFound('user not found');
+                    }
+                    return Promise.reject(err);
+                });
+        });
+    }
+
 
     /**
      * Liefert den aktuell angemeldeten User.

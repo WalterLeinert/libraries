@@ -100,6 +100,36 @@ export class UserService extends BaseService<IUser, number> {
             });
         });
     }
+
+    /**
+     * Ändert für den existierenden User das Passwort in der DB und liefert die Instanz als @see{Promise}.
+     * Das Passwort wird zusammen mit einem Salt als Hash beim User hinterlegt.
+     * 
+     * @param {User} user - mit neuem Passwort
+     * @returns {Promise<User>}
+     * 
+     * @memberOf UserService
+     */
+    public changePassword(user: IUser): Promise<IUser> {
+        Assert.that(Role.isValidRole(user.role));
+
+        user.password_salt = shortid.gen();
+
+        return new Promise<IUser>((resolve, reject) => {
+            Encryption.hashPassword(user.password, user.password_salt, (err, encryptedPassword) => {
+                if (err) {
+                    reject(err);
+                }
+
+                user.password = encryptedPassword;
+
+                super.update(user).then(u => {
+                    u.resetCredentials();
+                    resolve(u);
+                });
+            });
+        });
+    }
     // ----------------------------------------------------------------
     // Ende: überschriebene Methoden
     // ----------------------------------------------------------------
@@ -204,7 +234,7 @@ export class UserService extends BaseService<IUser, number> {
                             log.log('no user found');
                             resolve(undefined);
                         } else {
-                            let user = users[0];
+                            let user = this.createModelInstance(users[0]);
                             user.resetCredentials();
                             log.log('user: ', user);
                             resolve(user);
