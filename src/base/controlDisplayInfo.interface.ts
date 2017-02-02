@@ -1,3 +1,6 @@
+// ANgular
+import { PipeTransform } from '@angular/core';
+
 import { IDisplayInfo } from './displayInfo.interface';
 import { ControlType } from '../angular/modules/common/controlType';
 
@@ -23,4 +26,8 @@ export interface IControlDisplayInfo extends IDisplayInfo {
      * @memberOf IDisplayInfo
      */
     controlType?: ControlType;
+
+    pipe?: PipeTransform;
+
+    pipeArgs?: string;
 }

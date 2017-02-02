@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 // PrimeNG
 import { DataTableModule } from 'primeng/primeng';
+import {CalendarModule} from 'primeng/primeng';
 
 import { ProxyService } from '../../services';
 import { DataTableSelectorComponent } from './datatable-selector.component';
@@ -14,7 +15,8 @@ import { DataTableSelectorComponent } from './datatable-selector.component';
   imports: [
     CommonModule,
     FormsModule,
-    DataTableModule
+    DataTableModule,
+    CalendarModule
   ],
   exports: [
     DataTableSelectorComponent

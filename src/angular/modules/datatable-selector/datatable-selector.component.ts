@@ -46,19 +46,44 @@ export type sortMode = 'single' | 'multiple';
         <p-column field="{{info.valueField}}" header="{{info.textField}}" 
           [sortable]="true" [editable]="editable">
 
-          <div *ngIf="info.controlType">
-            <div [ngSwitch]="info.controlType">
-              <template [ngSwitchCase]="ControlType.Input" let-col let-data="rowData" pTemplate="body">
-                <span>{{ data[col.field] }}</span>
+          <div *ngIf="info.controlType === controlType.Input">
+            <template let-col let-data="rowData" pTemplate="body">
+              <span>{{ formatValue(data[col.field], info) }}</span>
+            </template>
+          </div>
+
+          <div *ngIf="info.controlType === controlType.Date">
+            <template let-col let-data="rowData" pTemplate="body">
+              <span>{{ formatValue(data[col.field], info) }}</span>
+              <!--
+              <p-calendar [(ngModel)]="data[col.field]"></p-calendar>
+              -->
+            </template>
+          </div>
+
+          <div [ngSwitch]="info.controlType">
+            <div *ngSwitchCase="controlType.Input">
+              <template let-col let-data="rowData" pTemplate="body">
+                <span>{{ formatValue(data[col.field], info) }}</span>
+              </template>
+            </div>
+            <div *ngSwitchCase="controlType.Date">
+              <template let-col let-data="rowData" pTemplate="body">
+                <p>info: {{ info || json }}, col: {{col | json}}</p>
+                <!--
+                <p-calendar [(ngModel)]="data[col.field]"></p-calendar>
+                -->
               </template>
             </div>
           </div>
-
-          <div *ngIf="!info.controlType">
+         
+          <!--
+          <div *ngIf="info.controlType === undefined">
             <template let-col let-data="rowData" pTemplate="body">
-              <span>{{ data[col.field] }}</span>
+              <span>{{ formatValue(data[col.field], info) }}</span>
             </template>
           </div>
+          -->
 
         </p-column>
       </ul>
@@ -72,6 +97,10 @@ export type sortMode = 'single' | 'multiple';
   styles: []
 })
 export class DataTableSelectorComponent extends ListSelectorComponent {
+  /**
+   * ControlType Werte
+   */
+  controlType = ControlType;
 
 
   /**
@@ -135,7 +164,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   protected setupConfig(items: any[], tableMetadata: TableMetadata) {
     if (this.config) {
-      this.configInternal = Clone.clone(this.config);
+      this.configInternal = this.config;
       return;
     }
 
@@ -281,5 +310,13 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
       console.log(`DataTableSelectorComponent.onRowSelect: ${JSON.stringify(row)}`);
     }
     this.selectedValueChange.emit(row);
+  }
+
+
+  public formatValue(value: any, info: IControlDisplayInfo): any {
+    if (info.pipe) {
+      return info.pipe.transform(value, info.pipeArgs);
+    }
+    return value;
   }
 }
