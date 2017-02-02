@@ -7,10 +7,11 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
     public static DEFAULT: IControlDisplayInfo = new ControlDisplayInfo(
         DisplayInfo.CURRENT_ITEM,
         DisplayInfo.CURRENT_ITEM,
+        undefined,
         ControlType.Input
     );
 
-    constructor(textField?: string, valueField?: string, private _controlType?: ControlType, private _style?: string) {
+    constructor(textField?: string, valueField?: string, private _style?: string, private _controlType: ControlType = ControlType.Input) {
         super(textField, valueField);
     }
 

@@ -1,5 +1,4 @@
 // Angular
-import { ControlType } from '../common/controlType';
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
@@ -12,7 +11,8 @@ import { Assert, ColumnTypes, Clone, TableMetadata } from '@fluxgate/common';
 import { IService } from '../../services';
 import { MetadataService, ProxyService } from '../../services';
 
-import { IControlDisplayInfo } from '../../../base';
+import { IControlDisplayInfo, ControlDisplayInfo } from '../../../base';
+import { ControlType } from '../common';
 
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 import { ListSelectorComponent } from '../common/list-selector.component';
@@ -59,7 +59,7 @@ export type sortMode = 'single' | 'multiple';
               <span>{{ data[col.field] }}</span>
             </template>
           </div>
-          
+
         </p-column>
       </ul>
     </div>
@@ -163,12 +163,14 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
     for (let metaData of tableMetadata.columnMetadata) {
       if (metaData.options.displayName) {
-        columnInfos.push(<IControlDisplayInfo>{
-          textField: metaData.options.displayName,
-          valueField: metaData.propertyName,
-          style: (metaData.propertyType === ColumnTypes.NUMBER || metaData.propertyType === ColumnTypes.DATE) ?
-            '{width: "180px", "text-align": "right"}' : '{width: "180px", "text-align": "left"}'
-        });
+        columnInfos.push(
+          new ControlDisplayInfo(
+            metaData.options.displayName,
+            metaData.propertyName,
+            (metaData.propertyType === ColumnTypes.NUMBER || metaData.propertyType === ColumnTypes.DATE) ?
+              '{width: "180px", "text-align": "right"}' : '{width: "180px", "text-align": "left"}'
+          )
+        );
       }
     }
 
@@ -197,10 +199,12 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
       // ... und dann entsprechende ColumnInfos erzeugen
       for (let propName of props) {
-        columnInfos.push(<IControlDisplayInfo>{
-          textField: propName,
-          valueField: propName
-        });
+        columnInfos.push(
+          new ControlDisplayInfo(
+            propName.toString(),
+            propName.toString()
+          )
+        );
       }
     }
 
