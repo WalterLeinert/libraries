@@ -13,8 +13,6 @@ const merge = require('merge2');
 const mocha = require('gulp-mocha');
 const tscConfig = require('./tsconfig.json');
 
-const line = '------------------------------------------------------------';
-
 /**
     * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
     * 
@@ -41,13 +39,6 @@ function execCommand(command, cwd, maxBuffer, cb) {
         cb(err);
     });
 }
-
-gulp.task('done', function () {
-  console.log(line);
-  console.log('Ready');
-  console.log(new Date().toString());
-  console.log(line);
-})
 
 
 /**
@@ -120,4 +111,4 @@ gulp.task('bundle', function (cb) {
 gulp.task('update-fluxgate', ['update-fluxgate-common'])
 
 /* single command to hook into VS Code */
-gulp.task('default', gulpSequence('clean', 'compile', 'test', 'bundle', 'done'));
+gulp.task('default', gulpSequence('clean', 'compile', 'test', 'bundle'));
