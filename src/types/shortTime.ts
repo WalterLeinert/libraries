@@ -68,6 +68,23 @@ export class ShortTime {
     }
 
     /**
+     * Erzeugt aus der Zeitangabe in Minuten eine @see{ShortTime}-Instanz.
+     * 
+     * @static
+     * @param {number} minutes
+     * @returns {ShortTime}
+     * 
+     * @memberOf ShortTime
+     */
+    public static createFromMinutes(minutes: number): ShortTime {
+        let hour = Math.floor(minutes / 60);
+        let minute = Math.floor(minutes - hour * 60);
+
+        return new ShortTime(<Hour>hour, minute);
+    }
+
+
+    /**
      * Creates an instance of ShortTime.
      * 
      * @param {Hour} _hour
@@ -90,5 +107,39 @@ export class ShortTime {
      */
     public toString(): string {
         return `${leftPad(this.hour, 2, 0)}:${leftPad(this.minute, 2, 0)}`;
+    }
+
+
+    public toMinutes(): number {
+        return this.hour * 60 + this.minute;
+    }
+
+    /**
+    * Addiert zur Zeit der aktuellen Instanz die Zeit @param{time} und liefert
+    * das Ergebnis.
+    * 
+    * @param {ShortTime} time
+    * @returns {ShortTime}
+    * 
+    * @memberOf ShortTime
+    */
+    public add(time: ShortTime): ShortTime {
+        let timeInMinutes = this.toMinutes() + time.toMinutes();
+        return ShortTime.createFromMinutes(timeInMinutes);
+    }
+
+    /**
+     * Subrahiert von der Zeit der aktuellen Instanz die Zeit @param{time} und liefert
+     * das Ergebnis.
+     * 
+     * @param {ShortTime} time
+     * @returns {ShortTime}
+     * 
+     * @memberOf ShortTime
+     */
+    public subtract(time: ShortTime): ShortTime {
+        let timeInMinutes = this.toMinutes() - time.toMinutes();
+        Assert.that(timeInMinutes >= 0);
+        return ShortTime.createFromMinutes(timeInMinutes);
     }
 }

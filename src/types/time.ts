@@ -69,6 +69,24 @@ export class Time extends ShortTime {
     }
 
     /**
+     * Erzeugt aus der Zeitangabe in Sekunden eine @see{Time}-Instanz.
+     * 
+     * @static
+     * @param {number} seconds
+     * @returns {Time}
+     * 
+     * @memberOf Time
+     */
+    public static createFromSeconds(seconds: number): Time {
+        let hour = Math.floor(seconds / 3600);
+        let minute = Math.floor((seconds - hour * 3600) / 60);
+        let second = (seconds - hour * 3600 - minute * 60);
+
+        return new Time(<Hour>hour, minute, second);
+    }
+
+
+    /**
      * Creates an instance of Time.
      * 
      * @param {Hour} _hour
@@ -92,5 +110,39 @@ export class Time extends ShortTime {
      */
     public toString(): string {
         return `${super.toString()}:${leftPad(this.second, 2, 0)}`;
+    }
+
+    public toSeconds(): number {
+        return this.hour * 3600 + this.minute * 60 + this.second;;
+    }
+
+
+    /**
+     * Addiert zur Zeit der aktuellen Instanz die Zeit @param{time} und liefert
+     * das Ergebnis.
+     * 
+     * @param {Time} time
+     * @returns {Time}
+     * 
+     * @memberOf Time
+     */
+    public add(time: Time): Time {
+        let timeInSeconds = this.toSeconds() + time.toSeconds();
+        return Time.createFromSeconds(timeInSeconds);
+    }
+
+    /**
+     * Subrahiert von der Zeit der aktuellen Instanz die Zeit @param{time} und liefert
+     * das Ergebnis.
+     * 
+     * @param {Time} time
+     * @returns {Time}
+     * 
+     * @memberOf Time
+     */
+    public subtract(time: Time): Time {
+        let timeInSeconds = this.toSeconds() - time.toSeconds();
+        Assert.that(timeInSeconds >= 0);
+        return Time.createFromSeconds(timeInSeconds);
     }
 }

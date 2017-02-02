@@ -29,7 +29,7 @@ let expedtedTimes = [
 
 
 @suite('ShortTime (HH:mm)')
-class TimeShortTest {
+class ShortTimeTest {
 
     @test 'should create instance of class ShortTime'() {
         return expect(new ShortTime(8, 0)).to.be.not.null;
@@ -90,6 +90,69 @@ class TimeShortTest {
 
     @test 'should throw an exception for -1 minutes'() {
         return expect(() => new ShortTime(8, -1)).to.throw(Error);
+    }
+
+}
+
+
+
+function timeToMinute(time: ShortTime): number {
+    return time.hour * 60 + time.minute;
+}
+
+
+@suite('ShortTime (add, subtract)')
+class ShortTimeOperationsTest {
+
+    @test 'should get minutes from hour'() {
+        let time = new ShortTime(8, 0);
+        return expect(time.toMinutes()).to.equal(timeToMinute(time));
+    }
+
+    @test 'should get minutes from minute'() {
+        let time = new ShortTime(0, 10);
+        return expect(time.toMinutes()).to.equal(timeToMinute(time));
+    }
+
+    @test 'should get time from minutes'() {
+        let time = new ShortTime(12, 15);
+        return expect(ShortTime.createFromMinutes(time.toMinutes())).to.deep.equal(time);
+    }
+
+    @test 'should get time from seconds -> Exception'() {
+        let time = new ShortTime(23, 59);
+        return expect(() => ShortTime.createFromMinutes(time.toMinutes() + 1)).to.throw(Error);
+    }
+
+    @test 'should add times'() {
+        let time1 = new ShortTime(12, 0);
+        let time2 = new ShortTime(1, 30);
+        let result = time1.add(time2);
+        let expected = new ShortTime(13, 30);
+
+        return expect(result).to.deep.equal(expected);
+    }
+
+    @test 'should subtract times'() {
+        let time1 = new ShortTime(12, 0);
+        let time2 = new ShortTime(1, 30);
+        let result = time1.subtract(time2);
+        let expected = new ShortTime(10, 30);
+
+        return expect(result).to.deep.equal(expected);
+    }
+
+
+    @test 'should add times -> Exception'() {
+        let time1 = new ShortTime(23, 59);
+        let time2 = new ShortTime(1, 30);
+        return expect(() => time1.add(time2)).to.throw(Error);
+    }
+
+     @test 'should subtract times -> Exception'() {
+        let time1 = new ShortTime(0, 0);
+        let time2 = new ShortTime(1, 30);
+        return expect(() => time1.subtract(time2)).to.throw(Error);
     }
 
 }
