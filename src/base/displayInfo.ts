@@ -1,6 +1,6 @@
 import { IDisplayInfo } from './displayInfo.interface';
 
-export class DisplayInfo {
+export class DisplayInfo implements IDisplayInfo {
 
     /**
       * symbolischer Propertyname: bezieht sich auf das aktuelle Item:
@@ -9,8 +9,18 @@ export class DisplayInfo {
       */
     public static CURRENT_ITEM = '.';
 
-    public static DEFAULT: IDisplayInfo = {
-        textField: DisplayInfo.CURRENT_ITEM,
-        valueField: DisplayInfo.CURRENT_ITEM,
-    };
+    public static DEFAULT: IDisplayInfo = new DisplayInfo(
+        DisplayInfo.CURRENT_ITEM,
+        DisplayInfo.CURRENT_ITEM);
+
+    constructor(private _textField?: string, private _valueField?: string) {
+    }
+
+    public get textField(): string {
+        return this._textField;
+    }
+
+    public get valueField(): string {
+        return this._valueField;
+    }
 }

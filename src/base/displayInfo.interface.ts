@@ -1,3 +1,5 @@
+import { ControlType } from '../angular/modules/common/controlType';
+
 /**
  * Die Konfiguration für Anzeige eines Objektwerts mit einem Property-Tupel
  *
@@ -21,10 +23,10 @@ export interface IDisplayInfo {
     valueField: string;
 
     /**
-     * Html-Style
+     * steuert, ob das Control Werteingaben zulässt
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberOf IDisplayInfo
      */
-    style?: string;
+    readonly?: boolean;
 }

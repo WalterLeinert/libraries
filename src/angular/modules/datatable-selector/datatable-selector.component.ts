@@ -1,4 +1,5 @@
 // Angular
+import { ControlType } from '../common/controlType';
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
@@ -11,7 +12,7 @@ import { Assert, ColumnTypes, Clone, TableMetadata } from '@fluxgate/common';
 import { IService } from '../../services';
 import { MetadataService, ProxyService } from '../../services';
 
-import { IDisplayInfo } from '../../../base';
+import { IControlDisplayInfo } from '../../../base';
 
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 import { ListSelectorComponent } from '../common/list-selector.component';
@@ -44,9 +45,21 @@ export type sortMode = 'single' | 'multiple';
       <ul *ngFor="let info of configInternal.columnInfos">
         <p-column field="{{info.valueField}}" header="{{info.textField}}" 
           [sortable]="true" [editable]="editable">
-          <template let-col let-data="rowData" pTemplate="body">
+
+          <div *ngIf="info.controlType">
+            <div [ngSwitch]="info.controlType">
+              <template [ngSwitchCase]="ControlType.Input" let-col let-data="rowData" pTemplate="body">
+                <span>{{ data[col.field] }}</span>
+              </template>
+            </div>
+          </div>
+
+          <div *ngIf="!info.controlType">
+            <template let-col let-data="rowData" pTemplate="body">
               <span>{{ data[col.field] }}</span>
-          </template>
+            </template>
+          </div>
+          
         </p-column>
       </ul>
     </div>
@@ -146,11 +159,11 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
     Assert.notNull(tableMetadata);
 
-    let columnInfos: IDisplayInfo[] = [];
+    let columnInfos: IControlDisplayInfo[] = [];
 
     for (let metaData of tableMetadata.columnMetadata) {
       if (metaData.options.displayName) {
-        columnInfos.push(<IDisplayInfo>{
+        columnInfos.push(<IControlDisplayInfo>{
           textField: metaData.options.displayName,
           valueField: metaData.propertyName,
           style: (metaData.propertyType === ColumnTypes.NUMBER || metaData.propertyType === ColumnTypes.DATE) ?
@@ -175,7 +188,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   private setupColumnInfosByReflection(items: any[]) {
     Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
 
-    let columnInfos: IDisplayInfo[] = [];
+    let columnInfos: IControlDisplayInfo[] = [];
 
     if (items && items.length > 0) {
 
@@ -184,7 +197,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
       // ... und dann entsprechende ColumnInfos erzeugen
       for (let propName of props) {
-        columnInfos.push(<IDisplayInfo>{
+        columnInfos.push(<IControlDisplayInfo>{
           textField: propName,
           valueField: propName
         });
