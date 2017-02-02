@@ -1,9 +1,9 @@
 let leftPad = require('left-pad');
+
 import { IAttributeSelector } from '../model/query/attributeSelector.interface';
 import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
-
-import { Hour } from './hour';
+import { MathUtil, Types, Hour } from '.';
 
 
 /**
@@ -113,6 +113,27 @@ export class ShortTime {
     public toMinutes(): number {
         return this.hour * 60 + this.minute;
     }
+
+
+    /**
+     * Liefert die Zeit in Stunden als Dezimalzahl. Ist @param{decimalPlaces} angegeben,
+     * dann werden nur die entsprechende Anzahl von Nachkommastellen berücksichtigt.
+     * 
+     * @param {number} [decimalPlaces]
+     * @returns
+     * 
+     * @memberOf ShortTime
+     */
+    public toHours(decimalPlaces?: number) {
+        Assert.that(Types.isUndefined(decimalPlaces) || decimalPlaces >= 0);
+
+        if (!decimalPlaces) {
+            return this.toMinutes() / 60;
+        } else {
+            return MathUtil.round10(this.toMinutes() / 60, -decimalPlaces);
+        }
+    }
+
 
     /**
     * Addiert zur Zeit der aktuellen Instanz die Zeit @param{time} und liefert

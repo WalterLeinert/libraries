@@ -5,8 +5,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { AssertionError } from '../../src/util';
-
-import { ShortTime } from '../../src/types/shortTime';
+import { ShortTime, Types } from '../../src/types';
 
 let expedtedTimes = [
     {
@@ -114,6 +113,28 @@ class ShortTimeOperationsTest {
         return expect(time.toMinutes()).to.equal(timeToMinute(time));
     }
 
+    @test 'should get hours'() {
+        let time = new ShortTime(0, 10);
+        return expect(time.toHours()).to.be.closeTo(time.toMinutes() / 60, 0.05);
+    }
+
+    @test 'should get hours 2'() {
+        let time = new ShortTime(12, 15);
+        return expect(time.toHours()).to.be.closeTo(time.toMinutes() / 60, 0.05);
+    }
+
+    @test 'should get hours rounded to 2 decimal places'() {
+        let time = new ShortTime(12, 15);
+        return expect(time.toHours(2)).to.equal(12.25);
+    }
+
+    @test 'should get hours rounded to 3 decimal places'() {
+        let time = new ShortTime(12, 11);
+        return expect(time.toHours(3)).to.equal(12.183);
+    }
+
+
+
     @test 'should get time from minutes'() {
         let time = new ShortTime(12, 15);
         return expect(ShortTime.createFromMinutes(time.toMinutes())).to.deep.equal(time);
@@ -149,7 +170,7 @@ class ShortTimeOperationsTest {
         return expect(() => time1.add(time2)).to.throw(Error);
     }
 
-     @test 'should subtract times -> Exception'() {
+    @test 'should subtract times -> Exception'() {
         let time1 = new ShortTime(0, 0);
         let time2 = new ShortTime(1, 30);
         return expect(() => time1.subtract(time2)).to.throw(Error);
