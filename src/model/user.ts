@@ -1,5 +1,6 @@
 import { AppRegistry } from '../base';
-import { IUser, UserRoleId, Table, Column } from '.';
+import { Enum } from '../model/decorator/model/enum';
+import { IUser, Role, UserRoleId, Table, Column } from '.';
 
 /**
  * Modelliert User im System (Defaultimplemetierung)
@@ -27,6 +28,7 @@ export class User implements IUser {
   @Column({ name: 'email', nullable: true, displayName: 'Email' })
   public email?: string;
 
+  @Enum({ dataSource: Role })
   @Column({ name: 'id_role', displayName: 'Role-Id' })
   public role: number = UserRoleId.User;
 
