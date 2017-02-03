@@ -20,17 +20,17 @@ export class RegisterGuardService implements CanActivate {
     private currentUser: IUser;
 
     constructor(private _router: Router, private passportService: PassportService) {
-        this.passportService.currentUserChange.subscribe(user => {
+        this.passportService.currentUserChange.subscribe((user) => {
             this.currentUser = user;
         });
 
         // initial aktuellen User ermitteln
         this.passportService.getCurrentUser().subscribe(
-            user => this.currentUser = user
+            (user) => this.currentUser = user
         );
     }
 
-    canActivate(route: ActivatedRouteSnapshot): boolean {
+    public canActivate(route: ActivatedRouteSnapshot): boolean {
         if (this.currentUser && this.currentUser.isAdmin) {
             return true;
         }

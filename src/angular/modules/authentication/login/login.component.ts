@@ -9,8 +9,8 @@ import { BaseComponent } from '../../../common/base/base.component';
 import { ChangePasswordGuardService } from '../changePassword/changePassword-guard.service';
 import { RegisterGuardService } from '../register/register-guard.service';
 
-import { PassportService } from '../passport.service';
 import { NavigationService } from '../navigation.service';
+import { PassportService } from '../passport.service';
 
 @Component({
   selector: 'flx-login',
@@ -49,8 +49,8 @@ import { NavigationService } from '../navigation.service';
 })
 
 export class LoginComponent extends BaseComponent<PassportService> {
-  username: string;
-  password: string;
+  public username: string;
+  public password: string;
 
 
   /**
@@ -68,14 +68,14 @@ export class LoginComponent extends BaseComponent<PassportService> {
    * 
    * @memberOf LoginComponent
    */
-  constructor(router: Router, private navigationService: NavigationService, service: PassportService, 
+  constructor(router: Router, private navigationService: NavigationService, service: PassportService,
     changePasswordGuardService: ChangePasswordGuardService, registerGuardService: RegisterGuardService) {
     super(router, service);
   }
 
-  login() {
+  public login() {
     this.service.login(this.username, this.password)
-      .subscribe(result => {
+      .subscribe((result) => {
         console.log(result);
         this.navigate([
           this.navigationService.navigationPath

@@ -1,9 +1,9 @@
-import { NgModule, Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, NgModule, Output } from '@angular/core';
 
 @Component({
-  selector: 'flx-popup',
-  template: `
+    selector: 'flx-popup',
+    template: `
     <div class="absolute">
         <div class="container-fluid custom-modal-container">
             <div class="row custom-modal-header">
@@ -31,7 +31,7 @@ import { CommonModule } from '@angular/common';
 
     </div>    
   `,
-  styles: [`
+    styles: [`
     div.absolute {
         position: absolute;
         top: 80px;
@@ -46,30 +46,26 @@ import { CommonModule } from '@angular/common';
 
 
 export class PopupComponent {
-  @Input() message: string = '';
-  @Input() title: string = '';
+    @Input() public message: string = '';
+    @Input() public title: string = '';
 
-  @Output() public onAnswer: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-
-  constructor() {
-  }
+    @Output() public onAnswer: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
-  onClick(event: boolean) {
-    console.log('message inside modal-component: ' + event);
-    this.onAnswer.next(event);
+    public onClick(event: boolean) {
+        console.log('message inside modal-component: ' + event);
+        this.onAnswer.next(event);
 
-    // this.dialog.close();
+        // this.dialog.close();
 
-  }
-
+    }
 }
 
 
+// tslint:disable-next-line:max-classes-per-file
 @NgModule({
-  imports: [CommonModule],
-  exports: [PopupComponent],
-  declarations: [PopupComponent]
+    imports: [CommonModule],
+    exports: [PopupComponent],
+    declarations: [PopupComponent]
 })
 export class PopupModule { }

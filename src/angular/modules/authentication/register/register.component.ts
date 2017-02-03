@@ -1,4 +1,5 @@
 /* tslint:disable:use-life-cycle-interface -> BaseComponent */
+// tslint:disable:max-line-length
 
 // Angular
 import { Component } from '@angular/core';
@@ -7,13 +8,13 @@ import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 
 // fluxgate
-import { User, IUser, IRole, Assert } from '@fluxgate/common';
+import { Assert, IRole, IUser, User } from '@fluxgate/common';
 
 import { Base2Component } from '../../../common/base';
+import { MetadataService } from '../../../services';
+import { NavigationService } from '../navigation.service';
 import { PassportService } from '../passport.service';
 import { RoleService } from '../role.service';
-import { NavigationService } from '../navigation.service';
-import { MetadataService } from '../../../services';
 
 
 @Component({
@@ -88,19 +89,19 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
 
     super(router, service, roleService);
 
-    let userTableMetadata = metadataService.findTableMetadata(User.name);
+    const userTableMetadata = metadataService.findTableMetadata(User.name);
     Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name}`);
 
     this.user = userTableMetadata.createEntity<User>();
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     super.ngOnInit();
   }
 
-  signup() {
+  public signup() {
     this.service.signup(this.user)
-      .subscribe(result => {
+      .subscribe((result) => {
         console.log(result);
 
         this.navigate([
@@ -112,7 +113,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
       });
   }
 
-  onSelectedRoleChanged(item: IRole) {
+  public onSelectedRoleChanged(item: IRole) {
     console.log(`RegisterComponent.onSelectedRoleChanged: item = ${JSON.stringify(item)}`);
   }
 }

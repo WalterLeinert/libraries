@@ -1,21 +1,21 @@
 // Angular
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert, ColumnTypes, Clone, TableMetadata } from '@fluxgate/common';
+import { Assert, Clone, ColumnTypes, TableMetadata } from '@fluxgate/common';
 
 import { IService } from '../../services';
 import { MetadataService, ProxyService } from '../../services';
 
-import { IControlDisplayInfo, ControlDisplayInfo } from '../../../base';
+import { ControlDisplayInfo, IControlDisplayInfo } from '../../../base';
 import { ControlType } from '../common';
 
-import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 import { ListSelectorComponent } from '../common/list-selector.component';
+import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 
 export type sortMode = 'single' | 'multiple';
 
@@ -101,7 +101,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   /**
    * ControlType Werte
    */
-  controlType = ControlType;
+  public controlType = ControlType;
 
 
   /**
@@ -110,7 +110,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    * @type {string}
    * @memberOf DataTableSelectorComponent
    */
-  @Input() sortMode: string = 'single';
+  @Input() public sortMode: string = 'single';
 
   /**
    * Anzahl der anzuzeigenden Gridzeilen
@@ -118,7 +118,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    * @type {number}
    * @memberOf DataTableSelectorComponent
    */
-  @Input() rows: number = 5;
+  @Input() public rows: number = 5;
 
   /**
    * Die Spaltenkonfiguration, die von aussen gesetzt werden kann.
@@ -144,13 +144,40 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     super(router, metadataService, changeDetectorRef);
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     super.ngOnInit();
 
     if (this.sortMode) {
       Assert.that(this.sortMode === 'single' || this.sortMode === 'multiple');
     }
   }
+
+
+  public get config(): IDataTableSelectorConfig {
+    return this._config;
+  }
+
+  @Input() public set config(value: IDataTableSelectorConfig) {
+    this._config = value;
+    this.initBoundData(this.dataItems, super.getMetadataForValues(this.dataItems));
+  }
+
+  public onRowSelect(row) {
+    this.changeDetectorRef.detectChanges();
+    if (this.debug) {
+      console.log(`DataTableSelectorComponent.onRowSelect: ${JSON.stringify(row)}`);
+    }
+    this.selectedValueChange.emit(row);
+  }
+
+
+  public formatValue(value: any, info: IControlDisplayInfo): any {
+    if (info.pipe) {
+      return info.pipe.transform(value, info.pipeArgs);
+    }
+    return value;
+  }
+
 
   protected initBoundData(items: any[], tableMetadata: TableMetadata) {
     this.dataItems = undefined;
@@ -175,72 +202,6 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     } else {
       this.setupColumnInfosByReflection(items);
     }
-  }
-
-
-  /**
-   * falls keine Column-Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
-   * 
-   * @private
-   * 
-   * @memberOf DataTableSelectorComponent
-   */
-  private setupColumnInfosByMetadata(items: any[], tableMetadata: TableMetadata) {
-    Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
-    Assert.notNull(tableMetadata);
-
-    let columnInfos: IControlDisplayInfo[] = [];
-
-    for (let metaData of tableMetadata.columnMetadata) {
-      if (metaData.options.displayName) {
-        columnInfos.push(
-          new ControlDisplayInfo(
-            metaData.options.displayName,
-            metaData.propertyName,
-            (metaData.propertyType === ColumnTypes.NUMBER || metaData.propertyType === ColumnTypes.DATE) ?
-              '{width: "180px", "text-align": "right"}' : '{width: "180px", "text-align": "left"}'
-          )
-        );
-      }
-    }
-
-    this.configInternal = {
-      columnInfos: columnInfos
-    };
-  }
-
-
-  /**
-   * falls keine Column-Konfiguration angegeben ist, wird diese über Reflection erzeugt
-   * 
-   * @private
-   * 
-   * @memberOf DataTableSelectorComponent
-   */
-  private setupColumnInfosByReflection(items: any[]) {
-    Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
-
-    let columnInfos: IControlDisplayInfo[] = [];
-
-    if (items && items.length > 0) {
-
-      // alle Properties des ersten Items über Reflection ermitteln        
-      let props = Reflect.ownKeys(items[0]);
-
-      // ... und dann entsprechende ColumnInfos erzeugen
-      for (let propName of props) {
-        columnInfos.push(
-          new ControlDisplayInfo(
-            propName.toString(),
-            propName.toString()
-          )
-        );
-      }
-    }
-
-    this.configInternal = {
-      columnInfos: columnInfos
-    };
   }
 
 
@@ -276,7 +237,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     let indexFound = -1;
     if (this.dataItems) {
       for (let index = 0; index < this.dataItems.length; index++) {
-        let item = this.dataItems[index];
+        const item = this.dataItems[index];
         if (item === value) {
           indexFound = index;
           break;
@@ -296,28 +257,70 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   }
 
 
-  public get config(): IDataTableSelectorConfig {
-    return this._config;
-  }
 
-  @Input() public set config(value: IDataTableSelectorConfig) {
-    this._config = value;
-    this.initBoundData(this.dataItems, super.getMetadataForValues(this.dataItems));
-  }
+  /**
+   * falls keine Column-Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
+   * 
+   * @private
+   * 
+   * @memberOf DataTableSelectorComponent
+   */
+  private setupColumnInfosByMetadata(items: any[], tableMetadata: TableMetadata) {
+    Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
+    Assert.notNull(tableMetadata);
 
-  public onRowSelect(row) {
-    this.changeDetectorRef.detectChanges();
-    if (this.debug) {
-      console.log(`DataTableSelectorComponent.onRowSelect: ${JSON.stringify(row)}`);
+    const columnInfos: IControlDisplayInfo[] = [];
+
+    for (const metaData of tableMetadata.columnMetadata) {
+      if (metaData.options.displayName) {
+        columnInfos.push(
+          new ControlDisplayInfo(
+            metaData.options.displayName,
+            metaData.propertyName,
+            (metaData.propertyType === ColumnTypes.NUMBER || metaData.propertyType === ColumnTypes.DATE) ?
+              '{width: "180px", "text-align": "right"}' : '{width: "180px", "text-align": "left"}'
+          )
+        );
+      }
     }
-    this.selectedValueChange.emit(row);
+
+    this.configInternal = {
+      columnInfos: columnInfos
+    };
   }
 
 
-  public formatValue(value: any, info: IControlDisplayInfo): any {
-    if (info.pipe) {
-      return info.pipe.transform(value, info.pipeArgs);
+  /**
+   * falls keine Column-Konfiguration angegeben ist, wird diese über Reflection erzeugt
+   * 
+   * @private
+   * 
+   * @memberOf DataTableSelectorComponent
+   */
+  private setupColumnInfosByReflection(items: any[]) {
+    Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
+
+    const columnInfos: IControlDisplayInfo[] = [];
+
+    if (items && items.length > 0) {
+
+      // alle Properties des ersten Items über Reflection ermitteln        
+      const props = Reflect.ownKeys(items[0]);
+
+      // ... und dann entsprechende ColumnInfos erzeugen
+      for (const propName of props) {
+        columnInfos.push(
+          new ControlDisplayInfo(
+            propName.toString(),
+            propName.toString()
+          )
+        );
+      }
     }
-    return value;
+
+    this.configInternal = {
+      columnInfos: columnInfos
+    };
   }
+
 }

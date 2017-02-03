@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/client",
-  "version": "1.8.26",
+  "version": "1.9.0",
   "description": "Fluxgate Client-Library ",
   "main": "dist/client.bundle.js",
   "typings": "dist/dts/index.d.ts",
@@ -51,7 +51,7 @@
     "rxjs": "^5.0.3"
   },
   "peerDependencies": {
-    "@fluxgate/common": "^1.8.x"
+    "@fluxgate/common": "^1.9.x"
   },
   "directories": {
     "lib": "lib"

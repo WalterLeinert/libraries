@@ -12,8 +12,8 @@ import { IUser } from '@fluxgate/common';
 
 import { BaseComponent } from '../../../common/base/base.component';
 
-import { PassportService } from '../passport.service';
 import { NavigationService } from '../navigation.service';
+import { PassportService } from '../passport.service';
 
 @Component({
   selector: 'flx-change-password',
@@ -69,10 +69,10 @@ import { NavigationService } from '../navigation.service';
 })
 
 export class ChangePasswordComponent extends BaseComponent<PassportService> {
-  username: string;
-  password: string;
-  passwordNew: string;
-  passwordNewRepeated: string;
+  public username: string;
+  public password: string;
+  public passwordNew: string;
+  public passwordNewRepeated: string;
   private currentUser: IUser;
 
   constructor(router: Router, private navigationService: NavigationService, service: PassportService,
@@ -80,22 +80,22 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
     super(router, service);
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     super.ngOnInit();
 
     this.service.getCurrentUser().subscribe(
-      user => this.currentUser = user
+      (user) => this.currentUser = user
     );
   }
 
-  changePassword() {
+  public changePassword() {
     if (this.passwordNew !== this.passwordNewRepeated) {
       super.addInfoMessage(`Die neuen Kennworte stimmen nicht überein.`);
       return;
     }
 
     this.service.changePassword(this.currentUser.username, this.password, this.passwordNew)
-      .subscribe(user => {
+      .subscribe((user) => {
         console.log(`ChangePasswordComponent.changePassword: user = ${user}`);
 
         this.navigate([
@@ -108,19 +108,19 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   }
 
 
-  cancel() {
+  public cancel() {
     this.navigate([
       this.navigationService.navigationPath
     ]);
   }
 
-  confirm() {
+  public confirm() {
     this.confirmationService.confirm({
       header: 'Delete',
       message: 'Are you sure you want to delete the selected department?',
       accept: () => {
         console.log('delete');
-        //this.delete(true);
+        // this.delete(true);
       },
       reject: () => {
         console.log('cancel');

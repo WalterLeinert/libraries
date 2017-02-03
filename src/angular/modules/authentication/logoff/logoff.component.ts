@@ -23,12 +23,12 @@ export class LogoffComponent extends BaseComponent<PassportService> {
     super(router, service);
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     super.ngOnInit();
     this.logoff();
   }
 
-  logoff() {
+  public logoff() {
     this.service.logoff()
       .subscribe((result) => {
         console.log(result);
