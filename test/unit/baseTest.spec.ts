@@ -1,9 +1,10 @@
-let path = require('path');
+import path = require('path');
+// tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, getLogger, configure } from 'log4js';
-import { XLog, using } from 'enter-exit-logger';
+import { using, XLog } from 'enter-exit-logger';
+import { configure, getLogger, levels, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 
@@ -14,7 +15,7 @@ import { fromEnvironment } from '@fluxgate/common';
  * Basisklasse für alle Unit-Tests
  */
 export abstract class BaseTest {
-    static readonly logger = getLogger('BaseTest');
+    protected static readonly logger = getLogger('BaseTest');
 
 
     /**
@@ -28,6 +29,7 @@ export abstract class BaseTest {
 
 
     protected static after() {
+        // tslint:disable-next-line:no-empty
         using(new XLog(BaseTest.logger, levels.DEBUG, 'static.after'), (log) => {
         });
     }
@@ -36,28 +38,31 @@ export abstract class BaseTest {
     private static initializeLogging() {
         using(new XLog(BaseTest.logger, levels.DEBUG, 'initializeLogging'), (log) => {
             // Logging konfigurieren ...
-            let systemMode = fromEnvironment('NODE_ENV', 'development');
+            const systemMode = fromEnvironment('NODE_ENV', 'development');
 
             if (systemMode) {
-                let configFile = 'log4js.' + systemMode + '.json';
+                const configFile = 'log4js.' + systemMode + '.json';
                 let configPath = path.join('/test/config', configFile);
                 configPath = path.join(process.cwd(), configPath);
-                log.log(`log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)}, configPath = ${configPath}`);
+                log.log(`log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)},` +
+                    `configPath = ${configPath}`);
 
                 configure(configPath);
             } else {
-                log.warn(`log4js: no systemMode defined -> not reading configuration`)
+                log.warn(`log4js: no systemMode defined -> not reading configuration`);
             }
         });
     }
 
 
     protected before() {
+        // tslint:disable-next-line:no-empty
         using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
         });
     }
 
     protected after() {
+        // tslint:disable-next-line:no-empty
         using(new XLog(BaseTest.logger, levels.DEBUG, 'after'), (log) => {
         });
     }

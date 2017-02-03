@@ -1,10 +1,10 @@
-import { Service } from 'ts-express-decorators';
 import * as Knex from 'knex';
+import { Service } from 'ts-express-decorators';
 
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, getLogger } from 'log4js';
-import { XLog, using } from 'enter-exit-logger';
+import { using, XLog } from 'enter-exit-logger';
+import { getLogger, levels, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 import { AppRegistryService } from './appRegistry.service';
@@ -14,7 +14,7 @@ import { AppRegistryService } from './appRegistry.service';
  */
 @Service()
 export class KnexService {
-    static logger = getLogger('KnexService');
+    protected static logger = getLogger('KnexService');
 
     /**
      * der Key für den Zugriff über @see{AppRegistry}
@@ -28,7 +28,7 @@ export class KnexService {
             //
             // setup knex
             //
-            let config = appRegistryService.get(KnexService.KNEX_CONFIG_KEY);
+            const config = appRegistryService.get(KnexService.KNEX_CONFIG_KEY);
             this._knex = Knex(config);
         });
     }

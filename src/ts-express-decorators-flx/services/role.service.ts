@@ -1,11 +1,11 @@
 import { Service } from 'ts-express-decorators';
 
 // Fluxgate
-import { Role, IRole, AppRegistry } from '@fluxgate/common';
+import { AppRegistry, IRole, Role } from '@fluxgate/common';
 
-import { MetadataService } from './metadata.service';
 import { BaseService } from './base.service';
 import { KnexService } from './knex.service';
+import { MetadataService } from './metadata.service';
 
 @Service()
 export class RoleService extends BaseService<IRole, number> {

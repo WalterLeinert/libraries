@@ -1,14 +1,14 @@
 import path = require('path');
 import fs = require('fs');
 import * as Express from 'express';
-import { $log } from 'ts-log-debug';
 import { ServerLoader } from 'ts-express-decorators';
 import { Forbidden } from 'ts-httpexceptions';
+import { $log } from 'ts-log-debug';
 
 // Fluxgate
 import {
-    AppConfig, IAppConfig, Assert, fromEnvironment,
-    LoggingConfiguration, StringBuilder, JsonReader, FileSystem
+    AppConfig, Assert, FileSystem, fromEnvironment,
+    IAppConfig, JsonReader, LoggingConfiguration, StringBuilder
 } from '@fluxgate/common';
 
 // lokale Komponenten
@@ -16,8 +16,8 @@ import { Messages } from '../resources/messages';
 import { Logging } from './util';
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, configure, getLogger } from 'log4js';
-import { XLog, using } from 'enter-exit-logger';
+import { using, XLog } from 'enter-exit-logger';
+import { configure, getLogger, levels, Logger } from 'log4js';
 
 // Logging konfigurieren ...
 Logging.configureLogging('@fluxgate/server', fromEnvironment('NODE_ENV', 'development'));
@@ -25,8 +25,8 @@ Logging.configureLogging('@fluxgate/server', fromEnvironment('NODE_ENV', 'develo
 // -------------------------- logging -------------------------------
 
 
-let appConfigPath = path.join(process.cwd(), 'app/config/config.json');
-let appConfig = JsonReader.readJsonSync<IAppConfig>(appConfigPath);
+const appConfigPath = path.join(process.cwd(), 'app/config/config.json');
+const appConfig = JsonReader.readJsonSync<IAppConfig>(appConfigPath);
 AppConfig.register(appConfig);
 
 
@@ -117,7 +117,7 @@ export interface IExpressConfiguration {
  * @extends {ServerLoader}
  */
 export abstract class ServerBase extends ServerLoader {
-    static logger = getLogger('ServerBase');
+    protected static logger = getLogger('ServerBase');
 
     /**
      * Default Express-Konfiguration
@@ -128,60 +128,6 @@ export abstract class ServerBase extends ServerLoader {
         port: 8000,
         httpsPort: 8080
     };
-
-    /**
-     * Initialisierung und Start
-     * 
-     * @returns {Promise<U>|Promise<TResult>}
-     */
-    public Initialize(): Promise<ServerBase> {
-        return using(new XLog(ServerBase.logger, levels.INFO, 'Initialize'), (log) => {
-
-            return new Promise<ServerBase>((resolve, reject) => {
-                let cwd = process.cwd();
-                log.info(`cwd = ${cwd}`);
-
-                let serverControllers = path.join(cwd, '../../node_modules/@fluxgate/server/dist/*.js');
-
-                let controllers = this.configuration.controllers;
-                if (!path.isAbsolute(this.configuration.controllers)) {
-                    controllers = path.join(cwd, this.configuration.controllers);
-                }
-
-                log.info(`__dirname = ${__dirname}, controllers = ${controllers}`);
-
-                let errorLogger = (message: string):void => {
-                    log.error(message);
-                };
-
-                let cert = FileSystem.readTextFile(errorLogger, this.configuration.certPath, 'Zertifikat');
-                let key = FileSystem.readTextFile(errorLogger, this.configuration.keyPath, 'Private Key');
-
-
-                this.setEndpoint(this.configuration.endPoint)
-                    .scan(serverControllers)
-                    .scan(controllers)
-                    .createHttpServer(this.configuration.port)
-                    .createHttpsServer({
-                        port: this.configuration.httpsPort,
-                        cert: cert,
-                        key: key
-                    });
-
-
-                this.start()
-                    .then(() => {
-                        log.info('Server started...');
-                        resolve(this);
-                    })
-                    .catch(err => {
-                        log.error(err);
-                        reject(err);
-                    });
-            });
-        });
-    }
-
 
 
     /**
@@ -202,27 +148,57 @@ export abstract class ServerBase extends ServerLoader {
         });
     }
 
+
     /**
+     * Initialisierung und Start
      * 
+     * @returns {Promise<U>|Promise<TResult>}
      */
-    private configure(configuration: IExpressConfiguration) {
-        using(new XLog(ServerBase.logger, levels.DEBUG, 'configure'), (log) => {
+    public Initialize(): Promise<ServerBase> {
+        return using(new XLog(ServerBase.logger, levels.INFO, 'Initialize'), (log) => {
 
-            if (!configuration.endPoint) {
-                configuration.endPoint = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.endPoint;
-            }
+            return new Promise<ServerBase>((resolve, reject) => {
+                const cwd = process.cwd();
+                log.info(`cwd = ${cwd}`);
 
-            if (!configuration.controllers) {
-                configuration.controllers = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.controllers;
-            }
+                const serverControllers = path.join(cwd, '../../node_modules/@fluxgate/server/dist/*.js');
 
-            if (!configuration.port) {
-                configuration.port = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.port;
-            }
+                let controllers = this.configuration.controllers;
+                if (!path.isAbsolute(this.configuration.controllers)) {
+                    controllers = path.join(cwd, this.configuration.controllers);
+                }
 
-            if (!configuration.httpsPort) {
-                configuration.httpsPort = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.httpsPort;
-            }
+                log.info(`__dirname = ${__dirname}, controllers = ${controllers}`);
+
+                const errorLogger = (message: string): void => {
+                    log.error(message);
+                };
+
+                const cert = FileSystem.readTextFile(errorLogger, this.configuration.certPath, 'Zertifikat');
+                const key = FileSystem.readTextFile(errorLogger, this.configuration.keyPath, 'Private Key');
+
+
+                this.setEndpoint(this.configuration.endPoint)
+                    .scan(serverControllers)
+                    .scan(controllers)
+                    .createHttpServer(this.configuration.port)
+                    .createHttpsServer({
+                        port: this.configuration.httpsPort,
+                        cert: cert,
+                        key: key
+                    });
+
+
+                this.start()
+                    .then(() => {
+                        log.info('Server started...');
+                        resolve(this);
+                    })
+                    .catch((err) => {
+                        log.error(err);
+                        reject(err);
+                    });
+            });
         });
     }
 
@@ -235,9 +211,9 @@ export abstract class ServerBase extends ServerLoader {
             if (error instanceof Forbidden) {
                 error.message = Messages.AUTHENTICATION_REQUIRED();
             }
-            let rval = super.onError(error, request, response, next);
+            const rval = super.onError(error, request, response, next);
 
-            let sb = new StringBuilder();
+            const sb = new StringBuilder();
             if (error.code) {
                 sb.appendLine(`code: ${error.code}`);
             }
@@ -278,6 +254,32 @@ export abstract class ServerBase extends ServerLoader {
                 return request.isAuthenticated();
             });
     };
+
+
+    /**
+     * 
+     */
+    private configure(configuration: IExpressConfiguration) {
+        using(new XLog(ServerBase.logger, levels.DEBUG, 'configure'), (log) => {
+
+            if (!configuration.endPoint) {
+                configuration.endPoint = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.endPoint;
+            }
+
+            if (!configuration.controllers) {
+                configuration.controllers = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.controllers;
+            }
+
+            if (!configuration.port) {
+                configuration.port = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.port;
+            }
+
+            if (!configuration.httpsPort) {
+                configuration.httpsPort = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.httpsPort;
+            }
+        });
+    }
+
 
 
 }

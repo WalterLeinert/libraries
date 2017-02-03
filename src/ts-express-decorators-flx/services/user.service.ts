@@ -1,22 +1,22 @@
 import { Service } from 'ts-express-decorators';
-let shortid = require('js-shortid');
+import shortid = require('js-shortid');
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, getLogger } from 'log4js';
-import { XLog, using } from 'enter-exit-logger';
+import { using, XLog } from 'enter-exit-logger';
+import { getLogger, levels, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { User, IUser, Role, Encryption, AppRegistry, Assert } from '@fluxgate/common';
+import { AppRegistry, Assert, Encryption, IUser, Role, User } from '@fluxgate/common';
 
 import { Messages } from '../../resources/messages';
-import { MetadataService } from './metadata.service';
 import { BaseService } from './base.service';
 import { KnexService } from './knex.service';
+import { MetadataService } from './metadata.service';
 
 @Service()
 export class UserService extends BaseService<IUser, number> {
-    static logger = getLogger('UserService');
+    protected static logger = getLogger('UserService');
 
     constructor(knexSerice: KnexService, metadataService: MetadataService) {
         super(AppRegistry.instance.get<Function>(User.USER_CONFIG_KEY), knexSerice, metadataService);
@@ -29,11 +29,11 @@ export class UserService extends BaseService<IUser, number> {
     public findById(id: number): Promise<IUser> {
         return new Promise<IUser>((resolve, reject) => {
             super.findById(id)
-                .then(user => {
+                .then((user) => {
                     user.resetCredentials();
                     resolve(user);
                 })
-                .catch(err => {
+                .catch((err) => {
                     reject(err);
                 });
         });
@@ -42,13 +42,13 @@ export class UserService extends BaseService<IUser, number> {
     public find(): Promise<IUser[]> {
         return new Promise<IUser[]>((resolve, reject) => {
             super.find()
-                .then(users => {
-                    users.forEach(user => {
+                .then((users) => {
+                    users.forEach((user) => {
                         user.resetCredentials();
                     });
                     resolve(users);
                 })
-                .catch(err => {
+                .catch((err) => {
                     reject(err);
                 });
         });
@@ -60,11 +60,11 @@ export class UserService extends BaseService<IUser, number> {
         }
         return new Promise<IUser>((resolve, reject) => {
             super.update(user)
-                .then(u => {
+                .then((u) => {
                     u.resetCredentials();
                     resolve(u);
                 })
-                .catch(err => {
+                .catch((err) => {
                     reject(err);
                 });
         });
@@ -93,7 +93,7 @@ export class UserService extends BaseService<IUser, number> {
 
                 user.password = encryptedPassword;
 
-                super.create(user).then(u => {
+                super.create(user).then((u) => {
                     u.resetCredentials();
                     resolve(u);
                 });
@@ -123,7 +123,7 @@ export class UserService extends BaseService<IUser, number> {
 
                 user.password = encryptedPassword;
 
-                super.update(user).then(u => {
+                super.update(user).then((u) => {
                     u.resetCredentials();
                     resolve(u);
                 });
@@ -136,8 +136,8 @@ export class UserService extends BaseService<IUser, number> {
 
 
     /**
-     * Liefert einen @see{User} für den Benutzernamen @param{username} und das Passwort @param{password} als @see{Promise},
-     * falls der Benutzer mit diesen Credentials existiert. 
+     * Liefert einen @see{User} für den Benutzernamen @param{username} und das Passwort @param{password}
+     * als @see{Promise}, falls der Benutzer mit diesen Credentials existiert. 
      * 
      * @param {string} username
      * @param {string} password
@@ -146,7 +146,8 @@ export class UserService extends BaseService<IUser, number> {
      * @memberOf UserService
      */
     public findByCredentialUsername(username: string, password: string): Promise<IUser> {
-        return using(new XLog(UserService.logger, levels.INFO, 'findByCredentialUsername', `username = ${username}`), (log) => {
+        return using(new XLog(UserService.logger, levels.INFO, 'findByCredentialUsername', `username = ${username}`),
+            (log) => {
 
             const message = Messages.WRONG_CREDENTIALS('Benutzername');
 
@@ -155,7 +156,7 @@ export class UserService extends BaseService<IUser, number> {
                     super.fromTable()
                         .where('username', username))
 
-                    .then(users => {
+                    .then((users) => {
 
                         try {
 
@@ -204,7 +205,7 @@ export class UserService extends BaseService<IUser, number> {
                             reject(err);
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         log.error(err);
                         reject(err);
                     });
@@ -229,19 +230,19 @@ export class UserService extends BaseService<IUser, number> {
                 super
                     .fromTable()
                     .where('username', username)
-                    .then(users => {
+                    .then((users) => {
                         if (!users || users.length <= 0) {
                             log.log('no user found');
                             resolve(undefined);
                         } else {
-                            let user = this.createModelInstance(users[0]);
+                            const user = this.createModelInstance(users[0]);
                             user.resetCredentials();
                             log.log('user: ', user);
                             resolve(user);
                         }
 
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         log.error(err);
                         reject(err);
                     });
@@ -265,18 +266,18 @@ export class UserService extends BaseService<IUser, number> {
                 super
                     .fromTable()
                     .where('email', email)
-                    .then(users => {
+                    .then((users) => {
                         if (!users || users.length <= 0) {
                             log.log('no user found');
                             resolve(undefined);
                         } else {
-                            let user = users[0];
+                            const user = users[0];
                             user.resetCredentials();
                             log.log('user: ', user);
                             resolve(user);
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         log.error(err);
                         reject(err);
                     });
@@ -305,13 +306,13 @@ export class UserService extends BaseService<IUser, number> {
                     super.fromTable()
                         .where('email', email)
                 )
-                    .then(users => {
+                    .then((users) => {
                         if (!users || users.length <= 0) {
                             log.log(message);
                             reject(message);
                         }
 
-                        let user = users[0];
+                        const user = users[0];
 
                         Encryption.hashPassword(password, user.password_salt, (err, encryptedPassword) => {
                             if (err) {
@@ -330,7 +331,7 @@ export class UserService extends BaseService<IUser, number> {
 
                         });
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         log.error(err);
                         reject(err);
                     });

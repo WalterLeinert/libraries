@@ -1,4 +1,6 @@
 import { Service } from 'ts-express-decorators';
+
+// fluxgate
 import { AppRegistry } from '@fluxgate/common';
 
 /**
@@ -7,7 +9,7 @@ import { AppRegistry } from '@fluxgate/common';
 @Service()
 export class AppRegistryService {
 
-   /**
+  /**
    * Liefertfür den angegebenen Key @param{key} die Dateninstanz vom Typ {T}
    * 
    * @param {string} key

@@ -3,10 +3,10 @@
  */
 
 const gulp = require('gulp');
+const gulp_tslint = require('gulp-tslint');
 const del = require('del');
 const gulpSequence = require('gulp-sequence');
 const exec = require('child_process').exec;
-const tslint = require("gulp-tslint");
 const typescript = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
@@ -60,14 +60,11 @@ gulp.task('clean', function () {
 })
 
 
-gulp.task('tslint', function (cb) {  
-  gulp.src("src/**/*.ts")
-    .pipe(tslint({
-      configuration: "./tslint.json",
-      formatter: "verbose"
-    }))
-    .pipe(tslint.report())
-})
+gulp.task('tslint', () => {
+    return gulp.src(['**/*.ts', '!**/*.d.ts', '!node_modules/**'])
+      .pipe(gulp_tslint())
+      .pipe(gulp_tslint.report());
+});
 
 
 /**

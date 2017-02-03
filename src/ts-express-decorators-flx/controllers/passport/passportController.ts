@@ -1,12 +1,12 @@
 import { NotFound } from 'ts-httpexceptions';
 
 import * as Express from 'express';
-import { Controller, Get, Post, BodyParams, Required, Request, Response, Next } from 'ts-express-decorators';
 import * as Passport from 'passport';
+import { BodyParams, Controller, Get, Next, Post, Request, Required, Response } from 'ts-express-decorators';
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, getLogger } from 'log4js';
-import { XLog, using } from 'enter-exit-logger';
+import { using, XLog } from 'enter-exit-logger';
+import { getLogger, levels, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
@@ -22,7 +22,7 @@ import { Messages } from '../../../resources/messages';
  */
 @Controller('/passport')
 export class PassportController {
-    static logger = getLogger('PassportController');
+    protected static logger = getLogger('PassportController');
 
     constructor(passportLocalService: PassportLocalService) {
         passportLocalService.initLocalSignup();

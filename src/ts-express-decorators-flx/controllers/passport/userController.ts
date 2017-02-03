@@ -1,14 +1,14 @@
 import {
-    Controller, Get, Put, Delete,
-    PathParams, Request,
-    Authenticated
+    Authenticated, Controller, Delete, Get,
+    PathParams, Put,
+    Request
 } from 'ts-express-decorators';
 
 // Fluxgate
-import { ServiceResult, User, IUser } from '@fluxgate/common';
+import { IUser, ServiceResult, User } from '@fluxgate/common';
 
-import { ControllerBase } from '../controllerBase';
 import { UserService } from '../../services/user.service';
+import { ControllerBase } from '../controllerBase';
 
 
 @Controller('/user')

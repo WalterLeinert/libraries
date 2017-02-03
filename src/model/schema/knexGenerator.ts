@@ -1,23 +1,23 @@
 // Nodejs imports
 import * as fs from 'fs';
-import * as path from 'path';
 import * as os from 'os';
+import * as path from 'path';
 import * as util from 'util';
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, configure, getLogger } from 'log4js';
-import { XLog, using } from 'enter-exit-logger';
+import { using, XLog } from 'enter-exit-logger';
+import { configure, getLogger, levels, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 
-import { TableInfo } from './tableInfo';
 import { ColumnInfo, DataType } from './columnInfo';
+import { IConfigInfo } from './configInfo';
 import { IGenerator } from './generator.interface';
 import { GeneratorBase } from './generatorBase';
-import { IConfigInfo } from './configInfo';
+import { TableInfo } from './tableInfo';
 
 export class KnexGenerator extends GeneratorBase {
-    static logger = getLogger('KnexGenerator');
+    protected static logger = getLogger('KnexGenerator');
 
     constructor(protected outputDir: string, protected configInfo: IConfigInfo) {
         super(outputDir, configInfo);
@@ -25,10 +25,10 @@ export class KnexGenerator extends GeneratorBase {
 
     public generateFiles(tableInfos: TableInfo[]) {
         using(new XLog(KnexGenerator.logger, levels.INFO, 'generateFiles'), (log) => {
-            for (let tableInfo of tableInfos) {
-                let tableName = tableInfo.name;
+            for (const tableInfo of tableInfos) {
+                const tableName = tableInfo.name;
 
-                let filePath = path.join(this.outputDir, tableName + '.ts');
+                const filePath = path.join(this.outputDir, tableName + '.ts');
 
                 fs.open(filePath, 'w', (err, fd) => {
                     if (err) {
@@ -52,6 +52,7 @@ export class KnexGenerator extends GeneratorBase {
         });
     }
 
+    // tslint:disable-next-line:no-empty
     public generateFile(fileName: string, tableInfos: TableInfo[]) {
     }
 
@@ -68,14 +69,14 @@ export class KnexGenerator extends GeneratorBase {
 
             GeneratorBase.writeLineSync(fd, `    .createTable('${tableInfo.name}', function(table) {`);
 
-            for (let colInfo of tableInfo.columns) {
+            for (const colInfo of tableInfo.columns) {
                 // WL: nur für pks
 
-                let f = false;
+                const f = false;
                 if (colInfo.isPrimaryKey) {
                     GeneratorBase.writeLineSync(fd, `      table.increments('${colInfo.name}').primary();`);
                 } else {
-                    let type = GeneratorBase.mapDataType(colInfo.type);
+                    const type = GeneratorBase.mapDataType(colInfo.type);
                     GeneratorBase.writeLineSync(fd, `      table.${type}('${colInfo.name}');`);
                 }
             }

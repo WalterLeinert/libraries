@@ -1,24 +1,24 @@
 // Nodejs imports
 import * as fs from 'fs';
-import * as path from 'path';
 import * as os from 'os';
+import * as path from 'path';
 import * as util from 'util';
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, configure, getLogger } from 'log4js';
-import { XLog, using } from 'enter-exit-logger';
+import { using, XLog } from 'enter-exit-logger';
+import { configure, getLogger, levels, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 import { StringBuilder } from '@fluxgate/common';
 
-import { TableInfo } from './tableInfo';
 import { ColumnInfo, DataType } from './columnInfo';
+import { IConfigInfo } from './configInfo';
 import { IGenerator } from './generator.interface';
 import { GeneratorBase } from './generatorBase';
-import { IConfigInfo } from './configInfo';
+import { TableInfo } from './tableInfo';
 
 export class PojoGenerator extends GeneratorBase {
-    static logger = getLogger('PojoGenerator');
+    protected static logger = getLogger('PojoGenerator');
 
     constructor(outputDir: string, configInfo: IConfigInfo) {
         super(outputDir, configInfo);
@@ -26,10 +26,10 @@ export class PojoGenerator extends GeneratorBase {
 
     public generateFiles(tableInfos: TableInfo[]) {
         using(new XLog(PojoGenerator.logger, levels.INFO, 'generateFiles'), (log) => {
-            for (let tableInfo of tableInfos) {
-                let tableName = tableInfo.name;
+            for (const tableInfo of tableInfos) {
+                const tableName = tableInfo.name;
 
-                let filePath = path.join(this.outputDir, tableName + '.ts');
+                const filePath = path.join(this.outputDir, tableName + '.ts');
 
                 fs.open(filePath, 'w', (err, fd) => {
                     if (err) {
@@ -44,7 +44,7 @@ export class PojoGenerator extends GeneratorBase {
                     this.dumpHeader(fd);
                     this.dumpTableHeader(fd, tableInfo);
 
-                    let dumpInterface = false;
+                    const dumpInterface = false;
                     if (dumpInterface) {
                         this.dumpInterface(fd, tableInfo);
                     }
@@ -62,6 +62,12 @@ export class PojoGenerator extends GeneratorBase {
         });
     }
 
+ 
+    // tslint:disable-next-line:no-empty
+    public generateFile(fileName: string, tableInfos: TableInfo[]) {
+    }
+
+    
     /**
      * erzeugt eine Indexdatei, die alle Modellklassen exportiert
      * 
@@ -72,7 +78,7 @@ export class PojoGenerator extends GeneratorBase {
      */
     private generateIndex(tableInfos: TableInfo[]) {
         using(new XLog(PojoGenerator.logger, levels.INFO, 'generateIndex'), (log) => {
-            let filePath = path.join(this.outputDir, 'index.ts');
+            const filePath = path.join(this.outputDir, 'index.ts');
 
             fs.open(filePath, 'w', (err, fd) => {
                 if (err) {
@@ -83,16 +89,14 @@ export class PojoGenerator extends GeneratorBase {
                     }
                 }
 
-                for (let tableInfo of tableInfos) {
-                    let tableName = tableInfo.name;
+                for (const tableInfo of tableInfos) {
+                    const tableName = tableInfo.name;
                     GeneratorBase.writeLineSync(fd, `export * from './${tableName}';`);
                 }
             });
         });
     }
-
-    public generateFile(fileName: string, tableInfos: TableInfo[]) {
-    }
+    
 
     /**
      * Erzeugt einen Tabellenheader
@@ -129,10 +133,10 @@ export class PojoGenerator extends GeneratorBase {
         using(new XLog(PojoGenerator.logger, levels.DEBUG, 'dumpInterface', 'table = ', info.name), (log) => {
             GeneratorBase.writeLineSync(fd, `export interface ${GeneratorBase.getInterfaceName(info)} {`);
 
-            for (let colInfo of info.columns) {
-                let colName = this.stripPrefix(colInfo.name, info.name + '_');
+            for (const colInfo of info.columns) {
+                const colName = this.stripPrefix(colInfo.name, info.name + '_');
 
-                let sb = new StringBuilder();
+                const sb = new StringBuilder();
                 sb.append('  ');
                 sb.append(colName + (colInfo.isNullable ? '?' : ''));
                 sb.append(': ');
@@ -171,11 +175,11 @@ export class PojoGenerator extends GeneratorBase {
      */
     private dumpClass(fd: number, info: TableInfo, dumpInterface: boolean): void {
         using(new XLog(PojoGenerator.logger, levels.DEBUG, 'dumpClass', 'table = ', info.name), (log) => {
-            let tableName = GeneratorBase.capitalizeFirstLetter(info.name);
+            const tableName = GeneratorBase.capitalizeFirstLetter(info.name);
 
             GeneratorBase.writeLineSync(fd);
             GeneratorBase.writeLineSync(fd, `@Table({ name: '${info.name}' })`);
-            let sb = new StringBuilder();
+            const sb = new StringBuilder();
             sb.append(`export class ${GeneratorBase.getClassName(info)}`);
 
             if (dumpInterface) {
@@ -184,15 +188,11 @@ export class PojoGenerator extends GeneratorBase {
             sb.append(' {');
             GeneratorBase.writeLineSync(fd, sb.toString());
 
-            // GeneratorBase.writeLineSync(fd, `  public static tableInfo = 
-            //      new TableInfo(${GeneratorBase.getClassName(info)}, '${info.name}', '${GeneratorBase.getPrimaryKeyName(info)}');`);
-
-
-            for (let colInfo of info.columns) {
+            for (const colInfo of info.columns) {
                 GeneratorBase.writeLineSync(fd);
                 this.dumpColumnDecorator(fd, colInfo);
 
-                let colName = this.stripPrefix(colInfo.name, info.name + '_');
+                const colName = this.stripPrefix(colInfo.name, info.name + '_');
 
                 GeneratorBase.writeLineSync(fd, '  public ' + colName + (colInfo.isNullable ? '?' : '') + ': '
                     + GeneratorBase.mapDataType(colInfo.type) + GeneratorBase.formatDefaultValue(colInfo) + ';');
@@ -232,7 +232,7 @@ export class PojoGenerator extends GeneratorBase {
      * @memberOf PojoGenerator
      */
     private dumpColumnDecorator(fd: number, colInfo: ColumnInfo) {
-        let sb = new StringBuilder();
+        const sb = new StringBuilder();
         sb.append('  @Column({ ');
         sb.append(`name: '${colInfo.name}'`);
         if (colInfo.isPrimaryKey) {
@@ -272,10 +272,11 @@ export class PojoGenerator extends GeneratorBase {
         GeneratorBase.writeLineSync(fd, '  //');
         GeneratorBase.writeLineSync(fd, '  // Deserialisierung aus Json: Behandlung von speziellen Spaltentypen');
         GeneratorBase.writeLineSync(fd, '  //');
-        GeneratorBase.writeLineSync(fd, `  public static deserialize(json: any): ${GeneratorBase.getClassName(info)} {`);
+        GeneratorBase.writeLineSync(fd, `  public static deserialize(json: any):` +
+            ` ${GeneratorBase.getClassName(info)} {`);
         GeneratorBase.writeLineSync(fd, `    let rval = new ${GeneratorBase.getClassName(info)}();`);
 
-        for (let colInfo of info.columns) {
+        for (const colInfo of info.columns) {
             switch (colInfo.type) {
                 case DataType.Date:
                     GeneratorBase.writeLineSync(fd, `    rval.${colInfo.name} = new Date(json.${colInfo.name});`);
@@ -286,6 +287,8 @@ export class PojoGenerator extends GeneratorBase {
                 case DataType.Number:
                     GeneratorBase.writeLineSync(fd, `    rval.${colInfo.name} = json.${colInfo.name};`);
                     break;
+                default:
+                    throw new Error(`Invalid type ${colInfo.type}`);
             }
         }
         GeneratorBase.writeLineSync(fd, '    return rval;');

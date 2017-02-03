@@ -1,11 +1,11 @@
 import {
-    Controller, Get, Post, Put, Delete,
-    PathParams, Request,
-    Authenticated
+    Authenticated, Controller, Delete, Get, PathParams,
+    Post, Put,
+    Request
 } from 'ts-express-decorators';
 
 // -------------------------- logging -------------------------------
-import { Logger, getLogger } from 'log4js';
+import { getLogger, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
@@ -24,7 +24,7 @@ export class QueryController<T, TId> {
     public query(
         @Request() request: Express.Request
         ): Promise<T[]> {
-        let query = <IQuery> (<any>request).body;
+        const query = (request as any).body as IQuery;
         return this.service.query(query);
     }
 

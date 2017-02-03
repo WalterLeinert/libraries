@@ -1,27 +1,27 @@
 // Nodejs imports
 import * as fs from 'fs';
-import * as path from 'path';
 import * as os from 'os';
+import * as path from 'path';
 import * as util from 'util';
 
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, configure, getLogger } from 'log4js';
-import { XLog, using } from 'enter-exit-logger';
+import { using, XLog } from 'enter-exit-logger';
+import { configure, getLogger, levels, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
-import { IGenerator } from './generator.interface';
-import { TableInfo } from './tableInfo';
 import { ColumnInfo, DataType } from './columnInfo';
 import { IConfigInfo } from './configInfo';
+import { IGenerator } from './generator.interface';
+import { TableInfo } from './tableInfo';
 
 /**
  * 
  */
 export abstract class GeneratorBase implements IGenerator {
-    static logger = getLogger('GeneratorBase');
+    protected static logger = getLogger('GeneratorBase');
 
-    static capitalizeFirstLetter(text: string) {
+    protected static capitalizeFirstLetter(text: string) {
         return text.charAt(0).toUpperCase() + text.slice(1);
     }
 
@@ -31,12 +31,12 @@ export abstract class GeneratorBase implements IGenerator {
     }
 
 
-    static writeLineSync(fd: number, text = '') {
+    protected static writeLineSync(fd: number, text = '') {
         fs.writeSync(fd, text + os.EOL);
     }
 
 
-    static formatDefaultValue(colInfo: ColumnInfo): string {
+    protected static formatDefaultValue(colInfo: ColumnInfo): string {
         let rval = '';
 
         if (colInfo.default) {
@@ -53,7 +53,7 @@ export abstract class GeneratorBase implements IGenerator {
                     val = 'new Date("' + colInfo.default + '")';
                     break;
                 default:
-                    throw new Error(util.format('unsupported data type: %s', DataType[<number>colInfo.type]));
+                    throw new Error(util.format('unsupported data type: %s', DataType[colInfo.type as number]));
             }
 
             rval = ' = ' + val + ';';
@@ -61,7 +61,7 @@ export abstract class GeneratorBase implements IGenerator {
         return rval;
     }
 
-    static mapDataType(type: DataType): string {
+    protected static mapDataType(type: DataType): string {
         switch (type) {
             case DataType.Number:
                 return 'number';
@@ -70,25 +70,25 @@ export abstract class GeneratorBase implements IGenerator {
             case DataType.Date:
                 return 'Date';
             default:
-                throw new Error(util.format('unsupported data type: %s', DataType[<number>type]));
+                throw new Error(util.format('unsupported data type: %s', DataType[type as number]));
         }
     }
 
-    static quote(text: string): string {
+    protected static quote(text: string): string {
         return '\'' + text + '\'';
     }
 
 
-    static getClassName(info: TableInfo): string {
+    protected static getClassName(info: TableInfo): string {
         return GeneratorBase.capitalizeFirstLetter(info.name);
     }
 
-    static getInterfaceName(info: TableInfo): string {
+    protected static getInterfaceName(info: TableInfo): string {
         return 'I' + this.getClassName(info);
     }
 
-    static getPrimaryKeyName(info: TableInfo): string {
-        let pk = info.columns.filter(col => col.isPrimaryKey);
+    protected static getPrimaryKeyName(info: TableInfo): string {
+        const pk = info.columns.filter((col) => col.isPrimaryKey);
         if (!pk || pk.length <= 0) {
             return 'no-pk-column';
         }

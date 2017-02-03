@@ -1,28 +1,29 @@
 import * as Knex from 'knex';
 
-import { OptionParser, OptionType, Option } from '@fluxgate/common';
-import { TableInfo } from './tableInfo';
+import { Option, OptionParser, OptionType } from '@fluxgate/common';
+
 import { ColumnInfo } from './columnInfo';
+import { TableInfo } from './tableInfo';
 
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, configure, getLogger } from 'log4js';
-import { XLog, using } from 'enter-exit-logger';
+import { using, XLog } from 'enter-exit-logger';
+import { configure, getLogger, levels, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 
 export class SchemaExtractor {
-    static logger = getLogger('Extractor');
+    protected static logger = getLogger('Extractor');
 
     constructor(private knex: Knex) {
     }
 
 
     public extractData(): Promise<TableInfo[]> {
-        let rval: TableInfo[] = [];
+        const rval: TableInfo[] = [];
 
         return using(new XLog(SchemaExtractor.logger, levels.INFO, 'extractData'), (log) => {
-            let tableInfos: { [name: string]: TableInfo; } = {};
+            const tableInfos: { [name: string]: TableInfo; } = {};
             // let x: Map<string, TableInfo> = new Map;
 
             return new Promise((resolve, reject) => {
@@ -39,15 +40,15 @@ export class SchemaExtractor {
                         .where('TABLE_SCHEMA', '=', 'griso')
                         .then()
 
-                ]).then(res => {
+                ]).then((res) => {
                     this.knex.destroy();
 
-                    let columnsSchema = <any>res[0];
-                    let constraintsSchema = <any>res[1];    // TODO: unused
+                    const columnsSchema = res[0];
+                    const constraintsSchema = res[1];    // TODO: unused
 
                     // $log.debug(data);
 
-                    for (let columnSchema of columnsSchema) {
+                    for (const columnSchema of columnsSchema) {
                         let tableInfo: TableInfo = tableInfos[columnSchema.TABLE_NAME];
 
                         if (!tableInfo) {
@@ -55,7 +56,7 @@ export class SchemaExtractor {
                             tableInfos[columnSchema.TABLE_NAME] = tableInfo;
                         }
 
-                        let colInfo = new ColumnInfo(
+                        const colInfo = new ColumnInfo(
                             columnSchema.COLUMN_NAME,
                             columnSchema.DATA_TYPE,
                             columnSchema.IS_NULLABLE,
@@ -67,7 +68,7 @@ export class SchemaExtractor {
                         log.debug('Column: ', colInfo);
                     }
 
-                    for (let table in tableInfos) {
+                    for (const table in tableInfos) {
                         if (table) {
                             rval.push(tableInfos[table]);
                         }

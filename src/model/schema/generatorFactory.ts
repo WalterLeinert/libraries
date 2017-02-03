@@ -1,7 +1,7 @@
-import { IGenerator } from './generator.interface';
 import { IConfigInfo } from './configInfo';
-import { PojoGenerator } from './pojoGenerator';
+import { IGenerator } from './generator.interface';
 import { KnexGenerator } from './knexGenerator';
+import { PojoGenerator } from './pojoGenerator';
 
 
 export class GeneratorFactory {

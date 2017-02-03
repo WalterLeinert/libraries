@@ -1,8 +1,8 @@
-import { Logger, levels, configure, getLogger } from 'log4js';
+import { configure, getLogger, levels, Logger } from 'log4js';
 import { $log } from 'ts-log-debug';
 
 // Fluxgate
-import { fromEnvironment, LoggingConfiguration, FileSystem } from '@fluxgate/common';
+import { FileSystem, fromEnvironment, LoggingConfiguration } from '@fluxgate/common';
 
 export class Logging {
 
@@ -11,7 +11,7 @@ export class Logging {
      */
     public static configureLogging(packageName: string, systemMode: string) {
         if (systemMode) {
-            let configPath = LoggingConfiguration.getConfigurationPath(systemMode);
+            const configPath = LoggingConfiguration.getConfigurationPath(systemMode);
 
             if (FileSystem.fileExists(configPath)) {
                 $log.info(`[${packageName}]: log4js: systemMode = ${systemMode}, configPath = ${configPath}`);

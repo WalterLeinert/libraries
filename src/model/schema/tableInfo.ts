@@ -7,7 +7,7 @@ import { ColumnInfo } from './columnInfo';
  * @class TableInfo
  */
 export class TableInfo {
-    private _columns: Array<ColumnInfo>;
+    private _columns: ColumnInfo[];
 
     constructor(private _name: string) {
         this._columns = new Array<ColumnInfo>();

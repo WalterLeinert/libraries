@@ -1,15 +1,17 @@
 import * as Knex from 'knex';
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, getLogger } from 'log4js';
-import { XLog, using } from 'enter-exit-logger';
+import { using, XLog } from 'enter-exit-logger';
+import { getLogger, levels, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IUser, ServiceResult, IQuery, TableMetadata, ColumnMetadata, IToString, Assert, Clone, Types } from '@fluxgate/common';
+import { Assert, Clone, ColumnMetadata, IQuery, IToString, IUser, 
+    ServiceResult, TableMetadata, Types 
+} from '@fluxgate/common';
 
-import { MetadataService } from './metadata.service';
 import { KnexService } from './knex.service';
+import { MetadataService } from './metadata.service';
 
 /**
  * Abstrakte Basisklasse für CRUD-Operationen auf der DB über knex.
@@ -21,7 +23,7 @@ import { KnexService } from './knex.service';
  * @template TId
  */
 export abstract class BaseService<T, TId extends IToString>  {
-    static logger = getLogger('BaseService');
+    protected static logger = getLogger('BaseService');
 
     private primaryKeyColumn: ColumnMetadata = null;
     private metadata: TableMetadata;
@@ -38,7 +40,7 @@ export abstract class BaseService<T, TId extends IToString>  {
     constructor(table: Function, private knexService: KnexService, private metadataService: MetadataService) {
         this.metadata = this.metadataService.findTableMetadata(table);
 
-        let cols = this.metadata.columnMetadata.filter((item: ColumnMetadata) => item.options.primary);
+        const cols = this.metadata.columnMetadata.filter((item: ColumnMetadata) => item.options.primary);
         if (cols.length <= 0) {
             BaseService.logger.warn(`Table ${this.metadata.options.name}: no primary key column`);
         }
@@ -66,7 +68,7 @@ export abstract class BaseService<T, TId extends IToString>  {
             subject = this.deserialize(subject);
 
 
-            let dbSubject = this.createDatabaseInstance(subject);
+            const dbSubject = this.createDatabaseInstance(subject);
 
             if (log.isDebugEnabled()) {
                 log.debug('dbSubject: ', dbSubject);
@@ -83,7 +85,7 @@ export abstract class BaseService<T, TId extends IToString>  {
                         } else if (ids.length > 1) {
                             reject(new Error('create failed: ids.length > 1'));
                         } else {
-                            let id = ids[0];
+                            const id = ids[0];
                             log.debug(`created new ${this.tableName} with id: ${id}`);
 
                             // Id der neuen Instanz zuweisen
@@ -93,7 +95,7 @@ export abstract class BaseService<T, TId extends IToString>  {
                             resolve(this.serialize(subject));
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         log.error(err);
                         reject(err);
                     });
@@ -125,16 +127,16 @@ export abstract class BaseService<T, TId extends IToString>  {
                             log.debug('result: no item found');
                             resolve(null);
                         } else {
-                            let result = this.createModelInstance(rows[0]);
+                            const result = this.createModelInstance(rows[0]);
 
                             if (log.isDebugEnabled) {
                                 //
                                 // falls wir ein User-Objekt gefunden haben, wird für das Logging
                                 // die Passwort-Info zurückgesetzt
                                 //
-                                let logResult = this.createModelInstance(Clone.clone(rows[0]));
+                                const logResult = this.createModelInstance(Clone.clone(rows[0]));
                                 if (Types.hasMethod(logResult, 'resetCredentials')) {
-                                    (<IUser><any>logResult).resetCredentials();
+                                    (logResult as any as IUser).resetCredentials();
                                 }
 
                                 log.debug('result = ', logResult);
@@ -143,7 +145,7 @@ export abstract class BaseService<T, TId extends IToString>  {
                             resolve(this.deserialize(result));
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         log.error(err);
                         reject(err);
                     });
@@ -165,22 +167,22 @@ export abstract class BaseService<T, TId extends IToString>  {
 
             return new Promise<T[]>((resolve, reject) => {
                 this.fromTable()
-                    .then(rows => {
+                    .then((rows) => {
                         if (rows.length <= 0) {
                             log.debug('result: no items');
                             resolve(new Array<T>());
                         } else {
-                            let result = this.createModelInstances(rows);
+                            const result = this.createModelInstances(rows);
 
                             if (log.isDebugEnabled) {
-                                let logResult = this.createModelInstances(Clone.clone(rows));
+                                const logResult = this.createModelInstances(Clone.clone(rows));
                                 //
                                 // falls wir User-Objekte gefunden haben, wird für das Logging
                                 // die Passwort-Info zurückgesetzt
                                 //                                
                                 if (logResult.length > 0) {
                                     if (Types.hasMethod(logResult[0], 'resetCredentials')) {
-                                        logResult.forEach(item => (<IUser><any>item).resetCredentials());
+                                        logResult.forEach((item) => (item as any as IUser).resetCredentials());
                                     }
                                 }
                                 log.debug('result = ', logResult);
@@ -189,7 +191,7 @@ export abstract class BaseService<T, TId extends IToString>  {
                             resolve(this.serializeArray(result));
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         log.error(err);
                         reject(err);
                     });
@@ -215,16 +217,17 @@ export abstract class BaseService<T, TId extends IToString>  {
 
             subject = this.deserialize(subject);
 
-            let dbSubject = this.createDatabaseInstance(subject);
+            const dbSubject = this.createDatabaseInstance(subject);
             return new Promise<T>((resolve, reject) => {
                 this.fromTable()
                     .where(this.idColumnName, dbSubject[this.idColumnName])
                     .update(dbSubject)
                     .then((affectedRows: number) => {
-                        log.debug(`updated ${this.tableName} with id: ${dbSubject[this.idColumnName]} (affectedRows: ${affectedRows})`, );
+                        log.debug(`updated ${this.tableName} with id: ${dbSubject[this.idColumnName]}` +
+                            ` (affectedRows: ${affectedRows})`, );
                         resolve(this.serialize(subject));
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         log.error(err);
                         reject(err);
                     });
@@ -252,11 +255,11 @@ export abstract class BaseService<T, TId extends IToString>  {
                     .del()
                     .then((affectedRows: number) => {
                         log.debug(`deleted from ${this.tableName} with id: ${id} (affectedRows: ${affectedRows})`);
-                        let res = new ServiceResult<TId>(id);
+                        const res = new ServiceResult<TId>(id);
                         // TODO: serialize z.Zt. nicht kompatibel
                         resolve(res);
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         log.error(err);
                         reject(err);
                     });
@@ -281,22 +284,22 @@ export abstract class BaseService<T, TId extends IToString>  {
 
             return new Promise<T[]>((resolve, reject) => {
                 query
-                    .then(rows => {
+                    .then((rows) => {
                         if (rows.length <= 0) {
                             log.debug('result: no item found');
                             resolve(new Array<T>());
                         } else {
-                            let result = this.createModelInstances(rows);
+                            const result = this.createModelInstances(rows);
 
                             if (log.isDebugEnabled) {
-                                let logResult = this.createModelInstances(Clone.clone(rows));
+                                const logResult = this.createModelInstances(Clone.clone(rows));
                                 //
                                 // falls wir User-Objekte gefunden haben, wird für das Logging
                                 // die Passwort-Info zurückgesetzt
                                 //                                
                                 if (logResult.length > 0) {
                                     if (Types.hasMethod(logResult[0], 'resetCredentials')) {
-                                        logResult.forEach(item => (<IUser><any>item).resetCredentials());
+                                        logResult.forEach((item) => (item as any as IUser).resetCredentials());
                                     }
                                 }
                                 log.debug('result = ', logResult);
@@ -305,7 +308,7 @@ export abstract class BaseService<T, TId extends IToString>  {
                             resolve(this.serializeArray(result));
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         log.error(err);
                         reject(err);
                     });
@@ -318,7 +321,7 @@ export abstract class BaseService<T, TId extends IToString>  {
         query: IQuery
     ): Promise<T[]> {
         return using(new XLog(BaseService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
-            let dbColumnName = this.metadata.getDbColumnName(query.selector.name);
+            const dbColumnName = this.metadata.getDbColumnName(query.selector.name);
 
             return this.queryKnex(
                 this.fromTable()
@@ -327,6 +330,33 @@ export abstract class BaseService<T, TId extends IToString>  {
         });
     }
 
+
+    /**
+     * Liefert die from(<table>) Clause für den aktuellen Tabellennamen
+     * 
+     * @readonly
+     * @protected
+     * @type {Knex.QueryBuilder}
+     * @memberOf ServiceBase
+     */
+    public fromTable(): Knex.QueryBuilder {
+        return this.knexService.knex(this.tableName);
+    }
+
+
+    /**
+     * Liefert den DB-Id-Spaltennamen (primary key column)
+     * 
+     * @readonly
+     * @type {string}
+     * @memberOf ServiceBase
+     */
+    public get idColumnName(): string {
+        if (!this.primaryKeyColumn) {
+            throw new Error(`Table ${this.tableName}: no primary key column`);
+        }
+        return this.primaryKeyColumn.options.name;
+    }
 
 
     protected createDatabaseInstance(entity: T): any {
@@ -356,23 +386,11 @@ export abstract class BaseService<T, TId extends IToString>  {
      * @memberOf BaseService
      */
     protected createModelInstances(rows: any[]): T[] {
-        let result = new Array<T>();
-        for (let row of rows) {
+        const result = new Array<T>();
+        for (const row of rows) {
             result.push(this.metadata.createModelInstance<T>(row));
         }
         return result;
-    }
-
-    /**
-     * Liefert die from(<table>) Clause für den aktuellen Tabellennamen
-     * 
-     * @readonly
-     * @protected
-     * @type {Knex.QueryBuilder}
-     * @memberOf ServiceBase
-     */
-    public fromTable(): Knex.QueryBuilder {
-        return this.knexService.knex(this.tableName);
     }
 
     /**
@@ -385,20 +403,7 @@ export abstract class BaseService<T, TId extends IToString>  {
     protected get tableName(): string {
         return this.metadata.options.name;
     }
-
-    /**
-     * Liefert den DB-Id-Spaltennamen (primary key column)
-     * 
-     * @readonly
-     * @type {string}
-     * @memberOf ServiceBase
-     */
-    public get idColumnName(): string {
-        if (!this.primaryKeyColumn) {
-            throw new Error(`Table ${this.tableName}: no primary key column`);
-        }
-        return this.primaryKeyColumn.options.name;
-    }
+    
 
 
     /**
@@ -408,7 +413,7 @@ export abstract class BaseService<T, TId extends IToString>  {
      * 
      * @param {T} item - Entity-Instanz
      * @returns {any}
-    */
+     */
     private serialize(item: T): any {
         Assert.notNull(item);
         return item;
@@ -421,7 +426,7 @@ export abstract class BaseService<T, TId extends IToString>  {
      * 
      * @param {T} items - Array von Entity-Instanzen
      * @returns {any}
-    */
+     */
     private serializeArray(items: T[]): any {
         Assert.notNull(items);
         return items;

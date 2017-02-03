@@ -1,12 +1,12 @@
 // -------------------------- logging -------------------------------
-import { ControllerBase } from './controllerBase';
-import { Logger, getLogger } from 'log4js';
+import { getLogger, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { ServiceResult, IQuery, IToString } from '@fluxgate/common';
+import { IQuery, IToString, ServiceResult } from '@fluxgate/common';
 
 import { BaseService } from '../services/base.service';
+import { ControllerBase } from './controllerBase';
 
 
 /**
@@ -21,7 +21,7 @@ import { BaseService } from '../services/base.service';
  * @template TId    - Type der Id-Spalte
  */
 export abstract class ReadonlyController<T, TId extends IToString> extends ControllerBase<T, TId> {
-    static logger = getLogger('ControllerBase');
+    protected static logger = getLogger('ControllerBase');
 
     constructor(service: BaseService<T, TId>, tableName: string, idName: string) {
         super(service, tableName, idName);
@@ -54,7 +54,7 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
     protected findByIdInternal(
         id: TId
     ): Promise<T> {
-       return super.findByIdInternal(id);
+        return super.findByIdInternal(id);
     }
 
 

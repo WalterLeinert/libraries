@@ -1,16 +1,17 @@
-let path = require('path');
+import  path = require('path');
+// tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
 
 import * as Knex from 'knex';
 
 // -------------------------- logging -------------------------------
-import { Logger, levels, getLogger } from 'log4js';
-import { XLog, using } from 'enter-exit-logger';
+import { using, XLog } from 'enter-exit-logger';
+import { getLogger, levels, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 
-import { AppRegistry, JsonReader, fromEnvironment, ICtor, Activator } from '@fluxgate/common';
-import { KnexService, MetadataService, AppRegistryService } from '../../src/ts-express-decorators-flx/services';
+import { Activator, AppRegistry, fromEnvironment, ICtor, JsonReader } from '@fluxgate/common';
+import { AppRegistryService, KnexService, MetadataService } from '../../src/ts-express-decorators-flx/services';
 
 import { BaseTest } from './baseTest.spec';
 
@@ -19,7 +20,7 @@ import { BaseTest } from './baseTest.spec';
  * Basisklasse für alle Service-Klassen, die mit Knex auf die DB zugreifen.
  */
 export abstract class KnexTest extends BaseTest {
-    static readonly logger = getLogger('KnexTest');
+    protected static readonly logger = getLogger('KnexTest');
 
     private static _appRegistryService: AppRegistryService;
     private static _knexService: KnexService;
@@ -28,27 +29,27 @@ export abstract class KnexTest extends BaseTest {
 
 
     /**
-      * wird einmal vor allen Tests ausgeführt
-      * - Knex-Initialisierung
-      */
+     * wird einmal vor allen Tests ausgeführt
+     * - Knex-Initialisierung
+     */
     protected static before() {
         using(new XLog(KnexTest.logger, levels.INFO, 'static.before'), (log) => {
             super.before();
 
-            let knexConfigPath = path.join(process.cwd(), '/test/config/knexfile.json');
+            const knexConfigPath = path.join(process.cwd(), '/test/config/knexfile.json');
             log.log(`knexConfigPath = ${knexConfigPath}`);
 
             //
             // Konfiguration lesen und in AppRegistry ablegen
             //
-            let config = JsonReader.readJsonSync<any>(knexConfigPath);
+            const config = JsonReader.readJsonSync<any>(knexConfigPath);
 
             let systemEnv = fromEnvironment('NODE_ENV', 'development');
             systemEnv = 'local';        // TODO
 
             log.log(`read knex config from ${knexConfigPath} for systemEnv = ${systemEnv}`);
 
-            let knexConfig: Knex.Config = config[systemEnv];
+            const knexConfig: Knex.Config = config[systemEnv];
             AppRegistry.instance.add(KnexService.KNEX_CONFIG_KEY, knexConfig);
 
             KnexTest._appRegistryService = new AppRegistryService();
@@ -59,9 +60,9 @@ export abstract class KnexTest extends BaseTest {
 
 
     /**
-      * wird einmal nach allen Tests ausgeführt
-      * - Knex-Cleanup
-      */
+     * wird einmal nach allen Tests ausgeführt
+     * - Knex-Cleanup
+     */
     protected static after() {
         using(new XLog(KnexTest.logger, levels.INFO, 'static.after'), (log) => {
             KnexTest.knexService.knex.destroy();
@@ -71,8 +72,8 @@ export abstract class KnexTest extends BaseTest {
     }
 
     /**
-      * Helpermethode zum Erzeugen von Service-Klassen 
-      */
+     * Helpermethode zum Erzeugen von Service-Klassen 
+     */
     protected static createService<T>(model: ICtor<T>): T {
         return Activator.createInstance<T>(model, KnexTest.knexService, KnexTest.metadataService);
     }

@@ -1,9 +1,9 @@
 // -------------------------- logging -------------------------------
-import { Logger, getLogger } from 'log4js';
+import { getLogger, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { ServiceResult, IQuery, IToString } from '@fluxgate/common';
+import { IQuery, IToString, ServiceResult } from '@fluxgate/common';
 
 import { BaseService } from '../services/base.service';
 
@@ -20,7 +20,7 @@ import { BaseService } from '../services/base.service';
  * @template TId    - Type der Id-Spalte
  */
 export abstract class ControllerBase<T, TId extends IToString> {
-    static logger = getLogger('ControllerBase');
+    protected static logger = getLogger('ControllerBase');
 
     constructor(private service: BaseService<T, TId>, private _tableName: string, private _idName: string) {
     }
