@@ -48,6 +48,10 @@
 
     "align": [
       true
+    ],
+
+    "no-console": [
+      true, "assert"
     ]
   },
   "jsRules": {
