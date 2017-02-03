@@ -1,4 +1,8 @@
-require('reflect-metadata');
+// tslint:disable:max-classes-per-file
+// tslint:disable:member-access
+
+import reflectMetadata = require('reflect-metadata');
+
 
 import * as chai from 'chai';
 import { expect } from 'chai';
@@ -22,16 +26,11 @@ class DerivedClass extends BaseClass {
 }
 
 
-
-let expedtedTimes = [
-];
-
-
 @suite('ReflectionTypeReflector')
 class ReflectionTest {
 
     @test 'should create instance of TypeReflector'() {
-        let tr = new TypeReflector(BaseClass);
+        const tr = new TypeReflector(BaseClass);
         return expect(tr).to.be.not.null;
     }
 }

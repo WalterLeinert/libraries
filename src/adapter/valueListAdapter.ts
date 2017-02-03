@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
 
 import { Assert } from '../util';
 
@@ -19,7 +19,7 @@ export class ValueListAdapter<T> implements IListAdapter<T> {
     constructor(items: T[]) {
         Assert.notNull(items);
 
-        for (let item of items) {
+        for (const item of items) {
             this.items.push(item);
         }
     }

@@ -19,7 +19,8 @@ export class ServiceResult<TId extends IToString> {
      * Creates an instance of ServiceResult.
      * 
      * @param {TId} id - Die Id der betroffenen Entity.
-     * @param {Status} [status=Status.Ok] - Der Status (immer Ok, da sonst keine Instanz des Typs @see{IServiceResult} zurückgegeben wird)
+     * @param {Status} [status=Status.Ok] - Der Status (immer Ok, da sonst keine Instanz des Typs @see{IServiceResult} 
+     * zurückgegeben wird)
      * 
      * @memberOf ServiceResult
      */

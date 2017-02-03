@@ -1,6 +1,7 @@
 import { AppRegistry } from '../base';
 import { Enum } from '../model/decorator/model/enum';
-import { IUser, Role, UserRoleId, Table, Column } from '.';
+
+import { Column, IUser, Role, Table, UserRoleId } from '.';
 
 /**
  * Modelliert User im System (Defaultimplemetierung)
@@ -9,8 +10,8 @@ import { IUser, Role, UserRoleId, Table, Column } from '.';
 export class User implements IUser {
 
   /**
-  * der Key für den Zugriff über @see{AppRegistry}
-  */
+   * der Key für den Zugriff über @see{AppRegistry}
+   */
   public static readonly USER_CONFIG_KEY = 'IUser';
 
   @Column({ name: 'user_id', primary: true, generated: true, displayName: 'Id' })

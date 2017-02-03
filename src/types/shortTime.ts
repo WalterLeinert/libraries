@@ -1,9 +1,10 @@
-let leftPad = require('left-pad');
+import leftPad = require('left-pad');
 
 import { IAttributeSelector } from '../model/query/attributeSelector.interface';
 import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
-import { MathUtil, Types, Hour } from '.';
+
+import { Hour, MathUtil, Types } from '.';
 
 
 /**
@@ -26,16 +27,16 @@ export class ShortTime {
     public static parse(text: string): ShortTime {
         Assert.notNullOrEmpty(text);
 
-        let parts = text.split(':');
+        const parts = text.split(':');
         Assert.that(parts.length >= 2);
 
         if (parts.length > 2) {
-            let seconds = +parts[2];
+            const seconds = +parts[2];
             Assert.that(seconds === 0, `Zeit ${text}: Falls Sekunden angegeben sind, darf der Wert nur 00 sein.`);
         }
 
-        let hour = +parts[0];
-        let minute = +parts[1];
+        const hour = +parts[0];
+        const minute = +parts[1];
 
         return new ShortTime(hour as Hour, minute);
     }
@@ -52,10 +53,11 @@ export class ShortTime {
      * @memberOf ShortTime
      */
     public static createFrom(obj: any) {
-        let hour: Hour = obj['hour'];
-        let minute: number = obj['minute'];
+        // tslint:disable:no-string-literal
+        const hour: Hour = obj['hour'];
+        const minute: number = obj['minute'];
 
-        let sb = new StringBuilder();
+        const sb = new StringBuilder();
         if (hour === undefined) {
             sb.appendWithDelimiter('hour');
         }
@@ -77,10 +79,10 @@ export class ShortTime {
      * @memberOf ShortTime
      */
     public static createFromMinutes(minutes: number): ShortTime {
-        let hour = Math.floor(minutes / 60);
-        let minute = Math.floor(minutes - hour * 60);
+        const hour = Math.floor(minutes / 60);
+        const minute = Math.floor(minutes - hour * 60);
 
-        return new ShortTime(<Hour>hour, minute);
+        return new ShortTime(hour as Hour, minute);
     }
 
 
@@ -136,16 +138,16 @@ export class ShortTime {
 
 
     /**
-    * Addiert zur Zeit der aktuellen Instanz die Zeit @param{time} und liefert
-    * das Ergebnis.
-    * 
-    * @param {ShortTime} time
-    * @returns {ShortTime}
-    * 
-    * @memberOf ShortTime
-    */
+     * Addiert zur Zeit der aktuellen Instanz die Zeit @param{time} und liefert
+     * das Ergebnis.
+     * 
+     * @param {ShortTime} time
+     * @returns {ShortTime}
+     * 
+     * @memberOf ShortTime
+     */
     public add(time: ShortTime): ShortTime {
-        let timeInMinutes = this.toMinutes() + time.toMinutes();
+        const timeInMinutes = this.toMinutes() + time.toMinutes();
         return ShortTime.createFromMinutes(timeInMinutes);
     }
 
@@ -159,7 +161,7 @@ export class ShortTime {
      * @memberOf ShortTime
      */
     public subtract(time: ShortTime): ShortTime {
-        let timeInMinutes = this.toMinutes() - time.toMinutes();
+        const timeInMinutes = this.toMinutes() - time.toMinutes();
         Assert.that(timeInMinutes >= 0);
         return ShortTime.createFromMinutes(timeInMinutes);
     }

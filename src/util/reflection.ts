@@ -11,14 +11,14 @@ export class Reflection {
      * 
      * @memberOf Reflection
      */
-    static copyProperties<T>(source: any, dest: { new (): T }): T {
-        let instance = new dest();
+    public static copyProperties<T>(source: any, dest: { new (): T }): T {
+        const instance = new dest();
 
         // alle Properties der Row über Reflection ermitteln        
-        let refl = Reflect.ownKeys(source);
+        const refl = Reflect.ownKeys(source);
 
         // ... und dann die Werte der Zielentity zuweisen
-        for (let propName of refl) {
+        for (const propName of refl) {
             instance[propName] = source[propName];
         }
 

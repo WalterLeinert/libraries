@@ -1,5 +1,6 @@
 import { AppRegistry, EnumHelper } from '../base';
-import { IRole, Table, Column } from '.';
+
+import { Column, IRole, Table } from '.';
 
 
 /**
@@ -22,8 +23,8 @@ export enum UserRoleId {
 export class Role implements IRole {
 
   /**
-  * der Key für den Zugriff über @see{AppRegistry}
-  */
+   * der Key für den Zugriff über @see{AppRegistry}
+   */
   public static readonly ROLE_CONFIG_KEY = 'IRole';
 
   private static roleIdMap: { [id: number]: boolean } = {};
@@ -39,7 +40,7 @@ export class Role implements IRole {
   @Column({ name: 'role_description', displayName: 'Description' })
   public description: string;
 
-  static initialize(): boolean {
+  private static initialize(): boolean {
     EnumHelper.getValues(UserRoleId).map((e) => {
       Role.roleIdMap[e] = true;
     });

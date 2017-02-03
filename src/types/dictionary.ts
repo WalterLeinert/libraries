@@ -50,14 +50,14 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     public set(key: TKey, value: TValue) {
         if (Types.isString(key)) {
             Assert.that(!this.isInitialized || this.keyType === KeyType.String);
-            this.stringDict[(<string><any>key)] = value;
+            this.stringDict[(key as any as string)] = value;
             this.initialize(KeyType.String);
             return;
         }
 
         if (Types.isNumber(key)) {
             Assert.that(!this.isInitialized || this.keyType === KeyType.Number);
-            this.numberDict[(<number><any>key)] = value;
+            this.numberDict[(key as any as number)] = value;
             this.initialize(KeyType.Number);
             return;
         }
@@ -84,12 +84,12 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     public get(key: TKey): TValue {
         if (Types.isString(key)) {
             Assert.that(!this.isInitialized || this.keyType === KeyType.String);
-            return this.stringDict[(<string><any>key)];
+            return this.stringDict[(key as any as string)];
         }
 
         if (Types.isNumber(key)) {
             Assert.that(!this.isInitialized || this.keyType === KeyType.Number);
-            return this.numberDict[(<number><any>key)];
+            return this.numberDict[(key as any as number)];
         }
 
         if (key.toString !== undefined) {
@@ -112,13 +112,13 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     public remove(key: TKey) {
         if (Types.isString(key)) {
             Assert.that(this.keyType === KeyType.String);
-            delete this.stringDict[(<string><any>key)];
+            delete this.stringDict[(key as any as string)];
             return;
         }
 
         if (Types.isNumber(key)) {
             Assert.that(this.keyType === KeyType.Number);
-            delete this.numberDict[(<number><any>key)];
+            delete this.numberDict[(key as any as number)];
             return;
         }
 
@@ -144,12 +144,12 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     public containsKey(key: TKey): boolean {
         if (Types.isString(key)) {
             Assert.that(!this.isInitialized || this.keyType === KeyType.String);
-            return this.stringDict[(<string><any>key)] !== undefined;
+            return this.stringDict[(key as any as string)] !== undefined;
         }
 
         if (Types.isNumber(key)) {
             Assert.that(!this.isInitialized || this.keyType === KeyType.Number);
-            return this.numberDict[(<number><any>key)] !== undefined;
+            return this.numberDict[(key as any as number)] !== undefined;
         }
 
         if (key.toString !== undefined) {
@@ -173,13 +173,13 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
 
         if (this.isInitialized) {
             if (this.keyType === KeyType.String) {
-                keys = <TKey[]> <any> Object.keys(this.stringDict);
+                keys = Object.keys(this.stringDict) as any as TKey[];
             } else if (this.keyType === KeyType.Number) {
-               keys = Object.keys(this.numberDict).map(item => {
-                   return <TKey> <any> parseInt(item, 10);
-               });
+                keys = Object.keys(this.numberDict).map((item) => {
+                    return parseInt(item, 10) as any as TKey;
+                });
             } else {
-                for (let k in this.stringToObjectMapper) {
+                for (const k in this.stringToObjectMapper) {
                     if (k) {
                         keys.push(this.stringToObjectMapper[k]);
                     }
@@ -199,23 +199,23 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
      * @memberOf Dictionary
      */
     public get values(): TValue[] {
-        let values: TValue[] = [];
+        const values: TValue[] = [];
 
         if (this.isInitialized) {
             if (this.keyType === KeyType.String) {
-                for (let k in this.stringDict) {
+                for (const k in this.stringDict) {
                     if (k) {
                         values.push(this.stringDict[k]);
                     }
                 }
             } else if (this.keyType === KeyType.Number) {
-                for (let k in this.numberDict) {
+                for (const k in this.numberDict) {
                     if (k) {
                         values.push(this.numberDict[k]);
                     }
                 }
             } else {
-                for (let k in this.stringToObjectMapper) {
+                for (const k in this.stringToObjectMapper) {
                     if (k) {
                         values.push(this.stringDict[k]);
                     }
@@ -247,9 +247,9 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
      * @memberOf Dictionary
      */
     public get count(): number {
-       if (!this.isInitialized) {
-           return 0;
-       }
+        if (!this.isInitialized) {
+            return 0;
+        }
 
         if (this.keyType === KeyType.String || this.keyType === KeyType.Object) {
             return Object.keys(this.stringDict).length;

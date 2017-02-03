@@ -50,7 +50,9 @@ export class FileSystem {
      * 
      * @memberOf FileSystem
      */
-    public static readTextFile(errorLogger: (message: string) => void, path: string, topic: string, encoding = 'utf8'): string {
+    public static readTextFile(errorLogger: (message: string) => void, path: string, topic: string,
+        encoding = 'utf8'): string {
+
         if (!path) {
             errorLogger(`Pfad auf ${topic} in Konfigration nicht gesetzt.`);
         }
@@ -62,7 +64,7 @@ export class FileSystem {
             try {
                 result = fs.readFileSync(path, encoding);
             } catch (err) {
-               errorLogger(`${topic} unter ${path} kann nicht gelesen werden.`);
+                errorLogger(`${topic} unter ${path} kann nicht gelesen werden.`);
             }
         }
 

@@ -1,4 +1,7 @@
-require('reflect-metadata');
+// tslint:disable:max-classes-per-file
+// tslint:disable:member-access
+
+import reflectMetadata = require('reflect-metadata');
 
 import * as chai from 'chai';
 import { expect } from 'chai';
@@ -12,8 +15,10 @@ class Test {
     }
 }
 
+
 class Test2 {
     constructor() {
+        // ok
     }
 }
 
@@ -21,18 +26,18 @@ class Test2 {
 class ActivatorTest {
 
     @test 'should create instance of class Test'() {
-        let expectedTest = new Test('hugo', 4711);
+        const expectedTest = new Test('hugo', 4711);
         return expect(Activator.createInstance<Test>(Test, expectedTest.name, expectedTest.id)).to.be.eql(expectedTest);
     }
 
 
     @test 'should create instance of class Test: 2nd parameter missing'() {
-        let expectedTest = new Test('hugo', undefined);
+        const expectedTest = new Test('hugo', undefined);
         return expect(Activator.createInstance<Test>(Test, expectedTest.name)).to.be.eql(expectedTest);
     }
 
     @test 'should create instance of class Test: all parameters missing'() {
-        let expectedTest = new Test(undefined, undefined);
+        const expectedTest = new Test(undefined, undefined);
         return expect(Activator.createInstance<Test>(Test)).to.be.eql(expectedTest);
     }
 

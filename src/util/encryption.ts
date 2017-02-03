@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+import crypto = require('crypto');
 
 export class Encryption {
     private static LEN = 256;
@@ -7,10 +7,10 @@ export class Encryption {
     private static DIGEST = 'sha256';
 
     public static hashPassword(password: string, salt: string, callback?) {
-        let len = Encryption.LEN / 2;
+        const len = Encryption.LEN / 2;
 
         if (3 === arguments.length) {
-            crypto.pbkdf2(password, salt, Encryption.ITERATIONS, len, Encryption.DIGEST, function (err, derivedKey) {
+            crypto.pbkdf2(password, salt, Encryption.ITERATIONS, len, Encryption.DIGEST, (err, derivedKey) => {
                 if (err) {
                     return callback(err);
                 }
@@ -19,19 +19,20 @@ export class Encryption {
             });
         } else {
             callback = salt;
-            crypto.randomBytes(Encryption.SALT_LEN / 2, function (err, slt) {
+            crypto.randomBytes(Encryption.SALT_LEN / 2, (err, slt) => {
                 if (err) {
                     return callback(err);
                 }
 
-                slt = slt.toString('hex');
-                crypto.pbkdf2(password, slt, Encryption.ITERATIONS, len, Encryption.DIGEST, function (cryptErr, derivedKey) {
-                    if (cryptErr) {
-                        return callback(cryptErr);
-                    }
+                const sltString = slt.toString('hex');
+                crypto.pbkdf2(password, sltString, Encryption.ITERATIONS, len, Encryption.DIGEST,
+                    (cryptErr, derivedKey) => {
+                        if (cryptErr) {
+                            return callback(cryptErr);
+                        }
 
-                    callback(null, derivedKey.toString('hex'), slt);
-                });
+                        callback(null, derivedKey.toString('hex'), sltString);
+                    });
             });
         }
     }

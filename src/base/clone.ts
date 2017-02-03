@@ -11,7 +11,7 @@ export class Clone {
      * @memberOf Clone
      */
     public static clone<T>(value: T): T {
-        let cloneString = JSON.stringify(value);
+        const cloneString = JSON.stringify(value);
         return JSON.parse(cloneString);
     }
 }

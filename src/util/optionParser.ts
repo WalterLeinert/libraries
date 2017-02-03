@@ -1,4 +1,6 @@
-let dashdash = require('dashdash');
+// tslint:disable:max-classes-per-file
+
+import dashdash = require('dashdash');
 import { format } from 'util';
 
 export enum OptionType {
@@ -10,7 +12,9 @@ export enum OptionType {
     Number,
     Integer,
     PositiveInteger,
-    Date,   // (epoch seconds, e.g. 1396031701, or ISO 8601 format YYYY-MM-DD[THH:MM:SS[.sss][Z]], e.g. "2014-03-28T18:35:01.489Z")
+    // (epoch seconds, e.g. 1396031701, or ISO 8601 format YYYY-MM-DD[THH:MM:SS[.sss][Z]], 
+    // e.g. "2014-03-28T18:35:01.489Z")
+    Date,
     ArrayOfBool,
     ArrayOfString,
     ArrayOfNumber,
@@ -68,7 +72,7 @@ export class Option<T> implements IOption {
         this.type = '';
 
         if (typeof type === 'number' /*OptionType*/) {
-            let stringType = Option.optionType2TypeMap[<number>type];
+            const stringType = Option.optionType2TypeMap[type as number];
             if (!stringType) {
                 throw new Error(format('no dashtash type for optionType "%s"', type));
             }
@@ -90,6 +94,7 @@ export class Option<T> implements IOption {
 /**
  * Interface für Funktion zum Parsen von Custom-Types 
  */
+// tslint:disable-next-line:callable-types
 export interface IParseFunc {
     (option: any, optstr: string, arg: string): any;
 }
@@ -105,10 +110,12 @@ export interface ICustomTypeInfo {
     default: any;
 }
 
+
 export class CustomTypeInfo<T> implements ICustomTypeInfo {
     public default: T;
 
-    constructor(public name: string, public takesArg: boolean, public helpArg: string, public parseArg: IParseFunc, defaultValue: T) {
+    constructor(public name: string, public takesArg: boolean, public helpArg: string,
+        public parseArg: IParseFunc, defaultValue: T) {
         this.default = defaultValue;
     }
 }
@@ -119,12 +126,12 @@ export class CustomTypeInfo<T> implements ICustomTypeInfo {
 export class CustomOption extends Option<any> {
 
     constructor(
-       public names: string[],
+        public names: string[],
         private _customType: ICustomTypeInfo,
         public help?: string,
         public env?: string,
         defaultValue?: any) {
-            super(names, _customType.name, help, env, defaultValue);
+        super(names, _customType.name, help, env, defaultValue);
     }
 
     public get customType(): ICustomTypeInfo {
@@ -141,21 +148,21 @@ export class CustomOption extends Option<any> {
  * Kapselt den dashdash-Parser
  */
 export class OptionParser {
-    parser: any;
+    private parser: any;
 
     constructor(private options: IOption[]) {
-        let customOptionTypes = new Array<ICustomTypeInfo>();
+        const customOptionTypes = new Array<ICustomTypeInfo>();
 
-        for (let option of options) {
+        for (const option of options) {
             if (option.isCustom()) {
-                let copt = option as CustomOption;
+                const copt = option as CustomOption;
                 customOptionTypes.push(copt.customType);
             }
         }
 
 
         if (customOptionTypes && customOptionTypes.length > 0) {
-            for (let ot of customOptionTypes) {
+            for (const ot of customOptionTypes) {
                 dashdash.addOptionType(ot);
             }
         }

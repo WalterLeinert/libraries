@@ -59,20 +59,20 @@ export interface IDictionary<TKey, TValue> {
     get(key: TKey): TValue;
 
     /**
-    * Entfernt den Eintrag unter dem Key @param{key}.
-    * 
-    * @param {TKey} key
-    * @returns
-    * 
-    * @memberOf Dictionary
-    */
+     * Entfernt den Eintrag unter dem Key @param{key}.
+     * 
+     * @param {TKey} key
+     * @returns
+     * 
+     * @memberOf Dictionary
+     */
     remove(key: TKey);
 
     /**
-    * Leert das Dictionary
-    * 
-    * @memberOf Dictionary
-    */
+     * Leert das Dictionary
+     *
+     * @memberOf Dictionary
+     */
     clear();
 
     /**

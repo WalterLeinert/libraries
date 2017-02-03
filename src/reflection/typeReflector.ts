@@ -1,5 +1,6 @@
-import { Assert } from './../util/assert';
 import { Dictionary } from './../types/dictionary';
+import { Assert } from './../util/assert';
+
 import { PropertyReflector } from './propertyReflector';
 
 
@@ -23,12 +24,12 @@ export class TypeReflector {
             // todo
 
             // alle Properties der Row über Reflection ermitteln        
-            let keys = Reflect.ownKeys(obj);
+            const keys = Reflect.ownKeys(obj);
 
-            keys.forEach(key => {
-                let propertyType: Function = (Reflect as any).getMetadata('design:type', obj, key);
+            keys.forEach((key) => {
+                const propertyType: Function = (Reflect as any).getMetadata('design:type', obj, key);
 
-                let descr = Reflect.getOwnPropertyDescriptor(obj, key);
+                const descr = Reflect.getOwnPropertyDescriptor(obj, key);
                 this.propertyDict.set(key.toString(), new PropertyReflector(key.toString(), descr));
             });
 

@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 
-import { LoggingConfiguration, LoggingConfigurationOptions } from '../../src/util';
+import { LoggingConfiguration, ILoggingConfigurationOptions } from '../../src/util';
 
 class Test {
     constructor(public name: string, public id: number) {
@@ -42,7 +42,7 @@ class LoggingConfigurationTest {
     }
 
     @test 'should get path with options (filename)'() {
-        let options: LoggingConfigurationOptions = {
+        let options: ILoggingConfigurationOptions = {
             filename: 'logging'
         };
         let expectedPath = this.buildPath(options);
@@ -51,7 +51,7 @@ class LoggingConfigurationTest {
     }
 
     @test 'should get path with options (relativePath)'() {
-        let options: LoggingConfigurationOptions = {
+        let options: ILoggingConfigurationOptions = {
             relativePath: 'lib/config'
         };
         let expectedPath = this.buildPath(options);
@@ -59,7 +59,7 @@ class LoggingConfigurationTest {
         return expect(LoggingConfiguration.getConfigurationPath(options)).to.be.eql(expectedPath);
     }
 
-    private buildPath(options: LoggingConfigurationOptions): string {
+    private buildPath(options: ILoggingConfigurationOptions): string {
         return path.join(
             process.cwd(),
             options.relativePath ? options.relativePath : LoggingConfiguration.DEFAULT_RELATIVE_PATH,

@@ -1,8 +1,8 @@
-let leftPad = require('left-pad');
+import leftPad = require('left-pad');
 import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
 
-import { ShortTime, Hour } from '.';
+import { Hour, ShortTime } from '.';
 
 
 /**
@@ -25,12 +25,12 @@ export class Time extends ShortTime {
     public static parse(text: string): Time {
         Assert.notNullOrEmpty(text);
 
-        let parts = text.split(':');
+        const parts = text.split(':');
         Assert.that(parts.length === 3);
 
-        let hour = +parts[0];
-        let minute = +parts[1];
-        let second = +parts[2];
+        const hour = +parts[0];
+        const minute = +parts[1];
+        const second = +parts[2];
 
         Assert.that(hour >= 0 && hour < 24);
 
@@ -49,11 +49,12 @@ export class Time extends ShortTime {
      * @memberOf Time
      */
     public static createFrom(obj: any) {
-        let hour: Hour = obj['hour'];
-        let minute: number = obj['minute'];
-        let second: number = obj['second'];
+        // tslint:disable:no-string-literal
+        const hour: Hour = obj['hour'];
+        const minute: number = obj['minute'];
+        const second: number = obj['second'];
 
-        let sb = new StringBuilder();
+        const sb = new StringBuilder();
         if (hour === undefined) {
             sb.appendWithDelimiter('hour');
         }
@@ -78,11 +79,11 @@ export class Time extends ShortTime {
      * @memberOf Time
      */
     public static createFromSeconds(seconds: number): Time {
-        let hour = Math.floor(seconds / 3600);
-        let minute = Math.floor((seconds - hour * 3600) / 60);
-        let second = (seconds - hour * 3600 - minute * 60);
+        const hour = Math.floor(seconds / 3600);
+        const minute = Math.floor((seconds - hour * 3600) / 60);
+        const second = (seconds - hour * 3600 - minute * 60);
 
-        return new Time(<Hour>hour, minute, second);
+        return new Time(hour as Hour, minute, second);
     }
 
 
@@ -127,7 +128,7 @@ export class Time extends ShortTime {
      * @memberOf Time
      */
     public add(time: Time): Time {
-        let timeInSeconds = this.toSeconds() + time.toSeconds();
+        const timeInSeconds = this.toSeconds() + time.toSeconds();
         return Time.createFromSeconds(timeInSeconds);
     }
 
@@ -141,7 +142,7 @@ export class Time extends ShortTime {
      * @memberOf Time
      */
     public subtract(time: Time): Time {
-        let timeInSeconds = this.toSeconds() - time.toSeconds();
+        const timeInSeconds = this.toSeconds() - time.toSeconds();
         Assert.that(timeInSeconds >= 0);
         return Time.createFromSeconds(timeInSeconds);
     }

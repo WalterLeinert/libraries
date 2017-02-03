@@ -67,7 +67,7 @@ export class AppRegistry {
         return (key in this.dataDict);
     }
 
-     /**
+    /**
      * Liefert die Singleton-Instanz.
      * 
      * @readonly

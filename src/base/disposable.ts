@@ -8,17 +8,17 @@ export abstract class Disposable implements IDisposable {
     // static logger: Logger = getLogger("Disposable");
 
     /** if true, throw Error on double dispose */
-    static throwExceptionOnAlreadyDisposed = false;
+    public static throwExceptionOnAlreadyDisposed = false;
 
     /** if true, log method entry/exit */
-    static doMethodTraces = false;
+    public static doMethodTraces = false;
 
     private disposed = false;
 
     /**
      * frees required resources
      */
-    dispose() {
+    public dispose() {
         // NOTE: EnterExitLogger not available due to recursion
         // using(new EnterExitLogger(Disposable.logger, levels.DEBUG, 'dispose'), (log) => {
         try {
@@ -51,6 +51,7 @@ export abstract class Disposable implements IDisposable {
      * Must be overridden in derived classes.
      */
     protected onDispose() {
+        // ok
     }
 }
 
@@ -76,8 +77,7 @@ export function using<TDisposable extends IDisposable, TReturn>(
     closure: (disposable: TDisposable) => TReturn): TReturn {
     try {
         return closure(disposable);
-    }
-    finally {
+    } finally {
         disposable.dispose();
     }
 }

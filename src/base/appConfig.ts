@@ -70,7 +70,7 @@ export class AppConfig {
   public static readonly APP_CONFIG_KEY = 'IAppConfig';
 
   public static register(config: IAppConfig) {
-    let key = AppConfig.APP_CONFIG_KEY;
+    const key = AppConfig.APP_CONFIG_KEY;
     AppRegistry.instance.add<IAppConfig>(key, config);
     // tslint:disable-next-line:no-console
     console.info(`configured: key = ${key} -> ${JSON.stringify(config)}`);

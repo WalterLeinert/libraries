@@ -1,4 +1,7 @@
-require('reflect-metadata');
+// tslint:disable:max-classes-per-file
+// tslint:disable:member-access
+
+import reflectMetadata = require('reflect-metadata');
 
 import * as chai from 'chai';
 import { expect } from 'chai';
@@ -31,20 +34,20 @@ interface ITestData<TKey, TValue> {
 
 class DictionaryTester<TKey, TValue> {
 
-    public doTest(expected: ITestData<TKey, TValue>[]) {
+    public doTest(expected: Array<ITestData<TKey, TValue>>) {
         // @test 'validate keys vs values'() {
-        expected.forEach(test => {
+        expected.forEach((test) => {
             expect(test.keys.length).to.be.equal(test.values.length);
         });
 
 
         // @test 'should set an item'() {
         expected.forEach(test => {
-            let dict = new Dictionary<TKey, TValue>();
+            const dict = new Dictionary<TKey, TValue>();
 
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 expect(dict.set(key, value)).not.to.throw;
                 expect(dict.count).to.be.equal(i + 1);
@@ -52,19 +55,21 @@ class DictionaryTester<TKey, TValue> {
         });
 
         // @test 'should get an item'() {
-        expected.forEach(test => {
-            let dict = new Dictionary<TKey, TValue>();
+        expected.forEach((test) => {
+            const dict = new Dictionary<TKey, TValue>();
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 expect(dict.set(key, value)).not.to.throw;
             }
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 expect(dict.get(key)).to.deep.equal(value);
             }
@@ -72,19 +77,20 @@ class DictionaryTester<TKey, TValue> {
 
 
         // @test 'should remove an item'() {
-        expected.forEach(test => {
-            let dict = new Dictionary<TKey, TValue>();
+        expected.forEach((test) => {
+            const dict = new Dictionary<TKey, TValue>();
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 dict.set(key, value);
             }
 
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 expect(dict.remove(key)).not.to.throw;
                 expect(dict.count).to.be.equal(test.keys.length - (i + 1));
@@ -94,19 +100,21 @@ class DictionaryTester<TKey, TValue> {
 
 
         // @test 'should test for existence'() {
-        expected.forEach(test => {
-            let dict = new Dictionary<TKey, TValue>();
+        expected.forEach((test) => {
+            const dict = new Dictionary<TKey, TValue>();
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 dict.set(key, value);
             }
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 expect(dict.containsKey(key)).to.be.true;
             }
@@ -114,12 +122,13 @@ class DictionaryTester<TKey, TValue> {
 
 
         // @test 'should test for non existence'() {
-        expected.forEach(test => {
-            let dict = new Dictionary<TKey, TValue>();
+        expected.forEach((test) => {
+            const dict = new Dictionary<TKey, TValue>();
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 dict.set(key, value);
             }
@@ -129,26 +138,27 @@ class DictionaryTester<TKey, TValue> {
 
 
         // @test 'should test empty keys'() {
-        expected.forEach(test => {
-            let dict = new Dictionary<TKey, TValue>();
+        expected.forEach((test) => {
+            const dict = new Dictionary<TKey, TValue>();
             expect(dict.keys.length).to.be.equal(0);
         });
 
 
         // @test 'should test empty values'() {
-        expected.forEach(test => {
-            let dict = new Dictionary<TKey, TValue>();
+        expected.forEach((test) => {
+            const dict = new Dictionary<TKey, TValue>();
             expect(dict.values.length).to.be.equal(0);
         });
 
 
         // @test 'should test keys'() {
-        expected.forEach(test => {
-            let dict = new Dictionary<TKey, TValue>();
+        expected.forEach((test) => {
+            const dict = new Dictionary<TKey, TValue>();
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 dict.set(key, value);
             }
@@ -158,12 +168,13 @@ class DictionaryTester<TKey, TValue> {
         });
 
         // @test 'should test values'() {
-        expected.forEach(test => {
-            let dict = new Dictionary<TKey, TValue>();
+        expected.forEach((test) => {
+            const dict = new Dictionary<TKey, TValue>();
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 dict.set(key, value);
             }
@@ -174,12 +185,13 @@ class DictionaryTester<TKey, TValue> {
 
 
         // @test 'should test clear'() {
-        expected.forEach(test => {
-            let dict = new Dictionary<TKey, TValue>();
+        expected.forEach((test) => {
+            const dict = new Dictionary<TKey, TValue>();
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 dict.set(key, value);
             }
@@ -190,14 +202,15 @@ class DictionaryTester<TKey, TValue> {
 
 
         // @test 'should test isEmpty'() {
-        expected.forEach(test => {
-            let dict = new Dictionary<TKey, TValue>();
+        expected.forEach((test) => {
+            const dict = new Dictionary<TKey, TValue>();
 
             expect(dict.isEmpty).to.be.true;
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 dict.set(key, value);
             }
@@ -213,9 +226,9 @@ class DictionaryTester<TKey, TValue> {
 class DictionaryGenericTest {
 
     @test 'should perform tests on Dictionary<string, string>'() {
-        let tester = new DictionaryTester<string, string>();
+        const tester = new DictionaryTester<string, string>();
 
-        let testData: ITestData<string, string>[] = [
+        const testData: Array<ITestData<string, string>> = [
             {
                 keys: [],
                 values: [],
@@ -232,9 +245,9 @@ class DictionaryGenericTest {
     }
 
     @test 'should perform tests on Dictionary<string, number>'() {
-        let tester = new DictionaryTester<string, number>();
+        const tester = new DictionaryTester<string, number>();
 
-        let testData: ITestData<string, number>[] = [
+        const testData: Array<ITestData<string, number>> = [
             {
                 keys: [],
                 values: [],
@@ -251,9 +264,9 @@ class DictionaryGenericTest {
     }
 
     @test 'should perform tests on Dictionary<number, number>'() {
-        let tester = new DictionaryTester<number, number>();
+        const tester = new DictionaryTester<number, number>();
 
-        let testData: ITestData<number, number>[] = [
+        const testData: Array<ITestData<number, number>> = [
             {
                 keys: [],
                 values: [],
@@ -271,9 +284,9 @@ class DictionaryGenericTest {
 
 
     @test 'should perform tests on Dictionary<string, ValueClass>'() {
-        let tester = new DictionaryTester<string, ValueClass>();
+        const tester = new DictionaryTester<string, ValueClass>();
 
-        let testData: ITestData<string, ValueClass>[] = [
+        const testData: Array<ITestData<string, ValueClass>> = [
             {
                 keys: [],
                 values: [],
@@ -292,9 +305,9 @@ class DictionaryGenericTest {
 
 
     @test 'should perform tests on Dictionary<KeyClass, ValueClass>'() {
-        let tester = new DictionaryTester<KeyClass, ValueClass>();
+        const tester = new DictionaryTester<KeyClass, ValueClass>();
 
-        let testData: ITestData<KeyClass, ValueClass>[] = [
+        const testData: Array<ITestData<KeyClass, ValueClass>> = [
             {
                 keys: [],
                 values: [],
