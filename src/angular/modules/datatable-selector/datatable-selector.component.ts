@@ -54,9 +54,10 @@ export type sortMode = 'single' | 'multiple';
 
           <div *ngIf="info.controlType === controlType.Date">
             <template let-col let-data="rowData" pTemplate="body">
-              <span>{{ formatValue(data[col.field], info) }}</span>
+              <p-calendar [(ngModel)]="data[col.field]" dateFormat="yyyy-mm-dd" [readonlyInput]="true"></p-calendar>
+              
               <!--
-              <p-calendar [(ngModel)]="data[col.field]"></p-calendar>
+              <span>{{ formatValue(data[col.field], info) }}</span>
               -->
             </template>
           </div>
