@@ -172,8 +172,9 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
             Assert.that(!this.dataService,
                 `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
         } else {
-            Assert.that(this.dataService !== undefined,
-                `Wenn Property data nicht gesetzt ist, muss dataService gesetzt sein.`);
+            // zulässig, falls DataBinding noch nicht abgeschlossen: weder data noch dataService ist gesetzt
+            // Assert.that(this.dataService !== undefined,
+            //     `Wenn Property data nicht gesetzt ist, muss dataService gesetzt sein.`);
         }
 
         this.selectedValue = undefined;
@@ -388,14 +389,15 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
      * Liefert @see{TableMetadata}, falls für die @param{values} (nur das erste Element) Metadaten vorliegen ->
      * ggf. autom. Konfiguration über Metadaten
      */
-    protected getMetadataForValues(values: any[]): TableMetadata  {
+    protected getMetadataForValues(values: any[]): TableMetadata {
         let tableMetadata;
         if (values && values.length > 0) {
             const value = values[0];
 
             if (value && value.constructor) {
                 const clazzName = value.constructor.name;
-                tableMetadata = this.metadataService.findTableMetadata(clazzName);            }
+                tableMetadata = this.metadataService.findTableMetadata(clazzName);
+            }
         }
         return tableMetadata;
     }
