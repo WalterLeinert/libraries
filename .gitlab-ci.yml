@@ -4,7 +4,6 @@
 image: node:7.0.0
 
 before_script:
-  - node -v
   - npm install
 
 # Pick zero or more services to be used on all builds.
@@ -26,6 +25,7 @@ stages:
 lint:
   stage: build
   script:
+    - node -v
     - node node_modules/gulp/bin/gulp tslint
 
 compile:
