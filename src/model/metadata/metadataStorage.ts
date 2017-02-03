@@ -1,5 +1,5 @@
 import { Assert } from '../../util/assert';
-import { Enum } from "./../decorator/model/enum";
+import { Enum } from './../decorator/model/enum';
 import { Dictionary, Types } from '../../types';
 import { CompoundValidator, Validator } from './../validation';
 import { ValidationMetadata } from './validationMetadata';

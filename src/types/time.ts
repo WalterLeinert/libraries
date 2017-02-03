@@ -113,7 +113,7 @@ export class Time extends ShortTime {
     }
 
     public toSeconds(): number {
-        return this.hour * 3600 + this.minute * 60 + this.second;;
+        return this.hour * 3600 + this.minute * 60 + this.second;
     }
 
 
