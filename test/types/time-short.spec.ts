@@ -1,13 +1,16 @@
-require('reflect-metadata');
+// tslint:disable:max-classes-per-file
+// tslint:disable:member-access
+
+// require('reflect-metadata');
 
 import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { AssertionError } from '../../src/util';
 import { ShortTime, Types } from '../../src/types';
+import { AssertionError } from '../../src/util';
 
-let expedtedTimes = [
+const expedtedTimes = [
     {
         time: new ShortTime(0, 0),
         text: '00:00'
@@ -35,19 +38,19 @@ class ShortTimeTest {
     }
 
     @test 'should format times'() {
-        expedtedTimes.forEach(test => {
+        expedtedTimes.forEach((test) => {
             expect(test.time.toString()).to.equal(test.text);
         });
     }
 
     @test 'should parse times'() {
-        expedtedTimes.forEach(test => {
+        expedtedTimes.forEach((test) => {
             expect(ShortTime.parse(test.text)).to.deep.equal(test.time);
         });
     }
 
     @test 'should createFrom obj'() {
-        let timeObj = {
+        const timeObj = {
             hour: 12,
             minute: 10
         };
@@ -71,12 +74,12 @@ class ShortTimeTest {
     }
 
     @test 'should allow 00 seconds'() {
-        let time = '12:11';
+        const time = '12:11';
         expect(ShortTime.parse(`${time}:00`).toString()).to.be.equal(time);
     }
 
     @test 'should not allow ss seconds'() {
-        let time = '12:11:33';
+        const time = '12:11:33';
         expect(() => ShortTime.parse(time))
             .to.throw(Error, `Zeit ${time}: Falls Sekunden angegeben sind, darf der Wert nur 00 sein.`);
     }
@@ -104,75 +107,75 @@ function timeToMinute(time: ShortTime): number {
 class ShortTimeOperationsTest {
 
     @test 'should get minutes from hour'() {
-        let time = new ShortTime(8, 0);
+        const time = new ShortTime(8, 0);
         return expect(time.toMinutes()).to.equal(timeToMinute(time));
     }
 
     @test 'should get minutes from minute'() {
-        let time = new ShortTime(0, 10);
+        const time = new ShortTime(0, 10);
         return expect(time.toMinutes()).to.equal(timeToMinute(time));
     }
 
     @test 'should get hours'() {
-        let time = new ShortTime(0, 10);
+        const time = new ShortTime(0, 10);
         return expect(time.toHours()).to.be.closeTo(time.toMinutes() / 60, 0.05);
     }
 
     @test 'should get hours 2'() {
-        let time = new ShortTime(12, 15);
+        const time = new ShortTime(12, 15);
         return expect(time.toHours()).to.be.closeTo(time.toMinutes() / 60, 0.05);
     }
 
     @test 'should get hours rounded to 2 decimal places'() {
-        let time = new ShortTime(12, 15);
+        const time = new ShortTime(12, 15);
         return expect(time.toHours(2)).to.equal(12.25);
     }
 
     @test 'should get hours rounded to 3 decimal places'() {
-        let time = new ShortTime(12, 11);
+        const time = new ShortTime(12, 11);
         return expect(time.toHours(3)).to.equal(12.183);
     }
 
 
 
     @test 'should get time from minutes'() {
-        let time = new ShortTime(12, 15);
+        const time = new ShortTime(12, 15);
         return expect(ShortTime.createFromMinutes(time.toMinutes())).to.deep.equal(time);
     }
 
     @test 'should get time from seconds -> Exception'() {
-        let time = new ShortTime(23, 59);
+        const time = new ShortTime(23, 59);
         return expect(() => ShortTime.createFromMinutes(time.toMinutes() + 1)).to.throw(Error);
     }
 
     @test 'should add times'() {
-        let time1 = new ShortTime(12, 0);
-        let time2 = new ShortTime(1, 30);
-        let result = time1.add(time2);
-        let expected = new ShortTime(13, 30);
+        const time1 = new ShortTime(12, 0);
+        const time2 = new ShortTime(1, 30);
+        const result = time1.add(time2);
+        const expected = new ShortTime(13, 30);
 
         return expect(result).to.deep.equal(expected);
     }
 
     @test 'should subtract times'() {
-        let time1 = new ShortTime(12, 0);
-        let time2 = new ShortTime(1, 30);
-        let result = time1.subtract(time2);
-        let expected = new ShortTime(10, 30);
+        const time1 = new ShortTime(12, 0);
+        const time2 = new ShortTime(1, 30);
+        const result = time1.subtract(time2);
+        const expected = new ShortTime(10, 30);
 
         return expect(result).to.deep.equal(expected);
     }
 
 
     @test 'should add times -> Exception'() {
-        let time1 = new ShortTime(23, 59);
-        let time2 = new ShortTime(1, 30);
+        const time1 = new ShortTime(23, 59);
+        const time2 = new ShortTime(1, 30);
         return expect(() => time1.add(time2)).to.throw(Error);
     }
 
     @test 'should subtract times -> Exception'() {
-        let time1 = new ShortTime(0, 0);
-        let time2 = new ShortTime(1, 30);
+        const time1 = new ShortTime(0, 0);
+        const time2 = new ShortTime(1, 30);
         return expect(() => time1.subtract(time2)).to.throw(Error);
     }
 

@@ -1,3 +1,6 @@
+
+import reflectMetadata = require('reflect-metadata');
+
 import { Dictionary } from './../types/dictionary';
 import { Assert } from './../util/assert';
 

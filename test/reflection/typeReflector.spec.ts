@@ -1,7 +1,8 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
 
-import reflectMetadata = require('reflect-metadata');
+// tslint:disable-next-line:no-var-requires
+require('reflect-metadata');
 
 
 import * as chai from 'chai';

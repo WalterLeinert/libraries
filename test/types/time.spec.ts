@@ -1,4 +1,5 @@
-require('reflect-metadata');
+// tslint:disable:max-classes-per-file
+// tslint:disable:member-access
 
 import * as chai from 'chai';
 import { expect } from 'chai';
@@ -8,7 +9,7 @@ import { AssertionError } from '../../src/util';
 
 import { Time } from '../../src/types/time';
 
-let expedtedTimes = [
+const expedtedTimes = [
     {
         time: new Time(0, 0, 0),
         text: '00:00:00'
@@ -36,19 +37,19 @@ class TimeTest {
     }
 
     @test 'should format times'() {
-        expedtedTimes.forEach(test => {
+        expedtedTimes.forEach((test) => {
             expect(test.time.toString()).to.equal(test.text);
         });
     }
 
     @test 'should parse times'() {
-        expedtedTimes.forEach(test => {
+        expedtedTimes.forEach((test) => {
             expect(Time.parse(test.text)).to.deep.equal(test.time);
         });
     }
 
     @test 'should createFrom obj'() {
-        let timeObj = {
+        const timeObj = {
             hour: 12,
             minute: 10,
             second: 15
@@ -104,58 +105,58 @@ function timeToSecond(time: Time): number {
 class TimeOperationsTest {
 
     @test 'should get seconds from hour'() {
-        let time = new Time(8, 0, 0);
+        const time = new Time(8, 0, 0);
         return expect(time.toSeconds()).to.equal(timeToSecond(time));
     }
 
     @test 'should get seconds from minute'() {
-        let time = new Time(0, 10, 0);
+        const time = new Time(0, 10, 0);
         return expect(time.toSeconds()).to.equal(timeToSecond(time));
     }
 
     @test 'should get seconds from second'() {
-        let time = new Time(0, 0, 11);
+        const time = new Time(0, 0, 11);
         return expect(time.toSeconds()).to.equal(timeToSecond(time));
     }
 
     @test 'should get time from seconds'() {
-        let time = new Time(12, 15, 10);
+        const time = new Time(12, 15, 10);
         return expect(Time.createFromSeconds(time.toSeconds())).to.deep.equal(time);
     }
 
     @test 'should get time from seconds -> Exception'() {
-        let time = new Time(23, 59, 59);
+        const time = new Time(23, 59, 59);
         return expect(() => Time.createFromSeconds(time.toSeconds() + 1)).to.throw(Error);
     }
 
     @test 'should add times'() {
-        let time1 = new Time(12, 0, 0);
-        let time2 = new Time(1, 30, 0);
-        let result = time1.add(time2);
-        let expected = new Time(13, 30, 0);
+        const time1 = new Time(12, 0, 0);
+        const time2 = new Time(1, 30, 0);
+        const result = time1.add(time2);
+        const expected = new Time(13, 30, 0);
 
         return expect(result).to.deep.equal(expected);
     }
 
     @test 'should subtract times'() {
-        let time1 = new Time(12, 0, 0);
-        let time2 = new Time(1, 30, 0);
-        let result = time1.subtract(time2);
-        let expected = new Time(10, 30, 0);
+        const time1 = new Time(12, 0, 0);
+        const time2 = new Time(1, 30, 0);
+        const result = time1.subtract(time2);
+        const expected = new Time(10, 30, 0);
 
         return expect(result).to.deep.equal(expected);
     }
 
 
     @test 'should add times -> Exception'() {
-        let time1 = new Time(23, 59, 59);
-        let time2 = new Time(1, 30, 0);
+        const time1 = new Time(23, 59, 59);
+        const time2 = new Time(1, 30, 0);
         return expect(() => time1.add(time2)).to.throw(Error);
     }
 
      @test 'should subtract times -> Exception'() {
-        let time1 = new Time(0, 0, 0);
-        let time2 = new Time(1, 30, 0);
+        const time1 = new Time(0, 0, 0);
+        const time2 = new Time(1, 30, 0);
         return expect(() => time1.subtract(time2)).to.throw(Error);
     }
 

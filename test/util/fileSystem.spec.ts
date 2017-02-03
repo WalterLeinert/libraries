@@ -1,3 +1,6 @@
+// tslint:disable:max-classes-per-file
+// tslint:disable:member-access
+
 import path = require('path');
 import process = require('process');
 
@@ -15,13 +18,13 @@ import { FileSystem, LoggingConfiguration } from '../../src/util';
 class LoggingConfigurationTest {
 
     @test 'should exist file'() {
-        let testPath = path.join(process.cwd(), 'package.json');
+        const testPath = path.join(process.cwd(), 'package.json');
         // console.log(testPath);
         return expect(FileSystem.fileExists(testPath)).to.be.true;
     }
 
     @test 'should not exist file'() {
-        let testPath = path.join(process.cwd(), 'does-not-exist');
+        const testPath = path.join(process.cwd(), 'does-not-exist');
         // console.log(testPath);
         return expect(FileSystem.fileExists(testPath)).to.be.false;
     }
@@ -37,13 +40,13 @@ class LoggingConfigurationTest {
 
 
     @test 'should exist directory'() {
-        let testPath = path.join(process.cwd());
+        const testPath = path.join(process.cwd());
         // console.log(testPath);
         return expect(FileSystem.directoryExists(testPath)).to.be.true;
     }
 
     @test 'should not exist directory'() {
-        let testPath = path.join(process.cwd(), 'does-not-exist');
+        const testPath = path.join(process.cwd(), 'does-not-exist');
         // console.log(testPath);
         return expect(FileSystem.directoryExists(testPath)).to.be.false;
     }

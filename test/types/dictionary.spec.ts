@@ -1,4 +1,7 @@
-require('reflect-metadata');
+// tslint:disable:max-classes-per-file
+// tslint:disable:member-access
+
+import reflectMetadata = require('reflect-metadata');
 
 import * as chai from 'chai';
 import { expect } from 'chai';
@@ -12,7 +15,7 @@ class BaseClass {
 }
 
 
-let expectedDict = [
+const expectedDict = [
     {
         dictCreator: () => new Dictionary<string, string>(),
         keys: ['key-0', 'key-1'],
@@ -33,56 +36,56 @@ class DictionaryStringStringTest<TKey, TValue> {
     }
 
     @test 'should set an item'() {
-        let d = new Dictionary<string, string>();
+        const d = new Dictionary<string, string>();
         expect(d.set('aaa', 'bbb')).not.to.throw;
         expect(d.count).to.be.equal(1);
     }
 
     @test 'should remove an item'() {
-        let d = new Dictionary<string, string>();
-        let key = 'aaa';
+        const d = new Dictionary<string, string>();
+        const key = 'aaa';
         d.set(key, 'bbb');
         expect(d.remove(key)).not.to.throw;
         expect(d.count).to.be.equal(0);
     }
 
     @test 'should test for existence'() {
-        let d = new Dictionary<string, string>();
-        let key = 'aaa';
+        const d = new Dictionary<string, string>();
+        const key = 'aaa';
         d.set(key, 'bbb');
         expect(d.containsKey(key)).to.be.true;
     }
 
     @test 'should test for not existence'() {
-        let d = new Dictionary<string, string>();
-        let key = 'aaa';
+        const d = new Dictionary<string, string>();
+        const key = 'aaa';
         d.set(key, 'bbb');
         expect(d.containsKey('no-such-key')).to.be.false;
     }
 
     @test 'should test empty keys'() {
-        let d = new Dictionary<string, string>();
+        const d = new Dictionary<string, string>();
         expect(d.keys.length).to.be.equal(0);
     }
 
     @test 'should test empty values'() {
-        let d = new Dictionary<string, string>();
+        const d = new Dictionary<string, string>();
         expect(d.values.length).to.be.equal(0);
     }
 
     @test 'should test keys'() {
-        let d = new Dictionary<string, string>();
-        let key = 'aaa';
-        let value = 'bbb';
+        const d = new Dictionary<string, string>();
+        const key = 'aaa';
+        const value = 'bbb';
         d.set(key, value);
         expect(d.keys.length).to.be.equal(1);
         expect(d.keys[0]).to.be.equal(key);
     }
 
     @test 'should test values'() {
-        let d = new Dictionary<string, string>();
-        let key = 'aaa';
-        let value = 'bbb';
+        const d = new Dictionary<string, string>();
+        const key = 'aaa';
+        const value = 'bbb';
         d.set(key, value);
         expect(d.values.length).to.be.equal(1);
         expect(d.values[0]).to.be.equal(value);
@@ -94,18 +97,18 @@ class DictionaryStringStringTest<TKey, TValue> {
 class DictionaryTest {
 
     @test 'validate keys vs values'() {
-        expectedDict.forEach(test => {
+        expectedDict.forEach((test) => {
             expect(test.keys.length).to.be.equal(test.values.length);
         });
     }
 
     @test 'should set an item'() {
-        expectedDict.forEach(test => {
-            let dict = test.dictCreator();
+        expectedDict.forEach((test) => {
+            const dict = test.dictCreator();
 
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 expect(dict.set(key, value)).not.to.throw;
                 expect(dict.count).to.be.equal(i + 1);
@@ -115,19 +118,20 @@ class DictionaryTest {
 
 
     @test 'should remove an item'() {
-        expectedDict.forEach(test => {
-            let dict = test.dictCreator();
+        expectedDict.forEach((test) => {
+            const dict = test.dictCreator();
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 dict.set(key, value);
             }
 
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 expect(dict.remove(key)).not.to.throw;
                 expect(dict.count).to.be.equal(test.keys.length - (i + 1));
@@ -137,19 +141,21 @@ class DictionaryTest {
 
 
     @test 'should test for existence'() {
-        expectedDict.forEach(test => {
-            let dict = test.dictCreator();
+        expectedDict.forEach((test) => {
+            const dict = test.dictCreator();
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 dict.set(key, value);
             }
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 expect(dict.containsKey(key)).to.be.true;
             }
@@ -157,12 +163,13 @@ class DictionaryTest {
     }
 
     @test 'should test for non existence'() {
-        expectedDict.forEach(test => {
-            let dict = test.dictCreator();
+        expectedDict.forEach((test) => {
+            const dict = test.dictCreator();
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 dict.set(key, value);
             }
@@ -172,26 +179,27 @@ class DictionaryTest {
     }
 
     @test 'should test empty keys'() {
-        expectedDict.forEach(test => {
-            let dict = test.dictCreator();
+        expectedDict.forEach((test) => {
+            const dict = test.dictCreator();
             expect(dict.keys.length).to.be.equal(0);
         });
     }
 
     @test 'should test empty values'() {
-        expectedDict.forEach(test => {
-            let dict = test.dictCreator();
+        expectedDict.forEach((test) => {
+            const dict = test.dictCreator();
             expect(dict.values.length).to.be.equal(0);
         });
     }
 
     @test 'should test keys'() {
-        expectedDict.forEach(test => {
-            let dict = test.dictCreator();
+        expectedDict.forEach((test) => {
+            const dict = test.dictCreator();
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 dict.set(key, value);
             }
@@ -202,12 +210,13 @@ class DictionaryTest {
     }
 
     @test 'should test values'() {
-        expectedDict.forEach(test => {
-            let dict = test.dictCreator();
+        expectedDict.forEach((test) => {
+            const dict = test.dictCreator();
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 dict.set(key, value);
             }
@@ -218,12 +227,13 @@ class DictionaryTest {
     }
 
     @test 'should test clear'() {
-        expectedDict.forEach(test => {
-            let dict = test.dictCreator();
+        expectedDict.forEach((test) => {
+            const dict = test.dictCreator();
 
+            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < test.keys.length; i++) {
-                let key = test.keys[i];
-                let value = test.values[i];
+                const key = test.keys[i];
+                const value = test.values[i];
 
                 dict.set(key, value);
             }

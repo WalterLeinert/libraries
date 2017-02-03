@@ -1,4 +1,5 @@
-require('reflect-metadata');
+// tslint:disable:max-classes-per-file
+// tslint:disable:member-access
 
 import * as chai from 'chai';
 import { expect } from 'chai';
@@ -24,6 +25,7 @@ class TestUser implements IUser {
 
 
     public resetCredentials() {
+        // ok
     }
 
     public get isAdmin(): boolean {
@@ -38,7 +40,11 @@ class TypesTest {
 
     @test 'should test various types'() {
         expect(Types.isArray([1, 2])).to.be.true;
-        expect(Types.isFunction(function () { })).to.be.true;
+        expect(Types.isFunction(
+            // tslint:disable-next-line:only-arrow-functions
+            function() {
+                // ok
+            })).to.be.true;
         expect(Types.isBoolean(true)).to.be.true;
         expect(Types.isNumber(4711)).to.be.true;
         expect(Types.isObject({ name: 'hugo' })).to.be.true;
@@ -50,7 +56,7 @@ class TypesTest {
     }
 
     @test 'should test functions/properties'() {
-        let user = new TestUser(1, 'walter', 'walter', 'leinert', 1, '', '');
+        const user = new TestUser(1, 'walter', 'walter', 'leinert', 1, '', '');
         expect(Types.hasMethod(user, 'noSuchFunction')).to.be.false;
         expect(Types.hasMethod(user, 'resetCredentials')).to.be.true;
 

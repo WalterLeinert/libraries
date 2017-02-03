@@ -1,3 +1,6 @@
+// tslint:disable:max-classes-per-file
+// tslint:disable:member-access
+
 import path = require('path');
 import process = require('process');
 
@@ -6,8 +9,8 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 
-import { AssertionError } from '../../src/util';
 import { Time } from '../../src/types/time';
+import { AssertionError } from '../../src/util';
 
 import { Reflection } from '../../src/util';
 

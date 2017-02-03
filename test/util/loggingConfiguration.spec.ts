@@ -1,3 +1,6 @@
+// tslint:disable:max-classes-per-file
+// tslint:disable:member-access
+
 import path = require('path');
 import process = require('process');
 
@@ -6,7 +9,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 
-import { LoggingConfiguration, ILoggingConfigurationOptions } from '../../src/util';
+import { ILoggingConfigurationOptions, LoggingConfiguration } from '../../src/util';
 
 class Test {
     constructor(public name: string, public id: number) {
@@ -15,6 +18,7 @@ class Test {
 
 class Test2 {
     constructor() {
+        // ok
     }
 }
 
@@ -23,7 +27,7 @@ class LoggingConfigurationTest {
 
 
     @test 'should get path w/o systemMode'() {
-        let expectedPath = path.join(
+        const expectedPath = path.join(
             process.cwd(),
             LoggingConfiguration.DEFAULT_RELATIVE_PATH,
             LoggingConfiguration.DEFAULT_FILENAME + LoggingConfiguration.DEFAULT_EXTENSION
@@ -32,8 +36,8 @@ class LoggingConfigurationTest {
     }
 
     @test 'should get path with systemMode'() {
-        let systemMode = 'development';
-        let expectedPath = path.join(
+        const systemMode = 'development';
+        const expectedPath = path.join(
             process.cwd(),
             LoggingConfiguration.DEFAULT_RELATIVE_PATH,
             LoggingConfiguration.DEFAULT_FILENAME + '.' + systemMode + LoggingConfiguration.DEFAULT_EXTENSION
@@ -42,19 +46,19 @@ class LoggingConfigurationTest {
     }
 
     @test 'should get path with options (filename)'() {
-        let options: ILoggingConfigurationOptions = {
+        const options: ILoggingConfigurationOptions = {
             filename: 'logging'
         };
-        let expectedPath = this.buildPath(options);
+        const expectedPath = this.buildPath(options);
 
         return expect(LoggingConfiguration.getConfigurationPath(options)).to.be.eql(expectedPath);
     }
 
     @test 'should get path with options (relativePath)'() {
-        let options: ILoggingConfigurationOptions = {
+        const options: ILoggingConfigurationOptions = {
             relativePath: 'lib/config'
         };
-        let expectedPath = this.buildPath(options);
+        const expectedPath = this.buildPath(options);
 
         return expect(LoggingConfiguration.getConfigurationPath(options)).to.be.eql(expectedPath);
     }
@@ -63,7 +67,8 @@ class LoggingConfigurationTest {
         return path.join(
             process.cwd(),
             options.relativePath ? options.relativePath : LoggingConfiguration.DEFAULT_RELATIVE_PATH,
-            (options.filename ? options.filename : LoggingConfiguration.DEFAULT_FILENAME) + LoggingConfiguration.DEFAULT_EXTENSION
+            (options.filename ? options.filename : LoggingConfiguration.DEFAULT_FILENAME) +
+            LoggingConfiguration.DEFAULT_EXTENSION
         );
     }
 

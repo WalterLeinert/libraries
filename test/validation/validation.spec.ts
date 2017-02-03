@@ -1,6 +1,10 @@
-require('reflect-metadata');
-import { ValidationResult } from '../../src/model/validation/validationResult';
+// tslint:disable:max-classes-per-file
+// tslint:disable:member-access
+
+// require('reflect-metadata');
+
 import { ColumnMetadata } from '../../src/model/metadata/columnMetadata';
+import { ValidationResult } from '../../src/model/validation/validationResult';
 
 import * as chai from 'chai';
 import { expect } from 'chai';
@@ -10,10 +14,10 @@ import { AssertionError } from '../../src/util';
 
 import { LengthValidator } from '../../src/model/validation/lengthValidator';
 
-let columnMetadata = new ColumnMetadata(null, 'name', 'string', {});
+const columnMetadata = new ColumnMetadata(null, 'name', 'string', {});
 
 
-let expectedResults = [
+const expectedResults = [
     {
         range: {
             min: 3,
@@ -71,19 +75,19 @@ let expectedResults = [
 class ValidationTest {
 
     @test 'should validate length of string'() {
-        let validator = new LengthValidator(3, 10);
+        const validator = new LengthValidator(3, 10);
         validator.attachColumnMetadata(columnMetadata);
 
-        let res = validator.validate('ttt');
+        const res = validator.validate('ttt');
         return expect(res.ok).to.be.true;
     }
 
 
     @test 'should test LengthValidator'() {
-        for (let expectedResult of expectedResults) {
-            let validator = new LengthValidator(expectedResult.range.min, expectedResult.range.max);
+        for (const expectedResult of expectedResults) {
+            const validator = new LengthValidator(expectedResult.range.min, expectedResult.range.max);
             validator.attachColumnMetadata(expectedResult.columnMetadata);
-            let res = validator.validate(expectedResult.text);
+            const res = validator.validate(expectedResult.text);
             expect(res).to.be.deep.equal(expectedResult.result);
         }
     }

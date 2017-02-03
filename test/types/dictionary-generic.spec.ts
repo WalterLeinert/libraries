@@ -42,7 +42,7 @@ class DictionaryTester<TKey, TValue> {
 
 
         // @test 'should set an item'() {
-        expected.forEach(test => {
+        expected.forEach((test) => {
             const dict = new Dictionary<TKey, TValue>();
 
             for (let i = 0; i < test.keys.length; i++) {

@@ -1,9 +1,11 @@
 import * as moment from 'moment';
+
+import { ShortTime, Time } from '../../types';
 import { Assert } from '../../util/assert';
-import { ValidationResult, IValidation } from './../validation';
 import { ColumnOptions } from '../decorator/model/columnOptions';
+import { IValidation, ValidationResult } from './../validation';
 import { ColumnTypes } from './columnTypes';
-import { Time, ShortTime } from '../../types';
+
 import { EnumMetadata } from '.';
 
 /**
@@ -22,7 +24,8 @@ export class ColumnMetadata {
      * @param {string} propertyType - Typ der Modelproperty
      * @param {ColumnOptions} options - weitere Propertyeigenschaften
      */
-    constructor(public target: Function, public propertyName: string, public propertyType: string, public options: ColumnOptions) {
+    constructor(public target: Function, public propertyName: string, public propertyType: string,
+        public options: ColumnOptions) {
     }
 
 
@@ -47,7 +50,8 @@ export class ColumnMetadata {
                 } else if (typeof value === 'string') {
                     rval = new Date(value);
                 } else {
-                    throw new Error(`Column ${this.propertyName}: Konvertierung von Datumswert ${JSON.stringify(value)} nicht möglich.`);
+                    throw new Error(`Column ${this.propertyName}: Konvertierung von Datumswert` +
+                        ` ${JSON.stringify(value)} nicht möglich.`);
                 }
                 break;
 
@@ -58,7 +62,6 @@ export class ColumnMetadata {
                     rval = Time.parse(value);
                 } else {
                     rval = Time.createFrom(value);    // wir interpretieren den Wert als Time
-                    // throw new Error(`Column ${this.propertyName}: Konvertierung von Zeitwert ${JSON.stringify(value)} nicht möglich.`);
                 }
                 break;
 
@@ -69,7 +72,6 @@ export class ColumnMetadata {
                     rval = ShortTime.parse(value);
                 } else {
                     rval = ShortTime.createFrom(value);    // wir interpretieren den Wert als ShortTime
-                    // throw new Error(`Column ${this.propertyName}: Konvertierung von Zeitwert ${JSON.stringify(value)} nicht möglich.`);
                 }
                 break;
 
@@ -121,9 +123,11 @@ export class ColumnMetadata {
 
             case ColumnTypes.JSON:
                 return JSON.stringify(value);
+
+            default:
+                return value;
         }
 
-        return value;
     }
 
     public setValidation(validator: IValidation) {
