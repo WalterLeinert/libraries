@@ -1,10 +1,11 @@
-
-import { Time, ShortTime } from '../../../types';
-import { ColumnOptions } from './columnOptions';
-import { ColumnTypes } from '../../metadata/columnTypes';
-import { ColumnMetadata } from '../../metadata/columnMetadata';
-import { MetadataStorage } from '../../metadata/metadataStorage';
+import { ShortTime, Time } from '../../../types';
 import { ColumnTypeUndefinedError } from '../../error/columnTypeUndefinedError';
+import { ColumnMetadata } from '../../metadata/columnMetadata';
+import { ColumnTypes } from '../../metadata/columnTypes';
+import { MetadataStorage } from '../../metadata/metadataStorage';
+
+import { ColumnOptions } from './columnOptions';
+
 
 /**
  * Column-Decorator für Modellproperties/-attribute
@@ -14,7 +15,8 @@ import { ColumnTypeUndefinedError } from '../../error/columnTypeUndefinedError';
  * @returns
  */
 export function Column(options?: ColumnOptions) {
-    return function (target: any, propertyName: string) {
+    // tslint:disable-next-line:only-arrow-functions
+    return function(target: any, propertyName: string) {
 
         let propertyType: Function = (Reflect as any).getMetadata('design:type', target, propertyName);
 
@@ -38,10 +40,10 @@ export function Column(options?: ColumnOptions) {
         }
 
 
-        let reflectedType = ColumnTypes.typeToString(propertyType);
+        const reflectedType = ColumnTypes.typeToString(propertyType);
         // console.log(`${propertyName} reflectedType: ${reflectedType}`);
 
-        let type = ColumnTypes.determineTypeFromFunction(propertyType);
+        const type = ColumnTypes.determineTypeFromFunction(propertyType);
 
         if (!options) {
             options = {} as ColumnOptions;
@@ -52,7 +54,7 @@ export function Column(options?: ColumnOptions) {
         }
 
         if (!options.type) {
-           throw new ColumnTypeUndefinedError(target, propertyName);
+            throw new ColumnTypeUndefinedError(target, propertyName);
         }
 
         if (!options.name) {
@@ -67,6 +69,7 @@ export function Column(options?: ColumnOptions) {
         //     options.displayName = propertyName;
         // }
 
-        MetadataStorage.instance.addColumnMetadata(new ColumnMetadata(target.constructor, propertyName, reflectedType, options));
+        MetadataStorage.instance.addColumnMetadata(new ColumnMetadata(target.constructor, propertyName,
+            reflectedType, options));
     };
 }

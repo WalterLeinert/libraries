@@ -1,7 +1,7 @@
 import { MetadataStorage } from '../../metadata/metadataStorage';
-import { NotNullValidator } from '../../validation/notNullValidator';
-import { LengthValidator } from '../../validation/lengthValidator';
 import { ValidationMetadata } from '../../metadata/validationMetadata';
+import { LengthValidator } from '../../validation/lengthValidator';
+import { NotNullValidator } from '../../validation/notNullValidator';
 
 /**
  * NotNull-Decorator zur Validierung von Modellproperties/-attributes
@@ -9,7 +9,9 @@ import { ValidationMetadata } from '../../metadata/validationMetadata';
  * 
  */
 export function NotNull() {
-    return function (target: any, propertyName: string) {
-        MetadataStorage.instance.addValidationMetadata(new ValidationMetadata(target.constructor, propertyName, new NotNullValidator()));
+    // tslint:disable-next-line:only-arrow-functions
+    return function(target: any, propertyName: string) {
+        MetadataStorage.instance.addValidationMetadata(
+            new ValidationMetadata(target.constructor, propertyName, new NotNullValidator()));
     };
 }

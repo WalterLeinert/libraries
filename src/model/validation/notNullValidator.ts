@@ -1,8 +1,9 @@
 import { StringBuilder } from '../../base';
 import { Assert } from '../../util/assert';
-import { ValidationResult } from './validationResult';
-import { Validator } from './validator';
 import { ColumnMetadata } from '../metadata/columnMetadata';
+
+import { ValidationResult, Validator } from '.';
+
 
 export class NotNullValidator extends Validator {
 

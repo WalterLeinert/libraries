@@ -1,8 +1,9 @@
 import { StringBuilder } from '../../base';
 import { Assert } from '../../util/assert';
-import { ValidationResult } from './validationResult';
-import { Validator } from './validator';
 import { ColumnMetadata } from '../metadata/columnMetadata';
+
+import { ValidationResult, Validator } from '.';
+
 
 export class LengthValidator extends Validator {
 
@@ -14,7 +15,7 @@ export class LengthValidator extends Validator {
     public validate(value: string): ValidationResult {
         if (this.min !== undefined) {
             let error = true;
-            let sb = new StringBuilder(`${this.propertyName}: Der Text`);
+            const sb = new StringBuilder(`${this.propertyName}: Der Text`);
 
             if (value === undefined) {
                 sb.append(' fehlt und');
@@ -31,7 +32,7 @@ export class LengthValidator extends Validator {
 
         if (this.max !== undefined) {
             let error = true;
-            let sb = new StringBuilder(`${this.propertyName}: Der Text`);
+            const sb = new StringBuilder(`${this.propertyName}: Der Text`);
 
             if (value === undefined) {
                 sb.append(' fehlt und');

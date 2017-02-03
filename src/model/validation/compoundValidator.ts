@@ -1,7 +1,8 @@
-import { ValidationResult } from './validationResult';
-import { Validator } from './validator';
-import { IValidation } from './validation.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
+
+import { IValidation, ValidationMessage, ValidationResult } from '.';
+import { Validator } from './validator';
+
 
 export class CompoundValidator extends Validator {
 
@@ -9,13 +10,13 @@ export class CompoundValidator extends Validator {
         super();
     }
 
-    validate(value: any): ValidationResult {
-        let messages = [];
+    public validate(value: any): ValidationResult {
+        const messages = new Array<ValidationMessage>();
 
-        for (let v of this.validators) {
-            let vr = v.validate(value);
-            if (! vr.ok) {
-                messages.push(vr.messages);
+        for (const validator of this.validators) {
+            const result = validator.validate(value);
+            if (!result.ok) {
+                result.messages.map((message) => messages.push(message));
             }
         }
 

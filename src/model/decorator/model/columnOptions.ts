@@ -1,5 +1,6 @@
 import { ColumnType } from '../../metadata/columnTypes';
 
+// tslint:disable-next-line:interface-name
 export interface ColumnOptions {
 
     /**

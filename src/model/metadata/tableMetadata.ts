@@ -1,7 +1,7 @@
-import { Assert } from '../../util/assert';
 import { Dictionary } from '../../types';
-import { ColumnMetadata } from '../metadata/columnMetadata';
+import { Assert } from '../../util/assert';
 import { TableOptions } from '../decorator/model/tableOptions';
+import { ColumnMetadata } from '../metadata/columnMetadata';
 
 
 /**
@@ -14,7 +14,7 @@ export class TableMetadata {
     private _columnMetadata: ColumnMetadata[] = [];
     private propertyMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
     private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
-    private _primaryKeyColumn; ColumnMetadata;
+    private _primaryKeyColumn: ColumnMetadata;
     private _service: Function;
 
     constructor(public target: Function, public options: TableOptions) {
@@ -59,7 +59,7 @@ export class TableMetadata {
      * @memberOf TableMetadata
      */
     public createEntity<T>() {
-        return <T>Reflect.construct(this.target, []);
+        return Reflect.construct(this.target, []) as T;
     }
 
     /**
@@ -68,19 +68,20 @@ export class TableMetadata {
      * @template T
      * @param {Function} target
      * @param {*} json
-     * @param {boolean} mapColumns - falls true, sind im Json-Objekt die Propertynamen die DB-Spaltennamen und müssen gemappt werden
+     * @param {boolean} mapColumns - falls true, sind im Json-Objekt die Propertynamen die DB-Spaltennamen und 
+     *                                 müssen gemappt werden
      * @returns {T}
      * 
      * @memberOf TableMetadata
      */
     public createModelInstance<T>(json: any, mapColumns = true): T {
-        let instance = this.createEntity();
+        const instance = this.createEntity();
 
         // alle Properties der Row über Reflection ermitteln        
-        let props = Reflect.ownKeys(json);
+        const props = Reflect.ownKeys(json);
 
         // ... und dann die Werte der Zielentity zuweisen
-        for (let propName of props) {
+        for (const propName of props) {
             let colMetadata = null;
 
             if (mapColumns) {
@@ -109,9 +110,9 @@ export class TableMetadata {
      * @memberOf TableMetadata
      */
     public createDatabaseInstance<T>(entity: T): any {
-        let dbInstance = {};
+        const dbInstance = {};
 
-        for (let col of this.columnMetadata) {
+        for (const col of this.columnMetadata) {
             if (col.options.persisted) {
                 dbInstance[col.options.name] = col.convertFromProperty(entity[col.propertyName]);
             }
@@ -151,7 +152,7 @@ export class TableMetadata {
     public getDbColumnName(propertyName: string) {
         Assert.notNullOrEmpty(propertyName);
 
-        let colMetadata = this.propertyMap.get(propertyName);
+        const colMetadata = this.propertyMap.get(propertyName);
         Assert.notNull(colMetadata, `Propertyname ${propertyName} nicht definiert.`);
         Assert.that(colMetadata.options.persisted, `Propertyname ${propertyName} muss Option persisted=true haben.`);
 

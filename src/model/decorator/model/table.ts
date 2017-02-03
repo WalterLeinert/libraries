@@ -1,7 +1,7 @@
-import { TableOptions } from './tableOptions';
 import { MetadataStorage } from '../../metadata/metadataStorage';
 import { TableMetadata } from '../../metadata/tableMetadata';
 
+import { TableOptions } from './tableOptions';
 
 /**
  * Table-Decorator für Modellklassen
@@ -11,7 +11,8 @@ import { TableMetadata } from '../../metadata/tableMetadata';
  * @returns
  */
 export function Table(options?: TableOptions) {
-  return function (target: Function) {
+  // tslint:disable-next-line:only-arrow-functions
+  return function(target: Function) {
     if (!options) {
       options = {} as TableOptions;
     }

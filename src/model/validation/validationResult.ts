@@ -7,21 +7,27 @@ export class ValidationResult {
     private _messages: ValidationMessage[] = [];
 
     public static create(ok: boolean, text: string);
+    // tslint:disable-next-line:unified-signatures
     public static create(ok: boolean, texts: string[]);
+    // tslint:disable-next-line:unified-signatures
     public static create(ok: boolean, messages: ValidationMessage[]);
 
-    public static create(ok: boolean, text: string | string[] | ValidationMessage[]): ValidationResult {
+
+    public static create(ok: boolean, text: string | Array<ValidationMessage | string>): ValidationResult {
         if (typeof text === 'string') {
-            return new ValidationResult(ok, [new ValidationMessage(text as string)]);
+            return new ValidationResult(ok, [new ValidationMessage(text)]);
         }
         if (Array.isArray(text)) {
             if (text.length > 0) {
                 if (typeof text[0] === 'string') {
-                    let messages = [];
-                    for (let message of text) {
-                        messages.push(new ValidationMessage(message as string));
+                    const messages: ValidationMessage[] = [];
+                    for (const txt of text) {
+                        const message = txt as any as string;
+                        messages.push(new ValidationMessage(message));
                     }
                     return new ValidationResult(ok, messages);
+                } else {
+                    return new ValidationResult(ok, text as any as ValidationMessage[]);
                 }
             }
         }
@@ -31,7 +37,7 @@ export class ValidationResult {
 
     private constructor(private _ok: boolean, messages?: ValidationMessage[]) {
         if (messages) {
-            for (let message of messages) {
+            for (const message of messages) {
                 this._messages.push(message);
             }
         }

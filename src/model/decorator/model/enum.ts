@@ -1,10 +1,11 @@
+import { ShortTime, Time } from '../../../types';
 import { Assert } from '../../../util';
-import { Time, ShortTime } from '../../../types';
-import { IEnumOptions } from './enumOptions.interface';
+import { ColumnTypeUndefinedError } from '../../error/columnTypeUndefinedError';
 import { ColumnTypes } from '../../metadata/columnTypes';
 import { EnumMetadata } from '../../metadata/enumMetadata';
 import { MetadataStorage } from '../../metadata/metadataStorage';
-import { ColumnTypeUndefinedError } from '../../error/columnTypeUndefinedError';
+
+import { IEnumOptions } from '.';
 
 /**
  * Enum-Decorator für Modellproperties/-attribute, deren Werteliste aus einer Tabelle stammen 
@@ -14,7 +15,8 @@ import { ColumnTypeUndefinedError } from '../../error/columnTypeUndefinedError';
  * @returns
  */
 export function Enum(options?: IEnumOptions) {
-    return function (target: any, propertyName: string) {
+    // tslint:disable-next-line:only-arrow-functions
+    return function(target: any, propertyName: string) {
 
         Assert.notNull(options);
         MetadataStorage.instance.addEnumMetadata(new EnumMetadata(target.constructor, propertyName, options));
