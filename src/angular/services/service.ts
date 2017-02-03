@@ -1,16 +1,16 @@
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/Observable/ErrorObservable';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
 
 import * as HttpStatusCodes from 'http-status-codes';
 
-import { ServiceResult, IQuery, TableMetadata, IToString } from '@fluxgate/common';
-import { Constants, Assert, StringBuilder } from '@fluxgate/common';
+import { IQuery, IToString, ServiceResult, TableMetadata } from '@fluxgate/common';
+import { Assert, Constants, StringBuilder } from '@fluxgate/common';
 
 import { Serializer } from '../../base/serializer';
 import { ConfigService } from './config.service';
@@ -70,7 +70,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
         Assert.notNull(_http, 'http');
         Assert.notNull(configService, 'configService');
 
-        let baseUrl = configService.config.url;
+        const baseUrl = configService.config.url;
 
         // Metadaten zur Entity ermitteln
         this._tableMetadata = this.metadataService.findTableMetadata(model);
@@ -80,7 +80,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
             this._topic = this._tableMetadata.options.name;
         }
 
-        let sb = new StringBuilder(configService.config.url);
+        const sb = new StringBuilder(configService.config.url);
 
         if (!baseUrl.endsWith(Constants.PATH_SEPARATOR)) {
             sb.append(Constants.PATH_SEPARATOR);
@@ -108,7 +108,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
 
         return this.http.post(this.getUrl(), this.serialize(item))
             .map((response: Response) => this.deserialize(response.json()))
-            .do(data => console.log(`Service.create: ${JSON.stringify(data)}`))
+            .do((data) => console.log(`Service.create: ${JSON.stringify(data)}`))
             .catch(Service.handleError);
     }
 
@@ -142,7 +142,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
 
         return this.http.get(`${this.getUrl()}/${id}`)
             .map((response: Response) => this.deserialize(response.json()))
-            .do(data => console.log(`Service.findById: id = ${id} -> ${JSON.stringify(data)}`))
+            .do((data) => console.log(`Service.findById: id = ${id} -> ${JSON.stringify(data)}`))
             .catch(Service.handleError);
     }
 
@@ -160,7 +160,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
 
         return this.http.put(`${this.getUrl()}`, this.serialize(item))
             .map((response: Response) => this.deserialize(response.json()))
-            .do(data => console.log(`Service.update: ${JSON.stringify(data)}`))
+            .do((data) => console.log(`Service.update: ${JSON.stringify(data)}`))
             .catch(Service.handleError);
     }
 
@@ -194,13 +194,65 @@ export abstract class Service<T, TId extends IToString> implements IService {
     public query(query: IQuery): Observable<T[]> {
         Assert.notNull(query, 'query');
 
-        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-        let options = new RequestOptions({ headers: headers });           // Create a request option
+        const headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        const options = new RequestOptions({ headers: headers });           // Create a request option
 
         return this.http.post(`${this.getUrl()}/query`, query, options)
             .map((response: Response) => this.deserializeArray(response.json()))
-            .do(data => console.log(`Service.query: query = ${JSON.stringify(query)} -> ${JSON.stringify(data)}`))
+            .do((data) => console.log(`Service.query: query = ${JSON.stringify(query)} -> ${JSON.stringify(data)}`))
             .catch(Service.handleError);
+    }
+
+
+    /**
+     * Liefert die Url inkl. Topic
+     * 
+     * @type {string}
+     */
+    public getUrl(): string {
+        return this._url;
+    }
+
+    /**
+     * Liefert das Topic.
+     * 
+     * @type {string}
+     */
+    public getTopic(): string {
+        return this._topic;
+    }
+
+
+    /**
+     * Liefert den Topicpfad (z.B. '/artikel' bei Topic 'artikel').
+     * 
+     * @type {string}
+     */
+    public getTopicPath(): string {
+        return Constants.PATH_SEPARATOR + this.getTopic();
+    }
+
+    /**
+     * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
+     * 
+     * @type {string}
+     */
+    public getModelClassName(): string {
+        return this._tableMetadata.className;
+    }
+
+    /**
+     * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
+     * Sonst wird ein Error geworfen.
+     * 
+     * @type {any}
+     * @memberOf Service
+     */
+    public getEntityId(item: T): TId {
+        if (!this._tableMetadata.primaryKeyColumn) {
+            throw new Error(`Table ${this._tableMetadata.options.name}: no primary key column`);
+        }
+        return item[this._tableMetadata.primaryKeyColumn.propertyName];
     }
 
 
@@ -253,56 +305,6 @@ export abstract class Service<T, TId extends IToString> implements IService {
         return this._tableMetadata;
     }
 
-    /**
-     * Liefert die Url inkl. Topic
-     * 
-     * @type {string}
-     */
-    public getUrl(): string {
-        return this._url;
-    }
-
-    /**
-     * Liefert das Topic.
-     * 
-     * @type {string}
-     */
-    public getTopic(): string {
-        return this._topic;
-    }
-
-
-    /**
-     * Liefert den Topicpfad (z.B. '/artikel' bei Topic 'artikel').
-     * 
-     * @type {string}
-     */
-    public getTopicPath(): string {
-        return Constants.PATH_SEPARATOR + this.getTopic();
-    }
-
-    /**
-     * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
-     * 
-     * @type {string}
-     */
-    public getModelClassName(): string {
-        return this._tableMetadata.className;
-    }
-
-    /**
-     * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
-     * Sonst wird ein Error geworfen.
-     * 
-     * @type {any}
-     * @memberOf Service
-     */
-    public getEntityId(item: T): TId {
-        if (!this._tableMetadata.primaryKeyColumn) {
-            throw new Error(`Table ${this._tableMetadata.options.name}: no primary key column`);
-        }
-        return item[this._tableMetadata.primaryKeyColumn.propertyName];
-    }
 
     /**
      * Liefert den Http-Clientservice

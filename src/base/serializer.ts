@@ -1,4 +1,4 @@
-import { TableMetadata, Assert } from '@fluxgate/common';
+import { Assert, TableMetadata } from '@fluxgate/common';
 
 
 /**
@@ -58,8 +58,8 @@ export class Serializer<T> {
             throw new Error('json: ist kein Array');
         }
 
-        let result = new Array<T>();
-        jsonArray.forEach(item => {
+        const result = new Array<T>();
+        jsonArray.forEach((item) => {
             result.push(this.deserialize(item));
         });
 

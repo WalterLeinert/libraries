@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { RegisterGuardService } from './register/register-guard.service';
 import { ChangePasswordGuardService } from './changePassword/changePassword-guard.service';
+import { RegisterGuardService } from './register/register-guard.service';
 
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { LogoffComponent } from './logoff/logoff.component';
 import { ChangePasswordComponent } from './changePassword/changePassword.component';
+import { LoginComponent } from './login/login.component';
+import { LogoffComponent } from './logoff/logoff.component';
+import { RegisterComponent } from './register/register.component';
 
 
 const routes: Routes = [

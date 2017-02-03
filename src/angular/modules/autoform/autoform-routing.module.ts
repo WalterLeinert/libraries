@@ -4,8 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 // Fluxgate
 import { Constants } from '@fluxgate/common';
 
-import { AutoformConstants } from './autoformConstants';
 import { AutoformComponent } from './autoform.component';
+import { AutoformConstants } from './autoformConstants';
 
 
 const routes: Routes = [

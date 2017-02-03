@@ -1,6 +1,7 @@
+import { ControlType } from './../angular/modules/common/controlType';
+
 import { IControlDisplayInfo } from './controlDisplayInfo.interface';
 import { DisplayInfo } from './displayInfo';
-import { ControlType } from './../angular/modules/common/controlType';
 
 export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayInfo {
 
@@ -11,7 +12,8 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
         ControlType.Input
     );
 
-    constructor(textField?: string, valueField?: string, private _style?: string, private _controlType: ControlType = ControlType.Input) {
+    constructor(textField?: string, valueField?: string, private _style?: string,
+        private _controlType: ControlType = ControlType.Input) {
         super(textField, valueField);
     }
 

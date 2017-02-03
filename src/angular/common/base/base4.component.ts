@@ -16,7 +16,8 @@ export abstract class Base4Component<
   TService2 extends IServiceBase,
   TService3 extends IServiceBase,
   TService4 extends IServiceBase> extends Base3Component<TService1, TService2, TService3> {
-    /**
+
+  /**
    * Creates an instance of BaseComponent.
    * 
    * @param {Router} _router - der zugehörige Router
@@ -24,11 +25,12 @@ export abstract class Base4Component<
    * 
    * @memberOf BaseComponent
    */
-  protected constructor(router: Router, service: TService1, service2: TService2, service3: TService3, private _service4: TService4) {
-      super(router, service, service2, service3);
+  protected constructor(router: Router, service: TService1, service2: TService2, service3: TService3,
+    private _service4: TService4) {
+    super(router, service, service2, service3);
   }
 
-   /**
+  /**
    * Liefert den zugehörigen Service4
    * 
    * @readonly

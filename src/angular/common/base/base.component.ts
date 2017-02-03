@@ -1,9 +1,9 @@
-import { OnInit, OnDestroy } from '@angular/core';
-import { Router, NavigationExtras } from '@angular/router';
+import { OnDestroy, OnInit } from '@angular/core';
+import { NavigationExtras, Router } from '@angular/router';
 import { Message } from 'primeng/primeng';
 
-import { AutoformConstants } from '../../modules/autoform/autoformConstants';
 import { IAutoformConfig, IAutoformNavigation } from '../../modules/autoform/autoformConfig.interface';
+import { AutoformConstants } from '../../modules/autoform/autoformConstants';
 import { IServiceBase } from '../../services';
 
 
@@ -53,6 +53,7 @@ export abstract class BaseComponent<TService extends IServiceBase> implements On
    * @memberOf BaseComponent
    */
   public ngOnDestroy() {
+    // ok
   }
 
   /**
@@ -109,7 +110,7 @@ export abstract class BaseComponent<TService extends IServiceBase> implements On
    */
   protected addMessage(message: Message) {
     let doAddMessage = true;
-    this._messages.forEach(msg => {
+    this._messages.forEach((msg) => {
       if (msg.detail === message.detail && msg.severity === message.severity && msg.summary === message.summary) {
         doAddMessage = false;
         return;
@@ -168,7 +169,7 @@ export abstract class BaseComponent<TService extends IServiceBase> implements On
    */
   protected navigateToDetailGeneric<T>(item: T, config: IAutoformConfig): Promise<boolean> {
 
-    let navigationConfig: IAutoformNavigation = {
+    const navigationConfig: IAutoformNavigation = {
       entityId: this.service.getEntityId(item),
       entity: this.service.getModelClassName(),
       autoformConfig: JSON.stringify(config)

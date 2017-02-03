@@ -4,7 +4,7 @@ import { Http } from '@angular/http';
 // Fluxgate
 import { Role } from '@fluxgate/common';
 
-import { Service, MetadataService } from '../../services';
+import { MetadataService, Service } from '../../services';
 import { ConfigService } from '../../services/config.service';
 
 

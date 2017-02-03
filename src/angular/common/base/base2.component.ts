@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
-import { BaseComponent } from './base.component';
 import { IServiceBase } from '../../services';
+import { BaseComponent } from './base.component';
 
 
 /**
@@ -11,8 +11,10 @@ import { IServiceBase } from '../../services';
  * @implements {OnInit}
  * @template TService - der konkrete Service
  */
-export abstract class Base2Component<TService1 extends IServiceBase, TService2 extends IServiceBase> extends BaseComponent<TService1> {
-    /**
+export abstract class Base2Component<TService1 extends IServiceBase, TService2 extends IServiceBase> extends
+  BaseComponent<TService1> {
+
+  /**
    * Creates an instance of BaseComponent.
    * 
    * @param {Router} _router - der zugehörige Router
@@ -21,10 +23,10 @@ export abstract class Base2Component<TService1 extends IServiceBase, TService2 e
    * @memberOf BaseComponent
    */
   protected constructor(router: Router, service: TService1, private _service2: TService2) {
-      super(router, service);
+    super(router, service);
   }
 
-   /**
+  /**
    * Liefert den zugehörigen Service2
    * 
    * @readonly

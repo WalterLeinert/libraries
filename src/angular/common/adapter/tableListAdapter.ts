@@ -1,4 +1,4 @@
-import { NgModule, Component, ReflectiveInjector, Injector } from '@angular/core';
+import { Component, Injector, NgModule, ReflectiveInjector } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 

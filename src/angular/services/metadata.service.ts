@@ -6,8 +6,6 @@ import { Assert, MetadataStorage, TableMetadata } from '@fluxgate/common';
 @Injectable()
 export class MetadataService {
 
-  constructor() { }
-
   /**
    * Liefert @see{TableMetadata} für die angegebene Modellklasse @param{model} (z.B. Artikel)
    * 
@@ -17,13 +15,15 @@ export class MetadataService {
    * @memberOf MetadataService
    */
   public findTableMetadata(model: Function): TableMetadata;
+  // tslint:disable-next-line:unified-signatures
   public findTableMetadata(model: string): TableMetadata;
 
+  // tslint:disable-next-line:unified-signatures
   public findTableMetadata(model: Function | string): TableMetadata {
     Assert.notNull(model);
     if (typeof (model) === 'string') {
       MetadataStorage.instance.findTableMetadata(model);
     }
-    return MetadataStorage.instance.findTableMetadata(<Function>model);
+    return MetadataStorage.instance.findTableMetadata(model as Function);
   }
 }

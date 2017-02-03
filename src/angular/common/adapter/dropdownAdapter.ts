@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs/Observable';
 
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/findIndex';
 import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 import { Assert, IListAdapter } from '@fluxgate/common';
@@ -65,19 +65,22 @@ export abstract class DropdownAdapter<T> implements IDropdownAdapter {
 
     }
 
-    /**
-     * Liefert die Liste der anzubindenden Werte 
-     */
-    protected getItems(): Observable<T[]> {
-        return this.listAdapter.getItems();
-    }
 
     /**
      * Liefert den Wert der angebundenen Werteliste für den Index @param{index}.
      */
     public getValueAt(index: number): Observable<T> {
         return this.getItems()
-        .map(items => items[index]);
+            .map((items) => items[index]);
+    }
+
+
+
+    /**
+     * Liefert die Liste der anzubindenden Werte 
+     */
+    protected getItems(): Observable<T[]> {
+        return this.listAdapter.getItems();
     }
 
 

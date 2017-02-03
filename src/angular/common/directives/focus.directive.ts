@@ -1,4 +1,4 @@
-import { NgModule, Directive, ElementRef, Input, EventEmitter } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, Input, NgModule } from '@angular/core';
 
 @Directive({
     selector: '[flxFocus]'
@@ -11,7 +11,7 @@ export class FocusDirective {
         if (this.focusEmitterSubscription) {
             this.focusEmitterSubscription.unsubscribe();
         }
-        this.focusEmitterSubscription = focusEmitter.subscribe((() => this.element.nativeElement.focus()).bind(this))
+        this.focusEmitterSubscription = focusEmitter.subscribe((() => this.element.nativeElement.focus()).bind(this));
     }
 
     constructor(private element: ElementRef) {
@@ -19,6 +19,7 @@ export class FocusDirective {
 }
 
 
+// tslint:disable-next-line:max-classes-per-file
 @NgModule({
     imports: [],
     exports: [FocusDirective],

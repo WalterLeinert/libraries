@@ -16,11 +16,11 @@ export interface IServiceCrud {
     create(item: any): any;
 
     /**
-    * Find all entities of type T and return {Observable<T[]>}.
-    * 
-    * @returns {Observable<T[]>}
-    * 
-    */
+     * Find all entities of type T and return {Observable<T[]>}.
+     * 
+     * @returns {Observable<T[]>}
+     * 
+     */
     find(): any;
 
     /**

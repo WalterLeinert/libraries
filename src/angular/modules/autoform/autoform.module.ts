@@ -1,19 +1,19 @@
-import { NgModule, Component, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Injector, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 // PrimeNG
-import { ButtonModule, SharedModule, ConfirmDialogModule } from 'primeng/primeng';
-import { MessagesModule, ConfirmationService } from 'primeng/primeng';
+import { ButtonModule, ConfirmDialogModule, SharedModule } from 'primeng/primeng';
+import { ConfirmationService, MessagesModule } from 'primeng/primeng';
 
-import { MetadataService, ProxyService } from '../../services';
 import { BaseComponent } from '../../common/base';
 import { PopupModule } from '../../modules/common';
+import { MetadataService, ProxyService } from '../../services';
 
-import { AutoformComponent } from './autoform.component';
 import { AutoformDetailComponent } from './autoform-detail.component';
 import { AutoformRoutingModule } from './autoform-routing.module';
+import { AutoformComponent } from './autoform.component';
 
 @NgModule({
   imports: [

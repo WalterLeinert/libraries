@@ -1,5 +1,5 @@
 // Angular
-import { Input, Output, EventEmitter } from '@angular/core';
+import { EventEmitter, Input, Output } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -34,7 +34,7 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
      * @type {boolean}
      * @memberOf DataTableSelectorComponent
      */
-    @Input() debug: boolean = false;
+    @Input() public debug: boolean = false;
 
 
     /**
@@ -54,7 +54,7 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
      *
      * @memberOf DataTableSelectorComponent
      */
-    @Output() dataChange = new EventEmitter<any>();
+    @Output() public dataChange = new EventEmitter<any>();
 
     /**
      * der Service zum Bereitstellen der Daten
@@ -64,7 +64,7 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
      * @type {IService}
      * @memberOf DataTableSelectorComponent
      */
-    @Input() dataService: IService;
+    @Input() public dataService: IService;
 
     /**
      * die Service-Methode zum Bereitstellen der Daten. Muss eine Methode von @see{dataService} sein.
@@ -74,7 +74,7 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
      * @type {IService}
      * @memberOf DataTableSelectorComponent
      */
-    @Input() dataServiceFunction: Function;
+    @Input() public dataServiceFunction: Function;
 
 
     /**
@@ -92,7 +92,7 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
      *
      * @memberOf DataTableSelectorComponent
      */
-    @Output() selectedIndexChange = new EventEmitter<number>();
+    @Output() public selectedIndexChange = new EventEmitter<number>();
 
 
     /**
@@ -102,7 +102,7 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
      *
      * @memberOf DataTableSelectorComponent
      */
-    @Output() selectedValueChange = new EventEmitter<any>();
+    @Output() public selectedValueChange = new EventEmitter<any>();
 
 
     /**
@@ -119,7 +119,7 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
         super(router, null);
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         super.ngOnInit();
 
         if (this.data) {
@@ -143,10 +143,10 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
                 serviceFunction = this.dataService.find;
             }
 
-            let tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
+            const tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
 
             serviceFunction.call(this.dataService)
-                .subscribe(items => {
+                .subscribe((items) => {
                     this.initBoundData(items, tableMetadata);
                 },
                 (error: Error) => {
@@ -169,7 +169,8 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
      */
     protected initBoundData(items: any[], tableMetadata: TableMetadata) {
         if (this.data) {
-            Assert.that(!this.dataService, `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
+            Assert.that(!this.dataService,
+                `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
         } else {
             Assert.that(this.dataService !== undefined,
                 `Wenn Property data nicht gesetzt ist, muss dataService gesetzt sein.`);
@@ -223,7 +224,8 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
 
     /**
      * Liefert den Wert für das @param{item} der Liste. Der Wert ist das Item selbst oder eine entsprechende Property,
-     * falls die valueField-Property einen entsprechenden Propertynamen enthält (nur bei @see{DropdownSelectorComponent})
+     * falls die valueField-Property einen entsprechenden Propertynamen enthält
+     * (nur bei @see{DropdownSelectorComponent})
      * 
      * @protected
      * @abstract
@@ -389,10 +391,10 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
     protected getMetadataForValues(values: any[]): TableMetadata  {
         let tableMetadata;
         if (values && values.length > 0) {
-            let value = values[0];
+            const value = values[0];
 
             if (value && value.constructor) {
-                let clazzName = value.constructor.name;
+                const clazzName = value.constructor.name;
                 tableMetadata = this.metadataService.findTableMetadata(clazzName);            }
         }
         return tableMetadata;

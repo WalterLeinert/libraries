@@ -4,7 +4,7 @@ import { SelectItem } from 'primeng/primeng';
 // fluxgate
 import { Assert, IListAdapter } from '@fluxgate/common';
 
-import { IDropdownAdapter, IDropdownAdapterOptions, DropdownAdapter } from '../../angular/common/adapter';
+import { DropdownAdapter, IDropdownAdapter, IDropdownAdapterOptions } from '../../angular/common/adapter';
 
 
 /**
@@ -25,6 +25,6 @@ export class PrimeNgDataTableAdapter<T> extends DropdownAdapter<T> {
         }*/
 
         this.getItems()
-            .subscribe(items => this.data = items);
+            .subscribe((items) => this.data = items);
     }
 }

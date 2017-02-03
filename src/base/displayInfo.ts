@@ -3,10 +3,10 @@ import { IDisplayInfo } from './displayInfo.interface';
 export class DisplayInfo implements IDisplayInfo {
 
     /**
-      * symbolischer Propertyname: bezieht sich auf das aktuelle Item:
-      * - bei Primitiven (wie string[]) auf den einzelnen Wert der Liste
-      * - bei Objekten (wie Person[]) auf die einzelne Objektinstanz
-      */
+     * symbolischer Propertyname: bezieht sich auf das aktuelle Item:
+     * - bei Primitiven (wie string[]) auf den einzelnen Wert der Liste
+     * - bei Objekten (wie Person[]) auf die einzelne Objektinstanz
+     */
     public static CURRENT_ITEM = '.';
 
     public static DEFAULT: IDisplayInfo = new DisplayInfo(

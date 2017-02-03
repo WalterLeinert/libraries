@@ -1,8 +1,10 @@
 // ANgular
 import { PipeTransform } from '@angular/core';
 
-import { IDisplayInfo } from './displayInfo.interface';
+
 import { ControlType } from '../angular/modules/common/controlType';
+
+import { IDisplayInfo } from './displayInfo.interface';
 
 
 /**

@@ -1,21 +1,23 @@
-import { NgModule, Component, Injector } from '@angular/core';
+// tslint:disable:max-line-length
+
+import { CommonModule } from '@angular/common';
+import { Component, Injector, NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IFieldOptions } from './autoformConfig.interface';
 import { IAutoformConfig } from './autoformConfig.interface';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
 
 // PrimeNG
-import { ButtonModule, SharedModule, ConfirmDialogModule } from 'primeng/primeng';
-import { MessagesModule, ConfirmationService } from 'primeng/primeng';
+import { ButtonModule, ConfirmDialogModule, SharedModule } from 'primeng/primeng';
+import { ConfirmationService, MessagesModule } from 'primeng/primeng';
 
 import { Subscription } from 'rxjs/Subscription';
 
 // Fluxgate
-import { TableMetadata, ColumnMetadata, ColumnTypes, Constants, Assert } from '@fluxgate/common';
+import { Assert, ColumnMetadata, ColumnTypes, Constants, TableMetadata } from '@fluxgate/common';
 
-import { MetadataService, ProxyService } from '../../services';
 import { BaseComponent } from '../../common/base';
+import { MetadataService, ProxyService } from '../../services';
 
 import { AutoformConstants } from './autoformConstants';
 
@@ -85,13 +87,13 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     super(router, service);
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     super.ngOnInit();
 
     this.sub = this.route.params.subscribe(
-      params => {
-        let id = <string>params[AutoformConstants.GENERIC_ENTITY_ID];
-        let entityName = <string>params[AutoformConstants.GENERIC_ENTITY];
+      (params) => {
+        const id = params[AutoformConstants.GENERIC_ENTITY_ID] as string;
+        const entityName = params[AutoformConstants.GENERIC_ENTITY] as string;
         this.config = JSON.parse(params[AutoformConstants.GENERIC_CONFIG]);
 
         this.setupProxy(entityName);
@@ -100,35 +102,13 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
       });
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     super.ngOnDestroy();
     this.sub.unsubscribe();
   }
 
 
-  private getItem(id: any) {
-    this.service.findById(id).subscribe(
-      item => this.item = item,
-      (error: Error) => {
-        this.handleError(error);
-      });
-  }
-
-  /**
-   * mittels MetadataService für die Entity @see{entityName} den zugehörigen Service ermitteln und 
-   * den ProxyService damit initialisieren
-   */
-  private setupProxy(entityName: string) {
-    let tableMetadata: TableMetadata = this.metadataService.findTableMetadata(entityName);
-    // console.log(`table = ${tableMetadata.options.name}`);
-    this.columnMetadata = tableMetadata.columnMetadata;
-
-    let service = this.injector.get(tableMetadata.service);
-    this.service.proxyService(service);
-  }
-
-
-  confirm() {
+  public confirm() {
     this.confirmationService.confirm({
       header: 'Löschen',
       message: 'Soll wirklich gelöscht werden?',
@@ -145,17 +125,17 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   /**
    * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
    */
-  cancel(): void {
+  public cancel(): void {
     this.navigate([this.service.getTopicPath()]);
   }
 
   /**
    * Speichert Änderungen an der Entity
    */
-  submit() {
-    let me = this;
+  public submit() {
+    const me = this;
     this.service.update(this.item).subscribe(
-      item => {
+      (item) => {
         this.item = item;
         me.cancel();
       },
@@ -167,11 +147,11 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   /**
    * Löscht die Entity
    */
-  delete(event) {
+  public delete(event) {
     if (event === true) {
-      let me = this;
+      const me = this;
       this.service.delete(this.service.getEntityId(this.item)).subscribe(
-        item => {
+        (item) => {
           this.item = item;
           me.cancel();
         },
@@ -183,7 +163,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   }
 
 
-  showmodal() {
+  public showmodal() {
     this.askuser = true;
   }
 
@@ -197,7 +177,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
       displayName = metadata.options.displayName;
     }
 
-    let columnConfig = <IFieldOptions>this.config.fields[metadata.propertyName];
+    const columnConfig = this.config.fields[metadata.propertyName] as IFieldOptions;
     if (columnConfig) {
       displayName = columnConfig.displayName;
     }
@@ -216,4 +196,27 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     }
     return rval;
   }
+
+
+  private getItem(id: any) {
+    this.service.findById(id).subscribe(
+      (item) => this.item = item,
+      (error: Error) => {
+        this.handleError(error);
+      });
+  }
+
+  /**
+   * mittels MetadataService für die Entity @see{entityName} den zugehörigen Service ermitteln und 
+   * den ProxyService damit initialisieren
+   */
+  private setupProxy(entityName: string) {
+    const tableMetadata: TableMetadata = this.metadataService.findTableMetadata(entityName);
+    // console.log(`table = ${tableMetadata.options.name}`);
+    this.columnMetadata = tableMetadata.columnMetadata;
+
+    const service = this.injector.get(tableMetadata.service);
+    this.service.proxyService(service);
+  }
+
 }

@@ -1,24 +1,26 @@
-import { NgModule, Component, Injector, Input, Output } from '@angular/core';
+// tslint:disable:max-line-length
+
 import { CommonModule } from '@angular/common';
+import { Component, Injector, Input, NgModule, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 // PrimeNG
-import { ButtonModule, SharedModule, ConfirmDialogModule } from 'primeng/primeng';
-import { MessagesModule, ConfirmationService } from 'primeng/primeng';
+import { ButtonModule, ConfirmDialogModule, SharedModule } from 'primeng/primeng';
+import { ConfirmationService, MessagesModule } from 'primeng/primeng';
 
 import { Subscription } from 'rxjs/Subscription';
 
 // Fluxgate
-import { TableMetadata, ColumnMetadata, ColumnTypes, Constants, Assert } from '@fluxgate/common';
+import { Assert, ColumnMetadata, ColumnTypes, Constants, TableMetadata } from '@fluxgate/common';
 
-import { MetadataService, ProxyService } from '../../services';
 import { BaseComponent } from '../../common/base';
+import { MetadataService, ProxyService } from '../../services';
 
-import { AutoformConstants } from './autoformConstants';
 import { IFieldOptions } from './autoformConfig.interface';
 import { IAutoformConfig } from './autoformConfig.interface';
+import { AutoformConstants } from './autoformConstants';
 
 
 
@@ -32,6 +34,7 @@ import { IAutoformConfig } from './autoformConfig.interface';
 
     <div>
       <ul *ngFor="let metadata of columnMetadata">
+
         <div class="form-group" *ngIf="! isHidden(metadata) && value[metadata.propertyName] && metadata.propertyType === 'string'">
           <label>{{displayName(metadata)}}</label>
           <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
@@ -84,7 +87,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    * @type {*}
    * @memberOf AutoformDetailComponent
    */
-  @Input() value: any;
+  @Input() public value: any;
 
 
   /**
@@ -93,7 +96,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    * @type {string}
    * @memberOf AutoformDetailComponent
    */
-  @Input() entityName: string = '';
+  @Input() public entityName: string = '';
 
 
   /**
@@ -121,39 +124,13 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
     super(router, service);
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     super.ngOnInit();
 
     this.setupProxy(this.entityName);
   }
 
-  private getItem(id: any) {
-    this.service.findById(id).subscribe(
-      value => this.value = value,
-      (error: Error) => {
-        this.handleError(error);
-      });
-  }
-
-
-  /**
-   * mittels MetadataService für die Entity @see{entityName} den zugehörigen Service ermitteln und 
-   * den ProxyService damit initialisieren
-   */
-  private setupProxy(entityName: string) {
-    let tableMetadata: TableMetadata = this.metadataService.findTableMetadata(entityName);
-
-    Assert.notNull(tableMetadata, `No metadata for entity ${entityName}`);
-
-    // console.log(`table = ${tableMetadata.options.name}`);
-    this.columnMetadata = tableMetadata.columnMetadata;
-
-    let service = this.injector.get(tableMetadata.service);
-    this.service.proxyService(service);
-  }
-
-
-  confirm() {
+  public confirm() {
     this.confirmationService.confirm({
       header: 'Löschen',
       message: 'Soll wirklich gelöscht werden?',
@@ -170,17 +147,17 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   /**
    * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
    */
-  cancel(): void {
+  public cancel(): void {
     this.navigate([this.service.getTopicPath()]);
   }
 
   /**
    * Speichert Änderungen an der Entity
    */
-  submit() {
-    let me = this;
+  public submit() {
+    const me = this;
     this.service.update(this.value).subscribe(
-      value => {
+      (value) => {
         this.value = value;
         me.cancel();
       },
@@ -192,11 +169,11 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   /**
    * Löscht die Entity
    */
-  delete(event) {
+  public delete(event) {
     if (event === true) {
-      let me = this;
+      const me = this;
       this.service.delete(this.service.getEntityId(this.value)).subscribe(
-        value => {
+        (value) => {
           this.value = value;
           me.cancel();
         },
@@ -208,7 +185,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   }
 
 
-  showmodal() {
+  public showmodal() {
     this.askuser = true;
   }
 
@@ -223,7 +200,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
     }
 
     if (this.config) {
-      let columnConfig = this.config.fields[metadata.propertyName];
+      const columnConfig = this.config.fields[metadata.propertyName];
       if (columnConfig) {
         displayName = columnConfig.displayName;
       }
@@ -253,4 +230,32 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
     }
     return rval;
   }
+
+
+  private getItem(id: any) {
+    this.service.findById(id).subscribe(
+      (value) => this.value = value,
+      (error: Error) => {
+        this.handleError(error);
+      });
+  }
+
+
+  /**
+   * mittels MetadataService für die Entity @see{entityName} den zugehörigen Service ermitteln und 
+   * den ProxyService damit initialisieren
+   */
+  private setupProxy(entityName: string) {
+    const tableMetadata: TableMetadata = this.metadataService.findTableMetadata(entityName);
+
+    Assert.notNull(tableMetadata, `No metadata for entity ${entityName}`);
+
+    // console.log(`table = ${tableMetadata.options.name}`);
+    this.columnMetadata = tableMetadata.columnMetadata;
+
+    const service = this.injector.get(tableMetadata.service);
+    this.service.proxyService(service);
+  }
+
+
 }

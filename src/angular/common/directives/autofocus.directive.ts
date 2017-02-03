@@ -1,4 +1,6 @@
-import { NgModule, Directive, ElementRef, Renderer, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, NgModule, Renderer } from '@angular/core';
+
+// fluxgate
 import { CommonModule } from '@angular/common';
 
 
@@ -39,8 +41,8 @@ export class AutofocusDirective implements AfterViewInit {
 
   }
 
-  ngAfterViewInit() {
-    let nameAttribute = this.elRef.nativeElement.getAttribute('name');
+  public ngAfterViewInit() {
+    const nameAttribute = this.elRef.nativeElement.getAttribute('name');
     this.focusIf(nameAttribute);
   }
 
@@ -49,7 +51,7 @@ export class AutofocusDirective implements AfterViewInit {
       // input.focus();
       input.setSelectionRange(selectionStart, selectionEnd);
     } else if (input.createTextRange) {
-      let range = input.createTextRange();
+      const range = input.createTextRange();
       range.collapse(true);
       range.moveEnd('character', selectionEnd);
       range.moveStart('character', selectionStart);
@@ -70,7 +72,7 @@ export class AutofocusDirective implements AfterViewInit {
    * 
    * @memberOf AutofocusDirective
    */
-  focusIf(nameAttribute: string) {
+  private focusIf(nameAttribute: string) {
     // console.log(this.elRef.nativeElement.getAttribute('name'))
     if (this.elRef.nativeElement.getAttribute('name') === nameAttribute) {
       this.renderer.invokeElementMethod(this.elRef.nativeElement, 'focus', []);
@@ -84,6 +86,7 @@ export class AutofocusDirective implements AfterViewInit {
 
 
 
+// tslint:disable-next-line:max-classes-per-file
 @NgModule({
   imports: [CommonModule],
   exports: [AutofocusDirective],

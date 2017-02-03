@@ -1,4 +1,6 @@
-import { NgModule, Directive, ElementRef, HostListener, Input, Renderer } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, NgModule, Renderer } from '@angular/core';
+
+// fluxgate
 import { CommonModule } from '@angular/common';
 
 
@@ -14,7 +16,7 @@ import { CommonModule } from '@angular/common';
 export class HighlightDirective {
   private _defaultColor = 'red';
 
-  @Input('flxHighlight') flxHighlight: string;
+  @Input('flxHighlight') public flxHighlight: string;
 
   constructor(private el: ElementRef, private renderer: Renderer) {
   }
@@ -23,10 +25,10 @@ export class HighlightDirective {
     this._defaultColor = colorName || this._defaultColor;
   }
 
-  @HostListener('mouseenter') onMouseEnter() {
+  @HostListener('mouseenter') private onMouseEnter() {
     this.highlight(this.flxHighlight || this._defaultColor);
   }
-  @HostListener('mouseleave') onMouseLeave() {
+  @HostListener('mouseleave') private onMouseLeave() {
     this.highlight(null);
   }
 
@@ -36,6 +38,7 @@ export class HighlightDirective {
 }
 
 
+// tslint:disable-next-line:max-classes-per-file
 @NgModule({
   imports: [CommonModule],
   exports: [HighlightDirective],

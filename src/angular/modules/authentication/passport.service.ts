@@ -1,17 +1,17 @@
 // Angular
-import { Injectable, Output, EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Http, Response } from '@angular/http';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 
 // Fluxgate
-import { Constants, Assert, StringBuilder, User, IUser, PasswordChange, ServiceResult } from '@fluxgate/common';
+import { Assert, Constants, IUser, PasswordChange, ServiceResult, StringBuilder, User } from '@fluxgate/common';
 
 import { Serializer } from '../../../base/serializer';
-import { IRestUri, IServiceBase, Service, MetadataService } from '../../services';
+import { IRestUri, IServiceBase, MetadataService, Service } from '../../services';
 import { ConfigService } from '../../services/config.service';
 
 
@@ -27,7 +27,7 @@ export class PassportService implements IServiceBase {
     private _topic: string = 'passport';
     private serializer: Serializer<IUser>;
 
-    @Output() currentUserChange: EventEmitter<IUser> = new EventEmitter();
+    @Output() public currentUserChange: EventEmitter<IUser> = new EventEmitter();
 
     /**
      * Creates an instance of PassportService.
@@ -44,7 +44,7 @@ export class PassportService implements IServiceBase {
         Assert.notNull(configService.config, 'configService.config');
         Assert.notNullOrEmpty(configService.config.url, 'configService.config.url');
 
-        let sb = new StringBuilder(configService.config.url);
+        const sb = new StringBuilder(configService.config.url);
 
         if (!configService.config.url.endsWith(Constants.PATH_SEPARATOR)) {
             sb.append(Constants.PATH_SEPARATOR);
@@ -54,7 +54,7 @@ export class PassportService implements IServiceBase {
         this._url = sb.toString();
 
         // Metadaten zur Entity ermitteln
-        let tableMetadata = this.metadataService.findTableMetadata(User);
+        const tableMetadata = this.metadataService.findTableMetadata(User);
         Assert.notNull(tableMetadata);
 
         this.serializer = new Serializer<User>(tableMetadata);
@@ -73,16 +73,16 @@ export class PassportService implements IServiceBase {
         Assert.notNullOrEmpty(username, 'username');
         Assert.notNullOrEmpty(password, 'password');
 
-        let userTableMetadata = this.metadataService.findTableMetadata(User.name);
+        const userTableMetadata = this.metadataService.findTableMetadata(User.name);
         Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name} nicht gefunden.`);
 
-        let user = userTableMetadata.createEntity<IUser>();
+        const user = userTableMetadata.createEntity<IUser>();
         user.username = username;
         user.password = password;
 
         return this.http.post(this.getUrl() + PassportService.LOGIN, user)
             .map((response: Response) => this.deserialize(response.json()))
-            .do(u => {
+            .do((u) => {
                 // console.log('user: ' + JSON.stringify(u));
                 this.onCurrentUserChange(u);
             })
@@ -103,7 +103,7 @@ export class PassportService implements IServiceBase {
 
         return this.http.post(this.getUrl() + PassportService.SIGNUP, user)
             .map((response: Response) => this.deserialize(response.json()))
-            .do(u => {
+            .do((u) => {
                 // console.log('user: ' + JSON.stringify(u));
                 this.onCurrentUserChange(u);
             })
@@ -121,6 +121,7 @@ export class PassportService implements IServiceBase {
     public logoff() {
         return this.http.get(this.getUrl() + PassportService.LOGOFF)
             .map((response: Response) => {
+                // ok
             }).do(() => {
                 // console.log('user: ' + JSON.stringify(u));
                 this.onCurrentUserChange(null);
@@ -143,11 +144,11 @@ export class PassportService implements IServiceBase {
         Assert.notNullOrEmpty(password, 'password');
         Assert.notNullOrEmpty(passwordNew, 'passwordNew');
 
-        let passwordChange = new PasswordChange(username, password, passwordNew);
+        const passwordChange = new PasswordChange(username, password, passwordNew);
 
         return this.http.post(this.getUrl() + PassportService.CHANGE_PASSWORD, passwordChange)
             .map((response: Response) => this.deserialize(response.json()))
-            .do(user => {
+            .do((user) => {
                 console.log(`PassportService.changePassword: user = ${JSON.stringify(user)}`);
             })
             .catch(Service.handleError);
@@ -164,14 +165,10 @@ export class PassportService implements IServiceBase {
     public getCurrentUser(): Observable<User> {
         return this.http.get(this.getUrl() + PassportService.CURRENT_USER)
             .map((response: Response) => this.deserialize(response.json()))
-            .do(data => {
+            .do((data) => {
                 console.log('result: ' + JSON.stringify(data));
             })
             .catch(Service.handleError);
-    }
-
-    protected onCurrentUserChange(value: IUser) {
-        this.currentUserChange.emit(value);
     }
 
 
@@ -198,10 +195,10 @@ export class PassportService implements IServiceBase {
     }
 
     /**
-  * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
-  * 
-  * @type {string}
-  */
+     * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
+     * 
+     * @type {string}
+     */
     public getModelClassName(): string {
         throw new Error(`Not supported`);
     }
@@ -216,6 +213,12 @@ export class PassportService implements IServiceBase {
     public getEntityId(item: any): any {
         throw new Error(`Not supported`);
     }
+
+
+    protected onCurrentUserChange(value: IUser) {
+        this.currentUserChange.emit(value);
+    }
+
 
 
     /**

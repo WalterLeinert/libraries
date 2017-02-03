@@ -1,8 +1,10 @@
 /**
- * Master Gulp Buildfile
+ * Gulp Buildfile
  */
+'user strict';
 
-const gulp = require('gulp')
+const gulp = require('gulp');
+const gulp_tslint = require('gulp-tslint');
 const del = require('del')
 const gulpSequence = require('gulp-sequence')
 const exec = require('child_process').exec;

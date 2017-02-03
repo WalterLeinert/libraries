@@ -5,7 +5,7 @@ import { IRestUri } from './restUri.interface';
  */
 export interface IServiceBase extends IRestUri {
 
-   /**
+    /**
      * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
      * 
      * @type {string}
