@@ -32,6 +32,8 @@
       false
     ],
 
+    "no-trailing-whitespace": false,
+
     "object-literal-shorthand": false,
     "object-literal-sort-keys": false,
 
