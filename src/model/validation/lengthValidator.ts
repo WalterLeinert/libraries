@@ -2,7 +2,8 @@ import { StringBuilder } from '../../base';
 import { Assert } from '../../util/assert';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 
-import { ValidationResult, Validator } from '.';
+import { ValidationResult } from './validationResult';
+import { Validator } from './validator';
 
 
 export class LengthValidator extends Validator {

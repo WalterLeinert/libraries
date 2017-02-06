@@ -13,10 +13,10 @@ module.exports = {
     libraryTarget: "commonjs"
   },
   resolve: {
-    extensions: ['', '.ts', '.js'],
+    extensions: ['.ts', '.js'],
     modules: [
-      //'node_modules',
-      //path.join(__dirname, 'src'),
+      path.join(__dirname, 'src'),
+      'node_modules',
     ]
   },
   module: {
@@ -27,7 +27,7 @@ module.exports = {
         include: [
           path.resolve(__dirname, 'src')
         ],
-        loader: 'ts',
+        loader: 'ts-loader',
         exclude: [
           /node_modules/,
           /dts/
