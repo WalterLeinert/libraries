@@ -6,12 +6,12 @@ import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert, Clone, ColumnTypes, TableMetadata, Types } from '@fluxgate/common';
+import { Assert, Clone, ColumnTypes, StringUtil, TableMetadata, Types } from '@fluxgate/common';
 
 import { IService } from '../../services';
 import { MetadataService, PipeService, PipeType, ProxyService } from '../../services';
 
-import { ControlDisplayInfo, IControlDisplayInfo } from '../../../base';
+import { ControlDisplayInfo, DataTypes, IControlDisplayInfo } from '../../../base';
 import { ControlType } from '../common';
 
 import { ListSelectorComponent } from '../common/list-selector.component';
@@ -44,6 +44,7 @@ export type sortMode = 'single' | 'multiple';
     <div *ngIf="configInternal && configInternal.columnInfos">
       <ul *ngFor="let info of configInternal.columnInfos">
         <p-column field="{{info.valueField}}" header="{{info.textField}}" 
+          [style]="style"
           [sortable]="true" [editable]="editable">
 
           <div *ngIf="info.controlType === controlType.Input">
@@ -219,8 +220,39 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   protected setupConfig(items: any[], tableMetadata: TableMetadata) {
     if (this.config) {
       this.configInternal = this.config;
+
+      // Defaults übernehmen
+      for (const colInfo of this.configInternal.columnInfos) {
+        if (colInfo.controlType === undefined) {
+          colInfo.controlType = ControlDisplayInfo.DEFAULT.controlType;
+        }
+
+        if (colInfo.readonly === undefined) {
+          colInfo.readonly = ControlDisplayInfo.DEFAULT.readonly;
+        }
+
+        if ((colInfo.dataType === undefined) && tableMetadata) {
+          const colMetaData = tableMetadata.getColumnMetadataByProperty(colInfo.valueField);
+          colInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
+        }
+
+        if (!colInfo.style && ControlDisplayInfo.isRightAligned(colInfo.dataType)) {
+          colInfo.style = '{"text-align": "right"}';
+        } else if (colInfo.style) {
+          // nicht bereits text-align enthalten?
+          if (colInfo.style.indexOf('text-align') < 0) {
+            const lastParenPos = colInfo.style.lastIndexOf('}');
+            if (lastParenPos >= 0) {
+              colInfo.style = StringUtil.splice(colInfo.style, lastParenPos, 0,
+                '{"text-align": "right"}');
+            }
+          }
+        }
+      }
+
       return;
     }
+
 
     // metadata/reflect
     if (tableMetadata) {
@@ -299,12 +331,13 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
     for (const metaData of tableMetadata.columnMetadata) {
       if (metaData.options.displayName) {
+        const dataType = DataTypes.mapColumnTypeToDataType(metaData.propertyType);
         columnInfos.push(
           new ControlDisplayInfo(
             metaData.options.displayName,
             metaData.propertyName,
-            (metaData.propertyType === ColumnTypes.NUMBER || metaData.propertyType === ColumnTypes.DATE) ?
-              '{width: "180px", "text-align": "right"}' : '{width: "180px", "text-align": "left"}'
+            dataType,
+            (ControlDisplayInfo.isRightAligned(dataType)) ? '{"text-align": "right"}' : '{"text-align": "left"}'
           )
         );
       }

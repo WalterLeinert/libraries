@@ -1,3 +1,4 @@
+import { DataType } from './dataType';
 import { IDisplayInfo } from './displayInfo.interface';
 
 export class DisplayInfo implements IDisplayInfo {
@@ -13,7 +14,7 @@ export class DisplayInfo implements IDisplayInfo {
         DisplayInfo.CURRENT_ITEM,
         DisplayInfo.CURRENT_ITEM);
 
-    constructor(private _textField?: string, private _valueField?: string) {
+    constructor(private _textField?: string, private _valueField?: string, private _dataType?: DataType) {
     }
 
     public get textField(): string {
@@ -22,5 +23,9 @@ export class DisplayInfo implements IDisplayInfo {
 
     public get valueField(): string {
         return this._valueField;
+    }
+
+    public get dataType(): DataType {
+        return this._dataType;
     }
 }

@@ -1,4 +1,6 @@
 import { ControlType } from '../angular/modules/common/controlType';
+import { DataType } from './dataType';
+
 
 /**
  * Die Konfiguration für Anzeige eines Objektwerts mit einem Property-Tupel
@@ -29,4 +31,13 @@ export interface IDisplayInfo {
      * @memberOf IDisplayInfo
      */
     readonly?: boolean;
+
+
+    /**
+     * Der Typ der Property
+     * 
+     * @type {string}
+     * @memberOf IDisplayInfo
+     */
+    dataType?: DataType;
 }

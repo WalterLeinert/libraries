@@ -12,7 +12,7 @@ import { Assert, Clone, ColumnMetadata, StringUtil, TableMetadata } from '@fluxg
 
 import { MetadataService, ProxyService } from '../../services';
 
-import { DisplayInfo, IDisplayInfo } from '../../../base';
+import { DataTypes, DisplayInfo, IDisplayInfo, } from '../../../base';
 
 import { ListSelectorComponent } from '../common/list-selector.component';
 import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
@@ -182,6 +182,16 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
       if (!config.displayInfo.valueField) {
         config.displayInfo.valueField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.valueField;
       }
+
+
+      if (!config.displayInfo.dataType && tableMetadata) {
+        const colMetaData = tableMetadata.getColumnMetadataByProperty(config.displayInfo.valueField);
+        if (colMetaData) {
+          config.displayInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
+        }
+      }
+
+
 
       if (!config.allowNoSelection) {
         config.allowNoSelection = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelection;
