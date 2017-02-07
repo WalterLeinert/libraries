@@ -93,7 +93,7 @@ export class PipeService {
      * @memberOf PipeService
      */
     private hasPipe(pipe: PipeType, locale: string = this._locale): boolean {
-        Assert.notNullOrEmpty(pipe)
+        Assert.notNullOrEmpty(pipe);
 
         const tuple = new Tuple<PipeType, string>(pipe, locale);
         return PipeService.pipeDict.containsKey(tuple);
