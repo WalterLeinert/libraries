@@ -4,4 +4,5 @@ export * from './hour';
 export * from './mathUtil';
 export * from './shortTime';
 export * from './time';
+export * from './tuple';
 export * from './types';
