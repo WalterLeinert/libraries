@@ -7,6 +7,7 @@ import { PipeType } from './../angular/services/pipe.service';
 import { IControlDisplayInfo } from './controlDisplayInfo.interface';
 import { DataType, DataTypes } from './dataType';
 import { DisplayInfo } from './displayInfo';
+import { TextAlignment, TextAlignments } from './textAlignment';
 
 export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayInfo {
 
@@ -15,6 +16,7 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
         DisplayInfo.CURRENT_ITEM,
         undefined,
         undefined,
+        TextAlignments.LEFT,
         ControlType.Input
     );
     
@@ -32,6 +34,7 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
 
 
     constructor(textField?: string, valueField?: string, dataType?: DataType, private _style?: string,
+        private _textAlignment?: TextAlignment,
         private _controlType: ControlType = ControlType.Input, private _pipe?: PipeType | PipeTransform,
         private _pipeArgs?: string, private _pipeLocale?: string) {
         super(textField, valueField, dataType);
@@ -43,6 +46,10 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
 
     public get style(): string {
         return this._style;
+    }
+
+    public get textAlignment(): TextAlignment {
+        return this._textAlignment;
     }
 
     public get pipe(): PipeType | PipeTransform {

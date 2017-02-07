@@ -14,6 +14,7 @@ import { MetadataService, PipeService, PipeType, ProxyService } from '../../serv
 import { ControlDisplayInfo, DataTypes, IControlDisplayInfo } from '../../../base';
 import { ControlType } from '../common';
 
+import { TextAlignments } from '../../../base';
 import { ListSelectorComponent } from '../common/list-selector.component';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 
@@ -43,49 +44,25 @@ export type sortMode = 'single' | 'multiple';
     
     <div *ngIf="configInternal && configInternal.columnInfos">
       <ul *ngFor="let info of configInternal.columnInfos">
-        <p-column field="{{info.valueField}}" header="{{info.textField}}" 
-          [style]="style"
-          [sortable]="true" [editable]="editable">
 
+        <p-column field="{{info.valueField}}" header="{{info.textField}}"
+          [sortable]="true" [editable]="editable">
+    
           <div *ngIf="info.controlType === controlType.Input">
             <template let-col let-data="rowData" pTemplate="body">
-              <span>{{ formatValue(data[col.field], info) }}</span>
+              <div [style.text-align]="info.textAlignment">
+                <span>{{ formatValue(data[col.field], info) }}</span>
+              </div>
             </template>
           </div>
 
           <div *ngIf="info.controlType === controlType.Date">
             <template let-col let-data="rowData" pTemplate="body">
-              <p-calendar [(ngModel)]="data[col.field]" dateFormat="yyyy-mm-dd" [readonlyInput]="true"></p-calendar>
-              
-              <!--
-              <span>{{ formatValue(data[col.field], info) }}</span>
-              -->
-            </template>
+              <div [style.text-align]="info.textAlignment">
+                <p-calendar [(ngModel)]="data[col.field]" dateFormat="yyyy-mm-dd" [readonlyInput]="true"></p-calendar>
+              </div>
+            </template>          
           </div>
-
-          <div [ngSwitch]="info.controlType">
-            <div *ngSwitchCase="controlType.Input">
-              <template let-col let-data="rowData" pTemplate="body">
-                <span>{{ formatValue(data[col.field], info) }}</span>
-              </template>
-            </div>
-            <div *ngSwitchCase="controlType.Date">
-              <template let-col let-data="rowData" pTemplate="body">
-                <p>info: {{ info || json }}, col: {{col | json}}</p>
-                <!--
-                <p-calendar [(ngModel)]="data[col.field]"></p-calendar>
-                -->
-              </template>
-            </div>
-          </div>
-         
-          <!--
-          <div *ngIf="info.controlType === undefined">
-            <template let-col let-data="rowData" pTemplate="body">
-              <span>{{ formatValue(data[col.field], info) }}</span>
-            </template>
-          </div>
-          -->
 
         </p-column>
       </ul>
@@ -99,6 +76,7 @@ export type sortMode = 'single' | 'multiple';
   styles: []
 })
 export class DataTableSelectorComponent extends ListSelectorComponent {
+
   /**
    * ControlType Werte
    */
@@ -236,17 +214,8 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
           colInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
         }
 
-        if (!colInfo.style && ControlDisplayInfo.isRightAligned(colInfo.dataType)) {
-          colInfo.style = '{"text-align": "right"}';
-        } else if (colInfo.style) {
-          // nicht bereits text-align enthalten?
-          if (colInfo.style.indexOf('text-align') < 0) {
-            const lastParenPos = colInfo.style.lastIndexOf('}');
-            if (lastParenPos >= 0) {
-              colInfo.style = StringUtil.splice(colInfo.style, lastParenPos, 0,
-                '{"text-align": "right"}');
-            }
-          }
+        if (!colInfo.textAlignment && ControlDisplayInfo.isRightAligned(colInfo.dataType)) {
+          colInfo.textAlignment = TextAlignments.RIGHT;
         }
       }
 
@@ -337,7 +306,9 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
             metaData.options.displayName,
             metaData.propertyName,
             dataType,
-            (ControlDisplayInfo.isRightAligned(dataType)) ? '{"text-align": "right"}' : '{"text-align": "left"}'
+            undefined,
+            (ControlDisplayInfo.isRightAligned(dataType)) ? TextAlignments.RIGHT : TextAlignments.LEFT,
+            ControlType.Input
           )
         );
       }
