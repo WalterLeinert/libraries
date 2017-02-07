@@ -4,7 +4,7 @@ import { ShortTime, Time } from '../../types';
 import { Assert } from '../../util/assert';
 import { ColumnOptions } from '../decorator/model/columnOptions';
 import { IValidation, ValidationResult } from './../validation';
-import { ColumnTypes } from './columnTypes';
+import { ColumnType, ColumnTypes } from './columnTypes';
 
 import { EnumMetadata } from '.';
 
@@ -21,10 +21,10 @@ export class ColumnMetadata {
     /**
      * @param {Function} target - Modelklasse
      * @param {string} propertyName - Name der Modelproperty
-     * @param {string} propertyType - Typ der Modelproperty
+     * @param {ColumnType} propertyType - Typ der Modelproperty
      * @param {ColumnOptions} options - weitere Propertyeigenschaften
      */
-    constructor(public target: Function, public propertyName: string, public propertyType: string,
+    constructor(public target: Function, public propertyName: string, public propertyType: ColumnType,
         public options: ColumnOptions) {
     }
 

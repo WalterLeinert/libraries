@@ -39,10 +39,7 @@ export function Column(options?: ColumnOptions) {
             }
         }
 
-
-        const reflectedType = ColumnTypes.typeToString(propertyType);
-        // console.log(`${propertyName} reflectedType: ${reflectedType}`);
-
+        // aus Propertytyp (Function) den ColumnType ermitteln
         const type = ColumnTypes.determineTypeFromFunction(propertyType);
 
         if (!options) {
@@ -70,6 +67,6 @@ export function Column(options?: ColumnOptions) {
         // }
 
         MetadataStorage.instance.addColumnMetadata(new ColumnMetadata(target.constructor, propertyName,
-            reflectedType, options));
+            type, options));
     };
 }
