@@ -194,7 +194,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
         // Assert.that(this.pipeService.hasPipe(pipeString, info.pipeLocale),
         //   `Die Pipe ${pipeString} (locale: ${info.pipeLocale}) ist nicht verfügbar.`);
 
-        pipe = this.pipeService.getPipe(pipeString);
+        pipe = this.pipeService.getPipe(pipeString, info.pipeLocale);
       } else {
         pipe = info.pipe as PipeTransform;
       }
