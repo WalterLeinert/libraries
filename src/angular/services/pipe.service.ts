@@ -36,19 +36,22 @@ export class PipeService {
     constructor( @Inject(LOCALE_ID) private _locale: string) {
     }
 
-   
-    public hasPipe(pipe: PipeType, locale: string = this._locale): boolean {
-        Assert.notNullOrEmpty(pipe)
 
-        const tuple = new Tuple<PipeType, string>(pipe, locale);
-        return PipeService.pipeDict.containsKey(tuple);
-    }
-
+    /**
+     * Liefert die Pipe für @param{pipe} und die Locale @param{locale}. Ist für das Tupel
+     * noch keine Pipe registriert, wird dies dann durchgeführt.
+     * 
+     * @param {PipeType} pipe
+     * @param {string} [locale=this._locale]
+     * @returns {PipeTransform}
+     * 
+     * @memberOf PipeService
+     */
     public getPipe(pipe: PipeType, locale: string = this._locale): PipeTransform {
         Assert.notNullOrEmpty(pipe);
         const tuple = new Tuple<PipeType, string>(pipe, locale);
 
-        if (! this.hasPipe(pipe, locale)) {
+        if (!this.hasPipe(pipe, locale)) {
             switch (pipe) {
                 case PipeTypes.CURRENCY:
                     PipeService.pipeDict.set(tuple, new CurrencyPipe(locale));
@@ -71,9 +74,29 @@ export class PipeService {
                 default:
                     throw new Error(`Unsupported pipe type: ${pipe}, locale = ${locale}`);
             }
-            
+
         }
 
         return PipeService.pipeDict.get(tuple);
     }
+
+
+    
+    /**
+     * Liefert true, falls die Pipe @param{pipe} und dem Locale @param{locale} bereits registriert ist.
+     * 
+     * @private
+     * @param {PipeType} pipe
+     * @param {string} [locale=this._locale]
+     * @returns {boolean}
+     * 
+     * @memberOf PipeService
+     */
+    private hasPipe(pipe: PipeType, locale: string = this._locale): boolean {
+        Assert.notNullOrEmpty(pipe)
+
+        const tuple = new Tuple<PipeType, string>(pipe, locale);
+        return PipeService.pipeDict.containsKey(tuple);
+    }
+
 }
