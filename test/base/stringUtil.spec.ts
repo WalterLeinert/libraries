@@ -79,4 +79,9 @@ class StringUtilTest {
         return expect(() => StringUtil.splice(text, 0, text.length + 1, '#')).to.throw(Error);
     }
 
+    @test 'should throw Error (start + delCount: text.length+1)'() {
+        const text = 'Hallo';
+        return expect(() => StringUtil.splice(text, 2, 5, '#')).to.throw(Error);
+    }
+
 }
