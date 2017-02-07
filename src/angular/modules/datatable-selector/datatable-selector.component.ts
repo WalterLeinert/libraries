@@ -1,15 +1,15 @@
 // Angular
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, PipeTransform } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert, Clone, ColumnTypes, TableMetadata } from '@fluxgate/common';
+import { Assert, Clone, ColumnTypes, TableMetadata, Types } from '@fluxgate/common';
 
 import { IService } from '../../services';
-import { MetadataService, ProxyService } from '../../services';
+import { MetadataService, PipeService, PipeType, ProxyService } from '../../services';
 
 import { ControlDisplayInfo, IControlDisplayInfo } from '../../../base';
 import { ControlType } from '../common';
@@ -140,7 +140,8 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   public dataItems: any[];
 
 
-  constructor(router: Router, metadataService: MetadataService, changeDetectorRef: ChangeDetectorRef) {
+  constructor(router: Router, metadataService: MetadataService, private pipeService: PipeService,
+    changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, changeDetectorRef);
   }
 
@@ -171,9 +172,34 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   }
 
 
+  /**
+   * Formatiert den Wert @param{value} mittels der Information in @param{info}
+   * 
+   * @param {*} value
+   * @param {IControlDisplayInfo} info
+   * @returns {*}
+   * 
+   * @memberOf DataTableSelectorComponent
+   */
   public formatValue(value: any, info: IControlDisplayInfo): any {
+    Assert.notNull(info);
+
+    let pipe: PipeTransform;
+
     if (info.pipe) {
-      return info.pipe.transform(value, info.pipeArgs);
+      if (Types.isString(info.pipe)) {
+        const pipeString = info.pipe as PipeType;
+
+        // Die Pipe wird on-demand erzeugt
+        // Assert.that(this.pipeService.hasPipe(pipeString, info.pipeLocale),
+        //   `Die Pipe ${pipeString} (locale: ${info.pipeLocale}) ist nicht verfügbar.`);
+
+        pipe = this.pipeService.getPipe(pipeString);
+      } else {
+        pipe = info.pipe as PipeTransform;
+      }
+
+      return pipe.transform(value, info.pipeArgs);
     }
     return value;
   }
