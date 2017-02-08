@@ -8,6 +8,7 @@ import { DataTableModule } from 'primeng/primeng';
 import { CalendarModule } from 'primeng/primeng';
 
 import { PipeService, ProxyService } from '../../services';
+import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
 import { DataTableSelectorComponent } from './datatable-selector.component';
 
 
@@ -16,7 +17,8 @@ import { DataTableSelectorComponent } from './datatable-selector.component';
     CommonModule,
     FormsModule,
     DataTableModule,
-    CalendarModule
+    CalendarModule,
+    DropdownSelectorModule
   ],
   exports: [
     DataTableSelectorComponent

@@ -19,7 +19,7 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
         TextAlignments.LEFT,
         ControlType.Input
     );
-    
+
 
     public static isRightAligned(dataType: DataType) {
         switch (dataType) {
@@ -35,13 +35,18 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
 
     constructor(textField?: string, valueField?: string, dataType?: DataType, private _style?: string,
         private _textAlignment?: TextAlignment,
-        private _controlType: ControlType = ControlType.Input, private _pipe?: PipeType | PipeTransform,
+        private _controlType: ControlType = ControlType.Input,
+        private _selectorDataService?: Function, private _pipe?: PipeType | PipeTransform,
         private _pipeArgs?: string, private _pipeLocale?: string) {
         super(textField, valueField, dataType);
     }
 
     public get controlType(): ControlType {
         return this._controlType;
+    }
+
+    public get selectorDataService(): Function {
+        return this._selectorDataService;
     }
 
     public get style(): string {

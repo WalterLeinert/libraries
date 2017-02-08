@@ -64,6 +64,17 @@ export type sortMode = 'single' | 'multiple';
             </template>          
           </div>
 
+          <div *ngIf="info.controlType === controlType.DropdownSelector">
+            <template let-col let-data="rowData" pTemplate="body">
+              <div [style.text-align]="info.textAlignment">
+                <flx-dropdown-selector [dataService]="selectorDataService"
+                  [textField]="info.textField" [valueField]="info.valueField"
+                  [style]="{'width':'150px'}" name="flxDropdownSelector" [debug]="false">
+                </flx-dropdown-selector>
+              </div>
+            </template>          
+          </div>          
+
         </p-column>
       </ul>
     </div>
@@ -201,22 +212,42 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
       // Defaults übernehmen
       for (const colInfo of this.configInternal.columnInfos) {
-        if (colInfo.controlType === undefined) {
-          colInfo.controlType = ControlDisplayInfo.DEFAULT.controlType;
-        }
-
         if (colInfo.readonly === undefined) {
           colInfo.readonly = ControlDisplayInfo.DEFAULT.readonly;
         }
 
-        if ((colInfo.dataType === undefined) && tableMetadata) {
+        if (tableMetadata) {
           const colMetaData = tableMetadata.getColumnMetadataByProperty(colInfo.valueField);
-          colInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
+
+          if (colInfo.dataType === undefined) {            
+            colInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
+          }
+
+          if (colInfo.dataType === DataTypes.DATE) {
+            colInfo.controlType = ControlType.Date;
+          }
+
+          if (!colInfo.selectorDataService) {
+            if (colMetaData.enumMetadata) {
+              const enumTableMetadata = this.metadataService.findTableMetadata(colMetaData.enumMetadata.dataSource);
+              colInfo.selectorDataService = enumTableMetadata.service;
+
+              if (colInfo.controlType === undefined) {
+                colInfo.controlType = ControlType.DropdownSelector;
+              }
+            }
+          }
+          
         }
 
         if (!colInfo.textAlignment && ControlDisplayInfo.isRightAligned(colInfo.dataType)) {
           colInfo.textAlignment = TextAlignments.RIGHT;
         }
+
+        if (colInfo.controlType === undefined) {
+          colInfo.controlType = ControlDisplayInfo.DEFAULT.controlType;
+        }
+
       }
 
       return;

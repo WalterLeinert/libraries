@@ -39,6 +39,15 @@ export interface IControlDisplayInfo extends IDisplayInfo {
     controlType?: ControlType;
 
     /**
+     * Liefert die zugehörige Service-Instanz, falls der @see{controlType} den 
+     * Wert @see{ControlType.DropdownSelector} hat.
+     * 
+     * @type {*}
+     * @memberOf IControlDisplayInfo
+     */
+    selectorDataService?: Function;
+
+    /**
      * Der Name der Pipe, über die der Wert formatiert werden soll oder eine Pipe-Instanz
      * 
      * @type {PipeTypes | PipeTransform}
