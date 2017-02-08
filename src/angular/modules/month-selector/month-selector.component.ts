@@ -52,6 +52,16 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
   public ngOnInit() {
     super.ngOnInit();
 
+    this.updateData();
+  }
+
+  protected onLocaleChange(value: string) {
+    super.onLocaleChange(value);
+    this.updateData();
+  }
+
+
+  private updateData() {
     let localeSettings = PrimeNgCalendarLocale[this.locale];
     if (Types.isUndefined(localeSettings)) {
       localeSettings = PrimeNgCalendarLocale.en;
@@ -61,8 +71,8 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
     for (let month = 1; month <= 12; month++) {
       this.months.push({
         id: month,
-        name: localeSettings.monthNames[month],
-        shortname: localeSettings.monthNamesShort[month]
+        name: localeSettings.monthNames[month - 1],
+        shortname: localeSettings.monthNamesShort[month - 1]
       });
     }
   }

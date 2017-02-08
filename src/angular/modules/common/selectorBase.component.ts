@@ -24,7 +24,7 @@ export abstract class SelectorBaseComponent extends BaseComponent<any> {
      *
      * @type {string}
      */
-    @Input() public locale: string = 'en';
+    private _locale: string = 'en';
 
 
     /**
@@ -84,5 +84,24 @@ export abstract class SelectorBaseComponent extends BaseComponent<any> {
 
     protected get changeDetectorRef(): ChangeDetectorRef {
         return this._changeDetectorRef;
+    }
+
+
+    // -------------------------------------------------------------------------------------
+    // Property locale
+    // -------------------------------------------------------------------------------------
+    protected onLocaleChange(value: string) {
+        // ok
+    }
+
+    public get locale(): string {
+        return this._locale;
+    }
+
+    @Input() public set locale(value: string) {
+        if (this._locale !== value) {
+            this._locale = value;
+            this.onLocaleChange(value);
+        }
     }
 }
