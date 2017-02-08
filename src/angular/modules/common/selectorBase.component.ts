@@ -19,6 +19,13 @@ export abstract class SelectorBaseComponent extends BaseComponent<any> {
      */
     @Input() public debug: boolean = false;
 
+    /**
+     * locale-Property
+     *
+     * @type {string}
+     */
+    @Input() public locale: string = 'en';
+
 
     /**
      * * setzt das style-Attribut von p-dropdown
