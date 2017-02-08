@@ -18,7 +18,7 @@ export interface IYearRange {
   template: `
 <div>
   <flx-dropdown-selector [data]="years" [(selectedValue)]="selectedValue"
-    [style]="{'width':'50px'}"
+    [style]="style"
     [debug]="debug" name="yearSelector">
   </flx-dropdown-selector>
 </div>
