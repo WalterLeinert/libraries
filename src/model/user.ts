@@ -29,7 +29,7 @@ export class User implements IUser {
   @Column({ name: 'email', nullable: true, displayName: 'Email' })
   public email?: string;
 
-  @Enum({ dataSource: Role })
+  @Enum((dataSource) => Role)
   @Column({ name: 'id_role', displayName: 'Role-Id' })
   public role: number = UserRoleId.User;
 

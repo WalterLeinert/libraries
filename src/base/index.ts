@@ -7,6 +7,7 @@ export * from './ctor';
 export * from './disposable.interface';
 export * from './disposable';
 export * from './enumHelper';
+export * from './objectType';
 export * from './stringBuilder';
 export * from './stringUtil';
 export * from './toString.interface';
