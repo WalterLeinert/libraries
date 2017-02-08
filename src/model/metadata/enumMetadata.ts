@@ -1,4 +1,5 @@
 import { ObjectType } from '../../base/objectType';
+import { Assert } from '../../util/assert';
 
 
 /**
@@ -37,7 +38,8 @@ export class EnumMetadata {
     /**
      * Gets the property's type to which this relation is applied.
      */
-    public get dataSource(): Function | string { // todo: when this can be a string?
-        return this._dataSource instanceof Function ? (this._dataSource as () => any)() : this._dataSource;
+    public get dataSource(): Function {
+        Assert.that(this._dataSource instanceof Function);
+        return  (this._dataSource as () => any)();
     }
 }
