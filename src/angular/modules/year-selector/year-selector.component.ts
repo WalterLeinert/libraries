@@ -1,7 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Assert, Types } from '@fluxgate/common';
 
+import { MetadataService } from '../../services';
+import { SelectorBaseComponent } from '../common/selectorBase.component';
 
 export interface IYearRange {
   lowerYear?: number;
@@ -13,7 +17,7 @@ export interface IYearRange {
   selector: 'flx-year-selector',
   template: `
 <div>
-  <flx-dropdown-selector [data]="years" [(selectedValue)]="selectedYear"
+  <flx-dropdown-selector [data]="years" [(selectedValue)]="selectedValue"
     [style]="{'width':'50px'}"
     [debug]="debug" name="yearSelector">
   </flx-dropdown-selector>
@@ -21,7 +25,7 @@ export interface IYearRange {
 `,
   styles: []
 })
-export class YearSelectorComponent {
+export class YearSelectorComponent extends SelectorBaseComponent {
   public static readonly YEAR_MIN = 1900;
   public static readonly YEAR_MAX = 2050;
 
@@ -34,31 +38,11 @@ export class YearSelectorComponent {
   ];
 
 
-  /**
-   * falls true, wird Debug-Info beim Control angezeigt
-   *
-   * @type {boolean}
-   * @memberOf YearSelectorComponent
-   */
-  @Input() public debug: boolean = false;
+  constructor(router: Router, metadataService: MetadataService, changeDetectorRef: ChangeDetectorRef) {
+    super(router, metadataService, changeDetectorRef);
 
-  /**
-   * selectedYearChange Event: wird bei jeder Selektionsänderung gefeuert.
-   *
-   * Eventdaten: @type{number} - selektiertes Jahr.
-   *
-   * @memberOf YearSelectorComponent
-   */
-  @Output() public selectedYearChange = new EventEmitter<number>();
-
-
-  /**
-   * das aktuell selektierte Jahr
-   *
-   * @type {number}
-   */
-  private _selectedYear: number;
-
+    this.style = '{\'width\':\'70px\'}';
+  }
 
 
   public get yearRange(): IYearRange {
@@ -98,26 +82,6 @@ export class YearSelectorComponent {
       }
 
       this._yearRange = value;
-    }
-  }
-
-
-  // -------------------------------------------------------------------------------------
-  // Property selectedValue und der Change Event
-  // -------------------------------------------------------------------------------------
-
-  protected onSelectedYearChange(value: number) {
-    this.selectedYearChange.emit(value);
-  }
-
-  public get selectedYear(): number {
-    return this._selectedYear;
-  }
-
-  @Input() public set selectedYear(value: number) {
-    if (this._selectedYear !== value) {
-      this._selectedYear = value;
-      this.onSelectedYearChange(value);
     }
   }
 }

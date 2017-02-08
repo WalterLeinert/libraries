@@ -13,29 +13,16 @@ import { MetadataService, ProxyService } from '../../services';
 
 import { IDisplayInfo } from '../../../base';
 import { BaseComponent } from '../../common/base';
+import { SelectorBaseComponent } from './selectorBase.component';
 
 
-export type sortMode = 'single' | 'multiple';
-
-
-
-export abstract class ListSelectorComponent extends BaseComponent<any> {
+export abstract class ListSelectorComponent extends SelectorBaseComponent {
 
 
     /**
      * Schutz vor rekursivem Ping-Pong
      */
     protected isPreselecting: boolean = false;
-
-
-    /**
-     * falls true, wird Debug-Info beim Control angezeigt
-     *
-     * @type {boolean}
-     * @memberOf DataTableSelectorComponent
-     */
-    @Input() public debug: boolean = false;
-
 
     /**
      * angebundene Objektliste statt Liste von Entities aus DB.
@@ -95,29 +82,11 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
     @Output() public selectedIndexChange = new EventEmitter<number>();
 
 
-    /**
-     * selectedValueChange Event: wird bei jeder Selektionsänderung gefeuert.
-     *
-     * Eventdaten: @type{any} - selektiertes Objekt.
-     *
-     * @memberOf DataTableSelectorComponent
-     */
-    @Output() public selectedValueChange = new EventEmitter<any>();
-
-
-    /**
-     * das aktuell selektierte Objekt
-     *
-     * @type {*}
-     * @memberOf DataTableSelectorComponent
-     */
-    private _selectedValue: any;
-
-
-    constructor(router: Router, private _metadataService: MetadataService,
-        private _changeDetectorRef: ChangeDetectorRef) {
-        super(router, null);
+    protected constructor(router: Router, metadataService: MetadataService,
+        changeDetectorRef: ChangeDetectorRef) {
+        super(router, metadataService, changeDetectorRef);
     }
+
 
     public ngOnInit() {
         super.ngOnInit();
@@ -310,6 +279,8 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
     // -------------------------------------------------------------------------------------
 
     protected onSelectedValueChange(value: any) {
+        super.onSelectedValueChange(value);
+
         this.changeDetectorRef.detectChanges();
         this.selectedValueChange.emit(value);
 
@@ -320,19 +291,6 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
         this.selectedIndex = index;
 
         this.preselectData();
-    }
-
-
-
-    public get selectedValue(): any {
-        return this._selectedValue;
-    }
-
-    @Input() public set selectedValue(value: any) {
-        if (this._selectedValue !== value) {
-            this._selectedValue = value;
-            this.onSelectedValueChange(value);
-        }
     }
 
 
@@ -400,15 +358,6 @@ export abstract class ListSelectorComponent extends BaseComponent<any> {
             }
         }
         return tableMetadata;
-    }
-
-
-    protected get metadataService(): MetadataService {
-        return this._metadataService;
-    }
-
-    protected get changeDetectorRef(): ChangeDetectorRef {
-        return this._changeDetectorRef;
     }
 
 }

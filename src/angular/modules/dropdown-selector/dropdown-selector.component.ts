@@ -10,11 +10,9 @@ import { SelectItem } from 'primeng/primeng';
 // Fluxgate
 import { Assert, Clone, ColumnMetadata, StringUtil, TableMetadata } from '@fluxgate/common';
 
-import { MetadataService, ProxyService } from '../../services';
-
 import { DataTypes, DisplayInfo, IDisplayInfo, } from '../../../base';
-
-import { ListSelectorComponent } from '../common/list-selector.component';
+import { MetadataService, ProxyService } from '../../services';
+import { ListSelectorComponent } from '../common';
 import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
 
 /**
@@ -88,14 +86,6 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
    */
   @Input() public autoWidth: boolean = true;
 
-
-  /**
-   * * setzt das style-Attribut von p-dropdown
-   *
-   * @type {string}
-   * @memberOf DropdownSelectorComponent
-   */
-  @Input() public style: string;
 
   /**
    * Die Property in der angebundenen Werteliste, welche in der Dropbox angezeigt werden soll
