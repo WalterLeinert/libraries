@@ -6,8 +6,9 @@ import { getLogger, levels, Logger } from 'log4js';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { Assert, Clone, ColumnMetadata, IQuery, IToString, IUser, 
-    ServiceResult, TableMetadata, Types 
+import {
+    Assert, Clone, ColumnMetadata, IQuery, IToString, IUser,
+    ServiceResult, TableMetadata, Types
 } from '@fluxgate/common';
 
 import { KnexService } from './knex.service';
@@ -321,12 +322,14 @@ export abstract class BaseService<T, TId extends IToString>  {
         query: IQuery
     ): Promise<T[]> {
         return using(new XLog(BaseService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
-            const dbColumnName = this.metadata.getDbColumnName(query.selector.name);
+            let knexQuery = this.fromTable();
 
-            return this.queryKnex(
-                this.fromTable()
-                    .where(dbColumnName, query.selector.operator, query.selector.value)
-            );
+            query.selectors.forEach((selector) => {
+                const dbColumnName = this.metadata.getDbColumnName(selector.name);
+                knexQuery = knexQuery.andWhere(dbColumnName, selector.operator, selector.value);
+            });
+
+            return this.queryKnex(knexQuery);
         });
     }
 
@@ -403,7 +406,7 @@ export abstract class BaseService<T, TId extends IToString>  {
     protected get tableName(): string {
         return this.metadata.options.name;
     }
-    
+
 
 
     /**
