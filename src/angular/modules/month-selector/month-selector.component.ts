@@ -67,13 +67,15 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
       localeSettings = PrimeNgCalendarLocale.en;
     }
 
-
+    const months = [];
     for (let month = 1; month <= 12; month++) {
-      this.months.push({
+      months.push({
         id: month,
         name: localeSettings.monthNames[month - 1],
         shortname: localeSettings.monthNamesShort[month - 1]
       });
+
+      this.months = months;
     }
   }
 
