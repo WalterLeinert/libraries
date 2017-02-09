@@ -15,7 +15,7 @@ import { MetadataStorage } from '../../metadata/metadataStorage';
  */
 export function Enum<T>(dataSource: (type?: any) => ObjectType<T>) {
     // tslint:disable-next-line:only-arrow-functions
-    return function (target: any, propertyName: string) {
+    return function(target: any, propertyName: string) {
         Assert.notNull(dataSource);
         MetadataStorage.instance.addEnumMetadata(new EnumMetadata(target.constructor, propertyName, dataSource));
     };
