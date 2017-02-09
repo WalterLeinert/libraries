@@ -29,7 +29,7 @@ export class Level implements ILevel {
         return this.level === (other as Level).level;
     }
 
-    public toString() {
+    public toString(): string {
         return this.levelString;
     }
 

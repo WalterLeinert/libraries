@@ -1,4 +1,8 @@
+import * as moment from 'moment';
+
+
 import { Platform } from '../base/platform';
+import { StringBuilder } from '../base/stringBuilder';
 import { Dictionary } from '../types/dictionary';
 import { Types } from '../types/types';
 
@@ -25,6 +29,7 @@ export class BrowserLogger implements ILogger {
     }
 
     private constructor(private categoryName: string) {
+
     }
 
     /**
@@ -37,27 +42,51 @@ export class BrowserLogger implements ILogger {
     }
 
     public trace(message: string, ...args: any[]): void {
-        console.trace(message, ...args);
+        if (this.isTraceEnabled()) {
+            const sb = this.createLogPrefix();
+            sb.append(message);
+            console.trace(sb.toString(), ...args);
+        }
     }
 
     public debug(message: string, ...args: any[]): void {
-        console.debug(message, ...args);
+        if (this.isDebugEnabled()) {
+            const sb = this.createLogPrefix();
+            sb.append(message);
+            console.debug(sb.toString(), ...args);
+        }
     }
 
     public info(message: string, ...args: any[]): void {
-        console.info(message, ...args);
+        if (this.isInfoEnabled()) {
+            const sb = this.createLogPrefix();
+            sb.append(message);
+            console.info(sb.toString(), ...args);
+        }
     }
 
     public warn(message: string, ...args: any[]): void {
-        console.warn(message, ...args);
+        if (this.isWarnEnabled()) {
+            const sb = this.createLogPrefix();
+            sb.append(message);
+            console.warn(sb.toString(), ...args);
+        }
     }
 
     public error(message: string, ...args: any[]): void {
-        console.error(message, ...args);
+        if (this.isErrorEnabled()) {
+            const sb = this.createLogPrefix();
+            sb.append(message);
+            console.error(sb.toString(), ...args);
+        }
     }
 
     public fatal(message: string, ...args: any[]): void {
-        console.error(message, ...args);
+        if (this.isFatalEnabled()) {
+            const sb = this.createLogPrefix();
+            sb.append(message);
+            console.error(sb.toString(), ...args);
+        }
     }
 
     public isLevelEnabled(level: ILevel): boolean {
@@ -98,6 +127,18 @@ export class BrowserLogger implements ILogger {
             throw new Error(`Level string ${level} currently not supported`);
         }
         this.level = lev;
+    }
+
+    private createLogPrefix(): StringBuilder {
+        const sb = new StringBuilder(moment().format('YYYY-MM-DD hh:mm:ss.SSS'));
+
+        sb.append(' [');
+        sb.append(this.level.toString());
+        sb.append('] ');
+        sb.append(this.categoryName);
+        sb.append(' ');
+
+        return sb;
     }
 
 }
