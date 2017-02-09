@@ -8,9 +8,25 @@ import { PrimeNgCalendarLocale } from '../../../primeng/calendarLocale';
 import { MetadataService } from '../../services';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
 
+
+/**
+ * Interaface für Monatsdaten
+ */
 export interface IMonth {
+
+  /**
+   * laufende Nummer (1..12)
+   */
   id: number;
+
+  /**
+   * Monatsname (für locale=de: z.B. 'Januar')
+   */
   name: string;
+
+  /**
+   * Monatskurzname (für locale=de: z.B. 'Jan')
+   */
   shortname: string;
 }
 
