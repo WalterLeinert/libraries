@@ -20,6 +20,7 @@ export interface IMonth {
   template: `
 <div>
   <flx-dropdown-selector [data]="months" [(selectedValue)]="selectedValue"
+    [textField]="textField" [valueField]="valueField"
     [style]="style"
     [debug]="debug" name="monthSelector">
   </flx-dropdown-selector>
@@ -40,6 +41,15 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
    * @memberOf MonthSelectorComponent
    */
   @Input() public textField: string = 'name';
+
+  /**
+   * Die Property in der angebundenen Werteliste, welche nach Auswahl
+   * als 'selectedValue' übernommen werden soll.
+   *
+   * @type {string}
+   * @memberOf MonthSelectorComponent
+   */
+  @Input() public valueField: string = '.';
 
 
   constructor(router: Router, metadataService: MetadataService, changeDetectorRef: ChangeDetectorRef) {
