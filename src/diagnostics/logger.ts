@@ -1,13 +1,13 @@
 import { ILevel, ILogger, Level } from '.';
-import { Platform } from '../base';
-import { Types } from '../types';
+import { Platform } from '../base/platform';
+import { Types } from '../types/types';
 import { BrowserLogger } from './browserLogger';
 
 
 
 export function getLogger(categoryName: string): ILogger {
     if (Platform.isNode()) {
-        let log4js = require('log4js');
+        const log4js = require('log4js');
         return new Logger(log4js.getLogger(categoryName));
     } else {
         return new Logger(BrowserLogger.create(categoryName));

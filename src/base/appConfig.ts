@@ -1,5 +1,5 @@
 // -------------------------- logging -------------------------------
-import { getLogger, ILogger } from '../diagnostics';
+import { getLogger, ILogger, levels, Logger } from '../diagnostics';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
@@ -65,13 +65,13 @@ export interface IAppConfig {
 
 
 export class AppConfig {
-  private static logger = getLogger('ConfigService');
+  protected static logger = getLogger('ConfigService');
   public static readonly APP_CONFIG_KEY = 'IAppConfig';
 
   public static register(config: IAppConfig) {
     const key = AppConfig.APP_CONFIG_KEY;
     AppRegistry.instance.add<IAppConfig>(key, config);
-   
+
     AppConfig.logger.info(`configured: key = ${key} -> ${JSON.stringify(config)}`);
   }
 

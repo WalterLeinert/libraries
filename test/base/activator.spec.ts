@@ -7,6 +7,7 @@ import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { getLogger, ILogger, levels, Logger } from '../../src/diagnostics';
 
 import { Activator } from '../../src/base/activator';
 
