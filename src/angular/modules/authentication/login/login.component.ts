@@ -4,6 +4,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
+// -------------------------- logging -------------------------------
+import {
+  configure, getLogger, ILogger, levels, Logger, using, XLog
+} from '@fluxgate/common';
+// -------------------------- logging -------------------------------
+
 import { BaseComponent } from '../../../common/base/base.component';
 
 import { ChangePasswordGuardService } from '../changePassword/changePassword-guard.service';
@@ -49,6 +55,8 @@ import { PassportService } from '../passport.service';
 })
 
 export class LoginComponent extends BaseComponent<PassportService> {
+  protected static logger = getLogger('LoginComponent');
+
   public username: string;
   public password: string;
 
@@ -76,7 +84,7 @@ export class LoginComponent extends BaseComponent<PassportService> {
   public login() {
     this.service.login(this.username, this.password)
       .subscribe((result) => {
-        console.log(result);
+        LoginComponent.logger.info(JSON.stringify(result));
         this.navigate([
           this.navigationService.navigationPath
         ]);

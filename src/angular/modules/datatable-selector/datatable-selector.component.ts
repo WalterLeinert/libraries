@@ -8,6 +8,12 @@ import 'rxjs/add/observable/throw';
 // Fluxgate
 import { Assert, Clone, ColumnTypes, StringUtil, TableMetadata, Types } from '@fluxgate/common';
 
+// -------------------------- logging -------------------------------
+import {
+  configure, getLogger, ILogger, levels, Logger, using, XLog
+} from '@fluxgate/common';
+// -------------------------- logging -------------------------------
+
 import { IService } from '../../services';
 import { MetadataService, PipeService, PipeType, ProxyService } from '../../services';
 
@@ -87,6 +93,7 @@ export type sortMode = 'single' | 'multiple';
   styles: []
 })
 export class DataTableSelectorComponent extends ListSelectorComponent {
+  protected static logger = getLogger('DataTableSelectorComponent');
 
   /**
    * ControlType Werte
@@ -156,7 +163,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   public onRowSelect(row) {
     this.changeDetectorRef.detectChanges();
     if (this.debug) {
-      console.log(`DataTableSelectorComponent.onRowSelect: ${JSON.stringify(row)}`);
+      DataTableSelectorComponent.logger.info(`DataTableSelectorComponent.onRowSelect: ${JSON.stringify(row)}`);
     }
     this.selectedValueChange.emit(row);
   }

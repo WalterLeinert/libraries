@@ -10,6 +10,12 @@ import { SelectItem } from 'primeng/primeng';
 // Fluxgate
 import { Assert, Clone, ColumnMetadata, StringUtil, TableMetadata } from '@fluxgate/common';
 
+// -------------------------- logging -------------------------------
+import {
+  configure, getLogger, ILogger, levels, Logger, using, XLog
+} from '@fluxgate/common';
+// -------------------------- logging -------------------------------
+
 import { DataTypes, DisplayInfo, IDisplayInfo, } from '../../../base';
 import { MetadataService, ProxyService } from '../../services';
 import { ListSelectorComponent } from '../common';
@@ -38,6 +44,8 @@ import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
   styles: []
 })
 export class DropdownSelectorComponent extends ListSelectorComponent {
+  protected static logger = getLogger('DropdownSelectorComponent');
+
   public static readonly ALLOW_NO_SELECTION_TEXT = '(Auswahl)';
 
   /**
@@ -140,8 +148,8 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
   public onChange(value) {
     this.changeDetectorRef.detectChanges();
     if (this.debug) {
-      console.log(`DropdownSelectorComponent.onChange: selectedIndex = ${this.selectedIndex},` +
-        ` value = ${JSON.stringify(value)}`);
+      DropdownSelectorComponent.logger.info(`DropdownSelectorComponent.onChange: selectedIndex =` +
+        ` ${this.selectedIndex}, value = ${JSON.stringify(value)}`);
     }
   }
 

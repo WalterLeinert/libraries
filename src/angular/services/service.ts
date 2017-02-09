@@ -12,6 +12,12 @@ import * as HttpStatusCodes from 'http-status-codes';
 import { IQuery, IToString, ServiceResult, TableMetadata } from '@fluxgate/common';
 import { Assert, Constants, StringBuilder } from '@fluxgate/common';
 
+// -------------------------- logging -------------------------------
+import {
+    configure, getLogger, ILogger, levels, Logger, using, XLog
+} from '@fluxgate/common';
+// -------------------------- logging -------------------------------
+
 import { Serializer } from '../../base/serializer';
 import { ConfigService } from './config.service';
 import { MetadataService } from './metadata.service';
@@ -27,6 +33,8 @@ import { IService } from './service.interface';
  * @template T
  */
 export abstract class Service<T, TId extends IToString> implements IService {
+    protected static logger = getLogger('Service');
+
     private _url: string;
     private _tableMetadata: TableMetadata;
     private serializer: Serializer<T>;
@@ -49,7 +57,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
             errorMessage = response.text();
         }
 
-        console.error(`${response.status} - ${response.statusText || ''} -- ${errorMessage}`);
+        Service.logger.error(`${response.status} - ${response.statusText || ''} -- ${errorMessage}`);
         return Observable.throw(new Error(errorMessage));
     }
 
@@ -108,7 +116,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
 
         return this.http.post(this.getUrl(), this.serialize(item))
             .map((response: Response) => this.deserialize(response.json()))
-            .do((data) => console.log(`Service.create: ${JSON.stringify(data)}`))
+            .do((data) => Service.logger.info(`Service.create: ${JSON.stringify(data)}`))
             .catch(Service.handleError);
     }
 
@@ -124,7 +132,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
     public find(): Observable<T[]> {
         return this.http.get(this.getUrl())
             .map((response: Response) => this.deserializeArray(response.json()))
-            // .do(data => console.log('result: ' + JSON.stringify(data)))
+            // .do(data => Service.logger.info('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
     }
 
@@ -142,7 +150,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
 
         return this.http.get(`${this.getUrl()}/${id}`)
             .map((response: Response) => this.deserialize(response.json()))
-            .do((data) => console.log(`Service.findById: id = ${id} -> ${JSON.stringify(data)}`))
+            .do((data) => Service.logger.info(`Service.findById: id = ${id} -> ${JSON.stringify(data)}`))
             .catch(Service.handleError);
     }
 
@@ -160,7 +168,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
 
         return this.http.put(`${this.getUrl()}`, this.serialize(item))
             .map((response: Response) => this.deserialize(response.json()))
-            .do((data) => console.log(`Service.update: ${JSON.stringify(data)}`))
+            .do((data) => Service.logger.info(`Service.update: ${JSON.stringify(data)}`))
             .catch(Service.handleError);
     }
 
@@ -178,7 +186,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
 
         return this.http.delete(`${this.getUrl()}/${id}`)
             .map((response: Response) => response.json())
-            .do((serviceResult) => console.log(`Service.delete: ${JSON.stringify(serviceResult)}`))
+            .do((serviceResult) => Service.logger.info(`Service.delete: ${JSON.stringify(serviceResult)}`))
             .catch(Service.handleError);
     }
 
@@ -199,7 +207,8 @@ export abstract class Service<T, TId extends IToString> implements IService {
 
         return this.http.post(`${this.getUrl()}/query`, query, options)
             .map((response: Response) => this.deserializeArray(response.json()))
-            .do((data) => console.log(`Service.query: query = ${JSON.stringify(query)} -> ${JSON.stringify(data)}`))
+            .do((data) => Service.logger.info(`Service.query: query = ${JSON.stringify(query)}` + 
+                ` -> ${JSON.stringify(data)}`))
             .catch(Service.handleError);
     }
 

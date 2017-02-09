@@ -10,6 +10,12 @@ import { Observable } from 'rxjs/Observable';
 // Fluxgate
 import { Assert, Constants, IUser, PasswordChange, ServiceResult, StringBuilder, User } from '@fluxgate/common';
 
+// -------------------------- logging -------------------------------
+import {
+    configure, getLogger, ILogger, levels, Logger, using, XLog
+} from '@fluxgate/common';
+// -------------------------- logging -------------------------------
+
 import { Serializer } from '../../../base/serializer';
 import { IRestUri, IServiceBase, MetadataService, Service } from '../../services';
 import { ConfigService } from '../../services/config.service';
@@ -17,6 +23,8 @@ import { ConfigService } from '../../services/config.service';
 
 @Injectable()
 export class PassportService implements IServiceBase {
+    protected static logger = getLogger('PassportService');
+
     public static get LOGIN() { return '/login'; }
     public static get SIGNUP() { return '/signup'; }
     public static get LOGOFF() { return '/logout'; }
@@ -83,7 +91,7 @@ export class PassportService implements IServiceBase {
         return this.http.post(this.getUrl() + PassportService.LOGIN, user)
             .map((response: Response) => this.deserialize(response.json()))
             .do((u) => {
-                // console.log('user: ' + JSON.stringify(u));
+                PassportService.logger.info('user: ' + JSON.stringify(u));
                 this.onCurrentUserChange(u);
             })
             .catch(Service.handleError);
@@ -104,7 +112,7 @@ export class PassportService implements IServiceBase {
         return this.http.post(this.getUrl() + PassportService.SIGNUP, user)
             .map((response: Response) => this.deserialize(response.json()))
             .do((u) => {
-                // console.log('user: ' + JSON.stringify(u));
+                PassportService.logger.info('user: ' + JSON.stringify(u));
                 this.onCurrentUserChange(u);
             })
             .catch(Service.handleError);
@@ -122,11 +130,11 @@ export class PassportService implements IServiceBase {
         return this.http.get(this.getUrl() + PassportService.LOGOFF)
             .map((response: Response) => {
                 // ok
-            }).do(() => {
-                // console.log('user: ' + JSON.stringify(u));
+            }).do((user) => {
+                PassportService.logger.info('user: ' + JSON.stringify(user));
                 this.onCurrentUserChange(null);
             })
-            // .do(data => console.log('result: ' + JSON.stringify(data)))
+            .do((data) => PassportService.logger.info('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
     }
 
@@ -149,7 +157,7 @@ export class PassportService implements IServiceBase {
         return this.http.post(this.getUrl() + PassportService.CHANGE_PASSWORD, passwordChange)
             .map((response: Response) => this.deserialize(response.json()))
             .do((user) => {
-                console.log(`PassportService.changePassword: user = ${JSON.stringify(user)}`);
+                PassportService.logger.info(`PassportService.changePassword: user = ${JSON.stringify(user)}`);
             })
             .catch(Service.handleError);
     }
@@ -165,8 +173,8 @@ export class PassportService implements IServiceBase {
     public getCurrentUser(): Observable<User> {
         return this.http.get(this.getUrl() + PassportService.CURRENT_USER)
             .map((response: Response) => this.deserialize(response.json()))
-            .do((data) => {
-                console.log('result: ' + JSON.stringify(data));
+            .do((user) => {
+                PassportService.logger.info('result: ' + JSON.stringify(user));
             })
             .catch(Service.handleError);
     }

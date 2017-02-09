@@ -10,6 +10,12 @@ import { SelectItem } from 'primeng/primeng';
 // fluxgate
 import { Assert, IRole, IUser, User } from '@fluxgate/common';
 
+// -------------------------- logging -------------------------------
+import {
+  configure, getLogger, ILogger, levels, Logger, using, XLog
+} from '@fluxgate/common';
+// -------------------------- logging -------------------------------
+
 import { Base2Component } from '../../../common/base';
 import { MetadataService } from '../../../services';
 import { NavigationService } from '../navigation.service';
@@ -81,6 +87,8 @@ import { RoleService } from '../role.service';
   styles: []
 })
 export class RegisterComponent extends Base2Component<PassportService, RoleService> {
+  protected static logger = getLogger('LoginComponent');
+
   public user: User;
   public selectedRole: IRole;
 
@@ -102,7 +110,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
   public signup() {
     this.service.signup(this.user)
       .subscribe((result) => {
-        console.log(result);
+        RegisterComponent.logger.info(JSON.stringify(result));
 
         this.navigate([
           this.navigationService.navigationPath
@@ -114,6 +122,6 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
   }
 
   public onSelectedRoleChanged(item: IRole) {
-    console.log(`RegisterComponent.onSelectedRoleChanged: item = ${JSON.stringify(item)}`);
+    RegisterComponent.logger.info(`RegisterComponent.onSelectedRoleChanged: item = ${JSON.stringify(item)}`);
   }
 }

@@ -10,6 +10,12 @@ import { ConfirmationService } from 'primeng/primeng';
 
 import { IUser } from '@fluxgate/common';
 
+// -------------------------- logging -------------------------------
+import {
+  configure, getLogger, ILogger, levels, Logger, using, XLog
+} from '@fluxgate/common';
+// -------------------------- logging -------------------------------
+
 import { BaseComponent } from '../../../common/base/base.component';
 
 import { NavigationService } from '../navigation.service';
@@ -69,6 +75,8 @@ import { PassportService } from '../passport.service';
 })
 
 export class ChangePasswordComponent extends BaseComponent<PassportService> {
+  protected static logger = getLogger('ChangePasswordComponent');
+
   public username: string;
   public password: string;
   public passwordNew: string;
@@ -96,7 +104,7 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
 
     this.service.changePassword(this.currentUser.username, this.password, this.passwordNew)
       .subscribe((user) => {
-        console.log(`ChangePasswordComponent.changePassword: user = ${user}`);
+        ChangePasswordComponent.logger.info(`ChangePasswordComponent.changePassword: user = ${user}`);
 
         this.navigate([
           this.navigationService.navigationPath
@@ -119,11 +127,11 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
       header: 'Delete',
       message: 'Are you sure you want to delete the selected department?',
       accept: () => {
-        console.log('delete');
+        ChangePasswordComponent.logger.info('delete');
         // this.delete(true);
       },
       reject: () => {
-        console.log('cancel');
+        ChangePasswordComponent.logger.info('cancel');
       }
     });
   }

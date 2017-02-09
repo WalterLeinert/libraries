@@ -4,7 +4,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { BaseComponent} from '../../../common/base/base.component';
+// -------------------------- logging -------------------------------
+import {
+  configure, getLogger, ILogger, levels, Logger, using, XLog
+} from '@fluxgate/common';
+// -------------------------- logging -------------------------------
+
+import { BaseComponent } from '../../../common/base/base.component';
 import { PassportService } from './../passport.service';
 
 
@@ -18,6 +24,7 @@ import { PassportService } from './../passport.service';
   styles: []
 })
 export class LogoffComponent extends BaseComponent<PassportService> {
+  protected static logger = getLogger('LogoffComponent');
 
   constructor(router: Router, service: PassportService) {
     super(router, service);
@@ -31,7 +38,7 @@ export class LogoffComponent extends BaseComponent<PassportService> {
   public logoff() {
     this.service.logoff()
       .subscribe((result) => {
-        console.log(result);
+        LogoffComponent.logger.info(result);
         this.navigate(['/']);
       },
       (error: Error) => {
