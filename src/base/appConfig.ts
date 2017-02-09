@@ -1,6 +1,5 @@
 // -------------------------- logging -------------------------------
-// import { Logger, levels, getLogger } from 'log4js';
-// import { XLog, using } from 'enter-exit-logger';
+import { getLogger, ILogger } from '../diagnostics';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
@@ -66,14 +65,14 @@ export interface IAppConfig {
 
 
 export class AppConfig {
-  // static logger = getLogger('ConfigService');
+  private static logger = getLogger('ConfigService');
   public static readonly APP_CONFIG_KEY = 'IAppConfig';
 
   public static register(config: IAppConfig) {
     const key = AppConfig.APP_CONFIG_KEY;
     AppRegistry.instance.add<IAppConfig>(key, config);
-    // tslint:disable-next-line:no-console
-    console.info(`configured: key = ${key} -> ${JSON.stringify(config)}`);
+   
+    AppConfig.logger.info(`configured: key = ${key} -> ${JSON.stringify(config)}`);
   }
 
   /**
