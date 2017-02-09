@@ -41,6 +41,7 @@ module.exports = {
   target: 'node', // important in order not to bundle built-in modules like path, fs, etc. 
   externals: [
     'dashdash',
+    'log4js',
     'moment',
     'reflect-metadata',
     'rxjs',
