@@ -1,6 +1,5 @@
-import { Types } from '../types';
+import { Types } from '../types/types';
 import { ILevel } from './level.interface';
-
 
 
 export class Level implements ILevel {

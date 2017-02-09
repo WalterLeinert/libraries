@@ -1,5 +1,6 @@
 // -------------------------- logging -------------------------------
-import { getLogger, ILogger, levels, Logger } from '../diagnostics';
+import { getLogger } from '../diagnostics/logger';
+import { ILogger } from '../diagnostics/logger.interface';
 // -------------------------- logging -------------------------------
 
 // Fluxgate

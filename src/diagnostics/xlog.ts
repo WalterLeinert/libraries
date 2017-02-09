@@ -1,5 +1,10 @@
-import { ILevel, ILogger, levels } from '.';
-import { Disposable, IDisposable, Platform } from '../base';
+import { Disposable, } from '../base/disposable';
+import { IDisposable } from '../base/disposable.interface';
+import { Platform } from '../base/platform';
+
+import { levels } from './level';
+import { ILevel } from './level.interface';
+import { ILogger } from './logger.interface';
 
 /**
  * Type of logging

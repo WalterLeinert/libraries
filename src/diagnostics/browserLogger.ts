@@ -1,6 +1,11 @@
-import { ILevel, ILogger, levels } from '.';
-import { Platform } from '../base';
-import { Dictionary, Types } from '../types';
+import { Platform } from '../base/platform';
+import { Dictionary } from '../types/dictionary';
+import { Types } from '../types/types';
+
+import { levels } from './level';
+import { ILevel, } from './level.interface';
+import { ILogger } from './logger.interface';
+
 
 export class BrowserLogger implements ILogger {
     private static loggerDict: Dictionary<string, ILogger> = new Dictionary<string, ILogger>();

@@ -1,7 +1,11 @@
-import { ILevel, ILogger, Level } from '.';
 import { Platform } from '../base/platform';
 import { Types } from '../types/types';
+
 import { BrowserLogger } from './browserLogger';
+import { levels } from './level';
+import { Level } from './level';
+import { ILevel } from './level.interface';
+import { ILogger } from './logger.interface';
 
 
 
