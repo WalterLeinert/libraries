@@ -7,11 +7,6 @@ import { Assert, Types } from '@fluxgate/common';
 import { MetadataService } from '../../services';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
 
-export interface IYearRange {
-  lowerYear?: number;
-  upperYear?: number;
-}
-
 
 @Component({
   selector: 'flx-year-selector',
@@ -29,13 +24,12 @@ export class YearSelectorComponent extends SelectorBaseComponent {
   public static readonly YEAR_MIN = 1900;
   public static readonly YEAR_MAX = 2050;
 
-  private _yearRange: IYearRange;
-
   public years: number[] = [
-    2017,
-    2016,
-    2015
   ];
+
+
+  @Input() public lowerYear: number;
+  @Input() public upperYear: number;
 
 
   constructor(router: Router, metadataService: MetadataService, changeDetectorRef: ChangeDetectorRef) {
@@ -44,44 +38,33 @@ export class YearSelectorComponent extends SelectorBaseComponent {
     this.style = '{\'width\':\'70px\'}';
   }
 
-
-  public get yearRange(): IYearRange {
-    return this._yearRange;
-  }
+  public ngOnInit() {
+    super.ngOnInit();
 
 
-  @Input() public set yearRange(value: IYearRange) {
+    let lowerYear = YearSelectorComponent.YEAR_MIN;
+    let upperYear = new Date().getFullYear();
 
-    if (this._yearRange !== value) {
-      this.years = [];
+    if (!Types.isUndefined(this.lowerYear)) {
+      Assert.that(this.lowerYear >= YearSelectorComponent.YEAR_MIN,
+        `Das Anfangsjahr ${this.lowerYear} ist kleiner als ${YearSelectorComponent.YEAR_MIN}`);
 
-      if (!Types.isUndefined(value)) {
-        let lowerYear = YearSelectorComponent.YEAR_MIN;
-        let upperYear = new Date().getFullYear();
-
-        if (!Types.isUndefined(value.lowerYear)) {
-          Assert.that(value.lowerYear >= YearSelectorComponent.YEAR_MIN,
-            `Das Anfangsjahr ${value.lowerYear} ist kleiner als ${YearSelectorComponent.YEAR_MIN}`);
-
-          lowerYear = value.lowerYear;
-        }
-
-        if (!Types.isUndefined(value.upperYear)) {
-          Assert.that(value.upperYear <= YearSelectorComponent.YEAR_MAX,
-            `Das Endjahr ${value.lowerYear} ist größer als ${YearSelectorComponent.YEAR_MAX}`);
-
-          upperYear = value.upperYear;
-        }
-
-        const years = [];
-        for (let year = upperYear; year >= lowerYear; year--) {
-          years.push(year);
-        }
-
-        this.years = years;
-      }
-
-      this._yearRange = value;
+      lowerYear = this.lowerYear;
     }
+
+    if (!Types.isUndefined(this.upperYear)) {
+      Assert.that(this.upperYear <= YearSelectorComponent.YEAR_MAX,
+        `Das Endjahr ${this.lowerYear} ist größer als ${YearSelectorComponent.YEAR_MAX}`);
+
+      upperYear = this.upperYear;
+    }
+
+    const years = [];
+    for (let year = upperYear; year >= lowerYear; year--) {
+      years.push(year);
+    }
+
+    this.years = years;
   }
+
 }
