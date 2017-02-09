@@ -5,8 +5,9 @@ import * as path from 'path';
 import * as util from 'util';
 
 // -------------------------- logging -------------------------------
-import { using, XLog } from 'enter-exit-logger';
-import { configure, getLogger, levels, Logger } from 'log4js';
+import { 
+    configure, getLogger, ILogger, levels, Logger, using, XLog 
+} from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 

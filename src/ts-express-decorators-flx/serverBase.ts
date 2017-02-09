@@ -11,13 +11,17 @@ import {
     IAppConfig, JsonReader, LoggingConfiguration, StringBuilder
 } from '@fluxgate/common';
 
+// -------------------------- logging -------------------------------
+import {
+    configure, getLogger, ILogger, levels, Logger, using, XLog
+} from '@fluxgate/common';
+// -------------------------- logging -------------------------------
+
 // lokale Komponenten
 import { Messages } from '../resources/messages';
 import { Logging } from './util';
 
-// -------------------------- logging -------------------------------
-import { using, XLog } from 'enter-exit-logger';
-import { configure, getLogger, levels, Logger } from 'log4js';
+
 
 // Logging konfigurieren ...
 Logging.configureLogging('@fluxgate/server', fromEnvironment('NODE_ENV', 'development'));

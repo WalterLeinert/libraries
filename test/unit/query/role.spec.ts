@@ -14,11 +14,10 @@ import { suite, test } from 'mocha-typescript';
 chai.use(chaiAsPromised);
 chai.should();
 
-
 // -------------------------- logging -------------------------------
-// tslint:disable-next-line:ordered-imports
-import { using, XLog } from 'enter-exit-logger';
-import { getLogger, levels, Logger } from 'log4js';
+import {
+    configure, getLogger, ILogger, levels, Logger, using, XLog
+} from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 import { IRole, Role } from '@fluxgate/common';
@@ -74,7 +73,7 @@ class RoleTest extends KnexTest {
 
     @test 'should find 3 roles'() {
         return expect(RoleTest.roleService.find()
-            .then((roles) => roles.length ))
+            .then((roles) => roles.length))
             .to.become(3);
     }
 
@@ -85,7 +84,7 @@ class RoleTest extends KnexTest {
 
     @test 'should now find 4 roles'() {
         return expect(RoleTest.roleService.find()
-            .then((roles) => roles.length ))
+            .then((roles) => roles.length))
             .to.become(4);
     }
 
@@ -110,7 +109,7 @@ class RoleTest extends KnexTest {
 
     @test 'should now find 5 roles'() {
         return expect(RoleTest.roleService.find()
-            .then((roles) => roles.length ))
+            .then((roles) => roles.length))
             .to.become(5);
     }
 
@@ -118,7 +117,7 @@ class RoleTest extends KnexTest {
         return expect(RoleTest.roleService.queryKnex(
             RoleTest.roleService.fromTable()
                 .where(RoleTest.roleService.idColumnName, '>=', RoleTest.FIRST_ROLE_ID))
-            .then((roles) => roles.length ))
+            .then((roles) => roles.length))
             .to.become(2);
     }
 
@@ -127,7 +126,7 @@ class RoleTest extends KnexTest {
         return expect(RoleTest.roleService.queryKnex(
             RoleTest.roleService.fromTable()
                 .where('role_name', '=', 'admin'))
-            .then((roles) => roles.length ))
+            .then((roles) => roles.length))
             .to.become(1);
     }
 
@@ -135,7 +134,7 @@ class RoleTest extends KnexTest {
         return expect(RoleTest.roleService.queryKnex(
             RoleTest.roleService.fromTable()
                 .where('role_name', '=', 'admin'))
-            .then((roles) => roles[0].id ))
+            .then((roles) => roles[0].id))
             .to.become(1);
     }
 
@@ -149,7 +148,7 @@ class RoleTest extends KnexTest {
 
     @test 'should now find 4 roles again'() {
         return expect(RoleTest.roleService.find()
-            .then((roles) => roles.length ))
+            .then((roles) => roles.length))
             .to.become(4);
     }
 

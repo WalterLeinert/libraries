@@ -1,8 +1,7 @@
-import { configure, getLogger, levels, Logger } from 'log4js';
 import { $log } from 'ts-log-debug';
 
 // Fluxgate
-import { FileSystem, fromEnvironment, LoggingConfiguration } from '@fluxgate/common';
+import { configure, FileSystem, fromEnvironment, LoggingConfiguration } from '@fluxgate/common';
 
 export class Logging {
 
@@ -14,15 +13,15 @@ export class Logging {
             const configPath = LoggingConfiguration.getConfigurationPath(systemMode);
 
             if (FileSystem.fileExists(configPath)) {
-                $log.info(`[${packageName}]: log4js: systemMode = ${systemMode}, configPath = ${configPath}`);
+                $log.info(`[${packageName}]: logging: systemMode = ${systemMode}, configPath = ${configPath}`);
 
                 configure(configPath, { reloadSecs: 10 });
             } else {
-                $log.warn(`[${packageName}]: log4js: cannot read configuration: ${configPath}`);
+                $log.warn(`[${packageName}]: logging: cannot read configuration: ${configPath}`);
             }
 
         } else {
-            $log.warn(`[${packageName}]: log4js: no systemMode defined -> not reading configuration`);
+            $log.warn(`[${packageName}]: logging: no systemMode defined -> not reading configuration`);
         }
     }
 

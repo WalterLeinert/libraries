@@ -3,8 +3,9 @@ import path = require('path');
 require('reflect-metadata');
 
 // -------------------------- logging -------------------------------
-import { using, XLog } from 'enter-exit-logger';
-import { configure, getLogger, levels, Logger } from 'log4js';
+import {
+    configure, getLogger, ILogger, levels, Logger, using, XLog
+} from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 
@@ -44,12 +45,12 @@ export abstract class BaseTest {
                 const configFile = 'log4js.' + systemMode + '.json';
                 let configPath = path.join('/test/config', configFile);
                 configPath = path.join(process.cwd(), configPath);
-                log.log(`log4js: systemMode = ${systemMode}, module = ${path.basename(__filename)},` +
+                log.log(`logging: systemMode = ${systemMode}, module = ${path.basename(__filename)},` +
                     `configPath = ${configPath}`);
 
                 configure(configPath);
             } else {
-                log.warn(`log4js: no systemMode defined -> not reading configuration`);
+                log.warn(`logging: no systemMode defined -> not reading configuration`);
             }
         });
     }

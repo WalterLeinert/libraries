@@ -5,7 +5,9 @@ import {
 } from 'ts-express-decorators';
 
 // -------------------------- logging -------------------------------
-import { getLogger, Logger } from 'log4js';
+import {
+    configure, getLogger, ILogger, levels, Logger, using, XLog
+} from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 // Fluxgate

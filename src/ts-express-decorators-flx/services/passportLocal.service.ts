@@ -4,8 +4,9 @@ import { Strategy } from 'passport-local';
 import { Service } from 'ts-express-decorators';
 
 // -------------------------- logging -------------------------------
-import { using, XLog } from 'enter-exit-logger';
-import { getLogger, levels, Logger } from 'log4js';
+import {
+    configure, getLogger, ILogger, levels, Logger, using, XLog
+} from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
