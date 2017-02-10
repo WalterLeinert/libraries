@@ -6,21 +6,27 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { using } from '../../src/base/disposable';
-import { getLogger, ILevel, levels, Logger, XLog } from '../../src/diagnostics';
+import { configure, getLogger, IConfig, ILevel, levels, Logger, XLog } from '../../src/diagnostics';
 
 
 class Test {
-    protected static readonly logger = getLogger('Test');
+    public static readonly logger = getLogger('Test');
 
     constructor(name: string) {
         using(new XLog(Test.logger, levels.INFO, 'ctor'), (log) => {
             // ok
         });
     }
+
+    public getLogLevel(): ILevel {
+        return using(new XLog(Test.logger, levels.INFO, 'getLogLevel'), (log) => {
+            return log.level;
+        });
+    }
 }
 
 class Test2 {
-    protected static readonly logger = getLogger(Test2);
+    public static readonly logger = getLogger(Test2);
 
     constructor(name: string) {
         using(new XLog(Test2.logger, levels.INFO, 'ctor'), (log) => {
@@ -35,6 +41,24 @@ class Test2 {
         });
     }
 }
+
+class Test3 {
+    public static readonly logger = getLogger(Test3);
+
+    constructor(name: string) {
+        using(new XLog(Test3.logger, levels.INFO, 'ctor'), (log) => {
+            // ok
+        });
+    }
+
+
+    public getLogLevel(): ILevel {
+        return using(new XLog(Test3.logger, levels.INFO, 'getLogLevel'), (log) => {
+            return log.level;
+        });
+    }
+}
+
 
 
 @suite('Logger')
@@ -71,9 +95,49 @@ class LoggerTest {
     }
 }
 
+@suite('Logger config')
+class LoggerConfigTest {
+
+    config: IConfig = {
+        appenders: [
+
+        ],
+
+        levels: {
+            '[all]': 'WARN',
+            'Test': 'DEBUG',
+            'Test2': 'INFO'
+        }
+    };
+
+
+
+    @test 'should test log level for Test'() {
+        const test = new Test('hirsch');
+
+        // Hinweis: die Level-Instanzen sind unterschiedlich (Level <-> log4js.Level)
+        expect(Test.logger.level.isEqualTo(levels.DEBUG)).to.be.true;
+    }
+
+    @test 'should test log level for Test2'() {
+        const test = new Test2('hirsch');
+        expect(Test2.logger.level.isEqualTo(levels.INFO)).to.be.true;
+    }
+
+    @test 'should test log level for Test3'() {
+        const test = new Test3('hirsch');
+        expect(Test3.logger.level.isEqualTo(levels.WARN)).to.be.true;
+    }
+
+    protected before() {
+        configure(this.config);
+    }
+
+}
+
 
 @suite('Logger extended')
-class LoggerExtendeTest {
+class LoggerExtendedTest {
 
     @test 'should create Test instance'() {
         const test = new Test('hugo');

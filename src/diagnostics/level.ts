@@ -4,7 +4,7 @@ import { ILevel } from './level.interface';
 
 export class Level implements ILevel {
 
-    public constructor(private level: number, private levelString: string) {
+    public constructor(private level: number, private levelStr: string) {
     }
 
 
@@ -30,7 +30,7 @@ export class Level implements ILevel {
     }
 
     public toString(): string {
-        return this.levelString;
+        return this.levelStr;
     }
 
     public static toLevel(level: string | ILevel, defaultLevel?: ILevel): ILevel {

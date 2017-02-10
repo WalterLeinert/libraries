@@ -5,17 +5,40 @@ import { Platform } from '../base/platform';
 import { StringBuilder } from '../base/stringBuilder';
 import { Dictionary } from '../types/dictionary';
 import { Types } from '../types/types';
+import { JsonReader } from '../util/jsonReader';
 
+import { IConfig } from './config.interface';
 import { levels } from './level';
-import { ILevel, } from './level.interface';
+import { Level } from './level';
+import { ILevel } from './level.interface';
 import { ILogger } from './logger.interface';
+import { LoggerRegistry } from './loggerRegistry';
 
 
 export class BrowserLogger implements ILogger {
     private _level: ILevel = levels.INFO;
 
-    public static configure(filename: string, options?: any): void {
-        // TODO
+    /**
+     * Konfiguriert das Logging
+     * 
+     * @static
+     * @param {string | IConfig} config
+     * @param {*} [options]
+     * 
+     * @memberOf BrowserLogger    
+     */
+    public static configure(config: string | IConfig, options?: any): void {
+
+        if (typeof config === 'string') {
+            JsonReader.readJson<IConfig>(config, (conf) => {
+                //
+                const cfg = conf as IConfig;
+
+                this.apply(cfg);
+            });
+        } else {
+            this.apply(config);
+        }       
     }
 
 
@@ -133,6 +156,24 @@ export class BrowserLogger implements ILogger {
         sb.append(' ');
 
         return sb;
+    }
+
+    private applyConfiguration(config: IConfig) {
+        Object.keys(config.levels).forEach((key) => {
+            if (key.toLowerCase() === '[all]') {
+                const level = Level.toLevel(key);
+                LoggerRegistry.forEachLogger((logger) => {
+                    logger.setLevel(level);
+                });
+
+            } else {
+                const level = Level.toLevel(key);
+                if (LoggerRegistry.hasLogger(key)) {
+                    const logger = LoggerRegistry.getLogger(key);
+                    logger.setLevel(level);
+                }
+            }
+        });
     }
 
 }

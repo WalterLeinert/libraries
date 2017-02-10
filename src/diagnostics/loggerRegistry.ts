@@ -33,4 +33,13 @@ export class LoggerRegistry {
             console.log(`  ${key}`);
         });
     }
+
+    public static forEachLogger(callbackfn: (value: ILogger, index: number, array: ILogger[]) => void, thisArg?: any):
+        void {
+        const loggers = LoggerRegistry.loggerDict.values;
+
+        for (let i = 0; i <= loggers.length; i++) {
+            callbackfn(loggers[i], i, loggers);
+        }
+    }
 }

@@ -2,6 +2,7 @@ import { Platform } from '../base/platform';
 import { Types } from '../types/types';
 
 import { BrowserLogger } from './browserLogger';
+import { IConfig } from './config.interface';
 import { levels } from './level';
 import { Level } from './level';
 import { ILevel } from './level.interface';
@@ -42,18 +43,18 @@ export function getLogger(category: string | Function): ILogger {
 
 
 /**
- * Konfiguriert das Logging über die Json-Datei @param{filename} und die Options.
+ * Konfiguriert das Logging über die Json-Datei @param{config} oder die entsprechende Konfiguration und die Options.
  * 
  * @export
  * @param {string} filename
  * @param {*} [options]
  */
-export function configure(filename: string, options?: any): void {
+export function configure(config: string | IConfig, options?: any): void {
     if (Platform.isNode()) {
         const log4js = require('log4js');
-        log4js.configure(filename, options);
+        log4js.configure(config, options);
     } else {
-        BrowserLogger.configure(filename, options);
+        BrowserLogger.configure(config, options);
     }
 }
 
