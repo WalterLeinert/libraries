@@ -22,7 +22,7 @@ const logger = getLogger('Column');
 export function Column(options?: ColumnOptions) {
 
     // tslint:disable-next-line:only-arrow-functions
-    return function (target: any, propertyName: string) {
+    return function(target: any, propertyName: string) {
 
         let propertyType: Function = (Reflect as any).getMetadata('design:type', target, propertyName);
 
