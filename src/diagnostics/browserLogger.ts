@@ -16,7 +16,7 @@ import { LoggerRegistry } from './loggerRegistry';
 
 
 export class BrowserLogger implements ILogger {
-    private _level: ILevel = levels.INFO;
+    private _level: ILevel = levels.WARN;
 
     /**
      * Konfiguriert das Logging
@@ -56,7 +56,7 @@ export class BrowserLogger implements ILogger {
 
     public trace(message: string, ...args: any[]): void {
         if (this.isTraceEnabled()) {
-            const sb = this.createLogPrefix();
+            const sb = this.createLogPrefix(levels.TRACE);
             sb.append(message);
             console.trace(sb.toString(), ...args);
         }
@@ -64,7 +64,7 @@ export class BrowserLogger implements ILogger {
 
     public debug(message: string, ...args: any[]): void {
         if (this.isDebugEnabled()) {
-            const sb = this.createLogPrefix();
+            const sb = this.createLogPrefix(levels.DEBUG);
             sb.append(message);
             console.debug(sb.toString(), ...args);
         }
@@ -72,7 +72,7 @@ export class BrowserLogger implements ILogger {
 
     public info(message: string, ...args: any[]): void {
         if (this.isInfoEnabled()) {
-            const sb = this.createLogPrefix();
+            const sb = this.createLogPrefix(levels.INFO);
             sb.append(message);
             console.info(sb.toString(), ...args);
         }
@@ -80,7 +80,7 @@ export class BrowserLogger implements ILogger {
 
     public warn(message: string, ...args: any[]): void {
         if (this.isWarnEnabled()) {
-            const sb = this.createLogPrefix();
+            const sb = this.createLogPrefix(levels.WARN);
             sb.append(message);
             console.warn(sb.toString(), ...args);
         }
@@ -88,7 +88,7 @@ export class BrowserLogger implements ILogger {
 
     public error(message: string, ...args: any[]): void {
         if (this.isErrorEnabled()) {
-            const sb = this.createLogPrefix();
+            const sb = this.createLogPrefix(levels.ERROR);
             sb.append(message);
             console.error(sb.toString(), ...args);
         }
@@ -96,7 +96,7 @@ export class BrowserLogger implements ILogger {
 
     public fatal(message: string, ...args: any[]): void {
         if (this.isFatalEnabled()) {
-            const sb = this.createLogPrefix();
+            const sb = this.createLogPrefix(levels.FATAL);
             sb.append(message);
             console.error(sb.toString(), ...args);
         }
@@ -146,11 +146,11 @@ export class BrowserLogger implements ILogger {
         return this._level;
     }
 
-    private createLogPrefix(): StringBuilder {
+    private createLogPrefix(level: ILevel): StringBuilder {
         const sb = new StringBuilder(moment().format('YYYY-MM-DD hh:mm:ss.SSS'));
 
         sb.append(' [');
-        sb.append(this.level.toString());
+        sb.append(level.toString());
         sb.append('] ');
         sb.append(this.categoryName);
         sb.append(' ');
