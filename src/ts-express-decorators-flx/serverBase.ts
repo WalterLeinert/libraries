@@ -121,7 +121,7 @@ export interface IExpressConfiguration {
  * @extends {ServerLoader}
  */
 export abstract class ServerBase extends ServerLoader {
-    protected static logger = getLogger('ServerBase');
+    protected static logger = getLogger(ServerBase);
 
     /**
      * Default Express-Konfiguration

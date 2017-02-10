@@ -22,7 +22,7 @@ import { BaseService } from '../services/base.service';
  * @template TId    - Type der Id-Spalte
  */
 export abstract class ControllerBase<T, TId extends IToString> {
-    protected static logger = getLogger('ControllerBase');
+    protected static logger = getLogger(ControllerBase);
 
     constructor(private service: BaseService<T, TId>, private _tableName: string, private _idName: string) {
     }

@@ -17,7 +17,7 @@ import { MetadataService } from './metadata.service';
 
 @Service()
 export class UserService extends BaseService<IUser, number> {
-    protected static logger = getLogger('UserService');
+    protected static logger = getLogger(UserService);
 
     constructor(knexSerice: KnexService, metadataService: MetadataService) {
         super(AppRegistry.instance.get<Function>(User.USER_CONFIG_KEY), knexSerice, metadataService);

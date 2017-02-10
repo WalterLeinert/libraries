@@ -14,7 +14,7 @@ import {
 
 
 export class SchemaExtractor {
-    protected static logger = getLogger('Extractor');
+    protected static logger = getLogger(SchemaExtractor);
 
     constructor(private knex: Knex) {
     }

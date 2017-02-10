@@ -23,7 +23,7 @@ import { ControllerBase } from './controllerBase';
  * @template TId    - Type der Id-Spalte
  */
 export abstract class ReadonlyController<T, TId extends IToString> extends ControllerBase<T, TId> {
-    protected static logger = getLogger('ControllerBase');
+    protected static logger = getLogger(ControllerBase);
 
     constructor(service: BaseService<T, TId>, tableName: string, idName: string) {
         super(service, tableName, idName);

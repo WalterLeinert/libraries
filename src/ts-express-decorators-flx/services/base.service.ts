@@ -25,7 +25,7 @@ import { MetadataService } from './metadata.service';
  * @template TId
  */
 export abstract class BaseService<T, TId extends IToString>  {
-    protected static logger = getLogger('BaseService');
+    protected static logger = getLogger(BaseService);
 
     private primaryKeyColumn: ColumnMetadata = null;
     private metadata: TableMetadata;

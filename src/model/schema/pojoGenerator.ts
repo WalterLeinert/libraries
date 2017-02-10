@@ -19,7 +19,7 @@ import { GeneratorBase } from './generatorBase';
 import { TableInfo } from './tableInfo';
 
 export class PojoGenerator extends GeneratorBase {
-    protected static logger = getLogger('PojoGenerator');
+    protected static logger = getLogger(PojoGenerator);
 
     constructor(outputDir: string, configInfo: IConfigInfo) {
         super(outputDir, configInfo);

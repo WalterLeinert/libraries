@@ -18,7 +18,7 @@ import { GeneratorBase } from './generatorBase';
 import { TableInfo } from './tableInfo';
 
 export class KnexGenerator extends GeneratorBase {
-    protected static logger = getLogger('KnexGenerator');
+    protected static logger = getLogger(KnexGenerator);
 
     constructor(protected outputDir: string, protected configInfo: IConfigInfo) {
         super(outputDir, configInfo);

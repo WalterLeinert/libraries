@@ -16,7 +16,7 @@ import { fromEnvironment } from '@fluxgate/common';
  * Basisklasse für alle Unit-Tests
  */
 export abstract class BaseTest {
-    protected static readonly logger = getLogger('BaseTest');
+    protected static readonly logger = getLogger(BaseTest);
 
 
     /**

@@ -15,7 +15,7 @@ import { AppRegistryService } from './appRegistry.service';
  */
 @Service()
 export class KnexService {
-    protected static logger = getLogger('KnexService');
+    protected static logger = getLogger(KnexService);
 
     /**
      * der Key für den Zugriff über @see{AppRegistry}

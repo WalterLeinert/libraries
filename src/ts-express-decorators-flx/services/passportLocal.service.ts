@@ -17,7 +17,7 @@ import { Messages } from '../../resources/messages';
 
 @Service()
 export class PassportLocalService {
-    protected static logger = getLogger('PassportLocalService');
+    protected static logger = getLogger(PassportLocalService);
 
     /**
      *

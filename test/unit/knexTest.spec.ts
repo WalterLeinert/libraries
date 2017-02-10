@@ -21,7 +21,7 @@ import { BaseTest } from './baseTest.spec';
  * Basisklasse für alle Service-Klassen, die mit Knex auf die DB zugreifen.
  */
 export abstract class KnexTest extends BaseTest {
-    protected static readonly logger = getLogger('KnexTest');
+    protected static readonly logger = getLogger(KnexTest);
 
     private static _appRegistryService: AppRegistryService;
     private static _knexService: KnexService;

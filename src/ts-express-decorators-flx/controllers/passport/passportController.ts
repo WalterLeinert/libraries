@@ -23,7 +23,7 @@ import { Messages } from '../../../resources/messages';
  */
 @Controller('/passport')
 export class PassportController {
-    protected static logger = getLogger('PassportController');
+    protected static logger = getLogger(PassportController);
 
     constructor(passportLocalService: PassportLocalService) {
         passportLocalService.initLocalSignup();

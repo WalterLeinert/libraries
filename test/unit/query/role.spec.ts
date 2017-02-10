@@ -29,7 +29,7 @@ import { KnexTest } from '../knexTest.spec';
 
 @suite('erste Role Tests')
 class RoleTest extends KnexTest {
-    protected static readonly logger = getLogger('RoleTest');
+    protected static readonly logger = getLogger(RoleTest);
 
     private static readonly FIRST_ROLE_ID = 1000;
     private static roleService: BaseService<Role, number>;

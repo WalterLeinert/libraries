@@ -20,7 +20,7 @@ import { TableInfo } from './tableInfo';
  * 
  */
 export abstract class GeneratorBase implements IGenerator {
-    protected static logger = getLogger('GeneratorBase');
+    protected static logger = getLogger(GeneratorBase);
 
     protected static capitalizeFirstLetter(text: string) {
         return text.charAt(0).toUpperCase() + text.slice(1);
