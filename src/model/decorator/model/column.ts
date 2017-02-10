@@ -1,3 +1,6 @@
+// Logging
+import { getLogger } from '../../../diagnostics/logger';
+
 import { ShortTime, Time } from '../../../types';
 import { ColumnTypeUndefinedError } from '../../error/columnTypeUndefinedError';
 import { ColumnMetadata } from '../../metadata/columnMetadata';
@@ -7,6 +10,8 @@ import { MetadataStorage } from '../../metadata/metadataStorage';
 import { ColumnOptions } from './columnOptions';
 
 
+const logger = getLogger('Column');
+
 /**
  * Column-Decorator für Modellproperties/-attribute
  * 
@@ -15,8 +20,9 @@ import { ColumnOptions } from './columnOptions';
  * @returns
  */
 export function Column(options?: ColumnOptions) {
+
     // tslint:disable-next-line:only-arrow-functions
-    return function(target: any, propertyName: string) {
+    return function (target: any, propertyName: string) {
 
         let propertyType: Function = (Reflect as any).getMetadata('design:type', target, propertyName);
 
@@ -27,15 +33,15 @@ export function Column(options?: ColumnOptions) {
         if (options && options.propertyType) {
             if (options.propertyType === ColumnTypes.DATE) {
                 propertyType = Date;
-                console.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
+                logger.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
             }
             if (options.propertyType === ColumnTypes.TIME) {
                 propertyType = Time;
-                console.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
+                logger.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
             }
             if (options.propertyType === ColumnTypes.SHORTTIME) {
                 propertyType = ShortTime;
-                console.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
+                logger.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
             }
         }
 

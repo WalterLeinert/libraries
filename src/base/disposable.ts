@@ -1,3 +1,7 @@
+// Logging
+import { getLogger } from '../diagnostics/logger';
+import { ILogger } from '../diagnostics/logger.interface';
+
 import { IDisposable } from './disposable.interface';
 
 
@@ -5,7 +9,7 @@ import { IDisposable } from './disposable.interface';
  * Abstract base class for disposable resources
  */
 export abstract class Disposable implements IDisposable {
-    // static logger: Logger = getLogger("Disposable");
+    protected static logger = getLogger(Disposable);
 
     /** if true, throw Error on double dispose */
     public static throwExceptionOnAlreadyDisposed = false;
@@ -23,7 +27,7 @@ export abstract class Disposable implements IDisposable {
         // using(new EnterExitLogger(Disposable.logger, levels.DEBUG, 'dispose'), (log) => {
         try {
             if (Disposable.doMethodTraces) {
-                console.log('>> dispose');
+                Disposable.logger.debug('>> dispose');
             }
 
 
@@ -31,7 +35,7 @@ export abstract class Disposable implements IDisposable {
                 if (Disposable.throwExceptionOnAlreadyDisposed) {
                     throw new Error('Instance already disposed: ' + JSON.stringify(this));
                 } else {
-                    console.log('Instance already disposed: ', this);
+                    Disposable.logger.debug('Instance already disposed: ', this);
                 }
             } else {
                 this.onDispose();
@@ -39,7 +43,7 @@ export abstract class Disposable implements IDisposable {
 
         } finally {
             if (Disposable.doMethodTraces) {
-                console.log('<< dispose');
+                Disposable.logger.debug('<< dispose');
             }
             this.disposed = true;
         }

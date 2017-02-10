@@ -1,6 +1,10 @@
 import path = require('path');
 import process = require('process');
 
+// Logging
+import { using } from '../base/disposable';
+import { getLogger, ILogger, levels, XLog } from '../diagnostics';
+
 import { StringBuilder, StringUtil } from '../base';
 import { fromEnvironment } from './env';
 
@@ -11,6 +15,8 @@ export interface ILoggingConfigurationOptions {
 }
 
 export class LoggingConfiguration {
+    protected static readonly logger = getLogger(LoggingConfiguration);
+
     public static readonly DEFAULT_FILENAME = 'log4js';
     public static readonly DEFAULT_EXTENSION = '.json';
     public static readonly DEFAULT_RELATIVE_PATH = '/config';
@@ -22,51 +28,53 @@ export class LoggingConfiguration {
      * @param {string} filename - der Name der Konfigurationsdatei (default: 'log4js)
      */
     public static getConfigurationPath(info?: string | ILoggingConfigurationOptions): string {
-        let options: ILoggingConfigurationOptions;
+        return using(new XLog(LoggingConfiguration.logger, levels.INFO, 'getConfigurationPath'), (log) => {
 
-        if (!info) {
-            // defaults
-            options = {
-                systemMode: null,
-                filename: LoggingConfiguration.DEFAULT_FILENAME,
-                relativePath: LoggingConfiguration.DEFAULT_RELATIVE_PATH
-            };
+            let options: ILoggingConfigurationOptions;
 
-        } else {
-            if (typeof info === 'string') {
+            if (!info) {
+                // defaults
                 options = {
-                    systemMode: info,
+                    systemMode: null,
                     filename: LoggingConfiguration.DEFAULT_FILENAME,
                     relativePath: LoggingConfiguration.DEFAULT_RELATIVE_PATH
                 };
 
-            } else if (typeof info === 'object') {
-                options = info;
+            } else {
+                if (typeof info === 'string') {
+                    options = {
+                        systemMode: info,
+                        filename: LoggingConfiguration.DEFAULT_FILENAME,
+                        relativePath: LoggingConfiguration.DEFAULT_RELATIVE_PATH
+                    };
+
+                } else if (typeof info === 'object') {
+                    options = info;
+                }
             }
-        }
 
-        if (fromEnvironment('LOG4JS_DEBUG', '-not-set-') !== '-not-set-') {
-            // tslint:disable-next-line:no-console
-            console.info(`options = ${JSON.stringify(options)}`);
-        }
+            if (fromEnvironment('LOG4JS_DEBUG', '-not-set-') !== '-not-set-') {
+                log.info(`options = ${JSON.stringify(options)}`);
+            }
 
-        if (!options.filename) {
-            options.filename = LoggingConfiguration.DEFAULT_FILENAME;
-        }
-        if (!options.relativePath) {
-            options.relativePath = LoggingConfiguration.DEFAULT_RELATIVE_PATH;
-        }
+            if (!options.filename) {
+                options.filename = LoggingConfiguration.DEFAULT_FILENAME;
+            }
+            if (!options.relativePath) {
+                options.relativePath = LoggingConfiguration.DEFAULT_RELATIVE_PATH;
+            }
 
-        const sb = new StringBuilder(options.filename);
-        if (!StringUtil.isNullOrEmpty(options.systemMode)) {
-            sb.append('.');
-            sb.append(options.systemMode);
-        }
-        sb.append(LoggingConfiguration.DEFAULT_EXTENSION);
+            const sb = new StringBuilder(options.filename);
+            if (!StringUtil.isNullOrEmpty(options.systemMode)) {
+                sb.append('.');
+                sb.append(options.systemMode);
+            }
+            sb.append(LoggingConfiguration.DEFAULT_EXTENSION);
 
-        let configPath = path.join(options.relativePath, sb.toString());
-        configPath = path.join(process.cwd(), configPath);
+            let configPath = path.join(options.relativePath, sb.toString());
+            configPath = path.join(process.cwd(), configPath);
 
-        return configPath;
+            return configPath;
+        });
     }
 }

@@ -1,7 +1,7 @@
 export interface IAppenderConfig {
     type: string;
     category?: string;
-    layout?: { type: string;[key: string]: any };
+    layout?: { type: string; [key: string]: any };
 }
 
 /**
