@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { using } from '../../src/base/disposable';
-import { getLogger, levels, Logger, XLog } from '../../src/diagnostics';
+import { getLogger, ILevel, levels, Logger, XLog } from '../../src/diagnostics';
 
 
 class Test {
@@ -25,6 +25,13 @@ class Test2 {
     constructor(name: string) {
         using(new XLog(Test2.logger, levels.INFO, 'ctor'), (log) => {
             // ok
+        });
+    }
+
+
+    public getLogLevel(): ILevel {
+        return using(new XLog(Test2.logger, levels.INFO, 'getLogLevel'), (log) => {
+            return log.level;
         });
     }
 }
@@ -62,6 +69,24 @@ class LoggerTest {
         expect(logger.isWarnEnabled()).to.be.true;
         expect(logger.isInfoEnabled()).to.be.false;
     }
+}
 
 
+@suite('Logger extended')
+class LoggerExtendeTest {
+
+    @test 'should create Test instance'() {
+        const test = new Test('hugo');
+        expect(test).to.be.not.null;
+    }
+
+    @test 'should create Test2 instance'() {
+        const test = new Test2('hirsch');
+        expect(test).to.be.not.null;
+    }
+
+    @test 'should test Test2.getLogLevel'() {
+        const test = new Test2('hirsch');
+        expect(test.getLogLevel()).to.be.equal(levels.INFO);
+    }
 }

@@ -2,7 +2,7 @@ import { ILevel } from './level.interface';
 
 export interface ILogger {
     setLevel(level: string | ILevel): void;
-    
+    level: ILevel;
 
     isLevelEnabled(level: ILevel): boolean;
     isTraceEnabled(): boolean;

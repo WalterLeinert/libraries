@@ -12,7 +12,7 @@ import { ILogger } from './logger.interface';
 
 
 export class BrowserLogger implements ILogger {
-    private level: ILevel = levels.INFO;
+    private _level: ILevel = levels.INFO;
 
     public static configure(filename: string, options?: any): void {
         // TODO
@@ -116,7 +116,11 @@ export class BrowserLogger implements ILogger {
         } else {
             throw new Error(`Level string ${level} currently not supported`);
         }
-        this.level = lev;
+        this._level = lev;
+    }
+
+    public get level(): ILevel {
+        return this._level;
     }
 
     private createLogPrefix(): StringBuilder {

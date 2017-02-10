@@ -35,10 +35,9 @@ export function getLogger(category: string | Function): ILogger {
         }
 
         LoggerRegistry.registerLogger(categoryName, logger);
-
-    } else {
-        return LoggerRegistry.getLogger(categoryName);
     }
+
+    return LoggerRegistry.getLogger(categoryName);
 }
 
 
@@ -129,6 +128,10 @@ export class Logger implements ILogger {
         } else {
             lev = Level.toLevel(level as string);
         }
-        return this.logger.setLevel(lev);
+        this.logger.setLevel(lev);
+    }
+
+    public get level(): ILevel {
+        return this.logger.level;
     }
 }

@@ -1,8 +1,10 @@
 import { Disposable, } from '../base/disposable';
 import { IDisposable } from '../base/disposable.interface';
 import { Platform } from '../base/platform';
+import { Types } from '../types/types';
 
 import { levels } from './level';
+import { Level } from './level';
 import { ILevel } from './level.interface';
 import { ILogger } from './logger.interface';
 
@@ -23,7 +25,7 @@ enum EnterExit {
  * @see {using}.
  */
 
-export class XLog extends Disposable {
+export class XLog extends Disposable implements ILogger {
     private static indentation = -1;
 
     private static readonly EnterExitStrings: string[] = ['>> ', '<< ', '@  '];
@@ -33,7 +35,7 @@ export class XLog extends Disposable {
     private static initEnterExitLogger: boolean = XLog.initialize();
 
     private functionName: string;
-    private level: ILevel;
+    private _level: ILevel;
     private logger: ILogger;
 
     private static levels = levels;
@@ -66,18 +68,18 @@ export class XLog extends Disposable {
     constructor(logger: ILogger, level: ILevel, functionName: string, message?: string, ...args: any[]) {
         super();
         this.logger = logger;
-        this.level = level;
+        this._level = level;
         this.functionName = functionName;
 
         XLog.indentation++;
-        this.logInternal(EnterExit.Enter, this.level, message, ...args);
+        this.logInternal(EnterExit.Enter, this._level, message, ...args);
     }
 
     /**
      * logs a message for the current log level, which was set in constructor
      */
     public log(message: string, ...args: any[]): void {
-        this.logInternal(EnterExit.Log, this.level, message, ...args);
+        this.logInternal(EnterExit.Log, this._level, message, ...args);
     }
 
 
@@ -123,11 +125,15 @@ export class XLog extends Disposable {
         this.logInternal(EnterExit.Log, XLog.levels.FATAL, message, ...args);
     }
 
+    public isLevelEnabled(level: ILevel): boolean {
+        return this._level.isLessThanOrEqualTo(level);
+    }
+
     /**
      * returns true, if the logger is enabled for the current level
      */
     public isEnabled(): boolean {
-        return this.isEnabledFor(this.level);
+        return this.isEnabledFor(this._level);
     }
 
     public isTraceEnabled(): boolean {
@@ -154,13 +160,28 @@ export class XLog extends Disposable {
         return this.logger.isFatalEnabled();
     }
 
+    public setLevel(level: string | ILevel): void {
+        let lev: ILevel;
+
+        if (!Types.isString(level)) {
+            lev = level as ILevel;
+        } else {
+            lev = Level.toLevel(level as string);
+        }
+        this._level = lev;
+    }
+
+    public get level(): ILevel {
+        return this._level;
+    }
+
 
     /**
      * triggers method exit log, update indentation
      */
     protected onDispose(): void {
         try {
-            this.logInternal(EnterExit.Exit, this.level);
+            this.logInternal(EnterExit.Exit, this._level);
             XLog.indentation--;
         } finally {
             super.onDispose();
