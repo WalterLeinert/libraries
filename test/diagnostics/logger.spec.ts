@@ -1,12 +1,33 @@
 // tslint:disable:member-access
+// tslint:disable:max-classes-per-file
 
 import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { using } from '../../src/base/disposable';
+import { getLogger, levels, Logger, XLog } from '../../src/diagnostics';
 
-import { getLogger, levels, Logger } from '../../src/diagnostics';
 
+class Test {
+    protected static readonly logger = getLogger('Test');
+
+    constructor(name: string) {
+        using(new XLog(Test.logger, levels.INFO, 'ctor'), (log) => {
+            // ok
+        });
+    }
+}
+
+class Test2 {
+    protected static readonly logger = getLogger(Test2);
+
+    constructor(name: string) {
+        using(new XLog(Test2.logger, levels.INFO, 'ctor'), (log) => {
+            // ok
+        });
+    }
+}
 
 
 @suite('Logger')

@@ -6,19 +6,49 @@ import { levels } from './level';
 import { Level } from './level';
 import { ILevel } from './level.interface';
 import { ILogger } from './logger.interface';
+import { LoggerRegistry } from './loggerRegistry';
 
 
-
-export function getLogger(categoryName: string): ILogger {
-    if (Platform.isNode()) {
-        const log4js = require('log4js');
-        return new Logger(log4js.getLogger(categoryName));
+/**
+ * Liefert den Logger für die angegebene Kategorie
+ * 
+ * @export
+ * @param {(string | Function)} category
+ * @returns {ILogger}
+ */
+export function getLogger(category: string | Function): ILogger {
+    let categoryName: string;
+    if (typeof category === 'string') {
+        categoryName = category;
     } else {
-        return new Logger(BrowserLogger.create(categoryName));
+        categoryName = category.name;
     }
 
+    if (!LoggerRegistry.hasLogger(categoryName)) {
+        let logger: ILogger;
+
+        if (Platform.isNode()) {
+            const log4js = require('log4js');
+            logger = new Logger(log4js.getLogger(categoryName));
+        } else {
+            logger = new Logger(BrowserLogger.create(categoryName));
+        }
+
+        LoggerRegistry.registerLogger(categoryName, logger);
+
+    } else {
+        return LoggerRegistry.getLogger(categoryName);
+    }
 }
 
+
+/**
+ * Konfiguriert das Logging über die Json-Datei @param{filename} und die Options.
+ * 
+ * @export
+ * @param {string} filename
+ * @param {*} [options]
+ */
 export function configure(filename: string, options?: any): void {
     if (Platform.isNode()) {
         const log4js = require('log4js');

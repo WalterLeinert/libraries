@@ -12,32 +12,22 @@ import { ILogger } from './logger.interface';
 
 
 export class BrowserLogger implements ILogger {
-    private static loggerDict: Dictionary<string, ILogger> = new Dictionary<string, ILogger>();
-
     private level: ILevel = levels.INFO;
 
     public static configure(filename: string, options?: any): void {
         // TODO
     }
 
-    public static getLoggerCount(): number {
-        return BrowserLogger.loggerDict.count;
-    }
-
-    public static hasLogger(categoryName: string): boolean {
-        return BrowserLogger.loggerDict.containsKey(categoryName);
-    }
 
     private constructor(private categoryName: string) {
-
     }
+
 
     /**
      * erzeugt eine neue Logger-Instanz
      */
     public static create(categoryName: string) {
         const logger = new BrowserLogger(categoryName);
-        BrowserLogger.loggerDict.set(categoryName, logger);
         return logger;
     }
 
