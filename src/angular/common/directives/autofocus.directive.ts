@@ -1,5 +1,11 @@
 import { AfterViewInit, Directive, ElementRef, NgModule, Renderer } from '@angular/core';
 
+
+// -------------------------------------- logging --------------------------------------------
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+// -------------------------------------- logging --------------------------------------------
+
+
 // fluxgate
 import { CommonModule } from '@angular/common';
 
@@ -36,6 +42,8 @@ import { CommonModule } from '@angular/common';
   selector: '[flxAutofocus]'
 })
 export class AutofocusDirective implements AfterViewInit {
+  protected static readonly logger = getLogger(AutofocusDirective);
+
 
   constructor(private elRef: ElementRef, private renderer: Renderer) {
 
@@ -72,15 +80,21 @@ export class AutofocusDirective implements AfterViewInit {
    * 
    * @memberOf AutofocusDirective
    */
-  private focusIf(nameAttribute: string) {
-    // console.log(this.elRef.nativeElement.getAttribute('name'))
-    if (this.elRef.nativeElement.getAttribute('name') === nameAttribute) {
-      this.renderer.invokeElementMethod(this.elRef.nativeElement, 'focus', []);
+  private focusIf(nameAttribute: string): boolean {
+    return using(new XLog(AutofocusDirective.logger, levels.DEBUG, 'focusIf', `nameAttribute = ${nameAttribute}`),
+      (log) => {
+        if (log.isDebugEnabled()) {
+          log.log(`attribue[name] = ${this.elRef.nativeElement.getAttribute('name')}`);
+        }
 
-      this.setCaretToPos(this.elRef.nativeElement, 0);
-      return true;
-    }
-    return false;
+        if (this.elRef.nativeElement.getAttribute('name') === nameAttribute) {
+          this.renderer.invokeElementMethod(this.elRef.nativeElement, 'focus', []);
+
+          this.setCaretToPos(this.elRef.nativeElement, 0);
+          return true;
+        }
+        return false;
+      });
   }
 }
 

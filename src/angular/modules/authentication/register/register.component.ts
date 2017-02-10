@@ -87,7 +87,7 @@ import { RoleService } from '../role.service';
   styles: []
 })
 export class RegisterComponent extends Base2Component<PassportService, RoleService> {
-  protected static logger = getLogger('LoginComponent');
+  protected static logger = getLogger(RegisterComponent);
 
   public user: User;
   public selectedRole: IRole;

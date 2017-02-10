@@ -33,7 +33,7 @@ import { IService } from './service.interface';
  * @template T
  */
 export abstract class Service<T, TId extends IToString> implements IService {
-    protected static logger = getLogger('Service');
+    protected static logger = getLogger(Service);
 
     private _url: string;
     private _tableMetadata: TableMetadata;
@@ -207,7 +207,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
 
         return this.http.post(`${this.getUrl()}/query`, query, options)
             .map((response: Response) => this.deserializeArray(response.json()))
-            .do((data) => Service.logger.info(`Service.query: query = ${JSON.stringify(query)}` + 
+            .do((data) => Service.logger.info(`Service.query: query = ${JSON.stringify(query)}` +
                 ` -> ${JSON.stringify(data)}`))
             .catch(Service.handleError);
     }

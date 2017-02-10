@@ -23,7 +23,7 @@ import { ConfigService } from '../../services/config.service';
 
 @Injectable()
 export class PassportService implements IServiceBase {
-    protected static logger = getLogger('PassportService');
+    protected static logger = getLogger(PassportService);
 
     public static get LOGIN() { return '/login'; }
     public static get SIGNUP() { return '/signup'; }

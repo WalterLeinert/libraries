@@ -93,7 +93,7 @@ export type sortMode = 'single' | 'multiple';
   styles: []
 })
 export class DataTableSelectorComponent extends ListSelectorComponent {
-  protected static logger = getLogger('DataTableSelectorComponent');
+  protected static logger = getLogger(DataTableSelectorComponent);
 
   /**
    * ControlType Werte

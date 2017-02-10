@@ -55,7 +55,7 @@ import { PassportService } from '../passport.service';
 })
 
 export class LoginComponent extends BaseComponent<PassportService> {
-  protected static logger = getLogger('LoginComponent');
+  protected static logger = getLogger(LoginComponent);
 
   public username: string;
   public password: string;

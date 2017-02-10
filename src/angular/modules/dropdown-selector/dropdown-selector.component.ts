@@ -44,7 +44,7 @@ import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
   styles: []
 })
 export class DropdownSelectorComponent extends ListSelectorComponent {
-  protected static logger = getLogger('DropdownSelectorComponent');
+  protected static logger = getLogger(DropdownSelectorComponent);
 
   public static readonly ALLOW_NO_SELECTION_TEXT = '(Auswahl)';
 

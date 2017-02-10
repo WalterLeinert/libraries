@@ -11,6 +11,12 @@ import { IAutoformConfig } from './autoformConfig.interface';
 import { ButtonModule, ConfirmDialogModule, SharedModule } from 'primeng/primeng';
 import { ConfirmationService, MessagesModule } from 'primeng/primeng';
 
+
+// -------------------------------------- logging --------------------------------------------
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+// -------------------------------------- logging --------------------------------------------
+
+
 import { Subscription } from 'rxjs/Subscription';
 
 // Fluxgate
@@ -66,6 +72,8 @@ import { AutoformConstants } from './autoformConstants';
   providers: [ConfirmationService]
 })
 export class AutoformComponent extends BaseComponent<ProxyService> {
+  protected static readonly logger = getLogger(AutoformComponent);
+
   public static DETAILS = 'Details';
 
   public pageTitle: string = AutoformComponent.DETAILS;
@@ -109,16 +117,18 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
 
   public confirm() {
-    this.confirmationService.confirm({
-      header: 'Löschen',
-      message: 'Soll wirklich gelöscht werden?',
-      accept: () => {
-        console.log('Löschen');
-        this.delete(true);
-      },
-      reject: () => {
-        console.log('Abbruch');
-      }
+    using(new XLog(AutoformComponent.logger, levels.INFO, 'confirm'), (log) => {
+      this.confirmationService.confirm({
+        header: 'Löschen',
+        message: 'Soll wirklich gelöscht werden?',
+        accept: () => {
+          log.log('Löschen');
+          this.delete(true);
+        },
+        reject: () => {
+          log.log('Abbruch');
+        }
+      });
     });
   }
 
@@ -211,12 +221,14 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
    * den ProxyService damit initialisieren
    */
   private setupProxy(entityName: string) {
-    const tableMetadata: TableMetadata = this.metadataService.findTableMetadata(entityName);
-    // console.log(`table = ${tableMetadata.options.name}`);
-    this.columnMetadata = tableMetadata.columnMetadata;
+    using(new XLog(AutoformComponent.logger, levels.INFO, 'setupProxy', `entityName = ${entityName}`), (log) => {
+      const tableMetadata: TableMetadata = this.metadataService.findTableMetadata(entityName);
+      log.log(`table = ${tableMetadata.options.name}`);
+      this.columnMetadata = tableMetadata.columnMetadata;
 
-    const service = this.injector.get(tableMetadata.service);
-    this.service.proxyService(service);
+      const service = this.injector.get(tableMetadata.service);
+      this.service.proxyService(service);
+    });
   }
 
 }

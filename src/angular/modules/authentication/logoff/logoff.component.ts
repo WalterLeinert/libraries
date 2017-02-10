@@ -24,7 +24,7 @@ import { PassportService } from './../passport.service';
   styles: []
 })
 export class LogoffComponent extends BaseComponent<PassportService> {
-  protected static logger = getLogger('LogoffComponent');
+  protected static logger = getLogger(LogoffComponent);
 
   constructor(router: Router, service: PassportService) {
     super(router, service);

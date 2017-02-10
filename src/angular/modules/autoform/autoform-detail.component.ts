@@ -12,6 +12,12 @@ import { ConfirmationService, MessagesModule } from 'primeng/primeng';
 
 import { Subscription } from 'rxjs/Subscription';
 
+
+// -------------------------------------- logging --------------------------------------------
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+// -------------------------------------- logging --------------------------------------------
+
+
 // Fluxgate
 import { Assert, ColumnMetadata, ColumnTypes, Constants, TableMetadata } from '@fluxgate/common';
 
@@ -76,6 +82,8 @@ import { AutoformConstants } from './autoformConstants';
   providers: [ConfirmationService]
 })
 export class AutoformDetailComponent extends BaseComponent<ProxyService> {
+  protected static readonly logger = getLogger(AutoformDetailComponent);
+
   public static DETAILS = 'Details';
 
   public pageTitle: string = AutoformDetailComponent.DETAILS;
@@ -131,16 +139,18 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   }
 
   public confirm() {
-    this.confirmationService.confirm({
-      header: 'Löschen',
-      message: 'Soll wirklich gelöscht werden?',
-      accept: () => {
-        console.log('Löschen');
-        this.delete(true);
-      },
-      reject: () => {
-        console.log('Abbruch');
-      }
+    using(new XLog(AutoformDetailComponent.logger, levels.INFO, 'confirm'), (log) => {
+      this.confirmationService.confirm({
+        header: 'Löschen',
+        message: 'Soll wirklich gelöscht werden?',
+        accept: () => {
+          log.log('Löschen');
+          this.delete(true);
+        },
+        reject: () => {
+          log.log('Abbruch');
+        }
+      });
     });
   }
 
@@ -246,15 +256,17 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    * den ProxyService damit initialisieren
    */
   private setupProxy(entityName: string) {
-    const tableMetadata: TableMetadata = this.metadataService.findTableMetadata(entityName);
+    using(new XLog(AutoformDetailComponent.logger, levels.INFO, 'setupProxy', `entityName = ${entityName}`), (log) => {
+      const tableMetadata: TableMetadata = this.metadataService.findTableMetadata(entityName);
 
-    Assert.notNull(tableMetadata, `No metadata for entity ${entityName}`);
+      Assert.notNull(tableMetadata, `No metadata for entity ${entityName}`);
 
-    // console.log(`table = ${tableMetadata.options.name}`);
-    this.columnMetadata = tableMetadata.columnMetadata;
+      log.log(`table = ${tableMetadata.options.name}`);
+      this.columnMetadata = tableMetadata.columnMetadata;
 
-    const service = this.injector.get(tableMetadata.service);
-    this.service.proxyService(service);
+      const service = this.injector.get(tableMetadata.service);
+      this.service.proxyService(service);
+    });
   }
 
 

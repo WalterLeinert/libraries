@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, NgModule, Output } from '@angular/core';
 
+
+// -------------------------------------- logging --------------------------------------------
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+// -------------------------------------- logging --------------------------------------------
+
+
 @Component({
     selector: 'flx-popup',
     template: `
@@ -46,6 +52,8 @@ import { Component, EventEmitter, Input, NgModule, Output } from '@angular/core'
 
 
 export class PopupComponent {
+    protected static readonly logger = getLogger(PopupComponent);
+
     @Input() public message: string = '';
     @Input() public title: string = '';
 
@@ -53,11 +61,12 @@ export class PopupComponent {
 
 
     public onClick(event: boolean) {
-        console.log('message inside modal-component: ' + event);
-        this.onAnswer.next(event);
+        using(new XLog(PopupComponent.logger, levels.INFO, 'onClick'), (log) => {
+            log.log('message inside modal-component: ' + event);
+            this.onAnswer.next(event);
 
-        // this.dialog.close();
-
+            // this.dialog.close();
+        });
     }
 }
 
