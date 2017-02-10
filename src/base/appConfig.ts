@@ -1,4 +1,5 @@
 // -------------------------- logging -------------------------------
+import { IConfig } from '../diagnostics/config.interface';
 import { getLogger } from '../diagnostics/logger';
 import { ILogger } from '../diagnostics/logger.interface';
 // -------------------------- logging -------------------------------
@@ -62,6 +63,8 @@ export interface IAppConfig {
    * wird versucht damit ein automatisches Login durchzuführen.
    */
   userCredentials?: IUserCredentials;
+
+  logging?: IConfig;
 }
 
 

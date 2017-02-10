@@ -38,7 +38,7 @@ export class LoggerRegistry {
         void {
         const loggers = LoggerRegistry.loggerDict.values;
 
-        for (let i = 0; i <= loggers.length; i++) {
+        for (let i = 0; i < loggers.length; i++) {
             callbackfn(loggers[i], i, loggers);
         }
     }

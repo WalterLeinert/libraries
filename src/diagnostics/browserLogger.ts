@@ -34,11 +34,11 @@ export class BrowserLogger implements ILogger {
                 //
                 const cfg = conf as IConfig;
 
-                this.apply(cfg);
+                BrowserLogger.applyConfiguration(cfg);
             });
         } else {
-            this.apply(config);
-        }       
+            BrowserLogger.applyConfiguration(config);
+        }
     }
 
 
@@ -158,16 +158,16 @@ export class BrowserLogger implements ILogger {
         return sb;
     }
 
-    private applyConfiguration(config: IConfig) {
+    private static applyConfiguration(config: IConfig) {
         Object.keys(config.levels).forEach((key) => {
             if (key.toLowerCase() === '[all]') {
-                const level = Level.toLevel(key);
+                const level = Level.toLevel(config.levels[key]);
                 LoggerRegistry.forEachLogger((logger) => {
                     logger.setLevel(level);
                 });
 
             } else {
-                const level = Level.toLevel(key);
+                const level = Level.toLevel(config.levels[key]);
                 if (LoggerRegistry.hasLogger(key)) {
                     const logger = LoggerRegistry.getLogger(key);
                     logger.setLevel(level);
