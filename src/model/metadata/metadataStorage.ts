@@ -39,93 +39,95 @@ export class MetadataStorage {
      * @memberOf MetadataStorage
      */
     public addTableMetadata(metadata: TableMetadata) {
-        using(new XLog(MetadataStorage.logger, levels.INFO, 'addTableMetadata'), (log) => {
-            Assert.notNull(metadata);
+        Assert.notNull(metadata);
 
-            const targetName = metadata.target.name;
+        using(new XLog(MetadataStorage.logger, levels.INFO, 'addTableMetadata', `targetName = ${metadata.target.name}`),
+            (log) => {
 
-            if (!this.tableDict.containsKey(targetName)) {
-                const colMetadata: ColumnMetadata[] = this.tableColumnDict.get(targetName);
-                const valMetadata: ValidationMetadata[] = this.tableValidationDict.get(targetName);
-                const enumMetadata: EnumMetadata[] = this.tableEnumDict.get(targetName);
+                const targetName = metadata.target.name;
 
+                if (!this.tableDict.containsKey(targetName)) {
+                    const colMetadata: ColumnMetadata[] = this.tableColumnDict.get(targetName);
+                    const valMetadata: ValidationMetadata[] = this.tableValidationDict.get(targetName);
+                    const enumMetadata: EnumMetadata[] = this.tableEnumDict.get(targetName);
 
-                //
-                // Dictionary (propertyName, ValidationMetadata[]) aufbauen, um
-                // anschliessend die Validatoren mit ColumnMetadata verknüpfen zu können
-                //
-                const propNameToValidator: Dictionary<string, ValidationMetadata[]> =
-                    new Dictionary<string, ValidationMetadata[]>();
-
-                if (valMetadata) {
-                    for (const vm of valMetadata) {
-                        let vms = propNameToValidator[vm.propertyName];
-                        if (!vms) {
-                            vms = [];
-                            propNameToValidator[vm.propertyName] = vms;
-                        }
-                        vms.push(vm);
-                    }
-                }
-
-                //
-                // Dictionary (propertyName, EnumMetadata[]) aufbauen, um
-                // anschliessend die Enums mit ColumnMetadata verknüpfen zu können
-                //
-                const propNameToEnum: Dictionary<string, EnumMetadata> = new Dictionary<string, EnumMetadata>();
-
-                if (enumMetadata) {
-                    for (const enmMeta of enumMetadata) {
-                        propNameToEnum.set(enmMeta.propertyName, enmMeta);
-                    }
-                }
-
-
-                colMetadata.forEach((item) => {
-
-                    // ggf. Enum-Metadaten setzen
-                    const enmMeta = propNameToEnum.get(item.propertyName);
-                    if (enmMeta) {
-                        item.setEnum(enmMeta);
-                    }
 
                     //
-                    // Validierung ermitteln und attachen
+                    // Dictionary (propertyName, ValidationMetadata[]) aufbauen, um
+                    // anschliessend die Validatoren mit ColumnMetadata verknüpfen zu können
                     //
-                    const validationMetadatas = propNameToValidator[item.propertyName];
+                    const propNameToValidator: Dictionary<string, ValidationMetadata[]> =
+                        new Dictionary<string, ValidationMetadata[]>();
 
-
-                    if (validationMetadatas) {
-                        let validator: Validator;
-
-                        //
-                        // falls mehrere Validation-Decorators an Modelproperty sind,
-                        // werden die Validatoren in einen CompoundValidator gekapselt.
-                        //
-                        if (validationMetadatas.length > 1) {
-                            for (const vm of validationMetadatas) {
-                                vm.validator.attachColumnMetadata(item);
+                    if (valMetadata) {
+                        for (const vm of valMetadata) {
+                            let vms = propNameToValidator[vm.propertyName];
+                            if (!vms) {
+                                vms = [];
+                                propNameToValidator[vm.propertyName] = vms;
                             }
-                            const validators = validationMetadatas.map((v) => v.validator);
-                            validator = new CompoundValidator(validators);
-                        } else {
-                            validator = validationMetadatas[0].validator;
+                            vms.push(vm);
                         }
-                        validator.attachColumnMetadata(item);
-                        item.setValidation(validator);
                     }
 
-                    metadata.add(item);
-                });
+                    //
+                    // Dictionary (propertyName, EnumMetadata[]) aufbauen, um
+                    // anschliessend die Enums mit ColumnMetadata verknüpfen zu können
+                    //
+                    const propNameToEnum: Dictionary<string, EnumMetadata> = new Dictionary<string, EnumMetadata>();
 
-                if (!metadata.primaryKeyColumn) {
-                    log.info(`Table ${metadata.options.name}: no primary key column`);
+                    if (enumMetadata) {
+                        for (const enmMeta of enumMetadata) {
+                            propNameToEnum.set(enmMeta.propertyName, enmMeta);
+                        }
+                    }
+
+
+                    colMetadata.forEach((item) => {
+
+                        // ggf. Enum-Metadaten setzen
+                        const enmMeta = propNameToEnum.get(item.propertyName);
+                        if (enmMeta) {
+                            item.setEnum(enmMeta);
+                        }
+
+                        //
+                        // Validierung ermitteln und attachen
+                        //
+                        const validationMetadatas = propNameToValidator[item.propertyName];
+
+
+                        if (validationMetadatas) {
+                            let validator: Validator;
+
+                            //
+                            // falls mehrere Validation-Decorators an Modelproperty sind,
+                            // werden die Validatoren in einen CompoundValidator gekapselt.
+                            //
+                            if (validationMetadatas.length > 1) {
+                                for (const vm of validationMetadatas) {
+                                    vm.validator.attachColumnMetadata(item);
+                                }
+                                const validators = validationMetadatas.map((v) => v.validator);
+                                validator = new CompoundValidator(validators);
+                            } else {
+                                validator = validationMetadatas[0].validator;
+                            }
+                            validator.attachColumnMetadata(item);
+                            item.setValidation(validator);
+                        }
+
+                        metadata.add(item);
+                    });
+
+                    if (!metadata.primaryKeyColumn) {
+                        log.info(`Table ${metadata.options.name}: no primary key column`);
+                    }
+
+                    this.tableDict.set(targetName, metadata);
+                    this.dbTableDict.set(metadata.options.name, metadata);
                 }
-
-                this.tableDict.set(targetName, metadata);
-                this.dbTableDict.set(metadata.options.name, metadata);
-            }
-        });
+            });
     }
 
 
