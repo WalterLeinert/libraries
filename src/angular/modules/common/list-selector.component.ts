@@ -282,7 +282,6 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
         super.onSelectedValueChange(value);
 
         this.changeDetectorRef.detectChanges();
-        this.selectedValueChange.emit(value);
 
         let index = -1;
         if (this.selectedValue) {
