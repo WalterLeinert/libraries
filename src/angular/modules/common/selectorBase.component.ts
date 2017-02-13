@@ -2,6 +2,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
+// -------------------------- logging -------------------------------
+import { configure, getLogger, ILogger, levels, Logger, using, XLog } from '@fluxgate/common';
+// -------------------------- logging -------------------------------
+
 import { Assert, Types } from '@fluxgate/common';
 
 import { BaseComponent } from '../../common/base';
@@ -11,6 +15,8 @@ import { MetadataService } from '../../services';
  * Basisklasse für alle Selector-Komponenten
  */
 export abstract class SelectorBaseComponent extends BaseComponent<any> {
+    protected static logger = getLogger(SelectorBaseComponent);
+
 
     /**
      * falls true, wird Debug-Info beim Control angezeigt
@@ -62,8 +68,13 @@ export abstract class SelectorBaseComponent extends BaseComponent<any> {
     // Property selectedValue und der Change Event
     // -------------------------------------------------------------------------------------
 
-    protected onSelectedValueChange(value: number) {
-        this.selectedValueChange.emit(value);
+    protected onSelectedValueChange(value: any) {
+        using(new XLog(SelectorBaseComponent.logger, levels.INFO, 'onSelectedValueChange'), (log) => {
+            if (log.isInfoEnabled()) {
+                log.log(`value = ${JSON.stringify(value)}`);
+            }
+            this.selectedValueChange.emit(value);
+        });
     }
 
     public get selectedValue(): any {

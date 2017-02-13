@@ -46,7 +46,7 @@ export type sortMode = 'single' | 'multiple';
 
   <p-dataTable [(value)]="dataItems" sortMode="sortMode" resizableColumns="true" [rows]="rows"
     [paginator]="true" [globalFilter]="gb"
-    selectionMode="single" [(selection)]="selectedValue" (onRowSelect)="onRowSelect($event.data)">
+    selectionMode="single" [(selection)]="selectedValue">
     
     <div *ngIf="configInternal && configInternal.columnInfos">
       <ul *ngFor="let info of configInternal.columnInfos">
@@ -160,14 +160,6 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     this.initBoundData(this.dataItems, super.getMetadataForValues(this.dataItems));
   }
 
-  public onRowSelect(row) {
-    this.changeDetectorRef.detectChanges();
-    if (this.debug) {
-      DataTableSelectorComponent.logger.info(`DataTableSelectorComponent.onRowSelect: ${JSON.stringify(row)}`);
-    }
-    this.selectedValueChange.emit(row);
-  }
-
 
   /**
    * Formatiert den Wert @param{value} mittels der Information in @param{info}
@@ -226,7 +218,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
         if (tableMetadata) {
           const colMetaData = tableMetadata.getColumnMetadataByProperty(colInfo.valueField);
 
-          if (colInfo.dataType === undefined) {            
+          if (colInfo.dataType === undefined) {
             colInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
           }
 
@@ -244,7 +236,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
               }
             }
           }
-          
+
         }
 
         if (!colInfo.textAlignment && ControlDisplayInfo.isRightAligned(colInfo.dataType)) {
