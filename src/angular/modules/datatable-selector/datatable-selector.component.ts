@@ -1,5 +1,5 @@
 // Angular
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, PipeTransform } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, PipeTransform } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -80,8 +80,7 @@ export type selectionMode = 'single' | 'multiple' | '';
                   {{data[col.field]}}
               </template>
               <template let-col let-data="rowData" pTemplate="editor">
-                <flx-dropdown-selector [dataService]="info.selectorDataService"
-                  [textField]="info.textField" [valueField]="info.valueField"
+                <flx-dropdown-selector [dataService]="info.selectorDataService"                 
                   [style]="{'width':'150px'}" name="flxDropdownSelector" [debug]="false">
                 </flx-dropdown-selector>
               </template>
@@ -182,6 +181,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
 
   constructor(router: Router, metadataService: MetadataService, private pipeService: PipeService,
+    private injector: Injector,
     changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, changeDetectorRef);
   }
@@ -250,59 +250,70 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
 
   protected setupConfig(items: any[], tableMetadata: TableMetadata) {
-    if (this.config) {
-      this.configInternal = this.config;
-
-      // Defaults übernehmen
-      for (const colInfo of this.configInternal.columnInfos) {
-        if (colInfo.readonly === undefined) {
-          colInfo.readonly = ControlDisplayInfo.DEFAULT.readonly;
-        }
-
-        if (tableMetadata) {
-          const colMetaData = tableMetadata.getColumnMetadataByProperty(colInfo.valueField);
-
-          if (colInfo.dataType === undefined) {
-            colInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
-          }
-
-          if (colInfo.dataType === DataTypes.DATE) {
-            colInfo.controlType = ControlType.Date;
-          }
-
-          if (!colInfo.selectorDataService) {
-            if (colMetaData.enumMetadata) {
-              const enumTableMetadata = this.metadataService.findTableMetadata(colMetaData.enumMetadata.dataSource);
-              colInfo.selectorDataService = enumTableMetadata.service;
-
-              if (colInfo.controlType === undefined) {
-                colInfo.controlType = ControlType.DropdownSelector;
-              }
-            }
-          }
-
-        }
-
-        if (!colInfo.textAlignment && ControlDisplayInfo.isRightAligned(colInfo.dataType)) {
-          colInfo.textAlignment = TextAlignments.RIGHT;
-        }
-
-        if (colInfo.controlType === undefined) {
-          colInfo.controlType = ControlDisplayInfo.DEFAULT.controlType;
-        }
-
+    using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'setupConfig'), (log) => {
+      if (log.isDebugEnabled) {
+        log.log(`no of items = ${items ? items.length : 'undefined'},` +
+          ` tableMetadata = ${tableMetadata ? tableMetadata.className : 'undefined'}`);
       }
 
-      return;
-    }
+      if (this.config) {
+        this.configInternal = this.config;
 
+        // Defaults übernehmen
+        for (const colInfo of this.configInternal.columnInfos) {
+          if (colInfo.readonly === undefined) {
+            colInfo.readonly = ControlDisplayInfo.DEFAULT.readonly;
+          }
 
-    // metadata/reflect
-    if (tableMetadata) {
-      this.setupColumnInfosByMetadata(items, tableMetadata);
-    } else {
-      this.setupColumnInfosByReflection(items);
-    }
+          if (tableMetadata) {
+            const colMetaData = tableMetadata.getColumnMetadataByProperty(colInfo.valueField);
+
+            if (colInfo.dataType === undefined) {
+              colInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
+            }
+
+            if (colInfo.dataType === DataTypes.DATE) {
+              colInfo.controlType = ControlType.Date;
+            }
+
+            if (!colInfo.selectorDataService) {
+              if (colMetaData.enumMetadata) {
+                const enumTableMetadata = this.metadataService.findTableMetadata(colMetaData.enumMetadata.dataSource);
+                colInfo.selectorDataService = this.injector.get(enumTableMetadata.service);
+
+                // if (colInfo.controlType === undefined) {
+                colInfo.controlType = ControlType.DropdownSelector;
+                // }
+              }
+            }
+
+          }
+
+          if (!colInfo.textAlignment && ControlDisplayInfo.isRightAligned(colInfo.dataType)) {
+            colInfo.textAlignment = TextAlignments.RIGHT;
+          }
+
+          if (colInfo.controlType === undefined) {
+            colInfo.controlType = ControlDisplayInfo.DEFAULT.controlType;
+          }
+
+        }
+
+      } else {
+
+        // metadata/reflect
+        if (tableMetadata) {
+          this.setupColumnInfosByMetadata(items, tableMetadata);
+        } else {
+          this.setupColumnInfosByReflection(items);
+        }
+      }
+
+      if (log.isDebugEnabled) {
+        log.log(`configInternal : ${JSON.stringify(this.configInternal)}`);
+      }
+
+    });
   }
 
 
@@ -371,8 +382,10 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
     if (value !== undefined) {
       if (value) {
+        this.selectedValue = undefined;
+
         this.selectionModeSaved = this.selectionMode;
-        this.selectionMode = '';
+        this.selectionMode = undefined;
       } else {
         this.selectionMode = this.selectionModeSaved;
       }

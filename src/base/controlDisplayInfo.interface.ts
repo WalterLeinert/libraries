@@ -2,6 +2,7 @@
 import { PipeTransform } from '@angular/core';
 
 import { ControlType } from '../angular/modules/common/controlType';
+import { IService } from '../angular/services';
 import { PipeTypes } from './../angular/services/pipe.service';
 import { IDisplayInfo } from './displayInfo.interface';
 import { TextAlignment } from './textAlignment';
@@ -45,7 +46,7 @@ export interface IControlDisplayInfo extends IDisplayInfo {
      * @type {*}
      * @memberOf IControlDisplayInfo
      */
-    selectorDataService?: Function;
+    selectorDataService?: IService;
 
     /**
      * Der Name der Pipe, über die der Wert formatiert werden soll oder eine Pipe-Instanz

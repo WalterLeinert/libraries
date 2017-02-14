@@ -3,6 +3,7 @@ import { PipeTransform } from '@angular/core';
 
 import { ControlType } from './../angular/modules/common/controlType';
 import { PipeType } from './../angular/services/pipe.service';
+import { IService } from './../angular/services/service.interface'
 
 import { IControlDisplayInfo } from './controlDisplayInfo.interface';
 import { DataType, DataTypes } from './dataType';
@@ -36,7 +37,7 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
     constructor(textField?: string, valueField?: string, dataType?: DataType, private _style?: string,
         private _textAlignment?: TextAlignment,
         private _controlType: ControlType = ControlType.Input,
-        private _selectorDataService?: Function, private _pipe?: PipeType | PipeTransform,
+        private _selectorDataService?: IService, private _pipe?: PipeType | PipeTransform,
         private _pipeArgs?: string, private _pipeLocale?: string) {
         super(textField, valueField, dataType);
     }
@@ -45,7 +46,7 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
         return this._controlType;
     }
 
-    public get selectorDataService(): Function {
+    public get selectorDataService(): IService {
         return this._selectorDataService;
     }
 
