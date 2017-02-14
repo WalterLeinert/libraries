@@ -8,6 +8,7 @@ import { IService } from './../angular/services/service.interface'
 import { IControlDisplayInfo } from './controlDisplayInfo.interface';
 import { DataType, DataTypes } from './dataType';
 import { DisplayInfo } from './displayInfo';
+import { IEnumDisplayInfo } from './enumDisplayInfo.interface';
 import { TextAlignment, TextAlignments } from './textAlignment';
 
 export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayInfo {
@@ -37,7 +38,7 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
     constructor(textField?: string, valueField?: string, dataType?: DataType, private _style?: string,
         private _textAlignment?: TextAlignment,
         private _controlType: ControlType = ControlType.Input,
-        private _selectorDataService?: IService, private _pipe?: PipeType | PipeTransform,
+        private _enumInfo?: IEnumDisplayInfo, private _pipe?: PipeType | PipeTransform,
         private _pipeArgs?: string, private _pipeLocale?: string) {
         super(textField, valueField, dataType);
     }
@@ -46,8 +47,8 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
         return this._controlType;
     }
 
-    public get selectorDataService(): IService {
-        return this._selectorDataService;
+    public get enumInfo(): IEnumDisplayInfo {
+        return this._enumInfo;
     }
 
     public get style(): string {

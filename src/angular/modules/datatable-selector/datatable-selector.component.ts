@@ -17,11 +17,12 @@ import {
 import { IService } from '../../services';
 import { MetadataService, PipeService, PipeType, ProxyService } from '../../services';
 
-import { ControlDisplayInfo, DataTypes, IControlDisplayInfo } from '../../../base';
+import { ControlDisplayInfo, DataTypes, IControlDisplayInfo, IEnumDisplayInfo } from '../../../base';
 import { ControlType } from '../common';
 
 import { TextAlignments } from '../../../base';
 import { ListSelectorComponent } from '../common/list-selector.component';
+import { DropdownSelectorComponent, IDropdownSelectorConfig } from '../dropdown-selector';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 
 export type sortMode = 'single' | 'multiple' | '';
@@ -77,10 +78,16 @@ export type selectionMode = 'single' | 'multiple' | '';
             <p-column field="{{info.valueField}}" header="{{info.textField}}"
               [sortable]="sortable" [editable]="editable" [style]=" {'overflow':'visible' }">
               <template let-col let-data="rowData" pTemplate="body">
-                  {{data[col.field]}}
+                <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService" 
+                  [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
+                  [(selectedValue)]="data[col.field]"            
+                  [style]="{'width':'150px'}" name="flxDropdownSelector" [debug]="false">
+                </flx-dropdown-selector>
               </template>
               <template let-col let-data="rowData" pTemplate="editor">
-                <flx-dropdown-selector [dataService]="info.selectorDataService"                 
+               <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService" 
+                  [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
+                  [(selectedValue)]="data[col.field]"            
                   [style]="{'width':'150px'}" name="flxDropdownSelector" [debug]="false">
                 </flx-dropdown-selector>
               </template>
@@ -179,7 +186,6 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   public dataItems: any[];
 
-
   constructor(router: Router, metadataService: MetadataService, private pipeService: PipeService,
     private injector: Injector,
     changeDetectorRef: ChangeDetectorRef) {
@@ -276,10 +282,15 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
               colInfo.controlType = ControlType.Date;
             }
 
-            if (!colInfo.selectorDataService) {
-              if (colMetaData.enumMetadata) {
+            if (colMetaData.enumMetadata) {
+              if (!colInfo.enumInfo.selectorDataService) {
+
                 const enumTableMetadata = this.metadataService.findTableMetadata(colMetaData.enumMetadata.dataSource);
-                colInfo.selectorDataService = this.injector.get(enumTableMetadata.service);
+                colInfo.enumInfo.selectorDataService = this.injector.get(enumTableMetadata.service);
+
+                const enumConfig: IDropdownSelectorConfig = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
+                colInfo.enumInfo.textField = colMetaData.enumMetadata.textField;
+                colInfo.enumInfo.valueField = colMetaData.enumMetadata.valueField;
 
                 // if (colInfo.controlType === undefined) {
                 colInfo.controlType = ControlType.DropdownSelector;

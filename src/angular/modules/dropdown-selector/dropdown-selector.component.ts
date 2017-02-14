@@ -163,78 +163,86 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
 
   protected setupConfig(items: any[], tableMetadata: TableMetadata) {
-
-    //
-    // config überschreibt text/valueField Settings ???
-    //
-    if (this.config) {
-      const config = Clone.clone(this.config);
-
-      if (!config.displayInfo) {
-        config.displayInfo = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo;
-      }
-
-      if (!config.displayInfo.textField) {
-        config.displayInfo.textField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.textField;
-      }
-      if (!config.displayInfo.valueField) {
-        config.displayInfo.valueField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.valueField;
+    using(new XLog(DropdownSelectorComponent.logger, levels.DEBUG, 'setupConfig'), (log) => {
+      if (log.isDebugEnabled) {
+        log.log(`no of items = ${items ? items.length : 'undefined'},` +
+          ` tableMetadata = ${tableMetadata ? tableMetadata.className : 'undefined'}`);
       }
 
 
-      if (!config.displayInfo.dataType && tableMetadata) {
-        const colMetaData = tableMetadata.getColumnMetadataByProperty(config.displayInfo.valueField);
-        if (colMetaData) {
-          config.displayInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
+      //
+      // config überschreibt text/valueField Settings ???
+      //
+      if (this.config) {
+        const config = Clone.clone(this.config);
+
+        if (!config.displayInfo) {
+          config.displayInfo = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo;
+        }
+
+        if (!config.displayInfo.textField) {
+          config.displayInfo.textField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.textField;
+        }
+        if (!config.displayInfo.valueField) {
+          config.displayInfo.valueField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.valueField;
+        }
+
+
+        if (!config.displayInfo.dataType && tableMetadata) {
+          const colMetaData = tableMetadata.getColumnMetadataByProperty(config.displayInfo.valueField);
+          if (colMetaData) {
+            config.displayInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
+          }
+        }
+
+
+
+        if (!config.allowNoSelection) {
+          config.allowNoSelection = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelection;
+        }
+        if (!config.allowNoSelectionText) {
+          config.allowNoSelectionText = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelectionText;
+        }
+
+        this.configInternal = config;
+
+      } else {
+
+        //
+        // es existiert keine Config und weder textField noch valueField sind angegeben
+        //
+        if (StringUtil.isNullOrEmpty(this.textField) && StringUtil.isNullOrEmpty(this.valueField)) {
+          // metadata/reflect
+          if (tableMetadata) {
+            this.setupColumnInfosByMetadata(items, tableMetadata);
+          } else {
+            this.setupColumnInfosByReflection(items);
+          }
+        } else {
+
+          // fehlt das valueField, wird als Default CURRENT_ITEM verwendet
+          if (StringUtil.isNullOrEmpty(this.valueField)) {
+            this.valueField = DisplayInfo.CURRENT_ITEM;
+          }
+
+          this.configInternal = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
+          this.configInternal.displayInfo.textField = this.textField;
+          this.configInternal.displayInfo.valueField = this.valueField;
+
+          if (this.allowNoSelection) {
+            this.configInternal.allowNoSelection = this.allowNoSelection;
+          }
+
+          if (this.allowNoSelectionText) {
+            this.configInternal.allowNoSelectionText = this.allowNoSelectionText;
+          }
         }
       }
 
-
-
-      if (!config.allowNoSelection) {
-        config.allowNoSelection = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelection;
+      if (log.isDebugEnabled) {
+        log.log(`configInternal : ${JSON.stringify(this.configInternal)}`);
       }
-      if (!config.allowNoSelectionText) {
-        config.allowNoSelectionText = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelectionText;
-      }
-
-      this.configInternal = config;
-
-      return;
-    }
-
-
-
-    //
-    // es existiert keine Config und weder textField noch valueField sind angegeben
-    //
-    if (StringUtil.isNullOrEmpty(this.textField) && StringUtil.isNullOrEmpty(this.valueField)) {
-      // metadata/reflect
-      if (tableMetadata) {
-        this.setupColumnInfosByMetadata(items, tableMetadata);
-      } else {
-        this.setupColumnInfosByReflection(items);
-      }
-    } else {
-
-      // fehlt das valueField, wird als Default CURRENT_ITEM verwendet
-      if (StringUtil.isNullOrEmpty(this.valueField)) {
-        this.valueField = DisplayInfo.CURRENT_ITEM;
-      }
-
-      this.configInternal = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
-      this.configInternal.displayInfo.textField = this.textField;
-      this.configInternal.displayInfo.valueField = this.valueField;
-
-      if (this.allowNoSelection) {
-        this.configInternal.allowNoSelection = this.allowNoSelection;
-      }
-
-      if (this.allowNoSelectionText) {
-        this.configInternal.allowNoSelectionText = this.allowNoSelectionText;
-      }
-    }
-
+    });
   }
 
 

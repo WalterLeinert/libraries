@@ -5,6 +5,7 @@ import { ControlType } from '../angular/modules/common/controlType';
 import { IService } from '../angular/services';
 import { PipeTypes } from './../angular/services/pipe.service';
 import { IDisplayInfo } from './displayInfo.interface';
+import { IEnumDisplayInfo } from './enumDisplayInfo.interface';
 import { TextAlignment } from './textAlignment';
 
 
@@ -40,13 +41,12 @@ export interface IControlDisplayInfo extends IDisplayInfo {
     controlType?: ControlType;
 
     /**
-     * Liefert die zugehörige Service-Instanz, falls der @see{controlType} den 
-     * Wert @see{ControlType.DropdownSelector} hat.
+     * Anzeigeinformation für Enums, falls @see{controlType} den Wert @see{ControlType.DropdownSelector} hat.
      * 
      * @type {*}
      * @memberOf IControlDisplayInfo
      */
-    selectorDataService?: IService;
+    enumInfo?: IEnumDisplayInfo;
 
     /**
      * Der Name der Pipe, über die der Wert formatiert werden soll oder eine Pipe-Instanz
