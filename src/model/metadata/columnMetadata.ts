@@ -16,7 +16,7 @@ import { EnumMetadata } from '.';
  */
 export class ColumnMetadata {
     private validator: IValidation;
-    private _enumMetadata: EnumMetadata;
+    private _enumMetadata: EnumMetadata<any, any, any>;
 
     /**
      * @param {Function} target - Modelklasse
@@ -139,11 +139,11 @@ export class ColumnMetadata {
         return this.validator.validate(value);
     }
 
-    public setEnum(enumMetadata: EnumMetadata) {
+    public setEnum(enumMetadata: EnumMetadata<any, any, any>) {
         this._enumMetadata = enumMetadata;
     }
 
-    public get enumMetadata(): EnumMetadata {
+    public get enumMetadata(): EnumMetadata<any, any, any> {
         return this._enumMetadata;
     }
 

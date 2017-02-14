@@ -26,7 +26,8 @@ export class MetadataStorage {
     new Dictionary<string, ValidationMetadata[]>();
 
     private tableColumnDict: Dictionary<string, ColumnMetadata[]> = new Dictionary<string, ColumnMetadata[]>();
-    private tableEnumDict: Dictionary<string, EnumMetadata[]> = new Dictionary<string, EnumMetadata[]>();
+    private tableEnumDict: Dictionary<string, Array<EnumMetadata<any, any, any>>> =
+    new Dictionary<string, Array<EnumMetadata<any, any, any>>>();
 
     private tableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
     private dbTableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
@@ -49,7 +50,7 @@ export class MetadataStorage {
                 if (!this.tableDict.containsKey(targetName)) {
                     const colMetadata: ColumnMetadata[] = this.tableColumnDict.get(targetName);
                     const valMetadata: ValidationMetadata[] = this.tableValidationDict.get(targetName);
-                    const enumMetadata: EnumMetadata[] = this.tableEnumDict.get(targetName);
+                    const enumMetadata: Array<EnumMetadata<any, any, any>> = this.tableEnumDict.get(targetName);
 
 
                     //
@@ -74,7 +75,8 @@ export class MetadataStorage {
                     // Dictionary (propertyName, EnumMetadata[]) aufbauen, um
                     // anschliessend die Enums mit ColumnMetadata verknüpfen zu können
                     //
-                    const propNameToEnum: Dictionary<string, EnumMetadata> = new Dictionary<string, EnumMetadata>();
+                    const propNameToEnum: Dictionary<string, EnumMetadata<any, any, any>> =
+                        new Dictionary<string, EnumMetadata<any, any, any>>();
 
                     if (enumMetadata) {
                         for (const enmMeta of enumMetadata) {
@@ -170,11 +172,11 @@ export class MetadataStorage {
         valMetadata.push(metadata);
     }
 
-    public addEnumMetadata(metadata: EnumMetadata) {
+    public addEnumMetadata<T, TText, TId>(metadata: EnumMetadata<T, TText, TId>) {
         Assert.notNull(metadata);
 
         const targetName = metadata.target.name;
-        let enumMetadata: EnumMetadata[] = this.tableEnumDict.get(targetName);
+        let enumMetadata: Array<EnumMetadata<any, any, any>> = this.tableEnumDict.get(targetName);
         if (!enumMetadata) {
             enumMetadata = [];
             this.tableEnumDict.set(targetName, enumMetadata);

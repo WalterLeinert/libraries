@@ -188,4 +188,10 @@ export class TableMetadata {
     public get className(): string {
         return this.target.name;
     }
+
+    public createPropertiesMap(): { [name: string]: string | any } {
+        const map: { [name: string]: string | any } = {};
+        this.columnMetadata.forEach((column) => map[column.propertyName] = column.propertyName);       
+        return map;
+    }
 }

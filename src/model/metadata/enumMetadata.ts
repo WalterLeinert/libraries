@@ -1,5 +1,7 @@
 import { ObjectType } from '../../base/objectType';
+import { PropertyAccessor } from '../../types';
 import { Assert } from '../../util/assert';
+import { MetadataStorage } from './metadataStorage';
 
 
 /**
@@ -14,12 +16,9 @@ export type RelationTypeInFunction = ((type?: any) => Function) | Function;
  * @export
  * @class EnumMetadata
  */
-export class EnumMetadata {
-    /**
-     * @param {Function} target - Modelklasse
-     * @param {string} propertyName - Name der Modelproperty
-     * @param {ColumnOptions} typeFunction - weitere Eigenschaften
-     */
+export class EnumMetadata<T, TText, TId> {
+    private _textField: string;
+    private _valueField: string;
 
 
     /**
@@ -32,7 +31,9 @@ export class EnumMetadata {
      * @memberOf EnumMetadata
      */
     constructor(public target: Function, public propertyName: string,
-        private _dataSource: RelationTypeInFunction) {
+        private _dataSource: RelationTypeInFunction,
+        private _foreignText: PropertyAccessor<T, TText>,
+        private _foreignId: PropertyAccessor<T, TId>) {
     }
 
     /**
@@ -40,6 +41,61 @@ export class EnumMetadata {
      */
     public get dataSource(): Function {
         Assert.that(this._dataSource instanceof Function);
-        return  (this._dataSource as () => any)();
+        return (this._dataSource as () => any)();
+    }
+
+    public get foreignText(): PropertyAccessor<T, TText> {
+        return this._foreignText;
+    }
+
+    public get foreignId(): PropertyAccessor<T, TId> {
+        return this._foreignId;
+    }
+
+
+    public setFields(textField: string, valueField: string) {
+        // Assert.notNullOrEmpty(textField);
+        // Assert.notNullOrEmpty(valueField);
+
+        this._textField = textField;
+        this._valueField = valueField;
+    }
+
+
+    /**
+     * Liefert den Namen der Property in der Target-Modelklasse, deren Wert im GUI angezeigt werden soll
+     * 
+     * @readonly
+     * @type {string}
+     * @memberOf EnumMetadata
+     */
+    public get textField(): string {
+        if (this._textField === undefined) {
+            this.setupFields();
+        }
+
+        return this._textField;
+    }
+
+    /**
+     * Liefert den Namen der Property in der Target-Modelklasse, deren Wert im entspr. Modell angebunden werden soll.
+     * 
+     * @readonly
+     * @type {string}
+     * @memberOf EnumMetadata
+     */
+    public get valueField(): string {
+        if (this._valueField === undefined) {
+            this.setupFields();
+        }
+
+        return this._valueField;
+    }
+
+    private setupFields() {
+        const targetMetadata = MetadataStorage.instance.findTableMetadata(this.dataSource);
+        const map = targetMetadata.createPropertiesMap();
+        this._textField = this.foreignText(map as T) as any as string;
+        this._valueField = this.foreignId(map as T) as any as string;
     }
 }

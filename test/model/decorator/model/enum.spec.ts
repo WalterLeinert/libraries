@@ -27,7 +27,8 @@ class ArtikelEnum {
     public name: string;
 
 
-    @Enum((dataSource) => KollektionEnum)
+    @Enum<KollektionEnum, string, number>((dataSource) => KollektionEnum,
+        (kollektion) => kollektion.nameKoll, (kollektion) => kollektion.idKoll)
     @Column({ name: 'id_kollektion', nullable: true })
     public id_kollektion?: number;
 }
@@ -37,10 +38,10 @@ class ArtikelEnum {
 class KollektionEnum {
 
     @Column({ name: 'kollektion_id', primary: true, generated: true })
-    public id: number;
+    public idKoll: number = 1;
 
     @Column({ name: 'kollektion_name' })
-    public name: string;
+    public nameKoll: string = 'summer';
 }
 
 
@@ -70,6 +71,22 @@ class EnumTest {
         expect(colMetaData.enumMetadata.dataSource).to.be.not.null;
         expect(colMetaData.enumMetadata.dataSource).to.equal(KollektionEnum);
     }
+
+    @test 'should exist text/ValueField'() {
+        const propertyName = 'id_kollektion';
+        const colMetaData = this.tableMetadata.getColumnMetadataByProperty(propertyName);
+
+
+        const koll = new KollektionEnum();
+
+        expect(colMetaData.enumMetadata.foreignText(koll)).to.be.equal(koll.nameKoll);
+        expect(colMetaData.enumMetadata.foreignId(koll)).to.be.equal(koll.idKoll);
+
+        expect(colMetaData.enumMetadata.textField).to.be.equal('nameKoll');
+        expect(colMetaData.enumMetadata.valueField).to.be.equal('idKoll');
+    }
+
+
 
 
     protected before() {
