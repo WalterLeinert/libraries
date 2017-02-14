@@ -51,7 +51,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
      * @type {IService}
      * @memberOf DataTableSelectorComponent
      */
-    @Input() public dataService: IService;
+    private _dataService: IService;
 
     /**
      * die Service-Methode zum Bereitstellen der Daten. Muss eine Methode von @see{dataService} sein.
@@ -61,7 +61,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
      * @type {IService}
      * @memberOf DataTableSelectorComponent
      */
-    @Input() public dataServiceFunction: Function;
+    private _dataServiceFunction: Function;
 
 
     /**
@@ -338,6 +338,34 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
         if (this._data !== data) {
             this._data = data;
             this.onDataChange(data);
+        }
+    }
+
+
+    // -------------------------------------------------------------------------------------
+    // Property dataService
+    // -------------------------------------------------------------------------------------
+    public get dataService(): IService {
+        return this._dataService;
+    }
+
+    @Input() public set dataService(value: IService) {
+        if (this._dataService !== value) {
+            this._dataService = value;
+        }
+    }
+
+
+    // -------------------------------------------------------------------------------------
+    // Property dataServiceFunction
+    // -------------------------------------------------------------------------------------
+    public get dataServiceFunction(): Function {
+        return this._dataServiceFunction;
+    }
+
+    @Input() public set dataServiceFunction(value: Function) {
+        if (this._dataServiceFunction !== value) {
+            this._dataServiceFunction = value;
         }
     }
 
