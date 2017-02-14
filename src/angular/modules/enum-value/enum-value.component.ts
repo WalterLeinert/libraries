@@ -68,7 +68,8 @@ export class EnumValueComponent implements OnInit, OnDestroy {
    * @type {string}
    * @memberOf EnumValueComponent
    */
-  @Input() public itemSelector: any;
+  private _itemSelector: any;
+  @Output() public itemSelectorChange = new EventEmitter<any>();
 
 
   /**
@@ -78,6 +79,8 @@ export class EnumValueComponent implements OnInit, OnDestroy {
    *
    */
   @Output() public itemChange = new EventEmitter<any>();
+
+  private items: any[];
 
 
   /**
@@ -91,10 +94,9 @@ export class EnumValueComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     if (this.dataService) {
       this.dataService.find().subscribe((items: any[]) => {
-        const filteredItems = items.filter((item) => this.getValue(item) === this.itemSelector);
-        if (filteredItems.length === 1) {
-          this.item = filteredItems[0];
-        }
+        this.items = items;
+
+        this.updateItem();
       });
     }
 
@@ -146,6 +148,34 @@ export class EnumValueComponent implements OnInit, OnDestroy {
   }
 
 
+  // -------------------------------------------------------------------------------------
+  // Property item und der Change Event
+  // -------------------------------------------------------------------------------------
+
+  protected onItemSelectorChange(value: any) {
+    using(new XLog(EnumValueComponent.logger, levels.INFO, 'onItemSelectorChange'), (log) => {
+      if (log.isInfoEnabled()) {
+        log.log(`value = ${JSON.stringify(value)}`);
+      }
+      this.itemSelectorChange.emit(value);
+
+      this.updateItem();
+    });
+  }
+
+  public get itemSelector(): any {
+    return this._itemSelector;
+  }
+
+  @Input() public set itemSelector(value: any) {
+    if (this._itemSelector !== value) {
+      this._itemSelector = value;
+      this.onItemSelectorChange(value);
+    }
+  }
+
+
+
 
   /**
    * Liefert den Anzeigetext für das Item @param{item}
@@ -176,6 +206,17 @@ export class EnumValueComponent implements OnInit, OnDestroy {
     }
 
     return value;
+  }
+
+
+  private updateItem() {
+    if (this.items) {
+      const itemsFiltered = this.items.filter((item) => this.getValue(item) === this.itemSelector);
+      if (itemsFiltered && itemsFiltered.length === 1) {
+        this.item = itemsFiltered[0];
+      }
+    }
+
   }
 
 }
