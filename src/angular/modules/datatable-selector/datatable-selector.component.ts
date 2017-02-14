@@ -77,6 +77,15 @@ export type selectionMode = 'single' | 'multiple' | '';
           <div *ngIf="info.controlType === controlType.DropdownSelector">
             <p-column field="{{info.valueField}}" header="{{info.textField}}"
               [sortable]="sortable" [editable]="editable" [style]=" {'overflow':'visible' }">
+
+              <template let-col let-data="rowData" pTemplate="body">
+                <flx-enum-value [dataService]="info.enumInfo.selectorDataService" 
+                  [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
+                  [itemSelector]="data[col.field]"
+                  [style]="{'width':'100%'}" name="flxEnumValue">
+                </flx-enum-value>
+              </template>
+
 <!--
               <template let-col let-data="rowData" pTemplate="body">
                 <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService" 

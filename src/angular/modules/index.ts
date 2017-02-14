@@ -3,5 +3,6 @@ export * from './authentication';
 export * from './common';
 export * from './datatable-selector';
 export * from './dropdown-selector';
+export * from './enum-value';
 export * from './month-selector';
 export * from './year-selector';
