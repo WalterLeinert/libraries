@@ -24,7 +24,9 @@ import { TextAlignments } from '../../../base';
 import { ListSelectorComponent } from '../common/list-selector.component';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 
-export type sortMode = 'single' | 'multiple';
+export type sortMode = 'single' | 'multiple' | '';
+
+export type selectionMode = 'single' | 'multiple' | '';
 
 
 /**
@@ -46,22 +48,47 @@ export type sortMode = 'single' | 'multiple';
 
   <p-dataTable [(value)]="dataItems" sortMode="sortMode" resizableColumns="true" [rows]="rows"
     [paginator]="true" [globalFilter]="gb"
-    selectionMode="single" [(selection)]="selectedValue">
+    [editable]="editable"
+    [selectionMode]="selectionMode" [(selection)]="selectedValue">
     
     <div *ngIf="configInternal && configInternal.columnInfos">
       <ul *ngFor="let info of configInternal.columnInfos">
 
-        <p-column field="{{info.valueField}}" header="{{info.textField}}"
-          [sortable]="true" [editable]="editable">
-    
-          <div *ngIf="info.controlType === controlType.Input">
-            <template let-col let-data="rowData" pTemplate="body">
-              <div [style.text-align]="info.textAlignment">
-                <span>{{ formatValue(data[col.field], info) }}</span>
-              </div>
-            </template>
+          
+        <div *ngIf="info.controlType === controlType.Input">
+          <p-column field="{{info.valueField}}" header="{{info.textField}}"
+            [sortable]="sortable" [editable]="editable">  
+          </p-column>
+        </div>
+
+         <div *ngIf="info.controlType === controlType.Date">
+            <p-column field="{{info.valueField}}" header="{{info.textField}}"
+              [sortable]="sortable" [editable]="editable" [style]=" {'overflow':'visible' }">
+              <template let-col let-data="rowData" pTemplate="body">
+                  {{data[col.field]|date }}
+              </template>
+              <template let-col let-data="rowData" pTemplate="editor">
+                  <p-calendar [(ngModel)]="data[col.field]" dateFormat="yyyy-mm-dd"></p-calendar>
+              </template>
+            </p-column>
           </div>
 
+          <div *ngIf="info.controlType === controlType.DropdownSelector">
+            <p-column field="{{info.valueField}}" header="{{info.textField}}"
+              [sortable]="sortable" [editable]="editable" [style]=" {'overflow':'visible' }">
+              <template let-col let-data="rowData" pTemplate="body">
+                  {{data[col.field]}}
+              </template>
+              <template let-col let-data="rowData" pTemplate="editor">
+                <flx-dropdown-selector [dataService]="info.selectorDataService"
+                  [textField]="info.textField" [valueField]="info.valueField"
+                  [style]="{'width':'150px'}" name="flxDropdownSelector" [debug]="false">
+                </flx-dropdown-selector>
+              </template>
+            </p-column>
+          </div>          
+
+<!--
           <div *ngIf="info.controlType === controlType.Date">
             <template let-col let-data="rowData" pTemplate="body">
               <div [style.text-align]="info.textAlignment">
@@ -80,8 +107,8 @@ export type sortMode = 'single' | 'multiple';
               </div>
             </template>          
           </div>          
+-->
 
-        </p-column>
       </ul>
     </div>
     </p-dataTable>
@@ -100,14 +127,31 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    */
   public controlType = ControlType;
 
+  /**
+   * selectionMode: single|multiple
+   * 
+   * @type {selectionMode}
+   * @memberOf DataTableSelectorComponent
+   */
+  private _selectionMode: selectionMode = 'single';
+
+  private selectionModeSaved: selectionMode;
+
 
   /**
    * Sortmodus: single|multiple 
    * 
-   * @type {string}
+   * @type {sortMode}
    * @memberOf DataTableSelectorComponent
    */
-  @Input() public sortMode: string = 'single';
+  private _sortMode: sortMode = 'single';
+
+  /**
+   * falls true, ist sind die Spalten sortierbar
+   *
+   * @type {boolean}
+   */
+  @Input() public sortable: boolean = true;
 
   /**
    * Anzahl der anzuzeigenden Gridzeilen
@@ -314,6 +358,27 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   }
 
 
+  /**
+   * Überwachung der editable-Property: false editable -> Selektionsmöglichkeit ausschalten
+   * 
+   * @protected
+   * @param {boolean} value
+   * 
+   * @memberOf DataTableSelectorComponent  
+   */
+  protected onEditableChange(value: boolean) {
+    super.onEditableChange(value);
+
+    if (value !== undefined) {
+      if (value) {
+        this.selectionModeSaved = this.selectionMode;
+        this.selectionMode = '';
+      } else {
+        this.selectionMode = this.selectionModeSaved;
+      }
+    }
+  }
+
 
   /**
    * falls keine Column-Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
@@ -381,6 +446,39 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     this.configInternal = {
       columnInfos: columnInfos
     };
+  }
+
+  /**
+   * Property selectionMode
+   */
+  public get selectionMode(): selectionMode {
+    return this._selectionMode;
+  }
+
+  @Input() public set selectionMode(value: selectionMode) {
+    if (this._selectionMode !== value) {
+      this._selectionMode = value;
+    }
+  }
+
+
+  /**
+   * Property sortMode
+   */
+  public get sortMode(): sortMode {
+    return this._sortMode;
+  }
+
+  @Input() public set sortMode(value: sortMode) {
+    if (this._sortMode !== value) {
+      this._sortMode = value;
+
+      if (!this._sortMode) {
+        this.sortable = false;
+      } else {
+        this.sortable = true;
+      }
+    }
   }
 
 }

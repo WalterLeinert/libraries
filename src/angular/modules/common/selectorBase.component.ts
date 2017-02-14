@@ -25,6 +25,15 @@ export abstract class SelectorBaseComponent extends BaseComponent<any> {
      */
     @Input() public debug: boolean = false;
 
+
+    /**
+     * falls true, ist die Komponente editierbar
+     *
+     * @type {boolean}
+     */
+    private _editable: boolean = false;
+
+
     /**
      * locale-Property
      *
@@ -115,4 +124,27 @@ export abstract class SelectorBaseComponent extends BaseComponent<any> {
             this.onLocaleChange(value);
         }
     }
+
+
+    /**
+     * Property editable
+     */
+    protected onEditableChange(value: boolean) {
+        using(new XLog(SelectorBaseComponent.logger, levels.INFO,
+            'onEditableChange', `value = ${JSON.stringify(value)}`), (log) => {
+                // ok
+        });
+    }
+
+    public get editable(): boolean {
+        return this._editable;
+    }
+
+    @Input() public set editable(value: boolean) {
+        if (this._editable !== value) {
+            this._editable = value;
+            this.onEditableChange(value);
+        }
+    }
+
 }
