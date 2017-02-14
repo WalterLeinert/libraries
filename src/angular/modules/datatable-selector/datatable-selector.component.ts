@@ -77,13 +77,15 @@ export type selectionMode = 'single' | 'multiple' | '';
           <div *ngIf="info.controlType === controlType.DropdownSelector">
             <p-column field="{{info.valueField}}" header="{{info.textField}}"
               [sortable]="sortable" [editable]="editable" [style]=" {'overflow':'visible' }">
+<!--
               <template let-col let-data="rowData" pTemplate="body">
                 <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService" 
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                   [(selectedValue)]="data[col.field]"            
-                  [style]="{'width':'150px'}" name="flxDropdownSelector" [debug]="false">
+                  [style]="{'width':'100%'}" name="flxDropdownSelector" [debug]="false">
                 </flx-dropdown-selector>
               </template>
+-->
               <template let-col let-data="rowData" pTemplate="editor">
                <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService" 
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
@@ -92,28 +94,7 @@ export type selectionMode = 'single' | 'multiple' | '';
                 </flx-dropdown-selector>
               </template>
             </p-column>
-          </div>          
-
-<!--
-          <div *ngIf="info.controlType === controlType.Date">
-            <template let-col let-data="rowData" pTemplate="body">
-              <div [style.text-align]="info.textAlignment">
-                <p-calendar [(ngModel)]="data[col.field]" dateFormat="yyyy-mm-dd" [readonlyInput]="true"></p-calendar>
-              </div>
-            </template>          
           </div>
-
-          <div *ngIf="info.controlType === controlType.DropdownSelector">
-            <template let-col let-data="rowData" pTemplate="body">
-              <div [style.text-align]="info.textAlignment">
-                <flx-dropdown-selector [dataService]="selectorDataService"
-                  [textField]="info.textField" [valueField]="info.valueField"
-                  [style]="{'width':'150px'}" name="flxDropdownSelector" [debug]="false">
-                </flx-dropdown-selector>
-              </div>
-            </template>          
-          </div>          
--->
 
       </ul>
     </div>
@@ -283,14 +264,14 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
             }
 
             if (colMetaData.enumMetadata) {
-              if (!colInfo.enumInfo.selectorDataService) {
+              if (!colInfo.enumInfo) {
 
                 const enumTableMetadata = this.metadataService.findTableMetadata(colMetaData.enumMetadata.dataSource);
-                colInfo.enumInfo.selectorDataService = this.injector.get(enumTableMetadata.service);
-
-                const enumConfig: IDropdownSelectorConfig = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
-                colInfo.enumInfo.textField = colMetaData.enumMetadata.textField;
-                colInfo.enumInfo.valueField = colMetaData.enumMetadata.valueField;
+                colInfo.enumInfo = {
+                  selectorDataService: this.injector.get(enumTableMetadata.service),
+                  textField: colMetaData.enumMetadata.textField,
+                  valueField: colMetaData.enumMetadata.valueField
+                };
 
                 // if (colInfo.controlType === undefined) {
                 colInfo.controlType = ControlType.DropdownSelector;
