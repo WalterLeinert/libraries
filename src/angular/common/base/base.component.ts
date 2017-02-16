@@ -5,10 +5,11 @@ import { Message } from 'primeng/primeng';
 import { IAutoformConfig, IAutoformNavigation } from '../../modules/autoform/autoformConfig.interface';
 import { AutoformConstants } from '../../modules/autoform/autoformConstants';
 import { IServiceBase } from '../../services';
+import { CoreComponent } from './core.component';
 
 
 /**
- * Basisklasse (Komponente) für alle GUI-Komponenten
+ * Basisklasse (Komponente) für alle GUI-Komponenten mit Router und einem Service
  * 
  * @export
  * @class BaseComponent
@@ -21,9 +22,7 @@ import { IServiceBase } from '../../services';
   templateUrl: './base.component.html',
   styleUrls: ['./base.component.css']
 })*/
-export abstract class BaseComponent<TService extends IServiceBase> implements OnInit, OnDestroy {
-  private _messages: Message[] = [];
-
+export abstract class BaseComponent<TService extends IServiceBase> extends CoreComponent {
 
   /**
    * Creates an instance of BaseComponent.
@@ -34,119 +33,9 @@ export abstract class BaseComponent<TService extends IServiceBase> implements On
    * @memberOf BaseComponent
    */
   protected constructor(private _router: Router, private _service: TService) {
+    super();
   }
 
-
-  /**
-   * Init-Methode der Komponente: kann in konkreter Komponente überschrieben werden
-   * 
-   * @memberOf BaseComponent
-   */
-  public ngOnInit() {
-    this.clearMessages();
-  }
-
-
-  /**
-   * Destroy-Methode der Komponente: kann in konkreter Komponente überschrieben werden
-   * 
-   * @memberOf BaseComponent
-   */
-  public ngOnDestroy() {
-    // ok
-  }
-
-  /**
-   * Liefert die aktuellen Meldungen
-   */
-  public get messages(): Message[] {
-    return this._messages;
-  }
-
-  /**
-   * löscht alle Messages
-   * 
-   * @protected
-   * 
-   * @memberOf BaseComponent
-   */
-  protected clearMessages() {
-    this._messages = [];
-  }
-
-  /**
-   * fügt eine neue Info-Meldungung hinzu
-   * 
-   * @protected
-   * @param {string} text
-   * @param {string} [summary='Hinweis']
-   * 
-   * @memberOf BaseComponent
-   */
-  protected addInfoMessage(text: string, summary = 'Hinweis') {
-    this.addMessage({ severity: 'info', summary: summary, detail: text });
-  }
-
-  /**
-   * fügt eine neue Fehlermeldungung hinzu
-   * 
-   * @protected
-   * @param {string} text
-   * @param {string} [summary='Fehlermeldung']
-   * 
-   * @memberOf BaseComponent
-   */
-  protected addErrorMessage(text: string, summary = 'Fehlermeldung') {
-    this.addMessage({ severity: 'error', summary: summary, detail: text });
-  }
-
-  /**
-   * fügt eine neue Meldung hinzu
-   * 
-   * @protected
-   * @param {Message} message
-   * 
-   * @memberOf BaseComponent
-   */
-  protected addMessage(message: Message) {
-    let doAddMessage = true;
-    this._messages.forEach((msg) => {
-      if (msg.detail === message.detail && msg.severity === message.severity && msg.summary === message.summary) {
-        doAddMessage = false;
-        return;
-      }
-    });
-
-    if (doAddMessage) {
-      this._messages.push(message);
-    }
-  }
-
-  /**
-   * Behandelt eine Fehlermeldung
-   * 
-   * @protected
-   * @param {Error} error
-   * @param {string} [summary='Fehlermeldung']
-   * 
-   * @memberOf BaseComponent
-   */
-  protected handleError(error: Error, summary = 'Fehlermeldung') {
-    this.addErrorMessage(error.message, summary);
-  }
-
-  /**
-   * Behandelt einen Hinweis
-   * 
-   * @protected
-   * @param {Error} info
-   * @param {string} [summary='Hinweis']
-   * 
-   * @memberOf BaseComponent
-   */
-  protected handleInfo(info: Error, summary = 'Hinweis') {
-    this.addInfoMessage(info.message, summary);
-  }
 
   /**
    * Navigiert über den zugehörigen Router

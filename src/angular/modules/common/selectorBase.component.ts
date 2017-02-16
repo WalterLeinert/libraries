@@ -8,13 +8,13 @@ import { configure, getLogger, ILogger, levels, Logger, using, XLog } from '@flu
 
 import { Assert, Types } from '@fluxgate/common';
 
-import { BaseComponent } from '../../common/base';
+import { CoreComponent } from '../../common/base';
 import { MetadataService } from '../../services';
 
 /**
  * Basisklasse für alle Selector-Komponenten
  */
-export abstract class SelectorBaseComponent extends BaseComponent<any> {
+export abstract class SelectorBaseComponent extends CoreComponent {
     protected static logger = getLogger(SelectorBaseComponent);
 
 
@@ -69,7 +69,7 @@ export abstract class SelectorBaseComponent extends BaseComponent<any> {
 
     protected constructor(router: Router, private _metadataService: MetadataService,
         private _changeDetectorRef: ChangeDetectorRef) {
-        super(router, null);
+        super();
     }
 
 
