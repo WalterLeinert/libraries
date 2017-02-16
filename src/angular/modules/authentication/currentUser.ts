@@ -16,35 +16,35 @@ import { IUser } from '@fluxgate/common';
  * @class CurrentUserBaseService
  */
 export abstract class CurrentUser {
-    protected static logger = getLogger(CurrentUser);
+  protected static logger = getLogger(CurrentUser);
 
-    private _user: IUser;
-    @Output() public userChange: EventEmitter<IUser> = new EventEmitter();
+  private _user: IUser;
+  @Output() public userChange: EventEmitter<IUser> = new EventEmitter();
 
 
-    /**
-     * Liefert den aktuell angemeldeten User.
-     * 
-     * @readonly
-     * @type {IUser}
-     * @memberOf CurrentUserService
-     */
-    public get user(): IUser {
-        return this._user;
+  /**
+   * Liefert den aktuell angemeldeten User.
+   * 
+   * @readonly
+   * @type {IUser}
+   * @memberOf CurrentUserService
+   */
+  protected get user(): IUser {
+    return this._user;
+  }
+
+  protected set user(value: IUser) {
+    if (this._user !== value) {
+      this._user = value;
+      this.onUserChange(value);
     }
-
-    public set user(value: IUser) {
-        if (this._user !== value) {
-            this._user = value;
-            this.onUserChange(value);
-        }
-    }
+  }
 
 
-    protected onUserChange(user: IUser) {
-        using(new XLog(CurrentUser.logger, levels.INFO, 'onUserChange',
-            `user = ${JSON.stringify(user)}`), (log) => {
-                this.userChange.emit(user);
-            });
-    }
+  protected onUserChange(user: IUser) {
+    using(new XLog(CurrentUser.logger, levels.INFO, 'onUserChange',
+      `user = ${JSON.stringify(user)}`), (log) => {
+        this.userChange.emit(user);
+      });
+  }
 }
