@@ -86,20 +86,11 @@ export type selectionMode = 'single' | 'multiple' | '';
                 </flx-enum-value>
               </template>
 
-<!--
-              <template let-col let-data="rowData" pTemplate="body">
-                <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService" 
-                  [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
-                  [(selectedValue)]="data[col.field]"            
-                  [style]="{'width':'100%'}" name="flxDropdownSelector" [debug]="false">
-                </flx-dropdown-selector>
-              </template>
--->
               <template let-col let-data="rowData" pTemplate="editor">
                <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService" 
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                   [(selectedValue)]="data[col.field]"            
-                  [style]="{'width':'150px'}" name="flxDropdownSelector" [debug]="false">
+                  [style]="{'width':'100%'}" name="flxDropdownSelector" [debug]="false">
                 </flx-dropdown-selector>
               </template>
             </p-column>
