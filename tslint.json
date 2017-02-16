@@ -14,6 +14,10 @@
      */
     "curly": true,
 
+    "align": [
+      true
+    ],
+
     "quotemark": [
       true,
       "single"
@@ -47,10 +51,6 @@
         "private-instance-method"
       ]
     }],
-
-    "align": [
-      true
-    ],
 
     "no-console": [
       true, "assert"
