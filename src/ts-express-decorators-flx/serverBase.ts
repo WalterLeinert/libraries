@@ -7,14 +7,12 @@ import { $log } from 'ts-log-debug';
 
 // Fluxgate
 import {
-    AppConfig, Assert, FileSystem, fromEnvironment,
-    IAppConfig, JsonReader, LoggingConfiguration, StringBuilder
+  AppConfig, Assert, FileSystem, fromEnvironment,
+  IAppConfig, JsonReader, LoggingConfiguration, StringBuilder
 } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
-import {
-    configure, getLogger, ILogger, levels, Logger, using, XLog
-} from '@fluxgate/common';
+import { configure, getLogger, ILogger, levels, Logger, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 // lokale Komponenten
@@ -43,21 +41,21 @@ AppConfig.register(appConfig);
  */
 export interface IServerConfiguration {
 
-    /**
-     * Pfad auf die Zertifikatdatei
-     * 
-     * @type {string}
-     * @memberOf IServerConfiguration
-     */
-    certPath: string;
+  /**
+   * Pfad auf die Zertifikatdatei
+   * 
+   * @type {string}
+   * @memberOf IServerConfiguration
+   */
+  certPath: string;
 
-    /**
-     * Pfad auf die Datei mit private Key
-     * 
-     * @type {string}
-     * @memberOf IServerConfiguration
-     */
-    keyPath: string;
+  /**
+   * Pfad auf die Datei mit private Key
+   * 
+   * @type {string}
+   * @memberOf IServerConfiguration
+   */
+  keyPath: string;
 }
 
 
@@ -69,46 +67,46 @@ export interface IServerConfiguration {
  */
 export interface IExpressConfiguration {
 
-    /**
-     * der Endpoint des Rest-API
-     * @example '/rest'
-     */
-    endPoint?: string;
+  /**
+   * der Endpoint des Rest-API
+   * @example '/rest'
+   */
+  endPoint?: string;
 
-    /**
-     * Path-Pattern für die Controller-Klassen
-     * @example '/controllers/xx/x.js' (x steht für *)
-     */
-    controllers?: string;
+  /**
+   * Path-Pattern für die Controller-Klassen
+   * @example '/controllers/xx/x.js' (x steht für *)
+   */
+  controllers?: string;
 
-    /**
-     * der Http-Port
-     * @example 8000
-     */
-    port?: number;
+  /**
+   * der Http-Port
+   * @example 8000
+   */
+  port?: number;
 
-    /**
-     * der Https-Port
-     * @example 8080
-     */
-    httpsPort?: number;
+  /**
+   * der Https-Port
+   * @example 8080
+   */
+  httpsPort?: number;
 
 
-    /**
-     * Pfad auf die Zertifikatdatei
-     * 
-     * @type {string}
-     * @memberOf IExpressConfiguration
-     */
-    certPath?: string;
+  /**
+   * Pfad auf die Zertifikatdatei
+   * 
+   * @type {string}
+   * @memberOf IExpressConfiguration
+   */
+  certPath?: string;
 
-    /**
-     * Pfad auf die Datei mit private Key
-     * 
-     * @type {string}
-     * @memberOf IExpressConfiguration
-     */
-    keyPath?: string;
+  /**
+   * Pfad auf die Datei mit private Key
+   * 
+   * @type {string}
+   * @memberOf IExpressConfiguration
+   */
+  keyPath?: string;
 }
 
 
@@ -121,168 +119,168 @@ export interface IExpressConfiguration {
  * @extends {ServerLoader}
  */
 export abstract class ServerBase extends ServerLoader {
-    protected static logger = getLogger(ServerBase);
+  protected static logger = getLogger(ServerBase);
 
-    /**
-     * Default Express-Konfiguration
-     */
-    public static readonly DEFAULT_EXPRESS_CONFIGURATION: IExpressConfiguration = {
-        endPoint: '/rest',
-        controllers: 'controllers/**/*.js',
-        port: 8000,
-        httpsPort: 8080
-    };
-
-
-    /**
-     * In your constructor set the global endpoint and configure the folder to scan the controllers.
-     * You can start the http and https server.
-     */
-    protected constructor(private configuration: IExpressConfiguration) {
-        super();
-
-        using(new XLog(ServerBase.logger, levels.INFO, 'ctor'), (log) => {
-            Assert.notNull(configuration);
-
-            if (!configuration) {
-                configuration = ServerBase.DEFAULT_EXPRESS_CONFIGURATION;  // TODO: clone
-            }
-
-            this.configure(this.configuration);
-        });
-    }
+  /**
+   * Default Express-Konfiguration
+   */
+  public static readonly DEFAULT_EXPRESS_CONFIGURATION: IExpressConfiguration = {
+    endPoint: '/rest',
+    controllers: 'controllers/**/*.js',
+    port: 8000,
+    httpsPort: 8080
+  };
 
 
-    /**
-     * Initialisierung und Start
-     * 
-     * @returns {Promise<U>|Promise<TResult>}
-     */
-    public Initialize(): Promise<ServerBase> {
-        return using(new XLog(ServerBase.logger, levels.INFO, 'Initialize'), (log) => {
+  /**
+   * In your constructor set the global endpoint and configure the folder to scan the controllers.
+   * You can start the http and https server.
+   */
+  protected constructor(private configuration: IExpressConfiguration) {
+    super();
 
-            return new Promise<ServerBase>((resolve, reject) => {
-                const cwd = process.cwd();
-                log.info(`cwd = ${cwd}`);
+    using(new XLog(ServerBase.logger, levels.INFO, 'ctor'), (log) => {
+      Assert.notNull(configuration);
 
-                const serverControllers = path.join(cwd, '../../node_modules/@fluxgate/server/dist/*.js');
+      if (!configuration) {
+        configuration = ServerBase.DEFAULT_EXPRESS_CONFIGURATION;  // TODO: clone
+      }
 
-                let controllers = this.configuration.controllers;
-                if (!path.isAbsolute(this.configuration.controllers)) {
-                    controllers = path.join(cwd, this.configuration.controllers);
-                }
-
-                log.info(`__dirname = ${__dirname}, controllers = ${controllers}`);
-
-                const errorLogger = (message: string): void => {
-                    log.error(message);
-                };
-
-                const cert = FileSystem.readTextFile(errorLogger, this.configuration.certPath, 'Zertifikat');
-                const key = FileSystem.readTextFile(errorLogger, this.configuration.keyPath, 'Private Key');
+      this.configure(this.configuration);
+    });
+  }
 
 
-                this.setEndpoint(this.configuration.endPoint)
-                    .scan(serverControllers)
-                    .scan(controllers)
-                    .createHttpServer(this.configuration.port)
-                    .createHttpsServer({
-                        port: this.configuration.httpsPort,
-                        cert: cert,
-                        key: key
-                    });
+  /**
+   * Initialisierung und Start
+   * 
+   * @returns {Promise<U>|Promise<TResult>}
+   */
+  public Initialize(): Promise<ServerBase> {
+    return using(new XLog(ServerBase.logger, levels.INFO, 'Initialize'), (log) => {
+
+      return new Promise<ServerBase>((resolve, reject) => {
+        const cwd = process.cwd();
+        log.info(`cwd = ${cwd}`);
+
+        const serverControllers = path.join(cwd, '../../node_modules/@fluxgate/server/dist/*.js');
+
+        let controllers = this.configuration.controllers;
+        if (!path.isAbsolute(this.configuration.controllers)) {
+          controllers = path.join(cwd, this.configuration.controllers);
+        }
+
+        log.info(`__dirname = ${__dirname}, controllers = ${controllers}`);
+
+        const errorLogger = (message: string): void => {
+          log.error(message);
+        };
+
+        const cert = FileSystem.readTextFile(errorLogger, this.configuration.certPath, 'Zertifikat');
+        const key = FileSystem.readTextFile(errorLogger, this.configuration.keyPath, 'Private Key');
 
 
-                this.start()
-                    .then(() => {
-                        log.info('Server started...');
-                        resolve(this);
-                    })
-                    .catch((err) => {
-                        log.error(err);
-                        reject(err);
-                    });
-            });
-        });
-    }
+        this.setEndpoint(this.configuration.endPoint)
+          .scan(serverControllers)
+          .scan(controllers)
+          .createHttpServer(this.configuration.port)
+          .createHttpsServer({
+            port: this.configuration.httpsPort,
+            cert: cert,
+            key: key
+          });
 
 
-    /**
-     * 
-     */
-    public onError(error: any, request: Express.Request, response: Express.Response, next: Express.NextFunction): any {
-        using(new XLog(ServerBase.logger, levels.INFO, 'onError'), (log) => {
-            if (error instanceof Forbidden) {
-                error.message = Messages.AUTHENTICATION_REQUIRED();
-            }
-            const rval = super.onError(error, request, response, next);
-
-            const sb = new StringBuilder();
-            if (error.code) {
-                sb.appendLine(`code: ${error.code}`);
-            }
-            if (error.errno) {
-                sb.appendLine(`errno: ${error.errno}`);
-            }
-            if (error.index) {
-                sb.appendLine(`index: ${error.index}`);
-            }
-            if (error.message) {
-                sb.appendLine(`message: ${error.message}`);
-            }
-            if (error.sqlState) {
-                sb.appendLine(`sqlState: ${error.sqlState}`);
-            }
-            if (error.stack) {
-                sb.appendLine(`stack: ${error.stack}`);
-            }
-            log.error(sb.toString());
-            return rval;
-        });
-    }
+        this.start()
+          .then(() => {
+            log.info('Server started...');
+            resolve(this);
+          })
+          .catch((err) => {
+            log.error(err);
+            reject(err);
+          });
+      });
+    });
+  }
 
 
-    public isAuthenticated(request: Express.Request, response: Express.Response, next?: Express.NextFunction,
-        authorization?: any): boolean {
-        return using(new XLog(ServerBase.logger, levels.DEBUG,
-            `isAuthenticated: authorization = ${JSON.stringify(authorization)}`), (log) => {
+  /**
+   * 
+   */
+  public onError(error: any, request: Express.Request, response: Express.Response, next: Express.NextFunction): any {
+    using(new XLog(ServerBase.logger, levels.INFO, 'onError'), (log) => {
+      if (error instanceof Forbidden) {
+        error.message = Messages.AUTHENTICATION_REQUIRED();
+      }
+      const rval = super.onError(error, request, response, next);
 
-                //
-                // TODO: AppConfig.config.userCredentials auswerten
-                //
-                if (AppConfig.config.mode === 'development' && AppConfig.config.userCredentials) {
-                    return true;
-                }
+      const sb = new StringBuilder();
+      if (error.code) {
+        sb.appendLine(`code: ${error.code}`);
+      }
+      if (error.errno) {
+        sb.appendLine(`errno: ${error.errno}`);
+      }
+      if (error.index) {
+        sb.appendLine(`index: ${error.index}`);
+      }
+      if (error.message) {
+        sb.appendLine(`message: ${error.message}`);
+      }
+      if (error.sqlState) {
+        sb.appendLine(`sqlState: ${error.sqlState}`);
+      }
+      if (error.stack) {
+        sb.appendLine(`stack: ${error.stack}`);
+      }
+      log.error(sb.toString());
+      return rval;
+    });
+  }
 
-                // Just use passport strategy method to know if the user is Authenticated :)
-                return request.isAuthenticated();
-            });
-    };
+
+  public isAuthenticated(request: Express.Request, response: Express.Response, next?: Express.NextFunction,
+    authorization?: any): boolean {
+    return using(new XLog(ServerBase.logger, levels.DEBUG,
+      `isAuthenticated: authorization = ${JSON.stringify(authorization)}`), (log) => {
+
+        //
+        // TODO: AppConfig.config.userCredentials auswerten
+        //
+        if (AppConfig.config.mode === 'development' && AppConfig.config.userCredentials) {
+          return true;
+        }
+
+        // Just use passport strategy method to know if the user is Authenticated :)
+        return request.isAuthenticated();
+      });
+  };
 
 
-    /**
-     * 
-     */
-    private configure(configuration: IExpressConfiguration) {
-        using(new XLog(ServerBase.logger, levels.DEBUG, 'configure'), (log) => {
+  /**
+   * 
+   */
+  private configure(configuration: IExpressConfiguration) {
+    using(new XLog(ServerBase.logger, levels.DEBUG, 'configure'), (log) => {
 
-            if (!configuration.endPoint) {
-                configuration.endPoint = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.endPoint;
-            }
+      if (!configuration.endPoint) {
+        configuration.endPoint = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.endPoint;
+      }
 
-            if (!configuration.controllers) {
-                configuration.controllers = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.controllers;
-            }
+      if (!configuration.controllers) {
+        configuration.controllers = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.controllers;
+      }
 
-            if (!configuration.port) {
-                configuration.port = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.port;
-            }
+      if (!configuration.port) {
+        configuration.port = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.port;
+      }
 
-            if (!configuration.httpsPort) {
-                configuration.httpsPort = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.httpsPort;
-            }
-        });
-    }
+      if (!configuration.httpsPort) {
+        configuration.httpsPort = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.httpsPort;
+      }
+    });
+  }
 
 
 
