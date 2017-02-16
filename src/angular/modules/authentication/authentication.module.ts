@@ -11,6 +11,7 @@ import { AutofocusModule, HighlightModule } from '../../common/directives';
 
 import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
 import { AuthenticationRoutingModule } from './authentication-routing.module';
+import { CurrentUserService } from './currentUser.service';
 import { NavigationService } from './navigation.service';
 import { PassportService } from './passport.service';
 import { RoleService } from './role.service';
@@ -42,6 +43,7 @@ import { RegisterComponent } from './register/register.component';
     RegisterComponent
   ],
   providers: [
+    CurrentUserService,
     NavigationService,
     PassportService,
     RoleService,

@@ -4,6 +4,7 @@ import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 // Fluxgate
 import { IUser } from '@fluxgate/common';
 
+import { CurrentUserBaseService } from '../currentUserBaseService';
 import { PassportService } from '../passport.service';
 
 
@@ -16,22 +17,14 @@ import { PassportService } from '../passport.service';
  * @implements {CanActivate}
  */
 @Injectable()
-export class ChangePasswordGuardService implements CanActivate {
-    private currentUser: IUser;
-
-    constructor(private _router: Router, private passportService: PassportService) {
-        this.passportService.currentUserChange.subscribe((user) => {
-            this.currentUser = user;
-        });
-
-        // initial aktuellen User ermitteln
-        this.passportService.getCurrentUser().subscribe(
-            (user) => this.currentUser = user
-        );
-    }
+export class ChangePasswordGuardService extends CurrentUserBaseService implements CanActivate {
+ 
+    constructor(private _router: Router, passportService: PassportService) {
+        super(passportService);
+   }
 
     public canActivate(route: ActivatedRouteSnapshot): boolean {
-        if (this.currentUser) {
+        if (this.user) {
             return true;
         }
         return false;
