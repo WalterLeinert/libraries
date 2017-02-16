@@ -52,32 +52,61 @@ export type selectionMode = 'single' | 'multiple' | '';
     [editable]="editable"
     [selectionMode]="selectionMode" [(selection)]="selectedValue">
     
-    <div *ngIf="configInternal && configInternal.columnInfos">
+    <div *ngIf="configInternal && configInternal.columnInfos">    <!-- div *ngIf="configInternal -->
       <ul *ngFor="let info of configInternal.columnInfos">
 
-          
-        <div *ngIf="info.controlType === controlType.Input">
+            
+        <!--
+          normale Text-/Eingabefelder
+          -->
+        <div *ngIf="info.controlType === controlType.Input">          
           <p-column field="{{info.valueField}}" header="{{info.textField}}"
-            [sortable]="sortable" [editable]="editable">  
+            [sortable]="sortable" [editable]="editable" [style]="{'overflow':'visible' }">
+
+            <div [style.text-align]="info.textAlignment">
+              <template let-col let-data="rowData" pTemplate="body">
+                  <span>{{ formatValue(data[col.field], info) }}</span>
+              </template>
+            </div>
+
+            <!--
+            <template let-col let-data="rowData" pTemplate="editor">
+              {{ data[col.field] }}
+            </template>
+            -->
+
           </p-column>
         </div>
 
-         <div *ngIf="info.controlType === controlType.Date">
-            <p-column field="{{info.valueField}}" header="{{info.textField}}"
-              [sortable]="sortable" [editable]="editable" [style]=" {'overflow':'visible' }">
+        <!--
+          Datumsfelder
+          -->
+        <div *ngIf="info.controlType === controlType.Date">
+          <p-column field="{{info.valueField}}" header="{{info.textField}}"
+            [sortable]="sortable" [editable]="editable" [style]="{'overflow':'visible' }">
+
+            <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
-                  {{data[col.field]|date }}
+                  {{ formatValue(data[col.field], info) }}
               </template>
-              <template let-col let-data="rowData" pTemplate="editor">
-                  <p-calendar [(ngModel)]="data[col.field]" dateFormat="yyyy-mm-dd"></p-calendar>
-              </template>
-            </p-column>
-          </div>
+            </div>
 
-          <div *ngIf="info.controlType === controlType.DropdownSelector">
-            <p-column field="{{info.valueField}}" header="{{info.textField}}"
-              [sortable]="sortable" [editable]="editable" [style]=" {'overflow':'visible' }">
+            <template let-col let-data="rowData" pTemplate="editor">
+                <p-calendar [(ngModel)]="data[col.field]" dateFormat="yyyy-mm-dd"></p-calendar>
+            </template>
 
+          </p-column>
+        </div>
+
+
+        <!--
+          Dropdown/Wertelisten
+          -->
+        <div *ngIf="info.controlType === controlType.DropdownSelector">
+          <p-column field="{{info.valueField}}" header="{{info.textField}}"
+            [sortable]="sortable" [editable]="editable" [style]=" {'overflow':'visible' }">
+
+            <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
                 <flx-enum-value [dataService]="info.enumInfo.selectorDataService" 
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
@@ -85,21 +114,25 @@ export type selectionMode = 'single' | 'multiple' | '';
                   [style]="{'width':'100%'}" name="flxEnumValue">
                 </flx-enum-value>
               </template>
+            </div>
 
-              <template let-col let-data="rowData" pTemplate="editor">
-               <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService" 
-                  [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
-                  [(selectedValue)]="data[col.field]"            
-                  [style]="{'width':'100%'}" name="flxDropdownSelector" [debug]="false">
-                </flx-dropdown-selector>
-              </template>
-            </p-column>
-          </div>
+            <template let-col let-data="rowData" pTemplate="editor">
+              <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService" 
+                [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
+                [(selectedValue)]="data[col.field]"            
+                [style]="{'width':'100%'}" name="flxDropdownSelector" [debug]="false">
+              </flx-dropdown-selector>
+            </template>
+
+          </p-column>
+        </div>
 
       </ul>
-    </div>
-    </p-dataTable>
+    </div>      <!-- div *ngIf="configInternal -->
+
+  </p-dataTable>
 </div>
+
 <div *ngIf="debug">
   <p>selectedIndex: {{selectedIndex}}, selectedValue: {{selectedValue | json}}</p>
 </div>
