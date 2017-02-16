@@ -95,6 +95,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     super(router, service);
   }
 
+  // tslint:disable-next-line:use-life-cycle-interface
   public ngOnInit() {
     super.ngOnInit();
 
@@ -110,6 +111,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
       });
   }
 
+  // tslint:disable-next-line:use-life-cycle-interface
   public ngOnDestroy() {
     super.ngOnDestroy();
     this.sub.unsubscribe();

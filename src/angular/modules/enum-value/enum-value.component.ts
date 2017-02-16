@@ -109,6 +109,40 @@ export class EnumValueComponent implements OnInit, OnDestroy {
 
 
 
+
+  /**
+   * Liefert den Anzeigetext für das Item @param{item}
+   */
+  public getText(item: any): string {
+    let text: string;
+
+    if (this.textField === DisplayInfo.CURRENT_ITEM) {
+      text = item.toString();
+    } else {
+      text = item[this.textField];
+    }
+
+    return text;
+  }
+
+  /**
+   * Liefert den Wert für das Item @param{item} (wird bei Änderung der Selektion angebunden)
+   * Konfiguration muss berücksichtigt werden.
+   */
+  public getValue(item: any): any {
+    let value: any;
+
+    if (this.valueField === DisplayInfo.CURRENT_ITEM) {
+      value = item;
+    } else {
+      value = item[this.valueField];
+    }
+
+    return value;
+  }
+
+
+
   // -------------------------------------------------------------------------------------
   // Property dataService
   // -------------------------------------------------------------------------------------
@@ -172,40 +206,6 @@ export class EnumValueComponent implements OnInit, OnDestroy {
       this._itemSelector = value;
       this.onItemSelectorChange(value);
     }
-  }
-
-
-
-
-  /**
-   * Liefert den Anzeigetext für das Item @param{item}
-   */
-  protected getText(item: any): string {
-    let text: string;
-
-    if (this.textField === DisplayInfo.CURRENT_ITEM) {
-      text = item.toString();
-    } else {
-      text = item[this.textField];
-    }
-
-    return text;
-  }
-
-  /**
-   * Liefert den Wert für das Item @param{item} (wird bei Änderung der Selektion angebunden)
-   * Konfiguration muss berücksichtigt werden.
-   */
-  protected getValue(item: any): any {
-    let value: any;
-
-    if (this.valueField === DisplayInfo.CURRENT_ITEM) {
-      value = item;
-    } else {
-      value = item[this.valueField];
-    }
-
-    return value;
   }
 
 

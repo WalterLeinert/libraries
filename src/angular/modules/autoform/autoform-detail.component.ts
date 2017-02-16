@@ -132,6 +132,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
     super(router, service);
   }
 
+  // tslint:disable-next-line:use-life-cycle-interface
   public ngOnInit() {
     super.ngOnInit();
 

@@ -182,6 +182,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     super(router, metadataService, changeDetectorRef);
   }
 
+  // tslint:disable-next-line:use-life-cycle-interface
   public ngOnInit() {
     super.ngOnInit();
 

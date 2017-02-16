@@ -1,6 +1,6 @@
 
 // Fluxgate
-import {Constants } from '@fluxgate/common';
+import { Constants } from '@fluxgate/common';
 
 export class AutoformConstants {
 

@@ -38,6 +38,7 @@ export class YearSelectorComponent extends SelectorBaseComponent {
     this.style = '{\'width\':\'70px\'}';
   }
 
+  // tslint:disable-next-line:use-life-cycle-interface
   public ngOnInit() {
     super.ngOnInit();
 

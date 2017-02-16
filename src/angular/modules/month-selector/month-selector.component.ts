@@ -75,6 +75,7 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
   }
 
 
+  // tslint:disable-next-line:use-life-cycle-interface
   public ngOnInit() {
     super.ngOnInit();
 

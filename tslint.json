@@ -54,7 +54,27 @@
 
     "no-console": [
       true, "assert"
-    ]
+    ],
+
+
+    "directive-selector": [true, "attribute", "flx", "camelCase"],
+    "component-selector": [true, "element", "flx", "kebab-case"],
+    "use-input-property-decorator": true,
+    "use-output-property-decorator": true,
+    "use-host-property-decorator": true,
+    "no-attribute-parameter-decorator": true,
+    "no-input-rename": true,
+    "no-output-rename": true,
+    "no-forward-ref": true,
+    "use-life-cycle-interface": true,
+    "use-pipe-transform-interface": true,
+    "pipe-naming": [true, "camelCase", "sg"],
+    "component-class-suffix": true,
+    "directive-class-suffix": true,
+    "import-destructuring-spacing": true,
+    "templates-use-public": true,
+    "no-access-missing-member": false,    // funktioniert sonst nicht für Members in Basisklassen
+    "invoke-injectable": true
   },
   "jsRules": {
     /*
