@@ -11,9 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { Assert, Constants, IUser, PasswordChange, ServiceResult, StringBuilder, User } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
-import {
-    configure, getLogger, ILogger, levels, Logger, using, XLog
-} from '@fluxgate/common';
+import { configure, getLogger, ILogger, levels, Logger, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 import { Serializer } from '../../../base/serializer';
