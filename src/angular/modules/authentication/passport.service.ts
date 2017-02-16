@@ -17,10 +17,11 @@ import { configure, getLogger, ILogger, levels, Logger, using, XLog } from '@flu
 import { Serializer } from '../../../base/serializer';
 import { IRestUri, IServiceBase, MetadataService, Service } from '../../services';
 import { ConfigService } from '../../services/config.service';
+import { CurrentUser } from './currentUser';
 
 
 @Injectable()
-export class PassportService implements IServiceBase {
+export class PassportService extends CurrentUser implements IServiceBase {
     protected static logger = getLogger(PassportService);
 
     public static get LOGIN() { return '/login'; }
@@ -33,7 +34,6 @@ export class PassportService implements IServiceBase {
     private _topic: string = 'passport';
     private serializer: Serializer<IUser>;
 
-    @Output() public currentUserChange: EventEmitter<IUser> = new EventEmitter();
 
     /**
      * Creates an instance of PassportService.
@@ -45,25 +45,29 @@ export class PassportService implements IServiceBase {
      * @memberOf PassportService
      */
     constructor(private http: Http, configService: ConfigService, private metadataService: MetadataService) {
-        Assert.notNull(http, 'http');
-        Assert.notNull(configService, 'configService');
-        Assert.notNull(configService.config, 'configService.config');
-        Assert.notNullOrEmpty(configService.config.url, 'configService.config.url');
+        super();
+        using(new XLog(PassportService.logger, levels.INFO, 'ctor'), (log) => {
 
-        const sb = new StringBuilder(configService.config.url);
+            Assert.notNull(http, 'http');
+            Assert.notNull(configService, 'configService');
+            Assert.notNull(configService.config, 'configService.config');
+            Assert.notNullOrEmpty(configService.config.url, 'configService.config.url');
 
-        if (!configService.config.url.endsWith(Constants.PATH_SEPARATOR)) {
-            sb.append(Constants.PATH_SEPARATOR);
-        }
+            const sb = new StringBuilder(configService.config.url);
 
-        sb.append(this._topic);
-        this._url = sb.toString();
+            if (!configService.config.url.endsWith(Constants.PATH_SEPARATOR)) {
+                sb.append(Constants.PATH_SEPARATOR);
+            }
 
-        // Metadaten zur Entity ermitteln
-        const tableMetadata = this.metadataService.findTableMetadata(User);
-        Assert.notNull(tableMetadata);
+            sb.append(this._topic);
+            this._url = sb.toString();
 
-        this.serializer = new Serializer<User>(tableMetadata);
+            // Metadaten zur Entity ermitteln
+            const tableMetadata = this.metadataService.findTableMetadata(User);
+            Assert.notNull(tableMetadata);
+
+            this.serializer = new Serializer<User>(tableMetadata);
+        });
     }
 
 
@@ -90,7 +94,7 @@ export class PassportService implements IServiceBase {
             .map((response: Response) => this.deserialize(response.json()))
             .do((u) => {
                 PassportService.logger.info('user: ' + JSON.stringify(u));
-                this.onCurrentUserChange(u);
+                this.onUserChange(u);
             })
             .catch(Service.handleError);
     }
@@ -111,7 +115,7 @@ export class PassportService implements IServiceBase {
             .map((response: Response) => this.deserialize(response.json()))
             .do((u) => {
                 PassportService.logger.info('user: ' + JSON.stringify(u));
-                this.onCurrentUserChange(u);
+                this.onUserChange(u);
             })
             .catch(Service.handleError);
     }
@@ -130,7 +134,7 @@ export class PassportService implements IServiceBase {
                 // ok
             }).do((user) => {
                 PassportService.logger.info('user: ' + JSON.stringify(user));
-                this.onCurrentUserChange(null);
+                this.onUserChange(null);
             })
             .do((data) => PassportService.logger.info('result: ' + JSON.stringify(data)))
             .catch(Service.handleError);
@@ -219,12 +223,6 @@ export class PassportService implements IServiceBase {
     public getEntityId(item: any): any {
         throw new Error(`Not supported`);
     }
-
-
-    protected onCurrentUserChange(value: IUser) {
-        this.currentUserChange.emit(value);
-    }
-
 
 
     /**
