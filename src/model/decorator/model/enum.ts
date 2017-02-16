@@ -7,7 +7,6 @@ import { EnumMetadata } from '../../metadata/enumMetadata';
 import { MetadataStorage } from '../../metadata/metadataStorage';
 
 
-
 /**
  * Enum-Decorator für Modellproperties/-attribute, deren Werteliste aus einer Tabelle stammen 
  * 
@@ -21,14 +20,14 @@ import { MetadataStorage } from '../../metadata/metadataStorage';
  * @returns
  */
 export function Enum<T, TText, TId>(
-    dataSource: (type?: any) => ObjectType<T>,
-    foreignText: PropertyAccessor<T, TText>,
-    foreignId: PropertyAccessor<T, TId>,
+  dataSource: (type?: any) => ObjectType<T>,
+  foreignText: PropertyAccessor<T, TText>,
+  foreignId: PropertyAccessor<T, TId>,
 ) {
-    // tslint:disable-next-line:only-arrow-functions
-    return function (target: any, propertyName: string) {
-        Assert.notNull(dataSource);
-        MetadataStorage.instance.addEnumMetadata(
-            new EnumMetadata(target.constructor, propertyName, dataSource, foreignText, foreignId));
-    };
+  // tslint:disable-next-line:only-arrow-functions
+  return function (target: any, propertyName: string) {
+    Assert.notNull(dataSource);
+    MetadataStorage.instance.addEnumMetadata(
+      new EnumMetadata(target.constructor, propertyName, dataSource, foreignText, foreignId));
+  };
 }
