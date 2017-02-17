@@ -4,11 +4,7 @@
 image: node:4.4.2
 before_script:
   - npm install
-# This folder is cached between builds
-# http://docs.gitlab.com/ce/ci/yaml/README.html#cache
-cache:
-  paths:
-  - node_modules/
+
 test:lint:
   script:
     - node node_modules/gulp/bin/gulp tslint
