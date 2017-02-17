@@ -1,4 +1,6 @@
-import { Color, ColorType, Converter } from './color';
+// Fluxgate
+import { Assert, Color, InstanceAccessor, Types } from '@fluxgate/common';
+
 import { DataType } from './dataType';
 import { IDisplayInfo } from './displayInfo.interface';
 
@@ -34,7 +36,7 @@ export class DisplayInfo implements IDisplayInfo {
     return this.options.editable;
   }
 
-  public get color(): Color | Converter<any, Color> {
+  public get color(): Color | InstanceAccessor<any, Color> {
     return this.options.color;
   }
 

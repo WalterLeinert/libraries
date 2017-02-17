@@ -1,4 +1,3 @@
-export * from './color';
 export * from './controlDisplayInfo';
 export * from './controlDisplayInfo.interface';
 export * from './dataType';

@@ -6,7 +6,9 @@ import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert, Clone, ColumnTypes, StringUtil, TableMetadata, Types } from '@fluxgate/common';
+import {
+  Assert, Clone, Color, ColumnTypes, InstanceAccessor, StringUtil, TableMetadata, Types
+} from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 import {
@@ -20,7 +22,7 @@ import { MetadataService, PipeService, PipeType, ProxyService } from '../../serv
 import { ControlDisplayInfo, DataTypes, IControlDisplayInfo, IEnumDisplayInfo } from '../../../base';
 import { ControlType } from '../common';
 
-import { Color, Converter, TextAlignments } from '../../../base';
+import { TextAlignments } from '../../../base';
 import { ListSelectorComponent } from '../common/list-selector.component';
 import { DropdownSelectorComponent, IDropdownSelectorConfig } from '../dropdown-selector';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
@@ -283,7 +285,13 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     return value;
   }
 
-
+  /**
+   * Wird bei Click auf den Edit-Button aufgerufen
+   * 
+   * @param {*} data - die Modelinstanz der aktuellen Zeile
+   * 
+   * @memberOf DataTableSelectorComponent
+   */
   public editRow(data: any) {
     using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'editRow',
       `selectedIdex = ${this.selectedIndex}, selectedValue = ${this.selectedValue}`), (log) => {
@@ -292,6 +300,14 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
       });
   }
 
+  /**
+   * Liefert true, falls die 
+   * 
+   * @param {IControlDisplayInfo} info
+   * @returns {boolean}
+   * 
+   * @memberOf DataTableSelectorComponent
+   */
   public isEditable(info: IControlDisplayInfo): boolean {
     return this.editable /*&& info.editable*/;
   }

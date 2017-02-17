@@ -1,5 +1,7 @@
+// Fluxgate
+import { Assert, Color, InstanceAccessor, Types } from '@fluxgate/common';
+
 import { ControlType } from '../angular/modules/common/controlType';
-import { Color, ColorType, Converter } from './color';
 import { DataType } from './dataType';
 
 
@@ -39,7 +41,7 @@ export interface IDisplayInfo {
    * @type {string}
    * @memberOf IDisplayInfo
    */
-  color?: Color | Converter<any, Color>;
+  color?: Color | InstanceAccessor<any, Color>;
 
   /**
    * Der Typ der Property
