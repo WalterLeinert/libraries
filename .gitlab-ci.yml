@@ -2,38 +2,13 @@
 # Official framework image. Look for the different tagged releases at:
 # https://hub.docker.com/r/library/node/tags/
 image: node:4.4.2
-
 before_script:
   - npm install
-
-# Pick zero or more services to be used on all builds.
-# Only needed when using a docker container to run your tests in.
-# Check out: http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-service
-services:
-  - mysql:latest
-
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
 cache:
   paths:
-    - node_modules/
-
-stages:
-  - build
-  - test
-
-lint:
-  stage: build
+  - node_modules/
+test:lint:
   script:
-    - node -v
     - node node_modules/gulp/bin/gulp tslint
-
-# compile:
-#   stage: build
-#   script:
-#     - node node_modules/gulp/bin/gulp compile
-
-# test:
-#   stage: test
-#   script:
-#     - node node_modules/gulp/bin/gulp test
