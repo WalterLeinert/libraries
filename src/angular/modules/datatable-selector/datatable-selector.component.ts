@@ -61,7 +61,7 @@ export type selectionMode = 'single' | 'multiple' | '';
           -->
         <div *ngIf="info.controlType === controlType.Input">          
           <p-column field="{{info.valueField}}" header="{{info.textField}}"
-            [sortable]="sortable" [editable]="info.editable">
+            [sortable]="sortable" [editable]="isEditable(info)">
 
             <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
@@ -83,7 +83,7 @@ export type selectionMode = 'single' | 'multiple' | '';
           -->
         <div *ngIf="info.controlType === controlType.Date">
           <p-column field="{{info.valueField}}" header="{{info.textField}}"
-            [sortable]="sortable" [editable]="info.editable" [style]="{'overflow':'visible' }">
+            [sortable]="sortable" [editable]="isEditable(info)" [style]="{'overflow':'visible' }">
 
             <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
@@ -104,7 +104,7 @@ export type selectionMode = 'single' | 'multiple' | '';
           -->
         <div *ngIf="info.controlType === controlType.DropdownSelector">
           <p-column field="{{info.valueField}}" header="{{info.textField}}"
-            [sortable]="sortable" [editable]="info.editable" [style]=" {'overflow':'visible' }">
+            [sortable]="sortable" [editable]="isEditable(info)" [style]=" {'overflow':'visible' }">
 
             <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
@@ -128,6 +128,21 @@ export type selectionMode = 'single' | 'multiple' | '';
         </div>
 
       </ul>
+
+      <!--
+        Button zum Editieren
+        -->
+      <div *ngIf="showEditButton">
+        <p-column styleClass="col-button" [style]="{width: '50px', 'text-align': 'center'}" >
+          <template pTemplate="header">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+          </template>
+          <template let-data="rowData" pTemplate="body">
+            <button type="button" pButton (click)="editRow(data)" icon="fa-pencil"></button>
+          </template>
+        </p-column>
+      </div>
+
     </div>      <!-- div *ngIf="configInternal -->
 
   </p-dataTable>
@@ -156,6 +171,13 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   private _selectionMode: selectionMode = 'single';
 
   private selectionModeSaved: selectionMode;
+
+  /**
+   * falls true, wird hinter der letzten Spalte eine Spalte mit Edit-Button angezeigt
+   *
+   * @type {boolean}
+   */
+  @Input() public showEditButton: boolean = false;
 
 
   /**
@@ -259,6 +281,19 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   }
 
 
+  public editRow(data: any) {
+    using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'editRow',
+      `selectedIdex = ${this.selectedIndex}, selectedValue = ${this.selectedValue}`), (log) => {
+        // this.rowEditing = true;
+        this.editable = true;
+      });
+  }
+
+  public isEditable(info: IControlDisplayInfo): boolean {
+    return this.editable /*&& info.editable*/;
+  }
+
+
   protected initBoundData(items: any[], tableMetadata: TableMetadata) {
     this.dataItems = undefined;
 
@@ -283,7 +318,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
         // Defaults übernehmen
         for (const colInfo of this.configInternal.columnInfos) {
           if (colInfo.editable === undefined) {
-            colInfo.editable = ControlDisplayInfo.DEFAULT.editable || this.editable;
+            colInfo.editable = ControlDisplayInfo.DEFAULT.editable;
           }
 
           if (tableMetadata) {
@@ -521,5 +556,4 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
       }
     }
   }
-
 }
