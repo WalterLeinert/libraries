@@ -138,13 +138,33 @@ export type selectionMode = 'single' | 'multiple' | '';
         Button zum Editieren
         -->
       <div *ngIf="showEditButton">
-        <p-column styleClass="col-button" [style]="{width: '50px', 'text-align': 'center'}" >
+        <p-column styleClass="col-button" [style]="{width: '100px', 'text-align': 'center'}" >
           <template pTemplate="header">
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
           </template>
+
+          
           <template let-data="rowData" pTemplate="body">
-            <button type="button" pButton (click)="editRow(data)" icon="fa-pencil"></button>
+            <div *ngIf="isEditing(data)">
+              <div>                
+                <button pButton type="text" class="ui-button-secondary"
+                  icon="fa-check" (click)="saveRow(data)">                  
+                </button>
+                <button pButton type="text" class="ui-button-secondary"
+                  icon="fa-times" (click)="cancelEdit(data)">                  
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="!isEditing(data)">
+              <div>                
+                <button pButton type="text" class="ui-button-secondary" 
+                  icon="fa-pencil" (click)="editRow(data)">                  
+                </button>
+              </div>
+            </div>
           </template>
+
         </p-column>
       </div>
 
@@ -227,6 +247,20 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   public dataItems: any[];
 
+  private editedRow: any;
+
+
+  /**
+   * Creates an instance of DataTableSelectorComponent.
+   * 
+   * @param {Router} router
+   * @param {MetadataService} metadataService
+   * @param {PipeService} pipeService
+   * @param {Injector} injector
+   * @param {ChangeDetectorRef} changeDetectorRef
+   * 
+   * @memberOf DataTableSelectorComponent
+   */
   constructor(router: Router, metadataService: MetadataService, private pipeService: PipeService,
     private injector: Injector,
     changeDetectorRef: ChangeDetectorRef) {
@@ -285,6 +319,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     return value;
   }
 
+
   /**
    * Wird bei Click auf den Edit-Button aufgerufen
    * 
@@ -294,11 +329,30 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    */
   public editRow(data: any) {
     using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'editRow',
-      `selectedIdex = ${this.selectedIndex}, selectedValue = ${this.selectedValue}`), (log) => {
-        // this.rowEditing = true;
+      `data = ${JSON.stringify(data)}`), (log) => {
         this.editable = true;
+        this.editedRow = data;
       });
   }
+
+  public saveRow(data: any) {
+    using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'saveRow',
+      `data = ${JSON.stringify(data)}`), (log) => {
+        this.editable = false;
+        this.editedRow = undefined;
+      });
+  }
+
+  public cancelEdit(data: any) {
+    using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'cancelEdit',
+      `data = ${JSON.stringify(data)}`), (log) => {
+        this.editable = false;
+        this.editedRow = undefined;
+      });
+  }
+
+
+
 
   /**
    * Liefert true, falls die 
@@ -311,6 +365,12 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   public isEditable(info: IControlDisplayInfo): boolean {
     return this.editable /*&& info.editable*/;
   }
+
+
+  public isEditing(data: any): boolean {
+    return this.editedRow !== undefined;
+  }
+
 
   public getColor(data: any, info: IControlDisplayInfo): string {
     Assert.notNull(data);
