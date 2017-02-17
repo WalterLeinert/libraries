@@ -9,4 +9,4 @@
  * 
  * let accessor: PropertyAccessor<Test, string> = (test) => test.name;
  */
-export type PropertyAccessor<T, TProperty> = ((object: T) => TProperty);
+export type InstanceAccessor<T, TProperty> = ((object: T) => TProperty);

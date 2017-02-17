@@ -1,5 +1,5 @@
 import { ObjectType } from '../../base/objectType';
-import { PropertyAccessor } from '../../types';
+import { InstanceAccessor } from '../../types';
 import { Assert } from '../../util/assert';
 import { MetadataStorage } from './metadataStorage';
 
@@ -32,8 +32,8 @@ export class EnumMetadata<T, TText, TId> {
      */
     constructor(public target: Function, public propertyName: string,
         private _dataSource: RelationTypeInFunction,
-        private _foreignText: PropertyAccessor<T, TText>,
-        private _foreignId: PropertyAccessor<T, TId>) {
+        private _foreignText: InstanceAccessor<T, TText>,
+        private _foreignId: InstanceAccessor<T, TId>) {
     }
 
     /**
@@ -44,11 +44,11 @@ export class EnumMetadata<T, TText, TId> {
         return (this._dataSource as () => any)();
     }
 
-    public get foreignText(): PropertyAccessor<T, TText> {
+    public get foreignText(): InstanceAccessor<T, TText> {
         return this._foreignText;
     }
 
-    public get foreignId(): PropertyAccessor<T, TId> {
+    public get foreignId(): InstanceAccessor<T, TId> {
         return this._foreignId;
     }
 

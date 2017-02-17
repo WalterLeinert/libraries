@@ -1,5 +1,5 @@
 import { ObjectType } from '../../../base/objectType';
-import { PropertyAccessor, ShortTime, Time } from '../../../types';
+import { InstanceAccessor, ShortTime, Time } from '../../../types';
 import { Assert } from '../../../util';
 import { ColumnTypeUndefinedError } from '../../error/columnTypeUndefinedError';
 import { ColumnTypes } from '../../metadata/columnTypes';
@@ -21,8 +21,8 @@ import { MetadataStorage } from '../../metadata/metadataStorage';
  */
 export function Enum<T, TText, TId>(
   dataSource: (type?: any) => ObjectType<T>,
-  foreignText: PropertyAccessor<T, TText>,
-  foreignId: PropertyAccessor<T, TId>,
+  foreignText: InstanceAccessor<T, TText>,
+  foreignId: InstanceAccessor<T, TId>,
 ) {
   // tslint:disable-next-line:only-arrow-functions
   return function(target: any, propertyName: string) {

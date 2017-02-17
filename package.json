@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/common",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "Fluxgate Library client/server übergreifend",
   "main": "dist/common.bundle.js",
   "typings": "dist/dts/src/index.d.ts",
@@ -20,6 +20,7 @@
     "@types/log4js": "0.0.32",
     "@types/mocha": "^2.2.39",
     "@types/node": "7.0.5",
+    "@types/tinycolor2": "^1.1.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "del": "^2.2.2",
@@ -44,7 +45,8 @@
     "log4js": "^1.1.0",
     "moment": "^2.17.1",
     "reflect-metadata": "^0.1.9",
-    "rxjs": "^5.1.0"
+    "rxjs": "^5.1.0",
+    "tinycolor2": "^1.4.1"
   },
   "directories": {
     "lib": "lib"
