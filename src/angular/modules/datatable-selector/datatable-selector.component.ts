@@ -61,11 +61,11 @@ export type selectionMode = 'single' | 'multiple' | '';
           -->
         <div *ngIf="info.controlType === controlType.Input">          
           <p-column field="{{info.valueField}}" header="{{info.textField}}"
-            [sortable]="sortable" [editable]="editable" [style]="{'overflow':'visible' }">
+            [sortable]="sortable" [editable]="editable">
 
             <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
-                  <span>{{ formatValue(data[col.field], info) }}</span>
+                  <span [style.color]="'red'">{{ formatValue(data[col.field], info) }}</span>
               </template>
             </div>
 
@@ -87,12 +87,12 @@ export type selectionMode = 'single' | 'multiple' | '';
 
             <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
-                  {{ formatValue(data[col.field], info) }}
+                <span [style.color]="'green'">{{ formatValue(data[col.field], info) }}</span>
               </template>
             </div>
 
             <template let-col let-data="rowData" pTemplate="editor">
-                <p-calendar [(ngModel)]="data[col.field]" dateFormat="yyyy-mm-dd"></p-calendar>
+                <p-calendar [(ngModel)]="data[col.field]" dateFormat="yy-mm-dd" [style.color]="'green'"></p-calendar>
             </template>
 
           </p-column>
@@ -111,7 +111,7 @@ export type selectionMode = 'single' | 'multiple' | '';
                 <flx-enum-value [dataService]="info.enumInfo.selectorDataService" 
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                   [itemSelector]="data[col.field]"
-                  [style]="{'width':'100%'}" name="flxEnumValue">
+                  [style]="{'width':'100%'}" [style.color]="'yellow'" name="flxEnumValue">
                 </flx-enum-value>
               </template>
             </div>
@@ -120,7 +120,7 @@ export type selectionMode = 'single' | 'multiple' | '';
               <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService" 
                 [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                 [(selectedValue)]="data[col.field]"            
-                [style]="{'width':'100%'}" name="flxDropdownSelector" [debug]="false">
+                [style]="{'width':'100%'}" [style.color]="'yellow'" name="flxDropdownSelector" [debug]="false">
               </flx-dropdown-selector>
             </template>
 
@@ -282,8 +282,8 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
         // Defaults übernehmen
         for (const colInfo of this.configInternal.columnInfos) {
-          if (colInfo.readonly === undefined) {
-            colInfo.readonly = ControlDisplayInfo.DEFAULT.readonly;
+          if (colInfo.editable === undefined) {
+            colInfo.editable = ControlDisplayInfo.DEFAULT.editable;
           }
 
           if (tableMetadata) {
@@ -437,12 +437,14 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
         const dataType = DataTypes.mapColumnTypeToDataType(metaData.propertyType);
         columnInfos.push(
           new ControlDisplayInfo(
-            metaData.options.displayName,
-            metaData.propertyName,
-            dataType,
-            undefined,
-            (ControlDisplayInfo.isRightAligned(dataType)) ? TextAlignments.RIGHT : TextAlignments.LEFT,
-            ControlType.Input
+            {
+              textField: metaData.options.displayName,
+              valueField: metaData.propertyName,
+              dataType: dataType,
+              style: undefined,
+              textAlignment: (ControlDisplayInfo.isRightAligned(dataType)) ? TextAlignments.RIGHT : TextAlignments.LEFT,
+              controlType: ControlType.Input
+            }
           )
         );
       }
@@ -475,8 +477,10 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
       for (const propName of props) {
         columnInfos.push(
           new ControlDisplayInfo(
-            propName.toString(),
-            propName.toString()
+            {
+              textField: propName.toString(),
+              valueField: propName.toString()
+            }
           )
         );
       }

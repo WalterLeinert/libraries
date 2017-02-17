@@ -8,36 +8,43 @@ import { DataType } from './dataType';
  */
 export interface IDisplayInfo {
 
-    /**
-     * anzuzeigender Propertyname
-     * 
-     * @type {string}
-     * @memberOf IDisplayInfo
-     */
-    textField: string;
+  /**
+   * anzuzeigender Propertyname
+   * 
+   * @type {string}
+   * @memberOf IDisplayInfo
+   */
+  textField: string;
 
-    /**
-     * Propertyname des angebundenen Werts
-     * 
-     * @type {string}
-     * @memberOf IDisplayInfo
-     */
-    valueField: string;
+  /**
+   * Propertyname des angebundenen Werts
+   * 
+   * @type {string}
+   * @memberOf IDisplayInfo
+   */
+  valueField: string;
 
-    /**
-     * steuert, ob das Control Werteingaben zulässt
-     * 
-     * @type {boolean}
-     * @memberOf IDisplayInfo
-     */
-    readonly?: boolean;
+  /**
+   * steuert, ob das Control Werteingaben zulässt
+   * 
+   * @type {boolean}
+   * @memberOf IDisplayInfo
+   */
+  editable?: boolean;
 
+  /**
+   * Propertyname des angebundenen Werts
+   * 
+   * @type {string}
+   * @memberOf IDisplayInfo
+   */
+  color?: string;
 
-    /**
-     * Der Typ der Property
-     * 
-     * @type {string}
-     * @memberOf IDisplayInfo
-     */
-    dataType?: DataType;
+  /**
+   * Der Typ der Property
+   * 
+   * @type {string}
+   * @memberOf IDisplayInfo
+   */
+  dataType?: DataType;
 }
