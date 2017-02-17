@@ -51,6 +51,7 @@ module.exports = {
     '@types/http-status-codes',
     'http-status-codes',
     'moment',
+    'tinycolor2',
     /^primeng\/*/,
     'rxjs',
     /rxjs\/*/

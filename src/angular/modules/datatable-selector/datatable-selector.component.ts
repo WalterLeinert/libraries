@@ -20,7 +20,7 @@ import { MetadataService, PipeService, PipeType, ProxyService } from '../../serv
 import { ControlDisplayInfo, DataTypes, IControlDisplayInfo, IEnumDisplayInfo } from '../../../base';
 import { ControlType } from '../common';
 
-import { TextAlignments } from '../../../base';
+import { Color, Converter, TextAlignments } from '../../../base';
 import { ListSelectorComponent } from '../common/list-selector.component';
 import { DropdownSelectorComponent, IDropdownSelectorConfig } from '../dropdown-selector';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
@@ -65,7 +65,7 @@ export type selectionMode = 'single' | 'multiple' | '';
 
             <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
-                  <span [style.color]="info.color">{{ formatValue(data[col.field], info) }}</span>
+                  <span [style.color]="getColor(data, info)">{{ formatValue(data[col.field], info) }}</span>
               </template>
             </div>
 
@@ -87,12 +87,13 @@ export type selectionMode = 'single' | 'multiple' | '';
 
             <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
-                <span [style.color]="info.color">{{ formatValue(data[col.field], info) }}</span>
+                <span [style.color]="getColor(data, info)">{{ formatValue(data[col.field], info) }}</span>
               </template>
             </div>
 
             <template let-col let-data="rowData" pTemplate="editor">
-                <p-calendar [(ngModel)]="data[col.field]" dateFormat="yy-mm-dd" [style.color]="info.color"></p-calendar>
+                <p-calendar [(ngModel)]="data[col.field]" dateFormat="yy-mm-dd" [style.color]="getColor(data, info)">
+                </p-calendar>
             </template>
 
           </p-column>
@@ -111,7 +112,8 @@ export type selectionMode = 'single' | 'multiple' | '';
                 <flx-enum-value [dataService]="info.enumInfo.selectorDataService" 
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                   [itemSelector]="data[col.field]"
-                  [style]="{'width':'100%'}" [style.color]="info.color" name="flxEnumValue">
+                  [style]="{'width':'100%'}" [style.color]="getColor(data, info)"
+                  name="flxEnumValue">
                 </flx-enum-value>
               </template>
             </div>
@@ -120,7 +122,8 @@ export type selectionMode = 'single' | 'multiple' | '';
               <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService" 
                 [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                 [(selectedValue)]="data[col.field]"            
-                [style]="{'width':'100%'}" [style.color]="info.color" name="flxDropdownSelector" [debug]="false">
+                [style]="{'width':'100%'}" [style.color]="getColor(data, info)"
+                name="flxDropdownSelector" [debug]="false">
               </flx-dropdown-selector>
             </template>
 
@@ -291,6 +294,19 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   public isEditable(info: IControlDisplayInfo): boolean {
     return this.editable /*&& info.editable*/;
+  }
+
+  public getColor(data: any, info: IControlDisplayInfo): string {
+    Assert.notNull(data);
+    Assert.notNull(info);
+
+    if (info.color !== undefined) {
+      if (info.color instanceof Color) {
+        return info.color.toString();
+      } else {
+        return info.color(data).toString();
+      }
+    }
   }
 
 

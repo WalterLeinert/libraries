@@ -1,3 +1,4 @@
+import { Color, ColorType, Converter } from './color';
 import { DataType } from './dataType';
 import { IDisplayInfo } from './displayInfo.interface';
 
@@ -33,7 +34,7 @@ export class DisplayInfo implements IDisplayInfo {
     return this.options.editable;
   }
 
-  public get color(): string {
+  public get color(): Color | Converter<any, Color> {
     return this.options.color;
   }
 

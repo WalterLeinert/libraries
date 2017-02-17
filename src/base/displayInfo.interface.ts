@@ -1,4 +1,5 @@
 import { ControlType } from '../angular/modules/common/controlType';
+import { Color, ColorType, Converter } from './color';
 import { DataType } from './dataType';
 
 
@@ -38,7 +39,7 @@ export interface IDisplayInfo {
    * @type {string}
    * @memberOf IDisplayInfo
    */
-  color?: string;
+  color?: Color | Converter<any, Color>;
 
   /**
    * Der Typ der Property
