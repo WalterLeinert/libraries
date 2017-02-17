@@ -17,9 +17,9 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
     {
       textField: DisplayInfo.CURRENT_ITEM,
       valueField: DisplayInfo.CURRENT_ITEM,
+      editable: DisplayInfo.DEFAULT.editable,
       textAlignment: TextAlignments.LEFT,
-      controlType: ControlType.Input,
-      pipe: undefined
+      controlType: ControlType.Input
     }
   );
 

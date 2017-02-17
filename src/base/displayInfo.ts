@@ -13,7 +13,8 @@ export class DisplayInfo implements IDisplayInfo {
   public static DEFAULT: IDisplayInfo = new DisplayInfo(
     {
       textField: DisplayInfo.CURRENT_ITEM,
-      valueField: DisplayInfo.CURRENT_ITEM
+      valueField: DisplayInfo.CURRENT_ITEM,
+      editable: false
     }
   );
 
@@ -26,6 +27,10 @@ export class DisplayInfo implements IDisplayInfo {
 
   public get valueField(): string {
     return this.options.valueField;
+  }
+
+  public get editable(): boolean {
+    return this.options.editable;
   }
 
   public get color(): string {

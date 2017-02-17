@@ -61,11 +61,11 @@ export type selectionMode = 'single' | 'multiple' | '';
           -->
         <div *ngIf="info.controlType === controlType.Input">          
           <p-column field="{{info.valueField}}" header="{{info.textField}}"
-            [sortable]="sortable" [editable]="editable">
+            [sortable]="sortable" [editable]="info.editable">
 
             <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
-                  <span [style.color]="'red'">{{ formatValue(data[col.field], info) }}</span>
+                  <span [style.color]="info.color">{{ formatValue(data[col.field], info) }}</span>
               </template>
             </div>
 
@@ -83,16 +83,16 @@ export type selectionMode = 'single' | 'multiple' | '';
           -->
         <div *ngIf="info.controlType === controlType.Date">
           <p-column field="{{info.valueField}}" header="{{info.textField}}"
-            [sortable]="sortable" [editable]="editable" [style]="{'overflow':'visible' }">
+            [sortable]="sortable" [editable]="info.editable" [style]="{'overflow':'visible' }">
 
             <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
-                <span [style.color]="'green'">{{ formatValue(data[col.field], info) }}</span>
+                <span [style.color]="info.color">{{ formatValue(data[col.field], info) }}</span>
               </template>
             </div>
 
             <template let-col let-data="rowData" pTemplate="editor">
-                <p-calendar [(ngModel)]="data[col.field]" dateFormat="yy-mm-dd" [style.color]="'green'"></p-calendar>
+                <p-calendar [(ngModel)]="data[col.field]" dateFormat="yy-mm-dd" [style.color]="info.color"></p-calendar>
             </template>
 
           </p-column>
@@ -104,14 +104,14 @@ export type selectionMode = 'single' | 'multiple' | '';
           -->
         <div *ngIf="info.controlType === controlType.DropdownSelector">
           <p-column field="{{info.valueField}}" header="{{info.textField}}"
-            [sortable]="sortable" [editable]="editable" [style]=" {'overflow':'visible' }">
+            [sortable]="sortable" [editable]="info.editable" [style]=" {'overflow':'visible' }">
 
             <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
                 <flx-enum-value [dataService]="info.enumInfo.selectorDataService" 
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                   [itemSelector]="data[col.field]"
-                  [style]="{'width':'100%'}" [style.color]="'yellow'" name="flxEnumValue">
+                  [style]="{'width':'100%'}" [style.color]="info.color" name="flxEnumValue">
                 </flx-enum-value>
               </template>
             </div>
@@ -120,7 +120,7 @@ export type selectionMode = 'single' | 'multiple' | '';
               <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService" 
                 [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                 [(selectedValue)]="data[col.field]"            
-                [style]="{'width':'100%'}" [style.color]="'yellow'" name="flxDropdownSelector" [debug]="false">
+                [style]="{'width':'100%'}" [style.color]="info.color" name="flxDropdownSelector" [debug]="false">
               </flx-dropdown-selector>
             </template>
 
@@ -283,7 +283,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
         // Defaults übernehmen
         for (const colInfo of this.configInternal.columnInfos) {
           if (colInfo.editable === undefined) {
-            colInfo.editable = ControlDisplayInfo.DEFAULT.editable;
+            colInfo.editable = ControlDisplayInfo.DEFAULT.editable || this.editable;
           }
 
           if (tableMetadata) {
@@ -307,9 +307,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
                   valueField: colMetaData.enumMetadata.valueField
                 };
 
-                // if (colInfo.controlType === undefined) {
                 colInfo.controlType = ControlType.DropdownSelector;
-                // }
               }
             }
 
