@@ -52,8 +52,7 @@ export class Color {
    * @param {ColorType} color
    * @returns
    * 
-   * @memberOf Color
-  
+   * @memberOf Color  
    */
   public static from(color: ColorType) {
     if (typeof color === 'string') {
