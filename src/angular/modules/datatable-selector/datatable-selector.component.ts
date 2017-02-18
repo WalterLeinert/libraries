@@ -247,7 +247,16 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   public dataItems: any[];
 
+
+  /**
+   * die Daten der aktuell editierten Zeile 
+   */
   private editedRow: any;
+
+  /**
+   * die geklonten Daten der aktuell editierten Zeile 
+   */
+  private savedRow: any;
 
 
   /**
@@ -331,6 +340,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'editRow',
       `data = ${JSON.stringify(data)}`), (log) => {
         this.editable = true;
+        this.savedRow = Clone.clone(data);
         this.editedRow = data;
       });
   }
@@ -340,6 +350,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
       `data = ${JSON.stringify(data)}`), (log) => {
         this.editable = false;
         this.editedRow = undefined;
+        this.savedRow = undefined;
       });
   }
 
@@ -348,6 +359,14 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
       `data = ${JSON.stringify(data)}`), (log) => {
         this.editable = false;
         this.editedRow = undefined;
+
+        const dataIndex = this.dataItems.indexOf(data);
+        Assert.that(dataIndex >= 0 && dataIndex < this.dataItems.length);
+
+        // Daten restaurieren
+        this.dataItems[dataIndex] = this.savedRow;
+
+        this.savedRow = undefined;
       });
   }
 
