@@ -37,7 +37,7 @@ class DictionaryStringStringTest<TKey, TValue> {
 
     @test 'should set an item'() {
         const d = new Dictionary<string, string>();
-        expect(d.set('aaa', 'bbb')).not.to.throw;
+        expect(d.set('aaa', 'bbb')).not.to.Throw();
         expect(d.count).to.be.equal(1);
     }
 
@@ -45,7 +45,7 @@ class DictionaryStringStringTest<TKey, TValue> {
         const d = new Dictionary<string, string>();
         const key = 'aaa';
         d.set(key, 'bbb');
-        expect(d.remove(key)).not.to.throw;
+        expect(d.remove(key)).not.to.Throw();
         expect(d.count).to.be.equal(0);
     }
 
@@ -110,7 +110,7 @@ class DictionaryTest {
                 const key = test.keys[i];
                 const value = test.values[i];
 
-                expect(dict.set(key, value)).not.to.throw;
+                expect(dict.set(key, value)).not.to.Throw();
                 expect(dict.count).to.be.equal(i + 1);
             }
         });
@@ -133,7 +133,7 @@ class DictionaryTest {
                 const key = test.keys[i];
                 const value = test.values[i];
 
-                expect(dict.remove(key)).not.to.throw;
+                expect(dict.remove(key)).not.to.Throw();
                 expect(dict.count).to.be.equal(test.keys.length - (i + 1));
             }
         });

@@ -59,6 +59,10 @@ export class Clone {
    */
   public static verifyClone<T>(value: T, clonedValue: T, attrName?: string) {
     if (value === clonedValue) {
+      // undefined und null werden wie reguläre Primitive behandelt 
+      if (value === undefined || value == null) {
+        return;
+      }
       throw new Error(`value identical to clonedValue: attrName = ${attrName}`);
     }
 
@@ -83,7 +87,7 @@ export class Clone {
 
       if (typeof entryValue === 'object') {
         if (entryValue === clonedEntryValue) {
-          throw new Error(`value[${entryValue}] identical to clonedValue[${clonedEntryValue}]: attrName = ${attrName}`);
+          throw new Error(`value[${entryName}] identical to clonedValue[${clonedEntryName}]`);
         }
 
         Clone.verifyClone(entryValue, clonedEntryValue, entryName);

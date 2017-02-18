@@ -49,7 +49,7 @@ class DictionaryTester<TKey, TValue> {
                 const key = test.keys[i];
                 const value = test.values[i];
 
-                expect(dict.set(key, value)).not.to.throw;
+                expect(dict.set(key, value)).not.to.Throw();
                 expect(dict.count).to.be.equal(i + 1);
             }
         });
@@ -63,7 +63,7 @@ class DictionaryTester<TKey, TValue> {
                 const key = test.keys[i];
                 const value = test.values[i];
 
-                expect(dict.set(key, value)).not.to.throw;
+                expect(dict.set(key, value)).not.to.Throw();
             }
 
             // tslint:disable-next-line:prefer-for-of
@@ -92,7 +92,7 @@ class DictionaryTester<TKey, TValue> {
                 const key = test.keys[i];
                 const value = test.values[i];
 
-                expect(dict.remove(key)).not.to.throw;
+                expect(dict.remove(key)).not.to.Throw();
                 expect(dict.count).to.be.equal(test.keys.length - (i + 1));
             }
         });

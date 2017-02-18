@@ -84,7 +84,7 @@ class LoggerTest {
     @test 'should log DEBUG message'() {
         const logger = getLogger('test');
         logger.setLevel('DEBUG');
-        return expect(() => logger.debug('debug message')).not.to.throw;
+        return expect(() => logger.debug('debug message')).not.to.Throw();
     }
 
     @test 'should set level WARN'() {

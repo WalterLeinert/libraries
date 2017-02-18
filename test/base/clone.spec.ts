@@ -45,14 +45,14 @@ class CloneTest {
     const test = null;
     const testCloned = Clone.clone<TestDerived>(test);
     expect(testCloned).to.deep.equal(test);
-    expect(() => Clone.verifyClone(test, testCloned)).not.to.throw;
+    expect(() => Clone.verifyClone(test, testCloned)).not.to.Throw();
   }
 
   @test 'should clone undefined'() {
     const test = null;
     const testCloned = Clone.clone<TestDerived>(test);
     expect(testCloned).to.deep.equal(test);
-    expect(() => Clone.verifyClone(test, testCloned)).not.to.throw;
+    expect(() => Clone.verifyClone(test, testCloned)).not.to.Throw();
   }
 
 
@@ -80,13 +80,12 @@ class CloneTest {
     expect(testCloned).to.deep.equal(test);
 
     expect(test === testCloned).to.be.not.true;
-    expect(() => Clone.verifyClone(test, testCloned)).not.to.throw;
+    expect(() => Clone.verifyClone(test, testCloned)).not.to.Throw();
   }
 
   @test 'should verifyClone'() {
-    const test = new TestDerived('Walter', 4711, new Date());
-    const testCloned = Clone.clone<TestDerived>(test);
-    expect(() => Clone.verifyClone(test, test)).not.to.throw;
+    const test = new TestDerived('Walter', 4711, new Date());    
+    expect(() => Clone.verifyClone(test, test)).to.Throw();
   }
 
 }
@@ -113,7 +112,7 @@ class CloneByCloneTest {
     const test = new TestWithClone(4711, false);
     const testCloned = Clone.clone(test);
     expect(testCloned).to.deep.equal(test);
-    expect(() => Clone.verifyClone(test, testCloned)).not.to.throw;
+    expect(() => Clone.verifyClone(test, testCloned)).not.to.Throw();
   }
 
 }
