@@ -42,11 +42,22 @@ class Tree {
   }
 }
 
+interface IDictionary<T> {
+  [index: string]: T;
+}
+
 
 @suite('Clone: external class reference')
 class CloneExtTest {
 
   @test 'should check Tree properties'() {
+
+    const d: IDictionary<number> = {};
+    // tslint:disable-next-line:no-string-literal
+    d['a'] = 1;
+    // tslint:disable-next-line:no-string-literal
+    d['a'] = 2;
+
     const tree = new Tree('my tree');
     expect(tree).to.be.not.null;
     expect(tree.leftChild).to.be.not.null;
