@@ -28,8 +28,16 @@ export class DisplayInfo implements IDisplayInfo {
     return this.options.textField;
   }
 
+  public set textField(value: string) {
+    this.options.textField = value;;
+  }
+
   public get valueField(): string {
     return this.options.valueField;
+  }
+
+  public set valueField(value: string) {
+    this.options.valueField = value;
   }
 
   public get editable(): boolean {
