@@ -17,7 +17,7 @@ export class DisplayInfo implements IDisplayInfo {
     {
       textField: DisplayInfo.CURRENT_ITEM,
       valueField: DisplayInfo.CURRENT_ITEM,
-      editable: false
+      editable: true
     }
   );
 

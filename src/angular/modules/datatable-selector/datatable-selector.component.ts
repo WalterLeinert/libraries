@@ -383,8 +383,9 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    */
   public isEditable(info: IControlDisplayInfo): boolean {
     return using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'isEditable',
-      `editable = ${this.editable}`), (log) => {
-        return this.editable /*&& (info.editable !== undefined ? info.editable : true)*/;
+      `editable = ${this.editable}, info.editable = ${info.editable !== undefined ? info.editable : undefined}`),
+        (log) => {
+        return this.editable && (info.editable !== undefined ? info.editable : true);
       });
   }
 
