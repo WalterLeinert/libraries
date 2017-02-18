@@ -337,8 +337,8 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    * @memberOf DataTableSelectorComponent
    */
   public editRow(data: any) {
-    using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'editRow',
-      `data = ${JSON.stringify(data)}`), (log) => {
+    using(new XLog(DataTableSelectorComponent.logger, levels.INFO, 'editRow',
+      `editable = ${this.editable}`), (log) => {
         this.editable = true;
         this.savedRow = Clone.clone(data);
         this.editedRow = data;
@@ -346,8 +346,8 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   }
 
   public saveRow(data: any) {
-    using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'saveRow',
-      `data = ${JSON.stringify(data)}`), (log) => {
+    using(new XLog(DataTableSelectorComponent.logger, levels.INFO, 'saveRow',
+      `editable = ${this.editable}`), (log) => {
         this.editable = false;
         this.editedRow = undefined;
         this.savedRow = undefined;
@@ -355,8 +355,8 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   }
 
   public cancelEdit(data: any) {
-    using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'cancelEdit',
-      `data = ${JSON.stringify(data)}`), (log) => {
+    using(new XLog(DataTableSelectorComponent.logger, levels.INFO, 'cancelEdit',
+      `editable = ${this.editable}` ), (log) => {
         this.editable = false;
         this.editedRow = undefined;
 
@@ -382,7 +382,10 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    * @memberOf DataTableSelectorComponent
    */
   public isEditable(info: IControlDisplayInfo): boolean {
-    return this.editable /*&& info.editable*/;
+    return using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'isEditable',
+      `editable = ${this.editable}`), (log) => {
+        return this.editable /*&& (info.editable !== undefined ? info.editable : true)*/;
+      });
   }
 
 
