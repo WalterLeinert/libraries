@@ -424,13 +424,34 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
       }
 
       if (this.config) {
-        this.configInternal = this.config;
+        this.configInternal = Clone.clone(this.config);
 
-        // Defaults übernehmen
+        //
+        // Konfiguration erweitern/anpassen
+        //
         for (const colInfo of this.configInternal.columnInfos) {
+
+          //
+          // Defaults/RowInfo übernehmen
+          //
           if (colInfo.editable === undefined) {
             colInfo.editable = ControlDisplayInfo.DEFAULT.editable;
+
+            // Row-Konfiguration übernehmen
+            if (this.configInternal.rowInfo !== undefined && this.configInternal.rowInfo.editable !== undefined) {
+              colInfo.editable = this.configInternal.rowInfo.editable;
+            }
           }
+
+          if (colInfo.color === undefined) {
+            colInfo.color = ControlDisplayInfo.DEFAULT.color;
+
+            // Row-Konfiguration übernehmen
+            if (this.configInternal.rowInfo !== undefined && this.configInternal.rowInfo.color !== undefined) {
+              colInfo.color = this.configInternal.rowInfo.color;
+            }
+          }
+
 
           if (tableMetadata) {
             const colMetaData = tableMetadata.getColumnMetadataByProperty(colInfo.valueField);
