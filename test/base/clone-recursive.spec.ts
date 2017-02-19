@@ -54,5 +54,6 @@ class CloneRecursiveTest {
     tree.child = tree;    // self reference
     const treeCloned = Clone.clone(tree);
     expect(treeCloned.child).to.equal(treeCloned);
+    expect(() => Clone.verifyClone(tree, treeCloned)).not.to.Throw();
   }
 }
