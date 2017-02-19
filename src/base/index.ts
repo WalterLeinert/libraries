@@ -12,3 +12,5 @@ export * from './platform';
 export * from './stringBuilder';
 export * from './stringUtil';
 export * from './toString.interface';
+export * from './uniqueIdentifiable';
+export * from './uniqueIdentifiable.interface';

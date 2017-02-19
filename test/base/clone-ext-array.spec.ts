@@ -7,9 +7,11 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { Clone } from '../../src/base/clone';
+import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable'
 
-class TreeNode {
+class TreeNode extends UniqueIdentifiable {
   constructor(private _id: number, private _name: string) {
+    super();
   }
 
   public get id(): number {
@@ -21,10 +23,12 @@ class TreeNode {
   }
 }
 
-class Tree {
+class Tree extends UniqueIdentifiable {
   private _childs: TreeNode[] = [];
 
   constructor(public name: string, childs: TreeNode[]) {
+    super();
+
     if (childs) {
       this._childs = childs.slice();
     }

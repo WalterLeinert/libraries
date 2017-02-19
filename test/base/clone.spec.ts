@@ -7,9 +7,10 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { Clone } from '../../src/base/clone';
+import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
 import { Types } from '../../src/types/types';
 
-class Test {
+class Test extends UniqueIdentifiable {
   private valueNumber = 4711;
   private valueString = 'Walter';
   private valueBoolean = true;
@@ -17,6 +18,7 @@ class Test {
 
 
   constructor(public id: number, private _test: boolean) {
+    super();
   }
 
   public get test(): boolean {

@@ -7,9 +7,12 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { Clone } from '../../src/base/clone';
+import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
 
-class TreeNode {
+class TreeNode extends UniqueIdentifiable {
+  
   constructor(private _id: number, private _name: string) {
+    super();
   }
 
   public get id(): number {
@@ -21,12 +24,12 @@ class TreeNode {
   }
 }
 
-class Tree {
+class Tree extends UniqueIdentifiable {
   private _leftChild: TreeNode = new TreeNode(1, 'left');
   private _rightChild: TreeNode = new TreeNode(2, 'right');
 
   constructor(public name: string) {
-    // ok
+    super();
   }
 
   public get leftChild(): TreeNode {
@@ -42,22 +45,11 @@ class Tree {
   }
 }
 
-interface IDictionary<T> {
-  [index: string]: T;
-}
-
 
 @suite('Clone: external class reference')
 class CloneExtTest {
 
   @test 'should check Tree properties'() {
-
-    const d: IDictionary<number> = {};
-    // tslint:disable-next-line:no-string-literal
-    d['a'] = 1;
-    // tslint:disable-next-line:no-string-literal
-    d['a'] = 2;
-
     const tree = new Tree('my tree');
     expect(tree).to.be.not.null;
     expect(tree.leftChild).to.be.not.null;

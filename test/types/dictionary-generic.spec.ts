@@ -7,10 +7,12 @@ import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
 import { Dictionary } from '../../src/types/dictionary';
 
-class KeyClass {
+class KeyClass extends UniqueIdentifiable {
   constructor(public id: number) {
+    super();
   }
 
   toString(): string {
