@@ -55,6 +55,14 @@ class TypesTest {
         expect(Types.isUndefined(undefined)).to.be.true;
     }
 
+    @test 'should test primitives'() {
+      expect(Types.isPrimitive(4711)).to.be.true;
+      expect(Types.isPrimitive('Hallo')).to.be.true;
+      expect(Types.isPrimitive(false)).to.be.true;
+      expect(Types.isPrimitive(Symbol(999))).to.be.true;
+      expect(Types.isPrimitive(undefined)).to.be.true;
+    }
+
     @test 'should test functions/properties'() {
         const user = new TestUser(1, 'walter', 'walter', 'leinert', 1, '', '');
         expect(Types.hasMethod(user, 'noSuchFunction')).to.be.false;

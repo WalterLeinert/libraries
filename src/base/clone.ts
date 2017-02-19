@@ -4,6 +4,7 @@ const entries = require('object.entries');
 import { Types } from '../types/types';
 import { Assert } from '../util/assert';
 import { ICtor } from './ctor';
+import { ObjectType } from './objectType';
 
 
 export class Clone {
@@ -19,14 +20,21 @@ export class Clone {
    * @memberOf Clone
    */
   public static clone<T>(value: T): T {
-    if (value === undefined || value === null) {
+    if (value === null) {
       return value;
     }
+
+    // bei primitiven Typen liefern wir deren Wert
+    if (Types.isPrimitive(value)) {
+      return value;
+    }
+
 
     // falls clone-Methode vorhanden ist nehmen wir diese
     if ((value as any).clone && Types.isFunction((value as any).clone)) {
       return (value as any).clone();
     }
+
 
     //
     // wir verwenden entries, da die 'for (const attr in value) { ...' Loop auch getter ohne Setter liefert,
@@ -34,8 +42,8 @@ export class Clone {
     //
     const valueEntries = entries(value);
 
-    // neue Instanz erzeugen
-    const clonedObj = new (value.constructor as any)();
+    // neue Instanz erzeugen    
+    const clonedObj = Types.construct<any>(value as any);
 
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < valueEntries.length; i++) {
@@ -63,7 +71,9 @@ export class Clone {
       if (value === undefined || value == null) {
         return;
       }
-      throw new Error(`value identical to clonedValue: attrName = ${attrName}`);
+      if (!Types.isPrimitive(value)) {
+        throw new Error(`value identical to clonedValue: attrName = ${attrName}`);
+      }
     }
 
     const valueEntries = entries(value);

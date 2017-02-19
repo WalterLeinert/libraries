@@ -1,4 +1,5 @@
-import { Assert } from './../util/assert';
+import { ObjectType } from '../base/objectType';
+import { Assert } from '../util/assert';
 
 export type byte = number;
 
@@ -40,6 +41,14 @@ export class Types {
     return obj === undefined;
   }
 
+  public static isPrimitive(obj: any): boolean {
+    return (Types.isString(obj) || Types.isNumber(obj) || Types.isBoolean(obj)
+      || Types.isSymbol(obj) || Types.isUndefined(obj));
+  }
+
+
+
+
   public static hasMethod(obj: any, methodName: string): boolean {
     Assert.notNull(obj);
     Assert.notNullOrEmpty(methodName);
@@ -50,5 +59,20 @@ export class Types {
     Assert.notNull(obj);
     Assert.notNullOrEmpty(propertyName);
     return !Types.isUndefined(obj[propertyName]);
+  }
+
+  /**
+   * Erzeugt eine neue Instanz für die "Klasse" @param{clazz} über die "constructor" function 
+   * -> simuliert den default constructor
+   * 
+   * @static
+   * @template T 
+   * @param {Object} obj 
+   * @returns {*} 
+   * 
+   * @memberOf Types
+   */
+  public static construct<T>(clazz: ObjectType<T>): T {
+    return new ((clazz as any).constructor)() as T;
   }
 }

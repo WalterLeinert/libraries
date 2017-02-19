@@ -7,17 +7,29 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { Clone } from '../../src/base/clone';
+import { Types } from '../../src/types/types';
 
 class Test {
+  private valueNumber = 4711;
+  private valueString = 'Walter';
+  private valueBoolean = true;
+  private valueSymbol = Symbol(12);
+
+
   constructor(public id: number, private _test: boolean) {
   }
 
   public get test(): boolean {
     return this._test;
   }
+
+  private func() {
+    // ok
+  }
 }
 
-class TestDerived extends Test {  
+
+class TestDerived extends Test {
   private names: string[] = ['a', 'b', 'c'];
 
   constructor(public name: string, id: number, private _today: Date, test: boolean = true) {
@@ -27,6 +39,49 @@ class TestDerived extends Test {
 
   public get today(): Date {
     return this._today;
+  }
+}
+
+
+const primitiveTests = [
+  {
+    type: 'number',
+    value: 4711
+  },
+  {
+    type: 'string',
+    value: 'Hallo'
+  },
+  {
+    type: 'boolean',
+    value: false
+  },
+  {
+    type: 'symbol',
+    value: Symbol(123)
+  },
+  {
+    type: 'undefined',
+    value: undefined
+  }
+];
+
+
+@suite('Clone primitives')
+class ClonePrimitivesTest {
+
+  @test 'should clone all primitives'() {
+    primitiveTests.forEach((primitiveTest) => {
+      const test = primitiveTest.value;
+
+      expect(Types.isPrimitive(test)).to.be.true;
+      expect(typeof test).to.equal(primitiveTest.type);
+
+      const testCloned = Clone.clone(test);
+      expect(testCloned).to.deep.equal(test);
+      expect(() => Clone.verifyClone(test, testCloned)).not.to.Throw();
+    });
+
   }
 }
 
@@ -73,7 +128,7 @@ class CloneTest {
     expect(test1 === test2).to.be.not.true;
   }
 
- 
+
   @test 'should clone'() {
     const test = new TestDerived('Walter', 4711, new Date());
     const testCloned = Clone.clone<TestDerived>(test);
@@ -84,7 +139,7 @@ class CloneTest {
   }
 
   @test 'should verifyClone'() {
-    const test = new TestDerived('Walter', 4711, new Date());    
+    const test = new TestDerived('Walter', 4711, new Date());
     expect(() => Clone.verifyClone(test, test)).to.Throw();
   }
 
