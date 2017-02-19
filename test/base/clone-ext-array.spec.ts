@@ -65,7 +65,9 @@ class CloneExtArrayTest {
       new TreeNode(3, 'child 3')
     ]);
     const treeCloned = Clone.clone(tree);
-    expect(treeCloned).to.deep.equal(tree);
+    
+    // Test so nicht möglich, da sich die Instanzen in der instanceId unterscheiden (UniqueIdentifiable)!
+    // expect(treeCloned).to.deep.equal(tree);
 
     expect(tree === treeCloned).to.be.not.true;
     expect(() => Clone.verifyClone(tree, treeCloned)).not.to.Throw();
@@ -82,7 +84,6 @@ class CloneExtArrayTest {
     treeCloned.childs[0] = tree.childs[0];
 
     expect(tree === treeCloned).to.be.not.true;
-    // Clone.verifyClone(tree, treeCloned);
     expect(() => Clone.verifyClone(tree, treeCloned)).to.Throw();
   }
 

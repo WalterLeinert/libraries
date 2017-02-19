@@ -9,6 +9,8 @@ import { Types } from '../types/types';
 import { Assert } from '../util/assert';
 import { ICtor } from './ctor';
 import { ObjectType } from './objectType';
+import { UniqueIdentifiable } from './uniqueIdentifiable';
+
 
 class ReferenceFixup<T> {
   constructor(public clonedObj: T, public valueSetter: InstanceSetter<T, any>, public clonedValue: T) {
@@ -66,6 +68,8 @@ abstract class ClonerBase<T> {
   protected iterateOnEntries(value: any, clonedValue: any, cb: (entryName: string, entryValue: any,
     clonedEntryName?: string, clonedEntryValue?: any) => void) {
 
+    const valueIsUniqueIdentifiable = value instanceof UniqueIdentifiable;
+
     //
     // wir verwenden entries, da die 'for (const attr in value) { ...' Loop auch getter ohne Setter liefert,
     // was dann bei der Wertzuweisung nicht funktioniert!
@@ -92,7 +96,11 @@ abstract class ClonerBase<T> {
         clonedEntryValue = clonedEntry[1];
       }
 
-      cb(entryName, entryValue, clonedEntryName, clonedEntryValue);
+      // instanceId wird nicht geklont!
+      if (!valueIsUniqueIdentifiable || (valueIsUniqueIdentifiable && entryName !== '_instanceId')) {
+        cb(entryName, entryValue, clonedEntryName, clonedEntryValue);
+      }
+
     }
   }
 }

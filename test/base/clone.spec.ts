@@ -134,7 +134,9 @@ class CloneTest {
   @test 'should clone'() {
     const test = new TestDerived('Walter', 4711, new Date());
     const testCloned = Clone.clone<TestDerived>(test);
-    expect(testCloned).to.deep.equal(test);
+
+    // Test so nicht möglich, da sich die Instanzen in der instanceId unterscheiden (UniqueIdentifiable)!
+    // expect(testCloned).to.deep.equal(test);
 
     expect(test === testCloned).to.be.not.true;
     expect(() => Clone.verifyClone(test, testCloned)).not.to.Throw();

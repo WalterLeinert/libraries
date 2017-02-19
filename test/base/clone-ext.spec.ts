@@ -10,7 +10,7 @@ import { Clone } from '../../src/base/clone';
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
 
 class TreeNode extends UniqueIdentifiable {
-  
+
   constructor(private _id: number, private _name: string) {
     super();
   }
@@ -63,7 +63,9 @@ class CloneExtTest {
   @test 'should clone'() {
     const tree = new Tree('Walter');
     const treeCloned = Clone.clone(tree);
-    expect(treeCloned).to.deep.equal(tree);
+
+    // Test so nicht möglich, da sich die Instanzen in der instanceId unterscheiden (UniqueIdentifiable)!
+    // expect(treeCloned).to.deep.equal(tree);
 
     expect(tree === treeCloned).to.be.not.true;
     expect(() => Clone.verifyClone(tree, treeCloned)).not.to.Throw();
@@ -76,7 +78,6 @@ class CloneExtTest {
     treeCloned.rightChild = tree.rightChild;
 
     expect(tree === treeCloned).to.be.not.true;
-    // Clone.verifyClone(tree, treeCloned);
     expect(() => Clone.verifyClone(tree, treeCloned)).to.Throw();
   }
 
