@@ -165,11 +165,14 @@ class TestWithClone {
 @suite('Clone by clone()')
 class CloneByCloneTest {
 
-  @test 'should clone by clone function'() {
+  @test 'should clone'() {
     const test = new TestWithClone(4711, false);
     const testCloned = Clone.clone(test);
     expect(testCloned).to.deep.equal(test);
-    expect(() => Clone.verifyClone(test, testCloned)).not.to.Throw();
+
+    // TestWithClone ist kein UniqueIdentifiable -> es darf nicht auf Zyklen getestet werden,
+    // da sonst Error in Dictionary
+    expect(() => Clone.verifyClone(test, testCloned, false)).not.to.Throw();
   }
 
 }

@@ -18,10 +18,35 @@ class ReferenceFixup<T> {
 
 
 abstract class ClonerBase<T> {
+  private static predefinedCloners: Dictionary<string, InstanceCreator<any>> =
+  new Dictionary<string, InstanceCreator<any>>();
+
+  private static initialized = ClonerBase.initialize();
+
   private cloneDict: Dictionary<any, any> = new Dictionary<any, any>();
 
+  private static initialize(): boolean {
+    ClonerBase.predefinedCloners.set(Date.name, (v) => new Date(v));
+    ClonerBase.predefinedCloners.set(String.name, (v) => String(v));
+    ClonerBase.predefinedCloners.set(Number.name, (v) => Number(v));
+    ClonerBase.predefinedCloners.set(Boolean.name, (v) => Boolean(v));
+    return true;
+  }
 
-  protected getCloneFor(value: any) {
+  public constructor(private _checkCycles: boolean) {
+
+  }
+
+  protected get checkCycles(): boolean {
+    return this._checkCycles;
+  }
+
+
+  protected static getPredefinedClonerFor(typeName: string): InstanceCreator<any> {
+    return ClonerBase.predefinedCloners.get(typeName);
+  }
+
+  protected getCloneFor(value: any): any {
     let rval;
 
     if (Types.isObject(value) && !Types.isArray(value)) {
@@ -43,7 +68,7 @@ abstract class ClonerBase<T> {
 
     //
     // wir verwenden entries, da die 'for (const attr in value) { ...' Loop auch getter ohne Setter liefert,
-    // was dann bei der Wertzweisung nicht funktioniert!
+    // was dann bei der Wertzuweisung nicht funktioniert!
     //
     const valueEntries = entries(value);
 
@@ -74,20 +99,14 @@ abstract class ClonerBase<T> {
 
 
 class Cloner<T> extends ClonerBase<T> {
-  private static predefinedCloners: Dictionary<string, InstanceCreator<any>> =
-  new Dictionary<string, InstanceCreator<any>>();
-  private static initialized = Cloner.initialize();
-
   private fixups: Array<ReferenceFixup<any>> = [];
 
-  private static initialize(): boolean {
-    Cloner.predefinedCloners.set(Date.name, (v) => new Date(v));
-    Cloner.predefinedCloners.set(String.name, (v) => String(v));
-    Cloner.predefinedCloners.set(Number.name, (v) => Number(v));
-    Cloner.predefinedCloners.set(Boolean.name, (v) => Boolean(v));
-    return true;
-  }
 
+  /**
+   * bei allen geklonten Objekten Referenzen auf geklonte Objekte korrigieren
+   * 
+   * @memberOf Cloner
+   */
   public resolveFixups() {
     this.fixups.forEach((fixup) => {
       fixup.valueSetter(fixup.clonedObj, fixup.clonedValue);
@@ -120,16 +139,18 @@ class Cloner<T> extends ClonerBase<T> {
       return (value as any).clone();
     }
 
-    const predefCloner = Cloner.predefinedCloners.get(value.constructor.name);
+    const predefCloner = ClonerBase.getPredefinedClonerFor(value.constructor.name);
     if (predefCloner !== undefined) {
       return predefCloner(value);
     }
 
 
-    // clone bereits erzeugt und registriert?
-    const clone = super.getCloneFor(value);
-    if (clone) {
-      return clone;
+    if (this.checkCycles) {
+      // clone bereits erzeugt und registriert?
+      const clone = super.getCloneFor(value);
+      if (clone) {
+        return clone;
+      }
     }
 
 
@@ -137,8 +158,10 @@ class Cloner<T> extends ClonerBase<T> {
     // neue Instanz erzeugen    
     const clonedObj = Types.construct<any>(value as any);
 
-    // für Objekte clone registrieren
-    super.registerClonFor(value, clonedObj);
+    if (this.checkCycles) {
+      // für Objekte clone registrieren
+      super.registerClonFor(value, clonedObj);
+    }
 
 
     super.iterateOnEntries(value, undefined, (entryName, entryValue) => {
@@ -182,6 +205,29 @@ class Verifier<T> extends ClonerBase<T> {
       }
     }
 
+    // primitive Typen sind ok 
+    if (Types.isPrimitive(value)) {
+      return;
+    }
+
+    // geklonte vordefinierte Typen sind ok
+    const predefCloner = ClonerBase.getPredefinedClonerFor(value.constructor.name);
+    if (predefCloner !== undefined) {
+      return;
+    }
+
+    if (this.checkCycles) {
+      // clone bereits erzeugt und registriert?
+      const clone = super.getCloneFor(value);
+      if (clone) {
+        return;
+      }
+
+
+      // für Objekte clone registrieren
+      super.registerClonFor(value, clonedValue);
+    }
+
 
     super.iterateOnEntries(value, clonedValue, (entryName, entryValue, clonedEntryName, clonedEntryValue) => {
       Assert.that(entryName === clonedEntryName);
@@ -193,7 +239,7 @@ class Verifier<T> extends ClonerBase<T> {
           throw new Error(`value[${entryName}] identical to clonedValue[${clonedEntryName}]`);
         }
 
-        Clone.verifyClone(entryValue, clonedEntryValue, entryName);   // Rekursion
+        this.verifyClone(entryValue, clonedEntryValue, entryName);   // Rekursion
       }
     });
 
@@ -213,8 +259,8 @@ export class Clone {
    * 
    * @memberOf Clone
    */
-  public static clone<T>(value: T): T {
-    const cloner = new Cloner<T>();
+  public static clone<T>(value: T, allowCycles: boolean = true): T {
+    const cloner = new Cloner<T>(allowCycles);
     const clonedValue = cloner.clone<T>(value);
     cloner.resolveFixups();
 
@@ -225,8 +271,8 @@ export class Clone {
   /**
    * Verifiziert, dass @param{clonedValue} wirklich ein deep clone von @param{value} ist.
    */
-  public static verifyClone<T>(value: T, clonedValue: T, attrName?: string) {
-    const verifier = new Verifier<T>();
+  public static verifyClone<T>(value: T, clonedValue: T, checkCycles: boolean = true) {
+    const verifier = new Verifier<T>(checkCycles);
     verifier.verifyClone<T>(value, clonedValue);
   }
 }
