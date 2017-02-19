@@ -267,7 +267,7 @@ export class Clone {
    * 
    * @memberOf Clone
    */
-  public static clone<T>(value: T, allowCycles: boolean = true): T {
+  public static clone<T>(value: T, allowCycles: boolean = false): T {
     const cloner = new Cloner<T>(allowCycles);
     const clonedValue = cloner.clone<T>(value);
     cloner.resolveFixups();
@@ -279,7 +279,7 @@ export class Clone {
   /**
    * Verifiziert, dass @param{clonedValue} wirklich ein deep clone von @param{value} ist.
    */
-  public static verifyClone<T>(value: T, clonedValue: T, checkCycles: boolean = true) {
+  public static verifyClone<T>(value: T, clonedValue: T, checkCycles: boolean = false) {
     const verifier = new Verifier<T>(checkCycles);
     verifier.verifyClone<T>(value, clonedValue);
   }

@@ -42,20 +42,20 @@ class CloneRecursiveTest {
     expect(tree.child).to.be.not.null;
     expect(tree.child.id).to.equal(2);
 
-    const treeCloned = Clone.clone(tree);
+    const treeCloned = Clone.clone(tree, true);
 
     // Test so nicht möglich, da sich die Instanzen in der instanceId unterscheiden (UniqueIdentifiable)!
     // expect(treeCloned).to.deep.equal(tree);
 
     expect(tree === treeCloned).to.be.not.true;
-    expect(() => Clone.verifyClone(tree, treeCloned)).not.to.Throw();
+    expect(() => Clone.verifyClone(tree, treeCloned, true)).not.to.Throw();
   }
 
   @test 'should check graph with cycle'() {
     const tree = new TreeNode(1, 'root');
     tree.child = tree;    // self reference
-    const treeCloned = Clone.clone(tree);
+    const treeCloned = Clone.clone(tree, true);
     expect(treeCloned.child).to.equal(treeCloned);
-    expect(() => Clone.verifyClone(tree, treeCloned)).not.to.Throw();
+    expect(() => Clone.verifyClone(tree, treeCloned, true)).not.to.Throw();
   }
 }
