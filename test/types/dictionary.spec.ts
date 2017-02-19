@@ -10,236 +10,271 @@ import { suite, test } from 'mocha-typescript';
 import { Dictionary } from '../../src/types/dictionary';
 
 class BaseClass {
-    constructor(public name: string) {
-    }
+  constructor(public name: string) {
+  }
 }
 
 
 const expectedDict = [
-    {
-        dictCreator: () => new Dictionary<string, string>(),
-        keys: ['key-0', 'key-1'],
-        values: ['value-0', 'value-1']
-    },
-    {
-        dictCreator: () => new Dictionary<string, string>(),
-        keys: [],
-        values: []
-    }
+  {
+    dictCreator: () => new Dictionary<string, string>(),
+    keys: ['key-0', 'key-1'],
+    values: ['value-0', 'value-1']
+  },
+  {
+    dictCreator: () => new Dictionary<string, string>(),
+    keys: [],
+    values: []
+  }
 ];
 
 
 @suite('Types.Dictionary<string, string>')
 class DictionaryStringStringTest<TKey, TValue> {
-    @test 'should create instance of Dictionary'() {
-        return expect(new Dictionary<string, string>()).to.be.not.null;
-    }
+  @test 'should create instance of Dictionary'() {
+    return expect(new Dictionary<string, string>()).to.be.not.null;
+  }
 
-    @test 'should set an item'() {
-        const d = new Dictionary<string, string>();
-        expect(() => d.set('aaa', 'bbb')).not.to.Throw();
-        expect(d.count).to.be.equal(1);
-    }
+  @test 'should set an item'() {
+    const d = new Dictionary<string, string>();
+    expect(() => d.set('aaa', 'bbb')).not.to.Throw();
+    expect(d.count).to.be.equal(1);
+  }
 
-    @test 'should remove an item'() {
-        const d = new Dictionary<string, string>();
-        const key = 'aaa';
-        d.set(key, 'bbb');
-        expect(() => d.remove(key)).not.to.Throw();
-        expect(d.count).to.be.equal(0);
-    }
+  @test 'should remove an item'() {
+    const d = new Dictionary<string, string>();
+    const key = 'aaa';
+    d.set(key, 'bbb');
+    expect(() => d.remove(key)).not.to.Throw();
+    expect(d.count).to.be.equal(0);
+  }
 
-    @test 'should test for existence'() {
-        const d = new Dictionary<string, string>();
-        const key = 'aaa';
-        d.set(key, 'bbb');
-        expect(d.containsKey(key)).to.be.true;
-    }
+  @test 'should test for existence'() {
+    const d = new Dictionary<string, string>();
+    const key = 'aaa';
+    d.set(key, 'bbb');
+    expect(d.containsKey(key)).to.be.true;
+  }
 
-    @test 'should test for not existence'() {
-        const d = new Dictionary<string, string>();
-        const key = 'aaa';
-        d.set(key, 'bbb');
-        expect(d.containsKey('no-such-key')).to.be.false;
-    }
+  @test 'should test for not existence'() {
+    const d = new Dictionary<string, string>();
+    const key = 'aaa';
+    d.set(key, 'bbb');
+    expect(d.containsKey('no-such-key')).to.be.false;
+  }
 
-    @test 'should test empty keys'() {
-        const d = new Dictionary<string, string>();
-        expect(d.keys.length).to.be.equal(0);
-    }
+  @test 'should test empty keys'() {
+    const d = new Dictionary<string, string>();
+    expect(d.keys.length).to.be.equal(0);
+  }
 
-    @test 'should test empty values'() {
-        const d = new Dictionary<string, string>();
-        expect(d.values.length).to.be.equal(0);
-    }
+  @test 'should test empty values'() {
+    const d = new Dictionary<string, string>();
+    expect(d.values.length).to.be.equal(0);
+  }
 
-    @test 'should test keys'() {
-        const d = new Dictionary<string, string>();
-        const key = 'aaa';
-        const value = 'bbb';
-        d.set(key, value);
-        expect(d.keys.length).to.be.equal(1);
-        expect(d.keys[0]).to.be.equal(key);
-    }
+  @test 'should test keys'() {
+    const d = new Dictionary<string, string>();
+    const key = 'aaa';
+    const value = 'bbb';
+    d.set(key, value);
+    expect(d.keys.length).to.be.equal(1);
+    expect(d.keys[0]).to.be.equal(key);
+  }
 
-    @test 'should test values'() {
-        const d = new Dictionary<string, string>();
-        const key = 'aaa';
-        const value = 'bbb';
-        d.set(key, value);
-        expect(d.values.length).to.be.equal(1);
-        expect(d.values[0]).to.be.equal(value);
-    }
+  @test 'should test values'() {
+    const d = new Dictionary<string, string>();
+    const key = 'aaa';
+    const value = 'bbb';
+    d.set(key, value);
+    expect(d.values.length).to.be.equal(1);
+    expect(d.values[0]).to.be.equal(value);
+  }
 }
 
 
 @suite('Types.Dictionary')
 class DictionaryTest {
 
-    @test 'validate keys vs values'() {
-        expectedDict.forEach((test) => {
-            expect(test.keys.length).to.be.equal(test.values.length);
-        });
-    }
+  @test 'validate keys vs values'() {
+    expectedDict.forEach((test) => {
+      expect(test.keys.length).to.be.equal(test.values.length);
+    });
+  }
 
-    @test 'should set an item'() {
-        expectedDict.forEach((test) => {
-            const dict = test.dictCreator();
+  @test 'should set an item'() {
+    expectedDict.forEach((test) => {
+      const dict = test.dictCreator();
 
-            for (let i = 0; i < test.keys.length; i++) {
-                const key = test.keys[i];
-                const value = test.values[i];
+      for (let i = 0; i < test.keys.length; i++) {
+        const key = test.keys[i];
+        const value = test.values[i];
 
-                expect(() => dict.set(key, value)).not.to.Throw();
-                expect(dict.count).to.be.equal(i + 1);
-            }
-        });
-    }
-
-
-    @test 'should remove an item'() {
-        expectedDict.forEach((test) => {
-            const dict = test.dictCreator();
-
-            // tslint:disable-next-line:prefer-for-of
-            for (let i = 0; i < test.keys.length; i++) {
-                const key = test.keys[i];
-                const value = test.values[i];
-
-                dict.set(key, value);
-            }
-
-            for (let i = 0; i < test.keys.length; i++) {
-                const key = test.keys[i];
-                const value = test.values[i];
-
-                expect(() => dict.remove(key)).not.to.Throw();
-                expect(dict.count).to.be.equal(test.keys.length - (i + 1));
-            }
-        });
-    }
+        expect(() => dict.set(key, value)).not.to.Throw();
+        expect(dict.count).to.be.equal(i + 1);
+      }
+    });
+  }
 
 
-    @test 'should test for existence'() {
-        expectedDict.forEach((test) => {
-            const dict = test.dictCreator();
+  @test 'should remove an item'() {
+    expectedDict.forEach((test) => {
+      const dict = test.dictCreator();
 
-            // tslint:disable-next-line:prefer-for-of
-            for (let i = 0; i < test.keys.length; i++) {
-                const key = test.keys[i];
-                const value = test.values[i];
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < test.keys.length; i++) {
+        const key = test.keys[i];
+        const value = test.values[i];
 
-                dict.set(key, value);
-            }
+        dict.set(key, value);
+      }
 
-            // tslint:disable-next-line:prefer-for-of
-            for (let i = 0; i < test.keys.length; i++) {
-                const key = test.keys[i];
-                const value = test.values[i];
+      for (let i = 0; i < test.keys.length; i++) {
+        const key = test.keys[i];
+        const value = test.values[i];
 
-                expect(dict.containsKey(key)).to.be.true;
-            }
-        });
-    }
+        expect(() => dict.remove(key)).not.to.Throw();
+        expect(dict.count).to.be.equal(test.keys.length - (i + 1));
+      }
+    });
+  }
 
-    @test 'should test for non existence'() {
-        expectedDict.forEach((test) => {
-            const dict = test.dictCreator();
 
-            // tslint:disable-next-line:prefer-for-of
-            for (let i = 0; i < test.keys.length; i++) {
-                const key = test.keys[i];
-                const value = test.values[i];
+  @test 'should test for existence'() {
+    expectedDict.forEach((test) => {
+      const dict = test.dictCreator();
 
-                dict.set(key, value);
-            }
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < test.keys.length; i++) {
+        const key = test.keys[i];
+        const value = test.values[i];
 
-            expect(dict.containsKey('no-such-key')).to.be.false;
-        });
-    }
+        dict.set(key, value);
+      }
 
-    @test 'should test empty keys'() {
-        expectedDict.forEach((test) => {
-            const dict = test.dictCreator();
-            expect(dict.keys.length).to.be.equal(0);
-        });
-    }
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < test.keys.length; i++) {
+        const key = test.keys[i];
+        const value = test.values[i];
 
-    @test 'should test empty values'() {
-        expectedDict.forEach((test) => {
-            const dict = test.dictCreator();
-            expect(dict.values.length).to.be.equal(0);
-        });
-    }
+        expect(dict.containsKey(key)).to.be.true;
+      }
+    });
+  }
 
-    @test 'should test keys'() {
-        expectedDict.forEach((test) => {
-            const dict = test.dictCreator();
+  @test 'should test for non existence'() {
+    expectedDict.forEach((test) => {
+      const dict = test.dictCreator();
 
-            // tslint:disable-next-line:prefer-for-of
-            for (let i = 0; i < test.keys.length; i++) {
-                const key = test.keys[i];
-                const value = test.values[i];
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < test.keys.length; i++) {
+        const key = test.keys[i];
+        const value = test.values[i];
 
-                dict.set(key, value);
-            }
+        dict.set(key, value);
+      }
 
-            expect(dict.keys.length).to.be.equal(test.keys.length);
-            expect(dict.keys).to.be.deep.equal(test.keys);
-        });
-    }
+      expect(dict.containsKey('no-such-key')).to.be.false;
+    });
+  }
 
-    @test 'should test values'() {
-        expectedDict.forEach((test) => {
-            const dict = test.dictCreator();
+  @test 'should test empty keys'() {
+    expectedDict.forEach((test) => {
+      const dict = test.dictCreator();
+      expect(dict.keys.length).to.be.equal(0);
+    });
+  }
 
-            // tslint:disable-next-line:prefer-for-of
-            for (let i = 0; i < test.keys.length; i++) {
-                const key = test.keys[i];
-                const value = test.values[i];
+  @test 'should test empty values'() {
+    expectedDict.forEach((test) => {
+      const dict = test.dictCreator();
+      expect(dict.values.length).to.be.equal(0);
+    });
+  }
 
-                dict.set(key, value);
-            }
+  @test 'should test keys'() {
+    expectedDict.forEach((test) => {
+      const dict = test.dictCreator();
 
-            expect(dict.values.length).to.be.equal(test.values.length);
-            expect(dict.values).to.be.deep.equal(test.values);
-        });
-    }
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < test.keys.length; i++) {
+        const key = test.keys[i];
+        const value = test.values[i];
 
-    @test 'should test clear'() {
-        expectedDict.forEach((test) => {
-            const dict = test.dictCreator();
+        dict.set(key, value);
+      }
 
-            // tslint:disable-next-line:prefer-for-of
-            for (let i = 0; i < test.keys.length; i++) {
-                const key = test.keys[i];
-                const value = test.values[i];
+      expect(dict.keys.length).to.be.equal(test.keys.length);
+      expect(dict.keys).to.be.deep.equal(test.keys);
+    });
+  }
 
-                dict.set(key, value);
-            }
+  @test 'should test values'() {
+    expectedDict.forEach((test) => {
+      const dict = test.dictCreator();
 
-            expect(dict.clear()).to.not.throw;
-            expect(dict.count).to.be.equal(0);
-        });
-    }
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < test.keys.length; i++) {
+        const key = test.keys[i];
+        const value = test.values[i];
+
+        dict.set(key, value);
+      }
+
+      expect(dict.values.length).to.be.equal(test.values.length);
+      expect(dict.values).to.be.deep.equal(test.values);
+    });
+  }
+
+  @test 'should test clear'() {
+    expectedDict.forEach((test) => {
+      const dict = test.dictCreator();
+
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < test.keys.length; i++) {
+        const key = test.keys[i];
+        const value = test.values[i];
+
+        dict.set(key, value);
+      }
+
+      expect(dict.clear()).to.not.throw;
+      expect(dict.count).to.be.equal(0);
+    });
+  }
+}
+
+
+
+class NotSupportedKey {
+  public id: number;
+}
+
+@suite('Types.Dictionary: not supported Keys')
+class DictionaryNotSupportedTest {
+
+  @test 'should create instance of Dictionary'() {
+    return expect(new Dictionary<NotSupportedKey, string>()).to.be.not.null;
+  }
+
+  @test 'should set an item'() {
+    const d = new Dictionary<NotSupportedKey, string>();
+    const key = new NotSupportedKey();
+    expect(() => d.set(key, 'bbb')).to.Throw();
+    expect(d.count).to.be.equal(0);
+  }
+
+  @test 'should remove an item'() {
+    const d = new Dictionary<NotSupportedKey, string>();
+    const key = new NotSupportedKey();
+    expect(() => d.remove(key)).to.Throw();
+    expect(d.count).to.be.equal(0);
+  }
+
+  @test 'should test for existence'() {
+    const d = new Dictionary<NotSupportedKey, string>();
+    const key = new NotSupportedKey();
+    expect(() => d.containsKey(key)).to.Throw();
+  }
+
 }
