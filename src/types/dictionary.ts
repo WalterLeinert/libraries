@@ -1,7 +1,7 @@
 import { IDictionary } from '.';
 
 import { IToString } from './../base/toString.interface';
-import { UniqueIdentifiable } from './../base/uniqueIdentifiable';
+import { Identifiable } from './../base/uniqueIdentifiable';
 import { Assert } from './../util/assert';
 import { Types } from './types';
 
@@ -16,11 +16,11 @@ enum KeyType {
   String,
   Number,
   Object,
-  UniqueIdentifiable,
+  Identifiable,
   Undefined
 }
 
-export type KeyTypes = number | string | UniqueIdentifiable | any; 
+export type KeyTypes = number | string | Identifiable | any; 
 
 
 /**
@@ -65,11 +65,11 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
       return;
     }
 
-    if (key instanceof UniqueIdentifiable) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.UniqueIdentifiable);
+    if (key instanceof Identifiable) {
+      Assert.that(!this.isInitialized || this.keyType === KeyType.Identifiable);
       this.idToObjectMapper[key.instanceId] = key;
       this.numberDict[key.instanceId] = value;
-      this.initialize(KeyType.UniqueIdentifiable);
+      this.initialize(KeyType.Identifiable);
       return;
     }
 
@@ -95,8 +95,8 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
       return this.numberDict[(key as any as number)];
     }
 
-    if (key instanceof UniqueIdentifiable) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.UniqueIdentifiable);
+    if (key instanceof Identifiable) {
+      Assert.that(!this.isInitialized || this.keyType === KeyType.Identifiable);
       return this.numberDict[key.instanceId];
     }
 
@@ -125,8 +125,8 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
       return;
     }
 
-    if (key instanceof UniqueIdentifiable) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.UniqueIdentifiable);
+    if (key instanceof Identifiable) {
+      Assert.that(!this.isInitialized || this.keyType === KeyType.Identifiable);
       delete this.idToObjectMapper[key.instanceId];
       delete this.numberDict[key.instanceId];
       return;
@@ -155,8 +155,8 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
       return this.numberDict[(key as any as number)] !== undefined;
     }
 
-    if (key instanceof UniqueIdentifiable) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.UniqueIdentifiable);
+    if (key instanceof Identifiable) {
+      Assert.that(!this.isInitialized || this.keyType === KeyType.Identifiable);
       return this.numberDict[key.instanceId] !== undefined;
     }
 
@@ -181,7 +181,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
         keys = Object.keys(this.numberDict).map((item) => {
           return parseInt(item, 10) as any as TKey;
         });
-      } else if (this.keyType === KeyType.UniqueIdentifiable) {
+      } else if (this.keyType === KeyType.Identifiable) {
         for (const k in this.idToObjectMapper) {
           if (k) {
             keys.push(this.idToObjectMapper[k]);
@@ -213,7 +213,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
             values.push(this.stringDict[k]);
           }
         }
-      } else if (this.keyType === KeyType.Number || this.keyType === KeyType.UniqueIdentifiable) {
+      } else if (this.keyType === KeyType.Number || this.keyType === KeyType.Identifiable) {
         for (const k in this.numberDict) {
           if (k) {
             values.push(this.numberDict[k]);
@@ -255,7 +255,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
     if (this.keyType === KeyType.String || this.keyType === KeyType.Object) {
       return Object.keys(this.stringDict).length;
     }
-    if (this.keyType === KeyType.Number || this.keyType === KeyType.UniqueIdentifiable) {
+    if (this.keyType === KeyType.Number || this.keyType === KeyType.Identifiable) {
       return Object.keys(this.numberDict).length;
     }
 

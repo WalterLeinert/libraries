@@ -7,4 +7,5 @@ export * from './jsonReader';
 export * from './loggingConfiguration';
 export * from './optionParser';
 export * from './reflection';
+export * from './utility';
 // export * from './gulputil';
