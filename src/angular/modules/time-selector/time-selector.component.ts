@@ -1,6 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { ShortTime } from '@fluxgate/common';
+
+// -------------------------------------- logging --------------------------------------------
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+// -------------------------------------- logging --------------------------------------------
+
+
+import { Hour, ShortTime } from '@fluxgate/common';
 
 import { CoreComponent } from '../../common/base/core.component';
 
@@ -8,13 +14,17 @@ import { CoreComponent } from '../../common/base/core.component';
   selector: 'flx-time-selector',
   template: `
 <div>
-  <p-calendar [(ngModel)]="date" [timeOnly]="true">
+  <p-calendar [(ngModel)]="date" [timeOnly]="true"
+    (onBlur)="onBlur($event)" (onSelect)="onSelect($event)"
+  >
   </p-calendar>
 </div>
 `,
   styles: []
 })
 export class TimeSelectorComponent extends CoreComponent {
+  protected static readonly logger = getLogger(TimeSelectorComponent);
+
   public date: Date;
 
   private _time: ShortTime;
@@ -29,6 +39,17 @@ export class TimeSelectorComponent extends CoreComponent {
     super.ngOnInit();
   }
 
+  public onBlur(eventData: any) {
+    using(new XLog(TimeSelectorComponent.logger, levels.INFO, 'onBlur'), (log) => {
+      this.updateTime();
+    });
+  }
+
+  public onSelect(eventData: any) {
+    using(new XLog(TimeSelectorComponent.logger, levels.INFO, 'onSelect'), (log) => {
+      this.updateTime();
+    });
+  }
 
   // -------------------------------------------------------------------------------------
   // Property time
@@ -49,5 +70,10 @@ export class TimeSelectorComponent extends CoreComponent {
       this._time = value;
       this.onTimeChange(value);
     }
+  }
+
+
+  private updateTime() {
+    this.time = new ShortTime(this.date.getHours() as Hour, this.date.getMinutes());
   }
 }
