@@ -95,8 +95,11 @@ export class ShortTime {
    * @memberOf ShortTime
    */
   public constructor(public hour: Hour, public minute: number) {
-    Assert.that(!Types.isUndefined(hour) && (hour >= 0 && hour <= 23));
-    Assert.that(!Types.isUndefined(minute) && minute >= 0 && minute <= 59);
+    // default constructor?
+    if (!(Types.isUndefined(hour) && Types.isUndefined(minute))) {
+      Assert.that(!Types.isUndefined(hour) && (hour >= 0 && hour <= 23));
+      Assert.that(!Types.isUndefined(minute) && minute >= 0 && minute <= 59);
+    }
   }
 
 

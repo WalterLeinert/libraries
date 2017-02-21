@@ -99,7 +99,10 @@ export class Time extends ShortTime {
   public constructor(hour: Hour, minute: number, public second: number) {
     super(hour, minute);
 
-    Assert.that(!Types.isUndefined(second) && (second >= 0 && second <= 59));
+    // default constructor?
+    if (!Types.isUndefined(second)) {
+      Assert.that(!Types.isUndefined(second) && (second >= 0 && second <= 59));
+    }
   }
 
   /**
