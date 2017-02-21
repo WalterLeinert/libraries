@@ -82,15 +82,17 @@ export class LoginComponent extends BaseComponent<PassportService> {
   }
 
   public login() {
-    this.service.login(this.username, this.password)
-      .subscribe((result) => {
-        LoginComponent.logger.info(JSON.stringify(result));
-        this.navigate([
-          this.navigationService.navigationPath
-        ]);
-      },
-      (error: Error) => {
-        this.handleInfo(error);
-      });
+    using(new XLog(LoginComponent.logger, levels.INFO, 'login'), (log) => {
+      this.service.login(this.username, this.password)
+        .subscribe((result) => {
+          log.log(JSON.stringify(result));
+          this.navigate([
+            this.navigationService.navigationPath
+          ]);
+        },
+        (error: Error) => {
+          this.handleInfo(error);
+        });
+    });
   }
 }

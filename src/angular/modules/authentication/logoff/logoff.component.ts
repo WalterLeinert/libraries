@@ -36,13 +36,15 @@ export class LogoffComponent extends BaseComponent<PassportService> {
   }
 
   public logoff() {
-    this.service.logoff()
-      .subscribe((result) => {
-        LogoffComponent.logger.info(result);
-        this.navigate(['/']);
-      },
-      (error: Error) => {
-        this.handleError(error);
-      });
+    using(new XLog(LogoffComponent.logger, levels.INFO, 'logoff'), (log) => {
+      this.service.logoff()
+        .subscribe(() => {
+          log.log('done');
+          this.navigate(['/']);
+        },
+        (error: Error) => {
+          this.handleError(error);
+        });
+    });
   }
 }

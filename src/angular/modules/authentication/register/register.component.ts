@@ -108,17 +108,19 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
   }
 
   public signup() {
-    this.service.signup(this.user)
-      .subscribe((result) => {
-        RegisterComponent.logger.info(JSON.stringify(result));
+    using(new XLog(RegisterComponent.logger, levels.INFO, 'signup'), (log) => {
+      this.service.signup(this.user)
+        .subscribe((result) => {
+          log.log(JSON.stringify(result));
 
-        this.navigate([
-          this.navigationService.navigationPath
-        ]);
-      },
-      (error: Error) => {
-        this.handleInfo(error);
-      });
+          this.navigate([
+            this.navigationService.navigationPath
+          ]);
+        },
+        (error: Error) => {
+          this.handleInfo(error);
+        });
+    });
   }
 
   public onSelectedRoleChanged(item: IRole) {

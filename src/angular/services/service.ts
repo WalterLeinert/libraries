@@ -49,7 +49,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
      * 
      * @memberOf Service
      */
-    public static handleError(response: Response): ErrorObservable<Error> {
+    public static handleError(response: Response): ErrorObservable {
         // In a real world app, we might use a remote logging infrastructure
         let errorMessage = '** unknown error **';
 
