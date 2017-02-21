@@ -6,33 +6,38 @@
  */
 export enum ControlType {
 
-    /**
-     * Texteingabefeld
-     */
-    Input,
+  /**
+   * Texteingabefeld
+   */
+  Input,
 
-    /**
-     * Datumsfeld
-     */
-    Date,
+  /**
+   * Datumsfeld
+   */
+  Date,
 
-    /**
-     * Auswahl aus Werteliste mit @see{DataTableSelector} (mehrspaltig, Werte z.B. aus DB-Tabelle)
-     */
-    DataTableSelector,
+  /**
+   * Zeitfeld
+   */
+  Time,
 
-    /**
-     * Auswahl aus Werteliste mit @see{DropdownSelector} (Dropdown, einspaltig)
-     */
-    DropdownSelector,
+  /**
+   * Auswahl aus Werteliste mit @see{DataTableSelector} (mehrspaltig, Werte z.B. aus DB-Tabelle)
+   */
+  DataTableSelector,
 
-    /**
-     * Checkbox für Auswahl eines boolschen Werts
-     */
-    Checkbox,
+  /**
+   * Auswahl aus Werteliste mit @see{DropdownSelector} (Dropdown, einspaltig)
+   */
+  DropdownSelector,
 
-    /**
-     * TODO ?? Werteliste??? <-> DropdownSelector
-     */
-    Radio
+  /**
+   * Checkbox für Auswahl eines boolschen Werts
+   */
+  Checkbox,
+
+  /**
+   * TODO ?? Werteliste??? <-> DropdownSelector
+   */
+  Radio
 }

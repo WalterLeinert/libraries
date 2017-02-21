@@ -24,7 +24,7 @@ import { ControlType } from '../common';
 
 import { TextAlignments } from '../../../base';
 import { ListSelectorComponent } from '../common/list-selector.component';
-import { DropdownSelectorComponent, IDropdownSelectorConfig } from '../dropdown-selector';
+import { IDropdownSelectorConfig } from '../dropdown-selector';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 
 export type sortMode = 'single' | 'multiple' | '';
@@ -96,6 +96,29 @@ export type selectionMode = 'single' | 'multiple' | '';
             <template let-col let-data="rowData" pTemplate="editor">
                 <p-calendar [(ngModel)]="data[col.field]" dateFormat="yy-mm-dd" [style.color]="getColor(data, info)">
                 </p-calendar>
+            </template>
+
+          </p-column>
+        </div>
+
+
+       <!--
+          Zeitfelder
+          TODO: ggf. bei obigem DateControl einbauen
+          -->
+        <div *ngIf="info.controlType === controlType.Time">
+          <p-column field="{{info.valueField}}" header="{{info.textField}}"
+            [sortable]="sortable" [editable]="isEditable(info)" [style]="{'overflow':'visible' }">
+
+            <div [style.text-align]="info.textAlignment">
+              <template let-col let-data="rowData" pTemplate="body">
+                <span [style.color]="getColor(data, info)">{{ formatValue(data[col.field], info) }}</span>
+              </template>
+            </div>
+
+            <template let-col let-data="rowData" pTemplate="editor">
+                <flx-time-selector [(time)]="data[col.field]" [style.color]="getColor(data, info)">
+                </flx-time-selector>
             </template>
 
           </p-column>
@@ -474,6 +497,8 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
             if (colInfo.dataType === DataTypes.DATE) {
               colInfo.controlType = ControlType.Date;
+            } else if (colInfo.dataType === DataTypes.TIME) {
+              colInfo.controlType = ControlType.Time;
             }
 
             if (colMetaData.enumMetadata) {
@@ -546,7 +571,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    * @param {*} value
    * @returns {number}
    * 
-   * @memberOf DropdownSelectorComponent
+   * @memberOf DataTableSelectorComponent
    */
   protected indexOfValue(value: any): number {
     let indexFound = -1;

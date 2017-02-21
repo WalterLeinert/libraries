@@ -5,4 +5,5 @@ export * from './datatable-selector';
 export * from './dropdown-selector';
 export * from './enum-value';
 export * from './month-selector';
+export * from './time-selector';
 export * from './year-selector';

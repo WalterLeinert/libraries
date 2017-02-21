@@ -10,6 +10,7 @@ import { CalendarModule } from 'primeng/primeng';
 import { PipeService, ProxyService } from '../../services';
 import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
 import { EnumValueModule } from '../enum-value/enum-value.module';
+import { TimeSelectorModule } from '../time-selector/time-selector.module';
 import { DataTableSelectorComponent } from './datatable-selector.component';
 
 
@@ -20,7 +21,8 @@ import { DataTableSelectorComponent } from './datatable-selector.component';
     DataTableModule,
     CalendarModule,
     EnumValueModule,
-    DropdownSelectorModule
+    DropdownSelectorModule,
+    TimeSelectorModule
   ],
   exports: [
     DataTableSelectorComponent
