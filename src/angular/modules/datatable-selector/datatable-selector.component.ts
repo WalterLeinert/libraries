@@ -258,6 +258,11 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    */
   private savedRow: any;
 
+  /**
+   * wird gefeuert, falls die geänderte Zeile gespeichert werden soll.
+   */
+  @Output() public saveEditedRow = new EventEmitter<any>();
+
 
   /**
    * Creates an instance of DataTableSelectorComponent.
@@ -351,12 +356,15 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
         this.editable = false;
         this.editedRow = undefined;
         this.savedRow = undefined;
+
+        // Event zum Speichern
+        this.onSaveEditedRow(data);
       });
   }
 
   public cancelEdit(data: any) {
     using(new XLog(DataTableSelectorComponent.logger, levels.INFO, 'cancelEdit',
-      `editable = ${this.editable}` ), (log) => {
+      `editable = ${this.editable}`), (log) => {
         this.editable = false;
         this.editedRow = undefined;
 
@@ -384,7 +392,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   public isEditable(info: IControlDisplayInfo): boolean {
     return using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'isEditable',
       `editable = ${this.editable}, info.editable = ${info.editable !== undefined ? info.editable : undefined}`),
-        (log) => {
+      (log) => {
         return this.editable && (info.editable !== undefined ? info.editable : true);
       });
   }
@@ -588,6 +596,11 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   }
 
 
+  protected onSaveEditedRow(row: any) {
+    this.saveEditedRow.emit(row);
+  }
+
+
   /**
    * falls keine Column-Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
    * 
@@ -692,4 +705,5 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
       }
     }
   }
+
 }
