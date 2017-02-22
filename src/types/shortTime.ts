@@ -164,6 +164,10 @@ export class ShortTime {
    * @memberOf ShortTime
    */
   public subtract(time: ShortTime): ShortTime {
+    Assert.notNull(time);
+    Assert.that(Types.isFunction(this.toMinutes));
+    Assert.that(Types.isFunction(time.toMinutes));
+
     const timeInMinutes = this.toMinutes() - time.toMinutes();
     Assert.that(timeInMinutes >= 0);
     return ShortTime.createFromMinutes(timeInMinutes);
