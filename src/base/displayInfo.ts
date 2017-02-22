@@ -29,7 +29,7 @@ export class DisplayInfo implements IDisplayInfo {
   }
 
   public set textField(value: string) {
-    this.options.textField = value;;
+    this.options.textField = value;
   }
 
   public get valueField(): string {
