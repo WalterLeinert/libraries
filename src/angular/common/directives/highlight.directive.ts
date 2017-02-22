@@ -25,9 +25,11 @@ export class HighlightDirective {
     this._defaultColor = colorName || this._defaultColor;
   }
 
+  // tslint:disable-next-line:no-unused-variable
   @HostListener('mouseenter') private onMouseEnter() {
     this.highlight(this.flxHighlight || this._defaultColor);
   }
+  // tslint:disable-next-line:no-unused-variable
   @HostListener('mouseleave') private onMouseLeave() {
     this.highlight(null);
   }

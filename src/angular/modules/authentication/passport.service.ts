@@ -1,5 +1,5 @@
 // Angular
-import { EventEmitter, Injectable, Output } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 
 import 'rxjs/add/operator/catch';
@@ -8,11 +8,12 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 
 // Fluxgate
-import { Assert, Constants, IUser, PasswordChange, ServiceResult, StringBuilder, User } from '@fluxgate/common';
-import { IRestUri, IServiceBase } from '@fluxgate/common';
+import { Assert, Constants, IUser, PasswordChange, StringBuilder, User } from '@fluxgate/common';
+import { IServiceBase } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
-import { configure, getLogger, ILogger, levels, Logger, using, XLog } from '@fluxgate/common';
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 import { Serializer } from '../../../base/serializer';

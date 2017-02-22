@@ -1,7 +1,5 @@
 // Fluxgate
-import { Assert, Color, InstanceAccessor, Types } from '@fluxgate/common';
-
-import { ControlType } from '../angular/modules/common/controlType';
+import { Color, InstanceAccessor } from '@fluxgate/common';
 import { DataType } from './dataType';
 
 

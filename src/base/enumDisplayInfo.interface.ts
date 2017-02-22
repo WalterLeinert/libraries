@@ -1,6 +1,4 @@
 import { IServiceCrud } from '@fluxgate/common';
-
-import { DataType } from './dataType';
 import { IDisplayInfo } from './displayInfo.interface';
 
 export interface IEnumDisplayInfo extends IDisplayInfo {

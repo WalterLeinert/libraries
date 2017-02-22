@@ -1,5 +1,5 @@
 // Fluxgate
-import { Assert, Color, InstanceAccessor, Types } from '@fluxgate/common';
+import { Color, InstanceAccessor } from '@fluxgate/common';
 
 import { DataType } from './dataType';
 import { IDisplayInfo } from './displayInfo.interface';

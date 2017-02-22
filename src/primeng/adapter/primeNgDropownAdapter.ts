@@ -2,9 +2,9 @@
 import { SelectItem } from 'primeng/primeng';
 
 // fluxgate
-import { Assert, IListAdapter } from '@fluxgate/common';
+import { IListAdapter } from '@fluxgate/common';
 
-import { DropdownAdapter, IDropdownAdapter, IDropdownAdapterOptions } from '../../angular/common/adapter';
+import { DropdownAdapter, IDropdownAdapterOptions } from '../../angular/common/adapter';
 
 
 /**

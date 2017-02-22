@@ -1,9 +1,7 @@
-import { Component, Injector, NgModule, ReflectiveInjector } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 
-import { Assert, IListAdapter } from '@fluxgate/common';
-import { MetadataStorage, TableMetadata } from '@fluxgate/common';
+import { IListAdapter } from '@fluxgate/common';
 
 import { Service } from '../../services/service';
 
@@ -12,7 +10,6 @@ import { Service } from '../../services/service';
  */
 export class TableListAdapter<T, TId> implements IListAdapter<T> {
     private _className: string;
-    private itemsSubscription: Observable<T[]>;
 
     /**
      * @param{string} className - der Name der Modelklasse (z.B. 'Artikel') 

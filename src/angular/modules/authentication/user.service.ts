@@ -4,10 +4,9 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
 
 // Fluxgate
-import { IUser, User } from '@fluxgate/common';
+import { User } from '@fluxgate/common';
 
 import { MetadataService, Service } from '../../services';
 import { ConfigService } from '../../services/config.service';

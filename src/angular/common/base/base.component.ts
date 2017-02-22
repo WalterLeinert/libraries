@@ -1,6 +1,4 @@
-import { OnDestroy, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { Message } from 'primeng/primeng';
 
 
 // Fluxgate

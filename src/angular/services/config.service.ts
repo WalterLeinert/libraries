@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { AppConfig, AppRegistry, IAppConfig } from '@fluxgate/common';
+import { AppConfig, IAppConfig } from '@fluxgate/common';
 
 
 @Injectable()

@@ -13,9 +13,8 @@ import { IQuery, IToString, ServiceResult, TableMetadata } from '@fluxgate/commo
 import { Assert, Constants, IService, StringBuilder } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
-import {
-  configure, getLogger, ILogger, levels, Logger, using, XLog
-} from '@fluxgate/common';
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 import { Serializer } from '../../base/serializer';

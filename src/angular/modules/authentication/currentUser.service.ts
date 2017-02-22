@@ -1,9 +1,4 @@
-import { EventEmitter, Injectable, NgModule, Output } from '@angular/core';
-import { HttpModule } from '@angular/http';
-
-import { Observable } from 'rxjs/Observable';
-
-import { IUser } from '@fluxgate/common';
+import { Injectable } from '@angular/core';
 
 import { CurrentUserBaseService } from './currentUserBaseService';
 import { PassportService } from './passport.service';
