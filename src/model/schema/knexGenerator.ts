@@ -1,19 +1,12 @@
 // Nodejs imports
 import * as fs from 'fs';
-import * as os from 'os';
 import * as path from 'path';
-import * as util from 'util';
 
 // -------------------------- logging -------------------------------
-import { 
-    configure, getLogger, ILogger, levels, Logger, using, XLog 
-} from '@fluxgate/common';
-// -------------------------- logging -------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
-
-import { ColumnInfo, DataType } from './columnInfo';
 import { IConfigInfo } from './configInfo';
-import { IGenerator } from './generator.interface';
 import { GeneratorBase } from './generatorBase';
 import { TableInfo } from './tableInfo';
 
@@ -72,8 +65,6 @@ export class KnexGenerator extends GeneratorBase {
 
             for (const colInfo of tableInfo.columns) {
                 // WL: nur für pks
-
-                const f = false;
                 if (colInfo.isPrimaryKey) {
                     GeneratorBase.writeLineSync(fd, `      table.increments('${colInfo.name}').primary();`);
                 } else {

@@ -1,18 +1,17 @@
 import path = require('path');
-import fs = require('fs');
 import * as Express from 'express';
 import { ServerLoader } from 'ts-express-decorators';
 import { Forbidden } from 'ts-httpexceptions';
-import { $log } from 'ts-log-debug';
 
 // Fluxgate
 import {
   AppConfig, Assert, FileSystem, fromEnvironment,
-  IAppConfig, JsonReader, LoggingConfiguration, StringBuilder
+  IAppConfig, JsonReader, StringBuilder
 } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
-import { configure, getLogger, ILogger, levels, Logger, using, XLog } from '@fluxgate/common';
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 // lokale Komponenten

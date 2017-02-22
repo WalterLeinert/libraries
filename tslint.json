@@ -23,6 +23,10 @@
       false
     ],
 
+    "no-unused-variable": [
+      true
+    ],
+
     "variable-name": [
       "check-format",
       "ban-keywords"

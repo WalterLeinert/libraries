@@ -1,15 +1,12 @@
 import * as Knex from 'knex';
 
-import { Option, OptionParser, OptionType } from '@fluxgate/common';
-
 import { ColumnInfo } from './columnInfo';
 import { TableInfo } from './tableInfo';
 
 
 // -------------------------- logging -------------------------------
-import {
-    configure, getLogger, ILogger, levels, Logger, using, XLog
-} from '@fluxgate/common';
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 
@@ -45,6 +42,7 @@ export class SchemaExtractor {
                     this.knex.destroy();
 
                     const columnsSchema = res[0];
+                    // tslint:disable-next-line:no-unused-variable
                     const constraintsSchema = res[1];    // TODO: unused
 
                     // $log.debug(data);
