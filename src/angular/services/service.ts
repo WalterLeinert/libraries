@@ -10,18 +10,17 @@ import { ErrorObservable } from 'rxjs/Observable/ErrorObservable';
 import * as HttpStatusCodes from 'http-status-codes';
 
 import { IQuery, IToString, ServiceResult, TableMetadata } from '@fluxgate/common';
-import { Assert, Constants, StringBuilder } from '@fluxgate/common';
+import { Assert, Constants, IService, StringBuilder } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 import {
-    configure, getLogger, ILogger, levels, Logger, using, XLog
+  configure, getLogger, ILogger, levels, Logger, using, XLog
 } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 import { Serializer } from '../../base/serializer';
 import { ConfigService } from './config.service';
 import { MetadataService } from './metadata.service';
-import { IService } from './service.interface';
 
 
 /**
@@ -33,298 +32,298 @@ import { IService } from './service.interface';
  * @template T
  */
 export abstract class Service<T, TId extends IToString> implements IService {
-    protected static logger = getLogger(Service);
+  protected static logger = getLogger(Service);
 
-    private _url: string;
-    private _tableMetadata: TableMetadata;
-    private serializer: Serializer<T>;
+  private _url: string;
+  private _tableMetadata: TableMetadata;
+  private serializer: Serializer<T>;
 
 
-    /**
-     * Handles server communication errors.
-     * 
-     * @private
-     * @param {Response} error
-     * @returns
-     * 
-     * @memberOf Service
-     */
-    public static handleError(response: Response): ErrorObservable {
-        // In a real world app, we might use a remote logging infrastructure
-        let errorMessage = '** unknown error **';
+  /**
+   * Handles server communication errors.
+   * 
+   * @private
+   * @param {Response} error
+   * @returns
+   * 
+   * @memberOf Service
+   */
+  public static handleError(response: Response): ErrorObservable {
+    // In a real world app, we might use a remote logging infrastructure
+    let errorMessage = '** unknown error **';
 
-        if (response.status < HttpStatusCodes.OK || response.status >= HttpStatusCodes.MULTIPLE_CHOICES) {
-            errorMessage = response.text();
-        }
-
-        Service.logger.error(`${response.status} - ${response.statusText || ''} -- ${errorMessage}`);
-        return Observable.throw(new Error(errorMessage));
+    if (response.status < HttpStatusCodes.OK || response.status >= HttpStatusCodes.MULTIPLE_CHOICES) {
+      errorMessage = response.text();
     }
 
+    Service.logger.error(`${response.status} - ${response.statusText || ''} -- ${errorMessage}`);
+    return Observable.throw(new Error(errorMessage));
+  }
 
 
-    /**
-     * Creates an instance of Service.
-     * 
-     * @param {Http} _http - Http client
-     * @param {string} baseUrl - base url of request
-     * 
-     * @memberOf Service
-     */
-    protected constructor(model: Function, private metadataService: MetadataService,
-        private _http: Http, configService: ConfigService, private _topic?: string) {
-        Assert.notNull(model, 'model');
-        Assert.notNull(metadataService, 'metadataService');
-        Assert.notNull(_http, 'http');
-        Assert.notNull(configService, 'configService');
 
-        const baseUrl = configService.config.url;
+  /**
+   * Creates an instance of Service.
+   * 
+   * @param {Http} _http - Http client
+   * @param {string} baseUrl - base url of request
+   * 
+   * @memberOf Service
+   */
+  protected constructor(model: Function, private metadataService: MetadataService,
+    private _http: Http, configService: ConfigService, private _topic?: string) {
+    Assert.notNull(model, 'model');
+    Assert.notNull(metadataService, 'metadataService');
+    Assert.notNull(_http, 'http');
+    Assert.notNull(configService, 'configService');
 
-        // Metadaten zur Entity ermitteln
-        this._tableMetadata = this.metadataService.findTableMetadata(model);
-        Assert.notNull(this._tableMetadata);
+    const baseUrl = configService.config.url;
 
-        if (this._topic === undefined) {
-            this._topic = this._tableMetadata.options.name;
-        }
+    // Metadaten zur Entity ermitteln
+    this._tableMetadata = this.metadataService.findTableMetadata(model);
+    Assert.notNull(this._tableMetadata);
 
-        const sb = new StringBuilder(configService.config.url);
-
-        if (!baseUrl.endsWith(Constants.PATH_SEPARATOR)) {
-            sb.append(Constants.PATH_SEPARATOR);
-        }
-
-        sb.append(this._topic);
-        this._url = sb.toString();
-
-        this._tableMetadata.registerService(this.constructor);
-        this.serializer = new Serializer<T>(this.tableMetadata);
+    if (this._topic === undefined) {
+      this._topic = this._tableMetadata.options.name;
     }
 
+    const sb = new StringBuilder(configService.config.url);
 
-
-    /**
-     * Create the entity {item} and return {Observable<T>}
-     * 
-     * @param {T} item
-     * @returns {Observable<T>}
-     * 
-     * @memberOf Service
-     */
-    public create(item: T): Observable<T> {
-        Assert.notNull(item, 'item');
-
-        return this.http.post(this.getUrl(), this.serialize(item))
-            .map((response: Response) => this.deserialize(response.json()))
-            .do((data) => Service.logger.info(`Service.create: ${JSON.stringify(data)}`))
-            .catch(Service.handleError);
+    if (!baseUrl.endsWith(Constants.PATH_SEPARATOR)) {
+      sb.append(Constants.PATH_SEPARATOR);
     }
 
+    sb.append(this._topic);
+    this._url = sb.toString();
+
+    this._tableMetadata.registerService(this.constructor);
+    this.serializer = new Serializer<T>(this.tableMetadata);
+  }
 
 
-    /**
-     * Find all entities of type T and return {Observable<T[]>}.
-     * 
-     * @returns {Observable<T[]>}
-     * 
-     * @memberOf Service
-     */
-    public find(): Observable<T[]> {
-        return this.http.get(this.getUrl())
-            .map((response: Response) => this.deserializeArray(response.json()))
-            // .do(data => Service.logger.info('result: ' + JSON.stringify(data)))
-            .catch(Service.handleError);
+
+  /**
+   * Create the entity {item} and return {Observable<T>}
+   * 
+   * @param {T} item
+   * @returns {Observable<T>}
+   * 
+   * @memberOf Service
+   */
+  public create(item: T): Observable<T> {
+    Assert.notNull(item, 'item');
+
+    return this.http.post(this.getUrl(), this.serialize(item))
+      .map((response: Response) => this.deserialize(response.json()))
+      .do((data) => Service.logger.info(`Service.create: ${JSON.stringify(data)}`))
+      .catch(Service.handleError);
+  }
+
+
+
+  /**
+   * Find all entities of type T and return {Observable<T[]>}.
+   * 
+   * @returns {Observable<T[]>}
+   * 
+   * @memberOf Service
+   */
+  public find(): Observable<T[]> {
+    return this.http.get(this.getUrl())
+      .map((response: Response) => this.deserializeArray(response.json()))
+      // .do(data => Service.logger.info('result: ' + JSON.stringify(data)))
+      .catch(Service.handleError);
+  }
+
+
+  /**
+   * Find the entity with the given id and return {Observable<T>}
+   * 
+   * @param {TId} id -- entity id.
+   * @returns {Observable<T>}
+   * 
+   * @memberOf Service
+   */
+  public findById(id: TId): Observable<T> {
+    Assert.notNull(id, 'id');
+
+    return this.http.get(`${this.getUrl()}/${id}`)
+      .map((response: Response) => this.deserialize(response.json()))
+      .do((data) => Service.logger.info(`Service.findById: id = ${id} -> ${JSON.stringify(data)}`))
+      .catch(Service.handleError);
+  }
+
+
+  /**
+   * Update the entity {item} with the given id and return {Observable<T>}
+   * 
+   * @param {T} item
+   * @returns {Observable<T>}
+   * 
+   * @memberOf Service
+   */
+  public update(item: T): Observable<T> {
+    Assert.notNull(item, 'item');
+
+    return this.http.put(`${this.getUrl()}`, this.serialize(item))
+      .map((response: Response) => this.deserialize(response.json()))
+      .do((data) => Service.logger.info(`Service.update: ${JSON.stringify(data)}`))
+      .catch(Service.handleError);
+  }
+
+
+  /**
+   * Delete the entity with the given id and return {Observable<T>}
+   * 
+   * @param {TId} id
+   * @returns {Observable<ServiceResult<TId>>}
+   * 
+   * @memberOf Service
+   */
+  public delete(id: TId): Observable<ServiceResult<TId>> {
+    Assert.notNull(id, 'id');
+
+    return this.http.delete(`${this.getUrl()}/${id}`)
+      .map((response: Response) => response.json())
+      .do((serviceResult) => Service.logger.info(`Service.delete: ${JSON.stringify(serviceResult)}`))
+      .catch(Service.handleError);
+  }
+
+
+  /**
+   * Finds all entities for the given query @param{query}
+   * 
+   * @param {IQuery} query
+   * @returns {Observable<T[]>}
+   * 
+   * @memberOf Service
+   */
+  public query(query: IQuery): Observable<T[]> {
+    Assert.notNull(query, 'query');
+
+    const headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+    const options = new RequestOptions({ headers: headers });           // Create a request option
+
+    return this.http.post(`${this.getUrl()}/query`, query, options)
+      .map((response: Response) => this.deserializeArray(response.json()))
+      .do((data) => Service.logger.info(`Service.query: query = ${JSON.stringify(query)}` +
+        ` -> ${JSON.stringify(data)}`))
+      .catch(Service.handleError);
+  }
+
+
+  /**
+   * Liefert die Url inkl. Topic
+   * 
+   * @type {string}
+   */
+  public getUrl(): string {
+    return this._url;
+  }
+
+  /**
+   * Liefert das Topic.
+   * 
+   * @type {string}
+   */
+  public getTopic(): string {
+    return this._topic;
+  }
+
+
+  /**
+   * Liefert den Topicpfad (z.B. '/artikel' bei Topic 'artikel').
+   * 
+   * @type {string}
+   */
+  public getTopicPath(): string {
+    return Constants.PATH_SEPARATOR + this.getTopic();
+  }
+
+  /**
+   * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
+   * 
+   * @type {string}
+   */
+  public getModelClassName(): string {
+    return this._tableMetadata.className;
+  }
+
+  /**
+   * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
+   * Sonst wird ein Error geworfen.
+   * 
+   * @type {any}
+   * @memberOf Service
+   */
+  public getEntityId(item: T): TId {
+    if (!this._tableMetadata.primaryKeyColumn) {
+      throw new Error(`Table ${this._tableMetadata.options.name}: no primary key column`);
     }
+    return item[this._tableMetadata.primaryKeyColumn.propertyName];
+  }
 
 
-    /**
-     * Find the entity with the given id and return {Observable<T>}
-     * 
-     * @param {TId} id -- entity id.
-     * @returns {Observable<T>}
-     * 
-     * @memberOf Service
-     */
-    public findById(id: TId): Observable<T> {
-        Assert.notNull(id, 'id');
-
-        return this.http.get(`${this.getUrl()}/${id}`)
-            .map((response: Response) => this.deserialize(response.json()))
-            .do((data) => Service.logger.info(`Service.findById: id = ${id} -> ${JSON.stringify(data)}`))
-            .catch(Service.handleError);
-    }
+  /**
+   * Serialisiert das @param{item} für die Übertragung zum Server über das REST-Api.
+   * 
+   * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
+   * 
+   * @param {T} item - Entity-Instanz
+   * @returns {any}
+   */
+  protected serialize(item: T): any {
+    return this.serializer.serialize(item);
+  }
 
 
-    /**
-     * Update the entity {item} with the given id and return {Observable<T>}
-     * 
-     * @param {T} item
-     * @returns {Observable<T>}
-     * 
-     * @memberOf Service
-     */
-    public update(item: T): Observable<T> {
-        Assert.notNull(item, 'item');
+  /**
+   * Deserialisiert das Json-Objekt, welches über das REST-Api vom Server zum Client übertragen wurde
+   * 
+   * @param {any} json - Json-Objekt vom Server
+   * @returns {T}
+   * 
+   * @memberOf Service
+   */
+  protected deserialize(json: any): T {
+    return this.serializer.deserialize(json);
+  }
 
-        return this.http.put(`${this.getUrl()}`, this.serialize(item))
-            .map((response: Response) => this.deserialize(response.json()))
-            .do((data) => Service.logger.info(`Service.update: ${JSON.stringify(data)}`))
-            .catch(Service.handleError);
-    }
-
-
-    /**
-     * Delete the entity with the given id and return {Observable<T>}
-     * 
-     * @param {TId} id
-     * @returns {Observable<ServiceResult<TId>>}
-     * 
-     * @memberOf Service
-     */
-    public delete(id: TId): Observable<ServiceResult<TId>> {
-        Assert.notNull(id, 'id');
-
-        return this.http.delete(`${this.getUrl()}/${id}`)
-            .map((response: Response) => response.json())
-            .do((serviceResult) => Service.logger.info(`Service.delete: ${JSON.stringify(serviceResult)}`))
-            .catch(Service.handleError);
-    }
-
-
-    /**
-     * Finds all entities for the given query @param{query}
-     * 
-     * @param {IQuery} query
-     * @returns {Observable<T[]>}
-     * 
-     * @memberOf Service
-     */
-    public query(query: IQuery): Observable<T[]> {
-        Assert.notNull(query, 'query');
-
-        const headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-        const options = new RequestOptions({ headers: headers });           // Create a request option
-
-        return this.http.post(`${this.getUrl()}/query`, query, options)
-            .map((response: Response) => this.deserializeArray(response.json()))
-            .do((data) => Service.logger.info(`Service.query: query = ${JSON.stringify(query)}` +
-                ` -> ${JSON.stringify(data)}`))
-            .catch(Service.handleError);
-    }
-
-
-    /**
-     * Liefert die Url inkl. Topic
-     * 
-     * @type {string}
-     */
-    public getUrl(): string {
-        return this._url;
-    }
-
-    /**
-     * Liefert das Topic.
-     * 
-     * @type {string}
-     */
-    public getTopic(): string {
-        return this._topic;
-    }
-
-
-    /**
-     * Liefert den Topicpfad (z.B. '/artikel' bei Topic 'artikel').
-     * 
-     * @type {string}
-     */
-    public getTopicPath(): string {
-        return Constants.PATH_SEPARATOR + this.getTopic();
-    }
-
-    /**
-     * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
-     * 
-     * @type {string}
-     */
-    public getModelClassName(): string {
-        return this._tableMetadata.className;
-    }
-
-    /**
-     * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
-     * Sonst wird ein Error geworfen.
-     * 
-     * @type {any}
-     * @memberOf Service
-     */
-    public getEntityId(item: T): TId {
-        if (!this._tableMetadata.primaryKeyColumn) {
-            throw new Error(`Table ${this._tableMetadata.options.name}: no primary key column`);
-        }
-        return item[this._tableMetadata.primaryKeyColumn.propertyName];
-    }
-
-
-    /**
-     * Serialisiert das @param{item} für die Übertragung zum Server über das REST-Api.
-     * 
-     * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
-     * 
-     * @param {T} item - Entity-Instanz
-     * @returns {any}
-     */
-    protected serialize(item: T): any {
-        return this.serializer.serialize(item);
-    }
-
-
-    /**
-     * Deserialisiert das Json-Objekt, welches über das REST-Api vom Server zum Client übertragen wurde
-     * 
-     * @param {any} json - Json-Objekt vom Server
-     * @returns {T}
-     * 
-     * @memberOf Service
-     */
-    protected deserialize(json: any): T {
-        return this.serializer.deserialize(json);
-    }
-
-    /**
-     * Deserialisiert ein Array von Json-Objekten, welches über das REST-Api vom Server zum Client übertragen wurde
-     * 
-     * @param {any} json - Array von Json-Objekten vom Server
-     * @returns {T[]}
-     */
-    protected deserializeArray(jsonArray: any): T[] {
-        return this.serializer.deserializeArray(jsonArray);
-    }
+  /**
+   * Deserialisiert ein Array von Json-Objekten, welches über das REST-Api vom Server zum Client übertragen wurde
+   * 
+   * @param {any} json - Array von Json-Objekten vom Server
+   * @returns {T[]}
+   */
+  protected deserializeArray(jsonArray: any): T[] {
+    return this.serializer.deserializeArray(jsonArray);
+  }
 
 
 
-    /**
-     * Liefert die zugehörige @see{TableMetadata} 
-     * 
-     * @readonly
-     * @protected
-     * @type {TableMetadata}
-     * @memberOf Service
-     */
-    protected get tableMetadata(): TableMetadata {
-        return this._tableMetadata;
-    }
+  /**
+   * Liefert die zugehörige @see{TableMetadata} 
+   * 
+   * @readonly
+   * @protected
+   * @type {TableMetadata}
+   * @memberOf Service
+   */
+  protected get tableMetadata(): TableMetadata {
+    return this._tableMetadata;
+  }
 
 
-    /**
-     * Liefert den Http-Clientservice
-     * 
-     * @readonly
-     * @protected
-     * @type {Http}
-     * @memberOf Service
-     */
-    protected get http(): Http {
-        return this._http;
-    }
+  /**
+   * Liefert den Http-Clientservice
+   * 
+   * @readonly
+   * @protected
+   * @type {Http}
+   * @memberOf Service
+   */
+  protected get http(): Http {
+    return this._http;
+  }
 
 }

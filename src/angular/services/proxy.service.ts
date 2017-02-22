@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 
 // Fluxgate
-import { IService, Service } from '.';
+import { IService } from '@fluxgate/common';
+
+import { Service } from './service';
 
 
 /**
@@ -11,55 +13,55 @@ import { IService, Service } from '.';
 @Injectable()
 export class ProxyService implements IService {
 
-    /**
-     * der eigentliche Service
-     */
-    private service: Service<any, any>;
+  /**
+   * der eigentliche Service
+   */
+  private service: Service<any, any>;
 
-    /**
-     * Setzt den eigentlichen Service
-     */
-    public proxyService(service: any) {
-        this.service = service;
-    }
+  /**
+   * Setzt den eigentlichen Service
+   */
+  public proxyService(service: any) {
+    this.service = service;
+  }
 
-    public create(item: any): any {
-        return this.service.create(item);
-    }
+  public create(item: any): any {
+    return this.service.create(item);
+  }
 
-    public find(): any {
-        return this.service.find();
-    }
+  public find(): any {
+    return this.service.find();
+  }
 
-    public findById(id: any): any {
-        return this.service.findById(id);
-    }
+  public findById(id: any): any {
+    return this.service.findById(id);
+  }
 
-    public delete(id: any): any {
-        return this.service.delete(id);
-    }
+  public delete(id: any): any {
+    return this.service.delete(id);
+  }
 
-    public update(item: any): any {
-        return this.service.update(item);
-    }
+  public update(item: any): any {
+    return this.service.update(item);
+  }
 
-    public getUrl(): string {
-        return this.service.getUrl();
-    }
+  public getUrl(): string {
+    return this.service.getUrl();
+  }
 
-    public getTopic(): string {
-        return this.service.getTopic();
-    }
+  public getTopic(): string {
+    return this.service.getTopic();
+  }
 
-    public getTopicPath(): string {
-        return this.service.getTopicPath();
-    }
+  public getTopicPath(): string {
+    return this.service.getTopicPath();
+  }
 
-     public getEntityId(item: any): any {
-         return this.service.getEntityId(item);
-     }
+  public getEntityId(item: any): any {
+    return this.service.getEntityId(item);
+  }
 
-     public getModelClassName(): string {
-         return this.service.getModelClassName();
-     }
+  public getModelClassName(): string {
+    return this.service.getModelClassName();
+  }
 }

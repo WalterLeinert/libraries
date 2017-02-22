@@ -7,7 +7,7 @@ import 'rxjs/add/observable/throw';
 
 // Fluxgate
 import {
-  Assert, Clone, Color, ColumnTypes, InstanceAccessor, StringUtil, TableMetadata, Types
+  Assert, Clone, Color, ColumnTypes, InstanceAccessor, IService, StringUtil, TableMetadata, Types
 } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
@@ -16,13 +16,11 @@ import {
 } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { IService } from '../../services';
-import { MetadataService, PipeService, PipeType, ProxyService } from '../../services';
 
 import { ControlDisplayInfo, DataTypes, IControlDisplayInfo, IEnumDisplayInfo } from '../../../base';
-import { ControlType } from '../common';
-
 import { TextAlignments } from '../../../base';
+import { MetadataService, PipeService, PipeType, ProxyService } from '../../services';
+import { ControlType } from '../common';
 import { ListSelectorComponent } from '../common/list-selector.component';
 import { IDropdownSelectorConfig } from '../dropdown-selector';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';

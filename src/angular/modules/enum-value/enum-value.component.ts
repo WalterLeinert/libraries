@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 
 // Fluxgate
-import { Assert, Clone, ColumnMetadata, StringUtil, TableMetadata } from '@fluxgate/common';
+import { Assert, Clone, ColumnMetadata, IService, StringUtil, TableMetadata } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 import {
@@ -18,7 +18,7 @@ import {
 
 import { DataTypes, DisplayInfo, IDisplayInfo, } from '../../../base';
 import { MetadataService, ProxyService } from '../../services';
-import { IService } from '../../services/service.interface';
+
 
 /**
  * Fluxgate EnumValue-Komponente

@@ -1,8 +1,10 @@
 // Angular
 import { PipeTransform } from '@angular/core';
 
+// Fluxgate
+import { IService } from '@fluxgate/common';
+
 import { ControlType } from '../angular/modules/common/controlType';
-import { IService } from '../angular/services';
 import { PipeType } from './../angular/services/pipe.service';
 import { IDisplayInfo } from './displayInfo.interface';
 import { IEnumDisplayInfo } from './enumDisplayInfo.interface';

@@ -1,6 +1,5 @@
 import { IServiceCrud } from '@fluxgate/common';
 
-import { IService } from '../angular/services';
 import { DataType } from './dataType';
 import { IDisplayInfo } from './displayInfo.interface';
 

@@ -6,13 +6,11 @@ import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert, TableMetadata } from '@fluxgate/common';
-
-import { IService } from '../../services';
-import { MetadataService, ProxyService } from '../../services';
+import { Assert, IService, TableMetadata } from '@fluxgate/common';
 
 import { IDisplayInfo } from '../../../base';
 import { BaseComponent } from '../../common/base';
+import { MetadataService, ProxyService } from '../../services';
 import { SelectorBaseComponent } from './selectorBase.component';
 
 

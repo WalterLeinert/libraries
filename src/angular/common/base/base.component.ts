@@ -2,9 +2,12 @@ import { OnDestroy, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { Message } from 'primeng/primeng';
 
+
+// Fluxgate
+import { IServiceBase } from '@fluxgate/common';
+
 import { IAutoformConfig, IAutoformNavigation } from '../../modules/autoform/autoformConfig.interface';
 import { AutoformConstants } from '../../modules/autoform/autoformConstants';
-import { IServiceBase } from '../../services';
 import { CoreComponent } from './core.component';
 
 

@@ -9,13 +9,14 @@ import { Observable } from 'rxjs/Observable';
 
 // Fluxgate
 import { Assert, Constants, IUser, PasswordChange, ServiceResult, StringBuilder, User } from '@fluxgate/common';
+import { IRestUri, IServiceBase } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 import { configure, getLogger, ILogger, levels, Logger, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 import { Serializer } from '../../../base/serializer';
-import { IRestUri, IServiceBase, MetadataService, Service } from '../../services';
+import { MetadataService, Service } from '../../services';
 import { ConfigService } from '../../services/config.service';
 import { CurrentUser } from './currentUser';
 

@@ -1,5 +1,8 @@
 import { Router } from '@angular/router';
-import { IServiceBase } from '../../services';
+
+// Fluxgate
+import { IServiceBase } from '@fluxgate/common';
+
 import { Base2Component } from './base2.component';
 
 
