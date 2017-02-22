@@ -87,10 +87,10 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   private sub: Subscription;
 
-  constructor(router: Router, service: ProxyService, private route: ActivatedRoute,
+  constructor(router: Router, service: ProxyService, route: ActivatedRoute,
     private injector: Injector,
     private confirmationService: ConfirmationService, private metadataService: MetadataService) {
-    super(router, service);
+    super(router, service, route);
   }
 
   // tslint:disable-next-line:use-life-cycle-interface

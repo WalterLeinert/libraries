@@ -1,4 +1,4 @@
-import { NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 
 // Fluxgate
@@ -33,7 +33,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
    * 
    * @memberOf BaseComponent
    */
-  protected constructor(private _router: Router, private _service: TService) {
+  protected constructor(private _router: Router, private _service: TService, private _route?: ActivatedRoute) {
     super();
   }
 
@@ -78,6 +78,30 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
    */
   protected get service(): TService {
     return this._service;
+  }
+
+  /**
+   * Liefert den zugehörigen Router
+   * 
+   * @readonly
+   * @protected
+   * @type {Router}
+   * @memberOf BaseComponent
+   */
+  protected get router(): Router {
+    return this._router;
+  }
+
+  /**
+   * Liefert die zugehörige Route
+   * 
+   * @readonly
+   * @protected
+   * @type {ActivatedRoute}
+   * @memberOf BaseComponent
+   */
+  protected get route(): ActivatedRoute {
+    return this._route;
   }
 
 
