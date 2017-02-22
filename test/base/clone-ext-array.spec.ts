@@ -7,7 +7,7 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { Clone } from '../../src/base/clone';
-import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable'
+import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
 
 class TreeNode extends UniqueIdentifiable {
   constructor(private _id: number, private _name: string) {
@@ -65,7 +65,7 @@ class CloneExtArrayTest {
       new TreeNode(3, 'child 3')
     ]);
     const treeCloned = Clone.clone(tree);
-    
+
     // Test so nicht möglich, da sich die Instanzen in der instanceId unterscheiden (UniqueIdentifiable)!
     // expect(treeCloned).to.deep.equal(tree);
 
