@@ -1,7 +1,7 @@
 import { $log } from 'ts-log-debug';
 
 // Fluxgate
-import { configure, FileSystem, fromEnvironment, LoggingConfiguration } from '@fluxgate/common';
+import { configure, FileSystem, LoggingConfiguration } from '@fluxgate/common';
 
 export class Logging {
 

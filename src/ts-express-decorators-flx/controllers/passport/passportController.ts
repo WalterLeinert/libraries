@@ -5,13 +5,12 @@ import * as Passport from 'passport';
 import { BodyParams, Controller, Get, Next, Post, Request, Required, Response } from 'ts-express-decorators';
 
 // -------------------------- logging -------------------------------
-import {
-    configure, getLogger, ILogger, levels, Logger, using, XLog
-} from '@fluxgate/common';
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IUser, ServiceResult } from '@fluxgate/common';
+import { IUser } from '@fluxgate/common';
 import { PassportLocalService } from '../../services/passportLocal.service';
 
 import { Messages } from '../../../resources/messages';

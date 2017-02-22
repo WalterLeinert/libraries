@@ -1,17 +1,8 @@
-import {
-    Authenticated, Controller, Delete, Get, PathParams,
-    Post, Put,
-    Request
-} from 'ts-express-decorators';
+import { Authenticated, Controller, Post, Request } from 'ts-express-decorators';
 
-// -------------------------- logging -------------------------------
-import {
-    configure, getLogger, ILogger, levels, Logger, using, XLog
-} from '@fluxgate/common';
-// -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IQuery, IToString } from '@fluxgate/common';
+import { IQuery } from '@fluxgate/common';
 
 import { BaseService } from '../services/base.service';
 

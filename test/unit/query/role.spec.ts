@@ -6,7 +6,6 @@ require('reflect-metadata');
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { } from 'chai-as-promised';
 import { suite, test } from 'mocha-typescript';
 
 
@@ -15,9 +14,8 @@ chai.use(chaiAsPromised);
 chai.should();
 
 // -------------------------- logging -------------------------------
-import {
-    configure, getLogger, ILogger, levels, Logger, using, XLog
-} from '@fluxgate/common';
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 import { IRole, Role } from '@fluxgate/common';

@@ -262,6 +262,7 @@ export class PojoGenerator extends GeneratorBase {
    * 
    * @memberOf PojoGenerator
    */
+  // tslint:disable-next-line:no-unused-variable
   private dumpDeserialization(fd: number, info: TableInfo) {
     GeneratorBase.writeLineSync(fd);
     GeneratorBase.writeLineSync(fd, '  //');
