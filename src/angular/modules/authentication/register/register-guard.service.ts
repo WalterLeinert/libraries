@@ -21,7 +21,7 @@ export class RegisterGuardService extends CurrentUserBaseService implements CanA
     }
 
     public canActivate(route: ActivatedRouteSnapshot): boolean {
-        if (this.user && this.user.isAdmin) {
+        if (this.userInternal && this.userInternal.isAdmin) {
             return true;
         }
         return false;

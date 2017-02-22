@@ -19,9 +19,8 @@ import { IUser } from '@fluxgate/common';
 export abstract class CurrentUser {
   protected static logger = getLogger(CurrentUser);
 
-  private _user: IUser;
+  private _userInternal: IUser;
   @Output() public userChange: EventEmitter<IUser> = new EventEmitter();
-
 
   /**
    * Liefert den aktuell angemeldeten User.
@@ -30,13 +29,18 @@ export abstract class CurrentUser {
    * @type {IUser}
    * @memberOf CurrentUserService
    */
-  protected get user(): IUser {
-    return this._user;
+  public get user(): IUser {
+    return this._userInternal;
   }
 
-  protected set user(value: IUser) {
-    if (this._user !== value) {
-      this._user = value;
+
+  protected get userInternal(): IUser {
+    return this._userInternal;
+  }
+
+  protected set userInternal(value: IUser) {
+    if (this._userInternal !== value) {
+      this._userInternal = value;
       this.onUserChange(value);
     }
   }

@@ -21,7 +21,7 @@ export class ChangePasswordGuardService extends CurrentUserBaseService implement
    }
 
     public canActivate(route: ActivatedRouteSnapshot): boolean {
-        if (this.user) {
+        if (this.userInternal) {
             return true;
         }
         return false;
