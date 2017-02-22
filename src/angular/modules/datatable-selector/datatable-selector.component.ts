@@ -171,10 +171,10 @@ export type selectionMode = 'single' | 'multiple' | '';
             <div *ngIf="isEditing(data)">
               <div>                
                 <button pButton type="text" class="ui-button-secondary"
-                  icon="fa-check" (click)="saveRow(data)">                  
+                  icon="fa-check" (click)="saveRow(data)" pTooltip="Save changes">                  
                 </button>
                 <button pButton type="text" class="ui-button-secondary"
-                  icon="fa-times" (click)="cancelEdit(data)">                  
+                  icon="fa-times" (click)="cancelEdit(data)" pTooltip="Cancel changes">                  
                 </button>
               </div>
             </div>
@@ -182,7 +182,7 @@ export type selectionMode = 'single' | 'multiple' | '';
             <div *ngIf="!isEditing(data)">
               <div>                
                 <button pButton type="text" class="ui-button-secondary" 
-                  icon="fa-pencil" (click)="editRow(data)">                  
+                  icon="fa-pencil" (click)="editRow(data)" pTooltip="Edit row">                  
                 </button>
               </div>
             </div>
@@ -494,6 +494,13 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
             if (colInfo.dataType === undefined) {
               colInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
             }
+
+            // berechnete Spalten sind nicht editierbar
+            if (colInfo.editable !== undefined && colInfo.editable && !colMetaData.options.persisted) {
+              log.error(`Spalte ${tableMetadata.className}.${colMetaData.propertyName}` +
+                ` ist nicht editierbar (berechneter Wert)`);
+            }
+            colInfo.editable = colMetaData.options.persisted;
 
             if (colInfo.dataType === DataTypes.DATE) {
               colInfo.controlType = ControlType.Date;
