@@ -489,37 +489,43 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
           if (tableMetadata) {
             const colMetaData = tableMetadata.getColumnMetadataByProperty(colInfo.valueField);
 
-            if (colInfo.dataType === undefined) {
-              colInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
-            }
+            if (!colMetaData) {
 
-            // berechnete Spalten sind nicht editierbar
-            if (colInfo.editable !== undefined && colInfo.editable && !colMetaData.options.persisted) {
-              log.warn(`Spalte ${tableMetadata.className}.${colMetaData.propertyName}` +
-                ` ist nicht editierbar (berechneter Wert)`);
-            }
-            colInfo.editable = colMetaData.options.persisted;
+              // Konfigurationsfehler?
+              log.error(`Modelclass ${tableMetadata.className}: unknown property ${colInfo.valueField}`);
+            } else {
 
-            if (colInfo.dataType === DataTypes.DATE) {
-              colInfo.controlType = ControlType.Date;
-            } else if (colInfo.dataType === DataTypes.TIME) {
-              colInfo.controlType = ControlType.Time;
-            }
+              if (colInfo.dataType === undefined) {
+                colInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
+              }
 
-            if (colMetaData.enumMetadata) {
-              if (!colInfo.enumInfo) {
+              // berechnete Spalten sind nicht editierbar
+              if (colInfo.editable !== undefined && colInfo.editable && !colMetaData.options.persisted) {
+                log.warn(`Spalte ${tableMetadata.className}.${colMetaData.propertyName}` +
+                  ` ist nicht editierbar (berechneter Wert)`);
+              }
+              colInfo.editable = colMetaData.options.persisted;
 
-                const enumTableMetadata = this.metadataService.findTableMetadata(colMetaData.enumMetadata.dataSource);
-                colInfo.enumInfo = {
-                  selectorDataService: enumTableMetadata.getServiceInstance(this.injector),
-                  textField: colMetaData.enumMetadata.textField,
-                  valueField: colMetaData.enumMetadata.valueField
-                };
+              if (colInfo.dataType === DataTypes.DATE) {
+                colInfo.controlType = ControlType.Date;
+              } else if (colInfo.dataType === DataTypes.TIME) {
+                colInfo.controlType = ControlType.Time;
+              }
 
-                colInfo.controlType = ControlType.DropdownSelector;
+              if (colMetaData.enumMetadata) {
+                if (!colInfo.enumInfo) {
+
+                  const enumTableMetadata = this.metadataService.findTableMetadata(colMetaData.enumMetadata.dataSource);
+                  colInfo.enumInfo = {
+                    selectorDataService: enumTableMetadata.getServiceInstance(this.injector),
+                    textField: colMetaData.enumMetadata.textField,
+                    valueField: colMetaData.enumMetadata.valueField
+                  };
+
+                  colInfo.controlType = ControlType.DropdownSelector;
+                }
               }
             }
-
           }
 
           if (!colInfo.textAlignment && ControlDisplayInfo.isRightAligned(colInfo.dataType)) {
