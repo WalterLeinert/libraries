@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Assert, Types } from '@fluxgate/common';
+import { Types } from '@fluxgate/common';
 
 import { PrimeNgCalendarLocale } from '../../../primeng/calendarLocale';
 import { MetadataService } from '../../services';

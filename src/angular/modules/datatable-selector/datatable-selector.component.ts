@@ -1,28 +1,24 @@
 // Angular
-import { Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, PipeTransform } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output, PipeTransform } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import {
-  Assert, Clone, Color, ColumnTypes, InstanceAccessor, IService, StringUtil, TableMetadata, Types
-} from '@fluxgate/common';
+import { Assert, Clone, Color, TableMetadata, Types } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
-import {
-  configure, getLogger, ILogger, levels, Logger, using, XLog
-} from '@fluxgate/common';
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 
-import { ControlDisplayInfo, DataTypes, IControlDisplayInfo, IEnumDisplayInfo } from '../../../base';
+import { ControlDisplayInfo, DataTypes, IControlDisplayInfo } from '../../../base';
 import { TextAlignments } from '../../../base';
-import { MetadataService, PipeService, PipeType, ProxyService } from '../../services';
+import { MetadataService, PipeService, PipeType } from '../../services';
 import { ControlType } from '../common';
 import { ListSelectorComponent } from '../common/list-selector.component';
-import { IDropdownSelectorConfig } from '../dropdown-selector';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 
 export type sortMode = 'single' | 'multiple' | '';

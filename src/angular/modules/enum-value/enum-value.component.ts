@@ -1,23 +1,15 @@
 // Angular
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
-
-
-// PrimeNG
-import { SelectItem } from 'primeng/primeng';
 
 // Fluxgate
-import { Assert, Clone, ColumnMetadata, IService, StringUtil, TableMetadata } from '@fluxgate/common';
+import { IService } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
-import {
-  configure, getLogger, ILogger, levels, Logger, using, XLog
-} from '@fluxgate/common';
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { DataTypes, DisplayInfo, IDisplayInfo, } from '../../../base';
-import { MetadataService, ProxyService } from '../../services';
+import { DisplayInfo, } from '../../../base';
 
 
 /**

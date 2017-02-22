@@ -1,12 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { EventEmitter, Input, Output } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 // -------------------------- logging -------------------------------
-import { configure, getLogger, ILogger, levels, Logger, using, XLog } from '@fluxgate/common';
-// -------------------------- logging -------------------------------
-
-import { Assert, Types } from '@fluxgate/common';
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 import { CoreComponent } from '../../common/base';
 import { MetadataService } from '../../services';

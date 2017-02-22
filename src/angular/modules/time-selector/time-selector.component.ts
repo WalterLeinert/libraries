@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 
 // -------------------------------------- logging --------------------------------------------
+// tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------------------- logging --------------------------------------------
 

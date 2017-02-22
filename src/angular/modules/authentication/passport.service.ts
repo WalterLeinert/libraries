@@ -235,6 +235,7 @@ export class PassportService extends CurrentUser implements IServiceBase {
      * @param {T} item - Entity-Instanz
      * @returns {any}
      */
+    // tslint:disable-next-line:no-unused-variable
     private serialize(item: IUser): any {
         return this.serializer.serialize(item);
     }

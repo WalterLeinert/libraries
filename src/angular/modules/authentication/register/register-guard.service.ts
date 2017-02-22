@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 
-// Fluxgate
-import { IUser } from '@fluxgate/common';
-
 import { CurrentUserBaseService } from '../currentUserBaseService';
 import { PassportService } from '../passport.service';
 

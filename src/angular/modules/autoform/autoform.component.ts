@@ -1,18 +1,16 @@
 // tslint:disable:max-line-length
 
-import { CommonModule } from '@angular/common';
-import { Component, Injector, NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, Injector } from '@angular/core';
+
+import { ConfirmationService } from 'primeng/primeng';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { IFieldOptions } from './autoformConfig.interface';
 import { IAutoformConfig } from './autoformConfig.interface';
 
-// PrimeNG
-import { ButtonModule, ConfirmDialogModule, SharedModule } from 'primeng/primeng';
-import { ConfirmationService, MessagesModule } from 'primeng/primeng';
-
 
 // -------------------------------------- logging --------------------------------------------
+// tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------------------- logging --------------------------------------------
 
@@ -20,7 +18,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 import { Subscription } from 'rxjs/Subscription';
 
 // Fluxgate
-import { Assert, ColumnMetadata, ColumnTypes, Constants, TableMetadata } from '@fluxgate/common';
+import { ColumnMetadata, ColumnTypes, TableMetadata } from '@fluxgate/common';
 
 import { BaseComponent } from '../../common/base';
 import { MetadataService, ProxyService } from '../../services';

@@ -1,5 +1,4 @@
 import { IControlDisplayInfo } from '../../../base/controlDisplayInfo.interface';
-import { IDisplayInfo } from '../../../base/displayInfo.interface';
 import { IRowDisplayInfo } from '../../../base/rowDisplayInfo.interface';
 
 /**

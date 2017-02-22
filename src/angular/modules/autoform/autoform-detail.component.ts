@@ -1,33 +1,22 @@
 // tslint:disable:max-line-length
 
-import { CommonModule } from '@angular/common';
-import { Component, Injector, Input, NgModule, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Injector, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
-
-// PrimeNG
-import { ButtonModule, ConfirmDialogModule, SharedModule } from 'primeng/primeng';
-import { ConfirmationService, MessagesModule } from 'primeng/primeng';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { ConfirmationService } from 'primeng/primeng';
 
 // -------------------------------------- logging --------------------------------------------
+// tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------------------- logging --------------------------------------------
 
 
 // Fluxgate
-import { Assert, ColumnMetadata, ColumnTypes, Constants, TableMetadata } from '@fluxgate/common';
+import { Assert, ColumnMetadata, TableMetadata } from '@fluxgate/common';
 
 import { BaseComponent } from '../../common/base';
 import { MetadataService, ProxyService } from '../../services';
-
-import { IFieldOptions } from './autoformConfig.interface';
 import { IAutoformConfig } from './autoformConfig.interface';
-import { AutoformConstants } from './autoformConstants';
-
 
 
 @Component({
@@ -240,15 +229,6 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
       }
     }
     return rval;
-  }
-
-
-  private getItem(id: any) {
-    this.service.findById(id).subscribe(
-      (value) => this.value = value,
-      (error: Error) => {
-        this.handleError(error);
-      });
   }
 
 

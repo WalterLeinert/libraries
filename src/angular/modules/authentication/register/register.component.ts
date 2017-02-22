@@ -5,15 +5,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { SelectItem } from 'primeng/primeng';
-
 // fluxgate
-import { Assert, IRole, IUser, User } from '@fluxgate/common';
+import { Assert, IRole, User } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
-import {
-  configure, getLogger, ILogger, levels, Logger, using, XLog
-} from '@fluxgate/common';
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 import { Base2Component } from '../../../common/base';

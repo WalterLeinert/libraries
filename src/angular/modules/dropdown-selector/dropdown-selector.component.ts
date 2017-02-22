@@ -1,5 +1,5 @@
 // Angular
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -8,16 +8,15 @@ import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 
 // Fluxgate
-import { Assert, Clone, ColumnMetadata, StringUtil, TableMetadata } from '@fluxgate/common';
+import { Assert, Clone, StringUtil, TableMetadata } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
-import {
-  configure, getLogger, ILogger, levels, Logger, using, XLog
-} from '@fluxgate/common';
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { DataTypes, DisplayInfo, IDisplayInfo, } from '../../../base';
-import { MetadataService, ProxyService } from '../../services';
+import { DataTypes, DisplayInfo, } from '../../../base';
+import { MetadataService } from '../../services';
 import { ListSelectorComponent } from '../common';
 import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
 
@@ -348,8 +347,6 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     Assert.notNull(tableMetadata);
 
     const config = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
-
-    const columnInfos: IDisplayInfo[] = [];
 
     // default: erste Property
     let displayMetadataName: string = tableMetadata.columnMetadata[0].propertyName;
