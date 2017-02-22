@@ -1,5 +1,6 @@
 // Logging
 import { getLogger } from '../diagnostics/logger';
+// tslint:disable-next-line:no-unused-variable
 import { ILogger } from '../diagnostics/logger.interface';
 
 import { IDisposable } from './disposable.interface';
@@ -9,54 +10,54 @@ import { IDisposable } from './disposable.interface';
  * Abstract base class for disposable resources
  */
 export abstract class Disposable implements IDisposable {
-    protected static logger = getLogger(Disposable);
+  protected static logger = getLogger(Disposable);
 
-    /** if true, throw Error on double dispose */
-    public static throwExceptionOnAlreadyDisposed = false;
+  /** if true, throw Error on double dispose */
+  public static throwExceptionOnAlreadyDisposed = false;
 
-    /** if true, log method entry/exit */
-    public static doMethodTraces = false;
+  /** if true, log method entry/exit */
+  public static doMethodTraces = false;
 
-    private disposed = false;
+  private disposed = false;
 
-    /**
-     * frees required resources
-     */
-    public dispose() {
-        // NOTE: EnterExitLogger not available due to recursion
-        // using(new EnterExitLogger(Disposable.logger, levels.DEBUG, 'dispose'), (log) => {
-        try {
-            if (Disposable.doMethodTraces) {
-                Disposable.logger.debug('>> dispose');
-            }
+  /**
+   * frees required resources
+   */
+  public dispose() {
+    // NOTE: EnterExitLogger not available due to recursion
+    // using(new EnterExitLogger(Disposable.logger, levels.DEBUG, 'dispose'), (log) => {
+    try {
+      if (Disposable.doMethodTraces) {
+        Disposable.logger.debug('>> dispose');
+      }
 
 
-            if (this.disposed) {
-                if (Disposable.throwExceptionOnAlreadyDisposed) {
-                    throw new Error('Instance already disposed: ' + JSON.stringify(this));
-                } else {
-                    Disposable.logger.debug('Instance already disposed: ', this);
-                }
-            } else {
-                this.onDispose();
-            }
-
-        } finally {
-            if (Disposable.doMethodTraces) {
-                Disposable.logger.debug('<< dispose');
-            }
-            this.disposed = true;
+      if (this.disposed) {
+        if (Disposable.throwExceptionOnAlreadyDisposed) {
+          throw new Error('Instance already disposed: ' + JSON.stringify(this));
+        } else {
+          Disposable.logger.debug('Instance already disposed: ', this);
         }
-        // });
-    }
+      } else {
+        this.onDispose();
+      }
 
-    /**
-     * Will be called by @see {Disposable.dispose}.
-     * Must be overridden in derived classes.
-     */
-    protected onDispose() {
-        // ok
+    } finally {
+      if (Disposable.doMethodTraces) {
+        Disposable.logger.debug('<< dispose');
+      }
+      this.disposed = true;
     }
+    // });
+  }
+
+  /**
+   * Will be called by @see {Disposable.dispose}.
+   * Must be overridden in derived classes.
+   */
+  protected onDispose() {
+    // ok
+  }
 }
 
 
@@ -77,11 +78,11 @@ export abstract class Disposable implements IDisposable {
  * @returns {TReturn} Returns whatever the closure's return value is.
  */
 export function using<TDisposable extends IDisposable, TReturn>(
-    disposable: TDisposable,
-    closure: (disposable: TDisposable) => TReturn): TReturn {
-    try {
-        return closure(disposable);
-    } finally {
-        disposable.dispose();
-    }
+  disposable: TDisposable,
+  closure: (disposable: TDisposable) => TReturn): TReturn {
+  try {
+    return closure(disposable);
+  } finally {
+    disposable.dispose();
+  }
 }

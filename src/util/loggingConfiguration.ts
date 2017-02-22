@@ -3,6 +3,7 @@ import process = require('process');
 
 // Logging
 import { using } from '../base/disposable';
+// tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, XLog } from '../diagnostics';
 
 import { StringBuilder, StringUtil } from '../base';

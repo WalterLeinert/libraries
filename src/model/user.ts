@@ -1,7 +1,7 @@
 import { AppRegistry } from '../base';
 import { Enum } from '../model/decorator/model/enum';
 
-import { Column, EnumTable, IUser, Role, Table, UserRoleId } from '.';
+import { Column, IUser, Role, Table, UserRoleId } from '.';
 
 
 /**
@@ -31,7 +31,7 @@ export class User implements IUser {
   @Column({ name: 'email', nullable: true, displayName: 'Email' })
   public email?: string;
 
-  @Enum<Role, string, number>((dataSource) => Role, (role) => role.name, (role) => role.id)
+  @Enum<Role, string, number>(() => Role, (role) => role.name, (role) => role.id)
   @Column({ name: 'id_role', displayName: 'Role-Id' })
   public role: number = UserRoleId.User;
 

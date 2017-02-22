@@ -1,6 +1,7 @@
 // -------------------------- logging -------------------------------
 import { IConfig } from '../diagnostics/config.interface';
 import { getLogger } from '../diagnostics/logger';
+// tslint:disable-next-line:no-unused-variable
 import { ILogger } from '../diagnostics/logger.interface';
 // -------------------------- logging -------------------------------
 

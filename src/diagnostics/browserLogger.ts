@@ -1,9 +1,5 @@
 import * as moment from 'moment';
-
-
-import { Platform } from '../base/platform';
 import { StringBuilder } from '../base/stringBuilder';
-import { Dictionary } from '../types/dictionary';
 import { Types } from '../types/types';
 import { JsonReader } from '../util/jsonReader';
 

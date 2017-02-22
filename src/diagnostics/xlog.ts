@@ -1,6 +1,4 @@
 import { Disposable, } from '../base/disposable';
-import { IDisposable } from '../base/disposable.interface';
-import { Platform } from '../base/platform';
 import { Types } from '../types/types';
 
 import { levels } from './level';
@@ -32,6 +30,7 @@ export class XLog extends Disposable implements ILogger {
     private static readonly defaultIndentation = 2;
     private static readonly maxIndentations = 30;
     private static readonly indentationLevels = new Array<string>();
+    // tslint:disable-next-line:no-unused-variable
     private static initEnterExitLogger: boolean = XLog.initialize();
 
     private functionName: string;

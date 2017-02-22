@@ -1,7 +1,5 @@
 import { Dictionary } from '../types/dictionary';
 import { Assert } from '../util/assert';
-
-import { levels } from './level';
 import { ILogger } from './logger.interface';
 
 

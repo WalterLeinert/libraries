@@ -7,8 +7,6 @@ import { Dictionary } from '../types/dictionary';
 import { InstanceCreator, InstanceSetter } from '../types/instanceAccessor';
 import { Types } from '../types/types';
 import { Assert } from '../util/assert';
-import { ICtor } from './ctor';
-import { ObjectType } from './objectType';
 import { UniqueIdentifiable } from './uniqueIdentifiable';
 
 
@@ -23,6 +21,7 @@ abstract class ClonerBase<T> {
   private static predefinedCloners: Dictionary<string, InstanceCreator<any>> =
   new Dictionary<string, InstanceCreator<any>>();
 
+  // tslint:disable-next-line:no-unused-variable
   private static initialized = ClonerBase.initialize();
 
   private cloneDict: Dictionary<any, any> = new Dictionary<any, any>();

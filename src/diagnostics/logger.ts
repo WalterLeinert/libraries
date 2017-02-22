@@ -3,7 +3,6 @@ import { Types } from '../types/types';
 
 import { BrowserLogger } from './browserLogger';
 import { IConfig } from './config.interface';
-import { levels } from './level';
 import { Level } from './level';
 import { ILevel } from './level.interface';
 import { ILogger } from './logger.interface';

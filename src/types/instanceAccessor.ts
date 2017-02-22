@@ -1,5 +1,3 @@
-import { ICtor } from '../base/ctor';
-
 /**
  * Typdeklaration, die den Zugriff auf Objektproperties über eine Lambdaexpression erlaubt.
  * 

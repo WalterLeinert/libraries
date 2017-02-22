@@ -1,6 +1,4 @@
 import { IDictionary } from '.';
-
-import { IToString } from './../base/toString.interface';
 import { Identifiable } from './../base/uniqueIdentifiable';
 import { Assert } from './../util/assert';
 import { Types } from './types';

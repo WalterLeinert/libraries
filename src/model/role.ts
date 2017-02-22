@@ -28,6 +28,7 @@ export class Role implements IRole {
   public static readonly ROLE_CONFIG_KEY = 'IRole';
 
   private static roleIdMap: { [id: number]: boolean } = {};
+  // tslint:disable-next-line:no-unused-variable
   private static ___initRole: boolean = Role.initialize();
 
 
