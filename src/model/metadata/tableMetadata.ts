@@ -200,7 +200,7 @@ export class TableMetadata {
    */
   public getServiceInstance(injector: any): IServiceCrud {
     if (this.options instanceof EnumTableOptions) {
-      return new EnumTableService(this.options.enumValues);
+      return new EnumTableService(this, this.options.enumValues);
     } else {
       return injector.get(this._service);
     }

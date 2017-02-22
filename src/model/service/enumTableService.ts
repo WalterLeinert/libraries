@@ -3,7 +3,8 @@ import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/Observable/ErrorObservable';
 
 import { Assert } from '../../util/assert';
-import { IServiceCrud } from './serviceCrud.interface';
+import { TableMetadata } from '../metadata/tableMetadata';
+import { IService } from './service.interface';
 
 
 /**
@@ -14,9 +15,9 @@ import { IServiceCrud } from './serviceCrud.interface';
  * @class EnumTableService
  * @implements {IServiceCrud}
  */
-export class EnumTableService implements IServiceCrud {
+export class EnumTableService implements IService {
 
-  public constructor(private enumValues: any[]) {
+  public constructor(private _tableMetadata: TableMetadata, private enumValues: any[]) {
     Assert.notNullOrEmpty(enumValues, 'enumValues');
   }
 
@@ -29,6 +30,27 @@ export class EnumTableService implements IServiceCrud {
    */
   public find(): Observable<any[]> {
     return Observable.of(this.enumValues);
+  }
+
+  public getModelClassName(): string {
+    return this._tableMetadata.className;
+  }
+
+
+  public getEntityId(item: any): any {
+    throw new Error(`Not supported`);
+  }
+
+  public getUrl(): string {
+    throw new Error(`Not supported`);
+  }
+
+  public getTopic(): string {
+    throw new Error(`Not supported`);
+  }
+
+  public getTopicPath(): string {
+    throw new Error(`Not supported`);
   }
 
   public create(item: any): any {
