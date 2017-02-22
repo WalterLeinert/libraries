@@ -497,7 +497,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
             // berechnete Spalten sind nicht editierbar
             if (colInfo.editable !== undefined && colInfo.editable && !colMetaData.options.persisted) {
-              log.error(`Spalte ${tableMetadata.className}.${colMetaData.propertyName}` +
+              log.warn(`Spalte ${tableMetadata.className}.${colMetaData.propertyName}` +
                 ` ist nicht editierbar (berechneter Wert)`);
             }
             colInfo.editable = colMetaData.options.persisted;
