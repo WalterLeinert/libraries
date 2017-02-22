@@ -513,7 +513,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
                 const enumTableMetadata = this.metadataService.findTableMetadata(colMetaData.enumMetadata.dataSource);
                 colInfo.enumInfo = {
-                  selectorDataService: this.injector.get(enumTableMetadata.service),
+                  selectorDataService: enumTableMetadata.getServiceInstance(this.injector),
                   textField: colMetaData.enumMetadata.textField,
                   valueField: colMetaData.enumMetadata.valueField
                 };

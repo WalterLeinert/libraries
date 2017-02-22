@@ -1,3 +1,5 @@
+import { IServiceCrud } from '@fluxgate/common';
+
 import { IService } from '../angular/services';
 import { DataType } from './dataType';
 import { IDisplayInfo } from './displayInfo.interface';
@@ -11,5 +13,5 @@ export interface IEnumDisplayInfo extends IDisplayInfo {
      * @type {*}
      * @memberOf IControlDisplayInfo
      */
-    selectorDataService?: IService;
+    selectorDataService?: IServiceCrud;
 }

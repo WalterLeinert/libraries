@@ -265,7 +265,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
       log.log(`table = ${tableMetadata.options.name}`);
       this.columnMetadata = tableMetadata.columnMetadata;
 
-      const service = this.injector.get(tableMetadata.service);
+      const service = tableMetadata.getServiceInstance(this.injector);
       this.service.proxyService(service);
     });
   }

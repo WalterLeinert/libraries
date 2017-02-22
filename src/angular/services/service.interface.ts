@@ -1,6 +1,6 @@
-import { IServiceBase } from './serviceBase.interface';
-import { IServiceCrud } from './serviceCrud.interface';
+import { IServiceCrud } from '@fluxgate/common';
 
+import { IServiceBase } from './serviceBase.interface';
 
 /**
  * Interface für alle Services
