@@ -1,7 +1,7 @@
 import { MetadataStorage } from '../../metadata/metadataStorage';
 import { TableMetadata } from '../../metadata/tableMetadata';
 
-import { TableOptions } from './tableOptions';
+import { TableOptions } from './tableOptions.interface';
 
 /**
  * Table-Decorator für Modellklassen
@@ -20,7 +20,7 @@ export function Table(options?: TableOptions) {
     if (!options.name) {
       options.name = target.name.toLowerCase();
     }
-    if (options.isView) {
+    if (options.isView === undefined) {
       options.isView = false;
     }
 

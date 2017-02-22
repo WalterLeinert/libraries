@@ -1,4 +1,4 @@
-import { ObjectType } from '../../../base/objectType';
+import { ICtor } from '../../../base/ctor';
 import { InstanceAccessor, ShortTime, Time } from '../../../types';
 import { Assert } from '../../../util';
 import { ColumnTypeUndefinedError } from '../../error/columnTypeUndefinedError';
@@ -20,7 +20,7 @@ import { MetadataStorage } from '../../metadata/metadataStorage';
  * @returns
  */
 export function Enum<T, TText, TId>(
-  dataSource: (type?: any) => ObjectType<T>,
+  dataSource: (type?: T) => ICtor<T>,
   foreignText: InstanceAccessor<T, TText>,
   foreignId: InstanceAccessor<T, TId>,
 ) {

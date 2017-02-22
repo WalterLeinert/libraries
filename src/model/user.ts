@@ -1,11 +1,38 @@
 import { AppRegistry } from '../base';
 import { Enum } from '../model/decorator/model/enum';
 
-import { Column, IUser, Role, Table, UserRoleId } from '.';
+import { Column, EnumTable, IUser, Role, Table, UserRoleId } from '.';
+
 
 /**
  * Modelliert User im System (Defaultimplemetierung)
  */
+@EnumTable({
+  enumValues: [
+    new RoleValue('Admin', 1),
+    new RoleValue('User', 2),
+  ]
+})
+export class RoleValue {
+
+  constructor(name: string, value: number) {
+    this.name = name;
+    this.value = value;
+  }
+
+  @Column({ displayName: 'Name' })
+  public name: string;
+
+  @Column({ displayName: 'Role-Id' })
+  public value: number;
+}
+
+
+
+/**
+ * Modelliert User im System (Defaultimplemetierung)
+ */
+// tslint:disable-next-line:max-classes-per-file
 @Table({ name: 'user' })
 export class User implements IUser {
 
@@ -28,6 +55,10 @@ export class User implements IUser {
 
   @Column({ name: 'email', nullable: true, displayName: 'Email' })
   public email?: string;
+
+  @Enum<RoleValue, string, number>((dataSource) => RoleValue, (role) => role.name, (role) => role.value)
+  @Column({ name: 'id_role', displayName: 'Role-Id' })
+  public roleValue: number = UserRoleId.User;
 
   @Enum<Role, string, number>((dataSource) => Role, (role) => role.name, (role) => role.id)
   @Column({ name: 'id_role', displayName: 'Role-Id' })

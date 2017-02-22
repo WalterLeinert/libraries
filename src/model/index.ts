@@ -9,5 +9,5 @@ export * from './role.interface';
 export * from './user.interface';
 export * from './user';
 export * from './role';
-export * from './serviceResult';
+export * from './service';
 export * from './validation';

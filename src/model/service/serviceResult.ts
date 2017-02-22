@@ -1,4 +1,4 @@
-import { IToString } from '../base/toString.interface';
+import { IToString } from '../../base/toString.interface';
 
 export enum Status {
     Ok,
