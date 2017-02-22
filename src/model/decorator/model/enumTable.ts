@@ -3,7 +3,6 @@ import { getLogger } from '../../../diagnostics/logger';
 
 import { EnumTableMetadata } from '../../metadata/enumTableMetadata';
 import { MetadataStorage } from '../../metadata/metadataStorage';
-import { TableMetadata } from '../../metadata/tableMetadata';
 import { EnumTableOptions } from './enumTableOptions';
 import { IEnumTableOptions } from './enumTableOptions.interface';
 

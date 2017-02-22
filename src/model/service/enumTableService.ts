@@ -1,6 +1,5 @@
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
-import { ErrorObservable } from 'rxjs/Observable/ErrorObservable';
 
 import { Assert } from '../../util/assert';
 import { TableMetadata } from '../metadata/tableMetadata';

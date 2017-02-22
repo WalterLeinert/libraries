@@ -1,6 +1,5 @@
 import { MetadataStorage } from '../../metadata/metadataStorage';
 import { ValidationMetadata } from '../../metadata/validationMetadata';
-import { LengthValidator } from '../../validation/lengthValidator';
 import { NotNullValidator } from '../../validation/notNullValidator';
 
 /**

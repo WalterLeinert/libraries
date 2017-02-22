@@ -4,15 +4,11 @@
 // tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
 
-
-import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Types } from '../../../../src/types';
-import { AssertionError } from '../../../../src/util';
-
 import { Column, ColumnTypes, Enum, EnumTable, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
+import { Types } from '../../../../src/types';
 
 
 @Table({ name: ArtikelEnumTable.TABLE_NAME })

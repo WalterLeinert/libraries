@@ -1,8 +1,6 @@
 import { ICtor } from '../../../base/ctor';
-import { InstanceAccessor, ShortTime, Time } from '../../../types';
+import { InstanceAccessor } from '../../../types';
 import { Assert } from '../../../util';
-import { ColumnTypeUndefinedError } from '../../error/columnTypeUndefinedError';
-import { ColumnTypes } from '../../metadata/columnTypes';
 import { EnumMetadata } from '../../metadata/enumMetadata';
 import { MetadataStorage } from '../../metadata/metadataStorage';
 

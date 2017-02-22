@@ -1,5 +1,4 @@
 import { IEnumTableOptions } from './enumTableOptions.interface';
-import { TableOptions } from './tableOptions.interface';
 
 /**
  * Optionen für EnumTable-Decorator

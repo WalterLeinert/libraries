@@ -1,6 +1,5 @@
 import { Assert } from '../../util/assert';
 import { EnumTableOptions } from '../decorator/model/enumTableOptions';
-import { TableOptions } from '../decorator/model/tableOptions.interface';
 
 import { TableMetadata } from './tableMetadata';
 

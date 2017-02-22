@@ -1,10 +1,10 @@
 // Logging
 import { using } from '../../base/disposable';
+// tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, XLog } from '../../diagnostics';
 
 import { Dictionary, Types } from '../../types';
 import { Assert } from '../../util/assert';
-import { Enum } from './../decorator/model/enum';
 import { CompoundValidator, Validator } from './../validation';
 
 import { ColumnMetadata, EnumMetadata, TableMetadata, ValidationMetadata } from '.';
