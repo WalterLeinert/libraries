@@ -3,12 +3,10 @@
 
 // require('reflect-metadata');
 
-import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { ShortTime, Types } from '../../src/types';
-import { AssertionError } from '../../src/util';
 
 const expedtedTimes = [
   {

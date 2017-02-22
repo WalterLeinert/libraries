@@ -4,7 +4,6 @@
 import path = require('path');
 import process = require('process');
 
-import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 

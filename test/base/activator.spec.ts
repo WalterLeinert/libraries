@@ -1,13 +1,8 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
 
-// import reflectMetadata = require('reflect-metadata');
-
-// import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
-
-// import { getLogger, ILogger, levels, Logger } from '../../src/diagnostics';
 
 import { Activator } from '../../src/base/activator';
 

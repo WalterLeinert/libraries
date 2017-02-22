@@ -1,7 +1,6 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
 
-import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 

@@ -1,9 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
 
-import reflectMetadata = require('reflect-metadata');
-
-import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
@@ -92,8 +89,7 @@ class DictionaryTester<TKey, TValue> {
 
       for (let i = 0; i < test.keys.length; i++) {
         const key = test.keys[i];
-        const value = test.values[i];
-
+        
         expect(() => dict.remove(key)).not.to.Throw();
         expect(dict.count).to.be.equal(test.keys.length - (i + 1));
       }
@@ -116,8 +112,6 @@ class DictionaryTester<TKey, TValue> {
       // tslint:disable-next-line:prefer-for-of
       for (let i = 0; i < test.keys.length; i++) {
         const key = test.keys[i];
-        const value = test.values[i];
-
         expect(dict.containsKey(key)).to.be.true;
       }
     });

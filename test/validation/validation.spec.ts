@@ -3,16 +3,12 @@
 
 // require('reflect-metadata');
 
-import { ColumnMetadata } from '../../src/model/metadata/columnMetadata';
-import { ValidationResult } from '../../src/model/validation/validationResult';
-
-import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { AssertionError } from '../../src/util';
-
+import { ColumnMetadata } from '../../src/model/metadata/columnMetadata';
 import { LengthValidator } from '../../src/model/validation/lengthValidator';
+import { ValidationResult } from '../../src/model/validation/validationResult';
 
 const columnMetadata = new ColumnMetadata(null, 'name', 'string', {});
 

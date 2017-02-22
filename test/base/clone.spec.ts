@@ -1,7 +1,6 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
 
-import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
@@ -11,9 +10,13 @@ import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
 import { Types } from '../../src/types/types';
 
 class Test extends UniqueIdentifiable {
+  // tslint:disable-next-line:no-unused-variable
   private valueNumber = 4711;
+  // tslint:disable-next-line:no-unused-variable
   private valueString = 'Walter';
+  // tslint:disable-next-line:no-unused-variable
   private valueBoolean = true;
+  // tslint:disable-next-line:no-unused-variable
   private valueSymbol = Symbol(12);
 
 
@@ -25,6 +28,7 @@ class Test extends UniqueIdentifiable {
     return this._test;
   }
 
+  // tslint:disable-next-line:no-unused-variable
   private func() {
     // ok
   }
@@ -32,6 +36,7 @@ class Test extends UniqueIdentifiable {
 
 
 class TestDerived extends Test {
+  // tslint:disable-next-line:no-unused-variable
   private names: string[] = ['a', 'b', 'c'];
 
   constructor(public name: string, id: number, private _today: Date, test: boolean = true) {

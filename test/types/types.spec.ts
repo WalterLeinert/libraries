@@ -1,13 +1,10 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
 
-import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { IUser } from '../../src/model';
-import { AssertionError } from '../../src/util';
-
 import { Types } from '../../src/types';
 
 
