@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 // PrimeNG
 import { DataTableModule } from 'primeng/primeng';
 import { CalendarModule } from 'primeng/primeng';
+import { TooltipModule } from 'primeng/primeng';
 
 import { PipeService, ProxyService } from '../../services';
 import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
@@ -20,6 +21,7 @@ import { DataTableSelectorComponent } from './datatable-selector.component';
     FormsModule,
     DataTableModule,
     CalendarModule,
+    TooltipModule,
     EnumValueModule,
     DropdownSelectorModule,
     TimeSelectorModule
