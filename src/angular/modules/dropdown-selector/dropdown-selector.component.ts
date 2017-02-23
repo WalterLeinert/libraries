@@ -100,7 +100,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
    * @type {string}
    * @memberOf DropdownSelectorComponent
    */
-  @Input() public textField: string;
+  private _textField: string;
 
   /**
    * Die Property in der angebundenen Werteliste, welche nach Auswahl
@@ -109,7 +109,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
    * @type {string}
    * @memberOf DropdownSelectorComponent
    */
-  @Input() public valueField: string;
+  private _valueField: string;
 
   /**
    * Die an die PrimtNG angebundenen Werte
@@ -143,6 +143,27 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     this._config = value;
     this.initBoundData(this.dataItems, this.getMetadataForValues(this.dataItems));
   }
+
+
+  public get textField(): string {
+    return this._textField ;
+  }
+  
+  @Input() public set textField(value: string) {
+    this._textField = value;
+    this.initBoundData(this.dataItems, this.getMetadataForValues(this.dataItems));
+  }
+
+
+  public get valueField(): string {
+    return this._valueField;
+  }
+
+  @Input() public set valueField(value: string) {
+    this._valueField = value;
+    this.initBoundData(this.dataItems, this.getMetadataForValues(this.dataItems));
+  }
+
 
 
   public onChange(value) {

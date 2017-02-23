@@ -19,8 +19,6 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
    */
   protected isPreselecting: boolean = false;
 
-  private isFirsttime: boolean = true;
-
   /**
    * angebundene Objektliste statt Liste von Entities aus DB.
    *
@@ -258,22 +256,28 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
         if (this.isDataEmpty) {
           return;
         }
-        if (this.isFirsttime) {
-          this.isFirsttime = false;
 
-          /**
-           * nur falls kein selectedValue existiert, setzen wir den selectedValue auf den Wert von
-           * selectedIndex oder 0
-           */
-          if (this.selectedValue === undefined) {
-            if (this.selectedIndex >= 0 && this.selectedIndex < this.dataLength) {
-              this.selectedValue = this.getDataValue(this.selectedIndex);
-            } else if (this.dataLength > 0) {
-              this.selectedValue = this.getDataValue(0);
-            }
+        /**
+         * - falls kein selectedValue existiert, setzen wir den selectedValue auf den Wert von
+         *   selectedIndex oder 0
+         * - falls bereits ein selectedValue existiert, versuchen wir einen selectedValue mit der 
+         *   aktuellen Konfiguration zu setzen
+         */
+        if (this.selectedValue === undefined) {
+          if (this.selectedIndex >= 0 && this.selectedIndex < this.dataLength) {
+            this.selectedValue = this.getDataValue(this.selectedIndex);
+          } else if (this.dataLength > 0) {
+            this.selectedValue = this.getDataValue(0);
           }
-
+        } else {
+          if (this.selectedIndex >= 0 && this.selectedIndex < this.dataLength) {
+            this.selectedValue = this.getDataValue(this.selectedIndex);
+          } else if (this.dataLength > 0) {
+            this.selectedValue = this.getDataValue(0);
+          }
         }
+
+
       } finally {
         this.isPreselecting = false;
       }
