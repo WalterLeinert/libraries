@@ -28,4 +28,13 @@ export class Utility {
     }
     return hash;
   };
+
+
+  /**
+   * Liefert true, falls @param {value} null oder leer ist.
+   */
+  public static isNullOrEmpty<T extends { length: number}>(value: T) {
+    return (!value || value == null || value.length <= 0);
+  }
+
 }

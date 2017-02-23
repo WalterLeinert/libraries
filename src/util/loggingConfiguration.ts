@@ -3,10 +3,12 @@ import process = require('process');
 
 // Logging
 import { using } from '../base/disposable';
+import { Utility } from '../util/utility';
+
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, XLog } from '../diagnostics';
 
-import { StringBuilder, StringUtil } from '../base';
+import { StringBuilder } from '../base';
 import { fromEnvironment } from './env';
 
 export interface ILoggingConfigurationOptions {
@@ -66,7 +68,7 @@ export class LoggingConfiguration {
             }
 
             const sb = new StringBuilder(options.filename);
-            if (!StringUtil.isNullOrEmpty(options.systemMode)) {
+            if (!Utility.isNullOrEmpty(options.systemMode)) {
                 sb.append('.');
                 sb.append(options.systemMode);
             }

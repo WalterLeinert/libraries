@@ -40,9 +40,13 @@ module.exports = {
 
   target: 'node', // important in order not to bundle built-in modules like path, fs, etc. 
   externals: [
+    'core-decorators',
     'dashdash',
+    'left-pad',
     'log4js',
     'moment',
+    'object.entries',
+    'tinycolor2',
     'reflect-metadata',
     'rxjs',
     /rxjs\/*/
