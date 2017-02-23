@@ -1,24 +1,25 @@
+// tslint:disable:member-access
 
 import { suite, test } from 'mocha-typescript';
 
- enum TableType {
+enum TableType {
   Master,
   Detail
 }
 
 
- interface IField {
+interface IField {
   name: string;
   type: string;
 }
 
- interface ITable {
+interface ITable {
   name: string;
   type: TableType;
   fields: IField[];
 }
 
- interface IOption {
+interface IOption {
   title: string;
   doctype?: string;
   printer?: string;
@@ -27,17 +28,17 @@ import { suite, test } from 'mocha-typescript';
 }
 
 
- interface IData {
+interface IData {
   table: string;
   records: { [key: string]: any };
 }
 
- interface IPrintjob {
+interface IPrintjob {
   options: IOption[];
   data: IData[];
 }
 
- interface IRootObject {
+interface IRootObject {
   report: string;
   tables: ITable[];
   printjobs: IPrintjob[];
@@ -94,10 +95,10 @@ const doc: IRootObject = {
 
 
 
-@suite('ReflectionTypeReflector')
+@suite('json-format')
 class ReflectionTest {
 
-  @test 'should create instance of TypeReflector'() {
+  @test 'should stringify doc'() {
     console.log(JSON.stringify(doc));
   }
 }
