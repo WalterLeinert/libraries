@@ -21,107 +21,108 @@ import { BaseService } from '../services/base.service';
  * @template TId    - Type der Id-Spalte
  */
 export abstract class ControllerBase<T, TId extends IToString> {
-    protected static logger = getLogger(ControllerBase);
+  protected static logger = getLogger(ControllerBase);
 
-    constructor(private service: BaseService<T, TId>, private _tableName: string, private _idName: string) {
-    }
-
-
-    /**
-     * Erzeugt und persistiert eine neue Instanz der Entity {T}.
-     * 
-     * @param {T} subject
-     * @returns {Promise<T>}
-     * 
-     * @memberOf ControllerBase
-     */
-    protected createInternal(
-        subject: T
-    ): Promise<T> {
-        return this.service.create(subject);
-    }
+  constructor(private service: BaseService<T, TId>, private _tableName: string, private _idName: string) {
+    this.service.setIdColumn(this._idName);
+  }
 
 
-    /**
-     * Liefert eine Entity vom Typ {T} für die angegebene id.
-     * 
-     * @param {TId} id
-     * @returns {Promise<T>}
-     * 
-     * @memberOf ControllerBase
-     */
-    protected findByIdInternal(
-        id: TId
-    ): Promise<T> {
-        return this.service.findById(id);
-    }
+  /**
+   * Erzeugt und persistiert eine neue Instanz der Entity {T}.
+   * 
+   * @param {T} subject
+   * @returns {Promise<T>}
+   * 
+   * @memberOf ControllerBase
+   */
+  protected createInternal(
+    subject: T
+  ): Promise<T> {
+    return this.service.create(subject);
+  }
 
 
-    /**
-     * Liefert alle Entities vom Typ {T}.
-     * 
-     * @returns {Promise<T[]>}
-     * 
-     * @memberOf ControllerBase
-     */
-    protected findInternal(
-    ): Promise<T[]> {
-        return this.service.find();
-    }
+  /**
+   * Liefert eine Entity vom Typ {T} für die angegebene id.
+   * 
+   * @param {TId} id
+   * @returns {Promise<T>}
+   * 
+   * @memberOf ControllerBase
+   */
+  protected findByIdInternal(
+    id: TId
+  ): Promise<T> {
+    return this.service.findById(id);
+  }
 
 
-    /**
-     * Aktualisiert die Entity vom Typ {T}.
-     * 
-     * @param {T} subject
-     * @returns {Promise<T>}
-     * 
-     * @memberOf ControllerBase
-     */
-    protected updateInternal(
-        subject: T
-    ): Promise<T> {
-        return this.service.update(subject);
-    }
+  /**
+   * Liefert alle Entities vom Typ {T}.
+   * 
+   * @returns {Promise<T[]>}
+   * 
+   * @memberOf ControllerBase
+   */
+  protected findInternal(
+  ): Promise<T[]> {
+    return this.service.find();
+  }
 
 
-    /**
-     * Löscht die Entity vom Typ {T} für die angegebene id.
-     * 
-     * @param {TId} id
-     * @returns {Promise<TId>}
-     * 
-     * @memberOf ControllerBase
-     */
-    protected deleteInternal(
-        id: TId
-    ): Promise<ServiceResult<TId>> {
-        return this.service.delete(id);
-    }
+  /**
+   * Aktualisiert die Entity vom Typ {T}.
+   * 
+   * @param {T} subject
+   * @returns {Promise<T>}
+   * 
+   * @memberOf ControllerBase
+   */
+  protected updateInternal(
+    subject: T
+  ): Promise<T> {
+    return this.service.update(subject);
+  }
 
 
-    /**
-     * Liefert den zugehörigen Tabellennamen
-     * 
-     * @readonly
-     * @protected
-     * @type {string}
-     * @memberOf ControllerBase
-     */
-    protected get tableName(): string {
-        return this._tableName;
-    }
+  /**
+   * Löscht die Entity vom Typ {T} für die angegebene id.
+   * 
+   * @param {TId} id
+   * @returns {Promise<TId>}
+   * 
+   * @memberOf ControllerBase
+   */
+  protected deleteInternal(
+    id: TId
+  ): Promise<ServiceResult<TId>> {
+    return this.service.delete(id);
+  }
 
-    /**
-     * Liefert den zugehörigen PrimaryKey-Tabellenspaltennamen.
-     * 
-     * @readonly
-     * @protected
-     * @type {string}
-     * @memberOf ControllerBase
-     */
-    protected get idName(): string {
-        return this._idName;
-    }
+
+  /**
+   * Liefert den zugehörigen Tabellennamen
+   * 
+   * @readonly
+   * @protected
+   * @type {string}
+   * @memberOf ControllerBase
+   */
+  protected get tableName(): string {
+    return this._tableName;
+  }
+
+  /**
+   * Liefert den zugehörigen PrimaryKey-Tabellenspaltennamen.
+   * 
+   * @readonly
+   * @protected
+   * @type {string}
+   * @memberOf ControllerBase
+   */
+  protected get idName(): string {
+    return this._idName;
+  }
 
 }
