@@ -16,7 +16,7 @@ import { AssertionError } from '../../src/util';
 import { Reflection } from '../../src/util';
 
 
-@suite('Util.Reflection')
+@suite('util.Reflection')
 class ReflectionTest {
 
     @test 'should test copyProperties'() {
