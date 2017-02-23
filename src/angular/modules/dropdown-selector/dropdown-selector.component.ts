@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 
 // Fluxgate
-import { Assert, Clone, StringUtil, TableMetadata } from '@fluxgate/common';
+import { Assert, Clone, TableMetadata, Utility } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -211,7 +211,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
         //
         // es existiert keine Config und weder textField noch valueField sind angegeben
         //
-        if (StringUtil.isNullOrEmpty(this.textField) && StringUtil.isNullOrEmpty(this.valueField)) {
+        if (Utility.isNullOrEmpty(this.textField) && Utility.isNullOrEmpty(this.valueField)) {
           // metadata/reflect
           if (tableMetadata) {
             this.setupColumnInfosByMetadata(items, tableMetadata);
@@ -221,7 +221,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
         } else {
 
           // fehlt das valueField, wird als Default CURRENT_ITEM verwendet
-          if (StringUtil.isNullOrEmpty(this.valueField)) {
+          if (Utility.isNullOrEmpty(this.valueField)) {
             this.valueField = DisplayInfo.CURRENT_ITEM;
           }
 
