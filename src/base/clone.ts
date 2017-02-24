@@ -22,17 +22,16 @@ abstract class ClonerBase<T> {
   new Dictionary<string, InstanceCreator<any>>();
 
   // tslint:disable-next-line:no-unused-variable
-  private static initialized = ClonerBase.initialize();
-
-  private cloneDict: Dictionary<any, any> = new Dictionary<any, any>();
-
-  private static initialize(): boolean {
+  private static initialized = (() => {
     ClonerBase.predefinedCloners.set(Date.name, (v) => new Date(v));
     ClonerBase.predefinedCloners.set(String.name, (v) => String(v));
     ClonerBase.predefinedCloners.set(Number.name, (v) => Number(v));
     ClonerBase.predefinedCloners.set(Boolean.name, (v) => Boolean(v));
     return true;
-  }
+  })();
+
+  private cloneDict: Dictionary<any, any> = new Dictionary<any, any>();
+
 
   public constructor(private _checkCycles: boolean) {
 

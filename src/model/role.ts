@@ -28,9 +28,14 @@ export class Role implements IRole {
   public static readonly ROLE_CONFIG_KEY = 'IRole';
 
   private static roleIdMap: { [id: number]: boolean } = {};
-  // tslint:disable-next-line:no-unused-variable
-  private static ___initRole: boolean = Role.initialize();
 
+  // tslint:disable-next-line:no-unused-variable
+  private static ___initRole: boolean = (() => {
+    EnumHelper.getValues(UserRoleId).map((e) => {
+      Role.roleIdMap[e] = true;
+    });
+    return true;
+  })();
 
   @Column({ name: 'role_id', primary: true, generated: true, displayName: 'Id' })
   public id: number;
@@ -41,12 +46,6 @@ export class Role implements IRole {
   @Column({ name: 'role_description', displayName: 'Description' })
   public description: string;
 
-  private static initialize(): boolean {
-    EnumHelper.getValues(UserRoleId).map((e) => {
-      Role.roleIdMap[e] = true;
-    });
-    return true;
-  }
 
   /**
    * prüft, ob @param{id} eine gültige Role-Id darstellt.
