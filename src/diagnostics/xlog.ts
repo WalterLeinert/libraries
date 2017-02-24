@@ -1,4 +1,7 @@
-import { Disposable, } from '../base/disposable';
+import * as moment from 'moment';
+
+import { Disposable } from '../base/disposable';
+import { StringBuilder } from '../base/stringBuilder';
 import { Types } from '../types/types';
 
 import { levels } from './level';
@@ -51,6 +54,8 @@ export class XLog extends Disposable implements ILogger {
   private functionName: string;
   private _level: ILevel;
   private logger: ILogger;
+  private startTime: moment.Moment;
+  private endTime: moment.Moment;
 
   private static levels = levels;
 
@@ -66,6 +71,8 @@ export class XLog extends Disposable implements ILogger {
    */
   constructor(logger: ILogger, level: ILevel, functionName: string, message?: string, ...args: any[]) {
     super();
+    this.startTime = moment();
+
     this.logger = logger;
     this._level = level;
     this.functionName = functionName;
@@ -180,6 +187,7 @@ export class XLog extends Disposable implements ILogger {
    */
   protected onDispose(): void {
     try {
+      this.endTime = moment();
       this.logInternal(EnterExit.Exit, this._level);
       XLog.indentation--;
     } finally {
@@ -199,35 +207,41 @@ export class XLog extends Disposable implements ILogger {
   private logInternal(kind: EnterExit, level: ILevel, message?: string, ...args: any[]): void {
     const indent = XLog.indentationLevels[XLog.indentation];
     let prefix = indent + XLog.EnterExitStrings[kind] + this.functionName;
+    const prefixedMessage = new StringBuilder();
 
     // prefix not empty message 
     if (message && message.length > 0) {
       prefix = prefix + ': ';
     }
-    let prefixedMessage = prefix;
+    prefixedMessage.append(prefix);
 
     if (message !== undefined) {
-      prefixedMessage = prefix + message;
+      prefixedMessage.append(message);
+    }
+
+    if (kind === EnterExit.Exit) {
+      const elapsed = this.endTime.diff(this.startTime);
+      prefixedMessage.append(` [elapsed: ${elapsed} ms]`);
     }
 
     switch (level) {
       case XLog.levels.TRACE:
-        this.logger.trace(prefixedMessage, ...args);
+        this.logger.trace(prefixedMessage.toString(), ...args);
         break;
       case XLog.levels.DEBUG:
-        this.logger.debug(prefixedMessage, ...args);
+        this.logger.debug(prefixedMessage.toString(), ...args);
         break;
       case XLog.levels.INFO:
-        this.logger.info(prefixedMessage, ...args);
+        this.logger.info(prefixedMessage.toString(), ...args);
         break;
       case XLog.levels.WARN:
-        this.logger.warn(prefixedMessage, ...args);
+        this.logger.warn(prefixedMessage.toString(), ...args);
         break;
       case XLog.levels.ERROR:
-        this.logger.error(prefixedMessage, ...args);
+        this.logger.error(prefixedMessage.toString(), ...args);
         break;
       case XLog.levels.FATAL:
-        this.logger.fatal(prefixedMessage, ...args);
+        this.logger.fatal(prefixedMessage.toString(), ...args);
         break;
       default:
         throw new Error('undefined log level: ' + level);
