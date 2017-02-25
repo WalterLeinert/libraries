@@ -272,8 +272,6 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
         } else {
           if (this.selectedIndex >= 0 && this.selectedIndex < this.dataLength) {
             this.selectedValue = this.getDataValue(this.selectedIndex);
-          } else if (this.dataLength > 0) {
-            this.selectedValue = this.getDataValue(0);
           }
         }
 
