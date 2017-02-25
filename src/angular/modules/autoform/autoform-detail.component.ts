@@ -1,7 +1,7 @@
 // tslint:disable:max-line-length
 
 import { Component, Injector, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ConfirmationService } from 'primeng/primeng';
 
@@ -116,9 +116,9 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   public askuser: boolean;
 
 
-  constructor(router: Router, service: ProxyService, private injector: Injector,
+  constructor(router: Router, route: ActivatedRoute, service: ProxyService, private injector: Injector,
     private confirmationService: ConfirmationService, private metadataService: MetadataService) {
-    super(router, service);
+    super(router, route, service);
   }
 
   // tslint:disable-next-line:use-life-cycle-interface

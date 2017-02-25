@@ -2,7 +2,7 @@
 
 // import 'reflect-metadata';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 // PrimeNG
@@ -82,9 +82,9 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   public passwordNewRepeated: string;
   private currentUser: IUser;
 
-  constructor(router: Router, private navigationService: NavigationService, service: PassportService,
-    private confirmationService: ConfirmationService) {
-    super(router, service);
+  constructor(router: Router, route: ActivatedRoute, private navigationService: NavigationService,
+    service: PassportService, private confirmationService: ConfirmationService) {
+    super(router, route, service);
   }
 
   public ngOnInit() {

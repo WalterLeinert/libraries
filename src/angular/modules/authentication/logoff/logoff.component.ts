@@ -2,7 +2,7 @@
 
 // Angular
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -25,8 +25,8 @@ import { PassportService } from './../passport.service';
 export class LogoffComponent extends BaseComponent<PassportService> {
   protected static logger = getLogger(LogoffComponent);
 
-  constructor(router: Router, service: PassportService) {
-    super(router, service);
+  constructor(router: Router, route: ActivatedRoute, service: PassportService) {
+    super(router, route, service);
   }
 
   public ngOnInit() {

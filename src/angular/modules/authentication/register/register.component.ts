@@ -3,7 +3,7 @@
 
 // Angular
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 // fluxgate
 import { Assert, IRole, User } from '@fluxgate/common';
@@ -89,10 +89,10 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
   public user: User;
   public selectedRole: IRole;
 
-  constructor(router: Router, private navigationService: NavigationService, service: PassportService,
+  constructor(router: Router, route: ActivatedRoute, private navigationService: NavigationService, service: PassportService,
     roleService: RoleService, metadataService: MetadataService) {
 
-    super(router, service, roleService);
+    super(router, route, service, roleService);
 
     const userTableMetadata = metadataService.findTableMetadata(User.name);
     Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name}`);

@@ -2,7 +2,7 @@
 
 // import 'reflect-metadata';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -75,9 +75,10 @@ export class LoginComponent extends BaseComponent<PassportService> {
    * 
    * @memberOf LoginComponent
    */
-  constructor(router: Router, private navigationService: NavigationService, service: PassportService,
-    changePasswordGuardService: ChangePasswordGuardService, registerGuardService: RegisterGuardService) {
-    super(router, service);
+  constructor(router: Router, route: ActivatedRoute, private navigationService: NavigationService,
+    service: PassportService, changePasswordGuardService: ChangePasswordGuardService,
+    registerGuardService: RegisterGuardService) {
+    super(router, route, service);
   }
 
   public login() {
