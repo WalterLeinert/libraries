@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { Types } from '@fluxgate/common';
 
+import { DisplayInfo } from '../../../base/displayInfo';
 import { PrimeNgCalendarLocale } from '../../../primeng/calendarLocale';
 import { MetadataService } from '../../services';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
@@ -65,7 +66,7 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
    * @type {string}
    * @memberOf MonthSelectorComponent
    */
-  @Input() public valueField: string = '.';
+  @Input() public valueField: string = DisplayInfo.CURRENT_ITEM;
 
 
   constructor(router: Router, metadataService: MetadataService, changeDetectorRef: ChangeDetectorRef) {
@@ -88,6 +89,22 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
   }
 
 
+  /**
+   * Liefert den Wert für das Item @param{item} (wird bei Änderung der Selektion angebunden)
+   * Konfiguration muss berücksichtigt werden.
+   */
+  private getValue(item: any): any {
+    let value: any;
+
+    if (this.valueField === DisplayInfo.CURRENT_ITEM) {
+      value = item;
+    } else {
+      value = item[this.valueField];
+    }
+
+    return value;
+  }
+
   private updateData() {
     let localeSettings = PrimeNgCalendarLocale[this.locale];
     if (Types.isUndefined(localeSettings)) {
@@ -101,9 +118,22 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
         name: localeSettings.monthNames[month - 1],
         shortname: localeSettings.monthNamesShort[month - 1]
       });
-
-      this.months = months;
     }
+
+    this.months = months;
+
+    if (this.selectedValue === undefined) {
+      // den aktuellen Monat vorselektieren
+      const thisMonth = new Date().getMonth() + 1;
+
+      const month = months.find((item, index, items) => {
+        return item.id === thisMonth;
+      });
+
+      this.selectedValue = this.getValue(month);
+    }
+
   }
+
 
 }

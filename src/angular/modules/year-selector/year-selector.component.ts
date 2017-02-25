@@ -64,8 +64,18 @@ export class YearSelectorComponent extends SelectorBaseComponent {
     for (let year = upperYear; year >= lowerYear; year--) {
       years.push(year);
     }
-
     this.years = years;
+
+    if (this.selectedValue === undefined) {
+      // das aktuelle Jahr vorselektieren
+      const thisYear = new Date().getFullYear();
+
+      const year = years.find((item, index, items) => {
+        return item === thisYear;
+      });
+
+      this.selectedValue = year;
+    }
   }
 
 }
