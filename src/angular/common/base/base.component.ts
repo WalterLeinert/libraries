@@ -29,11 +29,12 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
    * Creates an instance of BaseComponent.
    * 
    * @param {Router} _router - der zugehörige Router
+   * @param {ActivatedRoute} _route - die aktivierte Route
    * @param {*} _service - der zugehörige Service
    * 
    * @memberOf BaseComponent
    */
-  protected constructor(private _router: Router, private _service: TService, private _route?: ActivatedRoute) {
+  protected constructor(private _router: Router, private _route: ActivatedRoute, private _service: TService) {
     super();
   }
 

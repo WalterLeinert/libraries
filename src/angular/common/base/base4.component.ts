@@ -23,13 +23,15 @@ export abstract class Base4Component<
    * Creates an instance of BaseComponent.
    * 
    * @param {Router} _router - der zugehörige Router
+   * @param {ActivatedRoute} _route - die aktivierte Route
    * @param {*} _service4 - der zugehörige Service
    * 
    * @memberOf BaseComponent
    */
-  protected constructor(router: Router, service: TService1, service2: TService2, service3: TService3,
-    private _service4: TService4, route?: ActivatedRoute) {
-    super(router, service, service2, service3, route);
+  protected constructor(router: Router, route: ActivatedRoute,
+    service: TService1, service2: TService2, service3: TService3,
+    private _service4: TService4) {
+    super(router, route, service, service2, service3);
   }
 
   /**
