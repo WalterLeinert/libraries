@@ -15,7 +15,7 @@ import { CoreComponent } from '../../common/base/core.component';
   selector: 'flx-time-selector',
   template: `
 <div>
-  <p-calendar [(ngModel)]="date" [timeOnly]="true"
+  <p-calendar [(ngModel)]="date" [timeOnly]="true" hourFormat="24"
     (onBlur)="onBlur($event)" (onSelect)="onSelect($event)"
   >
   </p-calendar>

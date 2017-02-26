@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert, Clone, Color, TableMetadata, Types } from '@fluxgate/common';
+import { Assert, Clone, Color, InstanceAccessor, TableMetadata, Types } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -88,7 +88,9 @@ export type selectionMode = 'single' | 'multiple' | '';
             </div>
 
             <template let-col let-data="rowData" pTemplate="editor">
-                <p-calendar [(ngModel)]="data[col.field]" dateFormat="yy-mm-dd" [style.color]="getColor(data, info)">
+                <p-calendar [(ngModel)]="data[col.field]" 
+                  dateFormat="yy-mm-dd" [minDate]="getMinDate(data, info)" [maxDate]="getMaxDate(data, info)"
+                  [style.color]="getColor(data, info)">
                 </p-calendar>
             </template>
 
@@ -96,9 +98,8 @@ export type selectionMode = 'single' | 'multiple' | '';
         </div>
 
 
-       <!--
-          Zeitfelder
-          TODO: ggf. bei obigem DateControl einbauen
+        <!--
+          Zeitfelder          
           -->
         <div *ngIf="info.controlType === controlType.Time">
           <p-column field="{{info.valueField}}" header="{{info.textField}}"
@@ -432,6 +433,39 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
       }
     }
   }
+
+  /**
+   * Liefert das minimal erlaubte Datum
+   */
+  public getMinDate(data: any, info: IControlDisplayInfo): Date {
+    Assert.notNull(data);
+    Assert.notNull(info);
+
+    if (!Types.isUndefined(info.dateInfo)) {
+      if (info.dateInfo.minDate !== undefined && info.dateInfo.minDate instanceof Date) {
+        return info.dateInfo.minDate;
+      } else {
+        return (info.dateInfo.minDate as InstanceAccessor<any, Date>)(data);
+      }
+    }
+  }
+
+  /**
+   * Liefert das maximal erlaubte Datum
+   */
+  public getMaxDate(data: any, info: IControlDisplayInfo): Date {
+    Assert.notNull(data);
+    Assert.notNull(info);
+
+    if (!Types.isUndefined(info.dateInfo)) {
+      if (info.dateInfo.maxDate !== undefined && info.dateInfo.maxDate instanceof Date) {
+        return info.dateInfo.maxDate;
+      } else {
+        return (info.dateInfo.maxDate as InstanceAccessor<any, Date>)(data);
+      }
+    }
+  }
+
 
 
   protected initBoundData(items: any[], tableMetadata: TableMetadata) {

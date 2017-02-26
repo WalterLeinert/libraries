@@ -3,6 +3,7 @@ import { PipeTransform } from '@angular/core';
 
 import { ControlType } from '../angular/modules/common/controlType';
 import { PipeType } from './../angular/services/pipe.service';
+import { IDateDisplayInfo } from './dateDisplayInfo.interface';
 import { IDisplayInfo } from './displayInfo.interface';
 import { IEnumDisplayInfo } from './enumDisplayInfo.interface';
 import { TextAlignment } from './textAlignment';
@@ -46,6 +47,14 @@ export interface IControlDisplayInfo extends IDisplayInfo {
    * @memberOf IControlDisplayInfo
    */
   enumInfo?: IEnumDisplayInfo;
+
+  /**
+   * Anzeigeinformation für Datum
+   * 
+   * @type {*}
+   * @memberOf IControlDisplayInfo
+   */
+  dateInfo?: IDateDisplayInfo;
 
   /**
    * Der Name der Pipe, über die der Wert formatiert werden soll oder eine Pipe-Instanz
