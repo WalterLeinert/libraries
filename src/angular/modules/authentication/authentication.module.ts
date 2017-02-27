@@ -10,7 +10,7 @@ import { ConfirmDialogModule } from 'primeng/primeng';
 import { AutofocusModule, HighlightModule } from '../../common/directives';
 
 import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
-import { AuthenticationRoutingModule } from './authentication-routing.module';
+// import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { CurrentUserService } from './currentUser.service';
 import { NavigationService } from './navigation.service';
 import { PassportService } from './passport.service';
@@ -33,10 +33,16 @@ import { RegisterComponent } from './register/register.component';
     ConfirmDialogModule,
     HighlightModule,
     AutofocusModule,
-    DropdownSelectorModule,
-    AuthenticationRoutingModule
+    DropdownSelectorModule
+    // AuthenticationRoutingModule
   ],
   declarations: [
+    LoginComponent,
+    LogoffComponent,
+    ChangePasswordComponent,
+    RegisterComponent
+  ],
+  exports: [
     LoginComponent,
     LogoffComponent,
     ChangePasswordComponent,
