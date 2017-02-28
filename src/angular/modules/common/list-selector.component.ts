@@ -110,13 +110,13 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
 
       const tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
 
-      serviceFunction.call(this.dataService)
+      this.registerSubscription(serviceFunction.call(this.dataService)
         .subscribe((items) => {
           this.initBoundData(items, tableMetadata);
         },
         (error: Error) => {
           this.handleError(error);
-        });
+        }));
     }
   }
 

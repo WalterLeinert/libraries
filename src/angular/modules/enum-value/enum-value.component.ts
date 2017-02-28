@@ -10,6 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 import { DisplayInfo, } from '../../../base';
+import { CoreComponent } from '../../common/base';
 
 
 /**
@@ -30,7 +31,7 @@ import { DisplayInfo, } from '../../../base';
 `,
   styles: []
 })
-export class EnumValueComponent implements OnInit, OnDestroy {
+export class EnumValueComponent extends CoreComponent {
   protected static logger = getLogger(EnumValueComponent);
 
   private _dataService: IService;
@@ -83,23 +84,18 @@ export class EnumValueComponent implements OnInit, OnDestroy {
   private _item: any;
 
 
+  // tslint:disable-next-line:use-life-cycle-interface
   public ngOnInit() {
+    super.ngOnInit();
+
     if (this.dataService) {
-      this.dataService.find().subscribe((items: any[]) => {
+      this.registerSubscription(this.dataService.find().subscribe((items: any[]) => {
         this.items = items;
 
         this.updateItem();
-      });
+      }));
     }
-
   }
-
-
-  public ngOnDestroy() {
-    // ok
-  }
-
-
 
 
   /**

@@ -90,9 +90,9 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   public ngOnInit() {
     super.ngOnInit();
 
-    this.service.getCurrentUser().subscribe(
+    this.registerSubscription(this.service.getCurrentUser().subscribe(
       (user) => this.currentUser = user
-    );
+    ));
   }
 
   public changePassword() {
@@ -101,7 +101,7 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
       return;
     }
 
-    this.service.changePassword(this.currentUser.username, this.password, this.passwordNew)
+    this.registerSubscription(this.service.changePassword(this.currentUser.username, this.password, this.passwordNew)
       .subscribe((user) => {
         ChangePasswordComponent.logger.info(`ChangePasswordComponent.changePassword: user = ${user}`);
 
@@ -111,7 +111,7 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
       },
       (error: Error) => {
         this.handleInfo(error);
-      });
+      }));
   }
 
 

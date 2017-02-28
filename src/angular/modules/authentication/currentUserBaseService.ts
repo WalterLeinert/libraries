@@ -19,16 +19,16 @@ export abstract class CurrentUserBaseService extends CurrentUser {
     super();
 
     using(new XLog(CurrentUserBaseService.logger, levels.INFO, 'ctor'), (log) => {
-      this.passportService.userChange.subscribe((user) => {
+      this.registerSubscription(this.passportService.userChange.subscribe((user) => {
         this.userInternal = user;
         log.debug(`currentUserChange: user = ${JSON.stringify(user)}`);
-      });
+      }));
 
       // initial aktuellen User ermitteln
-      this.passportService.getCurrentUser().subscribe((user) => {
+      this.registerSubscription(this.passportService.getCurrentUser().subscribe((user) => {
         this.userInternal = user;
         log.debug(`getCurrentUser: user = ${JSON.stringify(user)}`);
-      });
+      }));
     });
   }
 }

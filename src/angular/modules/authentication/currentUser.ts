@@ -9,6 +9,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // Fluxgate
 import { IUser } from '@fluxgate/common';
 
+import { CoreComponent } from '../../common/base';
+
 
 /**
  * abstrakte Basisklasse mit user-Property und change-detection
@@ -16,7 +18,7 @@ import { IUser } from '@fluxgate/common';
  * @export
  * @class CurrentUserBaseService
  */
-export abstract class CurrentUser {
+export abstract class CurrentUser extends CoreComponent {
   protected static logger = getLogger(CurrentUser);
 
   private _userInternal: IUser;

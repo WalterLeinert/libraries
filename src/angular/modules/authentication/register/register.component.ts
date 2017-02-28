@@ -106,7 +106,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
 
   public signup() {
     using(new XLog(RegisterComponent.logger, levels.INFO, 'signup'), (log) => {
-      this.service.signup(this.user)
+      this.registerSubscription(this.service.signup(this.user)
         .subscribe((result) => {
           log.log(JSON.stringify(result));
 
@@ -116,7 +116,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
         },
         (error: Error) => {
           this.handleInfo(error);
-        });
+        }));
     });
   }
 

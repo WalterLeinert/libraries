@@ -83,7 +83,7 @@ export class LoginComponent extends BaseComponent<PassportService> {
 
   public login() {
     using(new XLog(LoginComponent.logger, levels.INFO, 'login'), (log) => {
-      this.service.login(this.username, this.password)
+      this.registerSubscription(this.service.login(this.username, this.password)
         .subscribe((result) => {
           log.log(JSON.stringify(result));
           this.navigate([
@@ -92,7 +92,7 @@ export class LoginComponent extends BaseComponent<PassportService> {
         },
         (error: Error) => {
           this.handleInfo(error);
-        });
+        }));
     });
   }
 }

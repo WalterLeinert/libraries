@@ -156,14 +156,14 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    */
   public submit() {
     const me = this;
-    this.service.update(this.value).subscribe(
+    this.registerSubscription(this.service.update(this.value).subscribe(
       (value) => {
         this.value = value;
         me.cancel();
       },
       (error: Error) => {
         this.handleError(error);
-      });
+      }));
   }
 
   /**
@@ -172,14 +172,14 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   public delete(event) {
     if (event === true) {
       const me = this;
-      this.service.delete(this.service.getEntityId(this.value)).subscribe(
+      this.registerSubscription(this.service.delete(this.service.getEntityId(this.value)).subscribe(
         (value) => {
           this.value = value;
           me.cancel();
         },
         (error: Error) => {
           this.handleError(error);
-        });
+        }));
     }
     this.askuser = false;
   }

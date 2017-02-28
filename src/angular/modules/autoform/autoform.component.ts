@@ -87,7 +87,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   private sub: Subscription;
 
-  constructor(router: Router, route: ActivatedRoute, service: ProxyService, 
+  constructor(router: Router, route: ActivatedRoute, service: ProxyService,
     private injector: Injector,
     private confirmationService: ConfirmationService, private metadataService: MetadataService) {
     super(router, route, service);
@@ -97,7 +97,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   public ngOnInit() {
     super.ngOnInit();
 
-    this.sub = this.route.params.subscribe(
+    this.registerSubscription(this.sub = this.route.params.subscribe(
       (params) => {
         const id = params[AutoformConstants.GENERIC_ENTITY_ID] as string;
         const entityName = params[AutoformConstants.GENERIC_ENTITY] as string;
@@ -106,7 +106,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
         this.setupProxy(entityName);
 
         this.getItem(id);
-      });
+      }));
   }
 
   // tslint:disable-next-line:use-life-cycle-interface
@@ -144,14 +144,14 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
    */
   public submit() {
     const me = this;
-    this.service.update(this.item).subscribe(
+    this.registerSubscription(this.service.update(this.item).subscribe(
       (item) => {
         this.item = item;
         me.cancel();
       },
       (error: Error) => {
         this.handleError(error);
-      });
+      }));
   }
 
   /**
@@ -160,14 +160,14 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   public delete(event) {
     if (event === true) {
       const me = this;
-      this.service.delete(this.service.getEntityId(this.item)).subscribe(
+      this.registerSubscription(this.service.delete(this.service.getEntityId(this.item)).subscribe(
         (item) => {
           this.item = item;
           me.cancel();
         },
         (error: Error) => {
           this.handleError(error);
-        });
+        }));
     }
     this.askuser = false;
   }
@@ -209,11 +209,11 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
 
   private getItem(id: any) {
-    this.service.findById(id).subscribe(
+    this.registerSubscription(this.service.findById(id).subscribe(
       (item) => this.item = item,
       (error: Error) => {
         this.handleError(error);
-      });
+      }));
   }
 
   /**
