@@ -6,5 +6,6 @@ export * from './base';
 // TODO Probleme im client wegen log4js -> wieder enter-exit-logger verwenden
 export * from './diagnostics';
 export * from './model';
+export * from './print';
 export * from './types';
 export * from './util';
