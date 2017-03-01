@@ -1,5 +1,5 @@
 // Angular
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 // Fluxgate
 import { IService } from '@fluxgate/common';
@@ -82,6 +82,10 @@ export class EnumValueComponent extends CoreComponent {
    * @type {any}
    */
   private _item: any;
+
+  constructor() {
+    super();
+  }
 
 
   // tslint:disable-next-line:use-life-cycle-interface

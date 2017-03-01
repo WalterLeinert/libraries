@@ -5,8 +5,15 @@ import { Subscription } from 'rxjs/Subscription';
 import { Message } from 'primeng/primeng';
 
 
+// -------------------------------------- logging --------------------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+// -------------------------------------- logging --------------------------------------------
+
+
+
 // Fluxgate
-import { Assert } from '@fluxgate/common';
+import { Assert, Dictionary, UniqueIdentifiable } from '@fluxgate/common';
 
 
 /**
@@ -16,8 +23,12 @@ import { Assert } from '@fluxgate/common';
  * @class CoreComponent
  * @implements {OnInit, OnDestroy}
  */
-export abstract class CoreComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription[] = [];
+export abstract class CoreComponent extends UniqueIdentifiable implements OnInit, OnDestroy {
+  protected static readonly logger = getLogger(CoreComponent);
+
+  private static subscriptionMap: Dictionary<UniqueIdentifiable, Subscription[]> =
+  new Dictionary<UniqueIdentifiable, Subscription[]>();
+
   private _messages: Message[] = [];
 
 
@@ -27,7 +38,9 @@ export abstract class CoreComponent implements OnInit, OnDestroy {
    * @memberOf BaseComponent
    */
   public ngOnInit() {
-    this.clearMessages();
+    using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnInit', `name = ${this.constructor.name}`), (log) => {
+      this.clearMessages();
+    });
   }
 
 
@@ -37,9 +50,28 @@ export abstract class CoreComponent implements OnInit, OnDestroy {
    * @memberOf BaseComponent
    */
   public ngOnDestroy() {
-    // rxjs Subscriptions freigeben
-    this.subscriptions.forEach((item) => {
-      item.unsubscribe();
+    using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnDestroy', `name = ${this.constructor.name}`), (log) => {
+
+      if (CoreComponent.subscriptionMap.containsKey(this)) {
+        if (log.isDebugEnabled()) {
+          log.debug(`components registered with subscriptions: ${CoreComponent.subscriptionMap.count}`);
+          CoreComponent.subscriptionMap.keys.forEach((key) => {
+            const subscriptions = CoreComponent.subscriptionMap.get(key);
+            log.debug(`  key = ${key.constructor.name}: ${subscriptions.length} subscriptions`);
+          });
+        }
+
+        // rxjs Subscriptions freigeben
+        const subscriptions = CoreComponent.subscriptionMap.get(this);
+        Assert.notNullOrEmpty(subscriptions);
+        CoreComponent.subscriptionMap.remove(this);
+
+        subscriptions.forEach((item) => {
+          item.unsubscribe();
+        });
+      }
+
+
     });
   }
 
@@ -146,7 +178,13 @@ export abstract class CoreComponent implements OnInit, OnDestroy {
   protected registerSubscription(subscription: Subscription) {
     Assert.notNull(subscription);
 
-    this.subscriptions.push(subscription);
+    let subscriptions = CoreComponent.subscriptionMap.get(this);
+    if (subscriptions === undefined) {
+      subscriptions = [];
+      CoreComponent.subscriptionMap.set(this, subscriptions);
+    }
+
+    subscriptions.push(subscription);
   }
 
 }
