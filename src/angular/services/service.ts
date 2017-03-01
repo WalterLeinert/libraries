@@ -10,7 +10,7 @@ import { ErrorObservable } from 'rxjs/Observable/ErrorObservable';
 import * as HttpStatusCodes from 'http-status-codes';
 
 import { IQuery, IToString, ServiceResult, TableMetadata } from '@fluxgate/common';
-import { Assert, Constants, IService, StringBuilder } from '@fluxgate/common';
+import { Assert, IService } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -20,6 +20,7 @@ import { getLogger, ILogger } from '@fluxgate/common';
 import { Serializer } from '../../base/serializer';
 import { ConfigService } from './config.service';
 import { MetadataService } from './metadata.service';
+import { ServiceBase } from './serviceBase';
 
 
 /**
@@ -30,35 +31,11 @@ import { MetadataService } from './metadata.service';
  * @class Service
  * @template T
  */
-export abstract class Service<T, TId extends IToString> implements IService {
+export abstract class Service<T, TId extends IToString> extends ServiceBase implements IService {
   protected static logger = getLogger(Service);
 
-  private _url: string;
   private _tableMetadata: TableMetadata;
   private serializer: Serializer<T>;
-
-
-  /**
-   * Handles server communication errors.
-   * 
-   * @private
-   * @param {Response} error
-   * @returns
-   * 
-   * @memberOf Service
-   */
-  public static handleError(response: Response): ErrorObservable {
-    // In a real world app, we might use a remote logging infrastructure
-    let errorMessage = '** unknown error **';
-
-    if (response.status < HttpStatusCodes.OK || response.status >= HttpStatusCodes.MULTIPLE_CHOICES) {
-      errorMessage = response.text();
-    }
-
-    Service.logger.error(`${response.status} - ${response.statusText || ''} -- ${errorMessage}`);
-    return Observable.throw(new Error(errorMessage));
-  }
-
 
 
   /**
@@ -70,30 +47,16 @@ export abstract class Service<T, TId extends IToString> implements IService {
    * @memberOf Service
    */
   protected constructor(model: Function, private metadataService: MetadataService,
-    private _http: Http, configService: ConfigService, private _topic?: string) {
-    Assert.notNull(model, 'model');
-    Assert.notNull(metadataService, 'metadataService');
-    Assert.notNull(_http, 'http');
-    Assert.notNull(configService, 'configService');
+    http: Http, configService: ConfigService, private topic?: string) {
+    super(http, configService.config.url,
+      topic === undefined ? metadataService.findTableMetadata(model).options.name : topic);
 
-    const baseUrl = configService.config.url;
+    Assert.notNull(model, 'model');
+
 
     // Metadaten zur Entity ermitteln
     this._tableMetadata = this.metadataService.findTableMetadata(model);
     Assert.notNull(this._tableMetadata);
-
-    if (this._topic === undefined) {
-      this._topic = this._tableMetadata.options.name;
-    }
-
-    const sb = new StringBuilder(configService.config.url);
-
-    if (!baseUrl.endsWith(Constants.PATH_SEPARATOR)) {
-      sb.append(Constants.PATH_SEPARATOR);
-    }
-
-    sb.append(this._topic);
-    this._url = sb.toString();
 
     this._tableMetadata.registerService(this.constructor);
     this.serializer = new Serializer<T>(this.tableMetadata);
@@ -115,7 +78,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
     return this.http.post(this.getUrl(), this.serialize(item))
       .map((response: Response) => this.deserialize(response.json()))
       .do((data) => Service.logger.info(`Service.create: ${JSON.stringify(data)}`))
-      .catch(Service.handleError);
+      .catch(this.handleError);
   }
 
 
@@ -131,7 +94,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
     return this.http.get(this.getUrl())
       .map((response: Response) => this.deserializeArray(response.json()))
       // .do(data => Service.logger.info('result: ' + JSON.stringify(data)))
-      .catch(Service.handleError);
+      .catch(this.handleError);
   }
 
 
@@ -149,7 +112,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
     return this.http.get(`${this.getUrl()}/${id}`)
       .map((response: Response) => this.deserialize(response.json()))
       .do((data) => Service.logger.info(`Service.findById: id = ${id} -> ${JSON.stringify(data)}`))
-      .catch(Service.handleError);
+      .catch(this.handleError);
   }
 
 
@@ -167,7 +130,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
     return this.http.put(`${this.getUrl()}`, this.serialize(item))
       .map((response: Response) => this.deserialize(response.json()))
       .do((data) => Service.logger.info(`Service.update: ${JSON.stringify(data)}`))
-      .catch(Service.handleError);
+      .catch(this.handleError);
   }
 
 
@@ -185,7 +148,7 @@ export abstract class Service<T, TId extends IToString> implements IService {
     return this.http.delete(`${this.getUrl()}/${id}`)
       .map((response: Response) => response.json())
       .do((serviceResult) => Service.logger.info(`Service.delete: ${JSON.stringify(serviceResult)}`))
-      .catch(Service.handleError);
+      .catch(this.handleError);
   }
 
 
@@ -207,37 +170,9 @@ export abstract class Service<T, TId extends IToString> implements IService {
       .map((response: Response) => this.deserializeArray(response.json()))
       .do((data) => Service.logger.info(`Service.query: query = ${JSON.stringify(query)}` +
         ` -> ${JSON.stringify(data)}`))
-      .catch(Service.handleError);
+      .catch(this.handleError);
   }
 
-
-  /**
-   * Liefert die Url inkl. Topic
-   * 
-   * @type {string}
-   */
-  public getUrl(): string {
-    return this._url;
-  }
-
-  /**
-   * Liefert das Topic.
-   * 
-   * @type {string}
-   */
-  public getTopic(): string {
-    return this._topic;
-  }
-
-
-  /**
-   * Liefert den Topicpfad (z.B. '/artikel' bei Topic 'artikel').
-   * 
-   * @type {string}
-   */
-  public getTopicPath(): string {
-    return Constants.PATH_SEPARATOR + this.getTopic();
-  }
 
   /**
    * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
@@ -310,19 +245,6 @@ export abstract class Service<T, TId extends IToString> implements IService {
    */
   protected get tableMetadata(): TableMetadata {
     return this._tableMetadata;
-  }
-
-
-  /**
-   * Liefert den Http-Clientservice
-   * 
-   * @readonly
-   * @protected
-   * @type {Http}
-   * @memberOf Service
-   */
-  protected get http(): Http {
-    return this._http;
   }
 
 }
