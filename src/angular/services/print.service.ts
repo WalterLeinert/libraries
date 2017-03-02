@@ -31,7 +31,7 @@ export class PrintService extends ServiceBase {
   public options: RequestOptions;
 
   constructor(http: Http, private metadataService: MetadataService, private configService: ConfigService) {
-    super(http, configService.config.printUrl, PrintService.TOPIC);
+    super(http, configService.config.printUrl, configService.config.printTopic);
   }
 
   /**
