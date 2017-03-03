@@ -43,7 +43,7 @@ export type selectionMode = 'single' | 'multiple' | '';
     <input #gb type="text" pInputText size="20" style="float:left" placeholder="search...">
   </div>
 
-  <p-dataTable [(value)]="dataItems" sortMode="sortMode" resizableColumns="true" [rows]="rows"
+  <p-dataTable [value]="dataItems" sortMode="sortMode" resizableColumns="true" [rows]="rows"
     [paginator]="true" [globalFilter]="gb"
     [editable]="editable"
     [selectionMode]="selectionMode" [(selection)]="selectedValue">
@@ -88,7 +88,7 @@ export type selectionMode = 'single' | 'multiple' | '';
             </div>
 
             <template let-col let-data="rowData" pTemplate="editor">
-                <p-calendar [(ngModel)]="data[col.field]" 
+                <p-calendar [(ngModel)]="data[col.field]"
                   dateFormat="yy-mm-dd" [minDate]="getMinDate(data, info)" [maxDate]="getMaxDate(data, info)"
                   [style.color]="getColor(data, info)">
                 </p-calendar>
@@ -470,6 +470,9 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   protected initBoundData(items: any[], tableMetadata: TableMetadata) {
     this.dataItems = undefined;
+
+    this.selectedIndex = -1;
+    this.selectedValue = undefined;
 
     super.initBoundData(items, tableMetadata);
   }
