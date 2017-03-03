@@ -45,6 +45,11 @@ import { AutoformConstants } from './autoformConstants';
             <input type="text" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
           </div>
 
+          <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'shorttime'">
+            <label>{{displayName(metadata)}}</label>
+            <input type="text" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
+          </div>
+
           <!--<div class="form-group" *ngIf="info.typeInfo.dataType == enumEnum && info.isVisible">
             <label>{{info.name}}</label>
             <select type="text" class="form-control">
