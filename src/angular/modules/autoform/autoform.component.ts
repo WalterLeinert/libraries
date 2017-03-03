@@ -45,9 +45,14 @@ import { AutoformConstants } from './autoformConstants';
             <input type="text" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
           </div>
 
-          <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'shorttime'">
+          <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'ShortTime'">
             <label>{{displayName(metadata)}}</label>
-            <input type="text" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
+            <input type="time" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
+          </div>
+
+          <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'Date'">
+            <label>{{displayName(metadata)}}</label>
+            <input type="date" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
           </div>
 
           <!--<div class="form-group" *ngIf="info.typeInfo.dataType == enumEnum && info.isVisible">
