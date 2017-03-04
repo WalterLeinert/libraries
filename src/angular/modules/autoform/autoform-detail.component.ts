@@ -38,8 +38,8 @@ import { IAutoformConfig } from './autoformConfig.interface';
           <label>{{displayName(metadata)}}</label>
           <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
         </div>
-        <div class="form-group" *ngIf="! isHidden(metadata)>
-          <label>{{displayName(metadata)}} ({{metadata.propertyType}}</label>
+        <div class="form-group" *ngIf="! isHidden(metadata)">
+          <label>{{displayName(metadata)}} ({{metadata.propertyType}})</label>
           <input type="date" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
         </div>
         <div class="form-group" *ngIf="! isHidden(metadata) && value[metadata.propertyName] && metadata.propertyType === 'ShortTime'">
