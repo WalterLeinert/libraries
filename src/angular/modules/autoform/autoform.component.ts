@@ -36,19 +36,21 @@ import { AutoformConstants } from './autoformConstants';
 
       <div>
         <ul *ngFor="let metadata of columnMetadata">
+        
           <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'string'">
             <label>{{displayName(metadata)}}</label>
             <input type="text" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
           </div>
+
           <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'number'">
             <label>{{displayName(metadata)}}</label>
             <input type="text" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
           </div>
 
-          <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'ShortTime'">
-            <label>{{displayName(metadata)}}</label>
+
+            <label>{{displayName(metadata)}} ({{metadata.propertyType}})</label>
             <input type="time" class="form-control" [(ngModel)]="item[metadata.propertyName]" name="{{metadata.propertyName}}">
-          </div>
+
 
           <div class="form-group" *ngIf="isNotHidden(metadata) && item[metadata.propertyName] && metadata.propertyType === 'Date'">
             <label>{{displayName(metadata)}}</label>
