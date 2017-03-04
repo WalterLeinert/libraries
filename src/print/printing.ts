@@ -134,7 +134,7 @@ export class Printing {
         const key = item.propertyName;
 
         if (item.propertyType === ColumnTypes.SHORTTIME) {
-          // rowData[key] = tableRows[i][key].toString();
+          rowData[key] = tableRows[i][key].toString();
         } else {
           rowData[key] = tableRows[i][key];
         }
