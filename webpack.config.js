@@ -1,17 +1,13 @@
 var webpack = require('webpack');
+var merge = require('webpack-merge');
 var path = require('path');
 var failPlugin = require('webpack-fail-plugin');
 
-module.exports = {
+const PLATFORM = process.env.PLATFORM_ENV = process.env.PLATFORM = 'node';
+
+var defaults = {
   context: path.join(__dirname, '.'),
-  entry: {
-    index: './src/index'
-  },
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'common.bundle.js',
-    libraryTarget: "commonjs"
-  },
+  entry: path.join(__dirname, './src/index'),
   resolve: {
     extensions: ['.ts', '.js'],
     modules: [
@@ -51,4 +47,49 @@ module.exports = {
     'rxjs',
     /rxjs\/*/
   ],
-}
+};
+
+
+var clientConfig = merge(defaults, {
+  target: 'web',
+
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: 'common.client.bundle.js',
+    libraryTarget: "commonjs"
+  },
+
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'PLATFORM': JSON.stringify('web')
+      }
+    })
+  ]
+
+});
+
+
+var serverConfig = merge(defaults, {
+  target: 'node',
+
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: 'common.node.bundle.js',
+    libraryTarget: "commonjs"
+  },
+
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'PLATFORM': JSON.stringify('node')
+      }
+    })
+  ]
+
+});
+
+
+
+module.exports = [clientConfig, serverConfig];
+

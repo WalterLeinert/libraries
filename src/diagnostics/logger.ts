@@ -27,7 +27,7 @@ export function getLogger(category: string | Function): ILogger {
     if (!LoggerRegistry.hasLogger(categoryName)) {
         let logger: ILogger;
 
-        if (Platform.isNode()) {
+        if (process.env.PLATFORM === 'node') {
             const log4js = require('log4js');
             logger = new Logger(log4js.getLogger(categoryName));
         } else {
@@ -49,7 +49,7 @@ export function getLogger(category: string | Function): ILogger {
  * @param {*} [options]
  */
 export function configure(config: string | IConfig, options?: any): void {
-    if (Platform.isNode()) {
+   if (process.env.PLATFORM === 'node') {
         const log4js = require('log4js');
         log4js.configure(config, options);
     } else {
