@@ -81,3 +81,35 @@ $ gulp update-fluxgate
 #### v1.2.0
 
 TODO
+
+## Hinweise zum Umstellung von Angular 2.4.6 auf 2.4.9 + AOT-Support
+
+	https://medium.com/@isaacplmann/getting-your-angular-2-library-ready-for-aot-90d1347bcad#.lhzz73yry
+	https://github.com/blacksonic/angular2-aot-webpack
+	
+	- @angular Packages aktualisieren (ng-update) auf 2.4.9 (dependencies):
+		○ Common
+		○ Core
+		○ Compiler
+		○ Forms
+		○ Http
+		○ Platform-browser
+		○ Platform-browser-dynamic
+		○ Platform-server
+		○ Router
+
+	- (devDependencies):
+		○ Compiler-cli
+		○ @types/jasmine
+		○ @types/node
+
+	- Angular-cli entfernen und durch @angular/cli ersetzten
+
+	- @angular/cli global installieren (1.0.0-rc.1)
+	- angular-cli.json 
+		○ umbenennen in .angular-cli.json
+	- tsconfig.json umbenennen in tsconfig.app.json
+	- Neu: tsconfig.spec.json
+	- Typings.d.ts (neuer Inhalt)
+		
+
