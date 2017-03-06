@@ -86,11 +86,12 @@ TODO
 
 Wichtige Artikel zum Thema:
 
-- [Getting your Angular 2 library ready for AoT](https://medium.com/@isaacplmann/getting-your-angular-2-library-ready-for-aot-90d1347bcad#.lhzz73yry)
+  * [Getting your Angular 2 library ready for AoT](https://medium.com/@isaacplmann/getting-your-angular-2-library-ready-for-aot-90d1347bcad#.lhzz73yry)
 
-- [Angular 2 AOT (Ahead Of Time) offline compilation example with Webpack](https://github.com/blacksonic/angular2-aot-webpack)
+  * [Angular 2 AOT (Ahead Of Time) offline compilation example with Webpack](https://github.com/blacksonic/angular2-aot-webpack)
 	
   * @angular Packages aktualisieren (ng-update) auf 2.4.9 (dependencies):
+  
     * common
     * core
     * compiler
@@ -102,11 +103,13 @@ Wichtige Artikel zum Thema:
     * router
 
   * (devDependencies):
+  
     * compiler-cli
     * @types/jasmine
     * @types/node
 
   * Angular-cli entfernen und durch @angular/cli ersetzten
+  *
     * @angular/cli global installieren (1.0.0-rc.1)
     * angular-cli.json 
       * umbenennen in .angular-cli.json
