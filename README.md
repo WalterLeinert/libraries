@@ -90,29 +90,28 @@ Wichtige Artikel zum Thema:
 
 - [Angular 2 AOT (Ahead Of Time) offline compilation example with Webpack](https://github.com/blacksonic/angular2-aot-webpack)
 	
-	- @angular Packages aktualisieren (ng-update) auf 2.4.9 (dependencies):
-		○ Common
-		○ Core
-		○ Compiler
-		○ Forms
-		○ Http
-		○ Platform-browser
-		○ Platform-browser-dynamic
-		○ Platform-server
-		○ Router
+  * @angular Packages aktualisieren (ng-update) auf 2.4.9 (dependencies):
+    * common
+    * core
+    * compiler
+    * forms
+    * http
+    * platform-browser
+    * platform-browser-dynamic
+    * platform-server
+    * router
 
-	- (devDependencies):
-		○ Compiler-cli
-		○ @types/jasmine
-		○ @types/node
+  * (devDependencies):
+    * compiler-cli
+    * @types/jasmine
+    * @types/node
 
-	- Angular-cli entfernen und durch @angular/cli ersetzten
-
-	- @angular/cli global installieren (1.0.0-rc.1)
-	- angular-cli.json 
-		○ umbenennen in .angular-cli.json
-	- tsconfig.json umbenennen in tsconfig.app.json
-	- Neu: tsconfig.spec.json
-	- Typings.d.ts (neuer Inhalt)
+  * Angular-cli entfernen und durch @angular/cli ersetzten
+    * @angular/cli global installieren (1.0.0-rc.1)
+    * angular-cli.json 
+      * umbenennen in .angular-cli.json
+      * tsconfig.json umbenennen in tsconfig.app.json
+  * Neu: tsconfig.spec.json
+  * typings.d.ts (neuer Inhalt)
 		
 
