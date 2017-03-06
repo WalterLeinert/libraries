@@ -38,7 +38,7 @@ import { IAutoformConfig } from './autoformConfig.interface';
           <label>{{displayName(metadata)}}</label>
           <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
         </div>
-        <div class="form-group" *ngIf="! isHidden(metadata)>
+        <div class="form-group" *ngIf="! isHidden(metadata)">
           <label>{{displayName(metadata)}} ({{metadata.propertyType}}</label>
           <input type="date" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
         </div>
@@ -166,7 +166,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   public submit() {
     const me = this;
     this.registerSubscription(this.service.update(this.value).subscribe(
-      (value) => {
+      (value: any) => {
         this.value = value;
         me.cancel();
       },
@@ -178,11 +178,11 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   /**
    * Löscht die Entity
    */
-  public delete(event) {
+  public delete(event: boolean) {
     if (event === true) {
       const me = this;
       this.registerSubscription(this.service.delete(this.service.getEntityId(this.value)).subscribe(
-        (value) => {
+        (value: any) => {
           this.value = value;
           me.cancel();
         },
