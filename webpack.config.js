@@ -3,20 +3,20 @@ var path = require('path');
 var failPlugin = require('webpack-fail-plugin');
 
 module.exports = {
-  // context: path.join(__dirname, '.'),
-  entry: {
-    main: './src/index'
-  },
+  context: path.join(__dirname, 'src'),
+  entry: path.join(__dirname, './src/index'),
+
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'server.bundle.js',
     libraryTarget: "commonjs"
   },
+
   resolve: {
     extensions: ['.ts', '.js'],
     modules: [
-      //'node_modules',
       path.join(__dirname, 'src'),
+      'node_modules'
     ]
   },
   module: {

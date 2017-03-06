@@ -2,6 +2,8 @@
  * Gulp Buildfile
  */
 
+// require("reflect-metadata");
+
 const gulp = require('gulp');
 const gulp_tslint = require('gulp-tslint');
 const del = require('del');
@@ -23,22 +25,22 @@ const tscConfig = require('./tsconfig.json');
     * cb           - Callbackfunktion
     */
 function execCommand(command, cwd, maxBuffer, cb) {
-    let execOpts = {};
-    if (cwd) {
-        execOpts.cwd = cwd;
-    }
+  let execOpts = {};
+  if (cwd) {
+    execOpts.cwd = cwd;
+  }
 
-    if (maxBuffer) {
-        execOpts.maxBuffer = maxBuffer;
-    }
+  if (maxBuffer) {
+    execOpts.maxBuffer = maxBuffer;
+  }
 
-    // console.log('ops = ', execOpts);
+  // console.log('ops = ', execOpts);
 
-    exec(command, execOpts, function (err, stdout, stderr) {
-        console.log(stdout);
-        console.log(stderr);
-        cb(err);
-    });
+  exec(command, execOpts, function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
 }
 
 
@@ -46,24 +48,24 @@ function execCommand(command, cwd, maxBuffer, cb) {
  * Common build
  */
 gulp.task('update-fluxgate-common', function (cb) {
-    //execCommand('npm uninstall --save @fluxgate/common', 'common', null, cb);
-    execCommand('npm uninstall --save @fluxgate/common && npm install --save @fluxgate/common', '.', null, cb);
+  //execCommand('npm uninstall --save @fluxgate/common', 'common', null, cb);
+  execCommand('npm uninstall --save @fluxgate/common && npm install --save @fluxgate/common', '.', null, cb);
 })
 
 gulp.task('really-clean', ['clean'], function (cb) {
-    return del('node_modules');
+  return del('node_modules');
 })
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-    return del(['dist', 'build', 'lib', 'dts']);
+  return del(['dist', 'build', 'lib', 'dts']);
 })
 
 
 gulp.task('tslint', () => {
-    return gulp.src(['**/*.ts', '!**/*.d.ts', '!node_modules/**'])
-      .pipe(gulp_tslint())
-      .pipe(gulp_tslint.report());
+  return gulp.src(['**/*.ts', '!**/*.d.ts', '!node_modules/**'])
+    .pipe(gulp_tslint())
+    .pipe(gulp_tslint.report());
 });
 
 
@@ -71,42 +73,47 @@ gulp.task('tslint', () => {
  * kompiliert den Server
  */
 gulp.task('compile', function () {
-    var tsResult = gulp
-        .src('src/**/*.ts')
-        .pipe(sourcemaps.init()) // This means sourcemaps will be generated
-        .pipe(typescript(tscConfig.compilerOptions));
+  var tsResult = gulp
+    .src('src/**/*.ts')
+    .pipe(sourcemaps.init()) // This means sourcemaps will be generated
+    .pipe(typescript(tscConfig.compilerOptions));
 
-    return merge([
-        tsResult.dts.pipe(
-            gulp.dest('build/dts')
-        ),
-        tsResult.js.pipe(
-            sourcemaps.write('.', {
-                sourceRoot: ".",
-                includeContent: true
-            }))
-            .pipe(gulp.dest('build/src')),
-    ]);
+  return merge([
+    tsResult.dts.pipe(
+      gulp.dest('build/dts')
+    ),
+    tsResult.js.pipe(
+      sourcemaps.write('.', {
+        sourceRoot: ".",
+        includeContent: true
+      }))
+      .pipe(gulp.dest('build/src')),
+  ]);
 })
 
-//optional - use a tsconfig file
-gulp.task('test', function () {
-    //find test code - note use of 'base'
-    return gulp.src('./test/**/*.spec.ts', { base: '.' })
-        /*transpile*/
-        .pipe(typescript(tscConfig.compilerOptions))
-        /*flush to disk*/
-        .pipe(gulp.dest('build'))
-        /*execute tests*/
-        .pipe(mocha({
-            
-            reporter: 'spec'
-        }));
+
+gulp.task('compile-test', function () {
+  //find test code - note use of 'base'
+  return gulp.src('./test/**/*.spec.ts', { base: '.' })
+    /*transpile*/
+    .pipe(typescript(tscConfig.compilerOptions))
+    /*flush to disk*/
+    .pipe(gulp.dest('build'));
 });
 
 
-gulp.task('bundle', ['compile'], function (cb) {
-    execCommand('webpack', '.', null, cb);
+
+//optional - use a tsconfig file
+gulp.task('test', ['compile-test'], function () {
+  gulp.src('./build/test/**/*.spec.js', {read: false})
+    .pipe(mocha({
+      reporter: 'spec'
+    }));
+});
+
+
+gulp.task('bundle', function (cb) {
+  execCommand('webpack', '.', null, cb);
 })
 
 

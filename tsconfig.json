@@ -12,6 +12,7 @@
     "moduleResolution": "node",
     "isolatedModules": false,
     "suppressImplicitAnyIndexErrors": false,
+    "importHelpers": true,
     "lib": [
       "es6",
       "dom"

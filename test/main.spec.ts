@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { Activator } from '@fluxgate/common';
 
 class Test {
