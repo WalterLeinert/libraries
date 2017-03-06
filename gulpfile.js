@@ -91,7 +91,7 @@ gulp.task('compile', function () {
 
 
 //optional - use a tsconfig file
-gulp.task('test', function () {
+gulp.task('test', ['set-env'], function () {
   //find test code - note use of 'base'
   return gulp.src('./test/**/*.spec.ts', { base: '.' })
     /*transpile*/
