@@ -88,7 +88,7 @@ Wichtige Artikel zum Thema:
 
 - [Getting your Angular 2 library ready for AoT](https://medium.com/@isaacplmann/getting-your-angular-2-library-ready-for-aot-90d1347bcad#.lhzz73yry)
 
-- https://github.com/blacksonic/angular2-aot-webpack
+- [Angular 2 AOT (Ahead Of Time) offline compilation example with Webpack](https://github.com/blacksonic/angular2-aot-webpack)
 	
 	- @angular Packages aktualisieren (ng-update) auf 2.4.9 (dependencies):
 		○ Common
