@@ -86,7 +86,7 @@ TODO
 
 Wichtige Artikel zum Thema:
 
-- https://medium.com/@isaacplmann/getting-your-angular-2-library-ready-for-aot-90d1347bcad#.lhzz73yry
+- [Getting your Angular 2 library ready for AoT|https://medium.com/@isaacplmann/getting-your-angular-2-library-ready-for-aot-90d1347bcad#.lhzz73yry]
 
 - https://github.com/blacksonic/angular2-aot-webpack
 	
