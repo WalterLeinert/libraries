@@ -42,7 +42,7 @@ export abstract class Base4Component<
    * @type {TService4}
    * @memberOf BaseComponent
    */
-  protected get service4(): TService4 {
+  public get service4(): TService4 {
     return this._service4;
   }
 }

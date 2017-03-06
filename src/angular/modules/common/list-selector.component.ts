@@ -111,7 +111,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
       const tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
 
       this.registerSubscription(serviceFunction.call(this.dataService)
-        .subscribe((items) => {
+        .subscribe((items: any[]) => {
           this.initBoundData(items, tableMetadata);
         },
         (error: Error) => {
@@ -158,7 +158,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
    * 
    * @memberOf ListSelectorComponent
    */
-  protected abstract setupData(items: any[]);
+  protected abstract setupData(items: any[]): void;
 
 
   /**
@@ -171,7 +171,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
    * 
    * @memberOf ListSelectorComponent
    */
-  protected abstract setupConfig(items: any[], tableMetadata: TableMetadata);
+  protected abstract setupConfig(items: any[], tableMetadata: TableMetadata): void;
 
   /**
    * Liefert den Index des Items (selectedValue) in der Wertelist

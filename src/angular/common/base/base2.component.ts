@@ -38,7 +38,7 @@ export abstract class Base2Component<TService1 extends IServiceBase, TService2 e
    * @type {TService}
    * @memberOf BaseComponent
    */
-  protected get service2(): TService2 {
+  public get service2(): TService2 {
     return this._service2;
   }
 }

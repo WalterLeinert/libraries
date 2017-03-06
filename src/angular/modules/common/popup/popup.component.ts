@@ -9,8 +9,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 
 @Component({
-    selector: 'flx-popup',
-    template: `
+  selector: 'flx-popup',
+  template: `
     <div class="absolute">
         <div class="container-fluid custom-modal-container">
             <div class="row custom-modal-header">
@@ -38,7 +38,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
     </div>    
   `,
-    styles: [`
+  styles: [`
     div.absolute {
         position: absolute;
         top: 80px;
@@ -53,29 +53,30 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 
 export class PopupComponent {
-    protected static readonly logger = getLogger(PopupComponent);
+  protected static readonly logger = getLogger(PopupComponent);
 
-    @Input() public message: string = '';
-    @Input() public title: string = '';
+  public shouldUseMyClass: boolean;   // TODO
+  @Input() public message: string = '';
+  @Input() public title: string = '';
 
-    @Output() public onAnswer: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() public onAnswer: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
-    public onClick(event: boolean) {
-        using(new XLog(PopupComponent.logger, levels.INFO, 'onClick'), (log) => {
-            log.log('message inside modal-component: ' + event);
-            this.onAnswer.next(event);
+  public onClick(event: boolean) {
+    using(new XLog(PopupComponent.logger, levels.INFO, 'onClick'), (log) => {
+      log.log('message inside modal-component: ' + event);
+      this.onAnswer.next(event);
 
-            // this.dialog.close();
-        });
-    }
+      // this.dialog.close();
+    });
+  }
 }
 
 
 // tslint:disable-next-line:max-classes-per-file
 @NgModule({
-    imports: [CommonModule],
-    exports: [PopupComponent],
-    declarations: [PopupComponent]
+  imports: [CommonModule],
+  exports: [PopupComponent],
+  declarations: [PopupComponent]
 })
 export class PopupModule { }

@@ -166,7 +166,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
 
 
-  public onChange(value) {
+  public onChange(value: any) {
     this.changeDetectorRef.detectChanges();
     if (this.debug) {
       DropdownSelectorComponent.logger.info(`DropdownSelectorComponent.onChange: selectedIndex =` +

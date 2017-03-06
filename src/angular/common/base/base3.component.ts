@@ -41,7 +41,7 @@ export abstract class Base3Component<
    * @type {TService3}
    * @memberOf BaseComponent
    */
-  protected get service3(): TService3 {
+  public get service3(): TService3 {
     return this._service3;
   }
 }

@@ -432,6 +432,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
         return info.color(data).toString();
       }
     }
+    return undefined;
   }
 
   /**
@@ -448,6 +449,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
         return (info.dateInfo.minDate as InstanceAccessor<any, Date>)(data);
       }
     }
+    return undefined;
   }
 
   /**
@@ -464,6 +466,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
         return (info.dateInfo.maxDate as InstanceAccessor<any, Date>)(data);
       }
     }
+    return undefined;
   }
 
 
@@ -482,7 +485,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   }
 
 
-  protected setupConfig(items: any[], tableMetadata: TableMetadata) {
+  protected setupConfig(items: any[], tableMetadata: TableMetadata): void {
     using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'setupConfig'), (log) => {
       if (log.isDebugEnabled) {
         log.log(`no of items = ${items ? items.length : 'undefined'},` +

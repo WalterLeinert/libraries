@@ -4,7 +4,7 @@ import { Directive, ElementRef, EventEmitter, Input, NgModule } from '@angular/c
     selector: '[flxFocus]'
 })
 export class FocusDirective {
-    private focusEmitterSubscription;
+    private focusEmitterSubscription: any;
 
     @Input('focus')
     set focus(focusEmitter: EventEmitter<any>) {

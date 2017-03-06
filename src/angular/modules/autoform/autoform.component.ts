@@ -157,7 +157,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   public submit() {
     const me = this;
     this.registerSubscription(this.service.update(this.item).subscribe(
-      (item) => {
+      (item: any) => {
         this.item = item;
         me.cancel();
       },
@@ -169,11 +169,11 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   /**
    * Löscht die Entity
    */
-  public delete(event) {
+  public delete(event: boolean) {
     if (event === true) {
       const me = this;
       this.registerSubscription(this.service.delete(this.service.getEntityId(this.item)).subscribe(
-        (item) => {
+        (item: any) => {
           this.item = item;
           me.cancel();
         },
@@ -222,7 +222,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   private getItem(id: any) {
     this.registerSubscription(this.service.findById(id).subscribe(
-      (item) => this.item = item,
+      (item: any) => this.item = item,
       (error: Error) => {
         this.handleError(error);
       }));

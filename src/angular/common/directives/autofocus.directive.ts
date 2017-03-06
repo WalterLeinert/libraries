@@ -55,7 +55,7 @@ export class AutofocusDirective implements AfterViewInit {
     this.focusIf(nameAttribute);
   }
 
-  private setSelectionRange(input, selectionStart, selectionEnd) {
+  private setSelectionRange(input: any, selectionStart: number, selectionEnd: number) {
     if (input.setSelectionRange) {
       // input.focus();
       input.setSelectionRange(selectionStart, selectionEnd);
@@ -68,7 +68,7 @@ export class AutofocusDirective implements AfterViewInit {
     }
   }
 
-  private setCaretToPos(input, pos) {
+  private setCaretToPos(input: any, pos: number) {
     this.setSelectionRange(input, pos, pos);
   }
 
