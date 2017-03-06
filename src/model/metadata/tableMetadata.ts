@@ -1,3 +1,4 @@
+import { Funktion } from '../../base/objectType';
 import { Dictionary } from '../../types';
 import { Assert } from '../../util/assert';
 import { EnumTableOptions } from '../decorator/model/enumTableOptions';
@@ -17,7 +18,7 @@ export class TableMetadata {
   private propertyMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   private _primaryKeyColumn: ColumnMetadata;
-  private _service: Function;
+  private _service: Funktion;
 
 
   /**
@@ -29,7 +30,7 @@ export class TableMetadata {
    * 
    * @memberOf TableMetadata
    */
-  constructor(public target: Function, public options: TableOptions | EnumTableOptions) {
+  constructor(public target: Funktion, public options: TableOptions | EnumTableOptions) {
   }
 
   /**
@@ -71,7 +72,7 @@ export class TableMetadata {
    * @memberOf TableMetadata
    */
   public createEntity<T>() {
-    return Reflect.construct(this.target, []) as T;
+    return Reflect.construct(this.target as (() => void), []) as T;
   }
 
   /**
@@ -182,7 +183,7 @@ export class TableMetadata {
   /**
    * Registriert den zugehörigen Service (Class/Constructor Function)
    */
-  public registerService(service: Function) {
+  public registerService(service: Funktion) {
     this._service = service;
   }
 

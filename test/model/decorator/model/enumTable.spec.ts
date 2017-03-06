@@ -40,16 +40,18 @@ class KollektionEnumTable {
   ];
 
 
-  public constructor(id: number, name: string) {
-    this.idKoll = id;
-    this.nameKoll = name;
-  }
-
   @Column({ name: 'kollektion_id', primary: true, generated: true })
   public idKoll: number = 1;
 
   @Column({ name: 'kollektion_name' })
   public nameKoll: string = 'summer';
+
+
+  public constructor(id: number, name: string) {
+    this.idKoll = id;
+    this.nameKoll = name;
+  }
+
 }
 
 

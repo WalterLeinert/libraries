@@ -34,6 +34,8 @@ export class XLog extends Disposable implements ILogger {
   private static readonly maxIndentations = 30;
   private static readonly indentationLevels = new Array<string>();
 
+  private static levels = levels;
+
   // tslint:disable-next-line:no-unused-variable
   private static initEnterExitLogger: boolean = (() => {
     let indentString = '';
@@ -57,7 +59,7 @@ export class XLog extends Disposable implements ILogger {
   private startTime: moment.Moment;
   private endTime: moment.Moment;
 
-  private static levels = levels;
+
 
 
   /**

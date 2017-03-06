@@ -1,4 +1,6 @@
-import { AppRegistry, EnumHelper } from '../base';
+import { AppRegistry } from '../base/appRegistry';
+import { EnumHelper } from '../base/enumHelper';
+import { Funktion } from '../base/objectType';
 
 import { Column, IRole, Table } from '.';
 
@@ -63,4 +65,4 @@ export class Role implements IRole {
 /**
  * Role Klasse registrieren
  */
-AppRegistry.instance.add<Function>(Role.ROLE_CONFIG_KEY, Role);
+AppRegistry.instance.add<Funktion>(Role.ROLE_CONFIG_KEY, Role);

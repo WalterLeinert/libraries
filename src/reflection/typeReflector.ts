@@ -1,6 +1,7 @@
 // tslint:disable-next-line:no-unused-variable
 import reflectMetadata = require('reflect-metadata');
 
+import { Funktion } from '../base/objectType';
 import { Dictionary } from './../types/dictionary';
 import { Assert } from './../util/assert';
 
@@ -31,7 +32,7 @@ export class TypeReflector {
 
             keys.forEach((key) => {
                 // tslint:disable-next-line:no-unused-variable
-                const propertyType: Function = (Reflect as any).getMetadata('design:type', obj, key);
+                const propertyType: Funktion = (Reflect as any).getMetadata('design:type', obj, key);
 
                 const descr = Reflect.getOwnPropertyDescriptor(obj, key);
                 this.propertyDict.set(key.toString(), new PropertyReflector(key.toString(), descr));

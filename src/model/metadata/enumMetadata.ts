@@ -1,3 +1,4 @@
+import { Funktion } from '../../base/objectType';
 import { InstanceAccessor } from '../../types';
 import { Assert } from '../../util/assert';
 import { MetadataStorage } from './metadataStorage';
@@ -6,7 +7,7 @@ import { MetadataStorage } from './metadataStorage';
 /**
  * Function that returns a type of the field. Returned value must be a class used on the relation.
  */
-export type RelationTypeInFunction = ((type?: any) => Function) | Function;
+export type RelationTypeInFunction = ((type?: any) => Funktion) | Funktion;
 
 
 /**
@@ -29,7 +30,7 @@ export class EnumMetadata<T, TText, TId> {
    * 
    * @memberOf EnumMetadata
    */
-  constructor(public target: Function, public propertyName: string,
+  constructor(public target: Funktion, public propertyName: string,
     private _dataSource: RelationTypeInFunction,
     private _foreignText: InstanceAccessor<T, TText>,
     private _foreignId: InstanceAccessor<T, TId>) {
@@ -38,7 +39,7 @@ export class EnumMetadata<T, TText, TId> {
   /**
    * Gets the property's type to which this relation is applied.
    */
-  public get dataSource(): Function {
+  public get dataSource(): Funktion {
     Assert.that(this._dataSource instanceof Function);
     return (this._dataSource as () => any)();
   }

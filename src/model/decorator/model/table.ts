@@ -1,3 +1,4 @@
+import { Funktion } from '../../../base/objectType';
 import { MetadataStorage } from '../../metadata/metadataStorage';
 import { TableMetadata } from '../../metadata/tableMetadata';
 
@@ -12,7 +13,7 @@ import { TableOptions } from './tableOptions.interface';
  */
 export function Table(options?: TableOptions) {
   // tslint:disable-next-line:only-arrow-functions
-  return function(target: Function) {
+  return function(target: Funktion) {
     if (!options) {
       options = {} as TableOptions;
     }

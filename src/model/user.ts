@@ -1,4 +1,5 @@
-import { AppRegistry } from '../base';
+import { AppRegistry } from '../base/appRegistry';
+import { Funktion } from '../base/objectType';
 import { Enum } from '../model/decorator/model/enum';
 
 import { Column, IUser, Role, Table, UserRoleId } from '.';
@@ -74,4 +75,4 @@ export class User implements IUser {
 /**
  * User Klasse registrieren
  */
-AppRegistry.instance.add<Function>(User.USER_CONFIG_KEY, User);
+AppRegistry.instance.add<Funktion>(User.USER_CONFIG_KEY, User);

@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 
+import { Funktion } from '../../base/objectType';
 import { ShortTime, Time } from '../../types';
 import { Assert } from '../../util/assert';
 import { ColumnOptions } from '../decorator/model/columnOptions';
@@ -24,7 +25,7 @@ export class ColumnMetadata {
      * @param {ColumnType} propertyType - Typ der Modelproperty
      * @param {ColumnOptions} options - weitere Propertyeigenschaften
      */
-    constructor(public target: Function, public propertyName: string, public propertyType: ColumnType,
+    constructor(public target: Funktion, public propertyName: string, public propertyType: ColumnType,
         public options: ColumnOptions) {
     }
 

@@ -1,5 +1,6 @@
-
+import { Funktion } from '../../base/objectType';
 import { Validator } from '../validation/validator';
+
 /**
  * Metadaten zur Validierung von Attributen
  * 
@@ -7,6 +8,6 @@ import { Validator } from '../validation/validator';
  * @class ValidationMetadata
  */
 export class ValidationMetadata {
-    constructor(public target: Function, public propertyName: string, public validator: Validator) {
-    }
+  constructor(public target: Funktion, public propertyName: string, public validator: Validator) {
+  }
 }
