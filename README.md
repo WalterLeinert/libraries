@@ -84,7 +84,8 @@ TODO
 
 ## Hinweise zum Umstellung von Angular 2.4.6 auf 2.4.9 + AOT-Support
 
-	https://medium.com/@isaacplmann/getting-your-angular-2-library-ready-for-aot-90d1347bcad#.lhzz73yry
+	[https://medium.com/@isaacplmann/getting-your-angular-2-library-ready-for-aot-90d1347bcad#.lhzz73yry]
+	
 	https://github.com/blacksonic/angular2-aot-webpack
 	
 	- @angular Packages aktualisieren (ng-update) auf 2.4.9 (dependencies):
