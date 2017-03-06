@@ -1,6 +1,4 @@
 *
-!dts/**/*
 !dist/**/*
 !package.json
 !*.md
-node_modules

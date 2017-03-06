@@ -51,6 +51,9 @@ symbols.json
 /dts/
 /dist/
 /build/
+/aot/
+**/*.ngsummary.json
+**/*.ngfactory.ts
 
 # Ausnahmen
 !gulpfile.js

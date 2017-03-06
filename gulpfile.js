@@ -4,6 +4,7 @@
 'user strict';
 
 const gulp = require('gulp');
+const ngc = require('gulp-ngc');
 const gulp_tslint = require('gulp-tslint');
 const del = require('del')
 const gulpSequence = require('gulp-sequence')
@@ -57,7 +58,7 @@ gulp.task('really-clean', ['clean'], function (cb) {
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-    return del(['dist', 'build', 'lib', 'dts']);
+    return del(['dist', 'build', 'aot', 'lib', 'dts', '**/*.ngfactory.ts', '**/*.ngsummary.json']);
 })
 
 gulp.task('tslint', () => {
@@ -88,7 +89,9 @@ gulp.task('compile', function () {
     ]);
 })
 
-
+gulp.task('ngc', () => {
+    return ngc('tsconfig.json');
+});
 
 //optional - use a tsconfig file
 gulp.task('test', function () {
@@ -113,4 +116,4 @@ gulp.task('bundle', function (cb) {
 gulp.task('update-fluxgate', ['update-fluxgate-common'])
 
 /* single command to hook into VS Code */
-gulp.task('default', gulpSequence('clean', 'compile', 'test', 'bundle'));
+gulp.task('default', gulpSequence('clean', 'ngc', 'test'));
