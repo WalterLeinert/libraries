@@ -111,6 +111,7 @@ Wichtige Artikel zum Thema:
     * angular-cli.json 
       * umbenennen in .angular-cli.json
       * tsconfig.json umbenennen in tsconfig.app.json
+  
   * Neu: tsconfig.spec.json
   * typings.d.ts (neuer Inhalt)
 		
