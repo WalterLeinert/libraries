@@ -2,6 +2,8 @@
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
+import { IUser } from '@fluxgate/common';
+
 import { CurrentUser } from './currentUser';
 import { PassportService } from './passport.service';
 
@@ -19,7 +21,7 @@ export abstract class CurrentUserBaseService extends CurrentUser {
     super();
 
     using(new XLog(CurrentUserBaseService.logger, levels.INFO, 'ctor'), (log) => {
-      this.registerSubscription(this.passportService.userChange.subscribe((user) => {
+      this.registerSubscription(this.passportService.userChange.subscribe((user: IUser) => {
         this.userInternal = user;
         log.debug(`currentUserChange: user = ${JSON.stringify(user)}`);
       }));
