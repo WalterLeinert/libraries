@@ -41,11 +41,11 @@ import { IAutoformConfig } from './autoformConfig.interface';
        
         <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'shorttime'">
           <label>{{displayName(metadata)}}</label>
-          <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          <input type="time" maxlength="5" size="6" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
         </div>
         <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'datetime'">
           <label>{{displayName(metadata)}}</label>
-          <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          <input type="date" maxlength="10" size="10" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
         </div>
 
         <!--<div class="form-group" *ngIf="info.typeInfo.dataType == enumEnum && info.isVisible">
