@@ -3,7 +3,7 @@
   "version": "1.14.1",
   "description": "Fluxgate Server-Library ",
   "main": "dist/server.bundle.js",
-  "typings": "dist/dts/src/index.d.ts",
+  "typings": "dts/src/index.d.ts",
   "scripts": {
     "tslint": "tslint ./src/**/*.ts",
     "debug_test": "node-debug _mocha -t 0 test/index.js"
