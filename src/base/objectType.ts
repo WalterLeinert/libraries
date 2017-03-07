@@ -1,7 +1,8 @@
 import { ICtor } from './ctor';
 
-export class Funktion {
+export abstract class Funktion {
   public readonly name: string;
+  public abstract call(...args: any[]): any;
 }
 
 /**
