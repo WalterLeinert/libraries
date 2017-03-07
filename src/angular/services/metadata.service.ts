@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Assert, MetadataStorage, TableMetadata } from '@fluxgate/common';
+import { Assert, Funktion, MetadataStorage, TableMetadata } from '@fluxgate/common';
 
 
 @Injectable()
@@ -14,16 +14,16 @@ export class MetadataService {
    * 
    * @memberOf MetadataService
    */
-  public findTableMetadata(model: Function): TableMetadata;
+  public findTableMetadata(model: Funktion): TableMetadata;
   // tslint:disable-next-line:unified-signatures
   public findTableMetadata(model: string): TableMetadata;
 
   // tslint:disable-next-line:unified-signatures
-  public findTableMetadata(model: Function | string): TableMetadata {
+  public findTableMetadata(model: Funktion | string): TableMetadata {
     Assert.notNull(model);
     if (typeof (model) === 'string') {
       MetadataStorage.instance.findTableMetadata(model);
     }
-    return MetadataStorage.instance.findTableMetadata(model as Function);
+    return MetadataStorage.instance.findTableMetadata(model as Funktion);
   }
 }
