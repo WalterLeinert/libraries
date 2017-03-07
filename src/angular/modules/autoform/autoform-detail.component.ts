@@ -30,23 +30,20 @@ import { IAutoformConfig } from './autoformConfig.interface';
     <div>
       <ul *ngFor="let metadata of columnMetadata">
 
-        <div class="form-group" *ngIf="! isHidden(metadata) && value[metadata.propertyName] && metadata.propertyType === 'string'">
+        <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'string'">
           <label>{{displayName(metadata)}}</label>
           <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
         </div>
-        <div class="form-group" *ngIf="! isHidden(metadata) && value[metadata.propertyName] && metadata.propertyType === 'number'">
+        <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'number'">
           <label>{{displayName(metadata)}}</label>
           <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
         </div>
-        <div class="form-group" *ngIf="! isHidden(metadata)">
-          <label>{{displayName(metadata)}} ({{metadata.propertyType}})</label>
-          <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
-        </div>
-        <div class="form-group" *ngIf="! isHidden(metadata) && value[metadata.propertyName] && metadata.propertyType === 'shorttime'">
+       
+        <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'shorttime'">
           <label>{{displayName(metadata)}}</label>
           <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
         </div>
-        <div class="form-group" *ngIf="! isHidden(metadata) && value[metadata.propertyName] && metadata.propertyType === 'datetime'">
+        <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'datetime'">
           <label>{{displayName(metadata)}}</label>
           <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
         </div>
@@ -224,7 +221,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   /**
    * Liefert true, falls Feld zu @param{metadata} nicht anzuzeigen ist
    */
-  public isHidden(metadata: ColumnMetadata): boolean {
+  public isHidden(metadata: ColumnMetadata, value: any): boolean {
     // Default: Anzeige, falls displayName im Model gesetzt ist
     let rval = metadata.options.displayName === undefined;
 
@@ -240,7 +237,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
         rval = true;
       }
     }
-    return rval;
+    return rval || value === undefined || value[metadata.propertyName] === undefined;
   }
 
 

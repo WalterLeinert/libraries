@@ -5,12 +5,9 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
-import { ErrorObservable } from 'rxjs/Observable/ErrorObservable';
-
-import * as HttpStatusCodes from 'http-status-codes';
 
 import { IQuery, IToString, ServiceResult, TableMetadata } from '@fluxgate/common';
-import { Assert, IService } from '@fluxgate/common';
+import { Assert, Funktion, IService } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -46,7 +43,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    * 
    * @memberOf Service
    */
-  protected constructor(model: Function, private metadataService: MetadataService,
+  protected constructor(model: Funktion, private metadataService: MetadataService,
     http: Http, configService: ConfigService, private topic?: string) {
     super(http, configService.config.url,
       topic === undefined ? metadataService.findTableMetadata(model).options.name : topic);

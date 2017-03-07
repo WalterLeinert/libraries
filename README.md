@@ -117,5 +117,10 @@ Wichtige Artikel zum Thema:
   
   * Neu: tsconfig.spec.json
   * typings.d.ts (neuer Inhalt)
+
+  * Packages aktualisieren:
+    * typescript (2.2.1)
+    * tslint (4.5.1)
+    * ts-node (2.1.0)
 		
 

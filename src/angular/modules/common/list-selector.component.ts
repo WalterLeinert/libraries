@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert, IService, TableMetadata } from '@fluxgate/common';
+import { Assert, Funktion, IService, TableMetadata } from '@fluxgate/common';
 import { MetadataService } from '../../services';
 import { SelectorBaseComponent } from './selectorBase.component';
 
@@ -56,7 +56,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
    * @type {IService}
    * @memberOf DataTableSelectorComponent
    */
-  private _dataServiceFunction: Function;
+  private _dataServiceFunction: Funktion;
 
 
   /**
@@ -100,7 +100,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
         return;
       }
 
-      let serviceFunction: Function;
+      let serviceFunction: Funktion;
 
       if (this.dataServiceFunction) {
         serviceFunction = this.dataServiceFunction;
@@ -368,11 +368,11 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
   // -------------------------------------------------------------------------------------
   // Property dataServiceFunction
   // -------------------------------------------------------------------------------------
-  public get dataServiceFunction(): Function {
+  public get dataServiceFunction(): Funktion {
     return this._dataServiceFunction;
   }
 
-  @Input() public set dataServiceFunction(value: Function) {
+  @Input() public set dataServiceFunction(value: Funktion) {
     if (this._dataServiceFunction !== value) {
       this._dataServiceFunction = value;
     }
