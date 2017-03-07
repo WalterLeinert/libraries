@@ -7,7 +7,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  Assert, Clone, ColumnMetadata, IQuery, IToString, IUser,
+  Assert, Clone, ColumnMetadata, Funktion, IQuery, IToString, IUser,
   ServiceResult, TableMetadata, Types
 } from '@fluxgate/common';
 
@@ -38,7 +38,7 @@ export abstract class BaseService<T, TId extends IToString>  {
    * 
    * @memberOf ServiceBase
    */
-  constructor(table: Function, private knexService: KnexService, private metadataService: MetadataService) {
+  constructor(table: Funktion, private knexService: KnexService, private metadataService: MetadataService) {
     this.metadata = this.metadataService.findTableMetadata(table);
 
     const cols = this.metadata.columnMetadata.filter((item: ColumnMetadata) => item.options.primary);

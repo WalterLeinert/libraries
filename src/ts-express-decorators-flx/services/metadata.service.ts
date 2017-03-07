@@ -1,7 +1,7 @@
 import { Service } from 'ts-express-decorators';
 
 // fluxgate
-import { MetadataStorage, TableMetadata } from '@fluxgate/common';
+import { Funktion, MetadataStorage, TableMetadata } from '@fluxgate/common';
 
 /**
  * Service für den Zugriff auf Modell-Metadaten
@@ -17,7 +17,7 @@ export class MetadataService {
    * 
    * @memberOf MetadataService
    */
-  public findTableMetadata(model: Function): TableMetadata {
+  public findTableMetadata(model: Funktion): TableMetadata {
     return MetadataStorage.instance.findTableMetadata(model);
   }
 
