@@ -27,7 +27,7 @@ export interface IRGB {
 // tslint:disable-next-line:max-classes-per-file
 export class Color {
   private static colorDict: Dictionary<string, Color> = new Dictionary<string, Color>(); 
-  private color: tinycolorInstance;
+  private _color: tinycolorInstance;
 
   /**
    * Creates an instance of Color.
@@ -38,9 +38,9 @@ export class Color {
    */
   private constructor(color: ColorType) {
     if (typeof color === 'string') {
-      this.color = TinyColor(color);
+      this._color = TinyColor(color);
     } else {
-      this.color = TinyColor(`rgb(${color.r}, ${color.g}, ${color.b})`);
+      this._color = TinyColor(`rgb(${color.r}, ${color.g}, ${color.b})`);
     }
 
   }
@@ -70,7 +70,7 @@ export class Color {
   }
 
   public toString(): string {
-    return this.color.toString();
+    return this._color.toString();
   }
 
 }
