@@ -1,9 +1,13 @@
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 
 // Fluxgate
-import { IServiceBase } from '@fluxgate/common';
+import { Assert, IService, IServiceBase, ServiceResult, Utility } from '@fluxgate/common';
 
+import { IRouterNavigationAction, NavigationAction } from '../../common/routing';
 import { IAutoformConfig, IAutoformNavigation } from '../../modules/autoform/autoformConfig.interface';
 import { AutoformConstants } from '../../modules/autoform/autoformConstants';
 import { CoreComponent } from './core.component';
@@ -38,6 +42,32 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
     super();
   }
 
+  /**
+   * Erzeugt ein @see{IRouterNavigationAction}-Objekt für CRUD-Aktionen auf einer Model-Instanz vom Typ @see{T}
+   * 
+   * @param action - die geforderte CRUD-Aktion
+   * @param subject - die Model-Instanz
+   */
+  protected createNavigationRouterAction<T>(action: NavigationAction, subject: T): IRouterNavigationAction<T> {
+    return {
+      action: action, subject: subject
+    };
+  }
+
+  /**
+   * Navigiert zur Parent-Komponente mit einem Routing-Command @see{IRouterNavigationAction}. 
+   * 
+   * @protected
+   * @template T 
+   * @param {NavigationAction} action 
+   * @param {T} subject 
+   * 
+   * @memberOf BaseComponent
+   */
+  protected navigateToParent<T>(action: NavigationAction, subject: T) {
+    this.navigate(['../', this.createNavigationRouterAction(action, subject)]);
+  }
+
 
   /**
    * Navigiert über den zugehörigen Router
@@ -68,6 +98,74 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
 
     return this.navigate([AutoformConstants.GENERIC_TOPIC, navigationConfig]);
   }
+
+
+
+  /**
+   * Führt die CRUD-Aktion in @param{routeParam} mit Hilfe des Services @param{service} durch (default:
+   * aktueller Service), aktualisiert die an die Komponente angebundene Liste von Items mit Hilfe von @param{refresher}
+   * 
+   * @protected
+   * @template T - Typ der Model-Instanz
+   * @template TId - Typ der Id-Spalte der Model-Instanz
+   * @param {T[]} items - die aktuell angebundene Liste von Items
+   * @param {IRouterNavigationAction<T>} routeParams
+   * @returns Observable<TId> - die Id der Model-Instanz, die nach der Aktionen zu selektieren ist.
+   * 
+   * @memberOf BaseComponent
+   */
+  protected performAction<T, TId>(items: T[], routeParams: IRouterNavigationAction<T>,
+    service?: IService): Observable<TId> {
+
+    Assert.notNull(routeParams);
+
+    if (!service) {
+      service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
+    }
+
+    //
+    // nur falls eine RouterNavigationAction vorliegt, führen wir die Aktion durch
+    // Hinweis: instanceof funktioniert nicht, da offensichtlich der Router nur die Properties übernimmt
+    // und nicht die Originalinstanz.
+    //
+    if (routeParams.subject && !Utility.isNullOrEmpty(routeParams.action)) {
+      switch (routeParams.action) {
+        case 'create':
+          return service.create(routeParams.subject).map((item: T) => service.getEntityId(item));
+
+        case 'update':
+          return service.update(routeParams.subject).map((item: T) => service.getEntityId(routeParams.subject));
+
+        case 'delete':
+          return service.delete(service.getEntityId(routeParams.subject)).map((result: ServiceResult<T>) => {
+            let index = items.findIndex((item) => service.getEntityId(item) === result.id);
+
+            if (index >= items.length - 1) {
+              index--;
+            } else {
+              index++;
+            }
+
+            if (index < 0) {
+              index = undefined;
+            }
+
+            let idToSelect: TId;
+            if (index !== undefined) {
+              idToSelect = service.getEntityId(items[index]);
+            }
+
+            return idToSelect;
+          });
+
+        default:
+          throw new Error('not supported');
+      }
+    } else {
+      return Observable.of(undefined);
+    }
+  }
+
 
   /**
    * Liefert den zugehörigen Service
