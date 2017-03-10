@@ -61,6 +61,10 @@ export class ProxyService implements IService {
     return this.service.getEntityId(item);
   }
 
+  public setEntityId(item: any, id: any) {
+    return this.service.setEntityId(item, id);
+  }
+
   public getModelClassName(): string {
     return this.service.getModelClassName();
   }

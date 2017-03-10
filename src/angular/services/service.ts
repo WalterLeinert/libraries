@@ -196,6 +196,21 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
 
   /**
+   * Setzt die Id der Entity @param{item} über die Metainformation, falls vorhanden.
+   * Sonst wird ein Error geworfen.
+   * 
+   * @type {any}
+   * @memberOf Service
+   */
+  public setEntityId(item: T, id: TId) {
+    if (!this._tableMetadata.primaryKeyColumn) {
+      throw new Error(`Table ${this._tableMetadata.options.name}: no primary key column`);
+    }
+    item[this._tableMetadata.primaryKeyColumn.propertyName] = id;
+  }
+
+
+  /**
    * Serialisiert das @param{item} für die Übertragung zum Server über das REST-Api.
    * 
    * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
