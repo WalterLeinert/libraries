@@ -5,9 +5,9 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 
 // Fluxgate
-import { Assert, IService, IServiceBase, ServiceResult, Utility } from '@fluxgate/common';
+import { Assert, InstanceAccessor, IService, IServiceBase, ServiceResult, Utility } from '@fluxgate/common';
 
-import { IRouterNavigationAction, NavigationAction } from '../../common/routing';
+import { IRefreshHelper, IRouterNavigationAction, NavigationAction } from '../../common/routing';
 import { IAutoformConfig, IAutoformNavigation } from '../../modules/autoform/autoformConfig.interface';
 import { AutoformConstants } from '../../modules/autoform/autoformConstants';
 import { CoreComponent } from './core.component';
@@ -172,6 +172,50 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
     } else {
       return Observable.of(undefined);
     }
+  }
+
+
+
+  /**
+   * Holt alle Model-Items mittels des Services und liefert einen IRefreshHelper als Observable
+   * mit den Items und einem selectedItem, welches anhand von @param{id} ermittelt wird.
+   * 
+   * @protected
+   * @template T 
+   * @template TId 
+   * @param {TId} id 
+   * @param {InstanceAccessor<T, TId>} idAccessor 
+   * @returns {Observable<IRefreshHelper<T>>} 
+   * 
+   * @memberOf BaseComponent
+   */
+  protected refreshItems<T, TId>(id: TId, idAccessor: InstanceAccessor<T, TId>): Observable<IRefreshHelper<T>> {
+    let selectedItem: T;
+
+    const service: IService = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
+
+    return service.find().
+      do((items: T[]) => {
+
+        if (id !== undefined) {
+          selectedItem = items.find((item) => {
+            return (idAccessor(item) === id);
+          });
+        } else {
+          if (!Utility.isNullOrEmpty(items)) {
+            selectedItem = items[0];
+          } else {
+            selectedItem = undefined;
+          }
+        }
+
+      }).
+      map((items: T[]) => {
+        const result: IRefreshHelper<T> = {
+          items: items, selectedItem: selectedItem
+        };
+        return result;
+      });
   }
 
 
