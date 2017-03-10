@@ -117,7 +117,8 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
    * @template T - Typ der Model-Instanz
    * @template TId - Typ der Id-Spalte der Model-Instanz
    * @param {T[]} items - die aktuell angebundene Liste von Items
-   * @param {IRouterNavigationAction<T>} routeParams
+   * @param {IRouterNavigationAction<T>} routeParams - Info mit action und subject
+   * @param {IService<T>} service - (optional) zu verwendender Service
    * @returns Observable<TId> - die Id der Model-Instanz, die nach der Aktionen zu selektieren ist.
    * 
    * @memberOf BaseComponent
@@ -177,29 +178,39 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
 
 
   /**
-   * Holt alle Model-Items mittels des Services und liefert einen IRefreshHelper als Observable
+   * Holt alle Model-Items mittels des Services @param{service} bzw. des Komponentenservices
+   * und liefert einen IRefreshHelper als Observable
    * mit den Items und einem selectedItem, welches anhand von @param{id} ermittelt wird.
    * 
    * @protected
    * @template T 
    * @template TId 
-   * @param {TId} id 
-   * @param {InstanceAccessor<T, TId>} idAccessor 
+   * @param {TId} idToSelect - Id des zu selektierenden Items
+   * @param {InstanceAccessor<T, TId>} idAccessor - (optional) liefert die zu verwendende Id des items
+   * @param {IService<T>} service - (optional) zu verwendender Service
    * @returns {Observable<IRefreshHelper<T>>} 
    * 
    * @memberOf BaseComponent
    */
-  protected refreshItems<T, TId>(id: TId, idAccessor: InstanceAccessor<T, TId>): Observable<IRefreshHelper<T>> {
+  protected refreshItems<T, TId>(idToSelect: TId, idAccessor?: InstanceAccessor<T, TId>,
+    service?: IService): Observable<IRefreshHelper<T>> {
+
     let selectedItem: T;
 
-    const service: IService = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
+    if (idAccessor === undefined) {
+      idAccessor = ((item: T) => service.getEntityId(item));  // default: über Metadaten
+    }
+
+    if (!service) {
+      service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
+    }
 
     return service.find().
       do((items: T[]) => {
 
-        if (id !== undefined) {
+        if (idToSelect !== undefined) {
           selectedItem = items.find((item) => {
-            return (idAccessor(item) === id);
+            return (idAccessor(item) === idToSelect);
           });
         } else {
           if (!Utility.isNullOrEmpty(items)) {
