@@ -43,6 +43,14 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
   }
 
   /**
+   * Liefert true, falls der Status der Komponente geändert wurde und zu sichernde Daten existieren.
+   * Muss in konkreten Komponentenklassen überschrieben werden.
+   */
+  public hasChanges(): boolean {
+    return false;
+  }
+
+  /**
    * Erzeugt ein @see{IRouterNavigationAction}-Objekt für CRUD-Aktionen auf einer Model-Instanz vom Typ @see{T}
    * 
    * @param action - die geforderte CRUD-Aktion
