@@ -40,6 +40,10 @@ export class EnumTableService implements IService {
     throw new Error(`Not supported`);
   }
 
+  public setEntityId(item: any, id: any) {
+    throw new Error(`Not supported`);
+  }
+
   public getUrl(): string {
     throw new Error(`Not supported`);
   }

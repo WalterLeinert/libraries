@@ -5,19 +5,29 @@ import { IRestUri } from './restUri.interface';
  */
 export interface IServiceBase extends IRestUri {
 
-    /**
-     * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
-     * 
-     * @type {string}
-     */
-    getModelClassName(): string;
+  /**
+   * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
+   * 
+   * @type {string}
+   */
+  getModelClassName(): string;
 
-    /**
-     * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
-     * Sonst wird ein Error geworfen.
-     * 
-     * @param{any} item - eine Entity-Instanz
-     * @type {any}
-     */
-    getEntityId(item: any): any;
+  /**
+   * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
+   * Sonst wird ein Error geworfen.
+   * 
+   * @param{any} item - eine Entity-Instanz
+   * @type {any}
+   */
+  getEntityId(item: any): any;
+
+  /**
+   * Setzt die Id der Entity @param{item} über die Metainformation, falls vorhanden.
+   * Sonst wird ein Error geworfen.
+   * 
+   * @param{any} item - eine Entity-Instanz
+   * @param{any} id - eine Entity-Id
+   * @type {any}
+   */
+  setEntityId(item: any, id: any);
 }
