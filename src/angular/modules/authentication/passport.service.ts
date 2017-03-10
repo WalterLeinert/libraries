@@ -218,14 +218,12 @@ export class PassportService extends CurrentUser implements IServiceBase {
     throw new Error(`Not supported`);
   }
 
-  /**
-   * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
-   * Sonst wird ein Error geworfen.
-   * 
-   * @type {any}
-   * @memberOf Service
-   */
+
   public getEntityId(item: any): any {
+    throw new Error(`Not supported`);
+  }
+
+  public setEntityId(item: any, id: any) {
     throw new Error(`Not supported`);
   }
 

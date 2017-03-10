@@ -2,7 +2,27 @@
 /**
  * mögliche Aktionen auf Model-Instanzen 
  */
-export type NavigationAction = 'create' | 'update' | 'delete';
+export type NavigationAction =
+  /**
+   * Erzeugen einer neuen Modelinstanz
+   */
+  'create' |
+
+  /**
+   * Update auf eine Modelinstanz
+   */
+  'update' |
+
+  /**
+   * Löschen einer Modelinstanz
+   */
+  'delete' |
+
+  /**
+   * Selektion des Items (kein Servicecall)
+   */
+  'select';
+
 
 /**
  * Interface für Routing-Parameter zur Durchführung von C(R)UD-Aktionen auf Model-Instanzen

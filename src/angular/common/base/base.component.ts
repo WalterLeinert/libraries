@@ -1,11 +1,15 @@
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 
 // Fluxgate
-import { Assert, InstanceAccessor, IService, IServiceBase, ServiceResult, Utility } from '@fluxgate/common';
+import {
+  Assert, InstanceAccessor, InstanceSetter, IService, IServiceBase,
+  ServiceResult, Utility
+} from '@fluxgate/common';
 
 import { IRefreshHelper, IRouterNavigationAction, NavigationAction } from '../../common/routing';
 import { IAutoformConfig, IAutoformNavigation } from '../../modules/autoform/autoformConfig.interface';
@@ -139,15 +143,18 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
     //
     if (routeParams.subject && !Utility.isNullOrEmpty(routeParams.action)) {
       switch (routeParams.action) {
+        case 'select':
+          return Observable.of(service.getEntityId(routeParams.subject));
+
         case 'create':
-          return service.create(routeParams.subject).map((item: T) => service.getEntityId(item));
+          return this.createItem(routeParams.subject).map((item: T) => service.getEntityId(item));
 
         case 'update':
-          return service.update(routeParams.subject).map((item: T) => service.getEntityId(routeParams.subject));
+          return this.updateItem(routeParams.subject).map((item: T) => service.getEntityId(routeParams.subject));
 
         case 'delete':
-          return service.delete(service.getEntityId(routeParams.subject)).map((result: ServiceResult<T>) => {
-            let index = items.findIndex((item) => service.getEntityId(item) === result.id);
+          return this.deleteItem(service.getEntityId(routeParams.subject)).map((id: TId) => {
+            let index = items.findIndex((item) => service.getEntityId(item) === id);
 
             if (index >= items.length - 1) {
               index--;
@@ -227,6 +234,49 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
         };
         return result;
       });
+  }
+
+
+  protected createItem<T, TId>(
+    item: T,
+    idAccessor?: InstanceAccessor<T, TId>,
+    idSetter?: InstanceSetter<T, TId>,
+    service?: IService): Observable<T> {
+
+    if (idAccessor === undefined) {
+      idAccessor = ((elem: T) => service.getEntityId(elem));  // default: über Metadaten
+    }
+
+    if (idSetter === undefined) {
+      idSetter = ((elem: T, id: TId) => service.setEntityId(elem, id));  // default: über Metadaten
+    }
+
+
+    if (!service) {
+      service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
+    }
+    return service.create(item)
+      .do((elem: T) => { idSetter(item, idAccessor(elem)); })   // Id setzen
+      .catch(this.handleError);
+  }
+
+  protected updateItem<T, TId>(item: T, service?: IService): Observable<T> {
+    if (!service) {
+      service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
+    }
+    return service.update(item)
+      .catch(this.handleError);
+  }
+
+  protected deleteItem<TId>(id: TId, service?: IService): Observable<TId> {
+    if (!service) {
+      service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
+    }
+    return service.delete(id)
+      .map((result: ServiceResult<TId>) => {
+        return result.id;
+      })
+      .catch(this.handleError);
   }
 
 
