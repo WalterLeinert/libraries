@@ -8,6 +8,7 @@ import 'rxjs/add/observable/throw';
 // Fluxgate
 import { Assert, Funktion, IService, TableMetadata } from '@fluxgate/common';
 import { MetadataService } from '../../services';
+import { MessageService } from '../../services/message.service';
 import { SelectorBaseComponent } from './selectorBase.component';
 
 
@@ -77,9 +78,9 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
   @Output() public selectedIndexChange = new EventEmitter<number>();
 
 
-  protected constructor(router: Router, metadataService: MetadataService,
+  protected constructor(router: Router, metadataService: MetadataService, messageService: MessageService,
     changeDetectorRef: ChangeDetectorRef) {
-    super(router, metadataService, changeDetectorRef);
+    super(router, metadataService, messageService, changeDetectorRef);
   }
 
 

@@ -7,6 +7,7 @@ import { Types } from '@fluxgate/common';
 import { DisplayInfo } from '../../../base/displayInfo';
 import { PrimeNgCalendarLocale } from '../../../primeng/calendarLocale';
 import { MetadataService } from '../../services';
+import { MessageService } from '../../services/message.service';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
 
 
@@ -69,8 +70,9 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
   @Input() public valueField: string = DisplayInfo.CURRENT_ITEM;
 
 
-  constructor(router: Router, metadataService: MetadataService, changeDetectorRef: ChangeDetectorRef) {
-    super(router, metadataService, changeDetectorRef);
+  constructor(router: Router, metadataService: MetadataService, messageService: MessageService,
+    changeDetectorRef: ChangeDetectorRef) {
+    super(router, metadataService, messageService, changeDetectorRef);
 
     this.style = '{\'width\':\'150px\'}';
   }

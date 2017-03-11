@@ -15,6 +15,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 import { Base2Component } from '../../../common/base';
 import { MetadataService } from '../../../services';
+import { MessageService } from '../../../services/message.service';
 import { NavigationService } from '../navigation.service';
 import { PassportService } from '../passport.service';
 import { RoleService } from '../role.service';
@@ -89,10 +90,10 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
   public user: User;
   public selectedRole: IRole;
 
-  constructor(router: Router, route: ActivatedRoute, private navigationService: NavigationService, service: PassportService,
+  constructor(router: Router, route: ActivatedRoute, messageService: MessageService, private navigationService: NavigationService, service: PassportService,
     roleService: RoleService, metadataService: MetadataService) {
 
-    super(router, route, service, roleService);
+    super(router, route, messageService, service, roleService);
 
     const userTableMetadata = metadataService.findTableMetadata(User.name);
     Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name}`);

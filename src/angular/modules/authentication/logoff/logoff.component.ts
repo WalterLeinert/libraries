@@ -10,8 +10,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 import { BaseComponent } from '../../../common/base/base.component';
+import { MessageService } from '../../../services/message.service';
 import { PassportService } from './../passport.service';
-
 
 @Component({
   selector: 'flx-logoff',
@@ -25,8 +25,8 @@ import { PassportService } from './../passport.service';
 export class LogoffComponent extends BaseComponent<PassportService> {
   protected static logger = getLogger(LogoffComponent);
 
-  constructor(router: Router, route: ActivatedRoute, service: PassportService) {
-    super(router, route, service);
+  constructor(router: Router, route: ActivatedRoute, messageService: MessageService, service: PassportService) {
+    super(router, route, messageService, service);
   }
 
   public ngOnInit() {

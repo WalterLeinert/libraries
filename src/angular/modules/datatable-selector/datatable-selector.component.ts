@@ -17,9 +17,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 import { ControlDisplayInfo, DataTypes, IControlDisplayInfo } from '../../../base';
 import { TextAlignments } from '../../../base';
 import { MetadataService, PipeService, PipeType } from '../../services';
+import { MessageService } from '../../services/message.service';
 import { ControlType } from '../common';
 import { ListSelectorComponent } from '../common/list-selector.component';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
+
 
 export type sortMode = 'single' | 'multiple' | '';
 
@@ -293,10 +295,10 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    * 
    * @memberOf DataTableSelectorComponent
    */
-  constructor(router: Router, metadataService: MetadataService, private pipeService: PipeService,
-    private injector: Injector,
+  constructor(router: Router, metadataService: MetadataService, messageService: MessageService,
+    private pipeService: PipeService, private injector: Injector,
     changeDetectorRef: ChangeDetectorRef) {
-    super(router, metadataService, changeDetectorRef);
+    super(router, metadataService, messageService, changeDetectorRef);
   }
 
   // tslint:disable-next-line:use-life-cycle-interface

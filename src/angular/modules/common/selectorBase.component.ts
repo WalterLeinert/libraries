@@ -8,6 +8,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 import { CoreComponent } from '../../common/base';
 import { MetadataService } from '../../services';
+import { MessageService } from '../../services/message.service';
 
 /**
  * Basisklasse für alle Selector-Komponenten
@@ -65,9 +66,9 @@ export abstract class SelectorBaseComponent extends CoreComponent {
     private _selectedValue: any;
 
 
-    protected constructor(router: Router, private _metadataService: MetadataService,
+    protected constructor(router: Router, private _metadataService: MetadataService, messageService: MessageService,
         private _changeDetectorRef: ChangeDetectorRef) {
-        super();
+        super(messageService);
     }
 
 

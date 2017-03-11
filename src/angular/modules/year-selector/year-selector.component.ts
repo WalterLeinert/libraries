@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Assert, Types } from '@fluxgate/common';
 
 import { MetadataService } from '../../services';
+import { MessageService } from '../../services/message.service';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
 
 
@@ -32,8 +33,9 @@ export class YearSelectorComponent extends SelectorBaseComponent {
   @Input() public upperYear: number;
 
 
-  constructor(router: Router, metadataService: MetadataService, changeDetectorRef: ChangeDetectorRef) {
-    super(router, metadataService, changeDetectorRef);
+  constructor(router: Router, metadataService: MetadataService, messageService: MessageService,
+    changeDetectorRef: ChangeDetectorRef) {
+    super(router, metadataService, messageService, changeDetectorRef);
 
     this.style = '{\'width\':\'70px\'}';
   }

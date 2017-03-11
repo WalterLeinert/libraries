@@ -11,6 +11,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 import { DisplayInfo, } from '../../../base';
 import { CoreComponent } from '../../common/base';
+import { MessageService } from '../../services/message.service';
 
 
 /**
@@ -83,8 +84,8 @@ export class EnumValueComponent extends CoreComponent {
    */
   private _item: any;
 
-  constructor() {
-    super();
+  constructor(messageService: MessageService) {
+    super(messageService);
   }
 
 

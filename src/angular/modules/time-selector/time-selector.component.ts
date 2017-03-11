@@ -10,6 +10,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 import { Hour, ShortTime } from '@fluxgate/common';
 
 import { CoreComponent } from '../../common/base/core.component';
+import { MessageService } from '../../services/message.service';
+
 
 @Component({
   selector: 'flx-time-selector',
@@ -31,8 +33,8 @@ export class TimeSelectorComponent extends CoreComponent {
   private _time: ShortTime;
   @Output() public timeChange = new EventEmitter<ShortTime>();
 
-  constructor() {
-    super();
+  constructor(messageService: MessageService) {
+    super(messageService);
   }
 
   // tslint:disable-next-line:use-life-cycle-interface

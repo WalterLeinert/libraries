@@ -2,18 +2,16 @@ import { OnDestroy, OnInit } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
-import { Message } from 'primeng/primeng';
-
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------------------- logging --------------------------------------------
 
-
-
 // Fluxgate
 import { Assert, Dictionary, UniqueIdentifiable } from '@fluxgate/common';
+
+import { IMessage, MessageService, MessageSeverity } from '../../services/message.service';
 
 
 /**
@@ -29,7 +27,9 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   private static subscriptionMap: Dictionary<UniqueIdentifiable, Subscription[]> =
   new Dictionary<UniqueIdentifiable, Subscription[]>();
 
-  private _messages: Message[] = [];
+  protected constructor(private messageService: MessageService) {
+    super();
+  }
 
 
   /**
@@ -39,7 +39,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    */
   public ngOnInit() {
     using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnInit', `name = ${this.constructor.name}`), (log) => {
-      this.clearMessages();
+      // ok
     });
   }
 
@@ -75,12 +75,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     });
   }
 
-  /**
-   * Liefert die aktuellen Meldungen
-   */
-  public get messages(): Message[] {
-    return this._messages;
-  }
 
   /**
    * löscht alle Messages
@@ -90,7 +84,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf BaseComponent
    */
   protected clearMessages() {
-    this._messages = [];
+    this.messageService.clearMessage();
   }
 
   /**
@@ -103,7 +97,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf BaseComponent
    */
   protected addInfoMessage(text: string, summary = 'Hinweis') {
-    this.addMessage({ severity: 'info', summary: summary, detail: text });
+    this.addMessage({ severity: MessageSeverity.Info, summary: summary, detail: text });
   }
 
   /**
@@ -116,7 +110,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf BaseComponent
    */
   protected addErrorMessage(text: string, summary = 'Fehlermeldung') {
-    this.addMessage({ severity: 'error', summary: summary, detail: text });
+    this.addMessage({ severity: MessageSeverity.Error, summary: summary, detail: text });
   }
 
   /**
@@ -127,18 +121,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * 
    * @memberOf BaseComponent
    */
-  protected addMessage(message: Message) {
-    let doAddMessage = true;
-    this._messages.forEach((msg) => {
-      if (msg.detail === message.detail && msg.severity === message.severity && msg.summary === message.summary) {
-        doAddMessage = false;
-        return;
-      }
-    });
-
-    if (doAddMessage) {
-      this._messages.push(message);
-    }
+  protected addMessage(message: IMessage) {
+    this.messageService.addMessage(message);
   }
 
   /**

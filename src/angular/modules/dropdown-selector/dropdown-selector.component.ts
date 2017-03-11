@@ -17,6 +17,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 import { DataTypes, DisplayInfo, } from '../../../base';
 import { MetadataService } from '../../services';
+import { MessageService } from '../../services/message.service';
 import { ListSelectorComponent } from '../common';
 import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
 
@@ -122,9 +123,9 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
   private dataItems: any[];
 
 
-  constructor(router: Router, metadataService: MetadataService,
+  constructor(router: Router, metadataService: MetadataService, messageService: MessageService,
     changeDetectorRef: ChangeDetectorRef) {
-    super(router, metadataService, changeDetectorRef);
+    super(router, metadataService, messageService, changeDetectorRef);
   }
 
 
@@ -146,9 +147,9 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
 
   public get textField(): string {
-    return this._textField ;
+    return this._textField;
   }
-  
+
   @Input() public set textField(value: string) {
     this._textField = value;
     this.initBoundData(this.dataItems, this.getMetadataForValues(this.dataItems));

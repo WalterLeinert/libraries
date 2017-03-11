@@ -17,8 +17,10 @@ import { getLogger, ILogger } from '@fluxgate/common';
 
 import { BaseComponent } from '../../../common/base/base.component';
 
+import { MessageService } from '../../../services/message.service';
 import { NavigationService } from '../navigation.service';
 import { PassportService } from '../passport.service';
+
 
 @Component({
   selector: 'flx-change-password',
@@ -82,9 +84,10 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   public passwordNewRepeated: string;
   private currentUser: IUser;
 
-  constructor(router: Router, route: ActivatedRoute, private navigationService: NavigationService,
+  constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
+    private navigationService: NavigationService,
     service: PassportService, private confirmationService: ConfirmationService) {
-    super(router, route, service);
+    super(router, route, messageService, service);
   }
 
   public ngOnInit() {

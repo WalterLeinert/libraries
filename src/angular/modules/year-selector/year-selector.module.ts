@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { DropdownSelectorModule } from '../dropdown-selector';
 
+import { MessageServiceModule } from '../../services/message.service';
+import { DropdownSelectorModule } from '../dropdown-selector';
 import { YearSelectorComponent } from './year-selector.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    MessageServiceModule,
     DropdownSelectorModule
   ],
   declarations: [

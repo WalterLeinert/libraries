@@ -16,6 +16,7 @@ import { Assert, ColumnMetadata, TableMetadata } from '@fluxgate/common';
 
 import { BaseComponent } from '../../common/base';
 import { MetadataService, ProxyService } from '../../services';
+import { MessageService } from '../../services/message.service';
 import { IAutoformConfig } from './autoformConfig.interface';
 
 
@@ -125,9 +126,9 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   public askuser: boolean;
 
 
-  constructor(router: Router, route: ActivatedRoute, service: ProxyService, private injector: Injector,
+  constructor(router: Router, route: ActivatedRoute, messageService: MessageService, service: ProxyService, private injector: Injector,
     private confirmationService: ConfirmationService, private metadataService: MetadataService) {
-    super(router, route, service);
+    super(router, route, messageService, service);
   }
 
   // tslint:disable-next-line:use-life-cycle-interface
