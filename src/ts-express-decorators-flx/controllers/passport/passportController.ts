@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IUser } from '@fluxgate/common';
+import { IUser, ServerBusinessException } from '@fluxgate/common';
 import { PassportLocalService } from '../../services/passportLocal.service';
 
 import { Messages } from '../../../resources/messages';
@@ -22,196 +22,196 @@ import { Messages } from '../../../resources/messages';
  */
 @Controller('/passport')
 export class PassportController {
-    protected static logger = getLogger(PassportController);
+  protected static logger = getLogger(PassportController);
 
-    constructor(passportLocalService: PassportLocalService) {
-        passportLocalService.initLocalSignup();
-        passportLocalService.initLocalLogin();
-        passportLocalService.initLocalChangePassword();
-    }
+  constructor(passportLocalService: PassportLocalService) {
+    passportLocalService.initLocalSignup();
+    passportLocalService.initLocalLogin();
+    passportLocalService.initLocalChangePassword();
+  }
 
-    /**
-     * Authenticate user with local info (in Database).
-     * 
-     * @param email
-     * @param password
-     * @param request
-     * @param response
-     * @param next
-     */
-    @Post('/login')
-    public login(
-        @Required() @BodyParams('username') username: string,
-        @Required() @BodyParams('password') password: string,
-        @Request() request: Express.Request,
-        @Response() response: Express.Response,
-        @Next() next: Express.NextFunction
-        ): Promise<IUser> {
+  /**
+   * Authenticate user with local info (in Database).
+   * 
+   * @param email
+   * @param password
+   * @param request
+   * @param response
+   * @param next
+   */
+  @Post('/login')
+  public login(
+    @Required() @BodyParams('username') username: string,
+    @Required() @BodyParams('password') password: string,
+    @Request() request: Express.Request,
+    @Response() response: Express.Response,
+    @Next() next: Express.NextFunction
+    ): Promise<IUser> {
 
-        return using(new XLog(PassportController.logger, levels.INFO, 'login', `username = ${username}`), (log) => {
-            return new Promise<IUser>((resolve, reject) => {
+    return using(new XLog(PassportController.logger, levels.INFO, 'login', `username = ${username}`), (log) => {
+      return new Promise<IUser>((resolve, reject) => {
 
-                try {
-                    Passport
-                        .authenticate('login', (err, user: IUser) => {
-                            if (err) {
-                                return reject(err);
-                            }
+        try {
+          Passport
+            .authenticate('login', (err, user: IUser) => {
+              if (err) {
+                return reject(err);
+              }
 
-                            request.logIn(user, (loginErr) => {
-                                if (loginErr) {
-                                    return reject(loginErr);
-                                }
-
-                                user.resetCredentials();
-                                resolve(user);
-                            });
-
-                        })(request, response, next);
-                } catch (err) {
-                    log.error(err);
-                    return reject(err);
+              request.logIn(user, (loginErr) => {
+                if (loginErr) {
+                  return reject(loginErr);
                 }
-            })
-                .catch((err) => {
-                    if (err && err.message === 'Failed to serialize user into session') {
-                        throw new NotFound('user not found');
-                    }
-                    return Promise.reject(err);
-                });
+
+                user.resetCredentials();
+                resolve(user);
+              });
+
+            })(request, response, next);
+        } catch (err) {
+          log.error(err);
+          return reject(err);
+        }
+      })
+        .catch((err) => {
+          if (err && err.message === 'Failed to serialize user into session') {
+            throw new NotFound('user not found');
+          }
+          return Promise.reject(err);
         });
-    }
+    });
+  }
 
 
 
-    /**
-     * Try to register new account
-     * @param request
-     * @param response
-     * @param next
-     */
-    @Post('/signup')
-    public signup(
-        @Request() request: Express.Request,
-        @Response() response: Express.Response,
-        @Next() next: Express.NextFunction
-        ): Promise<IUser> {
+  /**
+   * Try to register new account
+   * @param request
+   * @param response
+   * @param next
+   */
+  @Post('/signup')
+  public signup(
+    @Request() request: Express.Request,
+    @Response() response: Express.Response,
+    @Next() next: Express.NextFunction
+    ): Promise<IUser> {
 
-        return using(new XLog(PassportController.logger, levels.INFO, 'signup'), (log) => {
-            return new Promise<IUser>((resolve, reject) => {
+    return using(new XLog(PassportController.logger, levels.INFO, 'signup'), (log) => {
+      return new Promise<IUser>((resolve, reject) => {
 
-                Passport.authenticate('signup', (err, user: IUser) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    if (!user) {
-                        return reject(!!err);
-                    }
+        Passport.authenticate('signup', (err, user: IUser) => {
+          if (err) {
+            return reject(err);
+          }
+          if (!user) {
+            return reject(!!err);
+          }
 
-                    request.logIn(user, (loginErr) => {
-                        if (loginErr) {
-                            return reject(loginErr);
-                        }
+          request.logIn(user, (loginErr) => {
+            if (loginErr) {
+              return reject(loginErr);
+            }
 
-                        user.resetCredentials();
-                        return resolve(user);
-                    });
+            user.resetCredentials();
+            return resolve(user);
+          });
 
-                })(request, response, next);
-            });
-        });
-    }
+        })(request, response, next);
+      });
+    });
+  }
 
-    /**
-     * Disconnect user
-     * @param request
-     */
-    @Get('/logout')
-    public logout( @Request() request: Express.Request) {
-        return using(new XLog(PassportController.logger, levels.INFO, 'logout'), (log) => {
-            request.logout();
-            return 'Disconnected';
-        });
-    }
+  /**
+   * Disconnect user
+   * @param request
+   */
+  @Get('/logout')
+  public logout( @Request() request: Express.Request) {
+    return using(new XLog(PassportController.logger, levels.INFO, 'logout'), (log) => {
+      request.logout();
+      return 'Disconnected';
+    });
+  }
 
 
-    /**
-     * Ändert das Passwort für den Benutzer mit @{username}
-     * 
-     * @param {string} username
-     * @param {string} password
-     * @param {string} passwordNew
-     * @param {Express.Request} request
-     * @param {Express.Response} response
-     * @param {Express.NextFunction} next
-     * @returns {Promise<IUser>}
-     * 
-     * @memberOf PassportController
-     */
-    @Post('/changePassword')
-    public changePassword(
-        @Required() @BodyParams('username') username: string,
-        @Required() @BodyParams('password') password: string,
-        @Required() @BodyParams('passwordNew') passwordNew: string,
-        @Request() request: Express.Request,
-        @Response() response: Express.Response,
-        @Next() next: Express.NextFunction
-        ): Promise<IUser> {
+  /**
+   * Ändert das Passwort für den Benutzer mit @{username}
+   * 
+   * @param {string} username
+   * @param {string} password
+   * @param {string} passwordNew
+   * @param {Express.Request} request
+   * @param {Express.Response} response
+   * @param {Express.NextFunction} next
+   * @returns {Promise<IUser>}
+   * 
+   * @memberOf PassportController
+   */
+  @Post('/changePassword')
+  public changePassword(
+    @Required() @BodyParams('username') username: string,
+    @Required() @BodyParams('password') password: string,
+    @Required() @BodyParams('passwordNew') passwordNew: string,
+    @Request() request: Express.Request,
+    @Response() response: Express.Response,
+    @Next() next: Express.NextFunction
+    ): Promise<IUser> {
 
-        return using(new XLog(PassportController.logger, levels.INFO, 'changePassword'), (log) => {
-            return new Promise<IUser>((resolve, reject) => {
+    return using(new XLog(PassportController.logger, levels.INFO, 'changePassword'), (log) => {
+      return new Promise<IUser>((resolve, reject) => {
 
-                try {
-                    if (username !== request.user.username) {
-                        log.error(`username (${username}) !== request.user.username (${request.user.username})`);
-                        reject(new Error(`${Messages.USERS_DO_NOT_MATCH(username, request.user.username)}`));
-                        return;
-                    }
+        try {
+          if (username !== request.user.username) {
+            log.error(`username (${username}) !== request.user.username (${request.user.username})`);
+            reject(new ServerBusinessException(`${Messages.USERS_DO_NOT_MATCH(username, request.user.username)}`));
+            return;
+          }
 
-                    request.user.password = passwordNew;
+          request.user.password = passwordNew;
 
-                    Passport
-                        .authenticate('changePassword', (err, changedUser: IUser) => {
-                            if (err) {
-                                return reject(err);
-                            }
+          Passport
+            .authenticate('changePassword', (err, changedUser: IUser) => {
+              if (err) {
+                return reject(err);
+              }
 
-                            request.logIn(changedUser, (loginErr) => {
-                                if (loginErr) {
-                                    return reject(loginErr);
-                                }
-
-                                changedUser.resetCredentials();
-                                resolve(changedUser);
-                            });
-
-                        })(request, response, next);
-                } catch (err) {
-                    log.error(err);
-                    return reject(err);
+              request.logIn(changedUser, (loginErr) => {
+                if (loginErr) {
+                  return reject(loginErr);
                 }
-            })
-                .catch((err) => {
-                    if (err && err.message === 'Failed to serialize user into session') {
-                        throw new NotFound('user not found');
-                    }
-                    return Promise.reject(err);
-                });
+
+                changedUser.resetCredentials();
+                resolve(changedUser);
+              });
+
+            })(request, response, next);
+        } catch (err) {
+          log.error(err);
+          return reject(err);
+        }
+      })
+        .catch((err) => {
+          if (err && err.message === 'Failed to serialize user into session') {
+            throw new NotFound('user not found');
+          }
+          return Promise.reject(err);
         });
-    }
+    });
+  }
 
 
-    /**
-     * Liefert den aktuell angemeldeten User.
-     * 
-     * @param request
-     */
-    @Get('/currentUser')
-    public getCurrentUser( @Request() request: Express.Request): Promise<IUser> {
-        return using(new XLog(PassportController.logger, levels.INFO, 'currentUser'), (log) => {
-            return new Promise<IUser>((resolve, reject) => {
-                return resolve(request.user ? request.user : null);
-            });
-        });
-    }
+  /**
+   * Liefert den aktuell angemeldeten User.
+   * 
+   * @param request
+   */
+  @Get('/currentUser')
+  public getCurrentUser( @Request() request: Express.Request): Promise<IUser> {
+    return using(new XLog(PassportController.logger, levels.INFO, 'currentUser'), (log) => {
+      return new Promise<IUser>((resolve, reject) => {
+        return resolve(request.user ? request.user : null);
+      });
+    });
+  }
 }

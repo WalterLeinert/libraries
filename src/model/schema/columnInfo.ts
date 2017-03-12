@@ -1,3 +1,5 @@
+import { ArgumentException } from '@fluxgate/common';
+
 export enum DataType {
     Number = 0,
     String,
@@ -40,7 +42,7 @@ export class ColumnInfo {
                 this._nullable = false;
                 break;
 
-            default: throw new Error('Column ' + _name + ': value for nullable invalid: ' + nullableString);
+            default: throw new ArgumentException('Column ' + _name + ': value for nullable invalid: ' + nullableString);
         }
 
 
@@ -60,7 +62,7 @@ export class ColumnInfo {
                 this._type = DataType.String;
                 break;
 
-            default: throw new Error('Column ' + _name + ': type invalid: ' + type);
+            default: throw new ArgumentException('Column ' + _name + ': type invalid: ' + type);
         }
     }
 

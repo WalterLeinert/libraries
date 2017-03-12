@@ -7,7 +7,7 @@ import * as path from 'path';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { StringBuilder } from '@fluxgate/common';
+import { NotSupportedException, StringBuilder } from '@fluxgate/common';
 
 import { ColumnInfo, DataType } from './columnInfo';
 import { IConfigInfo } from './configInfo';
@@ -284,7 +284,7 @@ export class PojoGenerator extends GeneratorBase {
           GeneratorBase.writeLineSync(fd, `    rval.${colInfo.name} = json.${colInfo.name};`);
           break;
         default:
-          throw new Error(`Invalid type ${colInfo.type}`);
+          throw new NotSupportedException(`Invalid type ${colInfo.type}`);
       }
     }
     GeneratorBase.writeLineSync(fd, '    return rval;');

@@ -7,7 +7,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  Assert, Clone, ColumnMetadata, Funktion, IQuery, IToString, IUser,
+  Assert, Clone, ColumnMetadata, Funktion, InvalidOperationException, IQuery, IToString,
+  IUser, ServerSystemException,
   ServiceResult, TableMetadata, Types
 } from '@fluxgate/common';
 
@@ -82,9 +83,9 @@ export abstract class BaseService<T, TId extends IToString>  {
 
             if (ids.length <= 0) {
               log.error(`ids empty`);
-              reject(new Error('create failed: ids empty'));
+              reject(new ServerSystemException('create failed: ids empty'));
             } else if (ids.length > 1) {
-              reject(new Error('create failed: ids.length > 1'));
+              reject(new ServerSystemException('create failed: ids.length > 1'));
             } else {
               const id = ids[0];
               log.debug(`created new ${this.tableName} with id: ${id}`);
@@ -356,7 +357,7 @@ export abstract class BaseService<T, TId extends IToString>  {
    */
   public get idColumnName(): string {
     if (!this.primaryKeyColumn) {
-      throw new Error(`Table ${this.tableName}: no primary key column`);
+      throw new InvalidOperationException(`Table ${this.tableName}: no primary key column`);
     }
     return this.primaryKeyColumn.options.name;
   }
@@ -379,7 +380,7 @@ export abstract class BaseService<T, TId extends IToString>  {
         if (!colMetadata) {
           const message = `Table ${this.tableName}: no (model) column with name: ${name}`;
           BaseService.logger.error(`message`);
-          throw new Error(message);
+          throw new InvalidOperationException(message);
         }
 
         log.warn(`Table ${this.tableName}: no primary key column: setting ${name} as primary key column`);
