@@ -28,15 +28,15 @@ export class MessageService {
           break;
 
         case MessageSeverity.Warn:
-          log.info(`message: ${JSON.stringify(message)}`);
+          log.warn(`message: ${JSON.stringify(message)}`);
           break;
 
         case MessageSeverity.Error:
-          log.info(`message: ${JSON.stringify(message)}`);
+          log.error(`message: ${JSON.stringify(message)}`);
           break;
 
         case MessageSeverity.Fatal:
-          log.info(`message: ${JSON.stringify(message)}`);
+          log.fatal(`message: ${JSON.stringify(message)}`);
           break;
 
         default:
