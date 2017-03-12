@@ -1,6 +1,6 @@
 // tslint:disable:max-line-length
 
-import { Component, Injector, Input } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ConfirmationService } from 'primeng/primeng';
@@ -23,60 +23,71 @@ import { IAutoformConfig } from './autoformConfig.interface';
 @Component({
   selector: 'flx-autoform-detail',
   template: `
-<div class="container-fluid">
-  <!-- <h1>{{pageTitle}}</h1> -->
-  <form *ngIf="value">
+  <p-dialog [(visible)]="value" header="Overtime Details" (onBeforeHide)="onBeforeDialogHide($event)" [responsive]="true" showEffect="fade" [modal]="true">
+  <div class="container-fluid">
+  <form *ngIf="value" class="form-horizontal">
     <p-messages [value]="messages"></p-messages>
 
     <div>
       <ul *ngFor="let metadata of columnMetadata">
 
         <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'string'">
-          <label>{{displayName(metadata)}}</label>
-          <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          </div>
         </div>
         <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'number'">
-          <label>{{displayName(metadata)}}</label>
-          <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
+          <div class="col-sm-1">
+            <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          </div>
         </div>
-       
+
         <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'shorttime'">
-          <label>{{displayName(metadata)}}</label>
-          <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
+          <div class="col-sm-1">
+            <input type="text" maxlength="5" size="6" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          </div>
         </div>
+        
         <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'datetime'">
-          <label>{{displayName(metadata)}}</label>
-          <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
+          <div class="col-sm-2">
+            <input type="text" maxlength="10" size="10" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          </div>
         </div>
 
         <!--<div class="form-group" *ngIf="info.typeInfo.dataType == enumEnum && info.isVisible">
-          <label>{{info.name}}</label>
+          <label class="control-label col-sm-2">{{info.name}}:</label>
+          <div class="col-sm-10">
           <select type="text" class="form-control">
             <option *ngFor="let o of info.typeInfo.options" [value]="o">{{o.name}}</option>
           </select>
+          </div>
         </div>-->
 
       </ul>
     </div>
-
-  <div class="container">
-    <button type="submit" class="btn btn-primary" (click)='cancel()'>Abbruch</button>
-    <button type="submit" class="btn btn-primary" (click)='submit()'>
+   <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+    <div class="container">
+      <button type="submit" class="btn btn-primary" (click)='cancel()'>Abbruch</button>
+      <button type="submit" class="btn btn-primary" (click)='submit()'>
       <span class="glyphicon glyphicon-save"></span> Speichern
     </button>
-    <button type="submit" class="btn btn-primary" (click)='confirm()'>    
+      <button type="submit" class="btn btn-primary" (click)='confirm()'>    
       <span class="glyphicon glyphicon-trash"></span> Löschen
     </button>
-    <button type="submit" class="btn btn-primary" (click)="showmodal()">
-      <span class="glyphicon glyphicon-trash"></span> Löschen mit eigener Komponente
-    </button>
-    <flx-popup (onAnswer)="delete($event)" [title]="'Löschen?'" [message]="'Soll wirklich gelöscht werden?'"
-      *ngIf="askuser">Löschbestätigung</flx-popup>
+      <flx-popup (onAnswer)="delete($event)" [title]="'Löschen?'" [message]="'Soll wirklich gelöscht werden?'" *ngIf="askuser">Löschbestätigung</flx-popup>
 
     </div>
+    </div>
+    </p-footer>
   </form>
-</div>  
-`,
+</div>
+</p-dialog>
+  `,
   styles: [],
   providers: [ConfirmationService]
 })
@@ -113,6 +124,15 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    * @memberOf AutoformDetailComponent
    */
   @Input() public config: IAutoformConfig;
+
+
+  /**
+   * Meldung, wenn Fenster geschlossen wird
+   * 
+   * @type {EventEmitter}
+   * @memberOf AutoformDetailComponent
+   */
+  @Output() private hide = new EventEmitter<any>();
 
 
   /**
@@ -154,11 +174,22 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
     });
   }
 
+
+
+  public onBeforeDialogHide() {
+    this.hide.emit(true);
+  }
+
+
+
   /**
    * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
    */
   public cancel(): void {
-    this.navigate([this.service.getTopicPath()]);
+    //this.navigate([this.service.getTopicPath()]);
+    //this.hide.emit(true);
+
+    this.value = false;
   }
 
   /**

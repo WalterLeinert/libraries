@@ -19,5 +19,15 @@
 
   "html.format.extraLiners": "head, body, /html, p-tabView",
   "editor.tabSize": 2,
-  "editor.detectIndentation": false
+  "editor.detectIndentation": false,
+  "angulardoc.repoId": "879892b4-5710-40ea-8b21-f4ce9098cc8a",
+  "angulardoc.directoryFilter": [
+    "!typings",
+    "!node_modules",
+    "!.vscode"
+  ],
+  "angulardoc.fileFilter": [
+    "**/!(*.*spec).ts"
+  ],
+  "angulardoc.lastSync": 0
 }
