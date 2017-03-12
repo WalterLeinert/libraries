@@ -186,37 +186,31 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
    */
   public cancel(): void {
-    // this.navigate([this.service.getTopicPath()]);
-    // this.hide.emit(true);
-
-    this.value = false;
+    this.closePopup();
   }
 
   /**
    * Speichert Änderungen an der Entity
    */
   public submit() {
-    const me = this;
     this.registerSubscription(this.service.update(this.value).subscribe(
       (value: any) => {
-        this.value = value;
-        me.cancel();
+        this.closePopup();
       },
       (error: Error) => {
         this.handleError(error);
       }));
   }
 
+
   /**
    * Löscht die Entity
    */
   public delete(event: boolean) {
     if (event === true) {
-      const me = this;
       this.registerSubscription(this.service.delete(this.service.getEntityId(this.value)).subscribe(
         (value: any) => {
-          this.value = value;
-          me.cancel();
+          this.closePopup();
         },
         (error: Error) => {
           this.handleError(error);
@@ -291,5 +285,8 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
     });
   }
 
+  private closePopup() {
+    this.navigate(['..'], { relativeTo: this.route });
+  }
 
 }
