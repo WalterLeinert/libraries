@@ -32,10 +32,9 @@ export class ApplicationErrorHandler extends ErrorHandler {
 
   public handleError(error: Error) {
     using(new XLog(ApplicationErrorHandler.logger, levels.INFO, 'handleError'), (log) => {
-      log.error(error as any);
-      // if (log.isDebugEnabled()) {
-      //   log.debug(error);
-      // }
+      if (log.isDebugEnabled()) {
+        log.debug(error as any);
+      }
 
       this.messageService.addMessage({
         severity: MessageSeverity.Error,
