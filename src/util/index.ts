@@ -1,5 +1,4 @@
 export * from './assert';
-export * from './assertionError';
 export * from './encryption';
 export * from './env';
 export * from './fileSystem';

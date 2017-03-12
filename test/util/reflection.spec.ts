@@ -11,15 +11,13 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { Time } from '../../src/types/time';
-import { AssertionError } from '../../src/util';
-
 import { Reflection } from '../../src/util';
 
 
 @suite('util.Reflection')
 class ReflectionTest {
 
-    @test 'should test copyProperties'() {
-        // todo
-    }
+  @test 'should test copyProperties'() {
+    // todo
+  }
 }
