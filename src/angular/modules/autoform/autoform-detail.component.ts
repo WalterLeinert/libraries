@@ -186,8 +186,8 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
    */
   public cancel(): void {
-    //this.navigate([this.service.getTopicPath()]);
-    //this.hide.emit(true);
+    // this.navigate([this.service.getTopicPath()]);
+    // this.hide.emit(true);
 
     this.value = false;
   }
