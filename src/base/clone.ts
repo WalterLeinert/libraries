@@ -3,6 +3,7 @@
 // tslint:disable-next-line:no-var-requires
 const entries = require('object.entries');
 
+import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { Dictionary } from '../types/dictionary';
 import { InstanceCreator, InstanceSetter } from '../types/instanceAccessor';
 import { Types } from '../types/types';
@@ -207,7 +208,7 @@ class Verifier<T> extends ClonerBase<T> {
         return;
       }
       if (!Types.isPrimitive(value)) {
-        throw new Error(`value identical to clonedValue: attrName = ${attrName}`);
+        throw new InvalidOperationException(`value identical to clonedValue: attrName = ${attrName}`);
       }
     }
 
@@ -242,7 +243,7 @@ class Verifier<T> extends ClonerBase<T> {
 
       if (Types.isObject(entryValue)) {
         if (entryValue === clonedEntryValue) {
-          throw new Error(`value[${entryName}] identical to clonedValue[${clonedEntryName}]`);
+          throw new InvalidOperationException(`value[${entryName}] identical to clonedValue[${clonedEntryName}]`);
         }
 
         this.verifyClone(entryValue, clonedEntryValue, entryName);   // Rekursion

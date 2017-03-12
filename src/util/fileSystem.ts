@@ -1,3 +1,4 @@
+import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Assert } from './assert';
 
 /**
@@ -16,7 +17,7 @@ export class FileSystem {
         fs.accessSync(path, fs.constants.R_OK);
         return true;
       } else {
-        throw new Error('not supported');
+        throw new NotSupportedException();
       }
     } catch (err) {
       return false;
@@ -34,7 +35,7 @@ export class FileSystem {
         const fs = require('fs');
         return fs.statSync(path).isDirectory();
       } else {
-        throw new Error('not supported');
+        throw new NotSupportedException();
       }
     } catch (err) {
       if (err.code === 'ENOENT') {
@@ -75,7 +76,7 @@ export class FileSystem {
           const fs = require('fs');
           result = fs.readFileSync(path, encoding);
         } else {
-          throw new Error('not supported');
+          throw new NotSupportedException();
         }
       } catch (err) {
         errorLogger(`${topic} unter ${path} kann nicht gelesen werden.`);

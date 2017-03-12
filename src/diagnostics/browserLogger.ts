@@ -1,8 +1,10 @@
 import * as moment from 'moment';
+
 import { StringBuilder } from '../base/stringBuilder';
 import { Types } from '../types/types';
 import { JsonReader } from '../util/jsonReader';
 
+import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { IConfig } from './config.interface';
 import { levels } from './level';
 import { Level } from './level';
@@ -133,7 +135,7 @@ export class BrowserLogger implements ILogger {
         if (!Types.isString(level)) {
             lev = level as ILevel;
         } else {
-            throw new Error(`Level string ${level} currently not supported`);
+            throw new InvalidOperationException(`Level string ${level} currently not supported`);
         }
         this._level = lev;
     }

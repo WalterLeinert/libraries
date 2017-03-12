@@ -1,3 +1,4 @@
+import { ConfigurationException, NotSupportedException } from '../exceptions';
 import { FileSystem } from './fileSystem';
 
 export class JsonReader {
@@ -7,7 +8,7 @@ export class JsonReader {
    */
   public static readJsonSync<T>(jsonPath: string): T {
     if (!FileSystem.fileExists(jsonPath)) {
-      throw new Error(`Die Json-Konfiguration ${jsonPath} ist nicht lesbar oder existiert nicht.`);
+      throw new ConfigurationException(`Die Json-Konfiguration ${jsonPath} ist nicht lesbar oder existiert nicht.`);
     }
 
     try {
@@ -16,11 +17,11 @@ export class JsonReader {
         const data = fs.readFileSync(jsonPath);
         return JSON.parse(data.toString()) as T;
       } else {
-        throw new Error('not supported');
+        throw new NotSupportedException();
       }
     } catch (err) {
       // console.error(`Die Json-Konfiguration ${jsonPath} ist kein gültiges JSON-Format.`)
-      throw new Error(`Die Json-Konfiguration ${jsonPath} ist kein gültiges JSON-Format.`);
+      throw new ConfigurationException(`Die Json-Konfiguration ${jsonPath} ist kein gültiges JSON-Format.`);
     }
   }
 
@@ -40,7 +41,7 @@ export class JsonReader {
         }
       });
     } else {
-      throw new Error('not supported');
+      throw new NotSupportedException();
     }
   }
 }

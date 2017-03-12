@@ -2,6 +2,7 @@ import * as moment from 'moment';
 
 import { Disposable } from '../base/disposable';
 import { StringBuilder } from '../base/stringBuilder';
+import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Types } from '../types/types';
 
 import { levels } from './level';
@@ -246,7 +247,7 @@ export class XLog extends Disposable implements ILogger {
         this.logger.fatal(prefixedMessage.toString(), ...args);
         break;
       default:
-        throw new Error('undefined log level: ' + level);
+        throw new NotSupportedException('undefined log level: ' + level);
     }
   }
 
@@ -271,7 +272,7 @@ export class XLog extends Disposable implements ILogger {
       case XLog.levels.FATAL:
         return this.logger.isFatalEnabled();
       default:
-        throw new Error('undefined log level: ' + level);
+        throw new NotSupportedException('undefined log level: ' + level);
     }
   }
 }

@@ -3,6 +3,7 @@ import { getLogger } from '../diagnostics/logger';
 // tslint:disable-next-line:no-unused-variable
 import { ILogger } from '../diagnostics/logger.interface';
 
+import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { IDisposable } from './disposable.interface';
 
 
@@ -34,7 +35,7 @@ export abstract class Disposable implements IDisposable {
 
       if (this.disposed) {
         if (Disposable.throwExceptionOnAlreadyDisposed) {
-          throw new Error('Instance already disposed: ' + JSON.stringify(this));
+          throw new InvalidOperationException('Instance already disposed: ' + JSON.stringify(this));
         } else {
           Disposable.logger.debug('Instance already disposed: ', this);
         }

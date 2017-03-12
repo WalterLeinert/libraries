@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/common",
-  "version": "1.14.3-beta.0",
+  "version": "1.14.3-beta.1",
   "description": "Fluxgate Library client/server übergreifend",
   "browser": "dist/common.client.bundle.js",
   "main": "dist/common.node.bundle.js",

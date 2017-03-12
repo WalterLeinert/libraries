@@ -1,4 +1,5 @@
 import { Funktion } from '../../base/objectType';
+import { NotSupportedException } from '../../exceptions/notSupportedException';
 import { ShortTime, Time } from '../../types';
 
 /**
@@ -163,14 +164,14 @@ export class ColumnTypes {
         case 'object':
           return ColumnTypes.JSON;
         default:
-          throw new Error(`No ColumnType for type ${typeName}`);
+          throw new NotSupportedException(`No ColumnType for type ${typeName}`);
       }
 
     } else if (type instanceof Object) {
       return ColumnTypes.JSON;
 
     }
-    throw new Error(`Column type of ${type} cannot be determined.`);
+    throw new NotSupportedException(`Column type of ${type} cannot be determined.`);
     // return undefined;
   }
 

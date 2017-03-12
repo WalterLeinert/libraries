@@ -1,4 +1,5 @@
 import { IDictionary } from '.';
+import { InvalidOperationException, NotSupportedException } from '../exceptions';
 import { Identifiable } from './../base/uniqueIdentifiable';
 import { Assert } from './../util/assert';
 import { Types } from './types';
@@ -18,7 +19,7 @@ enum KeyType {
   Undefined
 }
 
-export type KeyTypes = number | string | Identifiable | any; 
+export type KeyTypes = number | string | Identifiable | any;
 
 
 /**
@@ -71,7 +72,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
       return;
     }
 
-    throw new Error(`Unsupported key: ${JSON.stringify(key)}`);
+    throw new NotSupportedException(`Unsupported key: ${JSON.stringify(key)}`);
   }
 
   /**
@@ -98,7 +99,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
       return this.numberDict[key.instanceId];
     }
 
-    throw new Error(`Unsupported key: ${JSON.stringify(key)}`);
+    throw new NotSupportedException(`Unsupported key: ${JSON.stringify(key)}`);
   }
 
 
@@ -130,7 +131,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
       return;
     }
 
-    throw new Error(`Unsupported key: ${JSON.stringify(key)}`);
+    throw new NotSupportedException(`Unsupported key: ${JSON.stringify(key)}`);
   }
 
 
@@ -158,7 +159,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
       return this.numberDict[key.instanceId] !== undefined;
     }
 
-    throw new Error(`Unsupported key: ${JSON.stringify(key)}`);
+    throw new NotSupportedException(`Unsupported key: ${JSON.stringify(key)}`);
   }
 
 
@@ -186,7 +187,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
           }
         }
       } else {
-        throw new Error(`Unsupported keyType: ${this.keyType}`);
+        throw new NotSupportedException(`Unsupported keyType: ${this.keyType}`);
       }
     }
 
@@ -218,7 +219,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
           }
         }
       } else {
-        throw new Error(`Unsupported keyType: ${this.keyType}`);
+        throw new NotSupportedException(`Unsupported keyType: ${this.keyType}`);
       }
     }
 
@@ -234,7 +235,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
   public clear() {
     this.stringDict = {};
     this.numberDict = {};
-    this.idToObjectMapper = {};    
+    this.idToObjectMapper = {};
   }
 
 
@@ -257,7 +258,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
       return Object.keys(this.numberDict).length;
     }
 
-    throw new Error(`Invalid Operation`);
+    throw new InvalidOperationException(`Invalid Operation`);
   }
 
 

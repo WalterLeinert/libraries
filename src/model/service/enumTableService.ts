@@ -1,6 +1,7 @@
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
 
+import { NotSupportedException } from '../../exceptions/notSupportedException';
 import { Assert } from '../../util/assert';
 import { TableMetadata } from '../metadata/tableMetadata';
 import { IService } from './service.interface';
@@ -37,23 +38,23 @@ export class EnumTableService implements IService {
 
 
   public getEntityId(item: any): any {
-    throw new Error(`Not supported`);
+    throw new NotSupportedException();
   }
 
   public setEntityId(item: any, id: any) {
-    throw new Error(`Not supported`);
+    throw new NotSupportedException();
   }
 
   public getUrl(): string {
-    throw new Error(`Not supported`);
+    throw new NotSupportedException();
   }
 
   public getTopic(): string {
-    throw new Error(`Not supported`);
+    throw new NotSupportedException();
   }
 
   public getTopicPath(): string {
-    throw new Error(`Not supported`);
+    throw new NotSupportedException();
   }
 
   public create(item: any): any {
