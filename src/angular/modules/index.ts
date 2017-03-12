@@ -4,6 +4,7 @@ export * from './common';
 export * from './datatable-selector';
 export * from './dropdown-selector';
 export * from './enum-value';
+export * from './messages';
 export * from './month-selector';
 export * from './time-selector';
 export * from './year-selector';
