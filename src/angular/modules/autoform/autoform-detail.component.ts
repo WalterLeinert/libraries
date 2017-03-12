@@ -177,7 +177,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
 
 
   public onBeforeDialogHide() {
-    this.hide.emit(true);
+    this.closePopup();
   }
 
 
