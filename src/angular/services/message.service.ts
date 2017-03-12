@@ -1,9 +1,9 @@
+// tslint:disable:max-classes-per-file
+
 // Angular
 import { Injectable, NgModule } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 
 
 // -------------------------------------- logging --------------------------------------------
@@ -11,16 +11,22 @@ import { Subject } from 'rxjs/Subject';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------------------- logging --------------------------------------------
 
+import { CustomSubject, IMessage, MessageSeverity, PublisherSubscriber } from '@fluxgate/common';
+
 
 @Injectable()
 export class MessageService {
   protected static readonly logger = getLogger(MessageService);
 
-  private messages: Subject<IMessage> = new BehaviorSubject<IMessage>(null);
+  private static readonly TOPIC = 'messages';
+
+  private pubSub = new PublisherSubscriber();
+
 
   public addMessage(message: IMessage) {
     using(new XLog(MessageService.logger, levels.INFO, 'addMessage'), (log) => {
-      this.messages.next(message);
+
+      this.pubSub.publish(MessageService.TOPIC, message);
 
       switch (message.severity) {
         case MessageSeverity.Info:
@@ -46,25 +52,19 @@ export class MessageService {
   }
 
   public clearMessage() {
-    this.messages.next();
+    throw new Error('not supported');
   }
 
-  public subscribe(): Observable<IMessage> {
-    return this.messages.asObservable();
+  /**
+   * Liefert die Message als shared @see{Observable}.
+   * 
+   * @returns {Observable<IMessage>} 
+   * 
+   * @memberOf MessageService
+   */
+  public getMessage(): CustomSubject<IMessage> {
+    return this.pubSub.subscribe<IMessage>(MessageService.TOPIC);
   }
-}
-
-export enum MessageSeverity {
-  Info,
-  Warn,
-  Error,
-  Fatal
-}
-
-export interface IMessage {
-  severity: MessageSeverity;
-  summary: string;
-  detail?: string;
 }
 
 

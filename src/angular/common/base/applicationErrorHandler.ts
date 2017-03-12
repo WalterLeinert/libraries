@@ -5,7 +5,9 @@ import { ApplicationRef, ErrorHandler, Inject, Injectable, Injector, NgModule } 
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { MessageService, MessageServiceModule, MessageSeverity } from '../../services/message.service';
+import { MessageSeverity } from '@fluxgate/common';
+
+import { MessageService, MessageServiceModule } from '../../services/message.service';
 
 
 export interface ILoggingErrorHandlerOptions {

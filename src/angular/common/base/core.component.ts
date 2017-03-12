@@ -9,9 +9,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
-import { Assert, Dictionary, UniqueIdentifiable } from '@fluxgate/common';
+import { Assert, Dictionary, IMessage, MessageSeverity, UniqueIdentifiable } from '@fluxgate/common';
 
-import { IMessage, MessageService, MessageSeverity } from '../../services/message.service';
+import { MessageService } from '../../services/message.service';
 
 
 /**
@@ -27,7 +27,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   private static subscriptionMap: Dictionary<UniqueIdentifiable, Subscription[]> =
   new Dictionary<UniqueIdentifiable, Subscription[]>();
 
-  protected constructor(private messageService: MessageService) {
+  protected constructor(private _messageService: MessageService) {
     super();
   }
 
@@ -84,7 +84,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf BaseComponent
    */
   protected clearMessages() {
-    this.messageService.clearMessage();
+    this._messageService.clearMessage();
   }
 
   /**
@@ -169,6 +169,13 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     }
 
     subscriptions.push(subscription);
+  }
+
+  /**
+   * Liefert den @see{MessageService}
+   */
+  protected get messageService(): MessageService {
+    return this._messageService;
   }
 
 }
