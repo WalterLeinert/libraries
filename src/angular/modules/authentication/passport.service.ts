@@ -22,6 +22,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 import { Serializer } from '../../../base/serializer';
 import { MetadataService } from '../../services';
 import { ConfigService } from '../../services/config.service';
+import { MessageService } from '../../services/message.service';
 import { CurrentUser } from './currentUser';
 
 
@@ -49,8 +50,9 @@ export class PassportService extends CurrentUser implements IServiceBase {
    * 
    * @memberOf PassportService
    */
-  constructor(private http: Http, configService: ConfigService, private metadataService: MetadataService) {
-    super();
+  constructor(private http: Http, configService: ConfigService, private metadataService: MetadataService,
+    messageService: MessageService) {
+    super(messageService);
     using(new XLog(PassportService.logger, levels.INFO, 'ctor'), (log) => {
 
       Assert.notNull(http, 'http');

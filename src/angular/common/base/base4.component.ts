@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 // Fluxgate
 import { IServiceBase } from '@fluxgate/common';
 
+import { MessageService } from '../../services/message.service';
 import { Base3Component } from './base3.component';
 
 /**
@@ -28,10 +29,10 @@ export abstract class Base4Component<
    * 
    * @memberOf BaseComponent
    */
-  protected constructor(router: Router, route: ActivatedRoute,
+  protected constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
     service: TService1, service2: TService2, service3: TService3,
     private _service4: TService4) {
-    super(router, route, service, service2, service3);
+    super(router, route, messageService, service, service2, service3);
   }
 
   /**

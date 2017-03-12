@@ -22,8 +22,9 @@ import { ColumnMetadata, ColumnTypes, TableMetadata } from '@fluxgate/common';
 
 import { BaseComponent } from '../../common/base';
 import { MetadataService, ProxyService } from '../../services';
-
+import { MessageService } from '../../services/message.service';
 import { AutoformConstants } from './autoformConstants';
+
 
 @Component({
   selector: 'flx-autoform',
@@ -99,10 +100,10 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   private sub: Subscription;
 
-  constructor(router: Router, route: ActivatedRoute, service: ProxyService,
+  constructor(router: Router, route: ActivatedRoute, messageService: MessageService, service: ProxyService,
     private injector: Injector,
     private confirmationService: ConfirmationService, private metadataService: MetadataService) {
-    super(router, route, service);
+    super(router, route, messageService, service);
   }
 
   // tslint:disable-next-line:use-life-cycle-interface

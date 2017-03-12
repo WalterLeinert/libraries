@@ -14,6 +14,7 @@ import {
 import { IRefreshHelper, IRouterNavigationAction, NavigationAction } from '../../common/routing';
 import { IAutoformConfig, IAutoformNavigation } from '../../modules/autoform/autoformConfig.interface';
 import { AutoformConstants } from '../../modules/autoform/autoformConstants';
+import { MessageService } from '../../services/message.service';
 import { CoreComponent } from './core.component';
 
 
@@ -42,8 +43,9 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
    * 
    * @memberOf BaseComponent
    */
-  protected constructor(private _router: Router, private _route: ActivatedRoute, private _service: TService) {
-    super();
+  protected constructor(private _router: Router, private _route: ActivatedRoute, messageService: MessageService,
+    private _service: TService) {
+    super(messageService);
   }
 
   /**

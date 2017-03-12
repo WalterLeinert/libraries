@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 // PrimeNG
 import { CalendarModule } from 'primeng/primeng';
 
-// Fluxgate
+import { MessageServiceModule } from '../../services/message.service';
 import { TimeSelectorComponent } from './time-selector.component';
 
 
@@ -14,7 +14,8 @@ import { TimeSelectorComponent } from './time-selector.component';
   imports: [
     CommonModule,
     FormsModule,
-    CalendarModule
+    CalendarModule,
+    MessageServiceModule
   ],
   declarations: [
     TimeSelectorComponent

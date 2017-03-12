@@ -6,9 +6,10 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule, ConfirmDialogModule, SharedModule } from 'primeng/primeng';
 import { MessagesModule } from 'primeng/primeng';
 
+
 import { PopupModule } from '../../modules/common';
 import { ProxyService } from '../../services';
-
+import { MessageServiceModule } from '../../services/message.service';
 import { AutoformDetailComponent } from './autoform-detail.component';
 import { AutoformRoutingModule } from './autoform-routing.module';
 import { AutoformComponent } from './autoform.component';
@@ -23,6 +24,7 @@ import { AutoformComponent } from './autoform.component';
     SharedModule,
     MessagesModule,
     // Fluxgate
+    MessageServiceModule,
     ConfirmDialogModule,
     PopupModule,
     AutoformRoutingModule

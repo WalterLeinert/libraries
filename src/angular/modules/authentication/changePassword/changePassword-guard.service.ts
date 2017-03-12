@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 
+import { MessageService } from '../../../services/message.service';
 import { CurrentUserBaseService } from '../currentUserBaseService';
 import { PassportService } from '../passport.service';
 
@@ -15,16 +16,16 @@ import { PassportService } from '../passport.service';
  */
 @Injectable()
 export class ChangePasswordGuardService extends CurrentUserBaseService implements CanActivate {
- 
-    constructor(private _router: Router, passportService: PassportService) {
-        super(passportService);
-   }
 
-    public canActivate(route: ActivatedRouteSnapshot): boolean {
-        if (this.userInternal) {
-            return true;
-        }
-        return false;
+  constructor(private _router: Router, messageService: MessageService, passportService: PassportService) {
+    super(passportService, messageService);
+  }
+
+  public canActivate(route: ActivatedRouteSnapshot): boolean {
+    if (this.userInternal) {
+      return true;
     }
+    return false;
+  }
 
 }

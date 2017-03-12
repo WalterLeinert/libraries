@@ -4,6 +4,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 import { IUser } from '@fluxgate/common';
 
+import { MessageService } from '../../services/message.service';
 import { CurrentUser } from './currentUser';
 import { PassportService } from './passport.service';
 
@@ -17,8 +18,8 @@ import { PassportService } from './passport.service';
 export abstract class CurrentUserBaseService extends CurrentUser {
   protected static logger = getLogger(CurrentUserBaseService);
 
-  protected constructor(private passportService: PassportService) {
-    super();
+  protected constructor(private passportService: PassportService, messageService: MessageService) {
+    super(messageService);
 
     using(new XLog(CurrentUserBaseService.logger, levels.INFO, 'ctor'), (log) => {
       this.registerSubscription(this.passportService.userChange.subscribe((user: IUser) => {

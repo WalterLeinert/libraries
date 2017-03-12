@@ -9,19 +9,19 @@ import { ConfirmDialogModule } from 'primeng/primeng';
 
 import { AutofocusModule, HighlightModule } from '../../common/directives';
 
+import { MessageServiceModule } from '../../services/message.service';
 import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
-// import { AuthenticationRoutingModule } from './authentication-routing.module';
-import { CurrentUserService } from './currentUser.service';
-import { NavigationService } from './navigation.service';
-import { PassportService } from './passport.service';
-import { RoleService } from './role.service';
-
 import { ChangePasswordGuardService } from './changePassword/changePassword-guard.service';
 import { ChangePasswordComponent } from './changePassword/changePassword.component';
+// import { AuthenticationRoutingModule } from './authentication-routing.module';
+import { CurrentUserService } from './currentUser.service';
 import { LoginComponent } from './login/login.component';
 import { LogoffComponent } from './logoff/logoff.component';
+import { NavigationService } from './navigation.service';
+import { PassportService } from './passport.service';
 import { RegisterGuardService } from './register/register-guard.service';
 import { RegisterComponent } from './register/register.component';
+import { RoleService } from './role.service';
 
 @NgModule({
   imports: [
@@ -33,7 +33,8 @@ import { RegisterComponent } from './register/register.component';
     ConfirmDialogModule,
     HighlightModule,
     AutofocusModule,
-    DropdownSelectorModule
+    DropdownSelectorModule,
+    MessageServiceModule
     // AuthenticationRoutingModule
   ],
   declarations: [

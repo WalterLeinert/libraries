@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { MessageService } from '../../services/message.service';
 import { CurrentUserBaseService } from './currentUserBaseService';
 import { PassportService } from './passport.service';
 
@@ -15,8 +16,8 @@ import { PassportService } from './passport.service';
  */
 @Injectable()
 export class CurrentUserService extends CurrentUserBaseService {
- 
-    constructor(passportService: PassportService) {
-        super(passportService);
-    }
+
+  constructor(passportService: PassportService, messageService: MessageService) {
+    super(passportService, messageService);
+  }
 }

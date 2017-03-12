@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 // PrimeNG
 import { DropdownModule } from 'primeng/primeng';
 
+import { MessageServiceModule } from '../../services/message.service';
 import { DropdownSelectorComponent } from './dropdown-selector.component';
 
 
@@ -13,7 +14,9 @@ import { DropdownSelectorComponent } from './dropdown-selector.component';
   imports: [
     CommonModule,
     FormsModule,
-    DropdownModule
+    DropdownModule,
+
+    MessageServiceModule
   ],
   exports: [
     DropdownSelectorComponent
