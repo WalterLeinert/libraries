@@ -1,4 +1,4 @@
-import { Assert, TableMetadata } from '@fluxgate/common';
+import { Assert, NotSupportedException, TableMetadata } from '@fluxgate/common';
 
 
 /**
@@ -55,7 +55,7 @@ export class Serializer<T> {
         Assert.notNull(jsonArray);
 
         if (!Array.isArray(jsonArray)) {
-            throw new Error('json: ist kein Array');
+          throw new NotSupportedException('json: ist kein Array');
         }
 
         const result = new Array<T>();

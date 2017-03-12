@@ -3,7 +3,7 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 // import 'ng2-toastr/bundles/ng2-toastr.min.css';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
-import { MessageSeverity } from '@fluxgate/common';
+import { MessageSeverity, NotSupportedException } from '@fluxgate/common';
 
 import { MessageService } from '../../services/message.service';
 
@@ -40,7 +40,7 @@ export class MessagesComponent implements OnInit {
           break;
 
         default:
-          throw new Error('not supported');
+          throw new NotSupportedException();
       }
     });
   }

@@ -6,13 +6,16 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 
-import { IQuery, IToString, ServiceResult, TableMetadata } from '@fluxgate/common';
-import { Assert, Funktion, IService } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
+
+
+import { IQuery, IToString, ServiceResult, TableMetadata } from '@fluxgate/common';
+import { Assert, Funktion, InvalidOperationException, IService } from '@fluxgate/common';
+
 
 import { Serializer } from '../../base/serializer';
 import { ConfigService } from './config.service';
@@ -189,7 +192,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    */
   public getEntityId(item: T): TId {
     if (!this._tableMetadata.primaryKeyColumn) {
-      throw new Error(`Table ${this._tableMetadata.options.name}: no primary key column`);
+      throw new InvalidOperationException(`Table ${this._tableMetadata.options.name}: no primary key column`);
     }
     return item[this._tableMetadata.primaryKeyColumn.propertyName];
   }
@@ -204,7 +207,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    */
   public setEntityId(item: T, id: TId) {
     if (!this._tableMetadata.primaryKeyColumn) {
-      throw new Error(`Table ${this._tableMetadata.options.name}: no primary key column`);
+      throw new InvalidOperationException(`Table ${this._tableMetadata.options.name}: no primary key column`);
     }
     item[this._tableMetadata.primaryKeyColumn.propertyName] = id;
   }

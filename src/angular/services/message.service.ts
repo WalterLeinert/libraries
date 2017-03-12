@@ -3,15 +3,12 @@
 // Angular
 import { Injectable, NgModule } from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-
-
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------------------- logging --------------------------------------------
 
-import { CustomSubject, IMessage, MessageSeverity, PublisherSubscriber } from '@fluxgate/common';
+import { CustomSubject, IMessage, MessageSeverity, NotSupportedException, PublisherSubscriber } from '@fluxgate/common';
 
 
 @Injectable()
@@ -46,13 +43,13 @@ export class MessageService {
           break;
 
         default:
-          throw new Error('not supported');
+          throw new NotSupportedException();
       }
     });
   }
 
   public clearMessage() {
-    throw new Error('not supported');
+    throw new NotSupportedException();
   }
 
   /**

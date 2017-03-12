@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 
 // Fluxgate
 import {
-  Assert, InstanceAccessor, InstanceSetter, IService, IServiceBase,
+  Assert, InstanceAccessor, InstanceSetter, IService, IServiceBase, NotSupportedException,
   ServiceResult, Utility
 } from '@fluxgate/common';
 
@@ -177,7 +177,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
           });
 
         default:
-          throw new Error('not supported');
+          throw new NotSupportedException();
       }
     } else {
       return Observable.of(undefined);

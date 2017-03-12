@@ -7,10 +7,10 @@ import * as HttpStatusCodes from 'http-status-codes';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { Assert, Constants, StringBuilder } from '@fluxgate/common';
+import { Assert, Constants, ServerSystemException, StringBuilder } from '@fluxgate/common';
 
 
 /**
@@ -103,15 +103,23 @@ export abstract class ServiceBase {
    * @memberOf ServiceBase
    */
   protected handleError(response: Response): ErrorObservable {
-    // In a real world app, we might use a remote logging infrastructure
-    let errorMessage = '** unknown error **';
+    return using(new XLog(ServiceBase.logger, levels.INFO, 'handleError'), (log) => {
+      // In a real world app, we might use a remote logging infrastructure
+      let errorMessage = '** unknown error **';
 
-    if (response.status < HttpStatusCodes.OK || response.status >= HttpStatusCodes.MULTIPLE_CHOICES) {
-      errorMessage = response.text();
-    }
+      if (response.status < HttpStatusCodes.OK || response.status >= HttpStatusCodes.MULTIPLE_CHOICES) {
+        errorMessage = response.text();
+      }
 
-    ServiceBase.logger.error(`${response.status} - ${response.statusText || ''} -- ${errorMessage}`);
-    return Observable.throw(new Error(errorMessage));
+      if (response.status === 0) {
+        errorMessage = 'Server down?';
+      }
+
+      log.error(`status = ${response.status}, statusText = ${response.statusText || ''} --` +
+        ` errorMessage = ${errorMessage}`);
+
+      return Observable.throw(new ServerSystemException(errorMessage));
+    });
   }
 
 

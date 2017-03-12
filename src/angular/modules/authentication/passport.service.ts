@@ -12,7 +12,7 @@ import * as HttpStatusCodes from 'http-status-codes';
 
 // Fluxgate
 import { Assert, Constants, IUser, PasswordChange, StringBuilder, User } from '@fluxgate/common';
-import { IServiceBase } from '@fluxgate/common';
+import { IServiceBase, NotSupportedException, ServerSystemException } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -217,16 +217,16 @@ export class PassportService extends CurrentUser implements IServiceBase {
    * @type {string}
    */
   public getModelClassName(): string {
-    throw new Error(`Not supported`);
+    throw new NotSupportedException();
   }
 
 
   public getEntityId(item: any): any {
-    throw new Error(`Not supported`);
+    throw new NotSupportedException();
   }
 
   public setEntityId(item: any, id: any) {
-    throw new Error(`Not supported`);
+    throw new NotSupportedException();
   }
 
   /**
@@ -245,7 +245,7 @@ export class PassportService extends CurrentUser implements IServiceBase {
     }
 
     PassportService.logger.error(`${response.status} - ${response.statusText || ''} -- ${errorMessage}`);
-    return Observable.throw(new Error(errorMessage));
+    return Observable.throw(new ServerSystemException(errorMessage));
   }
 
 
