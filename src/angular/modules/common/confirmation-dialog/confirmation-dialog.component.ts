@@ -19,7 +19,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 @Component({
   selector: 'flx-confirmation-dialog',
   template: `
-<p-confirmDialog header="header" message="message" icon="fa fa-question-circle-o fa5x" width="450" #cd>
+<p-confirmDialog header="header" message="message" appendTo="body" icon="fa fa-question-circle-o fa5x" width="450" #cd>
   <footer>
     <button type="button" pButton label="Cancel" (click)="cd.reject()"></button>
     <button type="button" pButton icon="fa-trash-o" label="OK" (click)="cd.accept()"></button>
