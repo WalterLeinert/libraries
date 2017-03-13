@@ -162,7 +162,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
       this.confirmAction({
         header: 'Delete',
         message: 'Do you want to delete this record?'
-      }, this.delete);
+      }, () => this.delete());
     });
   }
 
