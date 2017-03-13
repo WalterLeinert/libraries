@@ -1,6 +1,6 @@
 // tslint:disable:max-line-length
 
-import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ConfirmationService } from 'primeng/primeng';
@@ -27,8 +27,7 @@ import { IAutoformConfig } from './autoformConfig.interface';
   showEffect="fade" [modal]="true">
   <div class="container-fluid">
     <form *ngIf="value" class="form-horizontal">
-      <p-messages [value]="messages"></p-messages>
-
+    
       <div>
         <ul *ngFor="let metadata of columnMetadata">
 
@@ -82,7 +81,12 @@ import { IAutoformConfig } from './autoformConfig.interface';
               <span class="glyphicon glyphicon-trash"></span> Löschen
             </button>
             
-            <flx-popup (onAnswer)="delete($event)" [title]="'Löschen?'" [message]="'Soll wirklich gelöscht werden?'" *ngIf="askuser">Löschbestätigung</flx-popup>
+            <p-confirmDialog header="Confirmation" appendTo="body" icon="fa fa-question-circle" width="425" #cd>
+              <p-footer>
+                <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+                <button type="button" pButton icon="fa-check" label="Yes" (click)="cd.accept()"></button>
+              </p-footer>
+            </p-confirmDialog>
 
           </div>
         </div>
@@ -137,8 +141,6 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    */
   public columnMetadata: ColumnMetadata[];
 
-  public askuser: boolean;
-
 
   constructor(router: Router, route: ActivatedRoute, messageService: MessageService, service: ProxyService, private injector: Injector,
     private confirmationService: ConfirmationService, private metadataService: MetadataService) {
@@ -166,25 +168,26 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   public confirm() {
     using(new XLog(AutoformDetailComponent.logger, levels.INFO, 'confirm'), (log) => {
       this.confirmationService.confirm({
-        header: 'Löschen',
-        message: 'Soll wirklich gelöscht werden?',
+        header: 'Delete',
+        message: 'Do you want to delete this record?',
         accept: () => {
-          log.log('Löschen');
-          this.delete(true);
+          log.log('Delete');
+          this.delete();
         },
         reject: () => {
-          log.log('Abbruch');
+          log.log('Cancel');
         }
       });
     });
   }
 
 
-
+  /**
+   * Handler für das Schliessen über ESC oder close-icon
+   */
   public onBeforeDialogHide() {
     this.closePopup();
   }
-
 
 
   /**
@@ -211,22 +214,14 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   /**
    * Löscht die Entity
    */
-  public delete(event: boolean) {
-    if (event === true) {
-      this.registerSubscription(this.service.delete(this.service.getEntityId(this.value)).subscribe(
-        (value: any) => {
-          this.closePopup();
-        },
-        (error: Error) => {
-          this.handleError(error);
-        }));
-    }
-    this.askuser = false;
-  }
-
-
-  public showmodal() {
-    this.askuser = true;
+  public delete() {
+    this.registerSubscription(this.service.delete(this.service.getEntityId(this.value)).subscribe(
+      (value: any) => {
+        this.closePopup();
+      },
+      (error: Error) => {
+        this.handleError(error);
+      }));
   }
 
 

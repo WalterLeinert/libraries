@@ -7,8 +7,6 @@ import { ButtonModule, ConfirmDialogModule, SharedModule } from 'primeng/primeng
 import { MessagesModule } from 'primeng/primeng';
 import { DialogModule } from 'primeng/primeng';
 
-
-import { PopupModule } from '../../modules/common';
 import { ProxyService } from '../../services';
 import { MessageServiceModule } from '../../services/message.service';
 import { AutoformDetailComponent } from './autoform-detail.component';
@@ -24,11 +22,10 @@ import { AutoformDetailComponent } from './autoform-detail.component';
     SharedModule,
     MessagesModule,
     DialogModule,
+    ConfirmDialogModule,
 
     // Fluxgate
     MessageServiceModule,
-    ConfirmDialogModule,
-    PopupModule,
   ],
   exports: [
     AutoformDetailComponent
