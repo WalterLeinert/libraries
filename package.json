@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/client",
-  "version": "1.14.3-beta.23",
+  "version": "1.14.3-beta.24",
   "description": "Fluxgate Client-Library ",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

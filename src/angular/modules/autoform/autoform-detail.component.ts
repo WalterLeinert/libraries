@@ -10,12 +10,13 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 
 // Fluxgate
-import { Assert, ColumnMetadata, TableMetadata } from '@fluxgate/common';
+import { Assert, ColumnMetadata, NotSupportedException, TableMetadata } from '@fluxgate/common';
 
 import { BaseComponent } from '../../common/base';
 import { MetadataService, ProxyService } from '../../services';
 import { MessageService } from '../../services/message.service';
 import { IAutoformConfig } from './autoformConfig.interface';
+import { FormAction, FormActions, IDataFormAction } from './form-action';
 
 
 @Component({
@@ -133,6 +134,8 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    */
   public columnMetadata: ColumnMetadata[];
 
+  private action: FormAction;
+
 
   constructor(router: Router, route: ActivatedRoute, messageService: MessageService, service: ProxyService, private injector: Injector,
     private metadataService: MetadataService) {
@@ -144,8 +147,23 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
         log.log(`params = ${JSON.stringify(p)}`);
       });
 
-      this.route.data.subscribe((data) => {
+      this.route.data.subscribe((data: IDataFormAction) => {
         log.log(`data = ${JSON.stringify(data)}`);
+
+        Assert.notNull(data);
+
+        Assert.notNullOrEmpty(data.action);
+        Assert.notNullOrEmpty(data.resolverKey);
+
+        this.action = data.action;
+
+        const value = data[data.resolverKey];
+        Assert.notNull(value);
+
+        this.value = value;
+
+        Assert.notNull(value.constructor);
+        this.entityName = value.constructor.name;
       });
     });
   }
@@ -186,13 +204,25 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    * Speichert Änderungen an der Entity
    */
   public submit() {
-    this.registerSubscription(this.service.update(this.value).subscribe(
-      (value: any) => {
-        this.closePopup();
-      },
-      (error: Error) => {
-        this.handleError(error);
-      }));
+    if (this.action === FormActions.UPDATE) {
+      this.registerSubscription(this.service.update(this.value).subscribe(
+        (value: any) => {
+          this.closePopup();
+        },
+        (error: Error) => {
+          this.handleError(error);
+        }));
+    } else if (this.action === FormActions.CREATE) {
+      this.registerSubscription(this.service.create(this.value).subscribe(
+        (value: any) => {
+          this.closePopup();
+        },
+        (error: Error) => {
+          this.handleError(error);
+        }));
+    } else {
+      throw new NotSupportedException(`invalid action: ${this.action}`);
+    }
   }
 
 
