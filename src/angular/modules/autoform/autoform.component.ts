@@ -189,7 +189,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
    * Handler für das Schliessen über ESC oder close-icon
    */
   public onBeforeDialogHide() {
-    this.closePopup();
+    this.closePopup(true);
   }
 
 
@@ -197,7 +197,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
    * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
    */
   public cancel(): void {
-    this.closePopup();
+    this.closePopup(true);
   }
 
   /**
@@ -207,7 +207,8 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     if (this.action === FormActions.UPDATE) {
       this.registerSubscription(this.service.update(this.value).subscribe(
         (value: any) => {
-          this.closePopup();
+          this.addInfoMessage(`Record updated.`);
+          this.closePopup(false);
         },
         (error: Error) => {
           this.handleError(error);
@@ -215,7 +216,8 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     } else if (this.action === FormActions.CREATE) {
       this.registerSubscription(this.service.create(this.value).subscribe(
         (value: any) => {
-          this.closePopup();
+          this.addInfoMessage(`Record created.`);
+          this.closePopup(false);
         },
         (error: Error) => {
           this.handleError(error);
@@ -232,7 +234,8 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   public delete() {
     this.registerSubscription(this.service.delete(this.service.getEntityId(this.value)).subscribe(
       (value: any) => {
-        this.closePopup();
+        this.addInfoMessage(`Record deletde.`);
+        this.closePopup(false);
       },
       (error: Error) => {
         this.handleError(error);
@@ -300,7 +303,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     });
   }
 
-  private closePopup() {
+  private closePopup(cancelled: boolean) {
     let navigationPath: string;
 
     switch (this.action) {
@@ -310,7 +313,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
         break;
 
       case FormActions.UPDATE:
-      // die Navigation für update hat eine Id im Pfad (.../update/:id)
+        // die Navigation für update hat eine Id im Pfad (.../update/:id)
         navigationPath = '../..';
         break;
 
@@ -319,7 +322,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
         throw new NotSupportedException(`unsupported action ${this.action}`);
     }
 
-    this.navigate([navigationPath], { relativeTo: this.route });
+    this.navigate([navigationPath, { refresh: !cancelled }], { relativeTo: this.route });
   }
 
 }
