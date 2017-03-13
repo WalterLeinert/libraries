@@ -5,9 +5,6 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
-// PrimeNG
-import { ConfirmationService } from 'primeng/primeng';
-
 import { IUser } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
@@ -62,17 +59,9 @@ import { PassportService } from '../passport.service';
       </div>
     </div>
   </form>
-
-  <p-confirmDialog icon="fa fa-question-circle-o fa5x" width="450" #cd>
-    <footer>
-      <button type="button" pButton label="Cancel" (click)="cd.reject()"></button>
-      <button type="button" pButton icon="fa-trash-o" label="Delete" (click)="cd.accept()"></button>
-    </footer>
-  </p-confirmDialog>
 </div>
   `,
-  styles: [],
-  providers: [ConfirmationService]
+  styles: []
 })
 
 export class ChangePasswordComponent extends BaseComponent<PassportService> {
@@ -85,8 +74,7 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   private currentUser: IUser;
 
   constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
-    private navigationService: NavigationService,
-    service: PassportService, private confirmationService: ConfirmationService) {
+    private navigationService: NavigationService, service: PassportService) {
     super(router, route, messageService, service);
   }
 
@@ -108,9 +96,7 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
       .subscribe((user) => {
         ChangePasswordComponent.logger.info(`ChangePasswordComponent.changePassword: user = ${user}`);
 
-        this.navigate([
-          this.navigationService.navigationPath
-        ]);
+        this.navigate(['..'], { relativeTo: this.route });
       },
       (error: Error) => {
         this.handleInfo(error);
@@ -123,19 +109,4 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
       this.navigationService.navigationPath
     ]);
   }
-
-  public confirm() {
-    this.confirmationService.confirm({
-      header: 'Delete',
-      message: 'Are you sure you want to delete the selected department?',
-      accept: () => {
-        ChangePasswordComponent.logger.info('delete');
-        // this.delete(true);
-      },
-      reject: () => {
-        ChangePasswordComponent.logger.info('cancel');
-      }
-    });
-  }
-
 }
