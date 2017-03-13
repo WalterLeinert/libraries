@@ -41,6 +41,19 @@ export class Types {
     return obj === undefined;
   }
 
+  /**
+   * Liefert true, falls @param{obj} nicht null oder undefined ist.
+   * 
+   * @static
+   * @param {*} obj 
+   * @returns {boolean} 
+   * 
+   * @memberOf Types
+   */
+  public static isPresent(obj: any): boolean {
+    return !(Types.isNull(obj) || Types.isUndefined(obj));
+  }
+
   public static isPrimitive(obj: any): boolean {
     return (Types.isString(obj) || Types.isNumber(obj) || Types.isBoolean(obj)
       || Types.isSymbol(obj) || Types.isUndefined(obj));
