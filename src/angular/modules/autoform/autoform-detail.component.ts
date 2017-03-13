@@ -80,14 +80,9 @@ import { IAutoformConfig } from './autoformConfig.interface';
             <button type="submit" class="btn btn-primary" (click)='confirm()'>    
               <span class="glyphicon glyphicon-trash"></span> Löschen
             </button>
-            
-            <p-confirmDialog header="Confirmation" appendTo="body" icon="fa fa-question-circle" width="425" #cd>
-              <p-footer>
-                <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
-                <button type="button" pButton icon="fa-check" label="Yes" (click)="cd.accept()"></button>
-              </p-footer>
-            </p-confirmDialog>
 
+            <flx-confirmation-dialog></flx-confirmation-dialog>
+          
           </div>
         </div>
       </p-footer>

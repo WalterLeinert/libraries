@@ -9,7 +9,9 @@ import { DialogModule } from 'primeng/primeng';
 
 import { ProxyService } from '../../services';
 import { MessageServiceModule } from '../../services/message.service';
+import { ConfirmationDialogModule } from '../common/confirmation-dialog/confirmation-dialog.component';
 import { AutoformDetailComponent } from './autoform-detail.component';
+
 
 @NgModule({
   imports: [
@@ -26,6 +28,7 @@ import { AutoformDetailComponent } from './autoform-detail.component';
 
     // Fluxgate
     MessageServiceModule,
+    ConfirmationDialogModule
   ],
   exports: [
     AutoformDetailComponent

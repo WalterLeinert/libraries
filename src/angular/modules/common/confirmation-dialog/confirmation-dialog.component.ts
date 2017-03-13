@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, NgModule } from '@angular/core';
+import { Component, Input, NgModule } from '@angular/core';
 
 import 'rxjs/add/observable/of';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -17,8 +17,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 
 @Component({
+  selector: 'flx-confirmation-dialog',
   template: `
-<p-confirmDialog icon="fa fa-question-circle-o fa5x" width="450" #cd>
+<p-confirmDialog header="header" message="message" icon="fa fa-question-circle-o fa5x" width="450" #cd>
   <footer>
     <button type="button" pButton label="Cancel" (click)="cd.reject()"></button>
     <button type="button" pButton icon="fa-trash-o" label="OK" (click)="cd.accept()"></button>
@@ -29,8 +30,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 export class ConfirmationDialogComponent {
   protected static readonly logger = getLogger(ConfirmationDialogComponent);
 
-  public header: string;
-  public message: string;
+  @Input() public header: string;
+  @Input() public message: string;
 
   constructor(private confirmationService: ConfirmationService) {
   }
