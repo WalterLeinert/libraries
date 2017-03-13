@@ -20,7 +20,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 
 
 @Component({
-  selector: 'flx-autoform-detail',
+  selector: 'flx-autoform',
   template: `
 <p-dialog [(visible)]="value" header="Overtime Details" (onBeforeHide)="onBeforeDialogHide($event)" [responsive]="true"
   showEffect="fade" [modal]="true">
@@ -91,12 +91,12 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 `,
   styles: []
 })
-export class AutoformDetailComponent extends BaseComponent<ProxyService> {
-  protected static readonly logger = getLogger(AutoformDetailComponent);
+export class AutoformComponent extends BaseComponent<ProxyService> {
+  protected static readonly logger = getLogger(AutoformComponent);
 
   public static DETAILS = 'Details';
 
-  public pageTitle: string = AutoformDetailComponent.DETAILS;
+  public pageTitle: string = AutoformComponent.DETAILS;
 
 
   /**
@@ -141,7 +141,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
     private metadataService: MetadataService) {
     super(router, route, messageService, service);
 
-    using(new XLog(AutoformDetailComponent.logger, levels.INFO, 'ctor'), (log) => {
+    using(new XLog(AutoformComponent.logger, levels.INFO, 'ctor'), (log) => {
 
       this.route.params.subscribe((p) => {
         log.log(`params = ${JSON.stringify(p)}`);
@@ -176,7 +176,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   }
 
   public confirm() {
-    using(new XLog(AutoformDetailComponent.logger, levels.INFO, 'confirm'), (log) => {
+    using(new XLog(AutoformComponent.logger, levels.INFO, 'confirm'), (log) => {
       this.confirmAction({
         header: 'Delete',
         message: 'Do you want to delete this record?'
@@ -287,7 +287,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
    * den ProxyService damit initialisieren
    */
   private setupProxy(entityName: string) {
-    using(new XLog(AutoformDetailComponent.logger, levels.INFO, 'setupProxy', `entityName = ${entityName}`), (log) => {
+    using(new XLog(AutoformComponent.logger, levels.INFO, 'setupProxy', `entityName = ${entityName}`), (log) => {
       const tableMetadata: TableMetadata = this.metadataService.findTableMetadata(entityName);
 
       Assert.notNull(tableMetadata, `No metadata for entity ${entityName}`);
