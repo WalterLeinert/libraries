@@ -301,7 +301,25 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   }
 
   private closePopup() {
-    this.navigate(['../..'], { relativeTo: this.route });
+    let navigationPath: string;
+
+    switch (this.action) {
+      // die Navigation für create hat keine Id im Pfad (.../create)
+      case FormActions.CREATE:
+        navigationPath = '..';
+        break;
+
+      case FormActions.UPDATE:
+      // die Navigation für update hat eine Id im Pfad (.../update/:id)
+        navigationPath = '../..';
+        break;
+
+
+      default:
+        throw new NotSupportedException(`unsupported action ${this.action}`);
+    }
+
+    this.navigate([navigationPath], { relativeTo: this.route });
   }
 
 }
