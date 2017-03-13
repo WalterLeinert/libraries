@@ -3,8 +3,6 @@
 import { Component, Injector, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ConfirmationService } from 'primeng/primeng';
-
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
@@ -90,8 +88,7 @@ import { IAutoformConfig } from './autoformConfig.interface';
   </div>
 </p-dialog>
 `,
-  styles: [],
-  providers: [ConfirmationService]
+  styles: []
 })
 export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   protected static readonly logger = getLogger(AutoformDetailComponent);
@@ -138,7 +135,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
 
 
   constructor(router: Router, route: ActivatedRoute, messageService: MessageService, service: ProxyService, private injector: Injector,
-    private confirmationService: ConfirmationService, private metadataService: MetadataService) {
+    private metadataService: MetadataService) {
     super(router, route, messageService, service);
 
     using(new XLog(AutoformDetailComponent.logger, levels.INFO, 'ctor'), (log) => {
@@ -162,17 +159,10 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
 
   public confirm() {
     using(new XLog(AutoformDetailComponent.logger, levels.INFO, 'confirm'), (log) => {
-      this.confirmationService.confirm({
+      this.confirmAction({
         header: 'Delete',
-        message: 'Do you want to delete this record?',
-        accept: () => {
-          log.log('Delete');
-          this.delete();
-        },
-        reject: () => {
-          log.log('Cancel');
-        }
-      });
+        message: 'Do you want to delete this record?'
+      }, this.delete);
     });
   }
 

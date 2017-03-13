@@ -1,3 +1,4 @@
+// import { Injector, ReflectiveInjector } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 import 'rxjs/add/observable/of';
@@ -5,8 +6,18 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 
+// PrimeNG
+import { Confirmation, ConfirmationService } from 'primeng/primeng';
+
+// -------------------------------------- logging --------------------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+// -------------------------------------- logging --------------------------------------------
+
+
 // Fluxgate
 import {
+  AppRegistry,
   Assert, InstanceAccessor, InstanceSetter, IService, IServiceBase, NotSupportedException,
   ServiceResult, Utility
 } from '@fluxgate/common';
@@ -33,6 +44,18 @@ import { CoreComponent } from './core.component';
   styleUrls: ['./base.component.css']
 })*/
 export abstract class BaseComponent<TService extends IServiceBase> extends CoreComponent {
+  protected static readonly logger = getLogger(BaseComponent);
+
+
+  /**
+   * der PrimeNG Service für Aktionsbestätigungen 
+   * 
+   * @private
+   * @type {ConfirmationService}
+   * @memberOf BaseComponent
+   */
+  private confirmationService: ConfirmationService;
+
 
   /**
    * Creates an instance of BaseComponent.
@@ -283,6 +306,39 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
 
 
   /**
+   * Zeigt einen modalen Bestätigungsdialog mit Hilfe des @see{ConfirmationService} von primeNG.
+   * 
+   * Wichtig: im zugehörigen Komponentemplate muss ein 'flx-confirmation-dialog' (oder 'p-confirmDialog') existieren.
+   * 
+   * @param acceptAction - die Aktion, die nach Bestätigung durchgeführt werden soll (z.B. delete)
+   * @param rejectAction - die Aktion, die nach Abweisen durchgeführt werden soll
+   * @param options - Dialogoptions
+   */
+  protected confirmAction(options: Confirmation, acceptAction: () => void, rejectAction?: () => void) {
+    using(new XLog(BaseComponent.logger, levels.INFO, 'confirm'), (log) => {
+
+      if (this.confirmationService === undefined) {
+        this.confirmationService = this.getConfirmationService();
+      }
+
+      options.accept = () => {
+        log.log('accept');
+        acceptAction();
+      };
+
+      options.reject = () => {
+        log.log('reject');
+        if (rejectAction) {
+          rejectAction();
+        }
+      };
+
+      this.confirmationService.confirm(options);
+    });
+  }
+
+
+  /**
    * Liefert den zugehörigen Service
    * 
    * @readonly
@@ -325,6 +381,16 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
    */
   protected formatGenericId(item: any): string {
     return `${this.service.getModelClassName() + '-' + this.service.getEntityId(item)}`;
+  }
+
+
+
+  private getConfirmationService(): ConfirmationService {
+    const confirmationService = AppRegistry.instance.get<ConfirmationService>('ConfirmationService');
+    return confirmationService;
+    // const injector: Injector =
+    //   ReflectiveInjector.resolveAndCreate([{ provide: ConfirmationService, useClass: ConfirmationService }]);
+    // return injector.get(ConfirmationService);
   }
 
 }
