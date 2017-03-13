@@ -23,42 +23,43 @@ import { IAutoformConfig } from './autoformConfig.interface';
 @Component({
   selector: 'flx-autoform-detail',
   template: `
-  <p-dialog [(visible)]="value" header="Overtime Details" (onBeforeHide)="onBeforeDialogHide($event)" [responsive]="true" showEffect="fade" [modal]="true">
+<p-dialog [(visible)]="value" header="Overtime Details" (onBeforeHide)="onBeforeDialogHide($event)" [responsive]="true"
+  showEffect="fade" [modal]="true">
   <div class="container-fluid">
-  <form *ngIf="value" class="form-horizontal">
-    <p-messages [value]="messages"></p-messages>
+    <form *ngIf="value" class="form-horizontal">
+      <p-messages [value]="messages"></p-messages>
 
-    <div>
-      <ul *ngFor="let metadata of columnMetadata">
+      <div>
+        <ul *ngFor="let metadata of columnMetadata">
 
-        <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'string'">
-          <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'string'">
+            <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+            </div>
           </div>
-        </div>
-        <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'number'">
-          <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
-          <div class="col-sm-1">
-            <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'number'">
+            <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
+            <div class="col-sm-1">
+              <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+            </div>
           </div>
-        </div>
 
-        <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'shorttime'">
-          <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
-          <div class="col-sm-1">
-            <input type="text" maxlength="5" size="6" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'shorttime'">
+            <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
+            <div class="col-sm-1">
+              <input type="text" maxlength="5" size="6" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+            </div>
           </div>
-        </div>
-        
-        <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'datetime'">
-          <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
-          <div class="col-sm-2">
-            <input type="text" maxlength="10" size="10" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
-          </div>
-        </div>
 
-        <!--<div class="form-group" *ngIf="info.typeInfo.dataType == enumEnum && info.isVisible">
+          <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'datetime'">
+            <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
+            <div class="col-sm-2">
+              <input type="text" maxlength="10" size="10" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+            </div>
+          </div>
+
+          <!--<div class="form-group" *ngIf="info.typeInfo.dataType == enumEnum && info.isVisible">
           <label class="control-label col-sm-2">{{info.name}}:</label>
           <div class="col-sm-10">
           <select type="text" class="form-control">
@@ -67,27 +68,29 @@ import { IAutoformConfig } from './autoformConfig.interface';
           </div>
         </div>-->
 
-      </ul>
-    </div>
-   <p-footer>
-    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-    <div class="container">
-      <button type="submit" class="btn btn-primary" (click)='cancel()'>Abbruch</button>
-      <button type="submit" class="btn btn-primary" (click)='submit()'>
-      <span class="glyphicon glyphicon-save"></span> Speichern
-    </button>
-      <button type="submit" class="btn btn-primary" (click)='confirm()'>    
-      <span class="glyphicon glyphicon-trash"></span> Löschen
-    </button>
-      <flx-popup (onAnswer)="delete($event)" [title]="'Löschen?'" [message]="'Soll wirklich gelöscht werden?'" *ngIf="askuser">Löschbestätigung</flx-popup>
+        </ul>
+      </div>
 
-    </div>
-    </div>
-    </p-footer>
-  </form>
-</div>
+      <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <div class="container">
+            <button type="submit" class="btn btn-primary" (click)='cancel()'>Abbruch</button>
+            <button type="submit" class="btn btn-primary" (click)='submit()'>
+              <span class="glyphicon glyphicon-save"></span> Speichern
+            </button>
+            <button type="submit" class="btn btn-primary" (click)='confirm()'>    
+              <span class="glyphicon glyphicon-trash"></span> Löschen
+            </button>
+            
+            <flx-popup (onAnswer)="delete($event)" [title]="'Löschen?'" [message]="'Soll wirklich gelöscht werden?'" *ngIf="askuser">Löschbestätigung</flx-popup>
+
+          </div>
+        </div>
+      </p-footer>
+    </form>
+  </div>
 </p-dialog>
-  `,
+`,
   styles: [],
   providers: [ConfirmationService]
 })
@@ -127,15 +130,6 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
 
 
   /**
-   * Meldung, wenn Fenster geschlossen wird
-   * 
-   * @type {EventEmitter}
-   * @memberOf AutoformDetailComponent
-   */
-  @Output() private hide = new EventEmitter<any>();
-
-
-  /**
    * Metainformation für alle Modelspalten (-> entityName)
    * 
    * @type {ColumnMetadata[]}
@@ -149,6 +143,17 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   constructor(router: Router, route: ActivatedRoute, messageService: MessageService, service: ProxyService, private injector: Injector,
     private confirmationService: ConfirmationService, private metadataService: MetadataService) {
     super(router, route, messageService, service);
+
+    using(new XLog(AutoformDetailComponent.logger, levels.INFO, 'ctor'), (log) => {
+
+      this.route.params.subscribe((p) => {
+        log.log(`params = ${JSON.stringify(p)}`);
+      });
+
+      this.route.data.subscribe((data) => {
+        log.log(`data = ${JSON.stringify(data)}`);
+      });
+    });
   }
 
   // tslint:disable-next-line:use-life-cycle-interface
@@ -286,7 +291,7 @@ export class AutoformDetailComponent extends BaseComponent<ProxyService> {
   }
 
   private closePopup() {
-    this.navigate(['..'], { relativeTo: this.route });
+    this.navigate(['../..'], { relativeTo: this.route });
   }
 
 }

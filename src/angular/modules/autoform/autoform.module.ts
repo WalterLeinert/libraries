@@ -12,31 +12,28 @@ import { PopupModule } from '../../modules/common';
 import { ProxyService } from '../../services';
 import { MessageServiceModule } from '../../services/message.service';
 import { AutoformDetailComponent } from './autoform-detail.component';
-import { AutoformRoutingModule } from './autoform-routing.module';
-import { AutoformComponent } from './autoform.component';
 
 @NgModule({
   imports: [
     // Angular
     CommonModule,
     FormsModule,
+
     // PrimeNG
     ButtonModule,
     SharedModule,
     MessagesModule,
     DialogModule,
+
     // Fluxgate
     MessageServiceModule,
     ConfirmDialogModule,
     PopupModule,
-    AutoformRoutingModule
   ],
   exports: [
-    AutoformComponent,
     AutoformDetailComponent
   ],
   declarations: [
-    AutoformComponent,
     AutoformDetailComponent
   ],
   providers: [
