@@ -1,6 +1,6 @@
 // tslint:disable:max-line-length
 
-import { Component, Injector, Input } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // -------------------------------------- logging --------------------------------------------
@@ -10,40 +10,58 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 
 // Fluxgate
-import { Assert, ColumnMetadata, NotSupportedException, TableMetadata, Utility } from '@fluxgate/common';
+import { Assert, Clone, Color, NotSupportedException, TableMetadata, Utility } from '@fluxgate/common';
 
+import { IControlDisplayInfo } from '../../../base';
 import { BaseComponent } from '../../common/base';
 import { MetadataService, ProxyService } from '../../services';
 import { MessageService } from '../../services/message.service';
+import { ControlType } from '../common';
 import { IAutoformConfig } from './autoformConfig.interface';
+import { AutoformConfiguration } from './autoformConfiguration';
 import { FormAction, FormActions, IDataFormAction } from './form-action';
 
 
 @Component({
   selector: 'flx-autoform',
   template: `
-<p-dialog [(visible)]="value" header="Overtime Details" (onBeforeHide)="onBeforeDialogHide($event)" [responsive]="true"
+<p-dialog [(visible)]="dataItem" header="Overtime Details" (onBeforeHide)="onBeforeDialogHide($event)" [responsive]="true"
   showEffect="fade" [modal]="true">
   <div class="container-fluid">
-    <form *ngIf="value" class="form-horizontal">
+    <form *ngIf="dataItem" class="form-horizontal">
     
-      <div>
-        <ul *ngFor="let metadata of columnMetadata">
+      <div *ngIf="configInternal && configInternal.columnInfos">
+        <ul *ngFor="let info of configInternal.columnInfos">
 
-          <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'string'">
-            <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+          <!--
+          normale Text-/Eingabefelder
+          -->
+          <div *ngIf="info.controlType === controlType.Input">                 
+            <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+              <label class="control-label col-sm-2">{{info.textField}}:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" [(ngModel)]="dataItem[info.valueField]" name="{{info.valueField}}">
+              </div>
             </div>
           </div>
-          <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'number'">
-            <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
-            <div class="col-sm-1">
-              <input type="text" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
+
+          <!--
+          Datumsfelder
+          -->
+          <div *ngIf="info.controlType === controlType.Date">            
+            <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+              <label class="control-label col-sm-2">{{info.textField}}:</label>
+              <div class="col-sm-10">
+              <p-calendar [(ngModel)]="dataItem[info.valueField]" name="{{info.valueField}}"
+                  dateFormat="yy-mm-dd"
+                  [style.color]="getColor(dataItem, info)">
+                </p-calendar>
+              </div>
             </div>
           </div>
 
-          <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'shorttime'">
+<!--
+          <div class="form-group" *ngIf="! isHidden(metadata, dataItem) && metadata.propertyType === 'shorttime'">
             <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
             <div class="col-sm-1">
               <input type="text" maxlength="5" size="6" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
@@ -56,15 +74,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <input type="text" maxlength="10" size="10" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
             </div>
           </div>
-
-          <!--<div class="form-group" *ngIf="info.typeInfo.dataType == enumEnum && info.isVisible">
-          <label class="control-label col-sm-2">{{info.name}}:</label>
-          <div class="col-sm-10">
-          <select type="text" class="form-control">
-            <option *ngFor="let o of info.typeInfo.options" [value]="o">{{o.name}}</option>
-          </select>
-          </div>
-        </div>-->
+-->
 
         </ul>
       </div>
@@ -98,6 +108,13 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   public pageTitle: string = AutoformComponent.DETAILS;
 
+  /**
+   * ControlType Werte
+   */
+  public controlType = ControlType;
+
+  private configurator: AutoformConfiguration;
+
 
   /**
    * angebundenes Objekt.
@@ -105,7 +122,16 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
    * @type {*}
    * @memberOf AutoformDetailComponent
    */
-  @Input() public value: any;
+  private _value: any;
+
+  /**
+   * dataChange Event: wird bei jeder SelektionÄänderung von data gefeuert.
+   *
+   * Eventdaten: @type{any} - selektiertes Objekt.
+   *
+   * @memberOf DataTableSelectorComponent
+   */
+  @Output() public valueChange = new EventEmitter<any>();
 
 
   /**
@@ -117,22 +143,13 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   @Input() public entityName: string = '';
 
 
-  /**
-   * Konfiguration der Formularfelder
-   * 
-   * @type {IAutoformConfig}
-   * @memberOf AutoformDetailComponent
-   */
-  @Input() public config: IAutoformConfig;
 
+  private _config: IAutoformConfig;
 
-  /**
-   * Metainformation für alle Modelspalten (-> entityName)
-   * 
-   * @type {ColumnMetadata[]}
-   * @memberOf AutoformDetailComponent
-   */
-  public columnMetadata: ColumnMetadata[];
+  public configInternal: IAutoformConfig;
+
+  public dataItem: any;
+
 
   private action: FormAction;
 
@@ -159,7 +176,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
           if (Utility.isNullOrEmpty(data.resolverKey)) {
             log.warn(`data.resolverKey is empty`);
           }
-          
+
         } else {
           Assert.notNullOrEmpty(data.action);
           Assert.notNullOrEmpty(data.resolverKey);
@@ -178,20 +195,12 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     });
   }
 
+
   // tslint:disable-next-line:use-life-cycle-interface
   public ngOnInit() {
     super.ngOnInit();
 
     this.setupProxy(this.entityName);
-  }
-
-  public confirm() {
-    using(new XLog(AutoformComponent.logger, levels.INFO, 'confirm'), (log) => {
-      this.confirmAction({
-        header: 'Delete',
-        message: 'Do you want to delete this record?'
-      }, () => this.delete());
-    });
   }
 
 
@@ -253,45 +262,87 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   }
 
 
-  /**
-   * Liefert den Anzeigenamen für das Feld zu @param{metadata}.
-   */
-  public displayName(metadata: ColumnMetadata): string {
-    let displayName = metadata.propertyName;
-    if (metadata.options.displayName) {
-      displayName = metadata.options.displayName;
-    }
 
-    if (this.config) {
-      const columnConfig = this.config.fields[metadata.propertyName];
-      if (columnConfig) {
-        displayName = columnConfig.displayName;
-      }
-    }
 
-    return displayName;
+  public confirm() {
+    using(new XLog(AutoformComponent.logger, levels.INFO, 'confirm'), (log) => {
+      this.confirmAction({
+        header: 'Delete',
+        message: 'Do you want to delete this record?'
+      }, () => this.delete());
+    });
   }
+
+
 
   /**
    * Liefert true, falls Feld zu @param{metadata} nicht anzuzeigen ist
    */
-  public isHidden(metadata: ColumnMetadata, value: any): boolean {
+  public isHidden(info: IControlDisplayInfo, value: any): boolean {
     // Default: Anzeige, falls displayName im Model gesetzt ist
-    let rval = metadata.options.displayName === undefined;
+    let rval = info.textField === undefined;
 
-    // sonst steuert die Konfiguration, ob das Feld angezeigt oder verborgen werden soll 
-    if (this.config) {
-      // Wert aus Konfig überschreibt Model-Konfig
-      if (this.config.fields && this.config.fields[metadata.propertyName]) {
-        rval = false;
-      }
+    // Feld aber nicht anzeigen, falls in hiddenFileds angegeben
+    if (this.configInternal.hiddenFields && this.configInternal.hiddenFields.indexOf(info.valueField) >= 0) {
+      rval = true;
+    }
 
-      // Feld aber nicht anzeigen, falls in hiddenFileds angegeben
-      if (this.config.hiddenFields && this.config.hiddenFields.indexOf(metadata.propertyName) >= 0) {
-        rval = true;
+    return rval || value === undefined || value[info.valueField] === undefined;
+  }
+
+
+
+  public getColor(data: any, info: IControlDisplayInfo): string {
+    Assert.notNull(data);
+    Assert.notNull(info);
+
+    if (info.color !== undefined) {
+      if (info.color instanceof Color) {
+        return info.color.toString();
+      } else {
+        return info.color(data).toString();
       }
     }
-    return rval || value === undefined || value[metadata.propertyName] === undefined;
+    return undefined;
+  }
+
+
+
+  // -------------------------------------------------------------------------------------
+  // Property config
+  // -------------------------------------------------------------------------------------
+  public get config(): IAutoformConfig {
+    return this._config;
+  }
+
+  @Input() public set config(config: IAutoformConfig) {
+    this._config = config;
+    this.initBoundData(this.dataItem, this.getMetadataForValue(this.value));
+  }
+
+
+  // -------------------------------------------------------------------------------------
+  // Property value und der Change Event
+  // -------------------------------------------------------------------------------------
+  protected onValueChange(value: any) {
+    this.valueChange.emit(value);
+
+    //
+    // wir prüfen, ob für Items (nur das erste Element) Metadaten vorliegen ->
+    // ggf. autom. Konfiguration über Metadaten
+    //
+    this.initBoundData(value, this.getMetadataForValue(value));
+  }
+
+  public get value(): any {
+    return this._value;
+  }
+
+  @Input() public set value(value: any) {
+    if (this._value !== value) {
+      this._value = value;
+      this.onValueChange(value);
+    }
   }
 
 
@@ -306,12 +357,13 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
       Assert.notNull(tableMetadata, `No metadata for entity ${entityName}`);
 
       log.log(`table = ${tableMetadata.options.name}`);
-      this.columnMetadata = tableMetadata.columnMetadata;
 
       const service = tableMetadata.getServiceInstance(this.injector);
       this.service.proxyService(service);
     });
   }
+
+
 
   private closePopup(cancelled: boolean) {
     let navigationPath: string;
@@ -334,5 +386,65 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
     this.navigate([navigationPath, { refresh: !cancelled }], { relativeTo: this.route });
   }
+
+
+
+  /**
+   * Liefert @see{TableMetadata}, falls für die @param{values} (nur das erste Element) Metadaten vorliegen ->
+   * ggf. autom. Konfiguration über Metadaten
+   */
+  private getMetadataForValue(value: any): TableMetadata {
+    let tableMetadata;
+    if (value !== undefined) {
+
+      if (value.constructor) {
+        const clazzName = value.constructor.name;
+        tableMetadata = this.metadataService.findTableMetadata(clazzName);
+      }
+    }
+    return tableMetadata;
+  }
+
+
+
+
+  private initBoundData(item: any, tableMetadata: TableMetadata) {
+    this.setupConfig(item, tableMetadata);
+    this.setupData(item);
+  }
+
+  private setupData(item: any) {
+    this.dataItem = item;
+  }
+
+
+  private setupConfig(item: any, tableMetadata: TableMetadata): void {
+    using(new XLog(AutoformComponent.logger, levels.DEBUG, 'setupConfig'), (log) => {
+      if (log.isDebugEnabled) {
+        log.log(`item = ${JSON.stringify(item)},` +
+          ` tableMetadata = ${tableMetadata ? tableMetadata.className : 'undefined'}`);
+      }
+
+      if (this.config === undefined && tableMetadata === undefined) {
+        return;
+      }
+
+      this.configurator = new AutoformConfiguration(tableMetadata, this.metadataService, this.injector);
+
+      if (this.config) {
+        this.configInternal = Clone.clone(this.config);
+
+        this.configurator.configureConfig(this.configInternal);
+      } else {
+        this.configInternal = this.configurator.createConfig(this.config);
+      }
+
+      if (log.isDebugEnabled) {
+        log.log(`configInternal : ${JSON.stringify(this.configInternal)}`);
+      }
+
+    });
+  }
+
 
 }

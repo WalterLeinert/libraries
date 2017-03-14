@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule, ConfirmDialogModule, SharedModule } from 'primeng/primeng';
 import { MessagesModule } from 'primeng/primeng';
 import { DialogModule } from 'primeng/primeng';
+import { CalendarModule } from 'primeng/primeng';
 
 import { ProxyService } from '../../services';
 import { MessageServiceModule } from '../../services/message.service';
@@ -24,6 +25,7 @@ import { AutoformComponent } from './autoform.component';
     SharedModule,
     MessagesModule,
     DialogModule,
+    CalendarModule,
     ConfirmDialogModule,
 
     // Fluxgate

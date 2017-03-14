@@ -1,6 +1,8 @@
 // Fluxgate
 import { ColumnType, ColumnTypes, NotSupportedException } from '@fluxgate/common';
 
+import { ControlType } from '../../angular/modules/common';
+
 export type DataType = 'string' | 'number' | 'date' | 'time' | 'enum';
 
 export class DataTypes {
@@ -13,7 +15,7 @@ export class DataTypes {
 
   /**
    * Liefert für den @see{ColumnType} @param{columnType} den entsprechenden @see{DataType}.
-   * Falls keine Zuordnung existiert wird ein @see{Error} geworfen.
+   * Falls keine Zuordnung existiert wird eine @see{NotSupportedException} geworfen.
    * 
    * @static
    * @param {ColumnType} columnType
@@ -42,6 +44,37 @@ export class DataTypes {
 
       default:
         throw new NotSupportedException(`Unsupported columnType ${columnType}`);
+    }
+  }
+
+  /**
+   * Liefert für den @param{type} den entsprechenden @see{ControlType}.
+   * Falls keine Zuordnung existiert wird eine @see{NotSupportedException} geworfen.
+   * 
+   * @static
+   * @param {ColumnType} columnType
+   * @returns {DataType}
+   * 
+   * @memberOf DataTypes
+   */
+  public static mapDataTypeToControlType(type: DataType): ControlType {
+    switch (type) {
+
+      case DataTypes.STRING:
+      case DataTypes.NUMBER:
+        return ControlType.Input;
+
+      case DataTypes.DATE:
+        return ControlType.Date;
+
+      case DataTypes.TIME:
+        return ControlType.Time;
+
+      case DataTypes.ENUM:
+        return ControlType.DropdownSelector;
+
+      default:
+        throw new NotSupportedException(`Unsupported type ${type}`);
     }
   }
 }

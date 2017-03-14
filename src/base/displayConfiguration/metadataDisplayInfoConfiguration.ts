@@ -62,11 +62,7 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
       }
       displayInfo.editable = colMetaData.options.persisted;
 
-      if (displayInfo.dataType === DataTypes.DATE) {
-        displayInfo.controlType = ControlType.Date;
-      } else if (displayInfo.dataType === DataTypes.TIME) {
-        displayInfo.controlType = ControlType.Time;
-      }
+      displayInfo.controlType = DataTypes.mapDataTypeToControlType(displayInfo.dataType);
 
       if (colMetaData.enumMetadata) {
         if (!displayInfo.enumInfo) {
@@ -106,7 +102,7 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
               dataType: dataType,
               style: undefined,
               textAlignment: (ControlDisplayInfo.isRightAligned(dataType)) ? TextAlignments.RIGHT : TextAlignments.LEFT,
-              controlType: ControlType.Input
+              controlType: DataTypes.mapDataTypeToControlType(dataType)
             }
           )
         );
@@ -115,4 +111,5 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
 
     return columnInfos;
   }
+
 }

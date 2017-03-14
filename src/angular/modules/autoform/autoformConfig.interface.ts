@@ -1,45 +1,41 @@
-/**
- * Die Konfiguration eines einzelnen Formularfelds
- */
-export interface IFieldOptions {
-    /**
-     * der Anzeigename (Label)
-     */
-    displayName?: string;
-}
+import { IControlDisplayInfo } from '../../../base/displayConfiguration/controlDisplayInfo.interface';
 
 
 /**
  * Die Konfiguration des Formulars
  */
 export interface IAutoformConfig {
-    /**
-     * Liste der Formukarfelder, die nicht angezeigt werden
-     */
-    hiddenFields?: string[];
+  /**
+   * Liste der Formukarfelder, die nicht angezeigt werden
+   */
+  hiddenFields?: string[];
 
-    /**
-     * Konfiguration einzelner Formularfelder
-     */
-    fields: { [name: string]: IFieldOptions };
+
+  /**
+   * Die Spaltenkonfiguration für Anzeige/Wertebinding
+   * 
+   * @type {IControlDisplayInfo[]}
+   * @memberOf IDataTableSelectorConfig
+   */
+  columnInfos: IControlDisplayInfo[];
 }
 
 /**
  * Interface für die Navigation auf das generische Formular Autoform (@see{AutoformComponent})
  */
 export interface IAutoformNavigation {
-    /**
-     * Die Id der zugehörigen Entity
-     */
-    entityId: any;
+  /**
+   * Die Id der zugehörigen Entity
+   */
+  entityId: any;
 
-    /**
-     * Der Name der zugehörigen Entity-Klasse
-     */
-    entity: string;
+  /**
+   * Der Name der zugehörigen Entity-Klasse
+   */
+  entity: string;
 
-    /**
-     * die Konfiguration des Formulars @see{IAutoformConfig} als JSON-String
-     */
-    autoformConfig?: string;
+  /**
+   * die Konfiguration des Formulars @see{IAutoformConfig} als JSON-String
+   */
+  autoformConfig?: string;
 }
