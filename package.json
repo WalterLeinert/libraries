@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/server",
-  "version": "1.14.3-beta.2",
+  "version": "1.14.3",
   "description": "Fluxgate Server-Library ",
   "main": "dist/server.bundle.js",
   "typings": "dts/src/index.d.ts",
@@ -44,7 +44,7 @@
     "webpack-fail-plugin": "^1.0.5"
   },
   "dependencies": {
-    "@fluxgate/common": "^1.14.3-beta.2",
+    "@fluxgate/common": "^1.14.3",
     "express": "^4.14.1",
     "js-shortid": "^0.1.1",
     "knex": "^0.12.6",
@@ -58,7 +58,7 @@
     "ts-log-debug": "^2.2.0"
   },
   "peerDependencies": {
-    "@fluxgate/common": ">=1.14.3-beta.0"
+    "@fluxgate/common": ">=1.14.3"
   },
   "directories": {
     "lib": "lib"
