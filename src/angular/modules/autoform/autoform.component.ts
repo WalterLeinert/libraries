@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 
 // Fluxgate
-import { Assert, ColumnMetadata, NotSupportedException, TableMetadata } from '@fluxgate/common';
+import { Assert, ColumnMetadata, NotSupportedException, TableMetadata, Utility } from '@fluxgate/common';
 
 import { BaseComponent } from '../../common/base';
 import { MetadataService, ProxyService } from '../../services';
@@ -152,18 +152,28 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
         Assert.notNull(data);
 
-        Assert.notNullOrEmpty(data.action);
-        Assert.notNullOrEmpty(data.resolverKey);
+        if (Utility.isNullOrEmpty(data.action) || Utility.isNullOrEmpty(data.resolverKey)) {
+          if (Utility.isNullOrEmpty(data.action)) {
+            log.warn(`data.action is empty`);
+          }
+          if (Utility.isNullOrEmpty(data.resolverKey)) {
+            log.warn(`data.resolverKey is empty`);
+          }
+          
+        } else {
+          Assert.notNullOrEmpty(data.action);
+          Assert.notNullOrEmpty(data.resolverKey);
 
-        this.action = data.action;
+          this.action = data.action;
 
-        const value = data[data.resolverKey];
-        Assert.notNull(value);
+          const value = data[data.resolverKey];
+          Assert.notNull(value);
 
-        this.value = value;
+          this.value = value;
 
-        Assert.notNull(value.constructor);
-        this.entityName = value.constructor.name;
+          Assert.notNull(value.constructor);
+          this.entityName = value.constructor.name;
+        }
       });
     });
   }
