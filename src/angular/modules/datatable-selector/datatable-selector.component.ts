@@ -496,6 +496,10 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
           ` tableMetadata = ${tableMetadata ? tableMetadata.className : 'undefined'}`);
       }
 
+      if (this.config === undefined && tableMetadata === undefined) {
+        return;
+      }
+
       this.configurator = new DataTableSelectorConfiguration(tableMetadata, this.metadataService, this.injector);
 
       if (this.config) {

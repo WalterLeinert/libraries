@@ -25,14 +25,13 @@ import { DisplayInfoConfiguration } from './displayInfoConfiguration';
 export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
   protected static readonly logger = getLogger(MetadataDisplayInfoConfiguration);
 
-  constructor(private tableMetadata: TableMetadata, private metadataService: MetadataService,
+  constructor(protected tableMetadata: TableMetadata, private metadataService: MetadataService,
     private injector: Injector) {
 
     super();
-    Assert.notNull(tableMetadata);
 
     using(new XLog(DisplayInfoConfiguration.logger, levels.INFO, 'ctor'), (log) => {
-      log.log(`tableMetadata = ${this.tableMetadata.className}`);
+      log.log(`tableMetadata = ${this.tableMetadata ? this.tableMetadata.className : 'undefined'}`);
     });
   }
 
@@ -40,6 +39,8 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
   protected onConfigureDisplayInfo(displayInfo: IControlDisplayInfo) {
     using(new XLog(MetadataDisplayInfoConfiguration.logger, levels.INFO, 'onConfigureDisplayInfo'), (log) => {
       super.onConfigureDisplayInfo(displayInfo);
+
+      Assert.notNull(this.tableMetadata);
 
       const colMetaData = this.tableMetadata.getColumnMetadataByProperty(displayInfo.valueField);
 

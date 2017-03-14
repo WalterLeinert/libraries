@@ -30,9 +30,6 @@ export class DataTableSelectorDisplayInfoConfiguration extends MetadataDisplayIn
 
   constructor(tableMetadata: TableMetadata, metadataService: MetadataService, injector: Injector) {
     super(tableMetadata, metadataService, injector);
-    using(new XLog(DataTableSelectorDisplayInfoConfiguration.logger, levels.INFO, 'ctor'), (log) => {
-      log.log(`tableMetadata = ${tableMetadata.className}`);
-    });
   }
 
   public setRowInfo(rowInfo?: IRowDisplayInfo) {
@@ -41,6 +38,10 @@ export class DataTableSelectorDisplayInfoConfiguration extends MetadataDisplayIn
 
   protected onConfigureDisplayInfo(colInfo: IControlDisplayInfo) {
     using(new XLog(MetadataDisplayInfoConfiguration.logger, levels.INFO, 'onConfigureDisplayInfo'), (log) => {
+      if (!this.tableMetadata) {
+        return;
+      }
+
       super.onConfigureDisplayInfo(colInfo);
 
       //
