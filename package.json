@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/client",
-  "version": "1.14.3-beta.29",
+  "version": "1.14.3",
   "description": "Fluxgate Client-Library ",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -58,7 +58,7 @@
     "tinycolor2": "^1.4.1"
   },
   "peerDependencies": {
-    "@fluxgate/common": ">=1.14.3-beta.0"
+    "@fluxgate/common": ">=1.14.3"
   },
   "directories": {
     "lib": "lib"
