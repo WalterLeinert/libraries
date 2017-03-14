@@ -11,6 +11,8 @@ import { CalendarModule } from 'primeng/primeng';
 import { ProxyService } from '../../services';
 import { MessageServiceModule } from '../../services/message.service';
 import { ConfirmationDialogModule } from '../common/confirmation-dialog/confirmation-dialog.component';
+import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
+import { TimeSelectorModule } from '../time-selector/time-selector.module';
 import { AutoformComponent } from './autoform.component';
 
 
@@ -30,6 +32,8 @@ import { AutoformComponent } from './autoform.component';
 
     // Fluxgate
     MessageServiceModule,
+    TimeSelectorModule,
+    DropdownSelectorModule,
     ConfirmationDialogModule
   ],
   exports: [
