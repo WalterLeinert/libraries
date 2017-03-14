@@ -1,8 +1,8 @@
 // Angular
 import { PipeTransform } from '@angular/core';
 
-import { ControlType } from '../angular/modules/common/controlType';
-import { PipeType } from './../angular/services/pipe.service';
+import { ControlType } from '../../angular/modules/common/controlType';
+import { PipeType } from './../../angular/services/pipe.service';
 import { IDateDisplayInfo } from './dateDisplayInfo.interface';
 import { IDisplayInfo } from './displayInfo.interface';
 import { IEnumDisplayInfo } from './enumDisplayInfo.interface';

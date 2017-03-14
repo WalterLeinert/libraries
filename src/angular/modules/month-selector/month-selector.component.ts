@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { Types } from '@fluxgate/common';
 
-import { DisplayInfo } from '../../../base/displayInfo';
+import { DisplayInfo } from '../../../base/displayConfiguration/displayInfo';
 import { PrimeNgCalendarLocale } from '../../../primeng/calendarLocale';
 import { MetadataService } from '../../services';
 import { MessageService } from '../../services/message.service';

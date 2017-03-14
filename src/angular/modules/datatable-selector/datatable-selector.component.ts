@@ -5,23 +5,23 @@ import { Router } from '@angular/router';
 
 import 'rxjs/add/observable/throw';
 
-// Fluxgate
-import { Assert, Clone, Color, InstanceAccessor, TableMetadata, Types } from '@fluxgate/common';
-
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 
-import { ControlDisplayInfo, DataTypes, IControlDisplayInfo } from '../../../base';
-import { TextAlignments } from '../../../base';
+// Fluxgate
+import { Assert, Clone, Color, InstanceAccessor, TableMetadata, Types } from '@fluxgate/common';
+
+
+import { IControlDisplayInfo } from '../../../base';
 import { MetadataService, PipeService, PipeType } from '../../services';
 import { MessageService } from '../../services/message.service';
 import { ControlType } from '../common';
 import { ListSelectorComponent } from '../common/list-selector.component';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
-
+import { DataTableSelectorConfiguration } from './dataTableSelectorConfiguration';
 
 export type sortMode = 'single' | 'multiple' | '';
 
@@ -206,6 +206,8 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
    * ControlType Werte
    */
   public controlType = ControlType;
+
+  private configurator: DataTableSelectorConfiguration;
 
   /**
    * selectionMode: single|multiple
@@ -494,96 +496,14 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
           ` tableMetadata = ${tableMetadata ? tableMetadata.className : 'undefined'}`);
       }
 
+      this.configurator = new DataTableSelectorConfiguration(tableMetadata, this.metadataService, this.injector);
+
       if (this.config) {
         this.configInternal = Clone.clone(this.config);
 
-        //
-        // Konfiguration erweitern/anpassen
-        //
-        for (const colInfo of this.configInternal.columnInfos) {
-
-          //
-          // Defaults/RowInfo übernehmen
-          //
-          if (colInfo.editable === undefined) {
-            colInfo.editable = ControlDisplayInfo.DEFAULT.editable;
-
-            // Row-Konfiguration übernehmen
-            if (this.configInternal.rowInfo !== undefined && this.configInternal.rowInfo.editable !== undefined) {
-              colInfo.editable = this.configInternal.rowInfo.editable;
-            }
-          }
-
-          if (colInfo.color === undefined) {
-            colInfo.color = ControlDisplayInfo.DEFAULT.color;
-
-            // Row-Konfiguration übernehmen
-            if (this.configInternal.rowInfo !== undefined && this.configInternal.rowInfo.color !== undefined) {
-              colInfo.color = this.configInternal.rowInfo.color;
-            }
-          }
-
-
-          if (tableMetadata) {
-            const colMetaData = tableMetadata.getColumnMetadataByProperty(colInfo.valueField);
-
-            if (!colMetaData) {
-
-              // Konfigurationsfehler?
-              log.error(`Modelclass ${tableMetadata.className}: unknown property ${colInfo.valueField}`);
-            } else {
-
-              if (colInfo.dataType === undefined) {
-                colInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
-              }
-
-              // berechnete Spalten sind nicht editierbar
-              if (colInfo.editable !== undefined && colInfo.editable && !colMetaData.options.persisted) {
-                log.warn(`Spalte ${tableMetadata.className}.${colMetaData.propertyName}` +
-                  ` ist nicht editierbar (berechneter Wert)`);
-              }
-              colInfo.editable = colMetaData.options.persisted;
-
-              if (colInfo.dataType === DataTypes.DATE) {
-                colInfo.controlType = ControlType.Date;
-              } else if (colInfo.dataType === DataTypes.TIME) {
-                colInfo.controlType = ControlType.Time;
-              }
-
-              if (colMetaData.enumMetadata) {
-                if (!colInfo.enumInfo) {
-
-                  const enumTableMetadata = this.metadataService.findTableMetadata(colMetaData.enumMetadata.dataSource);
-                  colInfo.enumInfo = {
-                    selectorDataService: enumTableMetadata.getServiceInstance(this.injector),
-                    textField: colMetaData.enumMetadata.textField,
-                    valueField: colMetaData.enumMetadata.valueField
-                  };
-
-                  colInfo.controlType = ControlType.DropdownSelector;
-                }
-              }
-            }
-          }
-
-          if (!colInfo.textAlignment && ControlDisplayInfo.isRightAligned(colInfo.dataType)) {
-            colInfo.textAlignment = TextAlignments.RIGHT;
-          }
-
-          if (colInfo.controlType === undefined) {
-            colInfo.controlType = ControlDisplayInfo.DEFAULT.controlType;
-          }
-
-        }
-
+        this.configurator.configureConfig(this.configInternal);
       } else {
-
-        // metadata/reflect
-        if (tableMetadata) {
-          this.setupColumnInfosByMetadata(items, tableMetadata);
-        } else {
-          this.setupColumnInfosByReflection(items);
-        }
+        this.configInternal = this.configurator.createConfig(this.config);
       }
 
       if (log.isDebugEnabled) {
@@ -674,78 +594,6 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
     this.saveEditedRow.emit(row);
   }
 
-
-  /**
-   * falls keine Column-Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
-   * 
-   * @private
-   * 
-   * @memberOf DataTableSelectorComponent
-   */
-  private setupColumnInfosByMetadata(items: any[], tableMetadata: TableMetadata) {
-    Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
-    Assert.notNull(tableMetadata);
-
-    const columnInfos: IControlDisplayInfo[] = [];
-
-    for (const metaData of tableMetadata.columnMetadata) {
-      if (metaData.options.displayName) {
-        const dataType = DataTypes.mapColumnTypeToDataType(metaData.propertyType);
-        columnInfos.push(
-          new ControlDisplayInfo(
-            {
-              textField: metaData.options.displayName,
-              valueField: metaData.propertyName,
-              dataType: dataType,
-              style: undefined,
-              textAlignment: (ControlDisplayInfo.isRightAligned(dataType)) ? TextAlignments.RIGHT : TextAlignments.LEFT,
-              controlType: ControlType.Input
-            }
-          )
-        );
-      }
-    }
-
-    this.configInternal = {
-      columnInfos: columnInfos
-    };
-  }
-
-
-  /**
-   * falls keine Column-Konfiguration angegeben ist, wird diese über Reflection erzeugt
-   * 
-   * @private
-   * 
-   * @memberOf DataTableSelectorComponent
-   */
-  private setupColumnInfosByReflection(items: any[]) {
-    Assert.that(!this.config, 'config muss hier immer undefiniert sein.');
-
-    const columnInfos: IControlDisplayInfo[] = [];
-
-    if (items && items.length > 0) {
-
-      // alle Properties des ersten Items über Reflection ermitteln        
-      const props = Reflect.ownKeys(items[0]);
-
-      // ... und dann entsprechende ColumnInfos erzeugen
-      for (const propName of props) {
-        columnInfos.push(
-          new ControlDisplayInfo(
-            {
-              textField: propName.toString(),
-              valueField: propName.toString()
-            }
-          )
-        );
-      }
-    }
-
-    this.configInternal = {
-      columnInfos: columnInfos
-    };
-  }
 
   /**
    * Property selectionMode

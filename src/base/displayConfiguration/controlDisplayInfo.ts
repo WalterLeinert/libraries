@@ -1,8 +1,8 @@
 // Angular
 import { PipeTransform } from '@angular/core';
 
-import { ControlType } from './../angular/modules/common/controlType';
-import { PipeType } from './../angular/services/pipe.service';
+import { ControlType } from './../../angular/modules/common/controlType';
+import { PipeType } from './../../angular/services/pipe.service';
 import { IControlDisplayInfo } from './controlDisplayInfo.interface';
 import { DataType, DataTypes } from './dataType';
 import { DisplayInfo } from './displayInfo';

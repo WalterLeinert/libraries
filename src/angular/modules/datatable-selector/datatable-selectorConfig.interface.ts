@@ -1,5 +1,5 @@
-import { IControlDisplayInfo } from '../../../base/controlDisplayInfo.interface';
-import { IRowDisplayInfo } from '../../../base/rowDisplayInfo.interface';
+import { IControlDisplayInfo } from '../../../base/displayConfiguration/controlDisplayInfo.interface';
+import { IRowDisplayInfo } from '../../../base/displayConfiguration/rowDisplayInfo.interface';
 
 /**
  * Die Konfiguration der Komponente @see{DataTableSelectorComponent}
