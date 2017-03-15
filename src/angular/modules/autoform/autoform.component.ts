@@ -39,7 +39,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
           -->
           <div *ngIf="info.controlType === controlType.Input">
             <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}:</label>
+              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+
               <div class="col-sm-6">
                 <input type="text" class="form-control" [(ngModel)]="dataItem[info.valueField]" 
                   [id]="info.valueField" [formControlName]="info.valueField"
@@ -54,7 +55,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
           -->
           <div *ngIf="info.controlType === controlType.Date">
             <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}:</label>
+              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+
               <div class="col-sm-6">
                 <p-calendar class="form-control" [(ngModel)]="dataItem[info.valueField]" 
                   [id]="info.valueField" [formControlName]="info.valueField"
@@ -65,12 +67,12 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
           </div>
 
           <!--
-          Zeitfelder
+          Zeitfelder: Achtung: noch keine Formvalidierung (formControlName funktioniert noch nicht)
           -->
-
           <div *ngIf="info.controlType === controlType.Time">
             <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}:</label>
+              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+
               <div class="col-sm-6">
                 <flx-time-selector class="form-control" [(time)]="dataItem[info.valueField]"
                   [id]="info.valueField"
@@ -78,7 +80,27 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
                 </flx-time-selector>
               </div>
             </div>
-          </div>          
+          </div>
+
+
+          <!--
+          Dropdown/Wertelisten: Achtung: noch keine Formvalidierung (formControlName funktioniert noch nicht)
+          -->
+          <div *ngIf="info.controlType === controlType.DropdownSelector">
+            <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+
+              <div class="col-sm-6">
+                <flx-dropdown-selector class="form-control" [dataService]="info.enumInfo.selectorDataService"
+                  [id]="info.valueField"
+                  [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
+                  [(selectedValue)]="dataItem[info.valueField]" [style]="{'width':'100%'}" 
+                  [style.color]="getColor(dataItem, info)"
+                  [debug]="false">
+                </flx-dropdown-selector>
+              </div>
+            </div>
+          </div>                 
 
         </ul>
       </div>
