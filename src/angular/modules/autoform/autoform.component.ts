@@ -471,6 +471,33 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
           Validators.required
         ])
       ]
+      ],
+      start: [this.dataItem.start, [
+        Validators.compose([
+          Validators.required
+        ])
+      ]
+      ],
+      end: [this.dataItem.end, [
+        Validators.compose([
+          Validators.required
+        ])
+      ]
+      ],
+      duration: [this.dataItem.duration, [
+      ]
+      ],
+      reason: [this.dataItem.reason, [
+        Validators.compose([
+          Validators.required
+        ])
+      ]
+      ],
+      type: [this.dataItem.type, [
+        Validators.compose([
+          Validators.required
+        ])
+      ]
       ]
     });
 
