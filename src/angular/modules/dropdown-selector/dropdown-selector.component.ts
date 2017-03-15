@@ -34,7 +34,8 @@ import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
   selector: 'flx-dropdown-selector',
   template: `
 <p-dropdown [(options)]="options" [autoWidth]="autoWidth" [style]="style" [(ngModel)]="selectedValue" 
-    (onChange)="onChange($event.value)">
+  [readonly]="readonly"
+  (onChange)="onChange($event.value)">
 </p-dropdown>
 
 <div *ngIf="debug">
