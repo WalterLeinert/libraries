@@ -94,7 +94,7 @@ export class LoginComponent extends BaseComponent<PassportService> {
           ]);
         },
         (error: Error) => {
-          this.handleInfo(error);
+          this.handleError(error);
         }));
     });
   }

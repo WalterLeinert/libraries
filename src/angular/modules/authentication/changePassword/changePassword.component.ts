@@ -88,7 +88,7 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
 
   public changePassword() {
     if (this.passwordNew !== this.passwordNewRepeated) {
-      super.addInfoMessage(`Die neuen Kennworte stimmen nicht überein.`);
+      super.addInfoMessage(`Die Kennworte stimmen nicht überein.`);
       return;
     }
 
@@ -99,7 +99,7 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
         this.navigate(['..'], { relativeTo: this.route });
       },
       (error: Error) => {
-        this.handleInfo(error);
+        this.handleError(error);
       }));
   }
 

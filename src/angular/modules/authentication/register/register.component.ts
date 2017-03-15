@@ -116,7 +116,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
           ]);
         },
         (error: Error) => {
-          this.handleInfo(error);
+          this.handleError(error);
         }));
     });
   }
