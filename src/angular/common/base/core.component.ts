@@ -36,6 +36,9 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   public static ERROR_TEXT = 'Error';
 
 
+  // >> Formvalidierung
+  protected form: FormGroup;
+
   public formErrors: { [key: string]: any } = {
     date: ''    // nur Beispiel: die Errors werden über Validierung von angular erzeugt
   };
@@ -45,7 +48,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
       required: 'Date is required.',
     }
   };
-
+  // << Formvalidierung
 
   protected constructor(private _messageService: MessageService) {
     super();
@@ -91,6 +94,34 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
         });
       }
     });
+  }
+
+  /**
+   * Setzt der Form-Status zurück (z.B. nach submit) 
+   * 
+   * @memberOf CoreComponent
+   */
+  public resetForm(form?: FormGroup) {
+    if (form) {
+      form.reset();
+    } else {
+      if (this.form) {
+        this.form.reset();
+      }
+    }
+  }
+
+
+  /**
+   * Liefert true, falls eine zugehörige (Reactive) Form existiert und diese dirty ist.
+   * Muss in konkreten Komponentenklassen überschrieben werden, falls zusätzliche Bedingungen greifen sollen.
+   * 
+   * @returns {boolean} 
+   * 
+   * @memberOf CoreComponent
+   */
+  public hasChanges(): boolean {
+    return this.form && this.form.dirty;
   }
 
 
@@ -215,7 +246,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @param dataItem 
    * @param columnInfos 
    */
-  protected buildForm(formBuilder: FormBuilder, dataItem: any, columnInfos: IControlDisplayInfo[]): FormGroup {
+  protected buildForm(formBuilder: FormBuilder, dataItem: any, columnInfos: IControlDisplayInfo[]) {
     const dict: { [name: string]: any } = {};
 
     this.validationMessages = {};
@@ -239,23 +270,21 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
       }
     });
 
-    const form: FormGroup = formBuilder.group(dict);
+    this.form = formBuilder.group(dict);
 
-    form.valueChanges.subscribe((data) => this.onValueChanged(form, data));
-    this.onValueChanged(form);
-
-    return form;
+    this.form.valueChanges.subscribe((data) => this.onValueChanged(data));
+    this.onValueChanged();
   }
 
 
-  private onValueChanged(form: FormGroup, data?: any) {
-    if (!form) { return; }
+  private onValueChanged(data?: any) {
+    if (!this.form) { return; }
 
     for (const field in this.formErrors) {
       if (field) {
         // clear previous error message (if any)
         this.formErrors[field] = '';
-        const control = form.get(field);
+        const control = this.form.get(field);
 
         if (control && control.dirty && !control.valid) {
           const messages = this.validationMessages[field];

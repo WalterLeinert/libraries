@@ -71,13 +71,6 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
     super(messageService);
   }
 
-  /**
-   * Liefert true, falls der Status der Komponente geändert wurde und zu sichernde Daten existieren.
-   * Muss in konkreten Komponentenklassen überschrieben werden.
-   */
-  public hasChanges(): boolean {
-    return false;
-  }
 
   /**
    * Erzeugt ein @see{IRouterNavigationAction}-Objekt für CRUD-Aktionen auf einer Model-Instanz vom Typ @see{T}
@@ -281,7 +274,10 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
       service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
     }
     return service.create(item)
-      .do((elem: T) => { idSetter(item, idAccessor(elem)); })   // Id setzen
+      .do((elem: T) => {
+        idSetter(item, idAccessor(elem));
+        this.resetForm(); 
+      })   // Id setzen
       .catch(this.handleError);
   }
 
@@ -290,6 +286,9 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
       service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
     }
     return service.update(item)
+      .do((elem: T) => {
+        this.resetForm();
+      }) 
       .catch(this.handleError);
   }
 
@@ -298,6 +297,9 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
       service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
     }
     return service.delete(id)
+      .do((elemId: TId) => {
+        this.resetForm();
+      }) 
       .map((result: ServiceResult<TId>) => {
         return result.id;
       })

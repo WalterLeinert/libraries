@@ -121,7 +121,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
             <button type="submit" class="btn btn-primary" (click)='submit()'>
               <span class="glyphicon glyphicon-save"></span>Save
             </button>
-            <button type="submit" class="btn btn-primary" (click)='confirm()'>    
+            <button type="submit" class="btn btn-primary" (click)='confirmDelete()'>    
               <span class="glyphicon glyphicon-trash"></span>Delete
             </button>
 
@@ -151,7 +151,6 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   public pageTitle: string = AutoformComponent.DETAILS;
 
-  public autoformForm: FormGroup;
 
   /**
    * ControlType Werte
@@ -271,7 +270,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
           this.setupProxy(this.entityName);
 
           // FormBuilder erzeugen
-          this.autoformForm = this.buildForm(this.fb, this.value, this.configInternal.columnInfos);
+          this.buildForm(this.fb, this.value, this.configInternal.columnInfos);
         }
       });
     });
@@ -300,6 +299,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     if (this.action === FormActions.UPDATE) {
       this.registerSubscription(this.service.update(this.value).subscribe(
         (value: any) => {
+          this.resetForm();
           this.addSuccessMessage(`Record updated.`);
           this.closePopup(false);
         },
@@ -309,6 +309,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     } else if (this.action === FormActions.CREATE) {
       this.registerSubscription(this.service.create(this.value).subscribe(
         (value: any) => {
+          this.resetForm();
           this.addSuccessMessage(`Record created.`);
           this.closePopup(false);
         },
@@ -327,6 +328,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   public delete() {
     this.registerSubscription(this.service.delete(this.service.getEntityId(this.value)).subscribe(
       (value: any) => {
+        this.resetForm();
         this.addSuccessMessage(`Record deleted.`);
         this.closePopup(false);
       },
@@ -336,17 +338,14 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   }
 
 
-
-
-  public confirm() {
-    using(new XLog(AutoformComponent.logger, levels.INFO, 'confirm'), (log) => {
+  public confirmDelete() {
+    using(new XLog(AutoformComponent.logger, levels.INFO, 'confirmDelete'), (log) => {
       this.confirmAction({
         header: 'Delete',
         message: 'Do you want to delete this record?'
       }, () => this.delete());
     });
   }
-
 
 
   /**
