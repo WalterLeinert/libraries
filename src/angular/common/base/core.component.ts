@@ -219,6 +219,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     const dict: { [name: string]: any } = {};
 
     this.validationMessages = {};
+    this.formErrors = {};
 
     columnInfos.forEach((info) => {
       if (!(info.valueField === 'start' || info.valueField === 'end')) {    // TODO: filter antfernen
@@ -231,7 +232,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
 
         // TODO: richtige Meldungen erzeugen
-        this.validationMessages[info.valueField] = `${info.textField}: value required`;
+        this.validationMessages[info.valueField] = { required: `${info.textField}: value required` };
+        this.formErrors[info.valueField] = '';
       }
     });
 
