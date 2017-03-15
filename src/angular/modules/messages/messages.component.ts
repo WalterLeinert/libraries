@@ -21,6 +21,11 @@ export class MessagesComponent implements OnInit {
 
     this.messageService.getMessage().subscribe((message) => {
       switch (message.severity) {
+
+        case MessageSeverity.Success:
+          this.toastr.success(message.detail, message.summary);
+          break;
+
         case MessageSeverity.Info:
           this.toastr.info(message.detail, message.summary);
           break;

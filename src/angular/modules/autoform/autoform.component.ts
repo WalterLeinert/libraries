@@ -1,7 +1,7 @@
 // tslint:disable:max-line-length
 
 import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // -------------------------------------- logging --------------------------------------------
@@ -138,20 +138,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   public pageTitle: string = AutoformComponent.DETAILS;
 
-  // >> Form-Validierung
   public autoformForm: FormGroup;
-  public formErrors = {
-    date: ''
-  };
-
-  private validationMessages = {
-    date: {
-      required: 'Date is required.',
-    }
-  };
-  // << Form-Validierung
-
-
 
   /**
    * ControlType Werte
@@ -271,7 +258,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
           this.setupProxy(this.entityName);
 
           // FormBuilder erzeugen
-          this.buildForm();
+          this.autoformForm = this.buildForm(this.fb, this.value, this.configInternal.columnInfos);
         }
       });
     });
@@ -300,7 +287,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     if (this.action === FormActions.UPDATE) {
       this.registerSubscription(this.service.update(this.value).subscribe(
         (value: any) => {
-          this.addInfoMessage(`Record updated.`);
+          this.addSuccessMessage(`Record updated.`);
           this.closePopup(false);
         },
         (error: Error) => {
@@ -309,7 +296,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     } else if (this.action === FormActions.CREATE) {
       this.registerSubscription(this.service.create(this.value).subscribe(
         (value: any) => {
-          this.addInfoMessage(`Record created.`);
+          this.addSuccessMessage(`Record created.`);
           this.closePopup(false);
         },
         (error: Error) => {
@@ -327,7 +314,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   public delete() {
     this.registerSubscription(this.service.delete(this.service.getEntityId(this.value)).subscribe(
       (value: any) => {
-        this.addInfoMessage(`Record deletde.`);
+        this.addSuccessMessage(`Record deleted.`);
         this.closePopup(false);
       },
       (error: Error) => {
@@ -523,85 +510,11 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
         this.configInternal = this.configurator.createConfig(this.config);
       }
 
-      if (log.isDebugEnabled) {
+      if (log.isDebugEnabled()) {
         log.log(`configInternal : ${JSON.stringify(this.configInternal)}`);
       }
 
     });
-  }
-
-
-  private buildForm() {
-    let dict: { [name: string]: any } = {};
-
-    this.configInternal.columnInfos.forEach((info) => {
-
-    });
-
-
-    this.autoformForm = this.fb.group({
-      date: [this.dataItem.name, [
-        Validators.compose([
-          Validators.required
-        ])
-      ]
-      ],
-      // start: [this.dataItem.start, [
-      //   Validators.compose([
-      //     Validators.required
-      //   ])
-      // ]
-      // ],
-      // end: [this.dataItem.end, [
-      //   Validators.compose([
-      //     Validators.required
-      //   ])
-      // ]
-      // ],
-      duration: [this.dataItem.duration, [
-      ]
-      ],
-      reason: [this.dataItem.reason, [
-        Validators.compose([
-          Validators.required
-        ])
-      ]
-      ],
-      type: [this.dataItem.type, [
-        Validators.compose([
-          Validators.required
-        ])
-      ]
-      ]
-    });
-
-    this.autoformForm.valueChanges
-      .subscribe((data) => this.onValueChanged(data));
-
-    this.onValueChanged();
-  }
-
-  private onValueChanged(data?: any) {
-    if (!this.autoformForm) { return; }
-    const form = this.autoformForm;
-
-    for (const field in this.formErrors) {
-      if (field) {
-        // clear previous error message (if any)
-        this.formErrors[field] = '';
-        const control = form.get(field);
-
-        if (control && control.dirty && !control.valid) {
-          const messages = this.validationMessages[field];
-          for (const key in control.errors) {
-            if (key) {
-              this.formErrors[field] += messages[key] + ' ';
-            }
-
-          }
-        }
-      }
-    }
   }
 
 }

@@ -26,6 +26,7 @@ export class MessageService {
       this.pubSub.publish(MessageService.TOPIC, message);
 
       switch (message.severity) {
+        case MessageSeverity.Success:
         case MessageSeverity.Info:
           log.info(`message: ${JSON.stringify(message)}`);
           break;

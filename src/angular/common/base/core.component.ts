@@ -1,4 +1,5 @@
 import { OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -11,6 +12,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // Fluxgate
 import { Assert, Dictionary, IMessage, MessageSeverity, UniqueIdentifiable } from '@fluxgate/common';
 
+import { IControlDisplayInfo } from '../../../base';
 import { MessageService } from '../../services/message.service';
 
 
@@ -26,6 +28,24 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   private static subscriptionMap: Dictionary<UniqueIdentifiable, Subscription[]> =
   new Dictionary<UniqueIdentifiable, Subscription[]>();
+
+  // TODO: über Language-Service ermitteln
+  public static SUCCESS_TEXT = 'Success!';
+  public static INFO_TEXT = 'Info';
+  public static WARN_TEXT = 'Warning';
+  public static ERROR_TEXT = 'Error';
+
+
+  public formErrors: { [key: string]: any } = {
+    date: ''    // nur Beispiel: die Errors werden über Validierung von angular erzeugt
+  };
+
+  private validationMessages: { [key: string]: any } = {
+    date: {     // nur Beispiel: die Messages werden über die Konfiguraton/Metadaten aufgebaut
+      required: 'Date is required.',
+    }
+  };
+
 
   protected constructor(private _messageService: MessageService) {
     super();
@@ -70,8 +90,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
           item.unsubscribe();
         });
       }
-
-
     });
   }
 
@@ -96,9 +114,37 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * 
    * @memberOf BaseComponent
    */
-  protected addInfoMessage(text: string, summary = 'Hinweis') {
+  protected addSuccessMessage(text: string, summary = CoreComponent.SUCCESS_TEXT) {
+    this.addMessage({ severity: MessageSeverity.Success, summary: summary, detail: text });
+  }
+
+
+  /**
+   * fügt eine neue Info-Meldungung hinzu
+   * 
+   * @protected
+   * @param {string} text
+   * @param {string} [summary='Hinweis']
+   * 
+   * @memberOf BaseComponent
+   */
+  protected addInfoMessage(text: string, summary = CoreComponent.INFO_TEXT) {
     this.addMessage({ severity: MessageSeverity.Info, summary: summary, detail: text });
   }
+
+  /**
+   * fügt eine neue Warn-Meldungung hinzu
+   * 
+   * @protected
+   * @param {string} text
+   * @param {string} [summary='Hinweis']
+   * 
+   * @memberOf BaseComponent
+   */
+  protected addWarnMessage(text: string, summary = CoreComponent.WARN_TEXT) {
+    this.addMessage({ severity: MessageSeverity.Warn, summary: summary, detail: text });
+  }
+
 
   /**
    * fügt eine neue Fehlermeldungung hinzu
@@ -109,7 +155,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * 
    * @memberOf BaseComponent
    */
-  protected addErrorMessage(text: string, summary = 'Fehlermeldung') {
+  protected addErrorMessage(text: string, summary = CoreComponent.ERROR_TEXT) {
     this.addMessage({ severity: MessageSeverity.Error, summary: summary, detail: text });
   }
 
@@ -134,22 +180,10 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * 
    * @memberOf BaseComponent
    */
-  protected handleError(error: Error, summary = 'Fehlermeldung') {
+  protected handleError(error: Error, summary?: string) {
     this.addErrorMessage(error.message, summary);
   }
 
-  /**
-   * Behandelt einen Hinweis
-   * 
-   * @protected
-   * @param {Error} info
-   * @param {string} [summary='Hinweis']
-   * 
-   * @memberOf BaseComponent
-   */
-  protected handleInfo(info: Error, summary = 'Hinweis') {
-    this.addInfoMessage(info.message, summary);
-  }
 
   /**
    * Die rxjs Subscription @param{subscription} für spätere Freigabe registrieren.
@@ -170,6 +204,68 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
     subscriptions.push(subscription);
   }
+
+
+
+  /**
+   * Erzeugt mit Hilfe eines @see{FormBuilder}s für @param{dataItem} und die Infos @param{columnInfos} eine FormGroup
+   * und registriert sich auf Formänderungen
+   * 
+   * @param formBuilder 
+   * @param dataItem 
+   * @param columnInfos 
+   */
+  protected buildForm(formBuilder: FormBuilder, dataItem: any, columnInfos: IControlDisplayInfo[]): FormGroup {
+    const dict: { [name: string]: any } = {};
+
+    this.validationMessages = {};
+
+    columnInfos.forEach((info) => {
+      if (!(info.valueField === 'start' || info.valueField === 'end')) {    // TODO: filter antfernen
+        dict[info.valueField] = [dataItem[info.valueField], [
+          Validators.compose([
+            Validators.required      // TODO: richtige Validatoren anbinden
+          ])
+        ]
+        ];
+
+
+        // TODO: richtige Meldungen erzeugen
+        this.validationMessages[info.valueField] = `${info.textField}: value required`;
+      }
+    });
+
+    const form: FormGroup = formBuilder.group(dict);
+
+    form.valueChanges.subscribe((data) => this.onValueChanged(form, data));
+    this.onValueChanged(form);
+
+    return form;
+  }
+
+
+  private onValueChanged(form: FormGroup, data?: any) {
+    if (!form) { return; }
+
+    for (const field in this.formErrors) {
+      if (field) {
+        // clear previous error message (if any)
+        this.formErrors[field] = '';
+        const control = form.get(field);
+
+        if (control && control.dirty && !control.valid) {
+          const messages = this.validationMessages[field];
+          for (const key in control.errors) {
+            if (key) {
+              this.formErrors[field] += messages[key] + ' ';
+            }
+          }
+        }
+      }
+    }
+  }
+
+
 
   /**
    * Liefert den @see{MessageService}
