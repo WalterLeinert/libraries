@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // PrimeNG
 import { ButtonModule, ConfirmDialogModule, SharedModule } from 'primeng/primeng';
@@ -20,7 +21,7 @@ import { AutoformComponent } from './autoform.component';
   imports: [
     // Angular
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
 
     // PrimeNG
     ButtonModule,

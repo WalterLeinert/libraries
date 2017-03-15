@@ -1,6 +1,7 @@
 // tslint:disable:max-line-length
 
 import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // -------------------------------------- logging --------------------------------------------
@@ -25,56 +26,28 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 @Component({
   selector: 'flx-autoform',
   template: `
-<p-dialog [(visible)]="dataItem" header="Overtime Details" (onBeforeHide)="onBeforeDialogHide($event)" [responsive]="true"
-  showEffect="fade" [modal]="true">
+<p-dialog [(visible)]="dataItem" [header]="pageTitle" (onBeforeHide)="onBeforeDialogHide($event)" [responsive]="true" showEffect="fade"
+  [modal]="true">
   <div class="container-fluid">
-    <form *ngIf="dataItem" class="form-horizontal">
-    
+    <form *ngIf="dataItem" class="form-horizontal" [formGroup]="autoformForm">
+
       <div *ngIf="configInternal && configInternal.columnInfos">
         <ul *ngFor="let info of configInternal.columnInfos">
 
           <!--
           normale Text-/Eingabefelder
           -->
-          <div *ngIf="info.controlType === controlType.Input">                 
+          <div *ngIf="info.controlType === controlType.Input">
             <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-              <label class="control-label col-sm-2">{{info.textField}}:</label>
+              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" [(ngModel)]="dataItem[info.valueField]" name="{{info.valueField}}">
+                <input type="text" class="form-control" [(ngModel)]="dataItem[info.valueField]" 
+                  [id]="info.valueField" [formControlName]="info.valueField"
+                >
               </div>
             </div>
           </div>
 
-          <!--
-          Datumsfelder
-          -->
-          <div *ngIf="info.controlType === controlType.Date">            
-            <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-              <label class="control-label col-sm-2">{{info.textField}}:</label>
-              <div class="col-sm-10">
-              <p-calendar [(ngModel)]="dataItem[info.valueField]" name="{{info.valueField}}"
-                  dateFormat="yy-mm-dd"
-                  [style.color]="getColor(dataItem, info)">
-                </p-calendar>
-              </div>
-            </div>
-          </div>
-
-<!--
-          <div class="form-group" *ngIf="! isHidden(metadata, dataItem) && metadata.propertyType === 'shorttime'">
-            <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
-            <div class="col-sm-1">
-              <input type="text" maxlength="5" size="6" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
-            </div>
-          </div>
-
-          <div class="form-group" *ngIf="! isHidden(metadata, value) && metadata.propertyType === 'datetime'">
-            <label class="control-label col-sm-2">{{displayName(metadata)}}:</label>
-            <div class="col-sm-2">
-              <input type="text" maxlength="10" size="10" class="form-control" [(ngModel)]="value[metadata.propertyName]" name="{{metadata.propertyName}}">
-            </div>
-          </div>
--->
 
         </ul>
       </div>
@@ -82,16 +55,16 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
       <p-footer>
         <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
           <div class="container">
-            <button type="submit" class="btn btn-primary" (click)='cancel()'>Abbruch</button>
+            <button type="submit" class="btn btn-primary" (click)='cancel()'>Cancel</button>
             <button type="submit" class="btn btn-primary" (click)='submit()'>
-              <span class="glyphicon glyphicon-save"></span> Speichern
+              <span class="glyphicon glyphicon-save"></span>Save
             </button>
             <button type="submit" class="btn btn-primary" (click)='confirm()'>    
-              <span class="glyphicon glyphicon-trash"></span> Löschen
+              <span class="glyphicon glyphicon-trash"></span>Delete
             </button>
 
             <flx-confirmation-dialog></flx-confirmation-dialog>
-          
+
           </div>
         </div>
       </p-footer>
@@ -108,19 +81,31 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   public pageTitle: string = AutoformComponent.DETAILS;
 
+  // >> Form-Validierung
+  public autoformForm: FormGroup;
+  public formErrors = {
+    date: ''
+  };
+
+  private validationMessages = {
+    date: {
+      required: 'Date is required.',
+    }
+  };
+  // << Form-Validierung
+
+
+
   /**
    * ControlType Werte
    */
   public controlType = ControlType;
 
-  private configurator: AutoformConfiguration;
-
-
+  // >> Value Property
   /**
-   * angebundenes Objekt.
+   * (von aussen) angebundenes Objekt.
    * 
    * @type {*}
-   * @memberOf AutoformDetailComponent
    */
   private _value: any;
 
@@ -128,41 +113,76 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
    * dataChange Event: wird bei jeder SelektionÄänderung von data gefeuert.
    *
    * Eventdaten: @type{any} - selektiertes Objekt.
-   *
-   * @memberOf DataTableSelectorComponent
    */
   @Output() public valueChange = new EventEmitter<any>();
+  // << Value Property
 
 
   /**
    * Name der Klasse des angebundenen Objekts (z.B. 'Artikel') 
    * 
    * @type {string}
-   * @memberOf AutoformDetailComponent
    */
   @Input() public entityName: string = '';
 
 
+  // >> Konfiguration
 
+  /**
+   * erzeugt eine Instanz von @see{IAutoformConfig}
+   * 
+   * @private
+   * @type {AutoformConfiguration}
+   */
+  private configurator: AutoformConfiguration;
+
+  /**
+   * 
+   * 
+   * @private
+   * @type {IAutoformConfig}
+   * @memberOf AutoformComponent
+   */
   private _config: IAutoformConfig;
 
   public configInternal: IAutoformConfig;
+  // << Konfiguration
 
+
+  /**
+   * die (intern) angebundene Modelinstanz
+   * 
+   * @type {*}
+   * @memberOf AutoformComponent
+   */
   public dataItem: any;
 
-
+  /**
+   * Die durchzuführende Aktion (creae, edit, etc.)
+   * 
+   * @private
+   * @type {FormAction}
+   * @memberOf AutoformComponent
+   */
   private action: FormAction;
 
 
-  constructor(router: Router, route: ActivatedRoute, messageService: MessageService, service: ProxyService, private injector: Injector,
+  constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService, service: ProxyService, private injector: Injector,
     private metadataService: MetadataService) {
     super(router, route, messageService, service);
 
     using(new XLog(AutoformComponent.logger, levels.INFO, 'ctor'), (log) => {
-
       this.route.params.subscribe((p) => {
         log.log(`params = ${JSON.stringify(p)}`);
       });
+    });
+  }
+
+
+  // tslint:disable-next-line:use-life-cycle-interface
+  public ngOnInit() {
+    using(new XLog(AutoformComponent.logger, levels.INFO, 'ctor'), (log) => {
+      super.ngOnInit();
 
       this.route.data.subscribe((data: IDataFormAction) => {
         log.log(`data = ${JSON.stringify(data)}`);
@@ -190,17 +210,14 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
           Assert.notNull(value.constructor);
           this.entityName = value.constructor.name;
+
+          this.setupProxy(this.entityName);
+
+          // FormBuilder erzeugen
+          this.buildForm();
         }
       });
     });
-  }
-
-
-  // tslint:disable-next-line:use-life-cycle-interface
-  public ngOnInit() {
-    super.ngOnInit();
-
-    this.setupProxy(this.entityName);
   }
 
 
@@ -446,5 +463,44 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     });
   }
 
+
+  private buildForm() {
+    this.autoformForm = this.fb.group({
+      date: [this.dataItem.name, [
+        Validators.compose([
+          Validators.required
+        ])
+      ]
+      ]
+    });
+
+    this.autoformForm.valueChanges
+      .subscribe((data) => this.onValueChanged(data));
+
+    this.onValueChanged();
+  }
+
+  private onValueChanged(data?: any) {
+    if (!this.autoformForm) { return; }
+    const form = this.autoformForm;
+
+    for (const field in this.formErrors) {
+      if (field) {
+        // clear previous error message (if any)
+        this.formErrors[field] = '';
+        const control = form.get(field);
+
+        if (control && control.dirty && !control.valid) {
+          const messages = this.validationMessages[field];
+          for (const key in control.errors) {
+            if (key) {
+              this.formErrors[field] += messages[key] + ' ';
+            }
+
+          }
+        }
+      }
+    }
+  }
 
 }
