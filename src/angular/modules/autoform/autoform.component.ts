@@ -40,14 +40,45 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
           <div *ngIf="info.controlType === controlType.Input">
             <div class="form-group" *ngIf="! isHidden(info, dataItem)">
               <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}:</label>
-              <div class="col-sm-10">
+              <div class="col-sm-6">
                 <input type="text" class="form-control" [(ngModel)]="dataItem[info.valueField]" 
                   [id]="info.valueField" [formControlName]="info.valueField"
+                  [style.color]="getColor(dataItem, info)"
                 >
               </div>
             </div>
           </div>
 
+          <!--
+          Datumsfelder
+          -->
+          <div *ngIf="info.controlType === controlType.Date">
+            <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}:</label>
+              <div class="col-sm-6">
+                <p-calendar class="form-control" [(ngModel)]="dataItem[info.valueField]" 
+                  [id]="info.valueField" [formControlName]="info.valueField"
+                  dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
+                </p-calendar>
+              </div>
+            </div>
+          </div>
+
+          <!--
+          Zeitfelder
+          -->
+
+          <div *ngIf="info.controlType === controlType.Time">
+            <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}:</label>
+              <div class="col-sm-6">
+                <flx-time-selector class="form-control" [(time)]="dataItem[info.valueField]"
+                  [id]="info.valueField"
+                  [style.color]="getColor(dataItem, info)">
+                </flx-time-selector>
+              </div>
+            </div>
+          </div>          
 
         </ul>
       </div>
@@ -472,18 +503,18 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
         ])
       ]
       ],
-      start: [this.dataItem.start, [
-        Validators.compose([
-          Validators.required
-        ])
-      ]
-      ],
-      end: [this.dataItem.end, [
-        Validators.compose([
-          Validators.required
-        ])
-      ]
-      ],
+      // start: [this.dataItem.start, [
+      //   Validators.compose([
+      //     Validators.required
+      //   ])
+      // ]
+      // ],
+      // end: [this.dataItem.end, [
+      //   Validators.compose([
+      //     Validators.required
+      //   ])
+      // ]
+      // ],
       duration: [this.dataItem.duration, [
       ]
       ],
