@@ -106,20 +106,10 @@ export abstract class DisplayInfoConfiguration implements IDisplayInfoConfigurat
     //
     if (displayInfo.editable === undefined) {
       displayInfo.editable = ControlDisplayInfo.DEFAULT.editable;
-
-      // TODO: Row-Konfiguration übernehmen -> DataTableSelector
-      // if (this.configInternal.rowInfo !== undefined && this.configInternal.rowInfo.editable !== undefined) {
-      //   colInfo.editable = this.configInternal.rowInfo.editable;
-      // }
     }
 
     if (displayInfo.color === undefined) {
       displayInfo.color = ControlDisplayInfo.DEFAULT.color;
-
-      // TODO: Row-Konfiguration übernehmen -> DataTableSelector
-      // if (this.configInternal.rowInfo !== undefined && this.configInternal.rowInfo.color !== undefined) {
-      //   colInfo.color = this.configInternal.rowInfo.color;
-      // }
     }
 
     this.onConfigureDisplayInfo(displayInfo);
