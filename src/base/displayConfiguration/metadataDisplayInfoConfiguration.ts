@@ -93,7 +93,20 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
 
     for (const metaData of this.tableMetadata.columnMetadata) {
       if (metaData.options.displayName) {
-        const dataType = DataTypes.mapColumnTypeToDataType(metaData.propertyType);
+        let dataType = DataTypes.mapColumnTypeToDataType(metaData.propertyType);
+        let enumInfo;
+
+        if (metaData.enumMetadata) {
+          dataType = DataTypes.ENUM;
+
+          const enumTableMetadata = this.metadataService.findTableMetadata(metaData.enumMetadata.dataSource);
+          enumInfo = {
+            selectorDataService: enumTableMetadata.getServiceInstance(this.injector),
+            textField: metaData.enumMetadata.textField,
+            valueField: metaData.enumMetadata.valueField
+          };
+        }
+
         columnInfos.push(
           new ControlDisplayInfo(
             {
@@ -102,7 +115,8 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
               dataType: dataType,
               style: undefined,
               textAlignment: (ControlDisplayInfo.isRightAligned(dataType)) ? TextAlignments.RIGHT : TextAlignments.LEFT,
-              controlType: DataTypes.mapDataTypeToControlType(dataType)
+              controlType: DataTypes.mapDataTypeToControlType(dataType),
+              enumInfo: enumInfo
             }
           )
         );
