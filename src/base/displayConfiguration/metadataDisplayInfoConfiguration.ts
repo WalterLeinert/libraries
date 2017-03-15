@@ -62,6 +62,8 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
       }
       displayInfo.editable = colMetaData.options.persisted;
 
+      displayInfo.required = !colMetaData.options.nullable;
+
       displayInfo.controlType = DataTypes.mapDataTypeToControlType(displayInfo.dataType);
 
       if (colMetaData.enumMetadata) {
@@ -113,6 +115,7 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
               textField: metaData.options.displayName,
               valueField: metaData.propertyName,
               editable: metaData.options.persisted,
+              required: !metaData.options.nullable,
               dataType: dataType,
               style: undefined,
               textAlignment: (ControlDisplayInfo.isRightAligned(dataType)) ? TextAlignments.RIGHT : TextAlignments.LEFT,

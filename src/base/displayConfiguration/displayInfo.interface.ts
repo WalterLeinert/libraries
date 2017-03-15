@@ -48,4 +48,12 @@ export interface IDisplayInfo {
    * @memberOf IDisplayInfo
    */
   dataType?: DataType;
+
+  /**
+   * Plichtfeld?
+   * 
+   * @type {boolean}
+   * @memberOf IDisplayInfo
+   */
+  required?: boolean;
 }

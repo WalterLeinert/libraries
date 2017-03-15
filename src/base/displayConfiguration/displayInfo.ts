@@ -17,7 +17,8 @@ export class DisplayInfo implements IDisplayInfo {
     {
       textField: DisplayInfo.CURRENT_ITEM,
       valueField: DisplayInfo.CURRENT_ITEM,
-      editable: true
+      editable: true,
+      required: false
     }
   );
 
@@ -50,5 +51,9 @@ export class DisplayInfo implements IDisplayInfo {
 
   public get dataType(): DataType {
     return this.options.dataType;
+  }
+
+  public get required(): boolean {
+    return this.options.required;
   }
 }

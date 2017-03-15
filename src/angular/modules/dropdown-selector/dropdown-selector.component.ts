@@ -212,6 +212,9 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
         if (!config.displayInfo.valueField) {
           config.displayInfo.valueField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.valueField;
         }
+        if (!config.displayInfo.required) {
+          config.displayInfo.required = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.required;
+        }
 
 
         if (!config.displayInfo.dataType && tableMetadata) {
@@ -220,7 +223,6 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
             config.displayInfo.dataType = DataTypes.mapColumnTypeToDataType(colMetaData.propertyType);
           }
         }
-
 
 
         if (!config.allowNoSelection) {
@@ -386,8 +388,10 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
     const config = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
 
+    const colMetadata = tableMetadata.columnMetadata[0];
+
     // default: erste Property
-    let displayMetadataName: string = tableMetadata.columnMetadata[0].propertyName;
+    let displayMetadataName: string = colMetadata.propertyName;
 
     const metaDataWithDisplayName = tableMetadata.columnMetadata.filter(
       (item) => item.options.displayName && item.propertyType === 'string');
@@ -395,9 +399,14 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     if (metaDataWithDisplayName && metaDataWithDisplayName.length > 0) {
       // erste string-Propery mit gesetztem Displaynamen
       displayMetadataName = metaDataWithDisplayName[0].propertyName;
+    }
 
-      config.valuesCacheable = metaDataWithDisplayName[0].enumMetadata ?
-        metaDataWithDisplayName[0].enumMetadata.cacheable : false;
+
+    const metaDataWithEnum = tableMetadata.columnMetadata.filter(
+      (item) => item.enumMetadata);
+    if (metaDataWithEnum && metaDataWithEnum.length > 0) {
+      // erste Enum-Propery
+      config.valuesCacheable = metaDataWithEnum[0].enumMetadata.cacheable;
     }
 
     config.displayInfo.textField = displayMetadataName;

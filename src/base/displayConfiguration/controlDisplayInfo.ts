@@ -16,6 +16,7 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
       textField: DisplayInfo.CURRENT_ITEM,
       valueField: DisplayInfo.CURRENT_ITEM,
       editable: DisplayInfo.DEFAULT.editable,
+      required: DisplayInfo.DEFAULT.required,
       textAlignment: TextAlignments.LEFT,
       controlType: ControlType.Input
     }
@@ -39,6 +40,7 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
       valueField: controlOptions.valueField,
       dataType: controlOptions.dataType,
       editable: controlOptions.editable,
+      required: controlOptions.required,
       color: controlOptions.color
     });
   }

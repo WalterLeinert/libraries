@@ -104,7 +104,12 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
                 </flx-dropdown-selector>
               </div>
             </div>
-          </div>                 
+          </div>      
+
+
+          <div *ngIf="formErrors[info.valueField]" class="alert alert-danger">
+            {{ formErrors[info.valueField] }}
+          </div>           
 
         </ul>
       </div>
@@ -129,7 +134,15 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
   </div>
 </p-dialog>
 `,
-  styles: []
+  styles: [`
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442; /* red */
+}
+`]
 })
 export class AutoformComponent extends BaseComponent<ProxyService> {
   protected static readonly logger = getLogger(AutoformComponent);

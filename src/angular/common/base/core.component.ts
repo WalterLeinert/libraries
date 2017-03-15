@@ -223,16 +223,18 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
     columnInfos.forEach((info) => {
       if (!(info.valueField === 'start' || info.valueField === 'end')) {    // TODO: filter antfernen
+        const validators = info.required ? Validators.required : Validators.nullValidator;
+
         dict[info.valueField] = [dataItem[info.valueField], [
           Validators.compose([
-            Validators.required      // TODO: richtige Validatoren anbinden
+            validators
           ])
         ]
         ];
 
 
         // TODO: richtige Meldungen erzeugen
-        this.validationMessages[info.valueField] = { required: `${info.textField}: value required` };
+        this.validationMessages[info.valueField] = { required: `value required` };
         this.formErrors[info.valueField] = '';
       }
     });
