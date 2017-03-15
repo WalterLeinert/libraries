@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 
 // Fluxgate
-import { Assert, Clone, TableMetadata, Utility } from '@fluxgate/common';
+import { Assert, Clone, IService, TableMetadata, Utility } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -16,7 +16,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 import { DataTypes, DisplayInfo, } from '../../../base';
-import { MetadataService } from '../../services';
+import { CacheService, MetadataService } from '../../services';
 import { MessageService } from '../../services/message.service';
 import { ListSelectorComponent } from '../common';
 import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
@@ -55,7 +55,8 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
   public static DEFAULT_CONFIG: IDropdownSelectorConfig = {
     displayInfo: DisplayInfo.DEFAULT,
     allowNoSelection: true,
-    allowNoSelectionText: DropdownSelectorComponent.ALLOW_NO_SELECTION_TEXT
+    allowNoSelectionText: DropdownSelectorComponent.ALLOW_NO_SELECTION_TEXT,
+    valuesCacheable: false
   };
 
 
@@ -228,6 +229,9 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
         if (!config.allowNoSelectionText) {
           config.allowNoSelectionText = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelectionText;
         }
+        if (config.valuesCacheable === undefined) {
+          config.valuesCacheable = DropdownSelectorComponent.DEFAULT_CONFIG.valuesCacheable;
+        }
 
         this.configInternal = config;
 
@@ -363,6 +367,15 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
 
 
+  protected createDataService(service: IService) {
+    if (this.configInternal && this.configInternal.valuesCacheable) {
+      return new CacheService(service);
+    }
+    return service;
+  }
+
+
+
   /**
    * falls keine Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
    *
@@ -382,10 +395,14 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     if (metaDataWithDisplayName && metaDataWithDisplayName.length > 0) {
       // erste string-Propery mit gesetztem Displaynamen
       displayMetadataName = metaDataWithDisplayName[0].propertyName;
+
+      config.valuesCacheable = metaDataWithDisplayName[0].enumMetadata ?
+        metaDataWithDisplayName[0].enumMetadata.cacheable : false;
     }
 
     config.displayInfo.textField = displayMetadataName;
     config.displayInfo.valueField = DisplayInfo.CURRENT_ITEM;
+
 
     this.configInternal = config;
   }
@@ -436,5 +453,6 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
       this.configInternal = config;
     }
   }
+
 
 }

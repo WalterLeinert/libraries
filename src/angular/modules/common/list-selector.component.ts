@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert, Funktion, IService, TableMetadata } from '@fluxgate/common';
+import { Assert, Funktion, IService, TableMetadata, Types } from '@fluxgate/common';
+
 import { MetadataService } from '../../services';
 import { MessageService } from '../../services/message.service';
 import { SelectorBaseComponent } from './selectorBase.component';
@@ -144,8 +145,13 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
     }
 
     this.setupConfig(items, tableMetadata);
-    this.setupData(items);
 
+    // ggf. den Service mit dem CacheService wrappen
+    if (Types.isPresent(this.dataService)) {
+      this.dataService = this.createDataService(this.dataService);
+    }
+
+    this.setupData(items);
     this.preselectData();
   }
 
@@ -395,6 +401,15 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
       }
     }
     return tableMetadata;
+  }
+
+
+  /**
+   * Erlaubt das Wrappen des Service in abgeleiteten Klassen
+   * @param service 
+   */
+  protected createDataService(service: IService) {
+    return service;
   }
 
 }

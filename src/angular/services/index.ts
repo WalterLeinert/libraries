@@ -1,4 +1,5 @@
 // export * from './config.service';
+export * from './cache.service';
 export * from './componentServices.service';
 export * from './component-guard.service';
 export * from './config.service';
