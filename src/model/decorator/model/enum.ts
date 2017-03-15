@@ -21,11 +21,12 @@ export function Enum<T, TText, TId>(
   dataSource: (type?: T) => ICtor<T>,
   foreignText: InstanceAccessor<T, TText>,
   foreignId: InstanceAccessor<T, TId>,
+  cacheable: boolean = false
 ) {
   // tslint:disable-next-line:only-arrow-functions
   return function(target: any, propertyName: string) {
     Assert.notNull(dataSource);
     MetadataStorage.instance.addEnumMetadata(
-      new EnumMetadata(target.constructor, propertyName, dataSource, foreignText, foreignId));
+      new EnumMetadata(target.constructor, propertyName, dataSource, foreignText, foreignId, cacheable));
   };
 }

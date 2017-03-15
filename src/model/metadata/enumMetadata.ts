@@ -33,7 +33,8 @@ export class EnumMetadata<T, TText, TId> {
   constructor(public target: Funktion, public propertyName: string,
     private _dataSource: RelationTypeInFunction,
     private _foreignText: InstanceAccessor<T, TText>,
-    private _foreignId: InstanceAccessor<T, TId>) {
+    private _foreignId: InstanceAccessor<T, TId>,
+    private _cacheable: boolean) {
   }
 
   /**
@@ -50,6 +51,10 @@ export class EnumMetadata<T, TText, TId> {
 
   public get foreignId(): InstanceAccessor<T, TId> {
     return this._foreignId;
+  }
+
+  public get cacheable(): boolean {
+    return this._cacheable;
   }
 
 
