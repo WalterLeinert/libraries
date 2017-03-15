@@ -44,6 +44,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <div class="col-sm-6">
                 <input type="text" class="form-control" [(ngModel)]="dataItem[info.valueField]" 
                   [id]="info.valueField" [formControlName]="info.valueField"
+                  [readonly]="isReadonly(info)"
                   [style.color]="getColor(dataItem, info)"
                 >
               </div>
@@ -60,6 +61,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <div class="col-sm-6">
                 <p-calendar class="form-control" [(ngModel)]="dataItem[info.valueField]" 
                   [id]="info.valueField" [formControlName]="info.valueField"
+                  [readonlyInput]="isReadonly(info)"
                   dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
                 </p-calendar>
               </div>
@@ -76,6 +78,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <div class="col-sm-6">
                 <flx-time-selector class="form-control" [(time)]="dataItem[info.valueField]"
                   [id]="info.valueField"
+                  [readonly]="isReadonly(info)"
                   [style.color]="getColor(dataItem, info)">
                 </flx-time-selector>
               </div>
@@ -93,6 +96,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <div class="col-sm-6">
                 <flx-dropdown-selector class="form-control" [dataService]="info.enumInfo.selectorDataService"
                   [id]="info.valueField"
+                  [readonly]="isReadonly(info)"
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                   [(selectedValue)]="dataItem[info.valueField]" [style]="{'width':'100%'}" 
                   [style.color]="getColor(dataItem, info)"
@@ -360,7 +364,17 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     return rval || value === undefined || value[info.valueField] === undefined;
   }
 
-
+  /**
+   * Liefert true, falls die Daten nicht änderbar sind
+   * 
+   * @param {IControlDisplayInfo} info 
+   * @returns 
+   * 
+   * @memberOf AutoformComponent
+   */
+  public isReadonly(info: IControlDisplayInfo): boolean {
+    return !info.editable || this.action === FormActions.VIEW;
+  }
 
   public getColor(data: any, info: IControlDisplayInfo): string {
     Assert.notNull(data);
@@ -518,6 +532,13 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
 
   private buildForm() {
+    let dict: { [name: string]: any } = {};
+
+    this.configInternal.columnInfos.forEach((info) => {
+
+    });
+
+
     this.autoformForm = this.fb.group({
       date: [this.dataItem.name, [
         Validators.compose([

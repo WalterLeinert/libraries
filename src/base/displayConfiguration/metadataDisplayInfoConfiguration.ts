@@ -112,6 +112,7 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
             {
               textField: metaData.options.displayName,
               valueField: metaData.propertyName,
+              editable: metaData.options.persisted,
               dataType: dataType,
               style: undefined,
               textAlignment: (ControlDisplayInfo.isRightAligned(dataType)) ? TextAlignments.RIGHT : TextAlignments.LEFT,

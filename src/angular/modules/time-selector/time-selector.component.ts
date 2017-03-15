@@ -18,6 +18,7 @@ import { MessageService } from '../../services/message.service';
   template: `
 <div>
   <p-calendar [(ngModel)]="date" [timeOnly]="true" hourFormat="24"
+    [readonlyInput]="readonly"
     (onBlur)="onBlur($event)" (onSelect)="onSelect($event)"
   >
   </p-calendar>
@@ -29,6 +30,8 @@ export class TimeSelectorComponent extends CoreComponent {
   protected static readonly logger = getLogger(TimeSelectorComponent);
 
   public date: Date;
+
+  @Input() public readonly: boolean;
 
   private _time: ShortTime;
   @Output() public timeChange = new EventEmitter<ShortTime>();

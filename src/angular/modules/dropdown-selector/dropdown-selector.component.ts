@@ -58,6 +58,8 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
   };
 
 
+  @Input() public readonly: boolean;
+
   /**
    * Die Dropdownkonfiguration.
    *
