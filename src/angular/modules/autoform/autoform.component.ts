@@ -304,8 +304,23 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
    * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
    */
   public cancel(): void {
-    this.closePopup(true);
+    if (this.hasChanges()) {
+      if (confirm('You have unsaved changes: OK to discard?')) {
+        this.doClose(true);
+      }
+
+      // TODO: auf confirmAction umstellen
+      // this.confirmAction({
+      //   header: 'Unsaved Changes',
+      //   message: 'You have unsaved changes: OK to discard?'
+      // }, () =>
+      //     this.doClose(cancelled)
+      // );
+    } else {
+      this.doClose(true);
+    }
   }
+
 
   /**
    * Speichert Änderungen an der Entity
