@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
-import { Assert, Dictionary, IMessage, MessageSeverity, UniqueIdentifiable } from '@fluxgate/common';
+import { Assert, Clone, Dictionary, IMessage, MessageSeverity, UniqueIdentifiable } from '@fluxgate/common';
 
 import { IControlDisplayInfo } from '../../../base';
 import { MessageService } from '../../services/message.service';
@@ -96,17 +96,21 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     });
   }
 
+
   /**
-   * Setzt der Form-Status zurück (z.B. nach submit) 
+   * Setzt der Form-Status zurück (z.B. nach submit)
    * 
-   * @memberOf CoreComponent
+   * @param handler 
+   * @param form 
    */
-  public resetForm(form?: FormGroup) {
+  public resetForm(value?: any, form?: FormGroup) {
     if (form) {
-      form.reset();
+      const valueCloned = this.getClonedValue(value);
+      form.reset(valueCloned);
     } else {
       if (this.form) {
-        this.form.reset();
+        const valueCloned = this.getClonedValue(value);
+        this.form.reset(valueCloned);
       }
     }
   }
@@ -305,6 +309,16 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    */
   protected get messageService(): MessageService {
     return this._messageService;
+  }
+
+
+  private getClonedValue(value: any): any {
+    let valueCloned;
+
+    if (value !== undefined) {
+      valueCloned = Clone.clone(value);
+    }
+    return valueCloned;
   }
 
 }
