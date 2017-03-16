@@ -464,12 +464,17 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   private closePopup(cancelled: boolean) {
     if (this.hasChanges()) {
-      this.confirmAction({
-        header: 'Unsaved Changes',
-        message: 'You have unsaved changes: OK to discard?'
-      }, () =>
-          this.doClose(cancelled)
-      );
+      if (confirm('You have unsaved changes: OK to discard?')) {
+        this.doClose(cancelled);
+      }
+
+      // TODO: auf confirmAction umstellen
+      // this.confirmAction({
+      //   header: 'Unsaved Changes',
+      //   message: 'You have unsaved changes: OK to discard?'
+      // }, () =>
+      //     this.doClose(cancelled)
+      // );
     } else {
       this.doClose(cancelled);
     }
