@@ -1,7 +1,7 @@
 // tslint:disable:max-line-length
 
 import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // -------------------------------------- logging --------------------------------------------
@@ -462,8 +462,21 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   }
 
 
-
   private closePopup(cancelled: boolean) {
+    if (this.hasChanges()) {
+      this.confirmAction({
+        header: 'Unsaved Changes',
+        message: 'You have unsaved changes: OK to discard?'
+      }, () =>
+          this.doClose(cancelled)
+      );
+    } else {
+      this.doClose(cancelled);
+    }
+  }
+
+
+  private doClose(cancelled: boolean) {
     let navigationPath: string;
 
     switch (this.action) {
@@ -476,7 +489,6 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
         // die Navigation für update hat eine Id im Pfad (.../update/:id)
         navigationPath = '../..';
         break;
-
 
       default:
         throw new NotSupportedException(`unsupported action ${this.action}`);
