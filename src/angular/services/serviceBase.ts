@@ -130,11 +130,11 @@ export abstract class ServiceBase {
 
   private static formatResponseStatus(response: Response): string {
     const sb = new StringBuilder();
-    sb.append(`status = ${status}`);
+    sb.append(`status = ${response.status}`);
     if (response.status > 0) {
       sb.append(` / "${HttpStatusCodes.getStatusText(response.status)}"`);
     }
-    sb.append(`; statusText = ${response.statusText || ''}`);
+    sb.append(`; statusText = "${response.statusText || ''}"`);
 
     return sb.toString();
   }
