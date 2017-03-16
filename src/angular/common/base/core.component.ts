@@ -12,9 +12,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // Fluxgate
 import { Assert, Clone, Dictionary, IMessage, MessageSeverity, UniqueIdentifiable } from '@fluxgate/common';
 
+import { ControlType } from '../../../angular/modules/common/controlType';
 import { IControlDisplayInfo } from '../../../base';
+import { DataType, DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MessageService } from '../../services/message.service';
-
 
 /**
  * Basisklasse (Komponente) ohne Router, Service für alle GUI-Komponenten
@@ -257,19 +258,32 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     this.formErrors = {};
 
     columnInfos.forEach((info) => {
-      if (!(info.valueField === 'start' || info.valueField === 'end')) {    // TODO: filter antfernen
-        const validators = info.required ? Validators.required : Validators.nullValidator;
+
+      // TODO: workaround: entfernen, sobald die Controls den Angular-Control Contract implementieren
+      if (!(info.controlType === ControlType.Time || info.controlType === ControlType.DropdownSelector)) {
+        const validators: any[] = [Validators.nullValidator];
+        const messageDict = {};
+
+        if (info.required) {
+          validators.push(Validators.required);
+          // tslint:disable-next-line:no-string-literal
+          messageDict['required'] = 'Value required';
+        }
+
+        if (info.dataType === DataTypes.NUMBER) {
+          validators.push(Validators.pattern('[0-9]+'));
+          // tslint:disable-next-line:no-string-literal
+          messageDict['pattern'] = 'Only digits allowed';
+        }
 
         dict[info.valueField] = [dataItem[info.valueField], [
-          Validators.compose([
-            validators
-          ])
+          Validators.compose(validators)
         ]
         ];
 
 
         // TODO: richtige Meldungen erzeugen
-        this.validationMessages[info.valueField] = { required: `value required` };
+        this.validationMessages[info.valueField] = messageDict;
         this.formErrors[info.valueField] = '';
       }
     });
@@ -301,7 +315,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
       }
     }
   }
-
 
 
   /**
