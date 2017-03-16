@@ -25,8 +25,6 @@ import { PassportService } from '../passport.service';
 <div class="container">
   <h1>Login</h1>
 
-  <p-messages [value]="messages"></p-messages>
-
   <form>
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="username">Name</label>
@@ -52,7 +50,15 @@ import { PassportService } from '../passport.service';
   </form>
 </div>
   `,
-  styles: []
+  styles: [`
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442; /* red */
+}
+`]
 })
 
 export class LoginComponent extends BaseComponent<PassportService> {
