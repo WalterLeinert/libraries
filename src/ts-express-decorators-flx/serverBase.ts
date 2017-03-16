@@ -204,15 +204,45 @@ export abstract class ServerBase extends ServerLoader {
   }
 
 
+
+  /**
+   * This method let you configure the middleware required by your application to works.  
+   * @returns {Server}
+   */
+  public $onMountingMiddlewares(): void | Promise<any> {
+    return using(new XLog(ServerBase.logger, levels.INFO, '$onMountingMiddlewares'), (log) => {
+      const morgan = require('morgan');
+      const cookieParser = require('cookie-parser');
+      const bodyParser = require('body-parser');
+      const compress = require('compression');
+      const methodOverride = require('method-override');
+
+      this
+        .use(morgan('dev'))
+        .use(ServerLoader.AcceptMime('application/json'))
+
+        .use(cookieParser())
+        .use(compress({}))
+        .use(methodOverride())
+        .use(bodyParser.json())
+        .use(bodyParser.urlencoded({
+          extended: true
+        }));
+
+      return null;
+    });
+  }
+
+
   /**
    * 
    */
-  public onError(error: any, request: Express.Request, response: Express.Response, next: Express.NextFunction): any {
+  public $onError(error: any, request: Express.Request, response: Express.Response, next: Express.NextFunction): void {
     using(new XLog(ServerBase.logger, levels.INFO, 'onError'), (log) => {
       if (error instanceof Forbidden) {
         error.message = Messages.AUTHENTICATION_REQUIRED();
       }
-      const rval = super.onError(error, request, response, next);
+      // const rval = super.onError(error, request, response, next);
 
       const sb = new StringBuilder();
       if (error.code) {
@@ -234,7 +264,8 @@ export abstract class ServerBase extends ServerLoader {
         sb.appendLine(`stack: ${error.stack}`);
       }
       log.error(sb.toString());
-      return rval;
+
+      next(error);
     });
   }
 
