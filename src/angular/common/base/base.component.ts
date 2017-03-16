@@ -276,7 +276,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
     return service.create(item)
       .do((elem: T) => {
         idSetter(item, idAccessor(elem));
-        this.resetForm(); 
+        this.resetForm();
       })   // Id setzen
       .catch(this.handleError);
   }
@@ -288,7 +288,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
     return service.update(item)
       .do((elem: T) => {
         this.resetForm();
-      }) 
+      })
       .catch(this.handleError);
   }
 
@@ -299,7 +299,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
     return service.delete(id)
       .do((elemId: TId) => {
         this.resetForm();
-      }) 
+      })
       .map((result: ServiceResult<TId>) => {
         return result.id;
       })
