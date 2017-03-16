@@ -1,7 +1,7 @@
 // Angular
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GrowlModule } from 'primeng/primeng';
 import { MessagesModule } from 'primeng/primeng';
 import { DropdownModule } from 'primeng/primeng';
@@ -27,6 +27,7 @@ import { RoleService } from './role.service';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     GrowlModule,
     MessagesModule,
     DropdownModule,

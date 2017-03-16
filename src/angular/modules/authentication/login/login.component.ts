@@ -2,6 +2,7 @@
 
 // import 'reflect-metadata';
 import { Component } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // -------------------------- logging -------------------------------
@@ -25,26 +26,26 @@ import { PassportService } from '../passport.service';
 <div class="container">
   <h1>Login</h1>
 
-  <form>
+  <form [formGroup]="form">
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="username">Name</label>
       <div class="col-sm-5">
-        <input flxAutofocus type="text" class="form-control" id="username" required 
-          [(ngModel)]="username" name="username" placeholder="Benutzername">
+        <input flxAutofocus type="text" class="form-control" formControlName="username" id="username" required 
+          [(ngModel)]="username" name="username" placeholder="Username">
       </div>
     </div>
 
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="password">Password:</label>
       <div class="col-sm-5">
-        <input type="password" class="form-control" id="password" required
-          [(ngModel)]="password" name="password" placeholder="Passwort">
+        <input type="password" class="form-control" formControlName="password" id="password" required
+          [(ngModel)]="password" name="password" placeholder="Password">
       </div>    
     </div> 
 
     <div class="form-group row">
       <div class="col-sm-5">
-        <button type="submit" class="btn btn-primary" (click)='login()'>Anmelden</button>
+        <button type="submit" class="btn btn-primary" (click)='login()'>Login</button>
       </div>
     </div>
   </form>
@@ -83,12 +84,22 @@ export class LoginComponent extends BaseComponent<PassportService> {
    * 
    * @memberOf LoginComponent
    */
-  constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
+  constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
     private navigationService: NavigationService,
     service: PassportService, changePasswordGuardService: ChangePasswordGuardService,
     registerGuardService: RegisterGuardService) {
     super(router, route, messageService, service);
+    using(new XLog(LoginComponent.logger, levels.INFO, 'ctor'), (log) => {
+
+      this.form = fb.group({
+        name: fb.group({
+          username: ['', Validators.required],
+          password: ['', Validators.required],
+        })
+      });
+    });
   }
+
 
   public login() {
     using(new XLog(LoginComponent.logger, levels.INFO, 'login'), (log) => {
