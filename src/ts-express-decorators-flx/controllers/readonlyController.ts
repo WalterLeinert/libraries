@@ -4,7 +4,7 @@ import { getLogger, ILogger } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { ServerSystemException, IToString, ServiceResult } from '@fluxgate/common';
+import { IToString, ServerSystemException, ServiceResult } from '@fluxgate/common';
 
 import { BaseService } from '../services/base.service';
 import { ControllerBase } from './controllerBase';
