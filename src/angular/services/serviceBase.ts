@@ -81,6 +81,37 @@ export abstract class ServiceBase {
 
 
   /**
+   * Handles server communication errors.
+   * 
+   * @private
+   * @param {Response} error
+   * @returns
+   * 
+   * @memberOf ServiceBase
+   */
+  public static handleServerError(response: Response): ErrorObservable {
+    return using(new XLog(ServiceBase.logger, levels.INFO, 'handleServerError'), (log) => {
+      // In a real world app, we might use a remote logging infrastructure
+      let errorMessage = '** unknown error **';
+
+      if (response.status < HttpStatusCodes.OK || response.status >= HttpStatusCodes.MULTIPLE_CHOICES) {
+        errorMessage = response.text();
+      }
+
+      if (response.status === 0) {
+        errorMessage = 'Server down?';
+      }
+
+      log.error(`errorMessage = ${errorMessage}: [ ${ServiceBase.formatResponseStatus(response)} ]`);
+
+      return Observable.throw(new ServerSystemException(errorMessage));
+    });
+  }
+
+
+
+
+  /**
    * Liefert den Http-Clientservice
    * 
    * @readonly
@@ -93,35 +124,19 @@ export abstract class ServiceBase {
   }
 
 
-  /**
-   * Handles server communication errors.
-   * 
-   * @private
-   * @param {Response} error
-   * @returns
-   * 
-   * @memberOf ServiceBase
-   */
   protected handleError(response: Response): ErrorObservable {
-    return using(new XLog(ServiceBase.logger, levels.INFO, 'handleError'), (log) => {
-      // In a real world app, we might use a remote logging infrastructure
-      let errorMessage = '** unknown error **';
-
-      if (response.status < HttpStatusCodes.OK || response.status >= HttpStatusCodes.MULTIPLE_CHOICES) {
-        errorMessage = response.text();
-      }
-
-      if (response.status === 0) {
-        errorMessage = 'Server down?';
-      }
-
-      log.error(`status = ${response.status}, statusText = ${response.statusText || ''} --` +
-        ` errorMessage = ${errorMessage}`);
-
-      return Observable.throw(new ServerSystemException(errorMessage));
-    });
+    return ServiceBase.handleServerError(response);
   }
 
+  private static formatResponseStatus(response: Response): string {
+    const sb = new StringBuilder();
+    sb.append(`status = ${status}`);
+    if (response.status > 0) {
+      sb.append(` / "${HttpStatusCodes.getStatusText(response.status)}"`);
+    }
+    sb.append(`; statusText = ${response.statusText || ''}`);
 
+    return sb.toString();
+  }
 
 }

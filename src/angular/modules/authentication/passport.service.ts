@@ -8,11 +8,9 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/Observable/ErrorObservable';
 
-import * as HttpStatusCodes from 'http-status-codes';
-
 // Fluxgate
 import { Assert, Constants, IUser, PasswordChange, StringBuilder, User } from '@fluxgate/common';
-import { IServiceBase, NotSupportedException, ServerSystemException } from '@fluxgate/common';
+import { IServiceBase, NotSupportedException } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -23,6 +21,7 @@ import { Serializer } from '../../../base/serializer';
 import { MetadataService } from '../../services';
 import { ConfigService } from '../../services/config.service';
 import { MessageService } from '../../services/message.service';
+import { ServiceBase } from '../../services/serviceBase';
 import { CurrentUser } from './currentUser';
 
 
@@ -237,15 +236,7 @@ export class PassportService extends CurrentUser implements IServiceBase {
    * @returns
    */
   private handleServerError(response: Response): ErrorObservable {
-    // In a real world app, we might use a remote logging infrastructure
-    let errorMessage = '** unknown error **';
-
-    if (response.status < HttpStatusCodes.OK || response.status >= HttpStatusCodes.MULTIPLE_CHOICES) {
-      errorMessage = response.text();
-    }
-
-    PassportService.logger.error(`${response.status} - ${response.statusText || ''} -- ${errorMessage}`);
-    return Observable.throw(new ServerSystemException(errorMessage));
+    return ServiceBase.handleServerError(response);
   }
 
 
