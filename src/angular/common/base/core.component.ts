@@ -1,4 +1,4 @@
-import { OnDestroy, OnInit } from '@angular/core';
+import { Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -10,12 +10,14 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
-import { Assert, Clone, Dictionary, IMessage, MessageSeverity, UniqueIdentifiable } from '@fluxgate/common';
+import { Assert, Clone, Dictionary, Funktion, IMessage, MessageSeverity, UniqueIdentifiable } from '@fluxgate/common';
 
 import { ControlType } from '../../../angular/modules/common/controlType';
-import { IControlDisplayInfo } from '../../../base';
-import { DataType, DataTypes } from '../../../base/displayConfiguration/dataType';
+import { IControlDisplayInfo } from '../../../base/displayConfiguration/controlDisplayInfo.interface';
+import { DataTypes } from '../../../base/displayConfiguration/dataType';
+import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';
 import { MessageService } from '../../services/message.service';
+import { MetadataService } from '../../services/metadata.service';
 
 /**
  * Basisklasse (Komponente) ohne Router, Service für alle GUI-Komponenten
@@ -242,6 +244,18 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   }
 
 
+  protected createDisplayInfos(item: any, model: Funktion, metadataService: MetadataService, injector: Injector):
+    IControlDisplayInfo[] {
+    Assert.notNull(item);
+    Assert.notNull(model);
+    Assert.notNull(metadataService);
+    Assert.notNull(injector);
+
+    const tableMetadata = metadataService.findTableMetadata(model);
+    const configurator = new MetadataDisplayInfoConfiguration(tableMetadata, metadataService, injector);
+    return configurator.createConfig(item);
+  }
+
 
   /**
    * Erzeugt mit Hilfe eines @see{FormBuilder}s für @param{dataItem} und die Infos @param{columnInfos} eine FormGroup
@@ -295,6 +309,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   }
 
 
+
   private onValueChanged(data?: any) {
     if (!this.form) { return; }
 
@@ -333,5 +348,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     }
     return valueCloned;
   }
+
+
 
 }

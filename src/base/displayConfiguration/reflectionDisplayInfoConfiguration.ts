@@ -7,7 +7,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // Fluxgate
 import { Assert } from '@fluxgate/common';
 
-import { ControlDisplayInfo, IControlDisplayInfo } from './';
+import { ControlDisplayInfo } from './controlDisplayInfo';
+import { IControlDisplayInfo } from './controlDisplayInfo.interface';
 import { DisplayInfoConfiguration } from './displayInfoConfiguration';
 
 

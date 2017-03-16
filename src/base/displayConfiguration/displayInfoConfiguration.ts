@@ -6,7 +6,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // Fluxgate
 import { Assert } from '@fluxgate/common';
 
-import { ControlDisplayInfo, IControlDisplayInfo, IDisplayInfoConfiguration, TextAlignments } from './';
+import { ControlDisplayInfo } from './controlDisplayInfo';
+import { IControlDisplayInfo } from './controlDisplayInfo.interface';
+import { IDisplayInfoConfiguration } from './displayInfoConfiguration.interface';
+import { TextAlignments } from './textAlignment';
 
 
 /**

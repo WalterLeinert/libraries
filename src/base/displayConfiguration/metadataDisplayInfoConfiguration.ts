@@ -10,10 +10,13 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // Fluxgate
 import { Assert, InvalidOperationException, TableMetadata } from '@fluxgate/common';
 
-import { ControlType } from '../../angular/modules/common';
-import { MetadataService } from '../../angular/services';
-import { ControlDisplayInfo, DataTypes, IControlDisplayInfo, TextAlignments } from './';
+import { ControlType } from '../../angular/modules/common/controlType';
+import { MetadataService } from '../../angular/services/metadata.service';
+import { ControlDisplayInfo } from './controlDisplayInfo';
+import { IControlDisplayInfo } from './controlDisplayInfo.interface';
+import { DataTypes } from './dataType';
 import { DisplayInfoConfiguration } from './displayInfoConfiguration';
+import { TextAlignments } from './textAlignment';
 
 /**
  * Konfiguriert die DisplayInfos über die Metadaten.
