@@ -39,6 +39,16 @@ export class ComponentGuardService<T extends BaseComponent<TService>, TService e
     Observable<boolean> | Promise<boolean> | boolean {
 
     if (component.hasChanges()) {
+
+      // TODO: geht so nicht, weil confirmAction nicht blockt.
+      // let confirm = false;
+      // component.confirmAction({
+      //   header: 'Unsaved Changes',
+      //   message: 'You have unsaved changes: OK to discard?'
+      // }, () => confirm = true);
+      // return confirm;      
+
+
       return confirm('You have unsaved changes: OK to discard?');     // TODO: durch eigenen Dialog ersetzen
     } else {
       return true;
