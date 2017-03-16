@@ -277,7 +277,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
       .do((elem: T) => {
         idSetter(item, idAccessor(elem));
         this.addSuccessMessage('Record created.');
-        this.resetForm();
+        this.resetForm(item);
       })   // Id setzen
       .catch(this.handleError);
   }
@@ -289,7 +289,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
     return service.update(item)
       .do((elem: T) => {
         this.addSuccessMessage('Record updated.');
-        this.resetForm();
+        this.resetForm(item);
       })
       .catch(this.handleError);
   }
