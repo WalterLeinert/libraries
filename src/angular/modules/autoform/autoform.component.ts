@@ -29,7 +29,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 <p-dialog [(visible)]="dataItem" [header]="pageTitle" (onBeforeHide)="onBeforeDialogHide($event)" [responsive]="true" showEffect="fade"
   [modal]="true">
   <div class="container-fluid">
-    <form *ngIf="dataItem" class="form-horizontal" [formGroup]="autoformForm">
+    <form *ngIf="dataItem" class="form-horizontal" [formGroup]="form">
 
       <div *ngIf="configInternal && configInternal.columnInfos">
         <ul *ngFor="let info of configInternal.columnInfos">
@@ -48,6 +48,11 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
                   [style.color]="getColor(dataItem, info)"
                 >
               </div>
+
+              <div *ngIf="formErrors[info.valueField]" class="alert alert-danger">
+                {{ formErrors[info.valueField] }}
+              </div>           
+              
             </div>
           </div>
 
@@ -65,6 +70,11 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
                   dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
                 </p-calendar>
               </div>
+
+              <div *ngIf="formErrors[info.valueField]" class="alert alert-danger">
+                {{ formErrors[info.valueField] }}
+              </div>           
+
             </div>
           </div>
 
@@ -82,6 +92,11 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
                   [style.color]="getColor(dataItem, info)">
                 </flx-time-selector>
               </div>
+
+              <div *ngIf="formErrors[info.valueField]" class="alert alert-danger">
+                {{ formErrors[info.valueField] }}
+              </div>           
+
             </div>
           </div>
 
@@ -103,13 +118,13 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
                   [debug]="false">
                 </flx-dropdown-selector>
               </div>
+
+              <div *ngIf="formErrors[info.valueField]" class="alert alert-danger">
+                {{ formErrors[info.valueField] }}
+              </div>           
+              
             </div>
           </div>      
-
-
-          <div *ngIf="formErrors[info.valueField]" class="alert alert-danger">
-            {{ formErrors[info.valueField] }}
-          </div>           
 
         </ul>
       </div>
@@ -299,7 +314,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     if (this.action === FormActions.UPDATE) {
       this.registerSubscription(this.service.update(this.value).subscribe(
         (value: any) => {
-          this.resetForm();
+          this.resetForm(this.value);
           this.addSuccessMessage(`Record updated.`);
           this.closePopup(false);
         },
@@ -309,7 +324,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     } else if (this.action === FormActions.CREATE) {
       this.registerSubscription(this.service.create(this.value).subscribe(
         (value: any) => {
-          this.resetForm();
+          this.resetForm(this.value);
           this.addSuccessMessage(`Record created.`);
           this.closePopup(false);
         },
@@ -328,7 +343,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   public delete() {
     this.registerSubscription(this.service.delete(this.service.getEntityId(this.value)).subscribe(
       (value: any) => {
-        this.resetForm();
+        this.resetForm(this.value);
         this.addSuccessMessage(`Record deleted.`);
         this.closePopup(false);
       },
