@@ -2,7 +2,8 @@
 // tslint:disable:max-line-length
 
 // Angular
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // fluxgate
@@ -27,49 +28,47 @@ import { RoleService } from '../role.service';
 <div class="container">
   <h1>Register</h1>
 
-  <p-messages [value]="messages"></p-messages>
-
-  <form>
+  <form [formGroup]="form">
     <div class="form-group row">
-      <label class="col-form-label col-sm-2" for="username">Name</label>
+      <label class="col-form-label col-sm-2" for="username">Username</label>
       <div class="col-sm-5">
-        <input type="text" flxAutofocus class="form-control" required id="username" required [(ngModel)]="user.username" name="username"
-          placeholder="Benutzername">
+        <input type="text" flxAutofocus class="form-control" required id="username" required [(ngModel)]="user.username" formControlName="username"
+          placeholder="Username">
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-form-label col-sm-2" for="firstname">Vorname</label>
+      <label class="col-form-label col-sm-2" for="firstname">Firstname</label>
       <div class="col-sm-5">
-        <input type="text" class="form-control" id="firstname" [(ngModel)]="user.firstname" name="firstname"
-          placeholder="Vorname">
+        <input type="text" class="form-control" id="firstname" [(ngModel)]="user.firstname" formControlName="firstname"
+          placeholder="Firstname">
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-form-label col-sm-2" for="lastname">Nachname</label>
+      <label class="col-form-label col-sm-2" for="lastname">Lastname</label>
       <div class="col-sm-5">
-        <input type="text" class="form-control" id="lastname" [(ngModel)]="user.lastname" name="lastname"
-          placeholder="Nachname">
+        <input type="text" class="form-control" id="lastname" [(ngModel)]="user.lastname" formControlName="lastname"
+          placeholder="Lastname">
       </div>
     </div>
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="password">Password</label>
       <div class="col-sm-5">
-        <input type="password" class="form-control" required id="password" [(ngModel)]="user.password" name="password"
-          placeholder="Passwort">
+        <input type="password" class="form-control" required id="password" [(ngModel)]="user.password" formControlName="password"
+          placeholder="Password">
       </div>
     </div>
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="email">Email</label>
       <div class="col-sm-5">
-        <input type="text" class="form-control" required id="email" required [(ngModel)]="user.email" name="email" placeholder="Email">
+        <input type="text" class="form-control" required id="email" required [(ngModel)]="user.email" formControlName="email" placeholder="Email">
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-form-label col-sm-2" for="role">Rolle</label>
+      <label class="col-form-label col-sm-2" for="role">Role</label>
       <div class="col-sm-5">
         <flx-dropdown-selector [dataService]="service2" [textField]="'description'" [valueField]="'id'" [selectedValue]="user.role"
           (selectedValueChange)="onSelectedRoleChanged($event)"
-          [style]="{'width':'200px'}" [debug]="false" name="roles">
+          [style]="{'width':'200px'}" [debug]="false" id="role" >   <!-- formControlName="role" -->
           </flx-dropdown-selector>
       </div>
     </div>
@@ -98,8 +97,9 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
   public user: User;
   public selectedRole: IRole;
 
-  constructor(router: Router, route: ActivatedRoute, messageService: MessageService, private navigationService: NavigationService, service: PassportService,
-    roleService: RoleService, metadataService: MetadataService) {
+  constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
+    private navigationService: NavigationService, service: PassportService,
+    roleService: RoleService, metadataService: MetadataService, injector: Injector) {
 
     super(router, route, messageService, service, roleService);
 
@@ -107,10 +107,9 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
     Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name}`);
 
     this.user = userTableMetadata.createEntity<User>();
-  }
 
-  public ngOnInit(): void {
-    super.ngOnInit();
+    const displayInfos = this.createDisplayInfos(this.user, User, metadataService, injector);
+    this.buildForm(this.fb, this.user, displayInfos);
   }
 
   public signup() {

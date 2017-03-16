@@ -92,10 +92,8 @@ export class LoginComponent extends BaseComponent<PassportService> {
     using(new XLog(LoginComponent.logger, levels.INFO, 'ctor'), (log) => {
 
       this.form = fb.group({
-        name: fb.group({
-          username: ['', Validators.required],
-          password: ['', Validators.required],
-        })
+        username: ['', Validators.required],
+        password: ['', Validators.required],
       });
     });
   }
