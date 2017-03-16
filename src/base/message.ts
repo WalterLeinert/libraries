@@ -1,5 +1,6 @@
 
 export enum MessageSeverity {
+  Success,
   Info,
   Warn,
   Error,
@@ -14,7 +15,7 @@ export enum MessageSeverity {
  * @interface IMessage
  */
 export interface IMessage {
-  
+
   /**
    * Severity
    * 
@@ -22,7 +23,7 @@ export interface IMessage {
    * @memberOf IMessage
    */
   severity: MessageSeverity;
-  
+
   /**
    * Summary der Message
    * 
