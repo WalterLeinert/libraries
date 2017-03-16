@@ -45,7 +45,7 @@ import { PassportService } from '../passport.service';
 
     <div class="form-group row">
       <div class="col-sm-5">
-        <button type="submit" class="btn btn-primary" (click)='login()'>Login</button>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid" (click)='login()'>Login</button>
       </div>
     </div>
   </form>

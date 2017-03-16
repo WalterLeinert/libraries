@@ -74,7 +74,8 @@ import { RoleService } from '../role.service';
     </div>
     <div class="form-group row">
       <div class="col-sm-5">
-        <button type="submit" class="btn btn-primary" (click)='signup()'>Registrieren</button>
+        <!-- disabled Steuerung nach Umbau von flx-dropdown auf form.invalid umbauen -->
+        <button type="submit" class="btn btn-primary" [disabled]="isRegisterDisabled()" (click)='signup()'>Register</button>
       </div>
     </div>
     
@@ -130,5 +131,15 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
 
   public onSelectedRoleChanged(item: IRole) {
     RegisterComponent.logger.info(`RegisterComponent.onSelectedRoleChanged: item = ${JSON.stringify(item)}`);
+  }
+
+  public isRegisterDisabled() {
+    return (
+      // tslint:disable-next-line:no-string-literal
+      this.form.controls['username'].invalid ||
+      // tslint:disable-next-line:no-string-literal
+      this.form.controls['password'].invalid ||
+      // tslint:disable-next-line:no-string-literal
+      this.form.controls['email'].invalid);
   }
 }
