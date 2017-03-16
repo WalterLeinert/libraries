@@ -16,6 +16,8 @@ import { MessageService } from '../../services/message.service';
 })
 export class MessagesComponent implements OnInit {
 
+  private static readonly TOASTR_OPTIONS = { toastLife: 3000 };   // 3 sec
+
   constructor(private messageService: MessageService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.toastr.setRootViewContainerRef(vRef);
 
@@ -23,11 +25,11 @@ export class MessagesComponent implements OnInit {
       switch (message.severity) {
 
         case MessageSeverity.Success:
-          this.toastr.success(message.detail, message.summary);
+          this.toastr.success(message.detail, message.summary, MessagesComponent.TOASTR_OPTIONS);
           break;
 
         case MessageSeverity.Info:
-          this.toastr.info(message.detail, message.summary);
+          this.toastr.info(message.detail, message.summary, MessagesComponent.TOASTR_OPTIONS);
           break;
 
         case MessageSeverity.Warn:
