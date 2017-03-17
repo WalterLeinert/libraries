@@ -306,12 +306,12 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
                 if (v.options.min !== undefined) {
                   validators.push(Validators.minLength(v.options.min));
                   // tslint:disable-next-line:no-string-literal
-                  messageDict['minLength'] = 'Minimum length required';
+                  messageDict['minlength'] = 'Minimum length required';
                 }
                 if (v.options.max !== undefined) {
                   validators.push(Validators.maxLength(v.options.max));
                   // tslint:disable-next-line:no-string-literal
-                  messageDict['maxLength'] = 'Maximum length required';
+                  messageDict['maxlength'] = 'Maximum length required';
                 }
               }
             });
