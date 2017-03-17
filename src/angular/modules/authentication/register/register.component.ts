@@ -110,7 +110,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
     this.user = userTableMetadata.createEntity<User>();
 
     const displayInfos = this.createDisplayInfos(this.user, User, metadataService, injector);
-    this.buildForm(this.fb, this.user, displayInfos);
+    this.buildForm(this.fb, this.user, displayInfos, userTableMetadata);
   }
 
   public signup() {

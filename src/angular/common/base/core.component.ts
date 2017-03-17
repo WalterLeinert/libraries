@@ -10,7 +10,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
-import { Assert, Clone, Dictionary, Funktion, IMessage, MessageSeverity, UniqueIdentifiable } from '@fluxgate/common';
+import {
+  Assert, Clone, CompoundValidator, Dictionary, Funktion, IMessage,
+  MessageSeverity, PatternValidator, RangeValidator,
+  RequiredValidator, TableMetadata, UniqueIdentifiable, Utility
+} from '@fluxgate/common';
 
 import { ControlType } from '../../../angular/modules/common/controlType';
 import { IControlDisplayInfo } from '../../../base/displayConfiguration/controlDisplayInfo.interface';
@@ -259,53 +263,91 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * Erzeugt mit Hilfe eines @see{FormBuilder}s für @param{dataItem} und die Infos @param{columnInfos} eine FormGroup
-   * und registriert sich auf Formänderungen
+   * und registriert sich auf Formänderungen; über @param{tableMetadata} werden Validierungsinfos aus dem Model besorgt
    * 
    * @param formBuilder 
    * @param dataItem 
    * @param columnInfos 
+   * @param tableMetadata
    */
-  protected buildForm(formBuilder: FormBuilder, dataItem: any, columnInfos: IControlDisplayInfo[]) {
-    const dict: { [name: string]: any } = {};
+  protected buildForm(formBuilder: FormBuilder, dataItem: any, columnInfos: IControlDisplayInfo[],
+    tableMetadata: TableMetadata) {
+    using(new XLog(CoreComponent.logger, levels.INFO, 'buildForm'), (log) => {
+      const validatorDict: { [name: string]: any } = {};
 
-    this.validationMessages = {};
-    this.formErrors = {};
+      this.validationMessages = {};
+      this.formErrors = {};
 
-    columnInfos.forEach((info) => {
-
-      // TODO: workaround: entfernen, sobald die Controls den Angular-Control Contract implementieren
-      if (!(info.controlType === ControlType.Time || info.controlType === ControlType.DropdownSelector)) {
+      columnInfos.forEach((info) => {
         const validators: any[] = [Validators.nullValidator];
         const messageDict = {};
 
-        if (info.required) {
-          validators.push(Validators.required);
-          // tslint:disable-next-line:no-string-literal
-          messageDict['required'] = 'Value required';
+        if (tableMetadata) {
+          const colMetadata = tableMetadata.getColumnMetadataByProperty(info.valueField);
+          if (colMetadata.validator instanceof CompoundValidator) {
+            const vs = (colMetadata.validator as CompoundValidator).validators;
+            vs.forEach((v) => {
+              if (v instanceof PatternValidator) {
+                validators.push(Validators.pattern(v.pattern));
+                // tslint:disable-next-line:no-string-literal
+                messageDict['pattern'] = Utility.isNullOrEmpty(v.info) ? '' : v.info;
+              } else if (v instanceof RequiredValidator) {
+                validators.push(Validators.required);
+                // tslint:disable-next-line:no-string-literal
+                messageDict['required'] = 'Value required';
+              } else if (v instanceof RangeValidator) {
+                if (v.options.min !== undefined) {
+                  validators.push(Validators.minLength);
+                  // tslint:disable-next-line:no-string-literal
+                  messageDict['minLength'] = 'Minimum length required';
+                }
+                if (v.options.max !== undefined) {
+                  validators.push(Validators.maxLength);
+                  // tslint:disable-next-line:no-string-literal
+                  messageDict['minLength'] = 'Maximum length required';
+                }
+              }
+            });
+          }
+        } else {
+
+          if (info.required) {
+            validators.push(Validators.required);
+            // tslint:disable-next-line:no-string-literal
+            messageDict['required'] = 'Value required';
+          }
+
+          if (info.dataType === DataTypes.NUMBER) {
+            validators.push(Validators.pattern('[0-9]+'));
+            // tslint:disable-next-line:no-string-literal
+            messageDict['pattern'] = 'Only digits allowed';
+          }
         }
 
-        if (info.dataType === DataTypes.NUMBER) {
-          validators.push(Validators.pattern('[0-9]+'));
-          // tslint:disable-next-line:no-string-literal
-          messageDict['pattern'] = 'Only digits allowed';
+
+        // TODO: workaround: entfernen, sobald die Controls den Angular-Control Contract implementieren
+        if (!(info.controlType === ControlType.Time || info.controlType === ControlType.DropdownSelector)) {
+
+          validatorDict[info.valueField] = [dataItem[info.valueField], [
+            Validators.compose(validators)
+          ]
+          ];
+
+          this.validationMessages[info.valueField] = messageDict;
+          this.formErrors[info.valueField] = '';
         }
+      });
 
-        dict[info.valueField] = [dataItem[info.valueField], [
-          Validators.compose(validators)
-        ]
-        ];
-
-
-        // TODO: richtige Meldungen erzeugen
-        this.validationMessages[info.valueField] = messageDict;
-        this.formErrors[info.valueField] = '';
+      if (log.isDebugEnabled()) {
+        log.debug('validatorDict: ', JSON.stringify(validatorDict));
       }
+
+      this.form = formBuilder.group(validatorDict);
+
+      this.form.valueChanges.subscribe((data) => this.onValueChanged(data));
+      this.onValueChanged();
+
     });
-
-    this.form = formBuilder.group(dict);
-
-    this.form.valueChanges.subscribe((data) => this.onValueChanged(data));
-    this.onValueChanged();
   }
 
 
@@ -348,7 +390,4 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     }
     return valueCloned;
   }
-
-
-
 }

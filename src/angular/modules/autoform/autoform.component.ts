@@ -285,7 +285,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
           this.setupProxy(this.entityName);
 
           // FormBuilder erzeugen
-          this.buildForm(this.fb, this.value, this.configInternal.columnInfos);
+          this.buildForm(this.fb, this.value, this.configInternal.columnInfos, this.metadataService.findTableMetadata(this.entityName));
         }
       });
     });
