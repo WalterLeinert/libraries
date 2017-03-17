@@ -8,10 +8,10 @@ import { Validator } from './validator';
 export class PatternValidator extends Validator {
   private regex: RegExp;
 
-  constructor(private pattern: string, private info?: string) {
+  constructor(private _pattern: string, private _info?: string) {
     super();
-    Assert.notNullOrEmpty(pattern);
-    this.regex = new RegExp(pattern);
+    Assert.notNullOrEmpty(_pattern);
+    this.regex = new RegExp(_pattern);
   }
 
   public validate(value: string, propertyName?: string): ValidationResult {
@@ -24,8 +24,8 @@ export class PatternValidator extends Validator {
     const matchResult = value.match(this.regex);
 
     if (matchResult === null) {
-      if (this.info !== undefined) {
-        sb.append(this.info);
+      if (this._info !== undefined) {
+        sb.append(this._info);
       } else {
         sb.append(`does not match "${this.pattern}"`);
       }
@@ -33,5 +33,13 @@ export class PatternValidator extends Validator {
     }
 
     return ValidationResult.Ok;
+  }
+
+  public get pattern(): string {
+    return this._pattern;
+  }
+
+  public get info(): string {
+    return this._info;
   }
 }
