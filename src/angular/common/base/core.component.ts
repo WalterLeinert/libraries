@@ -1,5 +1,5 @@
 import { Injector, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -273,13 +273,20 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   protected buildForm(formBuilder: FormBuilder, dataItem: any, columnInfos: IControlDisplayInfo[],
     tableMetadata: TableMetadata) {
     using(new XLog(CoreComponent.logger, levels.INFO, 'buildForm'), (log) => {
-      const validatorDict: { [name: string]: any } = {};
+
+      // Dictionary mit dem Validierunginformationen
+      const validatorDict: {
+        [name: string]: [     // key: Propertyname
+          any,                // Propertywert 
+          ValidatorFn[]       // Array von Validatoren
+        ]
+      } = {};
 
       this.validationMessages = {};
       this.formErrors = {};
 
       columnInfos.forEach((info) => {
-        const validators: any[] = [];
+        const validators: ValidatorFn[] = [];
         const messageDict = {};
 
         if (tableMetadata) {
@@ -297,14 +304,14 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
                 messageDict['required'] = 'Value required';
               } else if (v instanceof RangeValidator) {
                 if (v.options.min !== undefined) {
-                  validators.push(Validators.minLength);
+                  validators.push(Validators.minLength(v.options.min));
                   // tslint:disable-next-line:no-string-literal
                   messageDict['minLength'] = 'Minimum length required';
                 }
                 if (v.options.max !== undefined) {
-                  validators.push(Validators.maxLength);
+                  validators.push(Validators.maxLength(v.options.max));
                   // tslint:disable-next-line:no-string-literal
-                  messageDict['minLength'] = 'Maximum length required';
+                  messageDict['maxLength'] = 'Maximum length required';
                 }
               }
             });
@@ -331,9 +338,9 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
           if (validators.length <= 0) {
             validators.push(Validators.nullValidator);    // noop Validator als einzigen Validator hinzufügen
           }
-          validatorDict[info.valueField] = [dataItem[info.valueField], [
-            Validators.compose(validators)
-          ]
+          validatorDict[info.valueField] = [
+            dataItem[info.valueField],
+            validators
           ];
 
           this.validationMessages[info.valueField] = messageDict;
