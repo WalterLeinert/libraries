@@ -297,7 +297,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
               if (v instanceof PatternValidator) {
                 validators.push(Validators.pattern(v.pattern));
                 // tslint:disable-next-line:no-string-literal
-                messageDict['pattern'] = Utility.isNullOrEmpty(v.info) ? '' : v.info;
+                messageDict['pattern'] = Utility.isNullOrEmpty(v.info) ? `Pattern ${v.pattern} not matched` : v.info;
               } else if (v instanceof RequiredValidator) {
                 validators.push(Validators.required);
                 // tslint:disable-next-line:no-string-literal
@@ -306,12 +306,12 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
                 if (v.options.min !== undefined) {
                   validators.push(Validators.minLength(v.options.min));
                   // tslint:disable-next-line:no-string-literal
-                  messageDict['minlength'] = 'Minimum length required';
+                  messageDict['minlength'] = `Minimum length of ${v.options.min} characters required`;
                 }
                 if (v.options.max !== undefined) {
                   validators.push(Validators.maxLength(v.options.max));
                   // tslint:disable-next-line:no-string-literal
-                  messageDict['maxlength'] = 'Maximum length required';
+                  messageDict['maxlength'] = `Maximum length of ${v.options.max} characters required`;
                 }
               }
             });
