@@ -44,6 +44,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <div class="col-sm-6">
                 <input type="text" class="form-control" [(ngModel)]="dataItem[info.valueField]" 
                   [id]="info.valueField" [formControlName]="info.valueField"
+                  [required]="info.required"
                   [readonly]="isReadonly(info)"
                   [style.color]="getColor(dataItem, info)"
                 >
@@ -66,6 +67,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <div class="col-sm-6">
                 <p-calendar class="form-control" [(ngModel)]="dataItem[info.valueField]" 
                   [id]="info.valueField" [formControlName]="info.valueField"
+                  [required]="info.required"
                   [readonlyInput]="isReadonly(info)"
                   dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
                 </p-calendar>
@@ -79,7 +81,9 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
           </div>
 
           <!--
-          Zeitfelder: Achtung: noch keine Formvalidierung (formControlName funktioniert noch nicht)
+          Zeitfelder:
+          Achtung: noch keine Formvalidierung (formControlName funktioniert noch nicht)
+          [required]="info.required"
           -->
           <div *ngIf="info.controlType === controlType.Time">
             <div class="form-group" *ngIf="! isHidden(info, dataItem)">
@@ -88,6 +92,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <div class="col-sm-6">
                 <flx-time-selector class="form-control" [(time)]="dataItem[info.valueField]"
                   [id]="info.valueField"
+                  
                   [readonly]="isReadonly(info)"
                   [style.color]="getColor(dataItem, info)">
                 </flx-time-selector>
@@ -102,7 +107,9 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 
 
           <!--
-          Dropdown/Wertelisten: Achtung: noch keine Formvalidierung (formControlName funktioniert noch nicht)
+          Dropdown/Wertelisten:
+          Achtung: noch keine Formvalidierung (formControlName funktioniert noch nicht)
+          [required]="info.required"
           -->
           <div *ngIf="info.controlType === controlType.DropdownSelector">
             <div class="form-group" *ngIf="! isHidden(info, dataItem)">
@@ -110,7 +117,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 
               <div class="col-sm-6">
                 <flx-dropdown-selector class="form-control" [dataService]="info.enumInfo.selectorDataService"
-                  [id]="info.valueField"
+                  [id]="info.valueField"                  
                   [readonly]="isReadonly(info)"
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                   [(selectedValue)]="dataItem[info.valueField]" [style]="{'width':'100%'}" 
