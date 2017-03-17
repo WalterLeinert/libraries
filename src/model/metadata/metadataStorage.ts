@@ -116,7 +116,6 @@ export class MetadataStorage {
               } else {
                 validator = validationMetadatas[0].validator;
               }
-              validator.attachColumnMetadata(item);
               item.setValidation(validator);
             }
 

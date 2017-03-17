@@ -5,64 +5,60 @@
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
-
-import { ColumnMetadata } from '../../src/model/metadata/columnMetadata';
-import { LengthValidator } from '../../src/model/validation/lengthValidator';
 import { ValidationResult } from '../../src/model/validation/validationResult';
-
-const columnMetadata = new ColumnMetadata(null, 'name', 'string', {});
+import { Validators } from '../../src/model/validation/validators';
 
 
 const expectedResults = [
-    {
-        range: {
-            min: 3,
-            max: 10
-        },
-        text: 'abc',
-        columnMetadata: columnMetadata,
-        result: ValidationResult.Ok
+  {
+    propName: 'name',
+    range: {
+      min: 3,
+      max: 10
     },
+    text: 'abc',
+    result: ValidationResult.Ok
+  },
 
-    {
-        range: {
-            min: 3,
-            max: 10
-        },
-        text: '',
-        columnMetadata: columnMetadata,
-        result: ValidationResult.create(false, 'name: Der Text \'\' muss mindestens 3 Zeichen enthalten.')
+  {
+    propName: 'name',
+    range: {
+      min: 3,
+      max: 10
     },
+    text: '',
+    result: ValidationResult.create(false, 'name: Text \'\' must contain at least 3 characters.')
+  },
 
-    {
-        range: {
-            min: 3,
-            max: 10
-        },
-        text: undefined,
-        columnMetadata: columnMetadata,
-        result: ValidationResult.create(false, 'name: Der Text fehlt und muss mindestens 3 Zeichen enthalten.')
+  {
+    propName: 'name',
+    range: {
+      min: 3,
+      max: 10
     },
+    text: undefined,
+    result: ValidationResult.create(false, 'name: Text is missing and must contain at least 3 characters.')
+  },
 
-    {
-        range: {
-            min: 3,
-            max: 10
-        },
-        text: 'a',
-        columnMetadata: columnMetadata,
-        result: ValidationResult.create(false, 'name: Der Text \'a\' muss mindestens 3 Zeichen enthalten.')
+  {
+    propName: 'name',
+    range: {
+      min: 3,
+      max: 10
     },
+    text: 'a',
+    result: ValidationResult.create(false, 'name: Text \'a\' must contain at least 3 characters.')
+  },
 
-    {
-        range: {
-            min: 3,
-            max: 10
-        },
-        text: '12345678901',
-        columnMetadata: columnMetadata,
-        result: ValidationResult.create(false, 'name: Der Text \'12345678901\' darf höchstens 10 Zeichen enthalten.')
+  {
+    propName: 'name',
+    range: {
+      min: 3,
+      max: 10
     },
+    text: '12345678901',
+    result: ValidationResult.create(false, 'name: Text \'12345678901\' may contain not more than 10 characters.')
+  },
 ];
 
 
@@ -70,21 +66,40 @@ const expectedResults = [
 @suite('Validation')
 class ValidationTest {
 
-    @test 'should validate length of string'() {
-        const validator = new LengthValidator(3, 10);
-        validator.attachColumnMetadata(columnMetadata);
+  @test 'should validate email addresses'() {
+    const validator = Validators.email;
+    const res = validator.validate('walter.leinert@outlook.com', 'mail');
+    expect(res.ok).to.be.true;
 
-        const res = validator.validate('ttt');
-        return expect(res.ok).to.be.true;
+    const res1 = validator.validate('hallo', 'mail');
+    expect(res1.ok).to.be.false;
+  }
+
+  @test 'should validate numbers'() {
+    const validator = Validators.integer;
+    const res = validator.validate('12345', 'name');
+    expect(res.ok).to.be.true;
+
+    const res1 = validator.validate('xy', 'name');
+    return expect(res1.ok).to.be.false;
+  }
+
+  @test 'should validate length of string'() {
+    const validator = Validators.range({ min: 3, max: 10 });
+    const res = validator.validate('ttt', 'name');
+    return expect(res.ok).to.be.true;
+  }
+
+
+  @test 'should test RangeValidator'() {
+    for (const expectedResult of expectedResults) {
+      const validator = Validators.range({
+        min: expectedResult.range.min,
+        max: expectedResult.range.max
+      });
+
+      const res = validator.validate(expectedResult.text, expectedResult.propName);
+      expect(res).to.be.deep.equal(expectedResult.result);
     }
-
-
-    @test 'should test LengthValidator'() {
-        for (const expectedResult of expectedResults) {
-            const validator = new LengthValidator(expectedResult.range.min, expectedResult.range.max);
-            validator.attachColumnMetadata(expectedResult.columnMetadata);
-            const res = validator.validate(expectedResult.text);
-            expect(res).to.be.deep.equal(expectedResult.result);
-        }
-    }
+  }
 }

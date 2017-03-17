@@ -8,11 +8,11 @@ export class CompoundValidator extends Validator {
     super();
   }
 
-  public validate(value: any): ValidationResult {
+  public validate(value: any, propertyName?: string): ValidationResult {
     const messages = new Array<ValidationMessage>();
 
     for (const validator of this.validators) {
-      const result = validator.validate(value);
+      const result = validator.validate(value, propertyName);
       if (!result.ok) {
         result.messages.map((message) => messages.push(message));
       }

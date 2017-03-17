@@ -1,26 +1,17 @@
-import { ColumnMetadata } from './../metadata/columnMetadata';
-
 import { IValidation, ValidationResult } from '.';
+import { Utility } from '../../util/utility';
 
 export abstract class Validator implements IValidation {
-    private _columnMetadata: ColumnMetadata;
 
-    protected constructor() {
-        // ok
+  protected constructor() {
+  }
+
+  public abstract validate(value: any, propertyName?: string): ValidationResult;
+
+  protected formatPropertyName(propertyName?: string) {
+    if (!Utility.isNullOrEmpty(propertyName)) {
+      return propertyName + ': ';
     }
-
-    public abstract validate(value: any): ValidationResult;
-
-    protected get columnMetadata(): ColumnMetadata {
-        return this._columnMetadata;
-    }
-
-    protected get propertyName(): string {
-        return this._columnMetadata.options.displayName ? this._columnMetadata.options.displayName :
-            this._columnMetadata.propertyName;
-    }
-
-    public attachColumnMetadata(columnMetadata: ColumnMetadata) {
-        this._columnMetadata = columnMetadata;
-    }
+    return '';
+  }
 }

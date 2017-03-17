@@ -17,7 +17,7 @@ import { EnumMetadata } from '.';
  * @class ColumnMetadata
  */
 export class ColumnMetadata {
-  private validator: IValidation;
+  private _validator: IValidation;
   private _enumMetadata: EnumMetadata<any, any, any>;
 
   /**
@@ -133,12 +133,29 @@ export class ColumnMetadata {
   }
 
   public setValidation(validator: IValidation) {
-    this.validator = validator;
+    this._validator = validator;
   }
 
+
+  /**
+   * Validiert
+   * 
+   * @param {*} value 
+   * @returns {ValidationResult} 
+   * 
+   * @memberOf ColumnMetadata
+   */
   public validate(value: any): ValidationResult {
-    Assert.notNull(this.validator);
-    return this.validator.validate(value);
+    Assert.notNull(this._validator);
+    return this._validator.validate(value);
+  }
+
+
+  /**
+   * Liefert den Validator oder undefined.
+   */
+  public get validator(): IValidation {
+    return this._validator;
   }
 
   public setEnum(enumMetadata: EnumMetadata<any, any, any>) {

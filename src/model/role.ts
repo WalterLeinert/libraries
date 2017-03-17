@@ -1,8 +1,12 @@
 import { AppRegistry } from '../base/appRegistry';
 import { EnumHelper } from '../base/enumHelper';
 import { Funktion } from '../base/objectType';
+import { Column } from '../model/decorator/model/column';
+import { Table } from '../model/decorator/model/table';
+import { Validation } from '../model/decorator/model/validation';
+import { Validators } from '../model/validation/validators';
 
-import { Column, IRole, Table } from '.';
+import { IRole } from './role.interface';
 
 
 /**
@@ -42,6 +46,9 @@ export class Role implements IRole {
   @Column({ name: 'role_id', primary: true, generated: true, displayName: 'Id' })
   public id: number;
 
+  @Validation([
+    Validators.required
+  ])
   @Column({ name: 'role_name', displayName: 'Name' })
   public name: string;
 
