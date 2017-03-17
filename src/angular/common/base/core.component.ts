@@ -279,7 +279,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
       this.formErrors = {};
 
       columnInfos.forEach((info) => {
-        const validators: any[] = [Validators.nullValidator];
+        const validators: any[] = [];
         const messageDict = {};
 
         if (tableMetadata) {
@@ -328,6 +328,9 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
         // TODO: workaround: entfernen, sobald die Controls den Angular-Control Contract implementieren
         if (!(info.controlType === ControlType.Time || info.controlType === ControlType.DropdownSelector)) {
 
+          if (validators.length <= 0) {
+            validators.push(Validators.nullValidator);    // noop Validator als einzigen Validator hinzufügen
+          }
           validatorDict[info.valueField] = [dataItem[info.valueField], [
             Validators.compose(validators)
           ]
