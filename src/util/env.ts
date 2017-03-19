@@ -16,15 +16,15 @@ const logger = getLogger(fromEnvironment);
  * @returns {string}
  */
 export function fromEnvironment(variable: string, defaultValue: string): string {
-    /* Assert.notNull(variable, 'variable');*/
+  /* Assert.notNull(variable, 'variable');*/
 
-    let rval = defaultValue;
-    try {
-        rval = process.env.variable ? process.env.variable : defaultValue;
-    } catch (err) {
-        logger.warn(`fromEnvironment failed: cannot get value from process.env for ${variable}` +
-            ` -> used: ${defaultValue}`);
-    }
+  let rval = defaultValue;
+  try {
+    rval = process.env[variable] ? process.env[variable] : defaultValue;
+  } catch (err) {
+    logger.warn(`fromEnvironment failed: cannot get value from process.env for ${variable}` +
+      ` -> used: ${defaultValue}`);
+  }
 
-    return rval;
+  return rval;
 } 
