@@ -12,7 +12,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  AppConfig, Assert, ConfigurationException, FileSystem, StringBuilder, Types, Utility
+  AppConfig, Assert, Clone, ConfigurationException, FileSystem, StringBuilder, Types, Utility
 } from '@fluxgate/common';
 
 
@@ -137,7 +137,7 @@ export abstract class ServerBase extends ServerLoader {
 
         // Anwendungscontroller
         const controllers = this.configuration.express.controllers;
-   
+
         log.info(`__dirname = ${__dirname}, controllers = ${controllers}`);
 
         const errorLogger = (message: string): void => {
@@ -273,7 +273,14 @@ export abstract class ServerBase extends ServerLoader {
       }
 
       KnexService.configure(configuration.knex);
-      log.debug('Knex.config = ', configuration.knex);
+
+      if (log.isDebugEnabled()) {
+        const knexConfig = Clone.clone(configuration.knex);
+        // tslint:disable-next-line:no-string-literal
+        knexConfig.connection['password'] = '*****';
+        log.debug('Knex.config = ', knexConfig);
+      }
+
 
       const cwd = process.cwd();
       log.info(`cwd = ${cwd}`);
@@ -287,7 +294,7 @@ export abstract class ServerBase extends ServerLoader {
       }
 
       if (!path.isAbsolute(configuration.express.controllers)) {
-        configuration.express.controllers  = path.join(cwd, this.configuration.express.controllers);
+        configuration.express.controllers = path.join(cwd, this.configuration.express.controllers);
       }
       // if (configuration.express.controllers.startsWith('.')) {
       //   configuration.express.controllers = path.join(process.cwd(), 'config', configuration.express.controllers);
