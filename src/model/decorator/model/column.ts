@@ -11,7 +11,7 @@ import { MetadataStorage } from '../../metadata/metadataStorage';
 import { ColumnOptions } from './columnOptions';
 
 
-const logger = getLogger('Column');
+const logger = getLogger(Column);
 
 /**
  * Column-Decorator für Modellproperties/-attribute

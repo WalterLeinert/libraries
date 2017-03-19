@@ -80,7 +80,7 @@ export interface IAppConfig {
 
 
 export class AppConfig {
-  protected static logger = getLogger('ConfigService');
+  protected static logger = getLogger(AppConfig);
   public static readonly APP_CONFIG_KEY = 'IAppConfig';
 
   public static register(config: IAppConfig) {

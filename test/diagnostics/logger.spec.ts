@@ -9,7 +9,7 @@ import { configure, getLogger, IConfig, ILevel, levels, XLog } from '../../src/d
 
 
 class Test {
-  public static readonly logger = getLogger('Test');
+  public static readonly logger = getLogger(Test);
 
   constructor(name: string) {
     using(new XLog(Test.logger, levels.INFO, 'ctor'), (log) => {

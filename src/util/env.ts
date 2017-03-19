@@ -4,7 +4,7 @@ import * as process from 'process';
 import { getLogger } from '../diagnostics/logger';
 
 
-const logger = getLogger('fromEnvironment');
+const logger = getLogger(fromEnvironment);
 
 /**
  * Liefert den Wert der Environment-Variable @param{variable}, falls gesetzt oder den

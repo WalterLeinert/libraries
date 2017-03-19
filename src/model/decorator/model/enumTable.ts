@@ -7,7 +7,7 @@ import { MetadataStorage } from '../../metadata/metadataStorage';
 import { EnumTableOptions } from './enumTableOptions';
 import { IEnumTableOptions } from './enumTableOptions.interface';
 
-const logger = getLogger('Column');
+const logger = getLogger(EnumTable);
 
 /**
  * Table-Decorator für Modellklassen
