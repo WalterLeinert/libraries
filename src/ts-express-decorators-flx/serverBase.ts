@@ -12,18 +12,14 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  AppConfig, Assert, ConfigurationException, FileSystem, fromEnvironment, StringBuilder, Types, Utility
+  AppConfig, Assert, ConfigurationException, FileSystem, StringBuilder, Types, Utility
 } from '@fluxgate/common';
 
 
 // lokale Komponenten
 import { Messages } from '../resources/messages';
 import { KnexService } from './services/knex.service';
-import { Logging } from './util';
 
-
-// Logging konfigurieren ...
-Logging.configureLogging('@fluxgate/server', fromEnvironment('NODE_ENV', 'development'));
 
 
 /**
