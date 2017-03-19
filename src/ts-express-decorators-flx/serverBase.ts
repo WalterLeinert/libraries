@@ -1,35 +1,29 @@
 import path = require('path');
 import * as Express from 'express';
+import * as Knex from 'knex';
 import { ServerLoader } from 'ts-express-decorators';
 import { Forbidden } from 'ts-httpexceptions';
-
-// Fluxgate
-import {
-  AppConfig, Assert, FileSystem, fromEnvironment,
-  IAppConfig, JsonReader, StringBuilder
-} from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
+
+// Fluxgate
+import {
+  AppConfig, Assert, ConfigurationException, FileSystem, fromEnvironment, StringBuilder, Types, Utility
+} from '@fluxgate/common';
+
+
 // lokale Komponenten
 import { Messages } from '../resources/messages';
+import { KnexService } from './services/knex.service';
 import { Logging } from './util';
-
 
 
 // Logging konfigurieren ...
 Logging.configureLogging('@fluxgate/server', fromEnvironment('NODE_ENV', 'development'));
-
-// -------------------------- logging -------------------------------
-
-
-const appConfigPath = path.join(process.cwd(), 'app/config/config.json');
-const appConfig = JsonReader.readJsonSync<IAppConfig>(appConfigPath);
-AppConfig.register(appConfig);
-
 
 
 /**
@@ -40,72 +34,54 @@ AppConfig.register(appConfig);
  */
 export interface IServerConfiguration {
 
-  /**
-   * Pfad auf die Zertifikatdatei
-   * 
-   * @type {string}
-   * @memberOf IServerConfiguration
-   */
-  certPath: string;
+  cert?: {
 
-  /**
-   * Pfad auf die Datei mit private Key
-   * 
-   * @type {string}
-   * @memberOf IServerConfiguration
-   */
-  keyPath: string;
-}
+    /**
+     * Pfad auf die Zertifikatdatei (relativ oder absolut)
+     * 
+     * @type {string}
+     * @memberOf IServerConfiguration
+     */
+    certPath: string;
 
-
-/**
- * Spezielle Einstellungen für den Express Webserver
- * 
- * @export
- * @interface IExpressConfiguration
- */
-export interface IExpressConfiguration {
-
-  /**
-   * der Endpoint des Rest-API
-   * @example '/rest'
-   */
-  endPoint?: string;
-
-  /**
-   * Path-Pattern für die Controller-Klassen
-   * @example '/controllers/xx/x.js' (x steht für *)
-   */
-  controllers?: string;
-
-  /**
-   * der Http-Port
-   * @example 8000
-   */
-  port?: number;
-
-  /**
-   * der Https-Port
-   * @example 8080
-   */
-  httpsPort?: number;
+    /**
+     * Pfad auf die Datei mit private Key (relativ oder absolut)
+     * 
+     * @type {string}
+     * @memberOf IServerConfiguration
+     */
+    keyPath: string;
+  };
 
 
-  /**
-   * Pfad auf die Zertifikatdatei
-   * 
-   * @type {string}
-   * @memberOf IExpressConfiguration
-   */
-  certPath?: string;
+  express: {
 
-  /**
-   * Pfad auf die Datei mit private Key
-   * 
-   * @type {string}
-   * @memberOf IExpressConfiguration
-   */
-  keyPath?: string;
+    /**
+     * der Endpoint des Rest-API
+     * @example '/rest'
+     */
+    endPoint?: string;
+
+    /**
+     * Path-Pattern für die Controller-Klassen
+     * @example '/controllers/xx/x.js' (x steht für *)
+     */
+    controllers?: string;
+
+    /**
+     * der Http-Port
+     * @example 8000
+     */
+    port: number;
+
+    /**
+     * der Https-Port
+     * @example 8080
+     */
+    httpsPort: number;
+  };
+
+  knex: Knex.Config;
 }
 
 
@@ -123,11 +99,14 @@ export abstract class ServerBase extends ServerLoader {
   /**
    * Default Express-Konfiguration
    */
-  public static readonly DEFAULT_EXPRESS_CONFIGURATION: IExpressConfiguration = {
-    endPoint: '/rest',
-    controllers: 'controllers/**/*.js',
-    port: 8000,
-    httpsPort: 8080
+  public static readonly DEFAULT_SERVER_CONFIGURATION: IServerConfiguration = {
+    express: {
+      endPoint: '/rest',
+      controllers: './controllers/**/*.js',
+      port: 8000,
+      httpsPort: 8080
+    },
+    knex: undefined
   };
 
 
@@ -135,17 +114,12 @@ export abstract class ServerBase extends ServerLoader {
    * In your constructor set the global endpoint and configure the folder to scan the controllers.
    * You can start the http and https server.
    */
-  protected constructor(private configuration: IExpressConfiguration) {
+  protected constructor(private configuration: IServerConfiguration) {
     super();
 
     using(new XLog(ServerBase.logger, levels.INFO, 'ctor'), (log) => {
       Assert.notNull(configuration);
-
-      if (!configuration) {
-        configuration = ServerBase.DEFAULT_EXPRESS_CONFIGURATION;  // TODO: clone
-      }
-
-      this.configure(this.configuration);
+      this.configure(configuration);
     });
   }
 
@@ -162,29 +136,28 @@ export abstract class ServerBase extends ServerLoader {
         const cwd = process.cwd();
         log.info(`cwd = ${cwd}`);
 
+        // interne Controller (wie UserController)
         const serverControllers = path.join(cwd, '../../node_modules/@fluxgate/server/dist/*.js');
 
-        let controllers = this.configuration.controllers;
-        if (!path.isAbsolute(this.configuration.controllers)) {
-          controllers = path.join(cwd, this.configuration.controllers);
-        }
-
+        // Anwendungscontroller
+        const controllers = this.configuration.express.controllers;
+   
         log.info(`__dirname = ${__dirname}, controllers = ${controllers}`);
 
         const errorLogger = (message: string): void => {
           log.error(message);
         };
 
-        const cert = FileSystem.readTextFile(errorLogger, this.configuration.certPath, 'Zertifikat');
-        const key = FileSystem.readTextFile(errorLogger, this.configuration.keyPath, 'Private Key');
+        const cert = FileSystem.readTextFile(errorLogger, this.configuration.cert.certPath, 'Zertifikat');
+        const key = FileSystem.readTextFile(errorLogger, this.configuration.cert.keyPath, 'Private Key');
 
 
-        this.setEndpoint(this.configuration.endPoint)
+        this.setEndpoint(this.configuration.express.endPoint)
           .scan(serverControllers)
           .scan(controllers)
-          .createHttpServer(this.configuration.port)
+          .createHttpServer(this.configuration.express.port)
           .createHttpsServer({
-            port: this.configuration.httpsPort,
+            port: this.configuration.express.httpsPort,
             cert: cert,
             key: key
           });
@@ -289,29 +262,76 @@ export abstract class ServerBase extends ServerLoader {
 
 
   /**
-   * 
+   * Konsolidiert/prüft die Konfiguration
    */
-  private configure(configuration: IExpressConfiguration) {
-    using(new XLog(ServerBase.logger, levels.DEBUG, 'configure'), (log) => {
+  private configure(configuration: IServerConfiguration) {
+    using(new XLog(ServerBase.logger, levels.INFO, 'ctor'), (log) => {
+      Assert.notNull(configuration);
 
-      if (!configuration.endPoint) {
-        configuration.endPoint = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.endPoint;
+      if (!Types.isPresent(configuration.express)) {
+        throw new ConfigurationException('Express configuration required.');
       }
 
-      if (!configuration.controllers) {
-        configuration.controllers = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.controllers;
+      if (!Types.isPresent(configuration.knex)) {
+        throw new ConfigurationException('Knex configuration required.');
       }
 
-      if (!configuration.port) {
-        configuration.port = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.port;
+      KnexService.configure(configuration.knex);
+      log.debug('Knex.config = ', configuration.knex);
+
+      const cwd = process.cwd();
+      log.info(`cwd = ${cwd}`);
+
+
+      //
+      // Controllers
+      //
+      if (Utility.isNullOrEmpty(configuration.express.controllers)) {
+        configuration.express.controllers = ServerBase.DEFAULT_SERVER_CONFIGURATION.express.controllers;
       }
 
-      if (!configuration.httpsPort) {
-        configuration.httpsPort = ServerBase.DEFAULT_EXPRESS_CONFIGURATION.httpsPort;
+      if (!path.isAbsolute(configuration.express.controllers)) {
+        configuration.express.controllers  = path.join(cwd, this.configuration.express.controllers);
+      }
+      // if (configuration.express.controllers.startsWith('.')) {
+      //   configuration.express.controllers = path.join(process.cwd(), 'config', configuration.express.controllers);
+      // }
+
+      //
+      // Endpoint
+      //
+      if (Utility.isNullOrEmpty(configuration.express.endPoint)) {
+        configuration.express.endPoint = ServerBase.DEFAULT_SERVER_CONFIGURATION.express.endPoint;
+      }
+
+
+      //
+      // Ports
+      // 
+      if (!(Types.isPresent(configuration.express.port) || Types.isPresent(configuration.express.httpsPort))) {
+        throw new ConfigurationException('At least one port must be configured.');
+      }
+
+
+      //
+      // Zertifikate
+      //
+      if (configuration.cert) {
+        if (Utility.isNullOrEmpty(configuration.cert.certPath)) {
+          throw new ConfigurationException('Path to certificate required');
+        }
+        if (Utility.isNullOrEmpty(configuration.cert.keyPath)) {
+          throw new ConfigurationException('Path to private key required');
+        }
+
+        if (!path.isAbsolute(configuration.cert.certPath)) {
+          configuration.cert.certPath = path.join(process.cwd(), 'config', configuration.cert.certPath);
+        }
+        if (!path.isAbsolute(configuration.cert.keyPath)) {
+          configuration.cert.keyPath = path.join(process.cwd(), 'config', configuration.cert.keyPath);
+        }
       }
     });
   }
-
-
 
 }
