@@ -42,7 +42,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
               <div class="col-sm-6">
-                <input type="text" class="form-control" [(ngModel)]="dataItem[info.valueField]" 
+                <input flxAutofocus type="text" class="form-control" [(ngModel)]="dataItem[info.valueField]" 
                   [id]="info.valueField" [formControlName]="info.valueField"
                   [required]="info.required"
                   [readonly]="isReadonly(info)"
@@ -73,10 +73,11 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
                 </p-calendar>
               </div>
 
+<!--
               <div *ngIf="formErrors[info.valueField]" class="alert alert-danger">
                 {{ formErrors[info.valueField] }}
               </div>           
-
+-->
             </div>
           </div>
 

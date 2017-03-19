@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Directive, ElementRef, NgModule, Renderer } from '@angular/core';
 
 
@@ -8,7 +9,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 
 // fluxgate
-import { CommonModule } from '@angular/common';
+import { Types } from '@fluxgate/common';
 
 
 /**
@@ -91,7 +92,16 @@ export class AutofocusDirective implements AfterViewInit {
         if (this.elRef.nativeElement.getAttribute('name') === nameAttribute) {
           this.renderer.invokeElementMethod(this.elRef.nativeElement, 'focus', []);
 
+          // setzt die Caret Position hinter das letzte Zeichen
+          // if (this.elRef.nativeElement.value) {
+          //   if (Types.isString(this.elRef.nativeElement.value)) {
+          //     const length = (this.elRef.nativeElement.value as string).length;
+          //     this.setCaretToPos(this.elRef.nativeElement, length);
+          //   }
+          // }
+
           this.setCaretToPos(this.elRef.nativeElement, 0);
+
           return true;
         }
         return false;
