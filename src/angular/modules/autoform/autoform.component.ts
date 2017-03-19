@@ -73,11 +73,10 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
                 </p-calendar>
               </div>
 
-<!--
               <div *ngIf="formErrors[info.valueField]" class="alert alert-danger">
                 {{ formErrors[info.valueField] }}
               </div>           
--->
+
             </div>
           </div>
 
