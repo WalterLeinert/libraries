@@ -1,4 +1,5 @@
-import { ConfigurationException, NotSupportedException } from '../exceptions';
+import { ConfigurationException } from '../exceptions/configurationException';
+import { NotSupportedException } from '../exceptions/notSupportedException';
 import { FileSystem } from './fileSystem';
 
 export class JsonReader {

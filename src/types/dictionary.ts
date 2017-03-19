@@ -1,7 +1,8 @@
-import { IDictionary } from '.';
-import { InvalidOperationException, NotSupportedException } from '../exceptions';
+import { InvalidOperationException } from '../exceptions/invalidOperationException';
+import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Identifiable } from './../base/uniqueIdentifiable';
 import { Assert } from './../util/assert';
+import { IDictionary } from './dictionary.interface';
 import { Types } from './types';
 
 

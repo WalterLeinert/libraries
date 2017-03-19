@@ -1,5 +1,6 @@
-import { IValidation, ValidationResult } from '.';
 import { Utility } from '../../util/utility';
+import { IValidation } from './validation.interface';
+import { ValidationResult } from './validationResult';
 
 export abstract class Validator implements IValidation {
 

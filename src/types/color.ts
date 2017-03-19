@@ -26,7 +26,7 @@ export interface IRGB {
  */
 // tslint:disable-next-line:max-classes-per-file
 export class Color {
-  private static colorDict: Dictionary<string, Color> = new Dictionary<string, Color>(); 
+  private static colorDict: Dictionary<string, Color> = new Dictionary<string, Color>();
   private _color: tinycolorInstance;
 
   /**
@@ -63,7 +63,7 @@ export class Color {
         thisColor = new Color(color);
         Color.colorDict.set(color, thisColor);
       }
-      return thisColor;    
+      return thisColor;
     } else {
       return new Color(color);
     }

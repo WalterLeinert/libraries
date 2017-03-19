@@ -2,7 +2,8 @@
 import { getLogger } from '../../../diagnostics/logger';
 
 import { Funktion } from '../../../base/objectType';
-import { ShortTime, Time } from '../../../types';
+import { ShortTime } from '../../../types/shortTime';
+import { Time } from '../../../types/time';
 import { ColumnTypeUndefinedError } from '../../error/columnTypeUndefinedError';
 import { ColumnMetadata } from '../../metadata/columnMetadata';
 import { ColumnTypes } from '../../metadata/columnTypes';

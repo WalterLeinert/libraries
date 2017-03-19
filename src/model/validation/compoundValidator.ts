@@ -1,4 +1,6 @@
-import { IValidation, ValidationMessage, ValidationResult } from '.';
+import { IValidation } from './validation.interface';
+import { ValidationMessage } from './validationMessage';
+import { ValidationResult } from './validationResult';
 import { Validator } from './validator';
 
 

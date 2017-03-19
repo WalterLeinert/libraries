@@ -1,9 +1,9 @@
 import leftPad = require('left-pad');
 import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
-
-import { Hour, ShortTime, Types } from '.';
-
+import { Hour } from './hour';
+import { ShortTime } from './shortTime';
+import { Types } from './types';
 
 /**
  * Modelliert eine Zeit (HH:mm:ss), da Date keine reine Zeit unterstützt

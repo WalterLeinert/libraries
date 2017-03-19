@@ -2,10 +2,12 @@ import * as moment from 'moment';
 
 import { Funktion } from '../../base/objectType';
 import { InvalidOperationException } from '../../exceptions/invalidOperationException';
-import { ShortTime, Time } from '../../types';
+import { ShortTime } from '../../types/shortTime';
+import { Time } from '../../types/time';
 import { Assert } from '../../util/assert';
 import { ColumnOptions } from '../decorator/model/columnOptions';
-import { IValidation, ValidationResult } from './../validation';
+import { IValidation } from './../validation/validation.interface';
+import { ValidationResult } from './../validation/validationResult';
 import { ColumnType, ColumnTypes } from './columnTypes';
 
 import { EnumMetadata } from '.';

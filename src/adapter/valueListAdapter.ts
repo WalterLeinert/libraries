@@ -1,7 +1,7 @@
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
 
-import { Assert } from '../util';
+import { Assert } from '../util/assert';
 
 import { IListAdapter } from './listAdapter.interface';
 

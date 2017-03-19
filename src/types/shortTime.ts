@@ -1,8 +1,9 @@
 import leftPad = require('left-pad');
 import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
-
-import { Hour, MathUtil, Types } from '.';
+import { Hour } from './hour';
+import { MathUtil } from './mathUtil';
+import { Types } from './types';
 
 
 /**

@@ -3,12 +3,15 @@ import process = require('process');
 
 // Logging
 import { using } from '../base/disposable';
-import { Utility } from '../util/utility';
-
+import { levels } from '../diagnostics/level';
+import { getLogger } from '../diagnostics/logger';
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, XLog } from '../diagnostics';
+import { ILogger } from '../diagnostics/logger.interface';
+import { XLog } from '../diagnostics/xlog';
 
-import { StringBuilder } from '../base';
+
+import { StringBuilder } from '../base/stringBuilder';
+import { Utility } from '../util/utility';
 import { fromEnvironment } from './env';
 
 export interface ILoggingConfigurationOptions {

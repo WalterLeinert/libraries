@@ -1,14 +1,22 @@
 // Logging
 import { using } from '../../base/disposable';
+import { levels } from '../../diagnostics/level';
+import { getLogger } from '../../diagnostics/logger';
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, XLog } from '../../diagnostics';
+import { ILogger } from '../../diagnostics/logger.interface';
+import { XLog } from '../../diagnostics/xlog';
 
 import { Funktion } from '../../base/objectType';
-import { Dictionary, Types } from '../../types';
+import { Dictionary } from '../../types/dictionary';
+import { Types } from '../../types/types';
 import { Assert } from '../../util/assert';
-import { CompoundValidator, Validator } from './../validation';
+import { CompoundValidator } from './../validation/compoundValidator';
+import { Validator } from './../validation/validator';
 
-import { ColumnMetadata, EnumMetadata, TableMetadata, ValidationMetadata } from '.';
+import { ColumnMetadata } from './columnMetadata';
+import { EnumMetadata } from './enumMetadata';
+import { TableMetadata } from './tableMetadata';
+import { ValidationMetadata } from './validationMetadata';
 
 
 /**

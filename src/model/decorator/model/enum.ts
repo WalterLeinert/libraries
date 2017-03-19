@@ -1,6 +1,6 @@
 import { ICtor } from '../../../base/ctor';
-import { InstanceAccessor } from '../../../types';
-import { Assert } from '../../../util';
+import { InstanceAccessor } from '../../../types/instanceAccessor';
+import { Assert } from '../../../util/assert';
 import { EnumMetadata } from '../../metadata/enumMetadata';
 import { MetadataStorage } from '../../metadata/metadataStorage';
 

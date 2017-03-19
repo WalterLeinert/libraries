@@ -1,6 +1,7 @@
 import { Funktion } from '../../base/objectType';
 import { NotSupportedException } from '../../exceptions/notSupportedException';
-import { ShortTime, Time } from '../../types';
+import { ShortTime } from '../../types/shortTime';
+import { Time } from '../../types/time';
 
 /**
  * z.T. übernommen aus https://github.com/typeorm/typeorm
