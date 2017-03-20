@@ -1,10 +1,12 @@
 import { AppRegistry } from '../base/appRegistry';
 import { Funktion } from '../base/objectType';
+import { StringBuilder } from '../base/stringBuilder';
 import { Column } from '../model/decorator/model/column';
 import { Enum } from '../model/decorator/model/enum';
 import { Table } from '../model/decorator/model/table';
 import { Validation } from '../model/decorator/model/validation';
 import { Validators } from '../model/validation/validators';
+import { Utility } from '../util/utility';
 
 import { Role, UserRoleId } from './role';
 import { IUser } from './user.interface';
@@ -21,6 +23,9 @@ export class User implements IUser {
    * der Key für den Zugriff über @see{AppRegistry}
    */
   public static readonly USER_CONFIG_KEY = 'IUser';
+
+  public static Null = new User(-1, '-no-name-', -1);
+
 
   @Column({ name: 'user_id', primary: true, generated: true, displayName: 'Id' })
   public id: number;
@@ -63,7 +68,20 @@ export class User implements IUser {
 
   @Column({ displayName: 'Name', persisted: false })
   public get fullName(): string {
-    return `${this.lastname}, ${this.firstname}`;
+    const sb = new StringBuilder(this.lastname);
+    if (!Utility.isNullOrEmpty(this.firstname)) {
+      sb.append(', ');
+      sb.append(this.firstname);
+    }
+    return sb.toString();
+  }
+
+
+  constructor(id: number, username: string, role: number) {
+    this.id = id;
+    this.username = username;
+    this.role = role;
+    this.lastname = 'none';
   }
 
 
@@ -87,6 +105,10 @@ export class User implements IUser {
    */
   public get isAdmin(): boolean {
     return this.role === UserRoleId.Admin;
+  }
+
+  public get isNull(): boolean {
+    return this.id === User.Null.id;
   }
 }
 
