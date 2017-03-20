@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IUser, ServerBusinessException } from '@fluxgate/common';
+import { IUser, ServerBusinessException, User } from '@fluxgate/common';
 import { PassportLocalService } from '../../services/passportLocal.service';
 
 import { Messages } from '../../../resources/messages';
@@ -210,7 +210,7 @@ export class PassportController {
   public getCurrentUser( @Request() request: Express.Request): Promise<IUser> {
     return using(new XLog(PassportController.logger, levels.INFO, 'currentUser'), (log) => {
       return new Promise<IUser>((resolve, reject) => {
-        return resolve(request.user ? request.user : null);
+        return resolve(request.user ? request.user : User.Null);
       });
     });
   }
