@@ -1,4 +1,6 @@
 import { Exception } from '../exceptions/exception';
+import { FlxException } from './flxException';
+
 
 /**
  * Modelliert einen Assertion-Error
@@ -7,6 +9,7 @@ import { Exception } from '../exceptions/exception';
  * @class AssertionException
  * @extends {Error}
  */
+@FlxException()
 export class AssertionException extends Exception {
 
   /**
@@ -17,7 +20,7 @@ export class AssertionException extends Exception {
    * @memberOf AssertionError
    */
   constructor(message?: string, innerException?: Exception) {
-    super(message, innerException);
+    super('AssertionException', message, innerException);
   }
 
 }

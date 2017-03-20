@@ -4,6 +4,7 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { AssertionException } from '../../src/exceptions/assertionException';
 import { Time } from '../../src/types/time';
 
 const expedtedTimes = [
@@ -59,35 +60,35 @@ class TimeTest {
 
   @test 'should throw exceptions from createFromj'() {
     expect(() => Time.createFrom({
-    })).to.throw(Error, 'Property hour, minute, second fehlt');
+    })).to.throw(AssertionException, 'Property hour, minute, second fehlt');
 
     expect(() => Time.createFrom({
       hour: 12
-    })).to.throw(Error, 'Property minute, second fehlt.');
+    })).to.throw(AssertionException, 'Property minute, second fehlt.');
 
     expect(() => Time.createFrom({
       hour: 12,
       minute: 15
-    })).to.throw(Error, 'Property second fehlt');
+    })).to.throw(AssertionException, 'Property second fehlt');
   }
 
 
 
 
   @test 'should throw an exception for 60 minutes '() {
-    return expect(() => new Time(8, 60, 0)).to.throw(Error);
+    return expect(() => new Time(8, 60, 0)).to.throw(AssertionException);
   }
 
   @test 'should throw an exception for -1 minutes'() {
-    return expect(() => new Time(8, -1, 0)).to.throw(Error);
+    return expect(() => new Time(8, -1, 0)).to.throw(AssertionException);
   }
 
   @test 'should throw an exception for 60 seconds '() {
-    return expect(() => new Time(8, 0, 60)).to.throw(Error);
+    return expect(() => new Time(8, 0, 60)).to.throw(AssertionException);
   }
 
   @test 'should throw an exception for -1 seconds'() {
-    return expect(() => new Time(8, 0, -1)).to.throw(Error);
+    return expect(() => new Time(8, 0, -1)).to.throw(AssertionException);
   }
 
 }
@@ -123,7 +124,7 @@ class TimeOperationsTest {
 
   @test 'should get time from seconds -> Exception'() {
     const time = new Time(23, 59, 59);
-    return expect(() => Time.createFromSeconds(time.toSeconds() + 1)).to.throw(Error);
+    return expect(() => Time.createFromSeconds(time.toSeconds() + 1)).to.throw(AssertionException);
   }
 
   @test 'should add times'() {
@@ -148,13 +149,13 @@ class TimeOperationsTest {
   @test 'should add times -> Exception'() {
     const time1 = new Time(23, 59, 59);
     const time2 = new Time(1, 30, 0);
-    return expect(() => time1.add(time2)).to.throw(Error);
+    return expect(() => time1.add(time2)).to.throw(AssertionException);
   }
 
   @test 'should subtract times -> Exception'() {
     const time1 = new Time(0, 0, 0);
     const time2 = new Time(1, 30, 0);
-    return expect(() => time1.subtract(time2)).to.throw(Error);
+    return expect(() => time1.subtract(time2)).to.throw(AssertionException);
   }
 
 }

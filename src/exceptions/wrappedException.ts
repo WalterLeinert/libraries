@@ -1,14 +1,29 @@
-import { Exception } from './exception';
+import { IException } from './exception.interface';
 
-export class WrappedException extends Exception {
+export class WrappedException implements IException {
+  private _type: string;
 
-  constructor(message: string, innerException: Exception) {
-    super(`${message} caused by: ${innerException instanceof Error ? innerException.message : innerException}`,
-      innerException);
+  constructor(private _nativeError: Error) {
+    this._type = 'WrappedException';
   }
 
-  get stack() {
-    return ((this.innerException instanceof Error ? this.innerException : this._nativeError) as any)
-      .stack;
+  public get message(): string {
+    return this._nativeError.message;
+  }
+
+  get stack(): string {
+    return this._nativeError.stack;
+  }
+
+  get name(): string {
+    return this._nativeError.name;
+  }
+
+  get type(): string {
+    return this._type;
+  }
+
+  public encodeException(): string {
+    return 'TODO';
   }
 }

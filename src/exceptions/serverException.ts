@@ -1,7 +1,14 @@
 import { Exception } from './exception';
 
-export class ServerException extends Exception {
-  constructor(message: string, innerException?: Exception) {
-    super(message, innerException);
+/**
+ * Exceptions auf Serverseite
+ * 
+ * @export
+ * @class ServerException
+ * @extends {Exception}
+ */
+export abstract class ServerException extends Exception {
+  constructor(kind: string, message: string, innerException?: Exception | Error) {
+    super(kind, message, innerException);
   }
 }

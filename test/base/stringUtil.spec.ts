@@ -5,7 +5,7 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { StringUtil } from '../../src/base/stringUtil';
-
+import { AssertionException } from '../../src/exceptions/assertionException';
 
 
 @suite('StringUtil')
@@ -54,33 +54,33 @@ class StringUtilTest {
    */
   @test 'should throw Error (text)'() {
     const text = undefined;
-    return expect(() => StringUtil.splice(text, 0, 2, '#')).to.throw(Error);
+    return expect(() => StringUtil.splice(text, 0, 2, '#')).to.throw(AssertionException);
   }
 
   @test 'should throw Error (start: -1)'() {
     const text = 'Hallo';
-    return expect(() => StringUtil.splice(text, -1, 2, '#')).to.throw(Error);
+    return expect(() => StringUtil.splice(text, -1, 2, '#')).to.throw(AssertionException);
   }
 
   @test 'should throw Error (start: text.length+1)'() {
     const text = 'Hallo';
-    return expect(() => StringUtil.splice(text, text.length + 1, 2, '#')).to.throw(Error);
+    return expect(() => StringUtil.splice(text, text.length + 1, 2, '#')).to.throw(AssertionException);
   }
 
 
   @test 'should throw Error (delCount: -1)'() {
     const text = 'Hallo';
-    return expect(() => StringUtil.splice(text, 0, -1, '#')).to.throw(Error);
+    return expect(() => StringUtil.splice(text, 0, -1, '#')).to.throw(AssertionException);
   }
 
   @test 'should throw Error (delCount: text.length+1)'() {
     const text = 'Hallo';
-    return expect(() => StringUtil.splice(text, 0, text.length + 1, '#')).to.throw(Error);
+    return expect(() => StringUtil.splice(text, 0, text.length + 1, '#')).to.throw(AssertionException);
   }
 
   @test 'should throw Error (start + delCount: text.length+1)'() {
     const text = 'Hallo';
-    return expect(() => StringUtil.splice(text, 2, 5, '#')).to.throw(Error);
+    return expect(() => StringUtil.splice(text, 2, 5, '#')).to.throw(AssertionException);
   }
 
 }
