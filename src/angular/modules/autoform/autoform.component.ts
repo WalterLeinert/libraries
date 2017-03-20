@@ -27,7 +27,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
   selector: 'flx-autoform',
   template: `
 <p-dialog [(visible)]="dataItem" [header]="pageTitle" (onBeforeHide)="onBeforeDialogHide($event)" [responsive]="true" showEffect="fade"
-  [modal]="true">
+  [modal]="true" width="600">
   <div class="container-fluid">
     <form *ngIf="dataItem" class="form-horizontal" [formGroup]="form">
 
@@ -41,7 +41,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
             <div class="form-group" *ngIf="! isHidden(info, dataItem)">
               <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
-              <div class="col-sm-6">
+              <div class="col-sm-10">
                 <input flxAutofocus type="text" class="form-control" [(ngModel)]="dataItem[info.valueField]" 
                   [id]="info.valueField" [formControlName]="info.valueField"
                   [required]="info.required"
@@ -64,8 +64,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
             <div class="form-group" *ngIf="! isHidden(info, dataItem)">
               <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
-              <div class="col-sm-6">
-                <p-calendar class="form-control" [(ngModel)]="dataItem[info.valueField]" 
+              <div class="col-sm-10">
+                <p-calendar inputStyleClass="form-control" [(ngModel)]="dataItem[info.valueField]" 
                   [id]="info.valueField" [formControlName]="info.valueField"
                   [required]="info.required"
                   [readonlyInput]="isReadonly(info)"
@@ -89,8 +89,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
             <div class="form-group" *ngIf="! isHidden(info, dataItem)">
               <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
-              <div class="col-sm-6">
-                <flx-time-selector class="form-control" [(time)]="dataItem[info.valueField]"
+              <div class="col-sm-10">
+                <flx-time-selector inputStyleClass="form-control" [(time)]="dataItem[info.valueField]"
                   [id]="info.valueField"
                   
                   [readonly]="isReadonly(info)"
@@ -115,8 +115,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
             <div class="form-group" *ngIf="! isHidden(info, dataItem)">
               <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
-              <div class="col-sm-6">
-                <flx-dropdown-selector class="form-control" [dataService]="info.enumInfo.selectorDataService"
+              <div class="col-sm-10">
+                <flx-dropdown-selector inputStyleClass="form-control" [dataService]="info.enumInfo.selectorDataService"
                   [id]="info.valueField"                  
                   [readonly]="isReadonly(info)"
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
@@ -138,22 +138,14 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 
       <p-footer>
         <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-          <div class="container">
-            <button type="submit" class="btn btn-primary" (click)='cancel()'>Cancel</button>
-            <button type="submit" class="btn btn-primary" (click)='submit()'>
-              <span class="glyphicon glyphicon-save"></span>Save
-            </button>
-            <button type="submit" class="btn btn-primary" (click)='confirmDelete()'>    
-              <span class="glyphicon glyphicon-trash"></span>Delete
-            </button>
-
-            <flx-confirmation-dialog></flx-confirmation-dialog>
-
-          </div>
+            <button type="button" class="btn btn-primary" (click)='cancel()'>Cancel</button>
+            <button type="button" class="btn btn-primary" (click)='submit()'>Save</button>
+            <button type="button" class="btn btn-primary" (click)='confirmDelete()'>Delete</button>   
         </div>
       </p-footer>
     </form>
   </div>
+  <flx-confirmation-dialog></flx-confirmation-dialog>
 </p-dialog>
 `,
   styles: [`
