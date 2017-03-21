@@ -1,11 +1,30 @@
 import { StringBuilder } from '../base/stringBuilder';
-// TODO: import { Assert } from '../util/assert';
+import { Utility } from '../util/utility';
 import { IException } from './exception.interface';
 import { ExceptionFactory } from './exceptionFactory';
 import { WrappedException } from './wrappedException';
 
-export function unimplemented(): any {
+
+export function unimplemented(): void {
   throw new Error('unimplemented');
+}
+
+/**
+ * Assertion, die nicht auf der Exception-Basisklasse basiert (sonst: Rekursion!)
+ * 
+ * @export
+ * @param {boolean} condition 
+ * @param {string} [message] 
+ */
+export function assert(condition: boolean, message?: string): void {
+  if (!condition) {
+    const sb = new StringBuilder('assertion failed');
+    if (!Utility.isNullOrEmpty(message)) {
+      sb.append(': ');
+      sb.append(message);
+    }
+    throw new Error();
+  }
 }
 
 
@@ -96,20 +115,50 @@ export abstract class Exception implements IException {
   }
 
 
+  /**
+   * Liefert true, falls die Meldung mit dem Präfix für kodierte Exceptions beginnt. 
+   * 
+   * @static
+   * @param {string} message 
+   * @returns 
+   * 
+   * @memberOf Exception
+   */
+  public static isEncodedException(message: string) {
+    return message.startsWith(Exception.EXC_PREFIX);
+  }
+
+
+  /**
+   * Liefert für die Fehlermeldung @param{message} eine @see{IException}
+   * 
+   * Ist in der Meldung eine spezielle Exception (mit ggf. inner exceptions) kodiert,
+   * wird diese konkrete Exception erzeugt.
+   * 
+   * Beispiel: {exc:ServerBusinessException::unknown user::{exc:AssertionException::property username is missing::}}
+   * 
+   * -> ServerBusinessException (inner: AssertionException)
+   * 
+   * @static
+   * @param {string} message 
+   * @returns {IException} 
+   * 
+   * @memberOf Exception
+   */
   public static decodeException(message: string): IException {
-    if (message.startsWith(Exception.EXC_PREFIX)) {
-      // TODO: Assert.that(message.endsWith(Exception.EXC_POSTFIX));
+    if (Exception.isEncodedException(message)) {
+      assert(message.endsWith(Exception.EXC_POSTFIX));
 
       // "{exc:ServerBusinessException::This is a ServerBusinessException.::}"
       // --> "{exc:ServerBusinessException::This is a ServerBusinessException.::"
-      let text = message.slice(0, message.length - 2);
+      let text = message.slice(0, message.length - Exception.EXC_POSTFIX.length);
 
       // --> "ServerBusinessException::This is a ServerBusinessException.::"    
-      text = message.slice(Exception.EXC_PREFIX.length);
+      text = text.slice(Exception.EXC_PREFIX.length);
 
       const messageSeparatorIndex = text.indexOf(Exception.EXC_SEPARATOR);
-      // TODO: Assert.that(messageSeparatorIndex >= 0,
-      //   `"${text}": no exception message separator "${Exception.EXC_SEPARATOR}"`);
+      assert(messageSeparatorIndex >= 0,
+        `"${text}": no exception message separator "${Exception.EXC_SEPARATOR}"`);
 
       // -> "ServerBusinessException"
       const exceptionType: string = text.slice(0, messageSeparatorIndex);
@@ -118,14 +167,14 @@ export abstract class Exception implements IException {
       text = text.slice(messageSeparatorIndex + Exception.EXC_SEPARATOR.length);
 
       const exceptionSeparatorIndex = text.indexOf(Exception.EXC_SEPARATOR);
-      // TODO: Assert.that(exceptionSeparatorIndex >= 0,
-      //  `"${text}": no inner exception separator "${Exception.EXC_SEPARATOR}"`);
+      assert(exceptionSeparatorIndex >= 0,
+        `"${text}": no inner exception separator "${Exception.EXC_SEPARATOR}"`);
 
       // -> "This is a ServerBusinessException."
       const excMessage = text.slice(0, exceptionSeparatorIndex);
 
       // --> ""
-      text = text.slice(messageSeparatorIndex + Exception.EXC_SEPARATOR.length - 1);
+      text = text.slice(exceptionSeparatorIndex + Exception.EXC_SEPARATOR.length);
 
       let innerException;
 

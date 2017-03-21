@@ -4,34 +4,86 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-// import { Error } from '../../src/exceptions/error';
-import { Exception } from '../../src/exceptions/exception';
-import { NotSupportedException } from '../../src/exceptions/notSupportedException';
+import {
+  Exception, ExceptionFactory
+} from '../../src/exceptions';
 
 
-@suite('Exceptions')
-class ExceptionTest {
+const errorText = 'user not found';
+const innerErrorText = 'inner error';
 
-  @test 'should throw NotSupportedException'() {
-    const messageExpected = 'not supported';
-    try {
-      throw new NotSupportedException(messageExpected);
-    } catch (exc) {
-      expect(exc).to.be.instanceof(Exception);
-      expect(exc).to.be.instanceof(NotSupportedException);
+const exceptionTypes = [
+  'ArgumentException',
+  'AssertionException',
+  'ClientException',
+  'ConfigurationException',
+  'InvalidOperationException',
+  'NotImplementedException',
+  'NotSupportedException',
+  'ServerBusinessException',
+  'ServerSystemException'
+];
 
-      expect(exc.message).to.equal(messageExpected);
-    }
+const innerExceptionTestCases = [
+  {
+    type: 'ServerBusinessException',
+    innerType: 'ArgumentException'
+  },
+
+];
+
+
+@suite('Exceptions: simple exceptions')
+class SimpleExceptionTests {
+
+  @test 'should encode/decode simple exception'() {
+
+    exceptionTypes.forEach((type) => {
+      const encoded = `{exc:${type}::${errorText}::}`;
+      const expected = ExceptionFactory.create(type, errorText);
+
+      const actual = Exception.decodeException(encoded);
+
+      expect(actual).to.exist;
+      expect(actual.message).to.equal(errorText);
+      expect(actual.innerException).not.to.exist;
+      expect(actual.type).to.equal(type);
+
+      expect(actual.type).to.equal(expected.type);
+      expect(actual.message).to.equal(expected.message);
+    });
   }
 
-  @test 'should expect NotSupportedException'() {
-    const messageExpected = 'not supported';
-    expect(() => {
-      throw new NotSupportedException(messageExpected);
-    }).to.throw(NotSupportedException, messageExpected);
+}
 
-    expect(() => {
-      throw new NotSupportedException(messageExpected);
-    }).to.throw(NotSupportedException, messageExpected);
+
+@suite('Exceptions: inner exceptions')
+class InnerExceptionTest {
+
+  @test 'should encode/decode exceptions with inner exceptions'() {
+
+    innerExceptionTestCases.forEach((test) => {
+      const encoded = `{exc:${test.type}::${errorText}::{exc:${test.innerType}::${innerErrorText}::}}`;
+      const expected = ExceptionFactory.create(test.type, errorText);
+      const expectedInner = ExceptionFactory.create(test.innerType, innerErrorText);
+
+      const actual = Exception.decodeException(encoded);
+
+      expect(actual).to.exist;
+      expect(actual.message).to.equal(errorText);
+      expect(actual.innerException).to.exist;
+      expect(actual.type).to.equal(test.type);
+
+      expect(actual.type).to.equal(expected.type);
+      expect(actual.message).to.equal(expected.message);
+
+      // inner
+      expect(actual.innerException.type).to.equal(test.innerType);
+      expect(actual.innerException.message).to.equal(innerErrorText);
+
+      expect(actual.innerException.type).to.equal(expectedInner.type);
+      expect(actual.innerException.message).to.equal(expectedInner.message);
+    });
   }
+
 }

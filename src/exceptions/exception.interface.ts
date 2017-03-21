@@ -8,6 +8,7 @@ export declare interface IException {
   message: string;
   stack: string;
   type: string;
+  innerException: IException;
 
   encodeException(): string;
 }

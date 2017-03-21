@@ -26,4 +26,8 @@ export class WrappedException implements IException {
   public encodeException(): string {
     return 'TODO';
   }
+
+  public get innerException(): IException {
+    return null;
+  }
 }
