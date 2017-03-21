@@ -53,7 +53,6 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
     Assert.notNull(model, 'model');
 
-
     // Metadaten zur Entity ermitteln
     this._tableMetadata = this.metadataService.findTableMetadata(model);
     Assert.notNull(this._tableMetadata);
@@ -93,7 +92,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
   public find(): Observable<T[]> {
     return this.http.get(this.getUrl())
       .map((response: Response) => this.deserializeArray(response.json()))
-      // .do(data => Service.logger.info('result: ' + JSON.stringify(data)))
+      .do((data) => Service.logger.info(`Service.find [${this.getModelClassName()}]: -> ${data.length} item(s)`))
       .catch(this.handleError);
   }
 
@@ -111,7 +110,8 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
     return this.http.get(`${this.getUrl()}/${id}`)
       .map((response: Response) => this.deserialize(response.json()))
-      .do((data) => Service.logger.info(`Service.findById: id = ${id} -> ${JSON.stringify(data)}`))
+      .do((data) => Service.logger.info(`Service.findById [${this.getModelClassName()}]: ` +
+        `id = ${id} -> ${JSON.stringify(data)}`))
       .catch(this.handleError);
   }
 
@@ -129,7 +129,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
     return this.http.put(`${this.getUrl()}`, this.serialize(item))
       .map((response: Response) => this.deserialize(response.json()))
-      .do((data) => Service.logger.info(`Service.update: ${JSON.stringify(data)}`))
+      .do((data) => Service.logger.info(`Service.update [${this.getModelClassName()}]: ${JSON.stringify(data)}`))
       .catch(this.handleError);
   }
 
@@ -147,7 +147,8 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
     return this.http.delete(`${this.getUrl()}/${id}`)
       .map((response: Response) => response.json())
-      .do((serviceResult) => Service.logger.info(`Service.delete: ${JSON.stringify(serviceResult)}`))
+      .do((serviceResult) => Service.logger.info(`Service.delete [${this.getModelClassName()}]: ` +
+        `${JSON.stringify(serviceResult)}`))
       .catch(this.handleError);
   }
 
@@ -168,8 +169,8 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
     return this.http.post(`${this.getUrl()}/query`, query, options)
       .map((response: Response) => this.deserializeArray(response.json()))
-      .do((data) => Service.logger.info(`Service.query: query = ${JSON.stringify(query)}` +
-        ` -> ${JSON.stringify(data)}`))
+      .do((data) => Service.logger.info(`Service.query [${this.getModelClassName()}]: ` +
+        `query = ${JSON.stringify(query)} -> ${JSON.stringify(data)}`))
       .catch(this.handleError);
   }
 
