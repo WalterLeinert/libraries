@@ -4,6 +4,7 @@ export * from './clientException';
 export * from './configurationException';
 export * from './exception';
 export * from './exceptionFactory';
+export * from './exceptionWrapper';
 export * from './exception.interface';
 export * from './invalidOperationException';
 export * from './notImplementedException';
