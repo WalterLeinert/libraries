@@ -7,7 +7,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  Assert, Clone, ColumnMetadata, Exception, Funktion, IException, InvalidOperationException,
+  Assert, Clone, ColumnMetadata, Exception, ExceptionWrapper, Funktion, IException, InvalidOperationException,
   IQuery, IToString, IUser,
   ServerBusinessException, ServerSystemException,
   ServiceResult, TableMetadata, Types
@@ -100,7 +100,7 @@ export abstract class BaseService<T, TId extends IToString>  {
           })
           .catch((err) => {
             log.error(err);
-            reject(this.createSystemException('error', err));
+            reject(this.createSystemException(err));
           });
 
       });
@@ -150,7 +150,7 @@ export abstract class BaseService<T, TId extends IToString>  {
           })
           .catch((err) => {
             log.error(err);
-            reject(this.createSystemException('error', err));
+            reject(this.createSystemException(err));
           });
       });
     });
@@ -196,7 +196,7 @@ export abstract class BaseService<T, TId extends IToString>  {
           })
           .catch((err) => {
             log.error(err);
-            reject(this.createSystemException('error', err));
+            reject(this.createSystemException(err));
           });
       });
     });
@@ -232,7 +232,7 @@ export abstract class BaseService<T, TId extends IToString>  {
           })
           .catch((err) => {
             log.error(err);
-            reject(this.createSystemException('error', err));
+            reject(this.createSystemException(err));
           });
       });
     });
@@ -264,7 +264,7 @@ export abstract class BaseService<T, TId extends IToString>  {
           })
           .catch((err) => {
             log.error(err);
-            reject(this.createSystemException('error', err));
+            reject(this.createSystemException(err));
           });
       });
     });
@@ -313,7 +313,7 @@ export abstract class BaseService<T, TId extends IToString>  {
           })
           .catch((err) => {
             log.error(err);
-            reject(this.createSystemException('error', err));
+            reject(this.createSystemException(err));
           });
       });
     });
@@ -426,12 +426,12 @@ export abstract class BaseService<T, TId extends IToString>  {
   }
 
 
-  protected createBusinessException(error: string, innerException?: IException | Error): Exception {
-    return new ServerBusinessException(error, innerException);
+  protected createBusinessException(error: string | IException | Error): IException {
+    return ExceptionWrapper.createBusinessException(error);
   }
 
-  protected createSystemException(error: string, innerException?: IException | Error): Exception {
-    return new ServerSystemException(error, innerException);
+  protected createSystemException(error: string | IException | Error): IException {
+    return ExceptionWrapper.createSystemException(error);
   }
 
 

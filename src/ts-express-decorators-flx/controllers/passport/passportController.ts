@@ -1,5 +1,3 @@
-import { NotFound } from 'ts-httpexceptions';
-
 import * as Express from 'express';
 import * as Passport from 'passport';
 import { BodyParams, Controller, Get, Next, Post, Request, Required, Response } from 'ts-express-decorators';
@@ -10,10 +8,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IUser, ServerBusinessException, ServerSystemException, User } from '@fluxgate/common';
-import { PassportLocalService } from '../../services/passportLocal.service';
+import {
+  ExceptionWrapper, IException, IUser, User
+} from '@fluxgate/common';
 
 import { Messages } from '../../../resources/messages';
+import { PassportLocalService } from '../../services/passportLocal.service';
 
 /**
  * Controller zur Authentifizierung über Passport.js
@@ -70,18 +70,17 @@ export class PassportController {
             })(request, response, next);
         } catch (err) {
           log.error(err);
-          return reject(new ServerSystemException('error', err));
+          return reject(this.createSystemException(err));
         }
       })
         .catch((err) => {
           if (err && err.message === 'Failed to serialize user into session') {
-            return Promise.reject(new ServerBusinessException('user not found'));
+            return Promise.reject(this.createBusinessException('user not found'));
           }
-          return Promise.reject(err);
+          return Promise.reject(this.createSystemException(err));
         });
     });
   }
-
 
 
   /**
@@ -102,7 +101,7 @@ export class PassportController {
 
         Passport.authenticate('signup', (err, user: IUser) => {
           if (err) {
-            return reject(new ServerSystemException('error', err));
+            return reject(this.createSystemException(err));
           }
           if (!user) {
             return reject(!!err);
@@ -110,7 +109,7 @@ export class PassportController {
 
           request.logIn(user, (loginErr) => {
             if (loginErr) {
-              return reject(loginErr);
+              return reject(this.createSystemException(loginErr));
             }
 
             user.resetCredentials();
@@ -164,7 +163,7 @@ export class PassportController {
         try {
           if (username !== request.user.username) {
             log.error(`username (${username}) !== request.user.username (${request.user.username})`);
-            reject(new ServerBusinessException(
+            reject(this.createBusinessException(
               `${Messages.USERS_DO_NOT_MATCH(username, request.user.username)}`));
             return;
           }
@@ -179,7 +178,7 @@ export class PassportController {
 
               request.logIn(changedUser, (loginErr) => {
                 if (loginErr) {
-                  return reject(new ServerSystemException('error', loginErr));
+                  return reject(this.createSystemException(loginErr));
                 }
 
                 changedUser.resetCredentials();
@@ -189,14 +188,14 @@ export class PassportController {
             })(request, response, next);
         } catch (err) {
           log.error(err);
-          return reject(new ServerSystemException('error', err));
+          return reject(this.createSystemException(err));
         }
       })
         .catch((err) => {
           if (err && err.message === 'Failed to serialize user into session') {
-            return Promise.reject(new ServerBusinessException('user not found'));
+            return Promise.reject(this.createBusinessException('user not found'));
           }
-          return Promise.reject(err);
+          return Promise.reject(this.createSystemException(err));
         });
     });
   }
@@ -215,4 +214,14 @@ export class PassportController {
       });
     });
   }
+
+
+  protected createBusinessException(error: string | IException | Error): IException {
+    return ExceptionWrapper.createBusinessException(error);
+  }
+
+  protected createSystemException(error: string | IException | Error): IException {
+    return ExceptionWrapper.createSystemException(error);
+  }
+
 }
