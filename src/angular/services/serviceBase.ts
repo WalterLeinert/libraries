@@ -10,7 +10,7 @@ import * as HttpStatusCodes from 'http-status-codes';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { Assert, Constants, ServerSystemException, StringBuilder } from '@fluxgate/common';
+import { Assert, Constants, Exception, ServerSystemException, StringBuilder } from '@fluxgate/common';
 
 
 /**
@@ -103,6 +103,11 @@ export abstract class ServiceBase {
       }
 
       log.error(`errorMessage = ${errorMessage}: [ ${ServiceBase.formatResponseStatus(response)} ]`);
+
+      if (Exception.isEncodedException(errorMessage)) {
+        const exc = Exception.decodeException(errorMessage);
+        return Observable.throw(exc);
+      }
 
       return Observable.throw(new ServerSystemException(errorMessage));
     });
