@@ -34,7 +34,7 @@ export class UserService extends BaseService<IUser, number> {
           resolve(user);
         })
         .catch((err) => {
-          reject(err);
+          reject(this.createSystemException(err));
         });
     });
   }
@@ -49,7 +49,7 @@ export class UserService extends BaseService<IUser, number> {
           resolve(users);
         })
         .catch((err) => {
-          reject(err);
+          reject(this.createSystemException(err));
         });
     });
   }
@@ -65,7 +65,7 @@ export class UserService extends BaseService<IUser, number> {
           resolve(u);
         })
         .catch((err) => {
-          reject(err);
+          reject(this.createSystemException(err));
         });
     });
   }
@@ -88,7 +88,7 @@ export class UserService extends BaseService<IUser, number> {
     return new Promise<IUser>((resolve, reject) => {
       Encryption.hashPassword(user.password, user.password_salt, (err, encryptedPassword) => {
         if (err) {
-          reject(err);
+          reject(this.createSystemException(err));
         }
 
         user.password = encryptedPassword;
@@ -118,7 +118,7 @@ export class UserService extends BaseService<IUser, number> {
     return new Promise<IUser>((resolve, reject) => {
       Encryption.hashPassword(user.password, user.password_salt, (err, encryptedPassword) => {
         if (err) {
-          reject(err);
+          reject(this.createSystemException(err));
         }
 
         user.password = encryptedPassword;
@@ -167,8 +167,7 @@ export class UserService extends BaseService<IUser, number> {
                 if (Array.isArray(users)) {
                   if (users.length <= 0 || users.length > 1) {
                     log.log(message);
-                    reject(message);
-                    // throw new Error(message);
+                    reject(this.createBusinessException(message));
                   } else {
                     user = users[0];
                     resolve(user);
@@ -176,7 +175,7 @@ export class UserService extends BaseService<IUser, number> {
                 } else {
                   if (!users) {
                     log.log(message);
-                    reject(message);
+                    reject(this.createBusinessException(message));
                     // throw new Error(message);
                   } else {
                     user = users;
@@ -185,7 +184,7 @@ export class UserService extends BaseService<IUser, number> {
                       if (err) {
 
                         log.log(message);
-                        reject(message);
+                        reject(this.createBusinessException(message));
                         // throw new Error(message);
                       }
 
@@ -195,19 +194,19 @@ export class UserService extends BaseService<IUser, number> {
                         resolve(user);
                       } else {
                         log.log(message + ' *');
-                        reject(message);
+                        reject(this.createBusinessException(message));
                         // throw new Error(message);
                       }
                     });
                   }
                 }
               } catch (err) {
-                reject(err);
+                reject(this.createSystemException(err));
               }
             })
             .catch((err) => {
               log.error(err);
-              reject(err);
+              reject(this.createSystemException(err));
             });
         });
 
@@ -244,7 +243,7 @@ export class UserService extends BaseService<IUser, number> {
           })
           .catch((err) => {
             log.error(err);
-            reject(err);
+            reject(this.createSystemException(err));
           });
       });
     });
@@ -279,7 +278,7 @@ export class UserService extends BaseService<IUser, number> {
           })
           .catch((err) => {
             log.error(err);
-            reject(err);
+            reject(this.createSystemException(err));
           });
       });
     });
@@ -309,14 +308,14 @@ export class UserService extends BaseService<IUser, number> {
           .then((users) => {
             if (!users || users.length <= 0) {
               log.log(message);
-              reject(message);
+              reject(this.createBusinessException(message));
             }
 
             const user = users[0];
 
             Encryption.hashPassword(password, user.password_salt, (err, encryptedPassword) => {
               if (err) {
-                reject(err);
+                reject(this.createSystemException(err));
               }
 
               if (encryptedPassword === user.password) {
@@ -326,14 +325,14 @@ export class UserService extends BaseService<IUser, number> {
                 resolve(user);
               } else {
                 log.log(message + ' *');
-                reject(message);
+                reject(this.createBusinessException(message));
               }
 
             });
           })
           .catch((err) => {
             log.error(err);
-            reject(err);
+            reject(this.createSystemException(err));
           });
       });
     });

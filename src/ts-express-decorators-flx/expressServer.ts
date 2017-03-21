@@ -1,5 +1,6 @@
 import path = require('path');
 import * as Express from 'express';
+import { ServerSettings } from 'ts-express-decorators';
 
 
 // -------------------------- logging -------------------------------
@@ -8,20 +9,19 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import {
-  AppConfig,
-  IAppConfig, JsonReader
-} from '@fluxgate/common';
+import { AppConfig, IAppConfig, JsonReader } from '@fluxgate/common';
+
+import { GlobalErrorHandler } from './middlewares/globalErrorHandler';
 import { ServerBase } from './serverBase';
 import { IServerConfiguration } from './serverBase';
-// -------------------------- logging -------------------------------
 
 
 const appConfigPath = path.join(process.cwd(), 'app/config/config.json');
 const appConfig = JsonReader.readJsonSync<IAppConfig>(appConfigPath);
 AppConfig.register(appConfig);
 
-
+// Server-Rootdir (zur Laufzeit)
+const rootDir = path.join(process.cwd());
 
 /**
  * Standardimplementierung für den Express-Server
@@ -30,11 +30,28 @@ AppConfig.register(appConfig);
  * @class ExpressServer
  * @extends {ServerBase}
  */
+
+@ServerSettings({
+
+  rootDir: rootDir,
+  mount: {
+    '/rest': `${rootDir}/controllers/**/**.js`
+  },
+  componentsScan: [
+    `${rootDir}/services/**/**.js`,
+    `${rootDir}/middlewares/**/**.js`
+  ],
+  acceptMimes: ['application/json']  // add your custom configuration here
+})
 export class ExpressServer extends ServerBase {
   protected static logger = getLogger(ExpressServer);
 
   public constructor(configuration: IServerConfiguration) {
     super(configuration);
+  }
+
+  public $afterRoutesInit() {
+    this.use(GlobalErrorHandler);
   }
 
 

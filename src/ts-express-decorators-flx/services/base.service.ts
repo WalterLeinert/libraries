@@ -7,8 +7,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  Assert, Clone, ColumnMetadata, Funktion, InvalidOperationException, IQuery, IToString,
-  IUser, ServerSystemException,
+  Assert, Clone, ColumnMetadata, Exception, Funktion, IException, InvalidOperationException,
+  IQuery, IToString, IUser,
+  ServerBusinessException, ServerSystemException,
   ServiceResult, TableMetadata, Types
 } from '@fluxgate/common';
 
@@ -83,9 +84,9 @@ export abstract class BaseService<T, TId extends IToString>  {
 
             if (ids.length <= 0) {
               log.error(`ids empty`);
-              reject(new ServerSystemException('create failed: ids empty'));
+              reject(this.createSystemException('create failed: ids empty'));
             } else if (ids.length > 1) {
-              reject(new ServerSystemException('create failed: ids.length > 1'));
+              reject(this.createSystemException('create failed: ids.length > 1'));
             } else {
               const id = ids[0];
               log.debug(`created new ${this.tableName} with id: ${id}`);
@@ -99,7 +100,7 @@ export abstract class BaseService<T, TId extends IToString>  {
           })
           .catch((err) => {
             log.error(err);
-            reject(err);
+            reject(this.createSystemException('error', err));
           });
 
       });
@@ -149,7 +150,7 @@ export abstract class BaseService<T, TId extends IToString>  {
           })
           .catch((err) => {
             log.error(err);
-            reject(err);
+            reject(this.createSystemException('error', err));
           });
       });
     });
@@ -195,7 +196,7 @@ export abstract class BaseService<T, TId extends IToString>  {
           })
           .catch((err) => {
             log.error(err);
-            reject(err);
+            reject(this.createSystemException('error', err));
           });
       });
     });
@@ -231,7 +232,7 @@ export abstract class BaseService<T, TId extends IToString>  {
           })
           .catch((err) => {
             log.error(err);
-            reject(err);
+            reject(this.createSystemException('error', err));
           });
       });
     });
@@ -263,7 +264,7 @@ export abstract class BaseService<T, TId extends IToString>  {
           })
           .catch((err) => {
             log.error(err);
-            reject(err);
+            reject(this.createSystemException('error', err));
           });
       });
     });
@@ -312,7 +313,7 @@ export abstract class BaseService<T, TId extends IToString>  {
           })
           .catch((err) => {
             log.error(err);
-            reject(err);
+            reject(this.createSystemException('error', err));
           });
       });
     });
@@ -423,6 +424,17 @@ export abstract class BaseService<T, TId extends IToString>  {
     }
     return result;
   }
+
+
+  protected createBusinessException(error: string, innerException?: IException | Error): Exception {
+    return new ServerBusinessException(error, innerException);
+  }
+
+  protected createSystemException(error: string, innerException?: IException | Error): Exception {
+    return new ServerSystemException(error, innerException);
+  }
+
+
 
   /**
    * Liefert den DB-Tabellennamen

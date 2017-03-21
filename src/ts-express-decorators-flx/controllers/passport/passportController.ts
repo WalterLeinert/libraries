@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IUser, ServerBusinessException, User } from '@fluxgate/common';
+import { IUser, ServerBusinessException, ServerSystemException, User } from '@fluxgate/common';
 import { PassportLocalService } from '../../services/passportLocal.service';
 
 import { Messages } from '../../../resources/messages';
@@ -70,12 +70,12 @@ export class PassportController {
             })(request, response, next);
         } catch (err) {
           log.error(err);
-          return reject(err);
+          return reject(new ServerSystemException('error', err));
         }
       })
         .catch((err) => {
           if (err && err.message === 'Failed to serialize user into session') {
-            throw new NotFound('user not found');
+            return Promise.reject(new ServerBusinessException('user not found'));
           }
           return Promise.reject(err);
         });
@@ -102,7 +102,7 @@ export class PassportController {
 
         Passport.authenticate('signup', (err, user: IUser) => {
           if (err) {
-            return reject(err);
+            return reject(new ServerSystemException('error', err));
           }
           if (!user) {
             return reject(!!err);
@@ -164,7 +164,8 @@ export class PassportController {
         try {
           if (username !== request.user.username) {
             log.error(`username (${username}) !== request.user.username (${request.user.username})`);
-            reject(new ServerBusinessException(`${Messages.USERS_DO_NOT_MATCH(username, request.user.username)}`));
+            reject(new ServerBusinessException(
+              `${Messages.USERS_DO_NOT_MATCH(username, request.user.username)}`));
             return;
           }
 
@@ -178,7 +179,7 @@ export class PassportController {
 
               request.logIn(changedUser, (loginErr) => {
                 if (loginErr) {
-                  return reject(loginErr);
+                  return reject(new ServerSystemException('error', loginErr));
                 }
 
                 changedUser.resetCredentials();
@@ -188,12 +189,12 @@ export class PassportController {
             })(request, response, next);
         } catch (err) {
           log.error(err);
-          return reject(err);
+          return reject(new ServerSystemException('error', err));
         }
       })
         .catch((err) => {
           if (err && err.message === 'Failed to serialize user into session') {
-            throw new NotFound('user not found');
+            return Promise.reject(new ServerBusinessException('user not found'));
           }
           return Promise.reject(err);
         });
