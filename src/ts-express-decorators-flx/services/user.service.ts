@@ -164,42 +164,41 @@ export class UserService extends BaseService<IUser, number> {
                 // Prüfung, ob users Array oder ein User
                 //
                 let user: IUser = null;
-                if (Array.isArray(users)) {
-                  if (users.length <= 0 || users.length > 1) {
-                    log.log(message);
-                    reject(this.createBusinessException(message));
-                  } else {
-                    user = users[0];
-                    resolve(user);
-                  }
+
+
+                if (!users) {
+                  log.log(message);
+                  reject(this.createBusinessException(message));
                 } else {
-                  if (!users) {
-                    log.log(message);
-                    reject(this.createBusinessException(message));
-                    // throw new Error(message);
-                  } else {
-                    user = users;
-
-                    Encryption.hashPassword(password, user.password_salt, (err, encryptedPassword) => {
-                      if (err) {
-
-                        log.log(message);
-                        reject(this.createBusinessException(message));
-                        // throw new Error(message);
-                      }
-
-                      if (encryptedPassword === user.password) {
-                        user.resetCredentials();
-                        log.log('user: ', user);
-                        resolve(user);
-                      } else {
-                        log.log(message + ' *');
-                        reject(this.createBusinessException(message));
-                        // throw new Error(message);
-                      }
-                    });
+                  if (!Array.isArray(users)) {
+                    reject(this.createSystemException('internal error: array expected'));
                   }
                 }
+
+                // no user found?
+                if (users.length <= 0 || users.length > 1) {
+                  log.log(message);
+                  reject(this.createBusinessException(message));
+                } else {
+                  user = users[0];
+
+                  Encryption.hashPassword(password, user.password_salt, (err, encryptedPassword) => {
+                    if (err) {
+                      log.log(message);
+                      reject(this.createBusinessException(message));
+                    }
+
+                    if (encryptedPassword === user.password) {
+                      user.resetCredentials();
+                      log.log('user: ', user);
+                      resolve(user);
+                    } else {
+                      log.log(message + ' *');
+                      reject(this.createBusinessException(message));
+                    }
+                  });
+                }
+
               } catch (err) {
                 reject(this.createSystemException(err));
               }
