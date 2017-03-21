@@ -127,8 +127,8 @@ export abstract class BaseService<T, TId extends IToString>  {
           .where(this.idColumnName, id.toString())
           .then((rows: any[]) => {
             if (rows.length <= 0) {
-              log.debug('result: no item found');
-              resolve(null);
+              log.info('result: no item found');
+              reject(this.createBusinessException(`table ${this.tableName}: item with id ${id} not found.`));
             } else {
               const result = this.createModelInstance(rows[0]);
 
