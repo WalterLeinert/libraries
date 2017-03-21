@@ -59,12 +59,6 @@ export interface IServerConfiguration {
     endPoint?: string;
 
     /**
-     * Path-Pattern für die Controller-Klassen
-     * @example '/controllers/xx/x.js' (x steht für *)
-     */
-    controllers?: string;
-
-    /**
      * der Http-Port
      * @example 8000
      */
@@ -98,7 +92,6 @@ export abstract class ServerBase extends ServerLoader {
   public static readonly DEFAULT_SERVER_CONFIGURATION: IServerConfiguration = {
     express: {
       endPoint: '/rest',
-      controllers: './controllers/**/*.js',
       port: 8000,
       httpsPort: 8080
     },
@@ -135,11 +128,6 @@ export abstract class ServerBase extends ServerLoader {
         // interne Controller (wie UserController)
         const serverControllers = path.join(cwd, '../../node_modules/@fluxgate/server/dist/*.js');
 
-        // Anwendungscontroller
-        const controllers = this.configuration.express.controllers;
-
-        log.info(`__dirname = ${__dirname}, controllers = ${controllers}`);
-
         const errorLogger = (message: string): void => {
           log.error(message);
         };
@@ -150,7 +138,6 @@ export abstract class ServerBase extends ServerLoader {
 
         this.setEndpoint(this.configuration.express.endPoint)
           .scan(serverControllers)
-          .scan(controllers)
           .createHttpServer(this.configuration.express.port)
           .createHttpsServer({
             port: this.configuration.express.httpsPort,
@@ -284,21 +271,6 @@ export abstract class ServerBase extends ServerLoader {
 
       const cwd = process.cwd();
       log.info(`cwd = ${cwd}`);
-
-
-      //
-      // Controllers
-      //
-      if (Utility.isNullOrEmpty(configuration.express.controllers)) {
-        configuration.express.controllers = ServerBase.DEFAULT_SERVER_CONFIGURATION.express.controllers;
-      }
-
-      if (!path.isAbsolute(configuration.express.controllers)) {
-        configuration.express.controllers = path.join(cwd, this.configuration.express.controllers);
-      }
-      // if (configuration.express.controllers.startsWith('.')) {
-      //   configuration.express.controllers = path.join(process.cwd(), 'config', configuration.express.controllers);
-      // }
 
       //
       // Endpoint
