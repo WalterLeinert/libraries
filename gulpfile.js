@@ -8,6 +8,7 @@ const gulp = require('gulp');
 const gulp_tslint = require('gulp-tslint');
 const del = require('del');
 const gulpSequence = require('gulp-sequence');
+const argv = require('yargs').argv;
 const exec = require('child_process').exec;
 const typescript = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
@@ -109,6 +110,14 @@ gulp.task('test', ['compile-test'], function () {
     .pipe(mocha({
       reporter: 'spec'
     }));
+});
+
+
+gulp.task('publish', ['default'], function (cb) {
+  const force = argv.f ? argv.f : '';
+  const forceSwitch = (force ? '-f' : '');
+
+  execCommand('npm publish ' + forceSwitch, '.', null, cb);
 });
 
 
