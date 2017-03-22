@@ -6,8 +6,9 @@
 const gulp = require('gulp');
 const ngc = require('gulp-ngc');
 const gulp_tslint = require('gulp-tslint');
-const del = require('del')
-const gulpSequence = require('gulp-sequence')
+const del = require('del');
+const gulpSequence = require('gulp-sequence');
+const argv = require('yargs').argv;
 const exec = require('child_process').exec;
 const tslint = require("gulp-tslint");
 const typescript = require('gulp-typescript');
@@ -105,6 +106,15 @@ gulp.task('test', function () {
         .pipe(mocha({
             reporter: 'spec'
         }));
+});
+
+
+
+gulp.task('publish', ['default'], function (cb) {
+  const force = argv.f ? argv.f : '';
+  const forceSwitch = (force ? '-f' : '');
+
+  execCommand('npm publish ' + forceSwitch, '.', null, cb);
 });
 
 

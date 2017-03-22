@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/client",
-  "version": "2.0.4-beta.2",
+  "version": "2.0.4",
   "description": "Fluxgate Client-Library ",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -46,10 +46,11 @@
     "vinyl-source-stream": "^1.1.0",
     "webpack": "^2.2.1",
     "webpack-fail-plugin": "^1.0.5",
+    "yargs": "^7.0.2",
     "zone.js": "^0.7.6"
   },
   "dependencies": {
-    "@fluxgate/common": "^2.0.4-beta.1",
+    "@fluxgate/common": "^2.0.4",
     "http-status-codes": "^1.1.6",
     "moment": "^2.17.1",
     "ng2-toastr": "^1.6.0",
@@ -58,7 +59,7 @@
     "tinycolor2": "^1.4.1"
   },
   "peerDependencies": {
-    "@fluxgate/common": ">=2.0.4-beta.0"
+    "@fluxgate/common": ">=2.0.4"
   },
   "directories": {
     "lib": "lib"
