@@ -6,6 +6,7 @@ const gulp = require('gulp');
 const env = require('gulp-env');
 const del = require('del');
 const gulpSequence = require('gulp-sequence');
+const argv = require('yargs').argv;
 const exec = require('child_process').exec;
 const gulp_tslint = require('gulp-tslint');
 const typescript = require('gulp-typescript');
@@ -104,6 +105,13 @@ gulp.task('test', ['set-env'], function () {
     }));
 });
 
+
+gulp.task('publish', ['default'], function (cb) {
+  const force = argv.f ? argv.f : '';
+  const forceSwitch = (force ? '-f' : '');
+
+  execCommand('npm publish ' + forceSwitch, '.', null, cb);
+});
 
 gulp.task('bundle', ['compile'], function (cb) {
   execCommand('webpack', '.', null, cb);

@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/common",
-  "version": "2.0.4-beta.1",
+  "version": "2.0.4",
   "description": "Fluxgate Library client/server übergreifend",
   "browser": "dist/common.client.bundle.js",
   "main": "dist/common.node.bundle.js",
@@ -40,7 +40,8 @@
     "typescript": "^2.2.1",
     "webpack": "^2.2.1",
     "webpack-fail-plugin": "^1.0.6",
-    "webpack-merge": "^3.0.0"
+    "webpack-merge": "^3.0.0",
+    "yargs": "^7.0.2"
   },
   "dependencies": {
     "core-decorators": "^0.15.0",
