@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@fluxgate/common": "^2.0.4",
+    "emailjs": "^1.0.8",
     "express": "^4.14.1",
     "js-shortid": "^0.1.1",
     "knex": "^0.12.6",

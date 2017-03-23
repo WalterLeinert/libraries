@@ -71,6 +71,15 @@ export interface IServerConfiguration {
     httpsPort: number;
   };
 
+  mail: {
+    host: string;
+    port: number;
+    ssl: boolean;
+    user: string;
+    password: string;
+    from: string;
+  };
+
   knex: Knex.Config;
 }
 
@@ -94,6 +103,14 @@ export abstract class ServerBase extends ServerLoader {
       endPoint: '/rest',
       port: 8000,
       httpsPort: 8080
+    },
+    mail: {
+      host: 'smtpserver',
+      port: 25,
+      ssl: true,
+      user: 'username',
+      password: 'password',
+      from: 'from'
     },
     knex: undefined
   };
