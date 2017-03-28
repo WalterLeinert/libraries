@@ -17,7 +17,6 @@ import { ChangePasswordComponent } from './changePassword/changePassword.compone
 import { CurrentUserService } from './currentUser.service';
 import { LoginComponent } from './login/login.component';
 import { LogoffComponent } from './logoff/logoff.component';
-import { NavigationService } from './navigation.service';
 import { PassportService } from './passport.service';
 import { RegisterGuardService } from './register/register-guard.service';
 import { RegisterComponent } from './register/register.component';
@@ -52,7 +51,6 @@ import { RoleService } from './role.service';
   ],
   providers: [
     CurrentUserService,
-    NavigationService,
     PassportService,
     RoleService,
     RegisterGuardService,

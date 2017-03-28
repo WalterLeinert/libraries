@@ -1,11 +1,11 @@
 /* tslint:disable:use-life-cycle-interface -> BaseComponent */
 
 // import 'reflect-metadata';
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
-import { IUser } from '@fluxgate/common';
+import { IUser, Types } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -15,7 +15,8 @@ import { getLogger, ILogger } from '@fluxgate/common';
 import { BaseComponent } from '../../../common/base/base.component';
 
 import { MessageService } from '../../../services/message.service';
-import { NavigationService } from '../navigation.service';
+import { AuthenticationNavigation } from '../authenticationNavigation';
+import { IAuthenticationNavigation } from '../authenticationNavigation.interface';
 import { PassportService } from '../passport.service';
 
 
@@ -82,7 +83,8 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   private currentUser: IUser;
 
   constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
-    private navigationService: NavigationService, service: PassportService) {
+    @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation,
+    service: PassportService) {
     super(router, route, messageService, service);
   }
 
@@ -104,7 +106,9 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
       .subscribe((user) => {
         ChangePasswordComponent.logger.info(`ChangePasswordComponent.changePassword: user = ${user}`);
 
-        this.navigate(['..'], { relativeTo: this.route });
+        if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
+          this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);
+        }
       },
       (error: Error) => {
         this.handleError(error);
@@ -113,8 +117,8 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
 
 
   public cancel() {
-    this.navigate([
-      this.navigationService.navigationPath
-    ]);
+    if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
+      this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);
+    }
   }
 }

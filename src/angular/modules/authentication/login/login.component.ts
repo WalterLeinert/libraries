@@ -1,7 +1,7 @@
 /* tslint:disable:use-life-cycle-interface -> BaseComponent */
 
 // import 'reflect-metadata';
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -16,7 +16,8 @@ import { ChangePasswordGuardService } from '../changePassword/changePassword-gua
 import { RegisterGuardService } from '../register/register-guard.service';
 
 import { MessageService } from '../../../services/message.service';
-import { NavigationService } from '../navigation.service';
+import { AuthenticationNavigation } from '../authenticationNavigation';
+import { IAuthenticationNavigation } from '../authenticationNavigation.interface';
 import { PassportService } from '../passport.service';
 
 
@@ -85,7 +86,7 @@ export class LoginComponent extends BaseComponent<PassportService> {
    * @memberOf LoginComponent
    */
   constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
-    private navigationService: NavigationService,
+    @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation,
     service: PassportService, changePasswordGuardService: ChangePasswordGuardService,
     registerGuardService: RegisterGuardService) {
     super(router, route, messageService, service);
@@ -105,7 +106,7 @@ export class LoginComponent extends BaseComponent<PassportService> {
         .subscribe((result) => {
           log.log(JSON.stringify(result));
           this.navigate([
-            this.navigationService.navigationPath
+            this.authenticationNavigation.loginRedirectUrl
           ]);
         },
         (error: Error) => {

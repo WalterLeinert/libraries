@@ -2,12 +2,12 @@
 // tslint:disable:max-line-length
 
 // Angular
-import { Component, Injector } from '@angular/core';
+import { Component, Inject, Injector } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // fluxgate
-import { Assert, IRole, User } from '@fluxgate/common';
+import { Assert, IRole, Types, User } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -17,7 +17,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 import { Base2Component } from '../../../common/base';
 import { MetadataService } from '../../../services';
 import { MessageService } from '../../../services/message.service';
-import { NavigationService } from '../navigation.service';
+import { AuthenticationNavigation } from '../authenticationNavigation';
+import { IAuthenticationNavigation } from '../authenticationNavigation.interface';
 import { PassportService } from '../passport.service';
 import { RoleService } from '../role.service';
 
@@ -99,7 +100,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
   public selectedRole: IRole;
 
   constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
-    private navigationService: NavigationService, service: PassportService,
+    @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation, service: PassportService,
     roleService: RoleService, metadataService: MetadataService, injector: Injector) {
 
     super(router, route, messageService, service, roleService);
@@ -119,9 +120,12 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
         .subscribe((result) => {
           log.log(JSON.stringify(result));
 
-          this.navigate([
-            this.navigationService.navigationPath
-          ]);
+          if (Types.isPresent(this.authenticationNavigation.registerRedirectUrl)) {
+            this.navigate([
+              this.authenticationNavigation.registerRedirectUrl
+            ]);
+          }
+
         },
         (error: Error) => {
           this.handleError(error);
