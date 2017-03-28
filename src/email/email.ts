@@ -40,7 +40,13 @@ export class Email {
         message.from = this.configuration.mail.from;
       }
 
-      mailtransport.send(message, function (err, themessage) { log.info(err || themessage); });
+      mailtransport.send(message, (err, themessage) => {
+        if (err) {
+          log.error(err);
+        } else {
+          log.log(themessage);
+        }
+      });
     });
   }
 
