@@ -53,7 +53,7 @@ export class User implements IUser {
     Validators.required
   ])
   @Enum<Role, string, number>(() => Role, (role) => role.name, (role) => role.id, true)
-  @Column({ name: 'id_role', displayName: 'Role-Id' })
+  @Column({ name: 'id_role', displayName: 'Role' })
   public role: number = UserRoleId.User;
 
   @Validation([
@@ -77,7 +77,7 @@ export class User implements IUser {
   }
 
 
-  constructor(id: number, username: string, role: number) {
+  constructor(id?: number, username?: string, role?: number) {
     this.id = id;
     this.username = username;
     this.role = role;
