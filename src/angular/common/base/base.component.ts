@@ -27,6 +27,7 @@ import { IAutoformConfig, IAutoformNavigation } from '../../modules/autoform/aut
 import { AutoformConstants } from '../../modules/autoform/autoformConstants';
 import { MessageService } from '../../services/message.service';
 import { CoreComponent } from './core.component';
+import { FormGroupInfo } from './formGroupInfo';
 
 
 /**
@@ -257,6 +258,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
 
   protected createItem<T, TId>(
     item: T,
+    groupName: string = FormGroupInfo.DEFAULT_NAME,
     idAccessor?: InstanceAccessor<T, TId>,
     idSetter?: InstanceSetter<T, TId>,
     service?: IService): Observable<T> {
@@ -277,19 +279,20 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
       .do((elem: T) => {
         idSetter(item, idAccessor(elem));
         this.addSuccessMessage('Record created.');
-        this.resetForm(item);
+        this.resetForm(groupName, item);
       })   // Id setzen
       .catch(this.handleError);
   }
 
-  protected updateItem<T, TId>(item: T, service?: IService): Observable<T> {
+  protected updateItem<T, TId>(item: T, groupName: string = FormGroupInfo.DEFAULT_NAME,
+    service?: IService): Observable<T> {
     if (!service) {
       service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
     }
     return service.update(item)
       .do((elem: T) => {
         this.addSuccessMessage('Record updated.');
-        this.resetForm(item);
+        this.resetForm(groupName, item);
       })
       .catch(this.handleError);
   }

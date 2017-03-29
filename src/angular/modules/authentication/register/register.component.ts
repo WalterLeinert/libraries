@@ -29,7 +29,7 @@ import { RoleService } from '../role.service';
 <div class="container">
   <h1>Register</h1>
 
-  <form [formGroup]="form">
+  <form [formGroup]="getForm()">
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="username">Username</label>
       <div class="col-sm-5">
@@ -75,7 +75,7 @@ import { RoleService } from '../role.service';
     </div>
     <div class="form-group row">
       <div class="col-sm-5">
-        <!-- disabled Steuerung nach Umbau von flx-dropdown auf form.invalid umbauen -->
+        <!-- disabled Steuerung nach Umbau von flx-dropdown auf getForm().invalid umbauen -->
         <button type="submit" class="btn btn-primary" [disabled]="isRegisterDisabled()" (click)='signup()'>Register</button>
       </div>
     </div>
@@ -141,11 +141,9 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
 
   public isRegisterDisabled() {
     return (
-      // tslint:disable-next-line:no-string-literal
-      this.form.controls['username'].invalid ||
-      // tslint:disable-next-line:no-string-literal
-      this.form.controls['password'].invalid ||
-      // tslint:disable-next-line:no-string-literal
-      this.form.controls['email'].invalid);
+      this.isFormControlInvalid('form', 'username') ||
+      this.isFormControlInvalid('form', 'password') ||
+      this.isFormControlInvalid('form', 'email')
+    );
   }
 }

@@ -11,9 +11,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  Assert, Clone, CompoundValidator, Dictionary, Funktion, IMessage,
+  Assert, CompoundValidator, Dictionary, Funktion, IMessage,
   MessageSeverity, PatternValidator, RangeValidator,
-  RequiredValidator, TableMetadata, UniqueIdentifiable, Utility
+  RequiredValidator, TableMetadata, Types, UniqueIdentifiable, Utility
 } from '@fluxgate/common';
 
 import { ControlType } from '../../../angular/modules/common/controlType';
@@ -22,6 +22,16 @@ import { DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
+import { FormGroupInfo, IMessageDict } from './formGroupInfo';
+
+
+export interface IValidatorDict {
+  [name: string]: [     // key: Propertyname
+    any,                // Propertywert 
+    ValidatorFn[] | ValidatorFn     // Array von Validatoren
+  ];
+}
+
 
 /**
  * Basisklasse (Komponente) ohne Router, Service für alle GUI-Komponenten
@@ -30,6 +40,7 @@ import { MetadataService } from '../../services/metadata.service';
  * @class CoreComponent
  * @implements {OnInit, OnDestroy}
  */
+// tslint:disable-next-line:max-classes-per-file
 export abstract class CoreComponent extends UniqueIdentifiable implements OnInit, OnDestroy {
   protected static readonly logger = getLogger(CoreComponent);
 
@@ -44,17 +55,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
 
   // >> Formvalidierung
-  protected form: FormGroup;
-
-  public formErrors: { [key: string]: any } = {
-    date: ''    // nur Beispiel: die Errors werden über Validierung von angular erzeugt
-  };
-
-  private validationMessages: { [key: string]: any } = {
-    date: {     // nur Beispiel: die Messages werden über die Konfiguraton/Metadaten aufgebaut
-      required: 'Date is required.',
-    }
-  };
+  private formInfos: Dictionary<string, FormGroupInfo> = new Dictionary<string, FormGroupInfo>();
   // << Formvalidierung
 
   protected constructor(private _messageService: MessageService) {
@@ -104,36 +105,53 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   }
 
 
+
   /**
-   * Setzt der Form-Status zurück (z.B. nach submit)
+   * Setzt den Form-Status zurück (z.B. nach submit).
    * 
-   * @param handler 
-   * @param form 
+   * Ist @param{groupName} gesetzt, wird nur dir entsprechende FormGroup zurückgesetzt
+   * 
+   * @param groupName - der Name der FormGroup
+   * @param value - der Wert/die Werte, auf den die FormGroup gesetzt werden soll
    */
-  public resetForm(value?: any, form?: FormGroup) {
-    if (form) {
-      const valueCloned = this.getClonedValue(value);
-      form.reset(valueCloned);
-    } else {
-      if (this.form) {
-        const valueCloned = this.getClonedValue(value);
-        this.form.reset(valueCloned);
+  public resetForm(groupName?: string, value?: any) {
+    if (Utility.isNullOrEmpty(groupName) && !Types.isPresent(value)) {
+      for (const info of this.formInfos.values) {
+        info.reset();
       }
+    } else {
+      const info = this.formInfos.get(groupName);
+      info.reset(value);
     }
   }
 
 
   /**
    * Liefert true, falls eine zugehörige (Reactive) Form existiert und diese dirty ist.
+   * Die Form kann aus mehreren FormGroups bestehen.
    * Muss in konkreten Komponentenklassen überschrieben werden, falls zusätzliche Bedingungen greifen sollen.
    * 
+   * Ist @param{groupName} angegeben, so wird nur die entsprechende Group untersucht.
+   * 
+   * @param groupName - der Name der FormGroup
    * @returns {boolean} 
    * 
    * @memberOf CoreComponent
    */
-  public hasChanges(): boolean {
-    return this.form && this.form.dirty;
+
+  public hasChanges(groupName?: string): boolean {
+    if (Utility.isNullOrEmpty(groupName)) {
+      for (const info of this.formInfos.values) {
+        if (info.hasChanges()) {
+          return true;
+        }
+      }
+      return false;
+    } else {
+      return this.formInfos.get(groupName).hasChanges();
+    }
   }
+
 
 
   /**
@@ -265,14 +283,21 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * Erzeugt mit Hilfe eines @see{FormBuilder}s für @param{dataItem} und die Infos @param{columnInfos} eine FormGroup
    * und registriert sich auf Formänderungen; über @param{tableMetadata} werden Validierungsinfos aus dem Model besorgt
    * 
-   * @param formBuilder 
-   * @param dataItem 
-   * @param columnInfos 
-   * @param tableMetadata
+
+   * @param formBuilder der zugehörige FormBuilder 
+   * @param dataItem anzubindendes Datenobjekt
+   * @param displayInfos Konfiguration der Controls
+   * @param tableMetadata Metadaten
+   * @param groupName der Name der FormGroup
    */
-  protected buildForm(formBuilder: FormBuilder, dataItem: any, columnInfos: IControlDisplayInfo[],
-    tableMetadata: TableMetadata) {
-    using(new XLog(CoreComponent.logger, levels.INFO, 'buildForm'), (log) => {
+  protected buildForm(formBuilder: FormBuilder, dataItem: any, displayInfos: IControlDisplayInfo[],
+    tableMetadata: TableMetadata, groupName: string = FormGroupInfo.DEFAULT_NAME): void {
+    Assert.notNullOrEmpty(groupName);
+    Assert.notNull(formBuilder);
+    Assert.notNull(dataItem);
+    Assert.notNullOrEmpty(displayInfos);
+
+    using(new XLog(CoreComponent.logger, levels.INFO, 'buildForm', `groupName = ${groupName}`), (log) => {
 
       // Dictionary mit dem Validierunginformationen
       const validatorDict: {
@@ -282,12 +307,13 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
         ]
       } = {};
 
-      this.validationMessages = {};
-      this.formErrors = {};
+      const formInfo = new FormGroupInfo();
+      this.formInfos.set(groupName, formInfo);
 
-      columnInfos.forEach((info) => {
+
+      displayInfos.forEach((info) => {
         const validators: ValidatorFn[] = [];
-        const messageDict = {};
+        const messageDict: IMessageDict = {};
 
         if (tableMetadata) {
           const colMetadata = tableMetadata.getColumnMetadataByProperty(info.valueField);
@@ -343,8 +369,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
             validators
           ];
 
-          this.validationMessages[info.valueField] = messageDict;
-          this.formErrors[info.valueField] = '';
+          formInfo.setValidationMessages(info.valueField, messageDict);
         }
       });
 
@@ -352,35 +377,83 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
         log.debug('validatorDict: ', JSON.stringify(validatorDict));
       }
 
-      this.form = formBuilder.group(validatorDict);
-
-      this.form.valueChanges.subscribe((data) => this.onValueChanged(data));
-      this.onValueChanged();
-
+      formInfo.setFormGroup(formBuilder.group(validatorDict));
     });
   }
 
 
+  /**
+   * Erzeugt mit Hilfe eines @see{FormBuilder}s für @param{dataItem} und die Infos @param{columnInfos} eine FormGroup
+   * und registriert sich auf Formänderungen; über @param{tableMetadata} werden Validierungsinfos aus dem Model besorgt
+   *
+   * @param formBuilder der zugehörige FormBuilder
+   * @param validatorDict Validierungsinformation
+   * @param groupName  der Name der FormGroup
+   */
+  protected buildFormFromValidators(formBuilder: FormBuilder, validatorDict: IValidatorDict,
+    groupName: string = FormGroupInfo.DEFAULT_NAME): void {
+    Assert.notNullOrEmpty(groupName);
+    Assert.notNull(formBuilder);
+    Assert.notNull(validatorDict);
 
-  private onValueChanged(data?: any) {
-    if (!this.form) { return; }
+    using(new XLog(CoreComponent.logger, levels.INFO, 'buildForm', `groupName = ${groupName}`), (log) => {
 
-    for (const field in this.formErrors) {
-      if (field) {
-        // clear previous error message (if any)
-        this.formErrors[field] = '';
-        const control = this.form.get(field);
+      if (log.isDebugEnabled()) {
+        log.debug('validatorDict: ', JSON.stringify(validatorDict));
+      }
 
-        if (control && control.dirty && !control.valid) {
-          const messages = this.validationMessages[field];
-          for (const key in control.errors) {
-            if (key) {
-              this.formErrors[field] += messages[key] + ' ';
-            }
-          }
+      const formInfo = new FormGroupInfo();
+      this.formInfos.set(groupName, formInfo);
+
+      for (const key in validatorDict) {
+        if (!Utility.isNullOrEmpty(key)) {
+          const v = validatorDict[key];
+
+          // v[0].validators.foreach((item) => {
+          // formInfo.setValidationMessages(info.valueField, messageDict);
+          // formInfo.setErrors(info.valueField, '');
+          // });
+          formInfo.setValidationMessages(key, {});
         }
       }
-    }
+
+      if (log.isDebugEnabled()) {
+        log.debug('validatorDict: ', JSON.stringify(validatorDict));
+      }
+
+      formInfo.setFormGroup(formBuilder.group(validatorDict));
+    });
+  }
+
+  /**
+   * Liefert true, falls das Control @param{controlName} der Gruppe 
+   * @param{groupName} den Status invalid hat. 
+   * 
+   * @param groupName  der Name der FormGroup
+   * @param {string} controlName 
+   * @returns {boolean} 
+   */
+  protected isFormControlInvalid(groupName: string, controlName: string): boolean {
+    Assert.notNullOrEmpty(groupName);
+    Assert.notNullOrEmpty(controlName);
+
+    const formInfo = this.formInfos.get(groupName);
+    return formInfo.isFormControlInvalid(controlName);
+  }
+
+  /**
+   * Liefert die zugehörige @see{FormGroup} für den Namen @param{groupName}.
+   * 
+   * @protected
+   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME] 
+   * @returns {FormGroup} 
+   * 
+   * @memberOf CoreComponent
+   */
+  protected getForm(groupName: string = FormGroupInfo.DEFAULT_NAME): FormGroup {
+    Assert.notNullOrEmpty(groupName);
+    const formInfo = this.formInfos.get(groupName);
+    return formInfo.form;
   }
 
 
@@ -389,15 +462,5 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    */
   protected get messageService(): MessageService {
     return this._messageService;
-  }
-
-
-  private getClonedValue(value: any): any {
-    let valueCloned;
-
-    if (value !== undefined) {
-      valueCloned = Clone.clone(value);
-    }
-    return valueCloned;
   }
 }

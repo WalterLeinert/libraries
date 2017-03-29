@@ -29,7 +29,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 <p-dialog [(visible)]="dataItem" [header]="pageTitle" (onBeforeHide)="onBeforeDialogHide($event)" [responsive]="true" showEffect="fade"
   [modal]="true" width="600">
   <div class="container-fluid">
-    <form *ngIf="dataItem" class="form-horizontal" [formGroup]="form">
+    <form *ngIf="dataItem" class="form-horizontal" [formGroup]="getForm()">
 
       <div *ngIf="configInternal && configInternal.columnInfos">
         <ul *ngFor="let info of configInternal.columnInfos">

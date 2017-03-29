@@ -27,7 +27,7 @@ import { PassportService } from '../passport.service';
 <div class="container">
   <h1>Login</h1>
 
-  <form [formGroup]="form">
+  <form [formGroup]="getForm()">
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="username">Name</label>
       <div class="col-sm-5">
@@ -46,7 +46,7 @@ import { PassportService } from '../passport.service';
 
     <div class="form-group row">
       <div class="col-sm-5">
-        <button type="submit" class="btn btn-primary" [disabled]="form.invalid" (click)='login()'>Login</button>
+        <button type="submit" class="btn btn-primary" [disabled]="getForm().invalid" (click)='login()'>Login</button>
       </div>
     </div>
   </form>
@@ -92,7 +92,7 @@ export class LoginComponent extends BaseComponent<PassportService> {
     super(router, route, messageService, service);
     using(new XLog(LoginComponent.logger, levels.INFO, 'ctor'), (log) => {
 
-      this.form = fb.group({
+      this.buildFormFromValidators(this.fb, {
         username: ['', Validators.required],
         password: ['', Validators.required],
       });
