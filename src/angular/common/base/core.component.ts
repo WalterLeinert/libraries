@@ -259,10 +259,36 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
 
   /**
-   * Erzeugt mit Hilfe eines @see{FormBuilder}s für @param{dataItem} und die Infos @param{columnInfos} eine FormGroup
+   * Erzeugt mit Hilfe eines @see{FormBuilder}s für die Modelklasse @param{clazz} über die Metadaten
+   * und den Injector eine FormGroup @param{groupName} und liefert eine neu erzeugte Modelinstanz.
+   * 
+   * @protected
+   * @template T 
+   * @param {FormBuilder} formBuilder 
+   * @param {Funktion} model 
+   * @param {MetadataService} metadataService 
+   * @param {Injector} injector 
+   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME] 
+   * @returns {T} 
+   * 
+   * @memberOf CoreComponent
+   */
+  protected buildFormFromModel<T>(formBuilder: FormBuilder, clazz: Funktion, metadataService: MetadataService,
+    injector: Injector, groupName: string = FormGroupInfo.DEFAULT_NAME): T {
+    const tableMetadata = metadataService.findTableMetadata(clazz);
+    Assert.notNull(tableMetadata, `Metadaten für Tabelle ${clazz.name}`);
+
+    const obj = tableMetadata.createEntity<T>();
+    const displayInfos = this.createDisplayInfos(obj, clazz, metadataService, injector);
+    this.buildForm(formBuilder, obj, displayInfos, tableMetadata, groupName);
+
+    return obj;
+  }
+
+  /**
+   * Erzeugt mit Hilfe eines @see{FormBuilder}s für @param{dataItem} und die Infos @param{displayInfos} eine FormGroup
    * und registriert sich auf Formänderungen; über @param{tableMetadata} werden Validierungsinfos aus dem Model besorgt
    * 
-
    * @param formBuilder der zugehörige FormBuilder 
    * @param dataItem anzubindendes Datenobjekt
    * @param displayInfos Konfiguration der Controls
@@ -359,6 +385,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
       formInfo.setFormGroup(formBuilder.group(validatorDict));
     });
   }
+  
 
 
   /**
@@ -444,6 +471,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     return formInfo.isFormControlInvalid(controlName);
   }
 
+
   /**
    * Liefert die zugehörige @see{FormGroup} für den Namen @param{groupName}.
    * 
@@ -459,6 +487,30 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     return formInfo.form;
   }
 
+
+  /**
+   * Liefert die default FormGroup
+   * 
+   * @readonly
+   * @protected
+   * @type {FormGroup}
+   * @memberOf CoreComponent
+   */
+  protected get form(): FormGroup {
+    return this.getForm();
+  }
+
+  /**
+   * Liefert die Validierungsfehler für das angegebene Control @param{controlName} und die 
+   * FormGroup @param{groupName}
+   * 
+   * @protected
+   * @param {string} controlName 
+   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME] 
+   * @returns {string} 
+   * 
+   * @memberOf CoreComponent
+   */
   protected getFormErrors(controlName: string, groupName: string = FormGroupInfo.DEFAULT_NAME): string {
     Assert.notNullOrEmpty(controlName);
     Assert.notNullOrEmpty(groupName);
@@ -473,4 +525,5 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   protected get messageService(): MessageService {
     return this._messageService;
   }
+
 }

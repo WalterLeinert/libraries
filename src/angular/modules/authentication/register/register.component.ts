@@ -102,16 +102,9 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
   constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
     @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation, service: PassportService,
     roleService: RoleService, metadataService: MetadataService, injector: Injector) {
-
     super(router, route, messageService, service, roleService);
 
-    const userTableMetadata = metadataService.findTableMetadata(User.name);
-    Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name}`);
-
-    this.user = userTableMetadata.createEntity<User>();
-
-    const displayInfos = this.createDisplayInfos(this.user, User, metadataService, injector);
-    this.buildForm(this.fb, this.user, displayInfos, userTableMetadata);
+    this.buildFormFromModel<User>(this.fb, User, metadataService, injector);
   }
 
   public signup() {
