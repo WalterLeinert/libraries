@@ -141,9 +141,9 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
 
   public isRegisterDisabled() {
     return (
-      this.isFormControlInvalid('form', 'username') ||
-      this.isFormControlInvalid('form', 'password') ||
-      this.isFormControlInvalid('form', 'email')
+      this.isFormControlInvalid('username') ||
+      this.isFormControlInvalid('password') ||
+      this.isFormControlInvalid('email')
     );
   }
 }

@@ -92,6 +92,10 @@ export class FormGroupInfo {
     return this._form;
   }
 
+  public getFormErrors(controlName: string): string {
+    return this.errors[controlName];
+  }
+
   private onValueChanged(dataa?: any) {
     this.updateFormErrors();
   }

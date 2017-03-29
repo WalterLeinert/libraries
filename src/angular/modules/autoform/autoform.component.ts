@@ -50,8 +50,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
                 >
               </div>
 
-              <div *ngIf="formErrors[info.valueField]" class="alert alert-danger">
-                {{ formErrors[info.valueField] }}
+              <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+                {{ getFormErrors(info.valueField) }}
               </div>           
               
             </div>
@@ -73,8 +73,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
                 </p-calendar>
               </div>
 
-              <div *ngIf="formErrors[info.valueField]" class="alert alert-danger">
-                {{ formErrors[info.valueField] }}
+              <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+                {{ getFormErrors(info.valueField) }}
               </div>           
 
             </div>
@@ -98,8 +98,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
                 </flx-time-selector>
               </div>
 
-              <div *ngIf="formErrors[info.valueField]" class="alert alert-danger">
-                {{ formErrors[info.valueField] }}
+              <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+                {{ getFormErrors(info.valueField) }}
               </div>           
 
             </div>
@@ -126,8 +126,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
                 </flx-dropdown-selector>
               </div>
 
-              <div *ngIf="formErrors[info.valueField]" class="alert alert-danger">
-                {{ formErrors[info.valueField] }}
+              <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+                {{ getFormErrors(info.valueField) }}
               </div>           
               
             </div>
@@ -328,7 +328,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     if (this.action === FormActions.UPDATE) {
       this.registerSubscription(this.service.update(this.value).subscribe(
         (value: any) => {
-          this.resetForm(this.value);
+          this.resetFormGroup(this.value);
           this.addSuccessMessage(`Record updated.`);
           this.closePopup(false);
         },
@@ -338,7 +338,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
     } else if (this.action === FormActions.CREATE) {
       this.registerSubscription(this.service.create(this.value).subscribe(
         (value: any) => {
-          this.resetForm(this.value);
+          this.resetFormGroup(this.value);
           this.addSuccessMessage(`Record created.`);
           this.closePopup(false);
         },
@@ -357,7 +357,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   public delete() {
     this.registerSubscription(this.service.delete(this.service.getEntityId(this.value)).subscribe(
       (value: any) => {
-        this.resetForm(this.value);
+        this.resetFormGroup(this.value);
         this.addSuccessMessage(`Record deleted.`);
         this.closePopup(false);
       },

@@ -11,7 +11,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  Assert, CompoundValidator, Dictionary, Funktion, IMessage,
+  Assert, CompoundValidator, Dictionary, Funktion, IMessage, InvalidOperationException,
   MessageSeverity, PatternValidator, RangeValidator,
   RequiredValidator, TableMetadata, Types, UniqueIdentifiable, Utility
 } from '@fluxgate/common';
@@ -102,27 +102,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
         });
       }
     });
-  }
-
-
-
-  /**
-   * Setzt den Form-Status zurück (z.B. nach submit).
-   * 
-   * Ist @param{groupName} gesetzt, wird nur dir entsprechende FormGroup zurückgesetzt
-   * 
-   * @param groupName - der Name der FormGroup
-   * @param value - der Wert/die Werte, auf den die FormGroup gesetzt werden soll
-   */
-  public resetForm(groupName?: string, value?: any) {
-    if (Utility.isNullOrEmpty(groupName) && !Types.isPresent(value)) {
-      for (const info of this.formInfos.values) {
-        info.reset();
-      }
-    } else {
-      const info = this.formInfos.get(groupName);
-      info.reset(value);
-    }
   }
 
 
@@ -392,9 +371,9 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    */
   protected buildFormFromValidators(formBuilder: FormBuilder, validatorDict: IValidatorDict,
     groupName: string = FormGroupInfo.DEFAULT_NAME): void {
-    Assert.notNullOrEmpty(groupName);
     Assert.notNull(formBuilder);
     Assert.notNull(validatorDict);
+    Assert.notNullOrEmpty(groupName);
 
     using(new XLog(CoreComponent.logger, levels.INFO, 'buildForm', `groupName = ${groupName}`), (log) => {
 
@@ -425,15 +404,39 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     });
   }
 
+
+  /**
+   * Setzt den kpmpletten Form-Status mit allen FormGroups zurück (z.B. nach submit).
+   */
+  protected resetForm() {
+    for (const info of this.formInfos.values) {
+      info.reset();
+    }
+  }
+
+
+  /**
+   * Setzt den Form-Status für die entsprechende FormGroup zurück (z.B. nach submit).
+   * 
+   * @param value - der Wert/die Werte, auf den die FormGroup gesetzt werden soll
+   * @param groupName - der Name der FormGroup
+   */
+  protected resetFormGroup(value?: any, groupName: string = FormGroupInfo.DEFAULT_NAME) {
+    Assert.notNullOrEmpty(groupName);
+    const info = this.formInfos.get(groupName);
+    info.reset(value);
+  }
+
+
   /**
    * Liefert true, falls das Control @param{controlName} der Gruppe 
    * @param{groupName} den Status invalid hat. 
    * 
+   * @param {string} controlName
    * @param groupName  der Name der FormGroup
-   * @param {string} controlName 
    * @returns {boolean} 
    */
-  protected isFormControlInvalid(groupName: string, controlName: string): boolean {
+  protected isFormControlInvalid(controlName: string, groupName: string = FormGroupInfo.DEFAULT_NAME): boolean {
     Assert.notNullOrEmpty(groupName);
     Assert.notNullOrEmpty(controlName);
 
@@ -454,6 +457,13 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     Assert.notNullOrEmpty(groupName);
     const formInfo = this.formInfos.get(groupName);
     return formInfo.form;
+  }
+
+  protected getFormErrors(controlName: string, groupName: string = FormGroupInfo.DEFAULT_NAME): string {
+    Assert.notNullOrEmpty(controlName);
+    Assert.notNullOrEmpty(groupName);
+    const formInfo = this.formInfos.get(groupName);
+    return formInfo.getFormErrors(controlName);;
   }
 
 
