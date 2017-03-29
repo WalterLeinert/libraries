@@ -5,6 +5,7 @@ export * from './query';
 export * from './passwordChange';
 
 export * from './entity.interface';
+export * from './mandant';
 export * from './role.interface';
 export * from './user.interface';
 export * from './user';

@@ -8,6 +8,7 @@ import { Validation } from '../model/decorator/model/validation';
 import { Validators } from '../model/validation/validators';
 import { Utility } from '../util/utility';
 
+import { Mandant } from './mandant';
 import { Role, UserRoleId } from './role';
 import { IUser } from './user.interface';
 
@@ -16,8 +17,9 @@ import { IUser } from './user.interface';
  * Modelliert User im System (Defaultimplemetierung)
  */
 // tslint:disable-next-line:max-classes-per-file
-@Table({ name: 'user' })
+@Table({ name: User.TABLE_NAME })
 export class User implements IUser {
+  public static readonly TABLE_NAME = 'user';
 
   /**
    * der Key für den Zugriff über @see{AppRegistry}
@@ -66,6 +68,8 @@ export class User implements IUser {
   @Column({ name: 'password_salt' })
   public password_salt: string;
 
+
+
   @Column({ displayName: 'Name', persisted: false })
   public get fullName(): string {
     const sb = new StringBuilder(this.lastname);
@@ -75,6 +79,15 @@ export class User implements IUser {
     }
     return sb.toString();
   }
+
+  @Column({ name: 'deleted' })
+  public deleted?: boolean;
+
+  @Validation([
+    Validators.required
+  ])
+  @Column({ name: 'id_mandant' })
+  public id_mandant?: number;   // = Mandant.FIRST_ID;
 
 
   constructor(id?: number, username?: string, role?: number) {

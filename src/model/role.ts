@@ -6,6 +6,7 @@ import { Table } from '../model/decorator/model/table';
 import { Validation } from '../model/decorator/model/validation';
 import { Validators } from '../model/validation/validators';
 
+import { Mandant } from './mandant';
 import { IRole } from './role.interface';
 
 
@@ -25,8 +26,9 @@ export enum UserRoleId {
 /**
  * Modelliert User Rollen (Defaultimplemetierung)
  */
-@Table({ name: 'role' })
+@Table({ name: Role.TABLE_NAME })
 export class Role implements IRole {
+  public static readonly TABLE_NAME = 'role';
 
   /**
    * der Key für den Zugriff über @see{AppRegistry}
@@ -55,6 +57,15 @@ export class Role implements IRole {
   @Column({ name: 'role_description', displayName: 'Description' })
   public description: string;
 
+  @Column({ name: 'deleted' })
+  public deleted?: boolean;
+
+  @Validation([
+    Validators.required
+  ])
+  @Column({ name: 'id_mandant' })
+  public id_mandant?: number;   // = Mandant.FIRST_ID;
+
 
   /**
    * prüft, ob @param{id} eine gültige Role-Id darstellt.
@@ -65,7 +76,6 @@ export class Role implements IRole {
     }
     return (id in Role.roleIdMap);
   }
-
 
 }
 
