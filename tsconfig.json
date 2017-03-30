@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
+    "module": "es2015",
     "sourceMap": true,
     "declaration": true,
+    "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "allowUnusedLabels": false,
@@ -12,7 +13,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "outDir": "dist",
     "lib": [
-      "es6",
+      "es2016",
       "dom"
     ],
     "typeRoots": [
