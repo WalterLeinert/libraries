@@ -88,21 +88,23 @@ export class PassportService extends CurrentUser implements IServiceBase {
   public login(username: string, password: string): Observable<IUser> {
     Assert.notNullOrEmpty(username, 'username');
     Assert.notNullOrEmpty(password, 'password');
+    return using(new XLog(PassportService.logger, levels.INFO, 'login', `username =  ${username}`), (log) => {
 
-    const userTableMetadata = this.metadataService.findTableMetadata(User.name);
-    Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name} nicht gefunden.`);
+      const userTableMetadata = this.metadataService.findTableMetadata(User.name);
+      Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name} nicht gefunden.`);
 
-    const user = userTableMetadata.createEntity<IUser>();
-    user.username = username;
-    user.password = password;
+      const user = userTableMetadata.createEntity<IUser>();
+      user.username = username;
+      user.password = password;
 
-    return this.http.post(this.getUrl() + PassportService.LOGIN, user)
-      .map((response: Response) => this.deserialize(response.json()))
-      .do((u) => {
-        PassportService.logger.info('user: ' + JSON.stringify(u));
-        this.onUserChange(u);
-      })
-      .catch(this.handleServerError);
+      return this.http.post(this.getUrl() + PassportService.LOGIN, user)
+        .map((response: Response) => this.deserialize(response.json()))
+        .do((u) => {
+          log.log('user: ' + JSON.stringify(u));
+          this.onUserChange(u);
+        })
+        .catch(this.handleServerError);
+    });
   }
 
 
@@ -116,14 +118,16 @@ export class PassportService extends CurrentUser implements IServiceBase {
    */
   public signup(user: User): Observable<User> {
     Assert.notNull(user, 'user');
-
-    return this.http.post(this.getUrl() + PassportService.SIGNUP, user)
-      .map((response: Response) => this.deserialize(response.json()))
-      .do((u) => {
-        PassportService.logger.info('user: ' + JSON.stringify(u));
-        this.onUserChange(u);
-      })
-      .catch(this.handleServerError);
+    return using(new XLog(PassportService.logger, levels.INFO, 'signup',
+      `username =  ${JSON.stringify(user)}`), (log) => {
+        return this.http.post(this.getUrl() + PassportService.SIGNUP, user)
+          .map((response: Response) => this.deserialize(response.json()))
+          .do((u) => {
+            log.log(`user = ${JSON.stringify(u)}`);
+            this.onUserChange(u);
+          })
+          .catch(this.handleServerError);
+      });
   }
 
 
@@ -135,15 +139,17 @@ export class PassportService extends CurrentUser implements IServiceBase {
    * @memberOf PassportService
    */
   public logoff() {
-    return this.http.get(this.getUrl() + PassportService.LOGOFF)
-      .map((response: Response) => {
-        // ok
-      }).do((user) => {
-        PassportService.logger.info('user: ' + JSON.stringify(user));
-        this.onUserChange(null);
-      })
-      .do((data) => PassportService.logger.info('result: ' + JSON.stringify(data)))
-      .catch(this.handleServerError);
+    return using(new XLog(PassportService.logger, levels.INFO, 'logoff'), (log) => {
+      return this.http.get(this.getUrl() + PassportService.LOGOFF)
+        .map((response: Response) => {
+          // ok
+        }).do((user) => {
+          log.log(`user = ${JSON.stringify(user)}`);
+          this.onUserChange(null);
+        })
+        .do((data) => PassportService.logger.info('result: ' + JSON.stringify(data)))
+        .catch(this.handleServerError);
+    });
   }
 
 
@@ -159,15 +165,16 @@ export class PassportService extends CurrentUser implements IServiceBase {
   public changePassword(username: string, password: string, passwordNew: string): Observable<IUser> {
     Assert.notNullOrEmpty(password, 'password');
     Assert.notNullOrEmpty(passwordNew, 'passwordNew');
+    return using(new XLog(PassportService.logger, levels.INFO, 'changePassword', `username = ${username}`), (log) => {
+      const passwordChange = new PasswordChange(username, password, passwordNew);
 
-    const passwordChange = new PasswordChange(username, password, passwordNew);
-
-    return this.http.post(this.getUrl() + PassportService.CHANGE_PASSWORD, passwordChange)
-      .map((response: Response) => this.deserialize(response.json()))
-      .do((user) => {
-        PassportService.logger.info(`PassportService.changePassword: user = ${JSON.stringify(user)}`);
-      })
-      .catch(this.handleServerError);
+      return this.http.post(this.getUrl() + PassportService.CHANGE_PASSWORD, passwordChange)
+        .map((response: Response) => this.deserialize(response.json()))
+        .do((user) => {
+          log.log(`user = ${JSON.stringify(user)}`);
+        })
+        .catch(this.handleServerError);
+    });
   }
 
 
@@ -179,12 +186,14 @@ export class PassportService extends CurrentUser implements IServiceBase {
    * @memberOf UserService
    */
   public getCurrentUser(): Observable<User> {
-    return this.http.get(this.getUrl() + PassportService.CURRENT_USER)
-      .map((response: Response) => this.deserialize(response.json()))
-      .do((user) => {
-        PassportService.logger.info('result: ' + JSON.stringify(user));
-      })
-      .catch(this.handleServerError);
+    return using(new XLog(PassportService.logger, levels.INFO, 'getCurrentUser'), (log) => {
+      return this.http.get(this.getUrl() + PassportService.CURRENT_USER)
+        .map((response: Response) => this.deserialize(response.json()))
+        .do((user) => {
+          log.log(`user = ${JSON.stringify(user)}`);
+        })
+        .catch(this.handleServerError);
+    });
   }
 
 

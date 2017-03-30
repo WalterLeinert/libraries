@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/client",
-  "version": "2.0.5",
+  "version": "2.0.6-beta.0",
   "description": "Fluxgate Client-Library ",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -50,7 +50,7 @@
     "zone.js": "^0.7.6"
   },
   "dependencies": {
-    "@fluxgate/common": "^2.0.5",
+    "@fluxgate/common": "^2.0.6-beta.0",
     "http-status-codes": "^1.1.6",
     "moment": "^2.17.1",
     "ng2-toastr": "^1.6.0",
@@ -59,7 +59,7 @@
     "tinycolor2": "^1.4.1"
   },
   "peerDependencies": {
-    "@fluxgate/common": ">=2.0.5"
+    "@fluxgate/common": ">=2.0.6-beta.0"
   },
   "directories": {
     "lib": "lib"
