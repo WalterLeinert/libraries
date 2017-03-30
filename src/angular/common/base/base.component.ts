@@ -349,18 +349,18 @@ export abstract class BaseComponent<TService extends IServiceBase> extends CoreC
   /**
    * Zeigt einen modalen Bestätigungsdialog zum Löschen an.
    * 
-   * @param message - Meldung
    * @param header - Headertext
+   * @param message - Meldung
    * @param acceptAction - die Aktion, die nach Bestätigung durchgeführt werden soll (delete)
    * @param rejectAction - die Aktion, die nach Abweisen durchgeführt werden soll (cancel)
    */
-  protected confirmDelete(message: string, header: string = 'Delete',
+  protected confirmDelete(header: string = 'Delete', message: string,
     acceptAction: () => void, rejectAction?: () => void) {
     using(new XLog(BaseComponent.logger, levels.INFO, 'confirmDelete'), (log) => {
       this.confirmAction({
         header: header,
         message: message
-      }, () => acceptAction(), () => rejectAction());
+      }, acceptAction, rejectAction);
     });
   }
 
