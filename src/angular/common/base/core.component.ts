@@ -11,9 +11,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  Assert, CompoundValidator, Dictionary, Funktion, IMessage, InvalidOperationException,
+  Assert, CompoundValidator, Dictionary, Funktion, IMessage,
   MessageSeverity, PatternValidator, RangeValidator,
-  RequiredValidator, TableMetadata, Types, UniqueIdentifiable, Utility
+  RequiredValidator, TableMetadata, UniqueIdentifiable, Utility
 } from '@fluxgate/common';
 
 import { ControlType } from '../../../angular/modules/common/controlType';
@@ -413,12 +413,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
       for (const key in validatorDict) {
         if (!Utility.isNullOrEmpty(key)) {
-          const v = validatorDict[key];
-
-          // v[0].validators.foreach((item) => {
-          // formInfo.setValidationMessages(info.valueField, messageDict);
-          // formInfo.setErrors(info.valueField, '');
-          // });
           formInfo.setValidationMessages(key, {});
         }
       }
@@ -518,7 +512,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     Assert.notNullOrEmpty(controlName);
     Assert.notNullOrEmpty(groupName);
     const formInfo = this.formInfos.get(groupName);
-    return formInfo.getFormErrors(controlName);;
+    return formInfo.getFormErrors(controlName);
   }
 
 
