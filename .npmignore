@@ -1,5 +1,4 @@
 *
-!dts/**/*
 !dist/**/*
 !package.json
 !*.md

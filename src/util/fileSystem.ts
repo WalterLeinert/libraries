@@ -1,6 +1,8 @@
 import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Assert } from './assert';
 
+const trueFlag = true;
+
 /**
  * Hilfsklasse für Filesystem-Operationen
  */
@@ -12,13 +14,20 @@ export class FileSystem {
   public static fileExists(path: string): boolean {
     Assert.notNullOrEmpty(path);
     try {
-      if (process.env.PLATFORM === 'node') {
+      // removeIf(browser)
+      if (trueFlag) {
         const fs = require('fs');
         fs.accessSync(path, fs.constants.R_OK);
         return true;
-      } else {
+      }
+      // endRemoveIf(browser)
+
+      // removeIf(node)
+      if (trueFlag) {
         throw new NotSupportedException();
       }
+      // endRemoveIf(node)
+
     } catch (err) {
       return false;
     }
@@ -31,12 +40,19 @@ export class FileSystem {
     Assert.notNullOrEmpty(path);
 
     try {
-      if (process.env.PLATFORM === 'node') {
+      // removeIf(browser)
+      if (trueFlag) {
         const fs = require('fs');
         return fs.statSync(path).isDirectory();
-      } else {
+      }
+      // endRemoveIf(browser)
+
+      // removeIf(node)
+      if (trueFlag) {
         throw new NotSupportedException();
       }
+      // endRemoveIf(node)
+
     } catch (err) {
       if (err.code === 'ENOENT') {
         return false;
@@ -72,12 +88,19 @@ export class FileSystem {
       errorLogger(`${topic} unter ${path} ist nicht lesbar oder existiert nicht.`);
     } else {
       try {
-        if (process.env.PLATFORM === 'node') {
+        // removeIf(browser)
+        if (trueFlag) {
           const fs = require('fs');
           result = fs.readFileSync(path, encoding);
-        } else {
+        }
+        // endRemoveIf(browser)
+
+        // removeIf(node)
+        if (trueFlag) {
           throw new NotSupportedException();
         }
+        // endRemoveIf(node)
+
       } catch (err) {
         errorLogger(`${topic} unter ${path} kann nicht gelesen werden.`);
       }

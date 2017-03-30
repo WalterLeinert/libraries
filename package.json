@@ -1,10 +1,10 @@
 {
   "name": "@fluxgate/common",
-  "version": "2.0.5-beta.2",
+  "version": "2.0.5-beta.45",
   "description": "Fluxgate Library client/server übergreifend",
-  "browser": "dist/common.client.bundle.js",
-  "main": "dist/common.node.bundle.js",
-  "typings": "dist/dts/src/index.d.ts",
+  "browser": "dist/browser/src/index.js",
+  "main": "dist/node/src/index.js",
+  "typings": "dist/node/dts/index.d.ts",
   "scripts": {
     "tslint": "tslint ./src/**/*.ts"
   },
@@ -27,6 +27,7 @@
     "gulp": "^3.9.1",
     "gulp-env": "^0.4.0",
     "gulp-mocha": "^3.0.1",
+    "gulp-remove-code": "^1.0.2",
     "gulp-sequence": "^0.4.6",
     "gulp-sourcemaps": "^2.4.1",
     "gulp-tslint": "^7.1.0",

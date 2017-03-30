@@ -26,12 +26,14 @@ export function getLogger(category: string | Funktion): ILogger {
   if (!LoggerRegistry.hasLogger(categoryName)) {
     let logger: ILogger;
 
-    if (process.env.PLATFORM === 'node') {
-      const log4js = require('log4js');
-      logger = new Logger(log4js.getLogger(categoryName));
-    } else {
-      logger = new Logger(BrowserLogger.create(categoryName));
-    }
+    // removeIf(node) 
+    logger = new Logger(BrowserLogger.create(categoryName));
+    // endRemoveIf(node)
+
+    // removeIf(browser)
+    const log4js = require('log4js');
+    logger = new Logger(log4js.getLogger(categoryName));
+    // endRemoveIf(browser)
 
     LoggerRegistry.registerLogger(categoryName, logger);
   }
@@ -48,12 +50,15 @@ export function getLogger(category: string | Funktion): ILogger {
  * @param {*} [options]
  */
 export function configure(config: string | IConfig, options?: any): void {
-  if (process.env.PLATFORM === 'node') {
-    const log4js = require('log4js');
-    log4js.configure(config, options);
-  } else {
-    BrowserLogger.configure(config, options);
-  }
+
+  // removeIf(browser)
+  const log4js = require('log4js');
+  log4js.configure(config, options);
+  // endRemoveIf(browser)
+
+  // removeIf(node) 
+  BrowserLogger.configure(config, options);
+  // endRemoveIf(node)
 }
 
 

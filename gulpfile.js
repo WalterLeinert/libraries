@@ -9,11 +9,13 @@ const gulpSequence = require('gulp-sequence');
 const argv = require('yargs').argv;
 const exec = require('child_process').exec;
 const gulp_tslint = require('gulp-tslint');
-const typescript = require('gulp-typescript');
+const tsc = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
 const mocha = require('gulp-mocha');
 const tscConfig = require('./tsconfig.json');
+const tsProject = tsc.createProject('tsconfig.json');
+const removeCode = require('gulp-remove-code');
 
 /**
     * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
@@ -68,37 +70,46 @@ gulp.task('tslint', () => {
 });
 
 
+gulp.task('compile-browser', function() {
+    const tsResult = gulp.src('src/**/*.ts')
+        .pipe(removeCode({ browser: true }))
+        .pipe(sourcemaps.init())
+        .pipe(tsProject());
+
+    return merge([
+        tsResult.dts.pipe(gulp.dest('dist/browser/dts')),
+        tsResult.js
+          .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+          .pipe(gulp.dest('dist/browser/src'))
+    ]);
+});
+
+gulp.task('compile-node', function() {
+    const tsResult = gulp.src('src/**/*.ts')
+        .pipe(removeCode({ node: true }))
+        .pipe(sourcemaps.init())
+        .pipe(tsProject());
+
+    return merge([
+        tsResult.dts.pipe(gulp.dest('dist/node/dts')),
+        tsResult.js
+          .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+          .pipe(gulp.dest('dist/node/src'))
+    ]);
+});
+
+
+
 /**
- * kompiliert den Server
+ * build an run tests
  */
-gulp.task('compile', function () { 
-  var tsResult = gulp
-    .src('src/**/*.ts')
-    .pipe(sourcemaps.init()) // This means sourcemaps will be generated
-    .pipe(typescript(tscConfig.compilerOptions));
-
-  return merge([
-    tsResult.dts.pipe(
-      gulp.dest('build/dts')
-    ),
-    tsResult.js.pipe(
-      sourcemaps.write('.', {
-        sourceRoot: '.',
-        includeContent: true
-      }))
-      .pipe(gulp.dest('build/src')),
-  ]);
-})
-
-
-//optional - use a tsconfig file
 gulp.task('test', ['set-env'], function () {
   //find test code - note use of 'base'
   return gulp.src('./test/**/*.spec.ts', { base: '.' })
     /*transpile*/
-    .pipe(typescript(tscConfig.compilerOptions))
+    .pipe(tsc(tscConfig.compilerOptions))
     /*flush to disk*/
-    .pipe(gulp.dest('build'))
+    .pipe(gulp.dest('dist/node'))
     /*execute tests*/
     .pipe(mocha({
       reporter: 'spec'
@@ -113,9 +124,11 @@ gulp.task('publish', ['default'], function (cb) {
   execCommand('npm publish ' + forceSwitch, '.', null, cb);
 });
 
-gulp.task('bundle', ['compile'], function (cb) {
-  execCommand('webpack', '.', null, cb);
-});
+
+// Hinweis: kein bundeling mehr für leichters Debuggen
+// gulp.task('bundle', ['compile'], function (cb) {
+//   execCommand('webpack', '.', null, cb);
+// });
 
 gulp.task('set-env', function () {
   env({
@@ -126,6 +139,4 @@ gulp.task('set-env', function () {
 });
 
 
-
-/* single command to hook into VS Code */
-gulp.task('default', gulpSequence('set-env', 'clean', 'compile', 'test', 'bundle'));
+gulp.task('default', gulpSequence('set-env', 'clean', 'compile-browser', 'compile-node', 'test'));
