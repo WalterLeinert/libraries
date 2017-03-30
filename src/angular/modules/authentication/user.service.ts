@@ -4,6 +4,7 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 
 // Fluxgate
 import { User } from '@fluxgate/common';
@@ -22,7 +23,18 @@ import { ConfigService } from '../../services/config.service';
 @Injectable()
 export class UserService extends Service<User, number> {
 
-    constructor(metadataService: MetadataService, http: Http, configService: ConfigService) {
-        super(User, metadataService, http, configService);
-    }
+  constructor(metadataService: MetadataService, http: Http, configService: ConfigService) {
+    super(User, metadataService, http, configService);
+  }
+
+
+  /**
+   * Markiert den User als deleted und führt einen Update in der DB durch.
+   * 
+   * @param user 
+   */
+  public markAsDeleted(user: User): Observable<User> {
+    user.deleted = true;
+    return super.update(user);
+  }
 }
