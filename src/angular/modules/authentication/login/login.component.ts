@@ -16,8 +16,7 @@ import { ChangePasswordGuardService } from '../changePassword/changePassword-gua
 import { RegisterGuardService } from '../register/register-guard.service';
 
 import { MessageService } from '../../../services/message.service';
-import { AuthenticationNavigation } from '../authenticationNavigation';
-import { IAuthenticationNavigation } from '../authenticationNavigation.interface';
+import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
 import { PassportService } from '../passport.service';
 
 

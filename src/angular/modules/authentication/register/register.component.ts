@@ -7,7 +7,7 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // fluxgate
-import { Assert, IRole, Types, User } from '@fluxgate/common';
+import { IRole, Types, User } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -17,8 +17,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 import { Base2Component } from '../../../common/base';
 import { MetadataService } from '../../../services';
 import { MessageService } from '../../../services/message.service';
-import { AuthenticationNavigation } from '../authenticationNavigation';
-import { IAuthenticationNavigation } from '../authenticationNavigation.interface';
+import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
 import { PassportService } from '../passport.service';
 import { RoleService } from '../role.service';
 

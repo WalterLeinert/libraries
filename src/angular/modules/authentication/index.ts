@@ -1,6 +1,5 @@
 export * from './authentication.module';
 export * from './authenticationNavigation';
-export * from './authenticationNavigation.interface';
 export * from './currentUser';
 export * from './currentUserBaseService';
 export * from './currentUser.service';

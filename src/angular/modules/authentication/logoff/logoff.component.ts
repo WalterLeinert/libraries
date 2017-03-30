@@ -13,8 +13,7 @@ import { Types } from '@fluxgate/common';
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
-import { AuthenticationNavigation } from '../authenticationNavigation';
-import { IAuthenticationNavigation } from '../authenticationNavigation.interface';
+import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
 import { PassportService } from './../passport.service';
 
 @Component({
