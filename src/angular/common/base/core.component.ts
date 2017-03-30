@@ -385,7 +385,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
       formInfo.setFormGroup(formBuilder.group(validatorDict));
     });
   }
-  
+
 
 
   /**
@@ -484,7 +484,10 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   protected getForm(groupName: string = FormGroupInfo.DEFAULT_NAME): FormGroup {
     Assert.notNullOrEmpty(groupName);
     const formInfo = this.formInfos.get(groupName);
-    return formInfo.form;
+    if (formInfo) {
+      return formInfo.form;
+    }
+    return null;
   }
 
 
