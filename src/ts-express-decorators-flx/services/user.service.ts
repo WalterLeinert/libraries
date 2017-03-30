@@ -1,5 +1,5 @@
+import * as shortid from 'js-shortid';
 import { Service } from 'ts-express-decorators';
-import shortid = require('js-shortid');
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable

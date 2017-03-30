@@ -1,7 +1,7 @@
 {
   "typescript.tsdk": "./node_modules/typescript/lib",
   "files.autoSave": "afterDelay",
-  "window.zoomLevel": 1,
+  "window.zoomLevel": -2,
   "workbench.sideBar.location": "left",
   "git.confirmSync": false,
   "[typescript]": {

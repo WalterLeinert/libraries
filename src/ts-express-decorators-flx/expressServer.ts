@@ -1,5 +1,5 @@
-import path = require('path');
 import * as Express from 'express';
+import * as path from 'path';
 import { ServerSettings } from 'ts-express-decorators';
 
 

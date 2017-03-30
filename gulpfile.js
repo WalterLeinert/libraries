@@ -5,16 +5,17 @@
 // require("reflect-metadata");
 
 const gulp = require('gulp');
-const gulp_tslint = require('gulp-tslint');
+const tslint = require('gulp-tslint');
 const del = require('del');
 const gulpSequence = require('gulp-sequence');
 const argv = require('yargs').argv;
 const exec = require('child_process').exec;
-const typescript = require('gulp-typescript');
+const tsc = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
 const mocha = require('gulp-mocha');
 const tscConfig = require('./tsconfig.json');
+const tsProject = tsc.createProject('tsconfig.json');
 
 
 /**
@@ -59,54 +60,49 @@ gulp.task('really-clean', ['clean'], function (cb) {
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-  return del(['dist', 'build', 'lib', 'dts']);
+  return del(['dist', 'build', 'js', 'lib', 'dts', 'release']);
 })
 
 
 gulp.task('tslint', () => {
   return gulp.src(['**/*.ts', '!**/*.d.ts', '!node_modules/**'])
-    .pipe(gulp_tslint())
-    .pipe(gulp_tslint.report());
+    .pipe(tslint())
+    .pipe(tslint.report());
 });
 
 
 /**
  * kompiliert den Server
  */
-gulp.task('compile', function () {
-  var tsResult = gulp
-    .src('src/**/*.ts')
-    .pipe(sourcemaps.init()) // This means sourcemaps will be generated
-    .pipe(typescript(tscConfig.compilerOptions));
+gulp.task('compile', function() {
+    var tsResult = gulp.src('src/**/*.ts')
+        .pipe(sourcemaps.init())
+        .pipe(tsProject());
 
-  return merge([
-    tsResult.dts.pipe(
-      gulp.dest('build/dts')
-    ),
-    tsResult.js.pipe(
-      sourcemaps.write('.', {
-        sourceRoot: ".",
-        includeContent: true
-      }))
-      .pipe(gulp.dest('build/src')),
-  ]);
-})
+    return merge([
+        tsResult.dts.pipe(gulp.dest('dist/dts')),
+        tsResult.js
+          .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+          .pipe(gulp.dest('dist/src'))
+    ]);
+});
+
 
 
 gulp.task('compile-test', function () {
   //find test code - note use of 'base'
   return gulp.src('./test/**/*.spec.ts', { base: '.' })
     /*transpile*/
-    .pipe(typescript(tscConfig.compilerOptions))
+    .pipe(tsc(tscConfig.compilerOptions))
     /*flush to disk*/
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('dist'));
 });
 
 
 
 //optional - use a tsconfig file
 gulp.task('test', ['compile-test'], function () {
-  gulp.src('./build/test/**/*.spec.js', {read: false})
+  gulp.src('./dist/test/**/*.spec.js', {read: false})
     .pipe(mocha({
       reporter: 'spec'
     }));
@@ -129,4 +125,4 @@ gulp.task('bundle', function (cb) {
 gulp.task('update-fluxgate', ['update-fluxgate-common'])
 
 /* single command to hook into VS Code */
-gulp.task('default', gulpSequence('clean', 'compile', /*'test',*/ 'bundle'));
+gulp.task('default', gulpSequence('clean', 'compile'/*gulp*/ /*, 'bundle'*/));

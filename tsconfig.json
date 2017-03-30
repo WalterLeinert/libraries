@@ -1,12 +1,10 @@
 {
   "compilerOptions": {
-    "baseUrl": "src/",
     "module": "commonjs",
     "target": "es5",
     "noImplicitAny": false,
     "sourceMap": true,
     "declaration": true,
-    "declarationDir": "dts/",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "moduleResolution": "node",
@@ -14,16 +12,13 @@
     "suppressImplicitAnyIndexErrors": false,
     "importHelpers": true,
     "lib": [
-      "es6",
-      "dom"
+      "es6"
     ],
-    "outDir": "build/",
-    "types": [
-      "node"
-    ]
+    "outDir": "dist",
+    "types": []
   },
   "exclude": [
-    "node_modules",
-    "dts"
+    "node_modules",   
+    "./test/**/*.spec.ts"
   ]
 }

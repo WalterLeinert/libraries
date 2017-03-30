@@ -1,6 +1,6 @@
-import path = require('path');
 import * as Express from 'express';
 import * as Knex from 'knex';
+import * as path from 'path';
 import { ServerLoader } from 'ts-express-decorators';
 import { Forbidden } from 'ts-httpexceptions';
 
@@ -143,7 +143,7 @@ export abstract class ServerBase extends ServerLoader {
         log.info(`cwd = ${cwd}`);
 
         // interne Controller (wie UserController)
-        const serverControllers = path.join(cwd, '../../node_modules/@fluxgate/server/dist/*.js');
+        const serverControllers = path.join(cwd, '../../node_modules/@fluxgate/server/dist/src/**/*Controller.js');
 
         const errorLogger = (message: string): void => {
           log.error(message);

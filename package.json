@@ -1,9 +1,9 @@
 {
   "name": "@fluxgate/server",
-  "version": "2.0.5-beta.5",
+  "version": "2.0.5-beta.10",
   "description": "Fluxgate Server-Library ",
-  "main": "dist/server.bundle.js",
-  "typings": "dts/src/index.d.ts",
+  "main": "dist/src/index.js",
+  "typings": "dist/dts/index.d.ts",
   "scripts": {
     "tslint": "tslint ./src/**/*.ts",
     "debug_test": "node-debug _mocha -t 0 test/index.js"
@@ -53,7 +53,7 @@
     "yargs": "^7.0.2"
   },
   "dependencies": {
-    "@fluxgate/common": "^2.0.5-beta.2",
+    "@fluxgate/common": "^2.0.5-beta.45",
     "emailjs": "^1.0.8",
     "express": "^4.14.1",
     "js-shortid": "^0.1.1",
