@@ -6,7 +6,7 @@ import { Table } from '../model/decorator/model/table';
 import { Validation } from '../model/decorator/model/validation';
 import { Validators } from '../model/validation/validators';
 
-import { Mandant } from './mandant';
+// import { Mandant } from './mandant';
 import { IRole } from './role.interface';
 
 
