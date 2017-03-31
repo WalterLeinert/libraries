@@ -5,19 +5,24 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { Store } from 'redux';
+
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
+// redux
+import { UserActions } from '../../../redux/actions';
+import { AppStore } from '../../../redux/app-store';
+import { IClientState } from '../../../redux/client-state.interface';
+
 import { BaseComponent } from '../../../common/base/base.component';
-
-import { ChangePasswordGuardService } from '../changePassword/changePassword-guard.service';
-import { RegisterGuardService } from '../register/register-guard.service';
-
 import { MessageService } from '../../../services/message.service';
-import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
+import { ChangePasswordGuardService } from '../changePassword/changePassword-guard.service';
+import { NavigationService } from '../navigation.service';
 import { PassportService } from '../passport.service';
+import { RegisterGuardService } from '../register/register-guard.service';
 
 
 @Component({
@@ -26,7 +31,7 @@ import { PassportService } from '../passport.service';
 <div class="container">
   <h1>Login</h1>
 
-  <form [formGroup]="getForm()">
+  <form [formGroup]="form">
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="username">Name</label>
       <div class="col-sm-5">
@@ -45,7 +50,7 @@ import { PassportService } from '../passport.service';
 
     <div class="form-group row">
       <div class="col-sm-5">
-        <button type="submit" class="btn btn-primary" [disabled]="getForm().invalid" (click)='login()'>Login</button>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid" (click)='login()'>Login</button>
       </div>
     </div>
   </form>
@@ -84,13 +89,15 @@ export class LoginComponent extends BaseComponent<PassportService> {
    * 
    * @memberOf LoginComponent
    */
-  constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
-    @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation,
+  constructor( @Inject(AppStore) private store: Store<IClientState>,
+    private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
+    private navigationService: NavigationService,
     service: PassportService, changePasswordGuardService: ChangePasswordGuardService,
     registerGuardService: RegisterGuardService) {
     super(router, route, messageService, service);
-    using(new XLog(LoginComponent.logger, levels.INFO, 'ctor'), (log) => {
 
+    using(new XLog(LoginComponent.logger, levels.INFO, 'ctor'), (log) => {
+      
       this.buildFormFromValidators(this.fb, {
         username: ['', Validators.required],
         password: ['', Validators.required],
@@ -104,6 +111,9 @@ export class LoginComponent extends BaseComponent<PassportService> {
       this.registerSubscription(this.service.login(this.username, this.password)
         .subscribe((result) => {
           log.log(JSON.stringify(result));
+
+          this.store.dispatch(UserActions.setCurrentUser(result));    // geänderten User publizieren
+
           this.navigate([
             this.authenticationNavigation.loginRedirectUrl
           ]);

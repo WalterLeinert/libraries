@@ -4,16 +4,22 @@
 import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { Store } from 'redux';
+
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { Types } from '@fluxgate/common';
+import { User } from '@fluxgate/common';
+
+// redux
+import { UserActions } from '../../../redux/actions';
+import { AppStore } from '../../../redux/app-store';
+import { IClientState } from '../../../redux/client-state.interface';
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
-import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
 import { PassportService } from './../passport.service';
 
 @Component({
@@ -25,8 +31,9 @@ import { PassportService } from './../passport.service';
 export class LogoffComponent extends BaseComponent<PassportService> {
   protected static logger = getLogger(LogoffComponent);
 
-  constructor(router: Router, route: ActivatedRoute, messageService: MessageService, service: PassportService,
-    @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation) {
+  constructor( @Inject(AppStore) private store: Store<IClientState>,
+    router: Router, route: ActivatedRoute, messageService: MessageService, service: PassportService,
+	@Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation) {
     super(router, route, messageService, service);
   }
 

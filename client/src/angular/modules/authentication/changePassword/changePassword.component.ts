@@ -4,18 +4,24 @@
 import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { Store } from 'redux';
 
-import { IUser, Types } from '@fluxgate/common';
+import { IUser } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { BaseComponent } from '../../../common/base/base.component';
+// redux
+import { UserActions } from '../../../redux/actions';
+import { AppStore } from '../../../redux/app-store';
+import { IClientState } from '../../../redux/client-state.interface';
 
+
+import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
-import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
+import { NavigationService } from '../navigation.service';
 import { PassportService } from '../passport.service';
 
 
@@ -81,43 +87,38 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   public passwordNewRepeated: string;
   private currentUser: IUser;
 
-  constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
-    @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation,
-    service: PassportService) {
+  constructor( @Inject(AppStore) private store: Store<IClientState>,
+    router: Router, route: ActivatedRoute, messageService: MessageService,
+    private navigationService: NavigationService, service: PassportService) {
     super(router, route, messageService, service);
   }
 
-  public ngOnInit() {
-    super.ngOnInit();
-
-    this.registerSubscription(this.service.getCurrentUser().subscribe(
-      (user) => this.currentUser = user
-    ));
-  }
-
   public changePassword() {
-    if (this.passwordNew !== this.passwordNewRepeated) {
-      super.addInfoMessage(`Die Kennworte stimmen nicht überein.`);
-      return;
-    }
+    using(new XLog(ChangePasswordComponent.logger, levels.INFO, 'changePassword'), (log) => {
+      if (this.passwordNew !== this.passwordNewRepeated) {
+        super.addInfoMessage(`Die Kennworte stimmen nicht überein.`);
+        return;
+      }
 
-    this.registerSubscription(this.service.changePassword(this.currentUser.username, this.password, this.passwordNew)
-      .subscribe((user) => {
-        ChangePasswordComponent.logger.info(`ChangePasswordComponent.changePassword: user = ${user}`);
+      this.registerSubscription(this.service.changePassword(this.currentUser.username, this.password, this.passwordNew)
+        .subscribe((user) => {
+          log.info(`user = ${user}`);
+          this.store.dispatch(UserActions.setCurrentUser(user));    // geänderten User publizieren
 
         if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
           this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);
         }
-      },
-      (error: Error) => {
-        this.handleError(error);
-      }));
+        },
+        (error: Error) => {
+          this.handleError(error);
+        }));
+    });
   }
 
 
   public cancel() {
+   
     if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
       this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);
     }
-  }
 }
