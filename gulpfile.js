@@ -192,6 +192,6 @@ gulp.task('update-fluxgate', ['update-fluxgate-client', 'update-fluxgate-server'
 
 gulp.task('build-all', gulpSequence('build-all-common', ['build-all-server', 'build-all-client']))
 
-gulp.task('build', gulpSequence('info', 'clean', 'build-common', 'build-server', 'build-client', 'publish'))
+// gulp.task('build', gulpSequence('info', 'clean', 'build-common', 'build-server', 'build-client', 'publish'))
 
-gulp.task('default', gulpSequence('build'))
+gulp.task('default', gulpSequence('build-all'))
