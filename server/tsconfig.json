@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "declaration": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
+    "isolatedModules": false,
+    "suppressImplicitAnyIndexErrors": false,
+    "importHelpers": true,
+    "lib": [
+      "es6"
+    ],
+    "outDir": "dist",
+    "types": []
+  },
+  "exclude": [
+    "node_modules",   
+    "./test/**/*.spec.ts"
+  ]
+}
