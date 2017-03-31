@@ -115,7 +115,7 @@ gulp.task('publish-server', function (cb) {
   execCommand('gulp publish -f', 'server', null, cb);
 })
 
-gulp.task('build-all-server', gulpSequence('clean-server', 'build-server', 'publish-server'))
+gulp.task('build-all-server', gulpSequence('clean-server', 'update-fluxgate-server', 'build-server', 'publish-server'))
 
 
 
@@ -146,7 +146,7 @@ gulp.task('publish-client', function (cb) {
   execCommand('gulp publish -f', 'client', null, cb);
 })
 
-gulp.task('build-all-client', gulpSequence('clean-client', 'build-client', 'publish-client'))
+gulp.task('build-all-client', gulpSequence('clean-client', 'update-fluxgate-client', 'build-client', 'publish-client'))
 
 
 
