@@ -4,23 +4,20 @@
 import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Store } from 'redux';
-
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { User } from '@fluxgate/common';
+import { User, Types } from '@fluxgate/common';
 
-// redux
-import { UserActions } from '../../../redux/actions';
-import { AppStore } from '../../../redux/app-store';
-import { IClientState } from '../../../redux/client-state.interface';
+// commands
+import { UserServiceRequests } from '../commands/user-service-requests';
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
 import { PassportService } from './../passport.service';
+import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
 
 @Component({
   selector: 'flx-logoff',
@@ -31,9 +28,9 @@ import { PassportService } from './../passport.service';
 export class LogoffComponent extends BaseComponent<PassportService> {
   protected static logger = getLogger(LogoffComponent);
 
-  constructor( @Inject(AppStore) private store: Store<IClientState>,
+  constructor(private userServiceRequests: UserServiceRequests,
     router: Router, route: ActivatedRoute, messageService: MessageService, service: PassportService,
-	@Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation) {
+    @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation) {
     super(router, route, messageService, service);
   }
 
@@ -47,6 +44,8 @@ export class LogoffComponent extends BaseComponent<PassportService> {
       this.registerSubscription(this.service.logoff()
         .subscribe(() => {
           log.log('done');
+
+          this.userServiceRequests.setCurrent(User.Null);
 
           if (Types.isPresent(this.authenticationNavigation.logoutRedirectUrl)) {
             this.navigate([this.authenticationNavigation.logoutRedirectUrl]);

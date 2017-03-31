@@ -6,25 +6,20 @@ import { Component, Inject, Injector } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Store } from 'redux';
-
 // fluxgate
-import { Assert, IRole, User } from '@fluxgate/common';
+import { Assert, IRole, User, Types } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-// redux
-import { UserActions } from '../../../redux/actions';
-import { AppStore } from '../../../redux/app-store';
-import { IClientState } from '../../../redux/client-state.interface';
+// commands
+import { UserServiceRequests } from '../commands/user-service-requests';
 
 import { Base2Component } from '../../../common/base';
 import { MetadataService } from '../../../services';
 import { MessageService } from '../../../services/message.service';
-import { NavigationService } from '../navigation.service';
 import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
 import { PassportService } from '../passport.service';
 import { RoleService } from '../role.service';
@@ -106,7 +101,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
   public user: User;
   public selectedRole: IRole;
 
-  constructor( @Inject(AppStore) private store: Store<IClientState>,
+  constructor(private userServiceRequests: UserServiceRequests,
     private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
     @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation, service: PassportService,
     roleService: RoleService, metadataService: MetadataService, injector: Injector) {
@@ -114,7 +109,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
     super(router, route, messageService, service, roleService);
 
     const userTableMetadata = metadataService.findTableMetadata(User.name);
-    Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name}`);
+    Assert.notNull(userTableMetadata, `Metadaten fï¿½r Tabelle ${User.name}`);
 
     this.user = userTableMetadata.createEntity<User>();
 
@@ -127,14 +122,15 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
       this.registerSubscription(this.service.signup(this.user)
         .subscribe((result) => {
           log.log(JSON.stringify(result));
-          this.store.dispatch(UserActions.setCurrentUser(result));    // geänderten User publizieren
+
+          this.userServiceRequests.setCurrent(result);
 
           this.resetForm();
 
           if (Types.isPresent(this.authenticationNavigation.registerRedirectUrl)) {
-          this.navigate([
+            this.navigate([
               this.authenticationNavigation.registerRedirectUrl
-          ]);
+            ]);
           }
         },
         (error: Error) => {

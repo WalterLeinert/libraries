@@ -4,8 +4,6 @@
 import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Store } from 'redux';
-
 import { IUser } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
@@ -13,16 +11,16 @@ import { IUser } from '@fluxgate/common';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-// redux
-import { UserActions } from '../../../redux/actions';
-import { AppStore } from '../../../redux/app-store';
-import { IClientState } from '../../../redux/client-state.interface';
+import { Types } from '@fluxgate/common';
+
+// commands
+import { UserServiceRequests } from '../commands/user-service-requests';
 
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
-import { NavigationService } from '../navigation.service';
 import { PassportService } from '../passport.service';
+import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
 
 
 @Component({
@@ -87,9 +85,10 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   public passwordNewRepeated: string;
   private currentUser: IUser;
 
-  constructor( @Inject(AppStore) private store: Store<IClientState>,
+  constructor(private userServiceRequests: UserServiceRequests,
     router: Router, route: ActivatedRoute, messageService: MessageService,
-    private navigationService: NavigationService, service: PassportService) {
+    @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation,
+    service: PassportService) {
     super(router, route, messageService, service);
   }
 
@@ -103,11 +102,12 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
       this.registerSubscription(this.service.changePassword(this.currentUser.username, this.password, this.passwordNew)
         .subscribe((user) => {
           log.info(`user = ${user}`);
-          this.store.dispatch(UserActions.setCurrentUser(user));    // geänderten User publizieren
 
-        if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
-          this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);
-        }
+          this.userServiceRequests.setCurrent(user);
+
+          if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
+            this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);
+          }
         },
         (error: Error) => {
           this.handleError(error);
@@ -117,8 +117,8 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
 
 
   public cancel() {
-   
     if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
       this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);
     }
+  }
 }

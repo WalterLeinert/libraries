@@ -1,5 +1,7 @@
 export * from './authentication.module';
 export * from './authenticationNavigation';
+export * from './commands/user-service-requests';
+export * from './commands/role-service-requests';
 export * from './currentUser';
 export * from './currentUserBaseService';
 export * from './currentUser.service';

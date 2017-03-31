@@ -5,25 +5,21 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Store } from 'redux';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-// redux
-import { UserActions } from '../../../redux/actions';
-import { AppStore } from '../../../redux/app-store';
-import { IClientState } from '../../../redux/client-state.interface';
+// commands
+import { UserServiceRequests } from '../commands/user-service-requests';
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
 import { ChangePasswordGuardService } from '../changePassword/changePassword-guard.service';
-import { NavigationService } from '../navigation.service';
 import { PassportService } from '../passport.service';
 import { RegisterGuardService } from '../register/register-guard.service';
-
+import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
 
 @Component({
   selector: 'flx-login',
@@ -89,15 +85,15 @@ export class LoginComponent extends BaseComponent<PassportService> {
    * 
    * @memberOf LoginComponent
    */
-  constructor( @Inject(AppStore) private store: Store<IClientState>,
+  constructor(private userServiceRequests: UserServiceRequests,
     private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
-    private navigationService: NavigationService,
+    @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation,
     service: PassportService, changePasswordGuardService: ChangePasswordGuardService,
     registerGuardService: RegisterGuardService) {
     super(router, route, messageService, service);
 
     using(new XLog(LoginComponent.logger, levels.INFO, 'ctor'), (log) => {
-      
+
       this.buildFormFromValidators(this.fb, {
         username: ['', Validators.required],
         password: ['', Validators.required],
@@ -112,7 +108,7 @@ export class LoginComponent extends BaseComponent<PassportService> {
         .subscribe((result) => {
           log.log(JSON.stringify(result));
 
-          this.store.dispatch(UserActions.setCurrentUser(result));    // geänderten User publizieren
+          this.userServiceRequests.setCurrent(result);
 
           this.navigate([
             this.authenticationNavigation.loginRedirectUrl
