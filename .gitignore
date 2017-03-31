@@ -41,6 +41,7 @@ index.js.map
 test/spec/*.js
 test/spec/*.js.map
 symbols.json
+**/*metadata.json
 
 # Test
 /stdout
@@ -50,4 +51,6 @@ symbols.json
 /lib/
 /dts/
 /build/
-/dist/
+/common/dist/
+/client/dist/
+/server/dist/
