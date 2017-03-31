@@ -1,0 +1,67 @@
+{
+  "name": "@fluxgate/client",
+  "version": "2.0.5",
+  "description": "Fluxgate Client-Library ",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "tslint": "tslint ./src/**/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://server.fluxgate.de:89/fluxgate/client.git"
+  },
+  "author": "Walter Leinert <walter.leinert@outlook.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@angular/common": "^2.4.9",
+    "@angular/compiler": "^2.4.9",
+    "@angular/compiler-cli": "^2.4.9",
+    "@angular/core": "^2.4.9",
+    "@angular/forms": "^2.4.9",
+    "@angular/http": "^2.4.9",
+    "@angular/platform-browser": "^2.4.9",
+    "@angular/platform-server": "^2.4.9",
+    "@angular/router": "^3.4.9",
+    "@types/http-status-codes": "^1.0.29",
+    "@types/jasmine": "^2.5.43",
+    "@types/log4js": "0.0.32",
+    "@types/node": "7.0.5",
+    "@types/tinycolor2": "^1.1.0",
+    "codelyzer": "^2.0.1",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^3.0.1",
+    "gulp-ngc": "^0.2.0",
+    "gulp-sequence": "^0.4.6",
+    "gulp-sourcemaps": "^2.4.1",
+    "gulp-tslint": "^7.1.0",
+    "gulp-typescript": "^3.1.4",
+    "jasmine": "^2.5.3",
+    "jasmine-core": "^2.5.2",
+    "merge2": "^1.0.3",
+    "ts-loader": "^2.0.0",
+    "tslint": "^4.5.1",
+    "typescript": "^2.2.1",
+    "vinyl-source-stream": "^1.1.0",
+    "webpack": "^2.2.1",
+    "webpack-fail-plugin": "^1.0.5",
+    "yargs": "^7.0.2",
+    "zone.js": "^0.7.6"
+  },
+  "dependencies": {
+    "@fluxgate/common": "^2.0.5",
+    "http-status-codes": "^1.1.6",
+    "moment": "^2.17.1",
+    "ng2-toastr": "^1.6.0",
+    "primeng": "^2.0.3",
+    "rxjs": "^5.1.0",
+    "tinycolor2": "^1.4.1"
+  },
+  "peerDependencies": {
+    "@fluxgate/common": ">=2.0.5"
+  },
+  "directories": {
+    "lib": "lib"
+  }
+}
