@@ -1,4 +1,4 @@
-import { Injector, OnDestroy, OnInit } from '@angular/core';
+import { EventEmitter, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -11,7 +11,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  Assert, CompoundValidator, Dictionary, Funktion, IMessage,
+  Assert, CompoundValidator, Dictionary, Funktion, IMessage, IUser,
   MessageSeverity, PatternValidator, RangeValidator,
   RequiredValidator, TableMetadata, UniqueIdentifiable, Utility
 } from '@fluxgate/common';
@@ -20,6 +20,9 @@ import { ControlType } from '../../../angular/modules/common/controlType';
 import { IControlDisplayInfo } from '../../../base/displayConfiguration/controlDisplayInfo.interface';
 import { DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';
+import { AppStore, IServiceState, Store } from '../../../redux';
+import { UserStore } from '../../modules/authentication/commands/user-store';
+import { AppInjector } from '../../services/appInjector.service';
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
 import { FormGroupInfo, IMessageDict } from './formGroupInfo';
@@ -53,13 +56,21 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   public static WARN_TEXT = 'Warning';
   public static ERROR_TEXT = 'Error';
 
-
   // >> Formvalidierung
   private formInfos: Dictionary<string, FormGroupInfo> = new Dictionary<string, FormGroupInfo>();
   // << Formvalidierung
 
+  private store: Store;
+
+  protected currentUserChanged: EventEmitter<IUser> = new EventEmitter();
+
   protected constructor(private _messageService: MessageService) {
     super();
+
+    this.store = AppInjector.instance.getInstance<Store>(AppStore);
+
+    this.store.subject(UserStore.ID).subscribe(() => this.updateUserState());
+    this.updateUserState();
   }
 
 
@@ -523,4 +534,15 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     return this._messageService;
   }
 
+  /**
+   * Feuert den currentUserChanged-Event immer wenn sich der aktuelle/angemeldete User ändert.
+   * 
+   * @private
+   * 
+   * @memberOf CoreComponent
+   */
+  private updateUserState() {
+    const state = this.store.getState<IServiceState<IUser, number>>(UserStore.ID);
+    this.currentUserChanged.emit(state.currentItem);
+  }
 }

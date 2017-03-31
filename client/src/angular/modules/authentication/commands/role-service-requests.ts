@@ -1,19 +1,14 @@
-// tslint:disable:max-classes-per-file
-
-
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, NgModule } from '@angular/core';
 
 // fluxgate
 import { IRole } from '@fluxgate/common';
 
 
 import { AppStore } from '../../../../redux/app-store';
-import { CommandStore } from '../../../../redux/commandStore';
-import { ServiceCommand } from '../../../../redux/service-command';
 import { ServiceRequests } from '../../../../redux/service-requests';
-import { IServiceState } from '../../../../redux/service-state.interface';
 import { Store } from '../../../../redux/store';
 import { RoleService } from '../role.service';
+import { RoleStore } from './role-store';
 
 
 @Injectable()
@@ -25,10 +20,17 @@ export class RoleServiceRequests extends ServiceRequests<IRole, number, RoleServ
 }
 
 
-export class RoleStore extends CommandStore<IServiceState<IRole, number>> {
-  public static ID = 'roleStore';
-
-  constructor() {
-    super(RoleStore.ID, ServiceCommand.INITIAL_STATE);
-  }
-}
+// tslint:disable-next-line:max-classes-per-file
+@NgModule({
+  imports: [
+  ],
+  declarations: [
+  ],
+  exports: [
+  ],
+  providers: [
+    RoleServiceRequests,
+    RoleService
+  ]
+})
+export class RoleServiceRequestsModule { }
