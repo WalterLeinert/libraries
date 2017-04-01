@@ -21,6 +21,14 @@ export abstract class EnhancedServiceRequests<T, TId extends IToString, TService
     super(storeId, service, store);
   }
 
+
+  /**
+   * 
+   * 
+   * @param {T} item 
+   * 
+   * @memberOf EnhancedServiceRequests
+   */
   public setDeleted(item: T): void {
     if (!Types.hasProperty(item, 'deleted')) {
       throw new InvalidOperationException(`item ${JSON.stringify(item)} hat keine deleted-Property`);

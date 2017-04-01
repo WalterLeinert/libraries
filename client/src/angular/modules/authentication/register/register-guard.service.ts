@@ -23,9 +23,7 @@ export class RegisterGuardService extends CurrentUserBaseService implements CanA
   constructor(private _router: Router, messageService: MessageService, passportService: PassportService) {
     super(passportService, messageService);
 
-    this.getCurrentUser().subscribe((user: IUser) => {
-      this.user = user;
-    });
+    this.user = this.getCurrentUser();
   }
 
   public canActivate(route: ActivatedRouteSnapshot): boolean {

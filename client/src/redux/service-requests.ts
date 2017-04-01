@@ -9,7 +9,7 @@ import { Store } from './store';
 import { UpdateItemCommand } from './update-item-command';
 
 /**
- * 
+ * Realisiert die Rest-API Operationen und führt ein dispatch der jeweiligen Kommandos durch.
  * 
  * @export
  * @class ServiceRequests
@@ -25,26 +25,59 @@ export abstract class ServiceRequests<T, TId extends IToString, TService extends
     Assert.notNull(store);
   }
 
+  /**
+   * Liefert die Store-Id
+   * 
+   * @readonly
+   * @type {string}
+   * @memberOf ServiceRequests
+   */
   public get storeId(): string {
     return this._storeId;
   }
 
+  /**
+   * Setzt das aktuelle Item.
+   * 
+   * @param {T} item 
+   * 
+   * @memberOf ServiceRequests
+   */
   public setCurrent(item: T): void {
     this.store.dispatch(new SetCurrentItemCommand(this._storeId, item));
   }
 
+  /**
+   * Führt die find-Methode aus und führt ein dispatch des zugehörigen Kommandos durch.
+   * 
+   * @memberOf ServiceRequests
+   */
   public find(): void {
     this.service.find().subscribe((items) => {
       this.store.dispatch(new FindItemsCommand(this._storeId, items));
     });
   }
 
+  /**
+   * Führt die update-Methode aus und führt ein dispatch des zugehörigen Kommandos durch.
+   * 
+   * @param {T} item
+   * 
+   * @memberOf ServiceRequests
+   */
   public update(item: T): void {
     this.service.update(item).subscribe((elem) => {
       this.store.dispatch(new UpdateItemCommand(this._storeId, elem));
     });
   }
 
+  /**
+   * Führt die delete-Methodes aus und führt ein dispatch des zugehörigen Kommandos durch.
+   * 
+   * @param {TId} id
+   * 
+   * @memberOf ServiceRequests
+   */
   public delete(id: TId): void {
     this.service.delete(id).subscribe((result) => {
       this.store.dispatch(new DeleteItemCommand(this._storeId, result.id));

@@ -19,8 +19,8 @@ import { UserServiceRequests } from '../commands/user-service-requests';
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
-import { PassportService } from '../passport.service';
 import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
+import { PassportService } from '../passport.service';
 
 
 @Component({

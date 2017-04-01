@@ -9,10 +9,18 @@ import { CustomSubject, PublisherSubscriber } from '@fluxgate/common';
 import { ICommand } from './command.interface';
 
 
+/**
+ * Realisiert einen CommandStore, der
+ * - einen speziellen Status hält
+ * - Kommandos dispatched
+ * - eine Subscription für Statusupdates ermöglicht.
+ * 
+ * @export
+ * @class CommandStore
+ * @template T
+ */
 export class CommandStore<T> {
   protected static readonly logger = getLogger(CommandStore);
-
-
 
   private _channel: string;
   private pubSub: PublisherSubscriber = new PublisherSubscriber();
@@ -26,15 +34,35 @@ export class CommandStore<T> {
     });
   }
 
+  /**
+   * Liefert den Storenamen
+   * 
+   * @readonly
+   * @type {string}
+   * @memberOf CommandStore
+   */
   public get name(): string {
     return this._name;
   }
 
+  /**
+   * Liefert den Status
+   * 
+   * @returns {T} 
+   * 
+   * @memberOf CommandStore
+   */
   public getState(): T {
     return this.state;
   }
 
-
+  /**
+   * Für ein Dispatch des Kommandos @param{command} aus -> Kommandoausführung, Statusupdate
+   * 
+   * @param {ICommand<any>} command 
+   * 
+   * @memberOf CommandStore
+   */
   public dispatch(command: ICommand<any>) {
     using(new XLog(CommandStore.logger, levels.INFO, 'dispatch'), (log) => {
       this.state = command.execute(this.state);
@@ -42,7 +70,13 @@ export class CommandStore<T> {
     });
   }
 
-
+  /**
+   * Liefert ein Subject für eine folgende Subscription.
+   * 
+   * @returns {CustomSubject<any>}
+   * 
+   * @memberOf CommandStore
+   */
   public subject(): CustomSubject<any> {
     return this.pubSub.subscribe(this._channel);
   }

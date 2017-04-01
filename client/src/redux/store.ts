@@ -4,44 +4,109 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------------------- logging --------------------------------------------
 
-import { Utility } from '@fluxgate/common';
+import { Assert, InvalidOperationException } from '@fluxgate/common';
 
 import { CustomSubject } from '@fluxgate/common';
 
 import { ICommand } from './command.interface';
 import { CommandStore } from './commandStore';
 
+/**
+ * Modelliert den Store beim redux/command Pattern.
+ * Der Store enthält mehrere @see{CommandStore}s für verschiedene Aspekte
+ * wie z.B. Rest-Services
+ * 
+ * @export
+ * @class Store
+ */
 export class Store {
   protected static readonly logger = getLogger(Store);
   private commandStores: { [storeName: string]: CommandStore<any> } = {};
 
+  /**
+   * Creates an instance of Store.
+   * @param {Array<CommandStore<any>>} stores
+   * 
+   * @memberOf Store
+   */
   constructor(stores: Array<CommandStore<any>>) {
     using(new XLog(Store.logger, levels.INFO, 'ctor'), (log) => {
-      this.combine(stores);
+      this.add(stores);
     });
   }
 
+  /**
+   * 
+   * 
+   * @param {CommandStore<any>} store 
+   * 
+   * @memberOf Store
+   */
+  public add(store: CommandStore<any> | Array<CommandStore<any>>): void {
+    Assert.notNull(store);
+    if (Array.isArray(store)) {
+      this.addInternal(store);
+    } else {
+      this.addInternal([store]);
+    }
+  }
+
   public dispatch(command: ICommand<any>) {
+    Assert.notNull(command);
+
     using(new XLog(Store.logger, levels.INFO, 'dispatch'), (log) => {
       const commandStore = this.commandStores[command.storeId];
       commandStore.dispatch(command);
     });
   }
 
+  /**
+   * Liefert den Status des Stores mit der Id @param{storeId}.
+   * 
+   * @template T
+   * @param {string} storeId
+   * @returns {T}
+   * 
+   * @memberOf Store
+   */
   public getState<T>(storeId: string): T {
+    Assert.notNullOrEmpty(storeId);
     const commandStore = this.commandStores[storeId];
     return commandStore.getState();
   }
 
+
+  /**
+   * Liefert das Subject für die Id @param{storeId} für eine anschliessende Subscription.
+   * 
+   * @param {string} storeId
+   * @returns {CustomSubject<any>}
+   * 
+   * @memberOf Store
+   */
   public subject(storeId: string): CustomSubject<any> {
+    Assert.notNullOrEmpty(storeId);
     const commandStore = this.commandStores[storeId];
     return commandStore.subject();
   }
 
-  public combine(stores: Array<CommandStore<any>>) {
-    if (!Utility.isNullOrEmpty(stores)) {
-      stores.forEach((store) => this.commandStores[store.name] = store);
-    }
+
+  /**
+   * Fügt die command stores dem Store hinzu
+   * 
+   * @param {Array<CommandStore<any>>} stores 
+   * 
+   * @memberOf Store
+   */
+  private addInternal(stores: Array<CommandStore<any>>) {
+    Assert.notNullOrEmpty(stores);
+
+    stores.forEach((store) => {
+      if (this.commandStores[store.name]) {
+        throw new InvalidOperationException(`Store enthält bereits einen CommandStore ${store.name}`);
+      }
+      this.commandStores[store.name] = store;
+    });
   }
 
 }

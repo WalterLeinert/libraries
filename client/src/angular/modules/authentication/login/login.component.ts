@@ -16,10 +16,10 @@ import { UserServiceRequests } from '../commands/user-service-requests';
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
+import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
 import { ChangePasswordGuardService } from '../changePassword/changePassword-guard.service';
 import { PassportService } from '../passport.service';
 import { RegisterGuardService } from '../register/register-guard.service';
-import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
 
 @Component({
   selector: 'flx-login',

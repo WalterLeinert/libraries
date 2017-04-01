@@ -24,10 +24,7 @@ export class ChangePasswordGuardService extends CurrentUserBaseService implement
   constructor(private _router: Router, messageService: MessageService, passportService: PassportService) {
     super(passportService, messageService);
 
-    this.getCurrentUser().subscribe((user: IUser) => {
-      this.user = user;
-    });
-
+    this.user = this.getCurrentUser();
   }
 
   public canActivate(route: ActivatedRouteSnapshot): boolean {

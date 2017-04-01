@@ -10,7 +10,7 @@ import { IServiceState } from './service-state.interface';
  * @abstract
  * @class ServiceCommand
  * @implements {ICommand<IServiceState<T>>}
- * @template T 
+ * @template T
  */
 export abstract class ServiceCommand<T, TId> implements ICommand<IServiceState<T, TId>> {
 

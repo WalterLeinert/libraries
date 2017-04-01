@@ -1,9 +1,3 @@
-// -------------------------- logging -------------------------------
-// tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
-
-import { IUser } from '@fluxgate/common';
-
 import { MessageService } from '../../services/message.service';
 import { CurrentUser } from './currentUser';
 import { PassportService } from './passport.service';

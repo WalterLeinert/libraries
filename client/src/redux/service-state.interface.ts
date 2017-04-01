@@ -1,10 +1,10 @@
 /**
  * Interface für den Service-Status
- * 
+ *
  * @export
  * @interface IServiceState
- * @template T 
- * @template TId 
+ * @template T
+ * @template TId
  */
 export interface IServiceState<T, TId> {
   /**
