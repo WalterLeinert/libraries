@@ -25,17 +25,18 @@ export class Store {
 
   /**
    * Creates an instance of Store.
+   * @param {Array<CommandStore<any>>} stores
    * 
    * @memberOf Store
    */
-  constructor() {
+  constructor(stores: Array<CommandStore<any>>) {
     using(new XLog(Store.logger, levels.INFO, 'ctor'), (log) => {
-      // ok
+      this.add(stores);
     });
   }
 
   /**
-   * Fügt den command store @param{store} zum Store hinzu
+   * 
    * 
    * @param {CommandStore<any>} store 
    * 
@@ -93,7 +94,7 @@ export class Store {
   /**
    * Fügt die command stores dem Store hinzu
    * 
-   * @param {Array<CommandStore<any>>} stores
+   * @param {Array<CommandStore<any>>} stores 
    * 
    * @memberOf Store
    */

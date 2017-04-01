@@ -15,7 +15,6 @@ export class UserServiceRequests extends EnhancedServiceRequests<IUser, number, 
 
   constructor(service: UserService, @Inject(AppStore) store: Store) {
     super(UserStore.ID, service, store);
-    store.add(new UserStore());
   }
 }
 
