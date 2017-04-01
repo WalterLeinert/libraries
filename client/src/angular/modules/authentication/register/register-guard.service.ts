@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 
+// fluxgate
+import { IUser } from '@fluxgate/common';
+
 import { MessageService } from '../../../services/message.service';
 import { CurrentUserBaseService } from '../currentUserBaseService';
 import { PassportService } from '../passport.service';
@@ -15,13 +18,18 @@ import { PassportService } from '../passport.service';
  */
 @Injectable()
 export class RegisterGuardService extends CurrentUserBaseService implements CanActivate {
+  private user: IUser;
 
   constructor(private _router: Router, messageService: MessageService, passportService: PassportService) {
     super(passportService, messageService);
+
+    this.getCurrentUser().subscribe((user: IUser) => {
+      this.user = user;
+    });
   }
 
   public canActivate(route: ActivatedRouteSnapshot): boolean {
-    if (this.userInternal && this.userInternal.isAdmin) {
+    if (this.user && this.user.isAdmin) {
       return true;
     }
     return false;

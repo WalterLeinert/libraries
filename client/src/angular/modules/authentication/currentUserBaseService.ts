@@ -10,28 +10,16 @@ import { PassportService } from './passport.service';
 
 
 /**
+ * TODO: obsolete wegen CoreComponent.getCurrentUser etc.
  * abstrakte Service-Basisklasse zum Überwachen des angemeldeten Users mittels @see{PassportService}. 
  * 
  * @export
  * @class CurrentUserBaseService
  */
 export abstract class CurrentUserBaseService extends CurrentUser {
-  protected static logger = getLogger(CurrentUserBaseService);
 
   protected constructor(private passportService: PassportService, messageService: MessageService) {
     super(messageService);
 
-    using(new XLog(CurrentUserBaseService.logger, levels.INFO, 'ctor'), (log) => {
-      this.registerSubscription(this.passportService.userChange.subscribe((user: IUser) => {
-        this.userInternal = user;
-        log.debug(`currentUserChange: user = ${JSON.stringify(user)}`);
-      }));
-
-      // initial aktuellen User ermitteln
-      this.registerSubscription(this.passportService.getCurrentUser().subscribe((user) => {
-        this.userInternal = user;
-        log.debug(`getCurrentUser: user = ${JSON.stringify(user)}`);
-      }));
-    });
   }
 }

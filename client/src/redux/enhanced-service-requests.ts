@@ -6,8 +6,8 @@ import { ServiceRequests } from './service-requests';
 import { Store } from './store';
 
 /**
- * 
- * 
+ * Erweiterung von @see{ServiceRequests} um @see{setDeleted}.
+ *
  * @export
  * @class EnhancedServiceRequests
  * @template T
@@ -23,7 +23,7 @@ export abstract class EnhancedServiceRequests<T, TId extends IToString, TService
 
   public setDeleted(item: T): void {
     if (!Types.hasProperty(item, 'deleted')) {
-      throw new InvalidOperationException(``);
+      throw new InvalidOperationException(`item ${JSON.stringify(item)} hat keine deleted-Property`);
     }
     (item as any).deleted = true;
     this.update(item);

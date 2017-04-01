@@ -5,14 +5,14 @@ import { IRole } from '@fluxgate/common';
 
 
 import { AppStore } from '../../../../redux/app-store';
-import { ServiceRequests } from '../../../../redux/service-requests';
+import { EnhancedServiceRequests } from '../../../../redux/enhanced-service-requests';
 import { Store } from '../../../../redux/store';
 import { RoleService } from '../role.service';
 import { RoleStore } from './role-store';
 
 
 @Injectable()
-export class RoleServiceRequests extends ServiceRequests<IRole, number, RoleService> {
+export class RoleServiceRequests extends EnhancedServiceRequests<IRole, number, RoleService> {
 
   constructor(service: RoleService, @Inject(AppStore) store: Store) {
     super(RoleStore.ID, service, store);

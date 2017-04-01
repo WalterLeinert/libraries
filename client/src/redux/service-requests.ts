@@ -1,10 +1,7 @@
-import { Inject } from '@angular/core';
-
 // fluxgate
-import { IToString } from '@fluxgate/common';
+import { Assert, IToString } from '@fluxgate/common';
 
 import { Service } from '../angular/services/service';
-import { AppStore } from './app-store';
 import { DeleteItemCommand } from './delete-item-command';
 import { FindItemsCommand } from './find-items-command';
 import { SetCurrentItemCommand } from './set-current-item-command';
@@ -16,13 +13,16 @@ import { UpdateItemCommand } from './update-item-command';
  * 
  * @export
  * @class ServiceRequests
- * @template T 
- * @template TId 
- * @template TService 
+ * @template T
+ * @template TId
+ * @template TService
  */
-export class ServiceRequests<T, TId extends IToString, TService extends Service<T, TId>> {
+export abstract class ServiceRequests<T, TId extends IToString, TService extends Service<T, TId>> {
 
-  constructor(private _storeId: string, private service: TService, @Inject(AppStore) private store: Store) {
+  protected constructor(private _storeId: string, private service: TService, private store: Store) {
+    Assert.notNullOrEmpty(_storeId);
+    Assert.notNull(service);
+    Assert.notNull(store);
   }
 
   public get storeId(): string {

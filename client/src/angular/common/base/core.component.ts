@@ -1,6 +1,8 @@
 import { EventEmitter, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
+import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 
@@ -11,7 +13,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  Assert, CompoundValidator, Dictionary, Funktion, IMessage, IUser,
+  Assert, CompoundValidator, CustomSubject, Dictionary, Funktion, IMessage, IUser,
   MessageSeverity, PatternValidator, RangeValidator,
   RequiredValidator, TableMetadata, UniqueIdentifiable, Utility
 } from '@fluxgate/common';
@@ -69,7 +71,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
     this.store = AppInjector.instance.getInstance<Store>(AppStore);
 
-    this.store.subject(UserStore.ID).subscribe(() => this.updateUserState());
+    this.getStoreSubject(UserStore.ID).subscribe(() => this.updateUserState());
     this.updateUserState();
   }
 
@@ -534,6 +536,23 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     return this._messageService;
   }
 
+
+  protected getStoreSubject(storeId: string): CustomSubject<any> {
+    return this.store.subject(storeId);
+  }
+
+
+  protected getStoreState<T, TId>(storeId: string): IServiceState<T, TId> {
+    return this.store.getState<IServiceState<T, TId>>(storeId);
+  }
+
+
+  protected getCurrentUser(): Observable<IUser> {
+    const state = this.store.getState<IServiceState<IUser, number>>(UserStore.ID);
+    return Observable.of(state.currentItem);
+  }
+
+
   /**
    * Feuert den currentUserChanged-Event immer wenn sich der aktuelle/angemeldete User ändert.
    * 
@@ -542,7 +561,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf CoreComponent
    */
   private updateUserState() {
-    const state = this.store.getState<IServiceState<IUser, number>>(UserStore.ID);
-    this.currentUserChanged.emit(state.currentItem);
+    this.getCurrentUser().subscribe((user) => {
+      this.currentUserChanged.emit(user);
+    });
   }
 }

@@ -7,7 +7,7 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // fluxgate
-import { Assert, IRole, User, Types } from '@fluxgate/common';
+import { Assert, IRole, Types, User } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable

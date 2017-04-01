@@ -101,7 +101,6 @@ export class PassportService extends CurrentUser implements IServiceBase {
         .map((response: Response) => this.deserialize(response.json()))
         .do((u) => {
           log.log('user: ' + JSON.stringify(u));
-          this.onUserChange(u);
         })
         .catch(this.handleServerError);
     });
@@ -124,7 +123,6 @@ export class PassportService extends CurrentUser implements IServiceBase {
           .map((response: Response) => this.deserialize(response.json()))
           .do((u) => {
             log.log(`user = ${JSON.stringify(u)}`);
-            this.onUserChange(u);
           })
           .catch(this.handleServerError);
       });
@@ -145,7 +143,6 @@ export class PassportService extends CurrentUser implements IServiceBase {
           // ok
         }).do((user) => {
           log.log(`user = ${JSON.stringify(user)}`);
-          this.onUserChange(null);
         })
         .do((data) => PassportService.logger.info('result: ' + JSON.stringify(data)))
         .catch(this.handleServerError);
@@ -169,25 +166,6 @@ export class PassportService extends CurrentUser implements IServiceBase {
       const passwordChange = new PasswordChange(username, password, passwordNew);
 
       return this.http.post(this.getUrl() + PassportService.CHANGE_PASSWORD, passwordChange)
-        .map((response: Response) => this.deserialize(response.json()))
-        .do((user) => {
-          log.log(`user = ${JSON.stringify(user)}`);
-        })
-        .catch(this.handleServerError);
-    });
-  }
-
-
-  /**
-   * Liefert den aktuell angemeldeten User.
-   * 
-   * @returns {Observable<User>}
-   * 
-   * @memberOf UserService
-   */
-  public getCurrentUser(): Observable<User> {
-    return using(new XLog(PassportService.logger, levels.INFO, 'getCurrentUser'), (log) => {
-      return this.http.get(this.getUrl() + PassportService.CURRENT_USER)
         .map((response: Response) => this.deserialize(response.json()))
         .do((user) => {
           log.log(`user = ${JSON.stringify(user)}`);
