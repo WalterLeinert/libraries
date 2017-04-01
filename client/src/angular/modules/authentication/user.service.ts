@@ -33,7 +33,7 @@ export class UserService extends Service<User, number> {
    * 
    * @param user 
    */
-  public markAsDeleted(user: User): Observable<User> {
+  public setDeleted(user: User): Observable<User> {
     user.deleted = true;
     return super.update(user);
   }
