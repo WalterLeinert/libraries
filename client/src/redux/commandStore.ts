@@ -14,7 +14,7 @@ import { ICommand } from './command.interface';
  * - einen speziellen Status hält
  * - Kommandos dispatched
  * - eine Subscription für Statusupdates ermöglicht.
- * 
+ *
  * @export
  * @class CommandStore
  * @template T
@@ -36,7 +36,7 @@ export class CommandStore<T> {
 
   /**
    * Liefert den Storenamen
-   * 
+   *
    * @readonly
    * @type {string}
    * @memberOf CommandStore
@@ -47,9 +47,9 @@ export class CommandStore<T> {
 
   /**
    * Liefert den Status
-   * 
-   * @returns {T} 
-   * 
+   *
+   * @returns {T}
+   *
    * @memberOf CommandStore
    */
   public getState(): T {
@@ -58,13 +58,15 @@ export class CommandStore<T> {
 
   /**
    * Für ein Dispatch des Kommandos @param{command} aus -> Kommandoausführung, Statusupdate
-   * 
-   * @param {ICommand<any>} command 
-   * 
+   *
+   * @param {ICommand<any>} command
+   *
    * @memberOf CommandStore
    */
   public dispatch(command: ICommand<any>) {
     using(new XLog(CommandStore.logger, levels.INFO, 'dispatch'), (log) => {
+      log.log(`command = ${command.constructor.name}: ${JSON.stringify(command)}`);
+
       this.state = command.execute(this.state);
       this.pubSub.publish(this._channel, command);
     });
@@ -72,9 +74,9 @@ export class CommandStore<T> {
 
   /**
    * Liefert ein Subject für eine folgende Subscription.
-   * 
+   *
    * @returns {CustomSubject<any>}
-   * 
+   *
    * @memberOf CommandStore
    */
   public subject(): CustomSubject<any> {
