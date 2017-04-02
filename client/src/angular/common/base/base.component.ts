@@ -26,7 +26,7 @@ import { IRefreshHelper, IRouterNavigationAction, NavigationAction } from '../..
 import { IAutoformConfig, IAutoformNavigation } from '../../modules/autoform/autoformConfig.interface';
 import { AutoformConstants } from '../../modules/autoform/autoformConstants';
 import { MessageService } from '../../services/message.service';
-import { CoreComponent } from './core.component';
+import { ExtendedCoreComponent } from './extended-core.component';
 import { FormGroupInfo } from './formGroupInfo';
 
 
@@ -44,7 +44,7 @@ import { FormGroupInfo } from './formGroupInfo';
   templateUrl: './base.component.html',
   styleUrls: ['./base.component.css']
 })*/
-export abstract class BaseComponent<TService extends IServiceBase> extends CoreComponent {
+export abstract class BaseComponent<TService extends IServiceBase> extends ExtendedCoreComponent {
   protected static readonly logger = getLogger(BaseComponent);
 
 

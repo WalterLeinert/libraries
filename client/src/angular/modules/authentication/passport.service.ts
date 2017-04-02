@@ -18,15 +18,15 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 import { Serializer } from '../../../base/serializer';
+import { CoreComponent } from '../../common/base/core.component';
 import { MetadataService } from '../../services';
 import { ConfigService } from '../../services/config.service';
 import { MessageService } from '../../services/message.service';
 import { ServiceBase } from '../../services/serviceBase';
-import { CurrentUser } from './currentUser';
 
 
 @Injectable()
-export class PassportService extends CurrentUser implements IServiceBase {
+export class PassportService extends CoreComponent implements IServiceBase {
   protected static logger = getLogger(PassportService);
 
   public static get LOGIN() { return '/login'; }
