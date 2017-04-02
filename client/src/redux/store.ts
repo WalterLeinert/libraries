@@ -15,7 +15,7 @@ import { CommandStore } from './commandStore';
  * Modelliert den Store beim redux/command Pattern.
  * Der Store enthält mehrere @see{CommandStore}s für verschiedene Aspekte
  * wie z.B. Rest-Services
- * 
+ *
  * @export
  * @class Store
  */
@@ -26,7 +26,7 @@ export class Store {
   /**
    * Creates an instance of Store.
    * @param {Array<CommandStore<any>>} stores
-   * 
+   *
    * @memberOf Store
    */
   constructor(stores: Array<CommandStore<any>>) {
@@ -36,10 +36,10 @@ export class Store {
   }
 
   /**
-   * 
-   * 
-   * @param {CommandStore<any>} store 
-   * 
+   *
+   *
+   * @param {CommandStore<any>} store
+   *
    * @memberOf Store
    */
   public add(store: CommandStore<any> | Array<CommandStore<any>>): void {
@@ -62,11 +62,11 @@ export class Store {
 
   /**
    * Liefert den Status des Stores mit der Id @param{storeId}.
-   * 
+   *
    * @template T
    * @param {string} storeId
    * @returns {T}
-   * 
+   *
    * @memberOf Store
    */
   public getState<T>(storeId: string): T {
@@ -78,10 +78,10 @@ export class Store {
 
   /**
    * Liefert das Subject für die Id @param{storeId} für eine anschliessende Subscription.
-   * 
+   *
    * @param {string} storeId
    * @returns {CustomSubject<any>}
-   * 
+   *
    * @memberOf Store
    */
   public subject(storeId: string): CustomSubject<any> {
@@ -93,9 +93,9 @@ export class Store {
 
   /**
    * Fügt die command stores dem Store hinzu
-   * 
-   * @param {Array<CommandStore<any>>} stores 
-   * 
+   *
+   * @param {Array<CommandStore<any>>} stores
+   *
    * @memberOf Store
    */
   private addInternal(stores: Array<CommandStore<any>>) {
