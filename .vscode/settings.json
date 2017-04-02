@@ -17,5 +17,7 @@
   "tslint.configFile": "./tslint.json",
   "html.format.extraLiners": "head, body, /html, p-tabView",
   "editor.tabSize": 2,
-  "editor.detectIndentation": false
+  "editor.detectIndentation": false,
+  "editor.trimAutoWhitespace": true,
+  "files.trimTrailingWhitespace": true
 }
