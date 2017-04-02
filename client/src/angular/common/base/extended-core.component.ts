@@ -18,9 +18,13 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 import { AppRegistry } from '@fluxgate/common';
 
 
+import { ServiceRequests } from '../../../redux/service-requests';
 import { IRouterNavigationAction, NavigationAction } from '../../common/routing';
 import { MessageService } from '../../services/message.service';
+import { Service } from '../../services/service';
 import { CoreComponent } from './core.component';
+import { FormGroupInfo } from './formGroupInfo';
+
 
 /**
  * Erweiterung zu @see{CoreComponent}: alle Funktionen ohne Verwendung von Service(s) aus @see{BaseService}
@@ -167,6 +171,38 @@ export abstract class ExtendedCoreComponent extends CoreComponent {
     return this._route;
   }
 
+  // TODO: diese Methode umbenennen in findItems (ohne 'ByServiceRequest'), die Methoden aus BaseComponent
+  protected findItemsByServiceRequest<T, TId, TService extends Service<T, TId>>(item: T,
+    groupName: string = FormGroupInfo.DEFAULT_NAME,
+    serviceRequests: ServiceRequests<T, TId, TService>): void {
+    serviceRequests.find();
+  }
+
+  protected findItemByIdServiceRequest<T, TId, TService extends Service<T, TId>>(id: TId,
+    groupName: string = FormGroupInfo.DEFAULT_NAME,
+    serviceRequests: ServiceRequests<T, TId, TService>): void {
+    serviceRequests.findById(id);
+  }
+
+
+  protected createItemByServiceRequest<T, TId, TService extends Service<T, TId>>(item: T,
+    groupName: string = FormGroupInfo.DEFAULT_NAME,
+    serviceRequests: ServiceRequests<T, TId, TService>): void {
+    serviceRequests.create(item);
+  }
+
+
+  protected updateItemByServiceRequest<T, TId, TService extends Service<T, TId>>(item: T,
+    groupName: string = FormGroupInfo.DEFAULT_NAME,
+    serviceRequests: ServiceRequests<T, TId, TService>): void {
+    serviceRequests.update(item);
+  }
+
+  protected deleteItemByServiceRequest<T, TId, TService extends Service<T, TId>>(id: TId,
+    groupName: string = FormGroupInfo.DEFAULT_NAME,
+    serviceRequests: ServiceRequests<T, TId, TService>): void {
+    serviceRequests.delete(id);
+  }
 
 
 

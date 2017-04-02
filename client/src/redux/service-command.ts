@@ -1,3 +1,5 @@
+
+
 import { ICommand } from './command.interface';
 import { IServiceState } from './service-state.interface';
 
@@ -5,7 +7,7 @@ import { IServiceState } from './service-state.interface';
 /**
  * abstraktes Command, welches Service-Operationen (wie find, update) ausführt und auf einem Status
  * @see{IServiceState} arbeitet.
- * 
+ *
  * @export
  * @abstract
  * @class ServiceCommand
@@ -29,7 +31,7 @@ export abstract class ServiceCommand<T, TId> implements ICommand<IServiceState<T
 
   /**
    * Liefert die zugehörige storeId.
-   * 
+   *
    * @readonly
    * @type {string}
    * @memberOf ServiceCommand
@@ -40,11 +42,11 @@ export abstract class ServiceCommand<T, TId> implements ICommand<IServiceState<T
 
 
   /**
-   * Führt das konkrete Command aus und liefert einen (ggf.) aktualisierten neuen Status zurück. 
-   * 
-   * @param {IServiceState<T>} [state=ServiceCommand.INITIAL_STATE] 
-   * @returns {IServiceState<T>} 
-   * 
+   * Führt das konkrete Command aus und liefert einen (ggf.) aktualisierten neuen Status zurück.
+   *
+   * @param {IServiceState<T>} [state=ServiceCommand.INITIAL_STATE]
+   * @returns {IServiceState<T>}
+   *
    * @memberOf ServiceCommand
    */
   public execute(state: IServiceState<T, TId> = ServiceCommand.INITIAL_STATE): IServiceState<T, TId> {

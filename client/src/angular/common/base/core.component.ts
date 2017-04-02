@@ -1,6 +1,8 @@
 import { EventEmitter, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
+import 'rxjs/add/observable/from';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 
@@ -20,7 +22,7 @@ import { ControlType } from '../../../angular/modules/common/controlType';
 import { IControlDisplayInfo } from '../../../base/displayConfiguration/controlDisplayInfo.interface';
 import { DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';
-import { AppStore, IServiceState, Store } from '../../../redux';
+import { AppStore, IServiceState, ServiceCommand, SetCurrentItemCommand, Store } from '../../../redux';
 import { UserStore } from '../../modules/authentication/commands/user-store';
 import { AppInjector } from '../../services/appInjector.service';
 import { MessageService } from '../../services/message.service';
@@ -58,6 +60,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   // >> Formvalidierung
   private formInfos: Dictionary<string, FormGroupInfo> = new Dictionary<string, FormGroupInfo>();
   // << Formvalidierung
+  private subscriptions: Subscription[] = [];
 
   private store: Store;
 
@@ -68,7 +71,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
     this.store = AppInjector.instance.getInstance<Store>(AppStore);
 
-    this.getStoreSubject(UserStore.ID).subscribe(() => this.updateUserState());
+    this.subscribeToStore(UserStore.ID);
     this.updateUserState();
   }
 
@@ -92,6 +95,11 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    */
   public ngOnDestroy() {
     using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnDestroy', `name = ${this.constructor.name}`), (log) => {
+
+      log.log(`unsubscribe store ${this.subscriptions.length} subscriptions`);
+      Observable.from(this.subscriptions).subscribe((sub) => {
+        sub.unsubscribe();
+      });
 
       if (CoreComponent.subscriptionMap.containsKey(this)) {
         if (log.isDebugEnabled()) {
@@ -534,9 +542,48 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   }
 
 
-  protected getStoreSubject(storeId: string): CustomSubject<any> {
-    return this.store.subject(storeId);
+  /**
+   * Registriert den Store @param{storeId} für Statusänderungen.
+   *
+   * @protected
+   * @template T
+   * @template TId
+   * @param {string} storeId
+   * @returns {Subscription}
+   *
+   * @memberOf CoreComponent
+   */
+  protected subscribeToStore<T, TId>(storeId: string): Subscription {
+    const subscription = this.getStoreSubject(storeId).subscribe((command) => {
+      this.onStoreUpdated(command);
+    });
+    this.subscriptions.push(subscription);
+    return subscription;
   }
+
+
+  /**
+   * "virtuelle" Methode; muss in konkreten Klassen überschrieben werden, um die entsprechenden Statusupdates
+   * mitzubekommen.
+   *
+   * @protected
+   * @template T
+   * @template TId
+   * @param {ServiceCommand<T, TId>} value
+   *
+   * @memberOf CoreComponent
+   */
+  protected onStoreUpdated<T, TId>(command: ServiceCommand<T, TId>): void {
+    using(new XLog(CoreComponent.logger, levels.INFO, 'onStoreUpdated'), (log) => {
+      log.log(`command = ${command}: ${JSON.stringify(command)}`);
+
+      if (command.storeId === UserStore.ID && command instanceof SetCurrentItemCommand) {
+        this.updateUserState(command);
+      }
+    });
+  }
+
+
 
   /**
    * Liefert den Store-Status für die Id @param{storeId};
@@ -575,7 +622,15 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    *
    * @memberOf CoreComponent
    */
-  private updateUserState() {
-    this.currentUserChanged.emit(this.getCurrentUser());
+  private updateUserState(command?: ServiceCommand<IUser, number>) {
+    if (command instanceof SetCurrentItemCommand) {
+      this.currentUserChanged.emit(this.getCurrentUser());
+    }
   }
+
+
+  private getStoreSubject(storeId: string): CustomSubject<any> {
+    return this.store.subject(storeId);
+  }
+
 }
