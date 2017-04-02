@@ -82,7 +82,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf BaseComponent
    */
   public ngOnInit() {
-    using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnInit', `name = ${this.constructor.name}`), (log) => {
+    using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnInit', `class: ${this.constructor.name}`), (log) => {
       // ok
     });
   }
@@ -94,7 +94,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf BaseComponent
    */
   public ngOnDestroy() {
-    using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnDestroy', `name = ${this.constructor.name}`), (log) => {
+    using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnDestroy', `class: ${this.constructor.name}`), (log) => {
 
       log.log(`unsubscribe store ${this.subscriptions.length} subscriptions`);
       Observable.from(this.subscriptions).subscribe((sub) => {
@@ -574,8 +574,10 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf CoreComponent
    */
   protected onStoreUpdated<T, TId>(command: ServiceCommand<T, TId>): void {
-    using(new XLog(CoreComponent.logger, levels.INFO, 'onStoreUpdated'), (log) => {
-      log.log(`command = ${command}: ${JSON.stringify(command)}`);
+    Assert.notNull(command);
+
+    using(new XLog(CoreComponent.logger, levels.INFO, 'onStoreUpdated', `class: ${this.constructor.name}`), (log) => {
+      log.log(`command = ${command.constructor.name}: ${JSON.stringify(command)}`);
 
       if (command.storeId === UserStore.ID && command instanceof SetCurrentItemCommand) {
         this.updateUserState(command);
