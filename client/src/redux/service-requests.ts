@@ -2,15 +2,14 @@
 import { Assert, IException, IToString } from '@fluxgate/common';
 
 import { Service } from '../angular/services/service';
-import { ServiceBase } from '../angular/services/serviceBase';
-import { CreateItemCommand } from './create-item-command';
-import { DeleteItemCommand } from './delete-item-command';
+import { CreatedItemCommand } from './created-item-command';
+import { DeletedItemCommand } from './deleted-item-command';
 import { ErrorCommand } from './error-command';
-import { FindItemByIdCommand } from './find-item-by-id-command';
-import { FindItemsCommand } from './find-items-command';
+import { FoundItemByIdCommand } from './found-item-by-id-command';
+import { FoundItemsCommand } from './found-items-command';
 import { SetCurrentItemCommand } from './set-current-item-command';
 import { Store } from './store';
-import { UpdateItemCommand } from './update-item-command';
+import { UpdatedItemCommand } from './updated-item-command';
 
 /**
  * Realisiert die Rest-API Operationen und führt ein dispatch der jeweiligen Kommandos durch.
@@ -61,7 +60,7 @@ export abstract class ServiceRequests<T, TId extends IToString, TService extends
   public create(item: T): void {
     this.service.create(item).subscribe(
       (elem) => {
-        this.store.dispatch(new CreateItemCommand(this._storeId, elem));
+        this.store.dispatch(new CreatedItemCommand(this._storeId, elem));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));
@@ -77,7 +76,7 @@ export abstract class ServiceRequests<T, TId extends IToString, TService extends
   public find(): void {
     this.service.find().subscribe(
       (items) => {
-        this.store.dispatch(new FindItemsCommand(this._storeId, items));
+        this.store.dispatch(new FoundItemsCommand(this._storeId, items));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));
@@ -87,7 +86,7 @@ export abstract class ServiceRequests<T, TId extends IToString, TService extends
   public findById(id: TId): void {
     this.service.findById(id).subscribe(
       (elem) => {
-        this.store.dispatch(new FindItemByIdCommand(this._storeId, elem));
+        this.store.dispatch(new FoundItemByIdCommand(this._storeId, elem));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));
@@ -105,7 +104,7 @@ export abstract class ServiceRequests<T, TId extends IToString, TService extends
   public update(item: T): void {
     this.service.update(item).subscribe(
       (elem) => {
-        this.store.dispatch(new UpdateItemCommand(this._storeId, elem));
+        this.store.dispatch(new UpdatedItemCommand(this._storeId, elem));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));
@@ -122,7 +121,7 @@ export abstract class ServiceRequests<T, TId extends IToString, TService extends
   public delete(id: TId): void {
     this.service.delete(id).subscribe(
       (result) => {
-        this.store.dispatch(new DeleteItemCommand(this._storeId, result.id));
+        this.store.dispatch(new DeletedItemCommand(this._storeId, result.id));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));

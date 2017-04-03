@@ -1,21 +1,22 @@
 import { ServiceCommand } from './service-command';
+import { ServiceRequestStates } from './service-request-state';
 import { IServiceState } from './service-state.interface';
 
 /**
- * Kommando zum Finden eines Items über die Id über einen Rest-Service.
+ * Kommando nach Löschen von Items über einen Rest-Service.
  *
- * Das eigentliche Finden wird im zugehörigen ServiceRequest ausgeführt,
+ * Das eigentliche Löschen wird im zugehörigen ServiceRequest ausgeführt,
  * wo ein dispatch dieses Kommandos erfolgt.
  *
  * @export
- * @class DeleteItemCommand
+ * @class DeletedItemCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class FindItemByIdCommand<T, TId> extends ServiceCommand<T, TId> {
+export class DeletedItemCommand<T, TId> extends ServiceCommand<T, TId> {
 
-  constructor(storeId: string, private item: T) {
+  constructor(storeId: string, private id: TId) {
     super(storeId);
   }
 
@@ -24,11 +25,14 @@ export class FindItemByIdCommand<T, TId> extends ServiceCommand<T, TId> {
    *
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
+   *
+   * @memberOf DeleteItemCommand
    */
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
-      item: this.item,
+      deletedId: this.id,
+      state: ServiceRequestStates.DONE,
       error: undefined
     };
   }

@@ -1,20 +1,21 @@
 import { ServiceCommand } from './service-command';
+import { ServiceRequestStates } from './service-request-state';
 import { IServiceState } from './service-state.interface';
 
 
 /**
- * Kommando zum Erzeugen eines neuen Items über einen Rest-Service.
+ * async Kommando zum Erzeugen eines neuen Items über einen Rest-Service.
  *
  * Der eigentliche Erzeugen wird im zugehörigen ServiceRequest ausgeführt,
  * wo ein dispatch dieses Kommandos erfolgt.
  *
  * @export
- * @class CreateItemCommand
+ * @class CreatingItemCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class CreateItemCommand<T, TId> extends ServiceCommand<T, TId> {
+export class CreatingItemCommand<T, TId> extends ServiceCommand<T, TId> {
 
   constructor(storeId: string, private item: T) {
     super(storeId);
@@ -32,6 +33,7 @@ export class CreateItemCommand<T, TId> extends ServiceCommand<T, TId> {
     return {
       ...state,
       item: this.item,
+      state: ServiceRequestStates.RUNNING,
       error: undefined
     };
   }

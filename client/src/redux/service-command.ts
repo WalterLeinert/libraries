@@ -1,6 +1,5 @@
-
-
 import { ICommand } from './command.interface';
+import { ServiceRequestStates } from './service-request-state';
 import { IServiceState } from './service-state.interface';
 
 
@@ -24,6 +23,7 @@ export abstract class ServiceCommand<T, TId> implements ICommand<IServiceState<T
     items: [],
     item: null,
     deletedId: null,
+    state: ServiceRequestStates.UNDEFINED,
     error: undefined
   };
 

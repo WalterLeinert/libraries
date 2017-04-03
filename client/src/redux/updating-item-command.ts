@@ -1,22 +1,23 @@
-import { IException } from '@fluxgate/common';
-
 import { ServiceCommand } from './service-command';
 import { ServiceRequestStates } from './service-request-state';
 import { IServiceState } from './service-state.interface';
 
 
 /**
- * Kommando zum Ablegen einer Exception nach einem Fehler bei einem Rest-Servicecall.
+ * async Kommando zum Update eines Items über einen Rest-Service.
+ *
+ * Der eigentliche Update wird im zugehörigen ServiceRequest ausgeführt,
+ * wo ein dispatch dieses Kommandos erfolgt.
  *
  * @export
- * @class ErrorCommand
+ * @class UpdatingItemCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class ErrorCommand<T, TId> extends ServiceCommand<T, TId> {
+export class UpdatingItemCommand<T, TId> extends ServiceCommand<T, TId> {
 
-  constructor(storeId: string, private error: IException) {
+  constructor(storeId: string, private item: T) {
     super(storeId);
   }
 
@@ -27,12 +28,14 @@ export class ErrorCommand<T, TId> extends ServiceCommand<T, TId> {
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
    *
+   * @memberOf UpdateItemCommand
    */
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
-      state: ServiceRequestStates.ERROR,
-      error: this.error
+      item: this.item,
+      state: ServiceRequestStates.RUNNING,
+      error: undefined
     };
   }
 }

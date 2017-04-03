@@ -1,5 +1,7 @@
 import { IException } from '@fluxgate/common';
 
+import { ServiceRequestState } from './service-request-state';
+
 /**
  * Interface für den Service-Status
  *
@@ -40,6 +42,15 @@ export interface IServiceState<T, TId> {
    * @memberOf IServiceState
    */
   deletedId: TId;
+
+  /**
+   * Der Status des zugehörigen Servicerequests.
+   * Falls der Status @see{ServiceRequestStates.ERROR} ist, findet man in @see{error} die Details
+   *
+   * @type {ServiceRequestState}
+   * @memberOf IServiceState
+   */
+  state: ServiceRequestState;
 
   /**
    * Falls bei einem Servicecall ein Fehler aufgetreten ist, enthält error die ensprechende Exception
