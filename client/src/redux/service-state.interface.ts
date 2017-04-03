@@ -1,4 +1,4 @@
-import { IException } from '@fluxgate/common';
+import { IEntity, IException } from '@fluxgate/common';
 
 import { ServiceRequestState } from './service-request-state';
 
@@ -10,7 +10,7 @@ import { ServiceRequestState } from './service-request-state';
  * @template T
  * @template TId
  */
-export interface IServiceState<T, TId> {
+export interface IServiceState<T extends IEntity<TId>, TId> {
   /**
    * aktuelles Item (z.B. nach Selektion im Grid)
    *

@@ -1,3 +1,6 @@
+// fluxgate
+import { IEntity } from '@fluxgate/common';
+
 import { ServiceCommand } from './service-command';
 import { ServiceRequestStates } from './service-request-state';
 import { IServiceState } from './service-state.interface';
@@ -14,7 +17,7 @@ import { IServiceState } from './service-state.interface';
  * @template T
  * @template TId
  */
-export class DeletedItemCommand<T, TId> extends ServiceCommand<T, TId> {
+export class DeletedItemCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
   constructor(storeId: string, private id: TId) {
     super(storeId);
@@ -31,6 +34,7 @@ export class DeletedItemCommand<T, TId> extends ServiceCommand<T, TId> {
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
+      items: state.items.filter((item) => item.id !== this.id),
       deletedId: this.id,
       state: ServiceRequestStates.DONE,
       error: undefined

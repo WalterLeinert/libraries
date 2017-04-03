@@ -13,7 +13,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  Assert, CompoundValidator, CustomSubject, Dictionary, Funktion, IMessage, IUser,
+  Assert, CompoundValidator, CustomSubject, Dictionary, Funktion, IEntity, IMessage, IUser,
   MessageSeverity, PatternValidator, RangeValidator,
   RequiredValidator, TableMetadata, UniqueIdentifiable, Utility
 } from '@fluxgate/common';
@@ -573,7 +573,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    *
    * @memberOf CoreComponent
    */
-  protected onStoreUpdated<T, TId>(command: ServiceCommand<T, TId>): void {
+  protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
     Assert.notNull(command);
 
     using(new XLog(CoreComponent.logger, levels.INFO, 'onStoreUpdated', `class: ${this.constructor.name}`), (log) => {
@@ -603,7 +603,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    *
    * @memberOf CoreComponent
    */
-  protected getStoreState<T, TId>(storeId: string): IServiceState<T, TId> {
+  protected getStoreState<T extends IEntity<TId>, TId>(storeId: string): IServiceState<T, TId> {
     return this.store.getState<IServiceState<T, TId>>(storeId);
   }
 

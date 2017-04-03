@@ -1,5 +1,5 @@
 // fluxgate
-import { Assert, IException, IToString } from '@fluxgate/common';
+import { Assert, IEntity, IException, IToString } from '@fluxgate/common';
 
 import { Service } from '../angular/services/service';
 import { CreatedItemCommand } from './created-item-command';
@@ -25,7 +25,7 @@ import { UpdatingItemCommand } from './updating-item-command';
  * @template TId
  * @template TService
  */
-export abstract class ServiceRequests<T, TId extends IToString, TService extends Service<T, TId>> {
+export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToString, TService extends Service<T, TId>> {
 
   protected constructor(private _storeId: string, private _service: TService, private _store: Store) {
     Assert.notNullOrEmpty(_storeId);

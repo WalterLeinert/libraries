@@ -1,3 +1,6 @@
+// fluxgate
+import { IEntity } from '@fluxgate/common';
+
 import { ICommand } from './command.interface';
 import { ServiceRequestStates } from './service-request-state';
 import { IServiceState } from './service-state.interface';
@@ -13,7 +16,7 @@ import { IServiceState } from './service-state.interface';
  * @implements {ICommand<IServiceState<T>>}
  * @template T
  */
-export abstract class ServiceCommand<T, TId> implements ICommand<IServiceState<T, TId>> {
+export abstract class ServiceCommand<T extends IEntity<TId>, TId> implements ICommand<IServiceState<T, TId>> {
 
   /**
    * Initialer Zustand

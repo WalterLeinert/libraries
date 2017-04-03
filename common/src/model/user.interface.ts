@@ -3,7 +3,7 @@ import { IEntity } from './entity.interface';
 /**
  * Interface für User
  */
-export interface IUser extends IEntity {
+export interface IUser extends IEntity<number> {
   /**
    * Der Benutzername (login)
    */
@@ -26,7 +26,7 @@ export interface IUser extends IEntity {
 
   /**
    * Liefert true, falls der User ein Admin ist.
-   * 
+   *
    * @readonly
    * @type {boolean}
    * @memberOf User
@@ -45,7 +45,7 @@ export interface IUser extends IEntity {
 
   /**
    * Setzt Passwort und Salt zurück
-   * 
+   *
    * @memberOf User
    */
   resetCredentials();

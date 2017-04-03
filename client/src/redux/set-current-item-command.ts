@@ -1,3 +1,6 @@
+// fluxgate
+import { IEntity } from '@fluxgate/common';
+
 import { ServiceCommand } from './service-command';
 import { IServiceState } from './service-state.interface';
 
@@ -13,7 +16,7 @@ import { IServiceState } from './service-state.interface';
  * @template T
  * @template TId
  */
-export class SetCurrentItemCommand<T, TId> extends ServiceCommand<T, TId> {
+export class SetCurrentItemCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
   constructor(storeId: string, private item: T) {
     super(storeId);

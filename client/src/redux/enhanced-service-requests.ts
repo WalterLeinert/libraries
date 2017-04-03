@@ -1,5 +1,5 @@
 // fluxgate
-import { InvalidOperationException, IToString, Types } from '@fluxgate/common';
+import { IEntity, InvalidOperationException, IToString, Types } from '@fluxgate/common';
 
 import { Service } from '../angular/services/service';
 import { ServiceRequests } from './service-requests';
@@ -14,7 +14,8 @@ import { Store } from './store';
  * @template TId
  * @template TService
  */
-export abstract class EnhancedServiceRequests<T, TId extends IToString, TService extends Service<T, TId>>
+export abstract class EnhancedServiceRequests<T extends IEntity<TId>, TId extends IToString,
+  TService extends Service<T, TId>>
   extends ServiceRequests<T, TId, TService> {
 
   constructor(storeId: string, service: TService, store: Store) {
@@ -23,10 +24,10 @@ export abstract class EnhancedServiceRequests<T, TId extends IToString, TService
 
 
   /**
-   * 
-   * 
-   * @param {T} item 
-   * 
+   *
+   *
+   * @param {T} item
+   *
    * @memberOf EnhancedServiceRequests
    */
   public setDeleted(item: T): void {

@@ -1,9 +1,9 @@
 import { IEntity } from './entity.interface';
 
 /**
- * Interface für User Rollen 
+ * Interface für User Rollen
  */
-export interface IRole extends IEntity {
+export interface IRole extends IEntity<number> {
   /**
    * Rollenname
    */

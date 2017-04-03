@@ -1,4 +1,4 @@
-import { IException } from '@fluxgate/common';
+import { IEntity, IException } from '@fluxgate/common';
 
 import { ServiceCommand } from './service-command';
 import { ServiceRequestStates } from './service-request-state';
@@ -14,7 +14,7 @@ import { IServiceState } from './service-state.interface';
  * @template T
  * @template TId
  */
-export class ErrorCommand<T, TId> extends ServiceCommand<T, TId> {
+export class ErrorCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
   constructor(storeId: string, private error: IException) {
     super(storeId);
