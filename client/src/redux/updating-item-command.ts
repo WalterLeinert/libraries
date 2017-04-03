@@ -33,7 +33,6 @@ export class UpdatingItemCommand<T, TId> extends ServiceCommand<T, TId> {
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
-      item: this.item,
       state: ServiceRequestStates.RUNNING,
       error: undefined
     };

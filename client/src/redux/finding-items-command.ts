@@ -17,7 +17,7 @@ import { IServiceState } from './service-state.interface';
  */
 export class FindingItemsCommand<T, TId> extends ServiceCommand<T, TId> {
 
-  constructor(storeId: string, private items: T[]) {
+  constructor(storeId: string) {
     super(storeId);
   }
 
@@ -32,7 +32,6 @@ export class FindingItemsCommand<T, TId> extends ServiceCommand<T, TId> {
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
-      items: this.items,
       state: ServiceRequestStates.RUNNING,
       error: undefined
     };

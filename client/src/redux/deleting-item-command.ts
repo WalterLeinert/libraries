@@ -31,7 +31,6 @@ export class DeletingItemCommand<T, TId> extends ServiceCommand<T, TId> {
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
-      deletedId: this.id,
       state: ServiceRequestStates.RUNNING,
       error: undefined
     };
