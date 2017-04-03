@@ -7,12 +7,12 @@ import { IServiceState } from './service-state.interface';
  *
  * Der eigentliche Update wird im zugehörigen ServiceRequest ausgeführt,
  * wo ein dispatch dieses Kommandos erfolgt.
- * 
+ *
  * @export
  * @class UpdateItemCommand
  * @extends {ServiceCommand<T, TId>}
- * @template T 
- * @template TId 
+ * @template T
+ * @template TId
  */
 export class UpdateItemCommand<T, TId> extends ServiceCommand<T, TId> {
 
@@ -26,10 +26,14 @@ export class UpdateItemCommand<T, TId> extends ServiceCommand<T, TId> {
    *
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
-   * 
+   *
    * @memberOf UpdateItemCommand
    */
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
-    return { ...state, item: this.item };
+    return {
+      ...state,
+      item: this.item,
+      error: undefined
+    };
   }
 }

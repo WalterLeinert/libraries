@@ -29,6 +29,10 @@ export class CreateItemCommand<T, TId> extends ServiceCommand<T, TId> {
    *
    */
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
-    return { ...state, item: this.item };
+    return {
+      ...state,
+      item: this.item,
+      error: undefined
+    };
   }
 }

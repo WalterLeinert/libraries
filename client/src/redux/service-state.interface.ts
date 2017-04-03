@@ -1,3 +1,5 @@
+import { IException } from '@fluxgate/common';
+
 /**
  * Interface für den Service-Status
  *
@@ -9,7 +11,7 @@
 export interface IServiceState<T, TId> {
   /**
    * aktuelles Item (z.B. nach Selektion im Grid)
-   * 
+   *
    * @type {T}
    * @memberOf IServiceState
    */
@@ -17,7 +19,7 @@ export interface IServiceState<T, TId> {
 
   /**
    * aktuelle Item-Liste (z.B. für Anzeige im Grid)
-   * 
+   *
    * @type {T[]}
    * @memberOf IServiceState
    */
@@ -25,7 +27,7 @@ export interface IServiceState<T, TId> {
 
   /**
    * aktuelles Item (z.B. nach create/update)
-   * 
+   *
    * @type {T}
    * @memberOf IServiceState
    */
@@ -33,9 +35,17 @@ export interface IServiceState<T, TId> {
 
   /**
    * Id des gelöschten Items
-   * 
+   *
    * @type {TId}
    * @memberOf IServiceState
    */
   deletedId: TId;
+
+  /**
+   * Falls bei einem Servicecall ein Fehler aufgetreten ist, enthält error die ensprechende Exception
+   *
+   * @type {IException}
+   * @memberOf IServiceState
+   */
+  error: IException;
 }

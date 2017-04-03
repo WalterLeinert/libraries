@@ -26,6 +26,10 @@ export class FindItemByIdCommand<T, TId> extends ServiceCommand<T, TId> {
    * @returns {IServiceState<T, TId>}
    */
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
-    return { ...state, item: this.item };
+    return {
+      ...state,
+      item: this.item,
+      error: undefined
+    };
   }
 }

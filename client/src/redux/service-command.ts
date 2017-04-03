@@ -23,7 +23,8 @@ export abstract class ServiceCommand<T, TId> implements ICommand<IServiceState<T
     currentItem: null,
     items: [],
     item: null,
-    deletedId: null
+    deletedId: null,
+    error: undefined
   };
 
   protected constructor(private _storeId: string) {

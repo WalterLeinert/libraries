@@ -579,6 +579,11 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     using(new XLog(CoreComponent.logger, levels.INFO, 'onStoreUpdated', `class: ${this.constructor.name}`), (log) => {
       log.log(`command = ${command.constructor.name}: ${JSON.stringify(command)}`);
 
+      const state = this.getStoreState(command.storeId);
+      if (state.error) {
+        log.error(`${state.error}`);
+      }
+
       if (command.storeId === UserStore.ID && command instanceof SetCurrentItemCommand) {
         this.updateUserState(command);
       }

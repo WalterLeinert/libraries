@@ -6,7 +6,7 @@ import { IServiceState } from './service-state.interface';
  *
  * Das eigentliche Löschen wird im zugehörigen ServiceRequest ausgeführt,
  * wo ein dispatch dieses Kommandos erfolgt.
- * 
+ *
  * @export
  * @class DeleteItemCommand
  * @extends {ServiceCommand<T, TId>}
@@ -21,13 +21,17 @@ export class DeleteItemCommand<T, TId> extends ServiceCommand<T, TId> {
 
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
-   * 
+   *
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
-   * 
+   *
    * @memberOf DeleteItemCommand
    */
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
-    return { ...state, deletedId: this.id };
+    return {
+      ...state,
+      deletedId: this.id,
+      error: undefined
+    };
   }
 }

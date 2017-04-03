@@ -1,9 +1,11 @@
 // fluxgate
-import { Assert, IToString } from '@fluxgate/common';
+import { Assert, IException, IToString } from '@fluxgate/common';
 
 import { Service } from '../angular/services/service';
+import { ServiceBase } from '../angular/services/serviceBase';
 import { CreateItemCommand } from './create-item-command';
 import { DeleteItemCommand } from './delete-item-command';
+import { ErrorCommand } from './error-command';
 import { FindItemByIdCommand } from './find-item-by-id-command';
 import { FindItemsCommand } from './find-items-command';
 import { SetCurrentItemCommand } from './set-current-item-command';
@@ -57,9 +59,13 @@ export abstract class ServiceRequests<T, TId extends IToString, TService extends
    * @memberOf ServiceRequests
    */
   public create(item: T): void {
-    this.service.create(item).subscribe((elem) => {
-      this.store.dispatch(new CreateItemCommand(this._storeId, elem));
-    });
+    this.service.create(item).subscribe(
+      (elem) => {
+        this.store.dispatch(new CreateItemCommand(this._storeId, elem));
+      },
+      (exc: IException) => {
+        this.store.dispatch(new ErrorCommand(this._storeId, exc));
+      });
   }
 
 
@@ -69,15 +75,23 @@ export abstract class ServiceRequests<T, TId extends IToString, TService extends
    * @memberOf ServiceRequests
    */
   public find(): void {
-    this.service.find().subscribe((items) => {
-      this.store.dispatch(new FindItemsCommand(this._storeId, items));
-    });
+    this.service.find().subscribe(
+      (items) => {
+        this.store.dispatch(new FindItemsCommand(this._storeId, items));
+      },
+      (exc: IException) => {
+        this.store.dispatch(new ErrorCommand(this._storeId, exc));
+      });
   }
 
   public findById(id: TId): void {
-    this.service.findById(id).subscribe((elem) => {
-      this.store.dispatch(new FindItemByIdCommand(this._storeId, elem));
-    });
+    this.service.findById(id).subscribe(
+      (elem) => {
+        this.store.dispatch(new FindItemByIdCommand(this._storeId, elem));
+      },
+      (exc: IException) => {
+        this.store.dispatch(new ErrorCommand(this._storeId, exc));
+      });
   }
 
 
@@ -89,9 +103,13 @@ export abstract class ServiceRequests<T, TId extends IToString, TService extends
    * @memberOf ServiceRequests
    */
   public update(item: T): void {
-    this.service.update(item).subscribe((elem) => {
-      this.store.dispatch(new UpdateItemCommand(this._storeId, elem));
-    });
+    this.service.update(item).subscribe(
+      (elem) => {
+        this.store.dispatch(new UpdateItemCommand(this._storeId, elem));
+      },
+      (exc: IException) => {
+        this.store.dispatch(new ErrorCommand(this._storeId, exc));
+      });
   }
 
   /**
@@ -102,9 +120,13 @@ export abstract class ServiceRequests<T, TId extends IToString, TService extends
    * @memberOf ServiceRequests
    */
   public delete(id: TId): void {
-    this.service.delete(id).subscribe((result) => {
-      this.store.dispatch(new DeleteItemCommand(this._storeId, result.id));
-    });
+    this.service.delete(id).subscribe(
+      (result) => {
+        this.store.dispatch(new DeleteItemCommand(this._storeId, result.id));
+      },
+      (exc: IException) => {
+        this.store.dispatch(new ErrorCommand(this._storeId, exc));
+      });
   }
 
   protected get service(): TService {

@@ -1,23 +1,24 @@
+import { IException } from '@fluxgate/common';
+
 import { ServiceCommand } from './service-command';
 import { IServiceState } from './service-state.interface';
 
 
 /**
- * Kommando zum Setzen eines aktuellen Items (z.B. nach Selektion in einer Liste).
- *
- * Das eigentliche Setzen des Items wird im zugehörigen ServiceRequest ausgeführt.
+ * Kommando zum Ablegen einer Exception nach einem Fehler bei einem Rest-Servicecall.
  *
  * @export
- * @class SetCurrentItemCommand
+ * @class ErrorCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class SetCurrentItemCommand<T, TId> extends ServiceCommand<T, TId> {
+export class ErrorCommand<T, TId> extends ServiceCommand<T, TId> {
 
-  constructor(storeId: string, private item: T) {
+  constructor(storeId: string, private error: IException) {
     super(storeId);
   }
+
 
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
@@ -25,14 +26,8 @@ export class SetCurrentItemCommand<T, TId> extends ServiceCommand<T, TId> {
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
    *
-   * @memberOf SetCurrentItemCommand
    */
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
-    const item: T = this.item;
-    return {
-      ...state,
-      currentItem: item,
-      error: undefined
-    };
+    return { ...state, error: this.error };
   }
 }

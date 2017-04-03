@@ -3,6 +3,7 @@ export * from './command.interface';
 export * from './commandStore';
 export * from './create-item-command';
 export * from './delete-item-command';
+export * from './error-command'
 export * from './find-items-command';
 export * from './find-item-by-id-command';
 export * from './service-command';
