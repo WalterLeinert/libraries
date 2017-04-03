@@ -2,18 +2,18 @@
 import { Assert, IEntity, IException, IToString } from '@fluxgate/common';
 
 import { Service } from '../angular/services/service';
-import { CreatedItemCommand } from './created-item-command';
 import { CreatingItemCommand } from './creating-item-command';
-import { DeletedItemCommand } from './deleted-item-command';
 import { DeletingItemCommand } from './deleting-item-command';
 import { ErrorCommand } from './error-command';
 import { FindingItemByIdCommand } from './finding-item-by-id-command';
 import { FindingItemsCommand } from './finding-items-command';
-import { FoundItemByIdCommand } from './found-item-by-id-command';
-import { FoundItemsCommand } from './found-items-command';
+import { ItemCreatedCommand } from './item-created-command';
+import { ItemDeletedCommand } from './item-deleted-command';
+import { ItemFoundByIdCommand } from './item-found-by-id-command';
+import { ItemUpdatedCommand } from './item-updated-command';
+import { ItemsFoundCommand } from './items-found-command';
 import { SetCurrentItemCommand } from './set-current-item-command';
 import { Store } from './store';
-import { UpdatedItemCommand } from './updated-item-command';
 import { UpdatingItemCommand } from './updating-item-command';
 
 /**
@@ -68,7 +68,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
 
     this.service.create(item).subscribe(
       (elem) => {
-        this.store.dispatch(new CreatedItemCommand(this._storeId, elem));
+        this.store.dispatch(new ItemCreatedCommand(this._storeId, elem));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));
@@ -85,7 +85,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
   public create(item: T): void {
     this.service.create(item).subscribe(
       (elem) => {
-        this.store.dispatch(new CreatedItemCommand(this._storeId, elem));
+        this.store.dispatch(new ItemCreatedCommand(this._storeId, elem));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));
@@ -103,7 +103,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
 
     this.service.find().subscribe(
       (items) => {
-        this.store.dispatch(new FoundItemsCommand(this._storeId, items));
+        this.store.dispatch(new ItemsFoundCommand(this._storeId, items));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));
@@ -118,7 +118,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
   public find(): void {
     this.service.find().subscribe(
       (items) => {
-        this.store.dispatch(new FoundItemsCommand(this._storeId, items));
+        this.store.dispatch(new ItemsFoundCommand(this._storeId, items));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));
@@ -131,7 +131,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
 
     this.service.findById(id).subscribe(
       (elem) => {
-        this.store.dispatch(new FoundItemByIdCommand(this._storeId, elem));
+        this.store.dispatch(new ItemFoundByIdCommand(this._storeId, elem));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));
@@ -141,7 +141,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
   public findById(id: TId): void {
     this.service.findById(id).subscribe(
       (elem) => {
-        this.store.dispatch(new FoundItemByIdCommand(this._storeId, elem));
+        this.store.dispatch(new ItemFoundByIdCommand(this._storeId, elem));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));
@@ -161,7 +161,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
 
     this.service.update(item).subscribe(
       (elem) => {
-        this.store.dispatch(new UpdatedItemCommand(this._storeId, elem));
+        this.store.dispatch(new ItemUpdatedCommand(this._storeId, elem));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));
@@ -178,7 +178,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
   public update(item: T): void {
     this.service.update(item).subscribe(
       (elem) => {
-        this.store.dispatch(new UpdatedItemCommand(this._storeId, elem));
+        this.store.dispatch(new ItemUpdatedCommand(this._storeId, elem));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));
@@ -198,7 +198,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
 
     this.service.delete(id).subscribe(
       (result) => {
-        this.store.dispatch(new DeletedItemCommand(this._storeId, result.id));
+        this.store.dispatch(new ItemDeletedCommand(this._storeId, result.id));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));
@@ -215,7 +215,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
   public delete(id: TId): void {
     this.service.delete(id).subscribe(
       (result) => {
-        this.store.dispatch(new DeletedItemCommand(this._storeId, result.id));
+        this.store.dispatch(new ItemDeletedCommand(this._storeId, result.id));
       },
       (exc: IException) => {
         this.store.dispatch(new ErrorCommand(this._storeId, exc));

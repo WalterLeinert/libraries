@@ -18,7 +18,7 @@ import { IServiceState } from './service-state.interface';
  * @template T
  * @template TId
  */
-export class FoundItemsCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
+export class ItemsFoundCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
   constructor(storeId: string, private items: T[]) {
     super(storeId);

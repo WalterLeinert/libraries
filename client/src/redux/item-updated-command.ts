@@ -5,23 +5,25 @@ import { ServiceCommand } from './service-command';
 import { ServiceRequestStates } from './service-request-state';
 import { IServiceState } from './service-state.interface';
 
+
 /**
- * Kommando nach Löschen von Items über einen Rest-Service.
+ * Kommando zum Update eines Items über einen Rest-Service.
  *
- * Das eigentliche Löschen wird im zugehörigen ServiceRequest ausgeführt,
+ * Der eigentliche Update wird im zugehörigen ServiceRequest ausgeführt,
  * wo ein dispatch dieses Kommandos erfolgt.
  *
  * @export
- * @class DeletedItemCommand
+ * @class UpdateItemCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class DeletedItemCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
+export class ItemUpdatedCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
-  constructor(storeId: string, private id: TId) {
+  constructor(storeId: string, private item: T) {
     super(storeId);
   }
+
 
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
@@ -29,13 +31,13 @@ export class DeletedItemCommand<T extends IEntity<TId>, TId> extends ServiceComm
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
    *
-   * @memberOf DeleteItemCommand
+   * @memberOf UpdateItemCommand
    */
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
-      items: state.items.filter((item) => item.id !== this.id),
-      deletedId: this.id,
+      items: state.items.map((item) => item.id !== this.item.id ? item : this.item),
+      item: this.item,
       state: ServiceRequestStates.DONE,
       error: undefined
     };

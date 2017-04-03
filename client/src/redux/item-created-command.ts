@@ -17,7 +17,7 @@ import { IServiceState } from './service-state.interface';
  * @template T
  * @template TId
  */
-export class CreatedItemCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
+export class ItemCreatedCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
   constructor(storeId: string, private item: T) {
     super(storeId);
@@ -34,6 +34,7 @@ export class CreatedItemCommand<T extends IEntity<TId>, TId> extends ServiceComm
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
+      items: [...state.items, this.item],
       item: this.item,
       state: ServiceRequestStates.DONE,
       error: undefined
