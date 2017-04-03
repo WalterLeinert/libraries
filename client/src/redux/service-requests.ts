@@ -4,8 +4,8 @@ import { Assert, IToString } from '@fluxgate/common';
 import { Service } from '../angular/services/service';
 import { CreateItemCommand } from './create-item-command';
 import { DeleteItemCommand } from './delete-item-command';
-import { FindItemsCommand } from './find-items-command';
 import { FindItemByIdCommand } from './find-item-by-id-command';
+import { FindItemsCommand } from './find-items-command';
 import { SetCurrentItemCommand } from './set-current-item-command';
 import { Store } from './store';
 import { UpdateItemCommand } from './update-item-command';
@@ -21,10 +21,10 @@ import { UpdateItemCommand } from './update-item-command';
  */
 export abstract class ServiceRequests<T, TId extends IToString, TService extends Service<T, TId>> {
 
-  protected constructor(private _storeId: string, private service: TService, private store: Store) {
+  protected constructor(private _storeId: string, private _service: TService, private _store: Store) {
     Assert.notNullOrEmpty(_storeId);
-    Assert.notNull(service);
-    Assert.notNull(store);
+    Assert.notNull(_service);
+    Assert.notNull(_store);
   }
 
   /**
@@ -105,5 +105,13 @@ export abstract class ServiceRequests<T, TId extends IToString, TService extends
     this.service.delete(id).subscribe((result) => {
       this.store.dispatch(new DeleteItemCommand(this._storeId, result.id));
     });
+  }
+
+  protected get service(): TService {
+    return this._service;
+  }
+
+  protected get store(): Store {
+    return this._store;
   }
 }
