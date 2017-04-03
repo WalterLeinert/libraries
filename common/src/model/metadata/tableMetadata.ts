@@ -9,7 +9,7 @@ import { IServiceCrud } from '../service/serviceCrud.interface';
 
 /**
  *  Modelliert Metadaten für Modellklasse/DB-Tabelle
- * 
+ *
  * @export
  * @class TableMetadata
  */
@@ -23,11 +23,11 @@ export class TableMetadata {
 
   /**
    * Creates an instance of TableMetadata.
-   * 
+   *
    * @param {Function} target - Modelklasse
    * @param {TableOptions} options - Tableoptions
    * @param {boolean} isEnumTable - falls true, virtuelle Tabelle mit Enum-Werten
-   * 
+   *
    * @memberOf TableMetadata
    */
   constructor(public target: Funktion, public options: TableOptions | EnumTableOptions) {
@@ -35,9 +35,9 @@ export class TableMetadata {
 
   /**
    * Fügt eine {ColumnMetadata} für eine DB-Spalte hinzu.
-   * 
+   *
    * @param {ColumnMetadata} metadata
-   * 
+   *
    * @memberOf TableMetadata
    */
   public add(metadata: ColumnMetadata) {
@@ -53,7 +53,7 @@ export class TableMetadata {
 
   /**
    * Liefert alle {ColumnMetadata}-Infos.
-   * 
+   *
    * @readonly
    * @type {ColumnMetadata[]}
    * @memberOf TableMetadata
@@ -64,11 +64,11 @@ export class TableMetadata {
 
 
   /**
-   * Erzeugt eine neue Modellinstanz 
-   * 
+   * Erzeugt eine neue Modellinstanz
+   *
    * @template T
    * @returns
-   * 
+   *
    * @memberOf TableMetadata
    */
   public createEntity<T>() {
@@ -77,20 +77,20 @@ export class TableMetadata {
 
   /**
    * Erzeugt aus dem JSON-Object @param{json} eine Modelinstanz vom Typ @see{T}
-   * 
+   *
    * @template T
    * @param {Function} target
    * @param {*} json
-   * @param {boolean} mapColumns - falls true, sind im Json-Objekt die Propertynamen die DB-Spaltennamen und 
+   * @param {boolean} mapColumns - falls true, sind im Json-Objekt die Propertynamen die DB-Spaltennamen und
    *                                 müssen gemappt werden
    * @returns {T}
-   * 
+   *
    * @memberOf TableMetadata
    */
   public createModelInstance<T>(json: any, mapColumns = true): T {
     const instance = this.createEntity();
 
-    // alle Properties der Row über Reflection ermitteln        
+    // alle Properties der Row über Reflection ermitteln
     const props = Reflect.ownKeys(json);
 
     // ... und dann die Werte der Zielentity zuweisen
@@ -114,12 +114,12 @@ export class TableMetadata {
 
 
   /**
-   * Erzeugt aus der Modelinstanz vom Typ @see{T} ein JSON-Object @param{json} mit den zugehörigen Spaltennamen. 
-   * 
+   * Erzeugt aus der Modelinstanz vom Typ @see{T} ein JSON-Object @param{json} mit den zugehörigen Spaltennamen.
+   *
    * @template T
    * @param {T} subject
    * @returns {*}
-   * 
+   *
    * @memberOf TableMetadata
    */
   public createDatabaseInstance<T>(entity: T): any {
@@ -136,11 +136,11 @@ export class TableMetadata {
 
 
   /**
-   * Liefert eine {ColumnMetadata} oder null für die Property @param{propertyName} 
-   * 
+   * Liefert eine {ColumnMetadata} oder null für die Property @param{propertyName}
+   *
    * @param {string} propertyName
    * @returns
-   * 
+   *
    * @memberOf TableMetadata
    */
   public getColumnMetadataByProperty(propertyName: string) {
@@ -149,10 +149,10 @@ export class TableMetadata {
 
   /**
    * Liefert eine {ColumnMetadata} oder null für den DB-Spaltennamen @param{dbColName}.
-   * 
+   *
    * @param {string} dbColName
    * @returns
-   * 
+   *
    * @memberOf TableMetadata
    */
   public getColumnMetadataByDbCol(dbColName: string) {
@@ -190,13 +190,13 @@ export class TableMetadata {
 
   /**
    * Liefert eine zugehörige Serviceinstanz.
-   * 
-   * Wenn die Table keine EnumTable ist, wird die Serviceinstance über den @param{injector} ermittelt; 
+   *
+   * Wenn die Table keine EnumTable ist, wird die Serviceinstance über den @param{injector} ermittelt;
    * sonst wird ein entsprechender @see{EnumTableService} erzeugt.
-   * 
-   * @param {*} injector 
-   * @returns {IServiceCrud} 
-   * 
+   *
+   * @param {*} injector
+   * @returns {IServiceCrud}
+   *
    * @memberOf TableMetadata
    */
   public getServiceInstance(injector: any): IServiceCrud {

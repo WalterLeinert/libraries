@@ -8,8 +8,9 @@ import { Assert, InvalidOperationException } from '@fluxgate/common';
 
 import { CustomSubject } from '@fluxgate/common';
 
+import { CommandStore } from './command-store';
 import { ICommand } from './command.interface';
-import { CommandStore } from './commandStore';
+import { CommandStoreStorage } from './decorators/command-store-storage';
 
 /**
  * Modelliert den Store beim redux/command Pattern.
@@ -29,9 +30,9 @@ export class Store {
    *
    * @memberOf Store
    */
-  constructor(stores: Array<CommandStore<any>>) {
+  constructor() {
     using(new XLog(Store.logger, levels.INFO, 'ctor'), (log) => {
-      this.add(stores);
+      CommandStoreStorage.instance.registerStores(this);
     });
   }
 
