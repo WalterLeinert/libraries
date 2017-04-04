@@ -32,6 +32,8 @@ export abstract class SelectorBaseComponent extends CoreComponent {
    */
   private _editable: boolean = false;
 
+  private _style: string;
+
 
   /**
    * locale-Property
@@ -39,15 +41,6 @@ export abstract class SelectorBaseComponent extends CoreComponent {
    * @type {string}
    */
   private _locale: string = 'en';
-
-
-  /**
-   * * setzt das style-Attribut von p-dropdown
-   *
-   * @type {string}
-   */
-  @Input() public style: string;
-
 
   /**
    * selectedValueChange Event: wird bei jeder Selektionsänderung gefeuert.
@@ -146,4 +139,15 @@ export abstract class SelectorBaseComponent extends CoreComponent {
     }
   }
 
+
+  /**
+   * Property editable
+   */
+  public get style(): string {
+    return this._style;
+  }
+
+  @Input() public set style(value: string) {
+    this._style = value;
+  }
 }
