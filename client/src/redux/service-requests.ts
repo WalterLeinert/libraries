@@ -63,7 +63,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ServiceRequests
    */
-  public createAsync(item: T): void {
+  public create(item: T): void {
     this.store.dispatch(new CreatingItemCommand(this._storeId, item));
 
     this.service.create(item).subscribe(
@@ -82,7 +82,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ServiceRequests
    */
-  public create(item: T): void {
+  public createSync(item: T): void {
     this.service.create(item).subscribe(
       (elem) => {
         this.store.dispatch(new ItemCreatedCommand(this._storeId, elem));
@@ -98,7 +98,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ServiceRequests
    */
-  public findAsync(): void {
+  public find(): void {
     this.store.dispatch(new FindingItemsCommand(this._storeId));
 
     this.service.find().subscribe(
@@ -115,7 +115,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ServiceRequests
    */
-  public find(): void {
+  public findSync(): void {
     this.service.find().subscribe(
       (items) => {
         this.store.dispatch(new ItemsFoundCommand(this._storeId, items));
@@ -126,7 +126,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
   }
 
 
-  public findByIdAsync(id: TId): void {
+  public findById(id: TId): void {
     this.store.dispatch(new FindingItemByIdCommand(this._storeId, id));
 
     this.service.findById(id).subscribe(
@@ -138,7 +138,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
       });
   }
 
-  public findById(id: TId): void {
+  public findByIdSync(id: TId): void {
     this.service.findById(id).subscribe(
       (elem) => {
         this.store.dispatch(new ItemFoundByIdCommand(this._storeId, elem));
@@ -156,7 +156,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ServiceRequests
    */
-  public updateAsync(item: T): void {
+  public update(item: T): void {
     this.store.dispatch(new UpdatingItemCommand(this._storeId, item));
 
     this.service.update(item).subscribe(
@@ -175,7 +175,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ServiceRequests
    */
-  public update(item: T): void {
+  public updateSync(item: T): void {
     this.service.update(item).subscribe(
       (elem) => {
         this.store.dispatch(new ItemUpdatedCommand(this._storeId, elem));
@@ -193,7 +193,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ServiceRequests
    */
-  public deleteAsync(id: TId): void {
+  public delete(id: TId): void {
     this.store.dispatch(new DeletingItemCommand(this._storeId, id));
 
     this.service.delete(id).subscribe(
@@ -212,7 +212,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ServiceRequests
    */
-  public delete(id: TId): void {
+  public deleteSync(id: TId): void {
     this.service.delete(id).subscribe(
       (result) => {
         this.store.dispatch(new ItemDeletedCommand(this._storeId, result.id));
