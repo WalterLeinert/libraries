@@ -1,4 +1,4 @@
-import { Funktion } from '@fluxgate/common';
+import { Funktion } from '../../base/objectType';
 
 export class CommandStoreMetadata {
 

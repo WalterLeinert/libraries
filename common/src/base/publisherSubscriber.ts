@@ -5,11 +5,11 @@ import { Subject } from 'rxjs/Subject';
 
 /**
  * Modelliert ein typisiertes Subjekt
- * 
+ *
  * @export
  * @class CustomSubject
  * @extends {Subject<T>}
- * @template T 
+ * @template T
  */
 export class CustomSubject<T> extends Subject<T> {
 }
@@ -17,7 +17,7 @@ export class CustomSubject<T> extends Subject<T> {
 
 /**
  * Implementiert das klassische Publisher-Subscriber Pattern
- * 
+ *
  * @export
  * @class PublisherSubscriber
  */
@@ -26,10 +26,10 @@ export class PublisherSubscriber {
 
   /**
    * Veröffentlicht die Daten in @param{value} auf den Kanal @param{channel}
-   * 
-   * @param {string} channel 
-   * @param {*} value 
-   * 
+   *
+   * @param {string} channel
+   * @param {*} value
+   *
    * @memberOf PublisherSubscriber
    */
   public publish<T>(channel: string, value: T) {
@@ -40,11 +40,11 @@ export class PublisherSubscriber {
   }
 
   /**
-   * Registriert einen Subscriber für den Kanal @param{channel} 
-   * 
-   * @param {string} channel 
-   * @returns 
-   * 
+   * Registriert einen Subscriber für den Kanal @param{channel}
+   *
+   * @param {string} channel
+   * @returns
+   *
    * @memberOf PublisherSubscriber
    */
   public subscribe<T>(channel: string): CustomSubject<T> {

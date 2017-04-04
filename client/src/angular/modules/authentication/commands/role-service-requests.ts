@@ -1,12 +1,11 @@
 import { Inject, Injectable, NgModule } from '@angular/core';
 
 // fluxgate
-import { IRole } from '@fluxgate/common';
+import { IRole, Store } from '@fluxgate/common';
 
 
 import { AppStore } from '../../../../redux/app-store';
 import { EnhancedServiceRequests } from '../../../../redux/enhanced-service-requests';
-import { Store } from '../../../../redux/store';
 import { RoleService } from '../role.service';
 import { RoleStore } from './role-store';
 

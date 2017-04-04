@@ -8,5 +8,6 @@ export * from './diagnostics';
 export * from './exceptions';
 export * from './model';
 export * from './print';
+export * from './redux';
 export * from './types';
 export * from './util';

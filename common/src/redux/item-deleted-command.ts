@@ -1,29 +1,26 @@
-// fluxgate
-import { IEntity } from '@fluxgate/common';
+import { IEntity } from '../model/entity.interface';
 
 import { ServiceCommand } from './service-command';
 import { ServiceRequestStates } from './service-request-state';
 import { IServiceState } from './service-state.interface';
 
-
 /**
- * async Kommando zum Update eines Items über einen Rest-Service.
+ * Kommando nach Löschen von Items über einen Rest-Service.
  *
- * Der eigentliche Update wird im zugehörigen ServiceRequest ausgeführt,
+ * Das eigentliche Löschen wird im zugehörigen ServiceRequest ausgeführt,
  * wo ein dispatch dieses Kommandos erfolgt.
  *
  * @export
- * @class UpdatingItemCommand
+ * @class DeletedItemCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class UpdatingItemCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
+export class ItemDeletedCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
-  constructor(storeId: string, private item: T) {
+  constructor(storeId: string, private id: TId) {
     super(storeId);
   }
-
 
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
@@ -31,12 +28,14 @@ export class UpdatingItemCommand<T extends IEntity<TId>, TId> extends ServiceCom
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
    *
-   * @memberOf UpdateItemCommand
+   * @memberOf DeleteItemCommand
    */
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
-      state: ServiceRequestStates.RUNNING,
+      items: state.items.filter((item) => item.id !== this.id),
+      deletedId: this.id,
+      state: ServiceRequestStates.DONE,
       error: undefined
     };
   }

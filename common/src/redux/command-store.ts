@@ -1,10 +1,15 @@
 // -------------------------------------- logging --------------------------------------------
+// Logging
+import { using } from '../base/disposable';
+import { levels } from '../diagnostics/level';
+import { getLogger } from '../diagnostics/logger';
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { ILogger } from '../diagnostics/logger.interface';
+import { XLog } from '../diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { CustomSubject, PublisherSubscriber } from '@fluxgate/common';
+import { CustomSubject, PublisherSubscriber } from '../base/publisherSubscriber';
 
 import { ICommand } from './command.interface';
 

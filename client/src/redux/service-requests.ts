@@ -1,20 +1,12 @@
 // fluxgate
-import { Assert, IEntity, IException, IToString } from '@fluxgate/common';
+import { Assert, CreatingItemCommand, DeletingItemCommand, ErrorCommand,
+  FindingItemByIdCommand, FindingItemsCommand, IEntity, IException,
+  ItemCreatedCommand, ItemDeletedCommand, ItemFoundByIdCommand, ItemsFoundCommand, ItemUpdatedCommand,
+  IToString, SetCurrentItemCommand, Store, UpdatingItemCommand
+} from '@fluxgate/common';
 
 import { Service } from '../angular/services/service';
-import { CreatingItemCommand } from './creating-item-command';
-import { DeletingItemCommand } from './deleting-item-command';
-import { ErrorCommand } from './error-command';
-import { FindingItemByIdCommand } from './finding-item-by-id-command';
-import { FindingItemsCommand } from './finding-items-command';
-import { ItemCreatedCommand } from './item-created-command';
-import { ItemDeletedCommand } from './item-deleted-command';
-import { ItemFoundByIdCommand } from './item-found-by-id-command';
-import { ItemUpdatedCommand } from './item-updated-command';
-import { ItemsFoundCommand } from './items-found-command';
-import { SetCurrentItemCommand } from './set-current-item-command';
-import { Store } from './store';
-import { UpdatingItemCommand } from './updating-item-command';
+
 
 /**
  * Realisiert die Rest-API Operationen und führt ein dispatch der jeweiligen Kommandos durch.

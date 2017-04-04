@@ -1,10 +1,6 @@
 // fluxgate
 import { IUser } from '@fluxgate/common';
-
-import { CommandStore } from '../../../../redux/command-store';
-import { ReduxStore } from '../../../../redux/decorators/redux-store.decorator';
-import { ServiceCommand } from '../../../../redux/service-command';
-import { IServiceState } from '../../../../redux/service-state.interface';
+import { CommandStore, IServiceState, ReduxStore, ServiceCommand } from '@fluxgate/common';
 
 
 @ReduxStore()

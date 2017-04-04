@@ -1,25 +1,25 @@
-// fluxgate
-import { IEntity } from '@fluxgate/common';
+import { IEntity } from '../model/entity.interface';
 
 import { ServiceCommand } from './service-command';
 import { ServiceRequestStates } from './service-request-state';
 import { IServiceState } from './service-state.interface';
 
 /**
- * async Kommando zum Finden eines Items über die Id über einen Rest-Service.
+ *
+ * Kommando nach Finden eines Items über die Id über einen Rest-Service.
  *
  * Das eigentliche Finden wird im zugehörigen ServiceRequest ausgeführt,
  * wo ein dispatch dieses Kommandos erfolgt.
  *
  * @export
- * @class FindingItemByIdCommand
+ * @class FoundItemCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class FindingItemByIdCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
+export class ItemFoundByIdCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
-  constructor(storeId: string, private id: TId) {
+  constructor(storeId: string, private item: T) {
     super(storeId);
   }
 
@@ -32,7 +32,8 @@ export class FindingItemByIdCommand<T extends IEntity<TId>, TId> extends Service
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
-      state: ServiceRequestStates.RUNNING,
+      item: this.item,
+      state: ServiceRequestStates.DONE,
       error: undefined
     };
   }

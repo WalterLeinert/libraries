@@ -1,12 +1,12 @@
 import { Inject, Injectable, NgModule } from '@angular/core';
 
 // fluxgate
-import { IUser } from '@fluxgate/common';
-
+import { IUser, Store } from '@fluxgate/common';
 
 import { AppStore } from '../../../../redux/app-store';
 import { EnhancedServiceRequests } from '../../../../redux/enhanced-service-requests';
-import { Store } from '../../../../redux/store';
+
+
 import { UserService } from '../user.service';
 import { UserStore } from './user-store';
 

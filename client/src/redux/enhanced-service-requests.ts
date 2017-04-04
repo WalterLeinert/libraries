@@ -1,9 +1,9 @@
 // fluxgate
-import { IEntity, InvalidOperationException, IToString, Types } from '@fluxgate/common';
+import { IEntity, InvalidOperationException, IToString, Store, Types } from '@fluxgate/common';
 
 import { Service } from '../angular/services/service';
 import { ServiceRequests } from './service-requests';
-import { Store } from './store';
+
 
 /**
  * Erweiterung von @see{ServiceRequests} um @see{setDeleted}.

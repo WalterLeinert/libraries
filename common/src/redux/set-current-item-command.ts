@@ -1,29 +1,25 @@
-// fluxgate
-import { IEntity } from '@fluxgate/common';
+import { IEntity } from '../model/entity.interface';
 
 import { ServiceCommand } from './service-command';
-import { ServiceRequestStates } from './service-request-state';
 import { IServiceState } from './service-state.interface';
 
 
 /**
- * async Kommando zum Erzeugen eines neuen Items über einen Rest-Service.
+ * Kommando zum Setzen eines aktuellen Items (z.B. nach Selektion in einer Liste).
  *
- * Der eigentliche Erzeugen wird im zugehörigen ServiceRequest ausgeführt,
- * wo ein dispatch dieses Kommandos erfolgt.
+ * Das eigentliche Setzen des Items wird im zugehörigen ServiceRequest ausgeführt.
  *
  * @export
- * @class CreatingItemCommand
+ * @class SetCurrentItemCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class CreatingItemCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
+export class SetCurrentItemCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
   constructor(storeId: string, private item: T) {
     super(storeId);
   }
-
 
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
@@ -31,11 +27,13 @@ export class CreatingItemCommand<T extends IEntity<TId>, TId> extends ServiceCom
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
    *
+   * @memberOf SetCurrentItemCommand
    */
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
+    const item: T = this.item;
     return {
       ...state,
-      state: ServiceRequestStates.RUNNING,
+      currentItem: item,
       error: undefined
     };
   }

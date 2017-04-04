@@ -18,11 +18,13 @@ import {
   RequiredValidator, TableMetadata, UniqueIdentifiable, Utility
 } from '@fluxgate/common';
 
+import { IServiceState, ServiceCommand, SetCurrentItemCommand, Store } from '@fluxgate/common';
+
 import { ControlType } from '../../../angular/modules/common/controlType';
 import { IControlDisplayInfo } from '../../../base/displayConfiguration/controlDisplayInfo.interface';
 import { DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';
-import { AppStore, IServiceState, ServiceCommand, SetCurrentItemCommand, Store } from '../../../redux';
+import { AppStore } from '../../../redux/app-store';
 import { UserStore } from '../../modules/authentication/commands/user-store';
 import { AppInjector } from '../../services/appInjector.service';
 import { MessageService } from '../../services/message.service';

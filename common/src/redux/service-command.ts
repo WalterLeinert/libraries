@@ -1,5 +1,4 @@
-// fluxgate
-import { IEntity } from '@fluxgate/common';
+import { IEntity } from '../model/entity.interface';
 
 import { ICommand } from './command.interface';
 import { ServiceRequestStates } from './service-request-state';

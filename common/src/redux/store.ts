@@ -1,12 +1,16 @@
-
 // -------------------------------------- logging --------------------------------------------
+// Logging
+import { using } from '../base/disposable';
+import { levels } from '../diagnostics/level';
+import { getLogger } from '../diagnostics/logger';
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { ILogger } from '../diagnostics/logger.interface';
+import { XLog } from '../diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
-import { Assert, InvalidOperationException } from '@fluxgate/common';
-
-import { CustomSubject } from '@fluxgate/common';
+import { CustomSubject } from '../base/publisherSubscriber';
+import { InvalidOperationException } from '../exceptions/invalidOperationException';
+import { Assert } from '../util/assert';
 
 import { CommandStore } from './command-store';
 import { ICommand } from './command.interface';
