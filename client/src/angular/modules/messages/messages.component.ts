@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 
 // import 'ng2-toastr/bundles/ng2-toastr.min.css';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
@@ -14,33 +14,33 @@ import { MessageService } from '../../services/message.service';
 <div></div>
 `
 })
-export class MessagesComponent implements OnInit {
+export class MessagesComponent implements OnInit, OnDestroy {
 
   private static readonly TOASTR_OPTIONS = { toastLife: 3000 };   // 3 sec
 
-  constructor(private messageService: MessageService, private toastr: ToastsManager, vRef: ViewContainerRef) {
-    this.toastr.setRootViewContainerRef(vRef);
+  constructor(private messageService: MessageService, private toastsManager: ToastsManager, vRef: ViewContainerRef) {
+    this.toastsManager.setRootViewContainerRef(vRef);
 
     this.messageService.getMessage().subscribe((message) => {
       switch (message.severity) {
 
         case MessageSeverity.Success:
-          this.toastr.success(message.detail, message.summary, MessagesComponent.TOASTR_OPTIONS);
+          this.toastsManager.success(message.detail, message.summary, MessagesComponent.TOASTR_OPTIONS);
           break;
 
         case MessageSeverity.Info:
-          this.toastr.info(message.detail, message.summary, MessagesComponent.TOASTR_OPTIONS);
+          this.toastsManager.info(message.detail, message.summary, MessagesComponent.TOASTR_OPTIONS);
           break;
 
         case MessageSeverity.Warn:
-          this.toastr.warning(message.detail, message.summary, {
+          this.toastsManager.warning(message.detail, message.summary, {
             closeButton: true,
             dismiss: 'click'
           });
           break;
 
         case MessageSeverity.Error:
-          this.toastr.error(message.detail, message.summary, {
+          this.toastsManager.error(message.detail, message.summary, {
             closeButton: true,
             dismiss: 'controlled'
           });
@@ -56,4 +56,7 @@ export class MessagesComponent implements OnInit {
     // ok
   }
 
+  public ngOnDestroy() {
+    this.toastsManager.dispose();
+  }
 }
