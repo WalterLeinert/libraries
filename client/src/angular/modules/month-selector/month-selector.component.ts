@@ -54,7 +54,7 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
 
   /**
    * Die textField-Property: steuert, welche Property in @see{IMonth} angezeigt wird.
-   * 
+   *
    * @type {string}
    * @memberOf MonthSelectorComponent
    */
@@ -74,7 +74,9 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
     changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, messageService, changeDetectorRef);
 
-    this.style = '{\'width\':\'150px\'}';
+    this.style = {
+      width: '150px'
+    };
   }
 
 

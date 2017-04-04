@@ -37,7 +37,9 @@ export class YearSelectorComponent extends SelectorBaseComponent {
     changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, messageService, changeDetectorRef);
 
-    this.style = '{\'width\':\'70px\'}';
+    this.style = {
+      width: '70px'
+    };
   }
 
   // tslint:disable-next-line:use-life-cycle-interface

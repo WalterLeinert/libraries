@@ -32,7 +32,7 @@ export abstract class SelectorBaseComponent extends CoreComponent {
    */
   private _editable: boolean = false;
 
-  private _style: string;
+  private _style: any;
 
 
   /**
@@ -143,11 +143,11 @@ export abstract class SelectorBaseComponent extends CoreComponent {
   /**
    * Property editable
    */
-  public get style(): string {
+  public get style(): any {
     return this._style;
   }
 
-  @Input() public set style(value: string) {
+  @Input() public set style(value: any) {
     this._style = value;
   }
 }

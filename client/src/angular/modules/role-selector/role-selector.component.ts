@@ -39,6 +39,8 @@ export class RoleSelectorComponent extends SelectorBaseComponent {
     changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, messageService, changeDetectorRef);
 
-    this.style = '{\'width\':\'200px\'}';
+    this.style = {
+      width: '200px'
+    };
   }
 }
