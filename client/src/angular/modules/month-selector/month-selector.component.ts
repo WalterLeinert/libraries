@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Types } from '@fluxgate/common';
@@ -44,7 +45,22 @@ export interface IMonth {
   </flx-dropdown-selector>
 </div>
 `,
-  styles: []
+  styles: [],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      // tslint:disable-next-line:no-forward-ref
+      useExisting: forwardRef(() => MonthSelectorComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      // tslint:disable-next-line:no-forward-ref
+      useExisting: forwardRef(() => MonthSelectorComponent),
+      multi: true,
+    }
+  ]
+
 })
 export class MonthSelectorComponent extends SelectorBaseComponent {
 
@@ -86,6 +102,15 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
 
     this.updateData();
   }
+
+  public validate(control: FormControl): { [key: string]: any } {
+    return (!this.parseError) ? null : {
+      monthError: {
+        valid: false
+      },
+    };
+  }
+
 
   protected onLocaleChange(value: string) {
     super.onLocaleChange(value);

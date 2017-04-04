@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Assert, Types } from '@fluxgate/common';
@@ -19,7 +20,21 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
   </flx-dropdown-selector>
 </div>
 `,
-  styles: []
+  styles: [],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      // tslint:disable-next-line:no-forward-ref
+      useExisting: forwardRef(() => YearSelectorComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      // tslint:disable-next-line:no-forward-ref
+      useExisting: forwardRef(() => YearSelectorComponent),
+      multi: true,
+    }
+  ]
 })
 export class YearSelectorComponent extends SelectorBaseComponent {
   public static readonly YEAR_MIN = 1900;
@@ -28,10 +43,8 @@ export class YearSelectorComponent extends SelectorBaseComponent {
   public years: number[] = [
   ];
 
-
   @Input() public lowerYear: number;
   @Input() public upperYear: number;
-
 
   constructor(router: Router, metadataService: MetadataService, messageService: MessageService,
     changeDetectorRef: ChangeDetectorRef) {
@@ -82,4 +95,12 @@ export class YearSelectorComponent extends SelectorBaseComponent {
     }
   }
 
+
+  public validate(control: FormControl): { [key: string]: any } {
+    return (!this.parseError) ? null : {
+      yearError: {
+        valid: false,
+      },
+    };
+  }
 }

@@ -1,5 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+// tslint:disable:member-ordering
 
+import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { ControlValueAccessor, FormControl, Validator } from '@angular/forms';
+import { NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -24,12 +27,28 @@ import { MessageService } from '../../services/message.service';
   </p-calendar>
 </div>
 `,
-  styles: []
+  styles: [],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      // tslint:disable-next-line:no-forward-ref
+      useExisting: forwardRef(() => TimeSelectorComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      // tslint:disable-next-line:no-forward-ref
+      useExisting: forwardRef(() => TimeSelectorComponent),
+      multi: true,
+    }
+  ]
 })
-export class TimeSelectorComponent extends CoreComponent {
+export class TimeSelectorComponent extends CoreComponent implements ControlValueAccessor, Validator {
   protected static readonly logger = getLogger(TimeSelectorComponent);
 
   public date: Date;
+
+  private parseError: boolean;
 
   @Input() public readonly: boolean;
 
@@ -57,12 +76,89 @@ export class TimeSelectorComponent extends CoreComponent {
     });
   }
 
+
+  // >>> interface Validator >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  /**
+   * Validiert das Control
+   *
+   * Muss in konkreten Klassen überschrieben werden!
+   *
+   * @abstract
+   * @param {FormControl} control
+   * @returns {*} null (falls ok), sonst ein Validation Object (dictionary)
+   *
+   * @memberOf SelectorBaseComponent
+   */
+  public validate(control: FormControl): { [key: string]: any } {
+    return (!this.parseError) ? null : {
+      userError: {
+        valid: false
+      },
+    };
+  }
+  // <<< interface Validator >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+  // >>> interface ControlValueAccessor >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  /**
+   * Write a new value to the element.
+   *
+   * @param {*} obj
+   *
+   * @memberOf SelectorBaseComponent
+   */
+  public writeValue(value: any) {
+    if (value) {
+      this.time = value;
+    }
+  }
+
+
+  /**
+   * Set the function to be called when the control receives a change event.
+   *
+   * @param {*} fn
+   *
+   * @memberOf SelectorBaseComponent
+   */
+  public registerOnChange(fn: any) {
+    this.propagateChange = fn;
+  }
+
+
+  /**
+   * Set the function to be called when the control receives a touch event. (unused)
+   *
+   * @memberOf SelectorBaseComponent
+   */
+  public registerOnTouched() {
+    // ok
+  }
+
+
+  /**
+   * the method set in registerOnChange, it is just
+   * a placeholder for a method that takes one parameter,
+   * we use it to emit changes back to the form
+   *
+   * @private
+   *
+   * @memberOf SelectorBaseComponent
+   */
+  private propagateChange = (_: any) => {
+    // ok
+  }
+  // <<< interface ControlValueAccessor >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+
   // -------------------------------------------------------------------------------------
   // Property time
   // -------------------------------------------------------------------------------------
   protected onTimeChange(value: ShortTime) {
     this.date = new Date();
     this.date.setHours(value.hour, value.minute);
+    this.propagateChange(this.time);
 
     this.timeChange.emit(value);
   }

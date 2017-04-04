@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { MessageService } from '../../services/message.service';
@@ -22,17 +23,31 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
   template: `
 <div>
   <flx-dropdown-selector [dataService]="service" [textField]="textField" [valueField]="valueField"
-    [(selectedValue)]="selectedValue" name="userSelector"
-    [style]="style" [debug]="debug">
+    [(selectedValue)]="selectedValue"
+    name="userSelector" [style]="style" [debug]="debug">
   </flx-dropdown-selector>
 </div>
 `,
-  styles: []
+  styles: [],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      // tslint:disable-next-line:no-forward-ref
+      useExisting: forwardRef(() => UserSelectorComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      // tslint:disable-next-line:no-forward-ref
+      useExisting: forwardRef(() => UserSelectorComponent),
+      multi: true,
+    }
+  ]
 })
 export class UserSelectorComponent extends SelectorBaseComponent {
-
   @Input() public textField: string = 'fullName';
   @Input() public valueField: string = '.';
+
 
   constructor(router: Router, metadataService: MetadataService, messageService: MessageService,
     public service: UserService,
@@ -43,4 +58,14 @@ export class UserSelectorComponent extends SelectorBaseComponent {
       width: '200px'
     };
   }
+
+
+  public validate(control: FormControl): { [key: string]: any } {
+    return (!this.parseError) ? null : {
+      userError: {
+        valid: false
+      },
+    };
+  }
+
 }

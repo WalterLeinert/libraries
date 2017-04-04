@@ -1,10 +1,15 @@
+// tslint:disable:member-ordering
+
 import { EventEmitter, Input, Output } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { AbstractControl, ControlValueAccessor, Validator } from '@angular/forms';
 import { Router } from '@angular/router';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+
+import { NotSupportedException } from '@fluxgate/common';
 
 import { CoreComponent } from '../../common/base/core.component';
 import { MessageService } from '../../services/message.service';
@@ -13,7 +18,7 @@ import { MetadataService } from '../../services/metadata.service';
 /**
  * Basisklasse für alle Selector-Komponenten
  */
-export abstract class SelectorBaseComponent extends CoreComponent {
+export abstract class SelectorBaseComponent extends CoreComponent implements ControlValueAccessor, Validator {
   protected static logger = getLogger(SelectorBaseComponent);
 
 
@@ -58,22 +63,94 @@ export abstract class SelectorBaseComponent extends CoreComponent {
    */
   private _selectedValue: any;
 
+  protected parseError: boolean;
+
 
   protected constructor(router: Router, private _metadataService: MetadataService, messageService: MessageService,
     private _changeDetectorRef: ChangeDetectorRef) {
     super(messageService);
   }
 
+  // >>> interface Validator >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  /**
+   * Validiert das Control
+   *
+   * Muss in konkreten Klassen überschrieben werden!
+   *
+   * @abstract
+   * @param {FormControl} control
+   * @returns {*} null (falls ok), sonst ein Validation Object (dictionary)
+   *
+   * @memberOf SelectorBaseComponent
+   */
+  public validate(control: AbstractControl): { [key: string]: any } {
+    throw new NotSupportedException(`control = ${control}`);
+  }
+  // <<< interface Validator >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+  // >>> interface ControlValueAccessor >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  /**
+   * Write a new value to the element.
+   *
+   * @param {*} obj
+   *
+   * @memberOf SelectorBaseComponent
+   */
+  public writeValue(value: any) {
+    if (value) {
+      this.selectedValue = value;
+    }
+  }
+
+
+  /**
+   * Set the function to be called when the control receives a change event.
+   *
+   * @param {*} fn
+   *
+   * @memberOf SelectorBaseComponent
+   */
+  public registerOnChange(fn: any) {
+    this.propagateChange = fn;
+  }
+
+
+  /**
+   * Set the function to be called when the control receives a touch event. (unused)
+   *
+   * @memberOf SelectorBaseComponent
+   */
+  public registerOnTouched() {
+    // ok
+  }
+
+
+  /**
+   * the method set in registerOnChange, it is just
+   * a placeholder for a method that takes one parameter,
+   * we use it to emit changes back to the form
+   *
+   * @private
+   *
+   * @memberOf SelectorBaseComponent
+   */
+  private propagateChange = (_: any) => {
+    // ok
+  }
+  // <<< interface ControlValueAccessor >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
 
   // -------------------------------------------------------------------------------------
   // Property selectedValue und der Change Event
   // -------------------------------------------------------------------------------------
-
   protected onSelectedValueChange(value: any) {
     using(new XLog(SelectorBaseComponent.logger, levels.INFO, 'onSelectedValueChange'), (log) => {
       if (log.isInfoEnabled()) {
         log.log(`value = ${JSON.stringify(value)}`);
       }
+      this.propagateChange(this.selectedValue);
       this.selectedValueChange.emit(value);
     });
   }

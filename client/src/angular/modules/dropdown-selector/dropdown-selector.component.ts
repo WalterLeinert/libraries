@@ -1,6 +1,7 @@
 // Angular
-import { Component, Input } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Router } from '@angular/router';
 
 
@@ -33,7 +34,7 @@ import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
 @Component({
   selector: 'flx-dropdown-selector',
   template: `
-<p-dropdown [(options)]="options" [autoWidth]="autoWidth" [style]="style" [(ngModel)]="selectedValue" 
+<p-dropdown [(options)]="options" [autoWidth]="autoWidth" [style]="style" [(ngModel)]="selectedValue"
   [readonly]="readonly"
   (onChange)="onChange($event.value)">
 </p-dropdown>
@@ -42,7 +43,21 @@ import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
   <p>selectedIndex: {{selectedIndex}}, selectedValue: {{selectedValue | json}}</p>
 </div>
 `,
-  styles: []
+  styles: [],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      // tslint:disable-next-line:no-forward-ref
+      useExisting: forwardRef(() => DropdownSelectorComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      // tslint:disable-next-line:no-forward-ref
+      useExisting: forwardRef(() => DropdownSelectorComponent),
+      multi: true,
+    }
+  ]
 })
 export class DropdownSelectorComponent extends ListSelectorComponent {
   protected static logger = getLogger(DropdownSelectorComponent);
@@ -138,6 +153,14 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     super.ngOnInit();
   }
 
+
+  public validate(control: FormControl): { [key: string]: any } {
+    return (!this.parseError) ? null : {
+      dropdownError: {
+        valid: false
+      },
+    };
+  }
 
 
   public get config(): IDropdownSelectorConfig {
@@ -345,11 +368,11 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
   /**
    * Liefert den Index des Werts (selectedValue) in der Optionsliste
-   * 
+   *
    * @protected
    * @param {*} value
    * @returns {number}
-   * 
+   *
    * @memberOf DropdownSelectorComponent
    */
   protected indexOfValue(value: any): number {
@@ -431,7 +454,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
       let firstPropName: string;
 
       if (typeof firstItem === 'object') {
-        // alle Properties des ersten Items über Reflection ermitteln        
+        // alle Properties des ersten Items über Reflection ermitteln
         const props = Reflect.ownKeys(firstItem);
 
         // ... und dann entsprechende ColumnInfos erzeugen

@@ -383,19 +383,15 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
         }
 
 
-        // TODO: workaround: entfernen, sobald die Controls den Angular-Control Contract implementieren
-        if (!(info.controlType === ControlType.Time || info.controlType === ControlType.DropdownSelector)) {
-
-          if (validators.length <= 0) {
-            validators.push(Validators.nullValidator);    // noop Validator als einzigen Validator hinzufügen
-          }
-          validatorDict[info.valueField] = [
-            dataItem[info.valueField],
-            validators
-          ];
-
-          formInfo.setValidationMessages(info.valueField, messageDict);
+        if (validators.length <= 0) {
+          validators.push(Validators.nullValidator);    // noop Validator als einzigen Validator hinzufügen
         }
+        validatorDict[info.valueField] = [
+          dataItem[info.valueField],
+          validators
+        ];
+
+        formInfo.setValidationMessages(info.valueField, messageDict);
       });
 
       if (log.isDebugEnabled()) {
