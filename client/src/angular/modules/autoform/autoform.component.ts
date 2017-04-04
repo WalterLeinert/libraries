@@ -42,7 +42,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
               <div class="col-sm-10">
-                <input flxAutofocus type="text" class="form-control" [(ngModel)]="dataItem[info.valueField]" 
+                <input flxAutofocus type="text" class="form-control" [(ngModel)]="dataItem[info.valueField]"
                   [id]="info.valueField" [formControlName]="info.valueField"
                   [required]="info.required"
                   [readonly]="isReadonly(info)"
@@ -52,8 +52,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 
               <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
                 {{ getFormErrors(info.valueField) }}
-              </div>           
-              
+              </div>
+
             </div>
           </div>
 
@@ -65,7 +65,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
               <div class="col-sm-10">
-                <p-calendar inputStyleClass="form-control" [(ngModel)]="dataItem[info.valueField]" 
+                <p-calendar inputStyleClass="form-control" [(ngModel)]="dataItem[info.valueField]"
                   [id]="info.valueField" [formControlName]="info.valueField"
                   [required]="info.required"
                   [readonlyInput]="isReadonly(info)"
@@ -75,15 +75,13 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 
               <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
                 {{ getFormErrors(info.valueField) }}
-              </div>           
+              </div>
 
             </div>
           </div>
 
           <!--
           Zeitfelder:
-          Achtung: noch keine Formvalidierung (formControlName funktioniert noch nicht)
-          [required]="info.required"
           -->
           <div *ngIf="info.controlType === controlType.Time">
             <div class="form-group" *ngIf="! isHidden(info, dataItem)">
@@ -91,8 +89,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 
               <div class="col-sm-10">
                 <flx-time-selector inputStyleClass="form-control" [(time)]="dataItem[info.valueField]"
-                  [id]="info.valueField"
-                  
+                  [id]="info.valueField" [formControlName]="info.valueField"
+                  [required]="info.required"
                   [readonly]="isReadonly(info)"
                   [style.color]="getColor(dataItem, info)">
                 </flx-time-selector>
@@ -100,7 +98,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 
               <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
                 {{ getFormErrors(info.valueField) }}
-              </div>           
+              </div>
 
             </div>
           </div>
@@ -108,8 +106,6 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 
           <!--
           Dropdown/Wertelisten:
-          Achtung: noch keine Formvalidierung (formControlName funktioniert noch nicht)
-          [required]="info.required"
           -->
           <div *ngIf="info.controlType === controlType.DropdownSelector">
             <div class="form-group" *ngIf="! isHidden(info, dataItem)">
@@ -117,10 +113,11 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 
               <div class="col-sm-10">
                 <flx-dropdown-selector inputStyleClass="form-control" [dataService]="info.enumInfo.selectorDataService"
-                  [id]="info.valueField"                  
+                  [id]="info.valueField" [formControlName]="info.valueField"
                   [readonly]="isReadonly(info)"
+                  [required]="info.required"
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
-                  [(selectedValue)]="dataItem[info.valueField]" [style]="{'width':'100%'}" 
+                  [(selectedValue)]="dataItem[info.valueField]" [style]="{'width':'100%'}"
                   [style.color]="getColor(dataItem, info)"
                   [debug]="false">
                 </flx-dropdown-selector>
@@ -128,10 +125,10 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
 
               <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
                 {{ getFormErrors(info.valueField) }}
-              </div>           
-              
+              </div>
+
             </div>
-          </div>      
+          </div>
 
         </ul>
       </div>
@@ -140,7 +137,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
         <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
             <button type="button" class="btn btn-primary" (click)='cancel()'>Cancel</button>
             <button type="button" class="btn btn-primary" (click)='submit()'>Save</button>
-            <button type="button" class="btn btn-primary" (click)='confirmDelete()'>Delete</button>   
+            <button type="button" class="btn btn-primary" (click)='confirmDelete()'>Delete</button>
         </div>
       </p-footer>
     </form>
@@ -174,7 +171,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   // >> Value Property
   /**
    * (von aussen) angebundenes Objekt.
-   * 
+   *
    * @type {*}
    */
   private _value: any;
@@ -189,8 +186,8 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
 
   /**
-   * Name der Klasse des angebundenen Objekts (z.B. 'Artikel') 
-   * 
+   * Name der Klasse des angebundenen Objekts (z.B. 'Artikel')
+   *
    * @type {string}
    */
   @Input() public entityName: string = '';
@@ -200,15 +197,15 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   /**
    * erzeugt eine Instanz von @see{IAutoformConfig}
-   * 
+   *
    * @private
    * @type {AutoformConfiguration}
    */
   private configurator: AutoformConfiguration;
 
   /**
-   * 
-   * 
+   *
+   *
    * @private
    * @type {IAutoformConfig}
    * @memberOf AutoformComponent
@@ -221,7 +218,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   /**
    * die (intern) angebundene Modelinstanz
-   * 
+   *
    * @type {*}
    * @memberOf AutoformComponent
    */
@@ -229,7 +226,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   /**
    * Die durchzuführende Aktion (creae, edit, etc.)
-   * 
+   *
    * @private
    * @type {FormAction}
    * @memberOf AutoformComponent
@@ -394,10 +391,10 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
   /**
    * Liefert true, falls die Daten nicht änderbar sind
-   * 
-   * @param {IControlDisplayInfo} info 
-   * @returns 
-   * 
+   *
+   * @param {IControlDisplayInfo} info
+   * @returns
+   *
    * @memberOf AutoformComponent
    */
   public isReadonly(info: IControlDisplayInfo): boolean {
@@ -459,7 +456,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
 
 
   /**
-   * mittels MetadataService für die Entity @see{entityName} den zugehörigen Service ermitteln und 
+   * mittels MetadataService für die Entity @see{entityName} den zugehörigen Service ermitteln und
    * den ProxyService damit initialisieren
    */
   private setupProxy(entityName: string) {
