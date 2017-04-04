@@ -26,7 +26,7 @@ export class User implements IUser {
    */
   public static readonly USER_CONFIG_KEY = 'IUser';
 
-  public static Null = new User(-1, '-no-name-', -1);
+  public static Null = new User(-1, '-no-name-', -1, 'none');
 
 
   @Column({ name: 'user_id', primary: true, generated: true, displayName: 'Id' })
@@ -90,17 +90,17 @@ export class User implements IUser {
   public id_mandant?: number;   // = Mandant.FIRST_ID;
 
 
-  constructor(id?: number, username?: string, role?: number) {
+  constructor(id?: number, username?: string, role?: number, lastname?: string) {
     this.id = id;
     this.username = username;
     this.role = role;
-    this.lastname = 'none';
+    this.lastname = lastname;
   }
 
 
   /**
    * Setzt Passwort und Salt zurück
-   * 
+   *
    * @memberOf User
    */
   public resetCredentials() {
@@ -111,7 +111,7 @@ export class User implements IUser {
 
   /**
    * Liefert true, falls der User ein Admin ist.
-   * 
+   *
    * @readonly
    * @type {boolean}
    * @memberOf User
