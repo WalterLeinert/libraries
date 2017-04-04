@@ -80,6 +80,10 @@ export class TimeSelectorComponent extends CoreComponent {
 
 
   private updateTime() {
-    this.time = new ShortTime(this.date.getHours() as Hour, this.date.getMinutes());
+    if (this.date) {
+      this.time = new ShortTime(this.date.getHours() as Hour, this.date.getMinutes());
+    } else {
+      this.onTimeChange(this.time);
+    }
   }
 }
