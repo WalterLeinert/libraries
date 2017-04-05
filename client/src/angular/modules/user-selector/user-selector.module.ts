@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
+import { FormsModule } from '@angular/forms';
 
 import { MessageServiceModule } from '../../services/message.service';
 import { UserService } from '../authentication/user.service';
@@ -10,6 +10,7 @@ import { UserSelectorComponent } from './user-selector.component';
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     MessageServiceModule,
     DropdownSelectorModule
   ],
