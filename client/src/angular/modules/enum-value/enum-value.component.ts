@@ -48,7 +48,7 @@ export class EnumValueComponent extends CoreComponent {
 
   /**
    * Die Property in der angebundenen Werteliste, welche nach Auswahl
-   * als 'selectedValue' übernommen werden soll.
+   * als 'value' übernommen werden soll.
    *
    * @type {string}
    * @memberOf EnumValueComponent
@@ -56,7 +56,7 @@ export class EnumValueComponent extends CoreComponent {
   @Input() public valueField: string;
 
   /**
-   * diese Property steuert, welches Enum-Item angezeigt werden soll. Der Werte 
+   * diese Property steuert, welches Enum-Item angezeigt werden soll. Der Werte
    * wird über @see{valueField} bestimmt.
    *
    * @type {string}

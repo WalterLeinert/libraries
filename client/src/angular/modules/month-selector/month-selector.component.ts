@@ -1,6 +1,6 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Types } from '@fluxgate/common';
@@ -38,7 +38,7 @@ export interface IMonth {
   selector: 'flx-month-selector',
   template: `
 <div>
-  <flx-dropdown-selector [data]="months" [(selectedValue)]="selectedValue"
+  <flx-dropdown-selector [data]="months" [(ngModel)]="value"
     [textField]="textField" [valueField]="valueField"
     [style]="style"
     [debug]="debug" name="monthSelector">
@@ -49,24 +49,23 @@ export interface IMonth {
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      // tslint:disable-next-line:no-forward-ref
-      useExisting: forwardRef(() => MonthSelectorComponent),
+      useExisting: MonthSelectorComponent,
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      // tslint:disable-next-line:no-forward-ref
-      useExisting: forwardRef(() => MonthSelectorComponent),
+      useExisting: MonthSelectorComponent,
       multi: true,
     }
   ]
 
 })
-export class MonthSelectorComponent extends SelectorBaseComponent {
+export class MonthSelectorComponent extends SelectorBaseComponent<number> {
 
   public months: IMonth[] = [
   ];
 
+  @ViewChild(NgModel) public model: NgModel;
 
   /**
    * Die textField-Property: steuert, welche Property in @see{IMonth} angezeigt wird.
@@ -78,7 +77,7 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
 
   /**
    * Die Property in der angebundenen Werteliste, welche nach Auswahl
-   * als 'selectedValue' übernommen werden soll.
+   * als 'value' übernommen werden soll.
    *
    * @type {string}
    * @memberOf MonthSelectorComponent
@@ -151,7 +150,7 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
 
     this.months = months;
 
-    if (this.selectedValue === undefined) {
+    if (this.value === undefined) {
       // den aktuellen Monat vorselektieren
       const thisMonth = new Date().getMonth() + 1;
 
@@ -159,10 +158,8 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
         return item.id === thisMonth;
       });
 
-      this.selectedValue = this.getValue(month);
+      this.value = this.getValue(month);
     }
-
   }
-
 
 }

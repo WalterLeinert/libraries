@@ -1,7 +1,9 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { IUser } from '@fluxgate/common';
 
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
@@ -22,7 +24,7 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
   selector: 'flx-user-selector',
   template: `
 <flx-dropdown-selector [dataService]="service" [textField]="textField" [valueField]="valueField"
-  [(selectedValue)]="selectedValue"
+  [(ngModel)]="value"
   name="userSelector" [style]="style" [debug]="debug">
 </flx-dropdown-selector>
 `,
@@ -30,19 +32,18 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      // tslint:disable-next-line:no-forward-ref
-      useExisting: forwardRef(() => UserSelectorComponent),
+      useExisting: UserSelectorComponent,
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      // tslint:disable-next-line:no-forward-ref
-      useExisting: forwardRef(() => UserSelectorComponent),
+      useExisting: UserSelectorComponent,
       multi: true,
     }
   ]
 })
-export class UserSelectorComponent extends SelectorBaseComponent {
+export class UserSelectorComponent extends SelectorBaseComponent<IUser> {
+  @ViewChild(NgModel) public model: NgModel;
   @Input() public textField: string = 'fullName';
   @Input() public valueField: string = '.';
 

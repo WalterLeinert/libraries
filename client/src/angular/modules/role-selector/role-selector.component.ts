@@ -1,6 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { IRole } from '@fluxgate/common';
 
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
@@ -22,15 +25,16 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
   template: `
 <div>
   <flx-dropdown-selector [dataService]="service" [textField]="textField" [valueField]="valueField"
-    [(selectedValue)]="selectedValue" name="roleSelector"
+    [(ngModel)]="value" name="roleSelector"
     [style]="style" [debug]="debug">
   </flx-dropdown-selector>
 </div>
 `,
   styles: []
 })
-export class RoleSelectorComponent extends SelectorBaseComponent {
+export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
 
+  @ViewChild(NgModel) public model: NgModel;
   @Input() public textField: string = 'description';
   @Input() public valueField: string = '.';
 

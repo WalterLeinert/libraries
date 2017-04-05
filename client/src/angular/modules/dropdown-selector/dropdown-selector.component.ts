@@ -1,7 +1,7 @@
 // Angular
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
 
@@ -34,32 +34,32 @@ import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
 @Component({
   selector: 'flx-dropdown-selector',
   template: `
-<p-dropdown [(options)]="options" [autoWidth]="autoWidth" [style]="style" [(ngModel)]="selectedValue"
-  [readonly]="readonly"
-  (onChange)="onChange($event.value)">
-</p-dropdown>
+<div>
+  <p-dropdown [(options)]="options" [autoWidth]="autoWidth" [style]="style" [(ngModel)]="value"
+    [readonly]="readonly"
+    (onChange)="onChange($event.value)">
+  </p-dropdown>
 
-<div *ngIf="debug">
-  <p>selectedIndex: {{selectedIndex}}, selectedValue: {{selectedValue | json}}</p>
+  <div *ngIf="debug">
+    <p>selectedIndex: {{selectedIndex}}, value: {{value | json}}</p>
+  </div>
 </div>
 `,
   styles: [],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      // tslint:disable-next-line:no-forward-ref
-      useExisting: forwardRef(() => DropdownSelectorComponent),
+      useExisting: DropdownSelectorComponent,
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      // tslint:disable-next-line:no-forward-ref
-      useExisting: forwardRef(() => DropdownSelectorComponent),
+      useExisting: DropdownSelectorComponent,
       multi: true,
     }
   ]
 })
-export class DropdownSelectorComponent extends ListSelectorComponent {
+export class DropdownSelectorComponent extends ListSelectorComponent<any> {
   protected static logger = getLogger(DropdownSelectorComponent);
 
   public static readonly ALLOW_NO_SELECTION_TEXT = '(Auswahl)';
@@ -74,6 +74,8 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     valuesCacheable: false
   };
 
+
+  @ViewChild(NgModel) public model: NgModel;
 
   @Input() public readonly: boolean;
 
@@ -124,7 +126,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
   /**
    * Die Property in der angebundenen Werteliste, welche nach Auswahl
-   * als 'selectedValue' übernommen werden soll.
+   * als 'value' übernommen werden soll.
    *
    * @type {string}
    * @memberOf DropdownSelectorComponent
@@ -367,7 +369,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
 
   /**
-   * Liefert den Index des Werts (selectedValue) in der Optionsliste
+   * Liefert den Index des Werts (value) in der Optionsliste
    *
    * @protected
    * @param {*} value
@@ -485,6 +487,4 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
       this.configInternal = config;
     }
   }
-
-
 }

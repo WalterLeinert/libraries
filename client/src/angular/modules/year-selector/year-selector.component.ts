@@ -1,6 +1,6 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Assert, Types } from '@fluxgate/common';
@@ -14,7 +14,7 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
   selector: 'flx-year-selector',
   template: `
 <div>
-  <flx-dropdown-selector [data]="years" [(selectedValue)]="selectedValue"
+  <flx-dropdown-selector [data]="years" [(ngModel)]="value"
     [style]="style"
     [debug]="debug" name="yearSelector">
   </flx-dropdown-selector>
@@ -24,25 +24,24 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      // tslint:disable-next-line:no-forward-ref
-      useExisting: forwardRef(() => YearSelectorComponent),
+      useExisting: YearSelectorComponent,
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      // tslint:disable-next-line:no-forward-ref
-      useExisting: forwardRef(() => YearSelectorComponent),
+      useExisting: YearSelectorComponent,
       multi: true,
     }
   ]
 })
-export class YearSelectorComponent extends SelectorBaseComponent {
+export class YearSelectorComponent extends SelectorBaseComponent<number> {
   public static readonly YEAR_MIN = 1900;
   public static readonly YEAR_MAX = 2050;
 
   public years: number[] = [
   ];
 
+  @ViewChild(NgModel) public model: NgModel;
   @Input() public lowerYear: number;
   @Input() public upperYear: number;
 
@@ -83,7 +82,7 @@ export class YearSelectorComponent extends SelectorBaseComponent {
     }
     this.years = years;
 
-    if (this.selectedValue === undefined) {
+    if (this.value === undefined) {
       // das aktuelle Jahr vorselektieren
       const thisYear = new Date().getFullYear();
 
@@ -91,7 +90,7 @@ export class YearSelectorComponent extends SelectorBaseComponent {
         return item === thisYear;
       });
 
-      this.selectedValue = year;
+      this.value = year;
     }
   }
 

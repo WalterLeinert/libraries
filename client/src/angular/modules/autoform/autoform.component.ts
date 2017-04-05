@@ -117,7 +117,7 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
                   [readonly]="isReadonly(info)"
                   [required]="info.required"
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
-                  [(selectedValue)]="dataItem[info.valueField]" [style]="{'width':'100%'}"
+                  [(ngModel)]="dataItem[info.valueField]" [style]="{'width':'100%'}"
                   [style.color]="getColor(dataItem, info)"
                   [debug]="false">
                 </flx-dropdown-selector>

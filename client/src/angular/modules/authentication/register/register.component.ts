@@ -69,7 +69,7 @@ import { RoleService } from '../role.service';
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="role">Role</label>
       <div class="col-sm-5">
-        <flx-dropdown-selector [dataService]="service2" [textField]="'description'" [valueField]="'id'" [selectedValue]="user.role"
+        <flx-dropdown-selector [dataService]="service2" [textField]="'description'" [valueField]="'id'" [ngModel]="user.role"
           (selectedValueChange)="onSelectedRoleChanged($event)"
           [style]="{'width':'200px'}" [debug]="false" id="role" >   <!-- formControlName="role" -->
           </flx-dropdown-selector>
@@ -81,7 +81,7 @@ import { RoleService } from '../role.service';
         <button type="submit" class="btn btn-primary" [disabled]="isRegisterDisabled()" (click)='signup()'>Register</button>
       </div>
     </div>
-    
+
   </form>
 </div>
   `,
