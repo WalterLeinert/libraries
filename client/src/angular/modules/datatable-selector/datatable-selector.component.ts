@@ -1,7 +1,7 @@
 // Angular
 import { Component, EventEmitter, Injector, Input, Output, PipeTransform, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { NgModel } from '@angular/forms';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import 'rxjs/add/observable/throw';
@@ -198,7 +198,19 @@ export type selectionMode = 'single' | 'multiple' | '';
   <p>selectedIndex: {{selectedIndex}}, value: {{value | json}}</p>
 </div>
   `,
-  styles: []
+  styles: [],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: DataTableSelectorComponent,
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: DataTableSelectorComponent,
+      multi: true,
+    }
+  ]
 })
 export class DataTableSelectorComponent extends ListSelectorComponent<any> {
   protected static logger = getLogger(DataTableSelectorComponent);
@@ -477,6 +489,14 @@ export class DataTableSelectorComponent extends ListSelectorComponent<any> {
     return undefined;
   }
 
+
+  public validate(control: FormControl): { [key: string]: any } {
+    return (!this.parseError) ? null : {
+      datatableError: {
+        valid: false,
+      },
+    };
+  }
 
 
   protected initBoundData(items: any[], tableMetadata: TableMetadata) {

@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { NgModel } from '@angular/forms';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { IRole } from '@fluxgate/common';
@@ -30,7 +30,19 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
   </flx-dropdown-selector>
 </div>
 `,
-  styles: []
+  styles: [],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: RoleSelectorComponent,
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: RoleSelectorComponent,
+      multi: true,
+    }
+  ]
 })
 export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
 
@@ -45,6 +57,14 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
 
     this.style = {
       width: '200px'
+    };
+  }
+
+  public validate(control: FormControl): { [key: string]: any } {
+    return (!this.parseError) ? null : {
+      roleError: {
+        valid: false,
+      },
     };
   }
 }
