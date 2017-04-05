@@ -21,6 +21,8 @@ export abstract class ControlBaseComponent<T> extends CoreComponent implements C
 
   protected abstract model: NgModel;
 
+  protected parseError: boolean;
+
 
   // >>> interface Validator >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   /**

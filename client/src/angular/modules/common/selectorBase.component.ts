@@ -44,9 +44,6 @@ export abstract class SelectorBaseComponent<T> extends ControlBaseComponent<T> {
    */
   private _locale: string = 'en';
 
-  protected parseError: boolean;
-
-
   protected constructor(router: Router, private _metadataService: MetadataService, messageService: MessageService,
     private _changeDetectorRef: ChangeDetectorRef) {
     super(messageService);
