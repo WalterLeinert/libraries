@@ -36,8 +36,16 @@ export abstract class ControlBaseComponent<T> extends CoreComponent implements C
    *
    * @memberOf SelectorBaseComponent
    */
+  // public validate(control: AbstractControl): { [key: string]: any } {
+  //   throw new NotSupportedException(`control = ${control}`);
+  // }
+
   public validate(control: AbstractControl): { [key: string]: any } {
-    throw new NotSupportedException(`control = ${control}`);
+    return (!this.parseError) ? null : {
+      error: {
+        valid: false
+      },
+    };
   }
   // <<< interface Validator >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
