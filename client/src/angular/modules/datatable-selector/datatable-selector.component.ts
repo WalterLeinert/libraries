@@ -115,7 +115,7 @@ export type selectionMode = 'single' | 'multiple' | '';
             </div>
 
             <template let-col let-data="rowData" pTemplate="editor">
-                <flx-time-selector [(time)]="data[col.field]" [style.color]="getColor(data, info)">
+                <flx-time-selector [(ngModel)]="data[col.field]" [style.color]="getColor(data, info)">
                 </flx-time-selector>
             </template>
 

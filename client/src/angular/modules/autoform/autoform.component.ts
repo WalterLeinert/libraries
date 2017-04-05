@@ -42,10 +42,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
               <div class="col-sm-10">
-                <input flxAutofocus type="text" class="form-control" [(ngModel)]="dataItem[info.valueField]"
-                  [id]="info.valueField" [formControlName]="info.valueField"
-                  [required]="info.required"
-                  [readonly]="isReadonly(info)"
+                <input flxAutofocus type="text" class="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
+                  [required]="info.required" [readonly]="isReadonly(info)"
                   [style.color]="getColor(dataItem, info)"
                 >
               </div>
@@ -65,10 +63,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
               <div class="col-sm-10">
-                <p-calendar inputStyleClass="form-control" [(ngModel)]="dataItem[info.valueField]"
-                  [id]="info.valueField" [formControlName]="info.valueField"
-                  [required]="info.required"
-                  [readonlyInput]="isReadonly(info)"
+                <p-calendar inputStyleClass="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
+                  [required]="info.required" [readonlyInput]="isReadonly(info)"
                   dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
                 </p-calendar>
               </div>
@@ -88,10 +84,8 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
               <div class="col-sm-10">
-                <flx-time-selector inputStyleClass="form-control" [(time)]="dataItem[info.valueField]"
-                  [id]="info.valueField" [formControlName]="info.valueField"
-                  [required]="info.required"
-                  [readonly]="isReadonly(info)"
+                <flx-time-selector inputStyleClass="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
+                  [required]="info.required" [readonly]="isReadonly(info)"
                   [style.color]="getColor(dataItem, info)">
                 </flx-time-selector>
               </div>
@@ -112,12 +106,11 @@ import { FormAction, FormActions, IDataFormAction } from './form-action';
               <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
               <div class="col-sm-10">
-                <flx-dropdown-selector inputStyleClass="form-control" [dataService]="info.enumInfo.selectorDataService"
-                  [id]="info.valueField" [formControlName]="info.valueField"
-                  [readonly]="isReadonly(info)"
-                  [required]="info.required"
+                <flx-dropdown-selector inputStyleClass="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
+                  [required]="info.required" [readonly]="isReadonly(info)"
+                  [dataService]="info.enumInfo.selectorDataService"
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
-                  [(ngModel)]="dataItem[info.valueField]" [style]="{'width':'100%'}"
+                  [style]="{'width':'100%'}"
                   [style.color]="getColor(dataItem, info)"
                   [debug]="false">
                 </flx-dropdown-selector>
