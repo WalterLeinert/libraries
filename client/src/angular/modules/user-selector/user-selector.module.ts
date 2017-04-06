@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { MessageServiceModule } from '../../services/message.service';
-import { UserService } from '../authentication/user.service';
+import { UserServiceRequestsModule } from '../authentication/commands/user-service-requests';
 import { DropdownSelectorModule } from '../dropdown-selector';
 import { UserSelectorComponent } from './user-selector.component';
 
@@ -12,7 +12,8 @@ import { UserSelectorComponent } from './user-selector.component';
     CommonModule,
     FormsModule,
     MessageServiceModule,
-    DropdownSelectorModule
+    DropdownSelectorModule,
+    UserServiceRequestsModule
   ],
   declarations: [
     UserSelectorComponent
@@ -21,7 +22,6 @@ import { UserSelectorComponent } from './user-selector.component';
     UserSelectorComponent
   ],
   providers: [
-    UserService
   ]
 })
 export class UserSelectorModule { }
