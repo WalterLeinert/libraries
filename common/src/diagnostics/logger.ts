@@ -10,7 +10,7 @@ import { LoggerRegistry } from './loggerRegistry';
 
 /**
  * Liefert den Logger für die angegebene Kategorie
- * 
+ *
  * @export
  * @param {(string | Function)} category
  * @returns {ILogger}
@@ -26,7 +26,7 @@ export function getLogger(category: string | Funktion): ILogger {
   if (!LoggerRegistry.hasLogger(categoryName)) {
     let logger: ILogger;
 
-    // removeIf(node) 
+    // removeIf(node)
     logger = new Logger(BrowserLogger.create(categoryName));
     // endRemoveIf(node)
 
@@ -44,7 +44,7 @@ export function getLogger(category: string | Funktion): ILogger {
 
 /**
  * Konfiguriert das Logging über die Json-Datei @param{config} oder die entsprechende Konfiguration und die Options.
- * 
+ *
  * @export
  * @param {string} filename
  * @param {*} [options]
@@ -56,8 +56,8 @@ export function configure(config: string | IConfig, options?: any): void {
   log4js.configure(config, options);
   // endRemoveIf(browser)
 
-  // removeIf(node) 
-  BrowserLogger.configure(config, options);
+  // removeIf(node)
+  LoggerRegistry.configure(config, options);
   // endRemoveIf(node)
 }
 

@@ -1,43 +1,117 @@
 import { Dictionary } from '../types/dictionary';
 import { Assert } from '../util/assert';
+import { JsonReader } from '../util/jsonReader';
+import { IConfig } from './config.interface';
+import { levels } from './level';
+import { Level } from './level';
+import { ILevel } from './level.interface';
 import { ILogger } from './logger.interface';
 
 
 export class LoggerRegistry {
-    private static loggerDict: Dictionary<string, ILogger> = new Dictionary<string, ILogger>();
+  private static loggerDict: Dictionary<string, ILogger> = new Dictionary<string, ILogger>();
 
-    public static registerLogger(categoryName: string, logger: ILogger) {
-        LoggerRegistry.loggerDict.set(categoryName, logger);
+  private static _config: IConfig;
+  private static defaultLevel: ILevel = levels.ERROR;
+
+
+  /**
+   * Konfiguriert das Logging
+   *
+   * @static
+   * @param {string | IConfig} config
+   * @param {*} [options]
+   *
+   * @memberOf BrowserLogger
+   */
+  public static configure(config: string | IConfig, options?: any): void {
+
+    if (typeof config === 'string') {
+      JsonReader.readJson<IConfig>(config, (conf) => {
+        //
+        const cfg = conf as IConfig;
+
+        LoggerRegistry.registerConfiguration(cfg);
+      });
+    } else {
+      LoggerRegistry.registerConfiguration(config);
+    }
+  }
+
+
+  private static registerConfiguration(config: IConfig) {
+    Assert.notNull(config);
+    LoggerRegistry._config = config;
+
+    const level = LoggerRegistry._config.levels['[all]'];
+    if (level) {
+      LoggerRegistry.defaultLevel = Level.toLevel(level);
     }
 
-    public static getLogger(categoryName: string): ILogger {
-        Assert.notNullOrEmpty(categoryName);
-        Assert.that(LoggerRegistry.hasLogger(categoryName));
+    LoggerRegistry.applyConfiguration(config);
+  }
 
-        return LoggerRegistry.loggerDict.get(categoryName);
+  public static registerLogger(categoryName: string, logger: ILogger) {
+    LoggerRegistry.loggerDict.set(categoryName, logger);
+  }
+
+  public static getLogger(categoryName: string): ILogger {
+    Assert.notNullOrEmpty(categoryName);
+    Assert.that(LoggerRegistry.hasLogger(categoryName));
+
+    const logger = LoggerRegistry.loggerDict.get(categoryName);
+
+    if (LoggerRegistry._config) {
+      const level = LoggerRegistry._config.levels[categoryName];
+      if (level) {
+        logger.setLevel(level);
+      } else {
+        logger.setLevel(LoggerRegistry.defaultLevel);
+      }
     }
 
-    public static getLoggerCount(): number {
-        return LoggerRegistry.loggerDict.count;
-    }
+    return logger;
+  }
 
-    public static hasLogger(categoryName: string): boolean {
-        return LoggerRegistry.loggerDict.containsKey(categoryName);
-    }
+  public static getLoggerCount(): number {
+    return LoggerRegistry.loggerDict.count;
+  }
 
-    public static dump() {
-        console.log(`LoggerRegistry.dump: ${LoggerRegistry.getLoggerCount()} loggers:`);
-        LoggerRegistry.loggerDict.keys.forEach((key) => {
-            console.log(`  ${key}`);
+  public static hasLogger(categoryName: string): boolean {
+    return LoggerRegistry.loggerDict.containsKey(categoryName);
+  }
+
+  public static dump() {
+    console.log(`LoggerRegistry.dump: ${LoggerRegistry.getLoggerCount()} loggers:`);
+    LoggerRegistry.loggerDict.keys.forEach((key) => {
+      console.log(`  ${key}`);
+    });
+  }
+
+  public static forEachLogger(callbackfn: (value: ILogger, index: number, array: ILogger[]) => void, thisArg?: any):
+    void {
+    const loggers = LoggerRegistry.loggerDict.values;
+
+    for (let i = 0; i < loggers.length; i++) {
+      callbackfn(loggers[i], i, loggers);
+    }
+  }
+
+  private static applyConfiguration(config: IConfig) {
+    Object.keys(config.levels).forEach((key) => {
+      if (key.toLowerCase() === '[all]') {
+        const level = Level.toLevel(config.levels[key]);
+        LoggerRegistry.forEachLogger((logger) => {
+          logger.setLevel(level);
         });
-    }
 
-    public static forEachLogger(callbackfn: (value: ILogger, index: number, array: ILogger[]) => void, thisArg?: any):
-        void {
-        const loggers = LoggerRegistry.loggerDict.values;
-
-        for (let i = 0; i < loggers.length; i++) {
-            callbackfn(loggers[i], i, loggers);
+      } else {
+        const level = Level.toLevel(config.levels[key]);
+        if (LoggerRegistry.hasLogger(key)) {
+          const logger = LoggerRegistry.getLogger(key);
+          logger.setLevel(level);
         }
-    }
+      }
+    });
+  }
 }

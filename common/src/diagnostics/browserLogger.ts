@@ -2,42 +2,16 @@ import * as moment from 'moment';
 
 import { StringBuilder } from '../base/stringBuilder';
 import { Types } from '../types/types';
-import { JsonReader } from '../util/jsonReader';
+
 
 import { InvalidOperationException } from '../exceptions/invalidOperationException';
-import { IConfig } from './config.interface';
 import { levels } from './level';
-import { Level } from './level';
 import { ILevel } from './level.interface';
 import { ILogger } from './logger.interface';
-import { LoggerRegistry } from './loggerRegistry';
 
 
 export class BrowserLogger implements ILogger {
   private _level: ILevel = levels.WARN;
-
-  /**
-   * Konfiguriert das Logging
-   *
-   * @static
-   * @param {string | IConfig} config
-   * @param {*} [options]
-   *
-   * @memberOf BrowserLogger
-   */
-  public static configure(config: string | IConfig, options?: any): void {
-
-    if (typeof config === 'string') {
-      JsonReader.readJson<IConfig>(config, (conf) => {
-        //
-        const cfg = conf as IConfig;
-
-        BrowserLogger.applyConfiguration(cfg);
-      });
-    } else {
-      BrowserLogger.applyConfiguration(config);
-    }
-  }
 
 
   private constructor(private categoryName: string) {
@@ -154,24 +128,6 @@ export class BrowserLogger implements ILogger {
     sb.append(' ');
 
     return sb;
-  }
-
-  private static applyConfiguration(config: IConfig) {
-    Object.keys(config.levels).forEach((key) => {
-      if (key.toLowerCase() === '[all]') {
-        const level = Level.toLevel(config.levels[key]);
-        LoggerRegistry.forEachLogger((logger) => {
-          logger.setLevel(level);
-        });
-
-      } else {
-        const level = Level.toLevel(config.levels[key]);
-        if (LoggerRegistry.hasLogger(key)) {
-          const logger = LoggerRegistry.getLogger(key);
-          logger.setLevel(level);
-        }
-      }
-    });
   }
 
 }
