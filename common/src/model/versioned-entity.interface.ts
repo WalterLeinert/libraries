@@ -7,5 +7,5 @@
  * @template TId
  */
 export interface IVersionedEntity {
-  version: number;
+  __version: number;
 }

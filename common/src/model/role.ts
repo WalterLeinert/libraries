@@ -67,7 +67,7 @@ export class Role implements IRole, IVersionedEntity {
   public id_mandant?: number;   // = Mandant.FIRST_ID;
 
   @Column({ name: 'role_version', displayName: 'Version' })
-  public version: number;
+  public __version: number;
 
 
   /**

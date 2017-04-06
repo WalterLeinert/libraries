@@ -92,7 +92,7 @@ export class User implements IUser, IVersionedEntity {
   public id_mandant?: number;   // = Mandant.FIRST_ID;
 
   @Column({ name: 'user_version', displayName: 'Version' })
-  public version: number;
+  public __version: number;
 
 
   constructor(id?: number, username?: string, role?: number, lastname?: string) {

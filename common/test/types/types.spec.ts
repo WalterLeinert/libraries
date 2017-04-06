@@ -11,13 +11,13 @@ import { Types } from '../../src/types';
 
 /**
  * Hilfsklasse für dne Test aus existierende Methode
- * 
+ *
  * @class TestUser
  * @implements {IUser}
  */
 class TestUser implements IUser {
   constructor(public id: number, public username, public firstname, public lastname, public role: number,
-    public password: string, public password_salt: string, public id_mandant: number = 1,
+    public password: string, public password_salt: string, public id_mandant: number = 1, public __version: number = 1,
     public deleted: boolean = false) {
   }
 
@@ -40,7 +40,7 @@ class TypesTest {
     expect(Types.isArray([1, 2])).to.be.true;
     expect(Types.isFunction(
       // tslint:disable-next-line:only-arrow-functions
-      function() {
+      function () {
         // ok
       })).to.be.true;
     expect(Types.isBoolean(true)).to.be.true;

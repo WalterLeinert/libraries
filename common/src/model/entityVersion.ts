@@ -14,5 +14,5 @@ export class EntityVersion implements IEntity<string>, IVersionedEntity {
   public id: string;
 
   @Column({ name: 'entity_version_version', displayName: 'Version' })
-  public version: number;
+  public __version: number;
 }

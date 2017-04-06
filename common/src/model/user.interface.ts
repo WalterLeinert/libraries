@@ -1,9 +1,10 @@
 import { IEntity } from './entity.interface';
+import { IVersionedEntity } from './versioned-entity.interface';
 
 /**
  * Interface für User
  */
-export interface IUser extends IEntity<number> {
+export interface IUser extends IEntity<number>, IVersionedEntity {
   /**
    * Der Benutzername (login)
    */
