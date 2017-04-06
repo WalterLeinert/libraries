@@ -1,5 +1,6 @@
 export * from './appRegistry.service';
 export * from './base.service';
+export * from './entityVersion.service';
 export * from './knex.service';
 export * from './metadata.service';
 export * from './passportLocal.service';
