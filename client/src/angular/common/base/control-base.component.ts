@@ -69,17 +69,29 @@ export abstract class ControlBaseComponent<T> extends CoreComponent implements C
   }
 
   public set value(value: T) {
-    if (this._value !== value) {
-      this._value = value;
-      this.onModelChange(value);    // -> angular
-      this.onValueChange(value);    // -> fluxgate
-    }
+    using(new XLog(ControlBaseComponent.logger, levels.DEBUG, 'set value'), (log) => {
+      if (log.isDebugEnabled()) {
+        log.log(`class: ${this.constructor.name}: old value = ${JSON.stringify(this._value)},` +
+          ` value = ${JSON.stringify(value)}`);
+      }
+
+      if (this._value !== value) {
+        this._value = value;
+        this.onModelChange(value);    // -> angular
+        this.onValueChange(value);    // -> fluxgate
+      }
+    });
   }
 
   public writeValue(value: T) {
-    this._value = value;
+    using(new XLog(ControlBaseComponent.logger, levels.DEBUG, 'writeValue'), (log) => {
+      if (log.isDebugEnabled()) {
+        log.log(`class: ${this.constructor.name}: value = ${JSON.stringify(value)}`);
+      }
+      this._value = value;
 
-    this.onValueWritten(value);
+      this.onValueWritten(value);
+    });
   }
 
   public registerOnChange(fn: (value: T) => void) {
@@ -100,7 +112,12 @@ export abstract class ControlBaseComponent<T> extends CoreComponent implements C
    * @memberOf ControlBaseComponent
    */
   protected onValueChange(value: T) {
-    this.valueChange.emit(value);
+    using(new XLog(ControlBaseComponent.logger, levels.DEBUG, 'onValueChange'), (log) => {
+      if (log.isDebugEnabled()) {
+        log.log(`class: ${this.constructor.name}: value = ${JSON.stringify(value)}`);
+      }
+      this.valueChange.emit(value);
+    });
   }
 
   protected onTouched() {
