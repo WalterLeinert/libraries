@@ -328,11 +328,6 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
     }
   }
 
-  protected preselectData() {
-    DropdownSelectorComponent.logger.error(`nur zum Test. wieder entfernen`);
-  }
-
-
 
   protected get isDataEmpty(): boolean {
     return !(this.dataItems && this.dataItems.length > 0);
