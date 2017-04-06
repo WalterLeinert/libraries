@@ -17,7 +17,7 @@ import { PassportLocalService } from '../../services/passportLocal.service';
 
 /**
  * Controller zur Authentifizierung über Passport.js
- * 
+ *
  * @class PassportController
  */
 @Controller('/passport')
@@ -32,7 +32,7 @@ export class PassportController {
 
   /**
    * Authenticate user with local info (in Database).
-   * 
+   *
    * @param email
    * @param password
    * @param request
@@ -70,12 +70,12 @@ export class PassportController {
             })(request, response, next);
         } catch (err) {
           log.error(err);
-          return reject(this.createSystemException(err));
+          return reject(this.createBusinessException(err));
         }
       })
         .catch((err) => {
           if (err && err.message === 'Failed to serialize user into session') {
-            return Promise.reject(this.createBusinessException('user not found'));
+            return Promise.reject(this.createSystemException('user not found'));
           }
           return Promise.reject(this.createSystemException(err));
         });
@@ -101,7 +101,7 @@ export class PassportController {
 
         Passport.authenticate('signup', (err, user: IUser) => {
           if (err) {
-            return reject(this.createSystemException(err));
+            return reject(this.createBusinessException(err));
           }
           if (!user) {
             return reject(!!err);
@@ -109,7 +109,7 @@ export class PassportController {
 
           request.logIn(user, (loginErr) => {
             if (loginErr) {
-              return reject(this.createSystemException(loginErr));
+              return reject(this.createBusinessException(loginErr));
             }
 
             user.resetCredentials();
@@ -136,7 +136,7 @@ export class PassportController {
 
   /**
    * Ändert das Passwort für den Benutzer mit @{username}
-   * 
+   *
    * @param {string} username
    * @param {string} password
    * @param {string} passwordNew
@@ -144,7 +144,7 @@ export class PassportController {
    * @param {Express.Response} response
    * @param {Express.NextFunction} next
    * @returns {Promise<IUser>}
-   * 
+   *
    * @memberOf PassportController
    */
   @Post('/changePassword')
@@ -178,7 +178,7 @@ export class PassportController {
 
               request.logIn(changedUser, (loginErr) => {
                 if (loginErr) {
-                  return reject(this.createSystemException(loginErr));
+                  return reject(this.createBusinessException(loginErr));
                 }
 
                 changedUser.resetCredentials();
@@ -203,7 +203,7 @@ export class PassportController {
 
   /**
    * Liefert den aktuell angemeldeten User.
-   * 
+   *
    * @param request
    */
   @Get('/currentUser')

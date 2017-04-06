@@ -5,7 +5,7 @@ import { ApplicationRef, ErrorHandler, Inject, Injectable, Injector, NgModule } 
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { MessageSeverity } from '@fluxgate/common';
+import { MessageSeverity, ServerBusinessException } from '@fluxgate/common';
 
 import { MessageService, MessageServiceModule } from '../../services/message.service';
 
@@ -37,7 +37,7 @@ export class ApplicationErrorHandler extends ErrorHandler {
       }
 
       this.messageService.addMessage({
-        severity: MessageSeverity.Error,
+        severity: error instanceof ServerBusinessException ? MessageSeverity.Info : MessageSeverity.Error,
         detail: error.message,
         summary: 'Internal Error. Ask for support.'
       });
