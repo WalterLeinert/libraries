@@ -13,10 +13,8 @@ import { ILogger } from './logger.interface';
 export class BrowserLogger implements ILogger {
   private _level: ILevel = levels.WARN;
 
-
-  private constructor(private categoryName: string) {
+  private constructor(private _categoryName: string) {
   }
-
 
   /**
    * erzeugt eine neue Logger-Instanz
@@ -116,6 +114,11 @@ export class BrowserLogger implements ILogger {
 
   public get level(): ILevel {
     return this._level;
+  }
+
+
+  public get categoryName(): string {
+    return this._categoryName;
   }
 
   private createLogPrefix(level: ILevel): StringBuilder {

@@ -138,4 +138,13 @@ export class Logger implements ILogger {
   public get level(): ILevel {
     return this.logger.level;
   }
+
+  public get categoryName(): string {
+    return this.logger.categoryName;
+  }
+
+  public toString(): string {
+    return this.logger.categoryName;
+  }
+
 }

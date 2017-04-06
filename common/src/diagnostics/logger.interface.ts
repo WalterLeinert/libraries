@@ -2,6 +2,8 @@ import { ILevel } from './level.interface';
 
 export interface ILogger {
   level: ILevel;
+  categoryName: string;
+
   setLevel(level: string | ILevel): void;
 
   isLevelEnabled(level: ILevel): boolean;

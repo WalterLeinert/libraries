@@ -20,10 +20,10 @@ enum EnterExit {
 }
 
 /**
- * Logger for method entry, exit and arbitrary logs based on 
+ * Logger for method entry, exit and arbitrary logs based on
  * the disposable pattern.
- * 
- * @see {EnterExitLogger} works in conjunction with 
+ *
+ * @see {EnterExitLogger} works in conjunction with
  * @see {using}.
  */
 
@@ -65,12 +65,12 @@ export class XLog extends Disposable implements ILogger {
 
   /**
    * Initializes a new instance and triggers method entry log, update indentation
-   * 
+   *
    * @param {log4js.Logger}: logger - the native logger
    * @param {log4js.Level}: level - the minimum log level
    * @param {string} functionName - the name of the method to be logged
    * @param {string} message - the message to belogged
-   * @param {any[]} args - optional message arguments 
+   * @param {any[]} args - optional message arguments
    */
   constructor(logger: ILogger, level: ILevel, functionName: string, message?: string, ...args: any[]) {
     super();
@@ -184,6 +184,9 @@ export class XLog extends Disposable implements ILogger {
     return this._level;
   }
 
+  public get categoryName(): string {
+    return this.logger.categoryName;
+  }
 
   /**
    * triggers method exit log, update indentation
@@ -201,18 +204,18 @@ export class XLog extends Disposable implements ILogger {
 
   /**
    * forwards different kind of log messages to @see {log4js}
-   * 
+   *
    * @param {EnterExit} kind - kind of log message
    * @param {Level} level - log level
    * @param {string} message - log message
-   * @param {any[]} ...args - additional log arguments 
+   * @param {any[]} ...args - additional log arguments
    */
   private logInternal(kind: EnterExit, level: ILevel, message?: string, ...args: any[]): void {
     const indent = XLog.indentationLevels[XLog.indentation];
     let prefix = indent + XLog.EnterExitStrings[kind] + this.functionName;
     const prefixedMessage = new StringBuilder();
 
-    // prefix not empty message 
+    // prefix not empty message
     if (message && message.length > 0) {
       prefix = prefix + ': ';
     }
@@ -254,7 +257,7 @@ export class XLog extends Disposable implements ILogger {
 
   /**
    * returns true, if the logger is enabled for the given level.
-   * 
+   *
    * @param {Level} level - the log level to test
    */
   private isEnabledFor(level: ILevel): boolean {

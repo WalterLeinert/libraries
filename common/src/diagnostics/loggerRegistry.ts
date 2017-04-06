@@ -98,19 +98,12 @@ export class LoggerRegistry {
   }
 
   private static applyConfiguration(config: IConfig) {
-    Object.keys(config.levels).forEach((key) => {
-      if (key.toLowerCase() === '[all]') {
-        const level = Level.toLevel(config.levels[key]);
-        LoggerRegistry.forEachLogger((logger) => {
-          logger.setLevel(level);
-        });
-
+    LoggerRegistry.forEachLogger((logger) => {
+      const catLevel = LoggerRegistry._config.levels[logger.categoryName];
+      if (catLevel) {
+        logger.setLevel(Level.toLevel(catLevel));
       } else {
-        const level = Level.toLevel(config.levels[key]);
-        if (LoggerRegistry.hasLogger(key)) {
-          const logger = LoggerRegistry.getLogger(key);
-          logger.setLevel(level);
-        }
+        logger.setLevel(LoggerRegistry.defaultLevel);
       }
     });
   }
