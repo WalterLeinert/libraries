@@ -17,9 +17,9 @@
             "type": "node",
             "request": "launch",
             "name": "Run Mocha",
-            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "program": "${workspaceRoot}/common/node_modules/mocha/bin/_mocha",
             "args": [
-                "build/test/**/*.spec.js", "--no-timeouts"
+                "common/dist/node/test/**/*.spec.js", "--no-timeouts"
             ],
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": null,
