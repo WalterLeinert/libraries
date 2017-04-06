@@ -15,7 +15,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 import {
   Assert, CompoundValidator, CustomSubject, Dictionary, Funktion, IEntity, IMessage, IUser,
   MessageSeverity, PatternValidator, RangeValidator,
-  RequiredValidator, TableMetadata, UniqueIdentifiable, Utility
+  RequiredValidator, ServerBusinessException, TableMetadata, UniqueIdentifiable, Utility
 } from '@fluxgate/common';
 
 import { IServiceState, ServiceCommand, SetCurrentItemCommand, Store } from '@fluxgate/common';
@@ -238,7 +238,11 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf BaseComponent
    */
   protected handleError(error: Error, summary?: string) {
-    this.addErrorMessage(error.message, summary);
+    if (error instanceof ServerBusinessException) {
+      this.addInfoMessage(error.message, summary);
+    } else {
+      this.addErrorMessage(error.message, summary);
+    }
   }
 
 
