@@ -87,6 +87,7 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
     if (command.storeId === RoleStore.ID) {
 
       if (command instanceof ItemsFoundCommand) {
+        this.value = Utility.isNullOrEmpty(state.items) ? null : state.items[0];
         this.roles = state.items;
       }
     }
