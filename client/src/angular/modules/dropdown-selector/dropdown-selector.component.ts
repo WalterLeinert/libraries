@@ -8,13 +8,15 @@ import { Router } from '@angular/router';
 // PrimeNG
 import { SelectItem } from 'primeng/primeng';
 
-// Fluxgate
-import { Assert, Clone, IService, TableMetadata, Utility } from '@fluxgate/common';
-
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
+
+// Fluxgate
+import { Assert, Clone, IService, TableMetadata, Types, Utility } from '@fluxgate/common';
+
+
 
 import { DataTypes, DisplayInfo, } from '../../../base';
 import { CacheService, MetadataService } from '../../services';
@@ -237,7 +239,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
         if (!config.displayInfo.valueField) {
           config.displayInfo.valueField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.valueField;
         }
-        if (!config.displayInfo.required) {
+        if (!Types.isPresent(config.displayInfo.required)) {
           config.displayInfo.required = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.required;
         }
 
@@ -250,13 +252,13 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
         }
 
 
-        if (!config.allowNoSelection) {
+        if (!Types.isPresent(config.allowNoSelection)) {
           config.allowNoSelection = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelection;
         }
-        if (!config.allowNoSelectionText) {
+        if (!Types.isPresent(config.allowNoSelectionText)) {
           config.allowNoSelectionText = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelectionText;
         }
-        if (config.valuesCacheable === undefined) {
+        if (!Types.isPresent(config.valuesCacheable)) {
           config.valuesCacheable = DropdownSelectorComponent.DEFAULT_CONFIG.valuesCacheable;
         }
 
@@ -285,11 +287,12 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
           this.configInternal.displayInfo.textField = this.textField;
           this.configInternal.displayInfo.valueField = this.valueField;
 
-          if (this.allowNoSelection) {
+          if (Types.isPresent(this.allowNoSelection)) {
+            Assert.that(Types.isBoolean(this.allowNoSelection))
             this.configInternal.allowNoSelection = this.allowNoSelection;
           }
 
-          if (this.allowNoSelectionText) {
+          if (Types.isPresent(this.allowNoSelectionText)) {
             this.configInternal.allowNoSelectionText = this.allowNoSelectionText;
           }
         }
@@ -308,6 +311,13 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
     if (items && items.length > 0) {
       this.options = [];
 
+      if (this.configInternal.allowNoSelection) {
+        this.options.push({
+          label: this.configInternal.allowNoSelectionText,
+          value: {}
+        });
+      }
+
       // ... und dann entsprechende Option-Objekte erzeugen
       for (const item of items) {
         this.options.push({
@@ -316,6 +326,10 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
         });
       }
     }
+  }
+
+  protected preselectData() {
+    DropdownSelectorComponent.logger.error(`nur zum Test. wieder entfernen`);
   }
 
 

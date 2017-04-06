@@ -29,7 +29,7 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    * @type {any[]}
    * @memberOf DataTableSelectorComponent
    */
-  private _data: any[];
+  private _data: T[];
 
   /**
    * dataChange Event: wird bei jeder SelektionÄänderung von data gefeuert.
@@ -38,7 +38,7 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    *
    * @memberOf DataTableSelectorComponent
    */
-  @Output() public dataChange = new EventEmitter<any>();
+  @Output() public dataChange = new EventEmitter<T[]>();
 
   /**
    * der Service zum Bereitstellen der Daten
@@ -293,8 +293,8 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
   protected onValueChange(value: any) {
     super.onValueChange(value);
 
-    this.changeDetectorRef.markForCheck();
-    // this.changeDetectorRef.detectChanges();
+    // this.changeDetectorRef.markForCheck();
+    this.changeDetectorRef.detectChanges();
 
     let index = -1;
     if (Types.isPresent(this.value)) {
@@ -333,7 +333,7 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
   // Property data und der Change Event
   // -------------------------------------------------------------------------------------
 
-  protected onDataChange(values: any[]) {
+  protected onDataChange(values: T[]) {
     this.dataChange.emit(values);
 
     //
@@ -343,11 +343,11 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
     this.initBoundData(values, this.getMetadataForValues(values));
   }
 
-  public get data(): any[] {
+  public get data(): T[] {
     return this._data;
   }
 
-  @Input() public set data(data: any[]) {
+  @Input() public set data(data: T[]) {
     if (this._data !== data) {
       this._data = data;
       this.onDataChange(data);
