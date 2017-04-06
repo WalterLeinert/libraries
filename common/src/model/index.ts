@@ -3,7 +3,7 @@ export * from './error';
 export * from './metadata';
 export * from './query';
 export * from './passwordChange';
-
+export * from './entityVersion';
 export * from './entity.interface';
 export * from './mandant';
 export * from './role.interface';
