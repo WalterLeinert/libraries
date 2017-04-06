@@ -25,10 +25,12 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
 @Component({
   selector: 'flx-user-selector',
   template: `
-<flx-dropdown-selector [data]="users" [textField]="textField" [valueField]="valueField"
-  [(ngModel)]="value"
-  name="userSelector" [style]="style" [debug]="debug">
-</flx-dropdown-selector>
+<div>
+  <flx-dropdown-selector [data]="users" [textField]="textField" [valueField]="valueField"
+    [(ngModel)]="value" name="userSelector"
+    [style]="style" [debug]="debug">
+  </flx-dropdown-selector>
+</div>
 `,
   styles: [],
   providers: [
@@ -45,6 +47,7 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
   ]
 })
 export class UserSelectorComponent extends SelectorBaseComponent<IUser> {
+
   @ViewChild(NgModel) public model: NgModel;
   @Input() public textField: string = 'fullName';
   @Input() public valueField: string = '.';
@@ -64,7 +67,6 @@ export class UserSelectorComponent extends SelectorBaseComponent<IUser> {
     };
   }
 
-
   public validate(control: FormControl): { [key: string]: any } {
     return (!this.parseError) ? null : {
       userError: {
@@ -74,7 +76,7 @@ export class UserSelectorComponent extends SelectorBaseComponent<IUser> {
   }
 
   protected onValueWritten(value: IUser) {
-    this.changeDetectorRef.markForCheck();
+    // this.changeDetectorRef.markForCheck();
   }
 
   protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
