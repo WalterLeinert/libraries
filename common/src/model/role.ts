@@ -27,7 +27,7 @@ export enum UserRoleId {
  * Modelliert User Rollen (Defaultimplemetierung)
  */
 @Table({ name: Role.TABLE_NAME })
-export class Role implements IRole, IVersionedEntity {
+export class Role implements IRole {
   public static readonly TABLE_NAME = 'role';
 
   /**

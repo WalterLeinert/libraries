@@ -20,7 +20,7 @@ import { IVersionedEntity } from './versioned-entity.interface';
  */
 // tslint:disable-next-line:max-classes-per-file
 @Table({ name: User.TABLE_NAME })
-export class User implements IUser, IVersionedEntity {
+export class User implements IUser {
   public static readonly TABLE_NAME = 'user';
 
   /**
