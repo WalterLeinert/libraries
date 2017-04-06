@@ -286,16 +286,16 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
           this.configInternal = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
           this.configInternal.displayInfo.textField = this.textField;
           this.configInternal.displayInfo.valueField = this.valueField;
-
-          if (Types.isPresent(this.allowNoSelection)) {
-            Assert.that(Types.isBoolean(this.allowNoSelection))
-            this.configInternal.allowNoSelection = this.allowNoSelection;
-          }
-
-          if (Types.isPresent(this.allowNoSelectionText)) {
-            this.configInternal.allowNoSelectionText = this.allowNoSelectionText;
-          }
         }
+      }
+
+      if (Types.isPresent(this.allowNoSelection)) {
+        Assert.that(Types.isBoolean(this.allowNoSelection))
+        this.configInternal.allowNoSelection = this.allowNoSelection;
+      }
+
+      if (Types.isPresent(this.allowNoSelectionText)) {
+        this.configInternal.allowNoSelectionText = this.allowNoSelectionText;
       }
 
       if (log.isDebugEnabled) {
