@@ -90,6 +90,7 @@ export abstract class ControlBaseComponent<T> extends CoreComponent implements C
       }
       this._value = value;
 
+      this.onValueChange(value);    // -> fluxgate
       this.onValueWritten(value);
     });
   }
