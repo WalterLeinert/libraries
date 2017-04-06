@@ -3,11 +3,13 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { IRole } from '@fluxgate/common';
+import { IEntity, IRole, Utility } from '@fluxgate/common';
+import { ItemsFoundCommand, ServiceCommand } from '@fluxgate/common';
 
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
-import { RoleService } from '../authentication/role.service';
+import { RoleServiceRequests } from '../authentication/commands/role-service-requests';
+import { RoleStore } from '../authentication/commands/role-store';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
 
 /**
@@ -24,7 +26,7 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
   selector: 'flx-role-selector',
   template: `
 <div>
-  <flx-dropdown-selector [dataService]="service" [textField]="textField" [valueField]="valueField"
+  <flx-dropdown-selector [data]="roles" [textField]="textField" [valueField]="valueField"
     [(ngModel)]="value" name="roleSelector"
     [style]="style" [debug]="debug">
   </flx-dropdown-selector>
@@ -50,10 +52,15 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
   @Input() public textField: string = 'description';
   @Input() public valueField: string = '.';
 
+  public roles: IRole[];
+
   constructor(router: Router, metadataService: MetadataService, messageService: MessageService,
-    public service: RoleService,
+    private serviceRequests: RoleServiceRequests,
     changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, messageService, changeDetectorRef);
+
+    this.subscribeToStore(RoleStore.ID);
+    this.serviceRequests.find();
 
     this.style = {
       width: '200px'
@@ -66,5 +73,22 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
         valid: false,
       },
     };
+  }
+
+  protected onValueWritten(value: IRole) {
+    this.changeDetectorRef.markForCheck();
+  }
+
+  protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
+    super.onStoreUpdated(command);
+
+    const state = this.getStoreState<IRole, number>(RoleStore.ID);
+
+    if (command.storeId === RoleStore.ID) {
+
+      if (command instanceof ItemsFoundCommand) {
+        this.roles = state.items;
+      }
+    }
   }
 }

@@ -19,5 +19,7 @@
     "typescript": "^2.1.5",
     "yargs": "^6.6.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@fluxgate/client": "^2.0.6-beta.50"
+  }
 }

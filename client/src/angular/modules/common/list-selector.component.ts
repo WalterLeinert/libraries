@@ -293,7 +293,8 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
   protected onValueChange(value: any) {
     super.onValueChange(value);
 
-    this.changeDetectorRef.detectChanges();
+    this.changeDetectorRef.markForCheck();
+    // this.changeDetectorRef.detectChanges();
 
     let index = -1;
     if (Types.isPresent(this.value)) {
