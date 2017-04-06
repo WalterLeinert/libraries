@@ -8,9 +8,11 @@ import { Validation } from '../model/decorator/model/validation';
 import { Validators } from '../model/validation/validators';
 import { Utility } from '../util/utility';
 
+
 // import { Mandant } from './mandant';
 import { Role, UserRoleId } from './role';
 import { IUser } from './user.interface';
+import { IVersionedEntity } from './versioned-entity.interface';
 
 
 /**
@@ -18,7 +20,7 @@ import { IUser } from './user.interface';
  */
 // tslint:disable-next-line:max-classes-per-file
 @Table({ name: User.TABLE_NAME })
-export class User implements IUser {
+export class User implements IUser, IVersionedEntity {
   public static readonly TABLE_NAME = 'user';
 
   /**
@@ -88,6 +90,9 @@ export class User implements IUser {
   ])
   @Column({ name: 'id_mandant' })
   public id_mandant?: number;   // = Mandant.FIRST_ID;
+
+  @Column({ name: 'user_version', displayName: 'Version' })
+  public version: number;
 
 
   constructor(id?: number, username?: string, role?: number, lastname?: string) {

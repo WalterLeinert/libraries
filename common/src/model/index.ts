@@ -12,3 +12,4 @@ export * from './user';
 export * from './role';
 export * from './service';
 export * from './validation';
+export * from './versioned-entity.interface';

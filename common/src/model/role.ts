@@ -8,7 +8,7 @@ import { Validators } from '../model/validation/validators';
 
 // import { Mandant } from './mandant';
 import { IRole } from './role.interface';
-
+import { IVersionedEntity } from './versioned-entity.interface';
 
 /**
  * Werte der Role-Ids in der DB (z.Zt.)
@@ -27,7 +27,7 @@ export enum UserRoleId {
  * Modelliert User Rollen (Defaultimplemetierung)
  */
 @Table({ name: Role.TABLE_NAME })
-export class Role implements IRole {
+export class Role implements IRole, IVersionedEntity {
   public static readonly TABLE_NAME = 'role';
 
   /**
@@ -65,6 +65,9 @@ export class Role implements IRole {
   ])
   @Column({ name: 'id_mandant' })
   public id_mandant?: number;   // = Mandant.FIRST_ID;
+
+  @Column({ name: 'role_version', displayName: 'Version' })
+  public version: number;
 
 
   /**
