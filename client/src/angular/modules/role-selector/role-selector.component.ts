@@ -25,12 +25,10 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
 @Component({
   selector: 'flx-role-selector',
   template: `
-<div>
-  <flx-dropdown-selector [data]="roles" [textField]="textField" [valueField]="valueField"
-    [(ngModel)]="value" name="roleSelector"
-    [style]="style" [debug]="debug">
-  </flx-dropdown-selector>
-</div>
+<flx-dropdown-selector [data]="roles" [textField]="textField" [valueField]="valueField"
+  [(ngModel)]="value" name="roleSelector"
+  [style]="style" [debug]="debug">
+</flx-dropdown-selector>
 `,
   styles: [],
   providers: [

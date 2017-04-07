@@ -19,13 +19,11 @@ import { MessageService } from '../../services/message.service';
 @Component({
   selector: 'flx-time-selector',
   template: `
-<div>
-  <p-calendar [(ngModel)]="date" [timeOnly]="true" hourFormat="24"
-    [readonlyInput]="readonly"
-    (onBlur)="onBlur($event)" (onSelect)="onSelect($event)"
-  >
-  </p-calendar>
-</div>
+<p-calendar [(ngModel)]="date" [timeOnly]="true" hourFormat="24"
+  [readonlyInput]="readonly"
+  (onBlur)="onBlur($event)" (onSelect)="onSelect($event)"
+>
+</p-calendar>
 `,
   styles: [],
   providers: [

@@ -25,12 +25,10 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
 @Component({
   selector: 'flx-user-selector',
   template: `
-<div>
-  <flx-dropdown-selector [data]="users" [textField]="textField" [valueField]="valueField"
-    [(ngModel)]="value" name="userSelector"
-    [style]="style" [debug]="debug">
-  </flx-dropdown-selector>
-</div>
+<flx-dropdown-selector [data]="users" [textField]="textField" [valueField]="valueField"
+  [(ngModel)]="value" name="userSelector"
+  [style]="style" [debug]="debug">
+</flx-dropdown-selector>
 `,
   styles: [],
   providers: [
