@@ -1,6 +1,9 @@
 import { Injectable, Injector, OpaqueToken } from '@angular/core';
 
 import { Funktion, InvalidOperationException, Types, UniqueIdentifiable } from '@fluxgate/common';
+import { Store } from '@fluxgate/common';
+
+import { AppStore } from '../../redux/app-store';
 
 
 /**
@@ -18,6 +21,7 @@ export class AppInjector extends UniqueIdentifiable {
   private static readonly _instance = new AppInjector();
   private static instanceId: number;
   private injector: Injector;
+  private testStore: Store;
 
   private constructor() {
     super();
@@ -29,6 +33,10 @@ export class AppInjector extends UniqueIdentifiable {
     }
   }
 
+  public setTestStore(store: Store) {
+    this.testStore = store;
+  }
+
   /**
    * Liefert die Singleton-Instanz.
    */
@@ -38,9 +46,9 @@ export class AppInjector extends UniqueIdentifiable {
 
   /**
    * Setzt den globalen Injector.
-   * 
-   * @param {Injector} injector 
-   * 
+   *
+   * @param {Injector} injector
+   *
    * @memberOf AppInjector
    */
   public setInjector(injector: Injector) {
@@ -53,14 +61,19 @@ export class AppInjector extends UniqueIdentifiable {
 
   /**
    * Liefert für das Token @param{token} eine entsprechende Instanz.
-   * 
-   * @template T 
+   *
+   * @template T
    * @param {(Funktion | OpaqueToken)} token
-   * @returns {T} 
-   * 
+   * @returns {T}
+   *
    * @memberOf AppInjector
    */
   public getInstance<T>(token: Funktion | OpaqueToken): T {
+    if (this.testStore) {
+      if (token === AppStore) {
+        return this.testStore as any as T;
+      }
+    }
     return this.injector.get(token) as T;
   }
 
