@@ -68,7 +68,9 @@ export class TimeSelectorComponent extends ControlBaseComponent<ShortTime> {
         try {
           const t = ShortTime.parse(controlValue);
           this.updateTime(t);
+          this.parseError = false;
         } catch (exc) {
+          log.warn(`TODO: angular Validierung einbinden (value: ${controlValue})`);
           this.parseError = true;
           eventData.target.value = null;
         }
@@ -78,6 +80,7 @@ export class TimeSelectorComponent extends ControlBaseComponent<ShortTime> {
 
   public onSelect(eventData: any) {
     using(new XLog(TimeSelectorComponent.logger, levels.INFO, 'onSelect'), (log) => {
+      this.parseError = false;
       this.updateTime();
     });
   }
@@ -109,6 +112,7 @@ export class TimeSelectorComponent extends ControlBaseComponent<ShortTime> {
     }
     if (time) {
       this.value = time;
+      this.model.control.reset();
     }
   }
 }
