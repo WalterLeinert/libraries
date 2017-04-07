@@ -77,31 +77,59 @@ export abstract class ControlBaseComponent<T> extends CoreComponent implements C
 
       if (this._value !== value) {
         this._value = value;
-        this.onModelChange(value);    // -> angular
+        this.onChangeCallback(value);    // -> angular
         this.onValueChange(value);    // -> fluxgate
       }
     });
   }
 
+
+  /**
+   * Write a new value to the element.
+   */
   public writeValue(value: T) {
     using(new XLog(ControlBaseComponent.logger, levels.DEBUG, 'writeValue'), (log) => {
       if (log.isDebugEnabled()) {
         log.log(`class: ${this.constructor.name}: value = ${JSON.stringify(value)}`);
       }
-      this._value = value;
 
-      this.onValueChange(value);    // -> fluxgate
-      this.onValueWritten(value);
+      if (this._value !== value) {
+        this._value = value;
+
+        this.onValueChange(value);    // -> fluxgate
+        this.onValueWritten(value);
+      }
     });
   }
 
-  public registerOnChange(fn: (value: T) => void) {
-    this.onModelChange = fn;
+
+  /**
+   * Set the function to be called when the control receives a change event.
+   */
+  public registerOnChange(fn: any) {
+    this.onChangeCallback = fn;
   }
 
-  public registerOnTouched(fn: () => void) {
-    this.onModelTouched = fn;
+
+  /**
+   * Set the function to be called when the control receives a touch event.
+   */
+  public registerOnTouched(fn: any) {
+    this.onTouchedCallback = fn;
   }
+
+
+
+  /**
+   * This function is called when the control status changes to or from "DISABLED".
+   * Depending on the value, it will enable or disable the appropriate DOM element.
+   *
+   * @param isDisabled
+   */
+  public setDisabledState(isDisabled: boolean): void {
+    this.onDisabledChanged(isDisabled);
+  }
+
   // <<< interface ControlValueAccessor ---------------------------------
 
   /**
@@ -121,8 +149,13 @@ export abstract class ControlBaseComponent<T> extends CoreComponent implements C
     });
   }
 
-  protected onTouched() {
+
+  protected onDisabledChanged(disabled: boolean) {
     // ok
+  }
+
+  protected onTouched() {
+    this.onTouchedCallback();
   }
 
 
@@ -134,11 +167,11 @@ export abstract class ControlBaseComponent<T> extends CoreComponent implements C
     // ok
   }
 
-  private onModelChange = (_: any) => {
+  private onChangeCallback = (_: any) => {
     // ok
   }
 
-  private onModelTouched = (_: any) => {
+  private onTouchedCallback = () => {
     // ok
   }
 }

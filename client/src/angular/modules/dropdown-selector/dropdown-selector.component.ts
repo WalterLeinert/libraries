@@ -288,7 +288,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
       }
 
       if (Types.isPresent(this.allowNoSelection)) {
-        Assert.that(Types.isBoolean(this.allowNoSelection))
+        Assert.that(Types.isBoolean(this.allowNoSelection));
         this.configInternal.allowNoSelection = this.allowNoSelection;
       }
 

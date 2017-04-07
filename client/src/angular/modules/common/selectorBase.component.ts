@@ -1,6 +1,6 @@
 // tslint:disable:member-ordering
 
-import { EventEmitter, Input, Output } from '@angular/core';
+import { Input } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 

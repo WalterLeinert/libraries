@@ -2,7 +2,7 @@
 
 import { Component, Input, ViewChild } from '@angular/core';
 import { NgModel } from '@angular/forms';
-import { NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { Hour, ShortTime } from '@fluxgate/common';
+import { Hour, ShortTime, Types } from '@fluxgate/common';
 
 import { ControlBaseComponent } from '../../common/base/control-base.component';
 import { MessageService } from '../../services/message.service';
@@ -59,7 +59,20 @@ export class TimeSelectorComponent extends ControlBaseComponent<ShortTime> {
 
   public onBlur(eventData: any) {
     using(new XLog(TimeSelectorComponent.logger, levels.INFO, 'onBlur'), (log) => {
-      this.updateTime();
+      super.onTouched();
+
+      // TODO: Validierung über angular triggern
+
+      const controlValue = eventData.target.value;
+      if (Types.isPresent(controlValue)) {
+        try {
+          const t = ShortTime.parse(controlValue);
+          this.updateTime(t);
+        } catch (exc) {
+          this.parseError = true;
+          eventData.target.value = null;
+        }
+      }
     });
   }
 
@@ -70,9 +83,32 @@ export class TimeSelectorComponent extends ControlBaseComponent<ShortTime> {
   }
 
 
-  private updateTime() {
-    if (this.date) {
-      this.value = new ShortTime(this.date.getHours() as Hour, this.date.getMinutes());
+  public validate(control: FormControl): { [key: string]: any } {
+    return (!this.parseError) ? null : {
+      timeError: {
+        valid: false
+      },
+    };
+  }
+
+  protected onValueChange(value: ShortTime) {
+    if (value) {
+      const date = new Date();
+      date.setHours(value.hour);
+      date.setMinutes(value.minute);
+
+      this.date = date;
+    }
+  }
+
+  private updateTime(time?: ShortTime) {
+    if (!time) {
+      if (this.date) {
+        time = new ShortTime(this.date.getHours() as Hour, this.date.getMinutes());
+      }
+    }
+    if (time) {
+      this.value = time;
     }
   }
 }
