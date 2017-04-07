@@ -37,13 +37,11 @@ export interface IMonth {
 @Component({
   selector: 'flx-month-selector',
   template: `
-<div>
-  <flx-dropdown-selector [data]="months" [(ngModel)]="value"
-    [textField]="textField" [valueField]="valueField"
-    [style]="style"
-    [debug]="debug" name="monthSelector">
-  </flx-dropdown-selector>
-</div>
+<flx-dropdown-selector [data]="months" [(ngModel)]="value"
+  [textField]="textField" [valueField]="valueField"
+  [style]="style"
+  [debug]="debug" name="monthSelector">
+</flx-dropdown-selector>
 `,
   styles: [],
   providers: [

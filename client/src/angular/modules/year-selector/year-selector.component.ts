@@ -13,12 +13,10 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
 @Component({
   selector: 'flx-year-selector',
   template: `
-<div>
-  <flx-dropdown-selector [data]="years" [(ngModel)]="value"
-    [style]="style"
-    [debug]="debug" name="yearSelector">
-  </flx-dropdown-selector>
-</div>
+<flx-dropdown-selector [data]="years" [(ngModel)]="value"
+  [style]="style"
+  [debug]="debug" name="yearSelector">
+</flx-dropdown-selector>
 `,
   styles: [],
   providers: [

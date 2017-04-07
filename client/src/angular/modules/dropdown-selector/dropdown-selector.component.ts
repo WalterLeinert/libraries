@@ -36,15 +36,13 @@ import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
 @Component({
   selector: 'flx-dropdown-selector',
   template: `
-<div>
-  <p-dropdown [(options)]="options" [autoWidth]="autoWidth" [style]="style" [(ngModel)]="value"
-    [readonly]="readonly"
-    (onChange)="onChange($event.value)">
-  </p-dropdown>
+<p-dropdown [(options)]="options" [style]="style" [(ngModel)]="value"
+  [readonly]="readonly"
+  (onChange)="onChange($event.value)">
+</p-dropdown>
 
-  <div *ngIf="debug">
-    <p>selectedIndex: {{selectedIndex}}, value: {{value | json}}</p>
-  </div>
+<div *ngIf="debug">
+  <p>selectedIndex: {{selectedIndex}}, value: {{value | json}}</p>
 </div>
 `,
   styles: [],
@@ -115,7 +113,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
    * @type {boolean}
    * @memberOf DropdownSelectorComponent
    */
-  @Input() public autoWidth: boolean = true;
+  @Input() public autoWidth: boolean;
 
 
   /**
