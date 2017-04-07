@@ -112,7 +112,7 @@ export class TimeSelectorComponent extends ControlBaseComponent<ShortTime> {
     }
     if (time) {
       this.value = time;
-      this.model.control.reset();
+      // this.model.control.reset(this.value);
     }
   }
 }
