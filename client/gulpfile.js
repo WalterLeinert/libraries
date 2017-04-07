@@ -26,22 +26,22 @@ const tscConfig = require('./src/tsconfig.app.json');
     * cb           - Callbackfunktion
     */
 function execCommand(command, cwd, maxBuffer, cb) {
-    let execOpts = {};
-    if (cwd) {
-        execOpts.cwd = cwd;
-    }
+  let execOpts = {};
+  if (cwd) {
+    execOpts.cwd = cwd;
+  }
 
-    if (maxBuffer) {
-        execOpts.maxBuffer = maxBuffer;
-    }
+  if (maxBuffer) {
+    execOpts.maxBuffer = maxBuffer;
+  }
 
-    // console.log('ops = ', execOpts);
+  // console.log('ops = ', execOpts);
 
-    exec(command, execOpts, function (err, stdout, stderr) {
-        console.log(stdout);
-        console.log(stderr);
-        cb(err);
-    });
+  exec(command, execOpts, function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
 }
 
 
@@ -49,63 +49,67 @@ function execCommand(command, cwd, maxBuffer, cb) {
  * Common build
  */
 gulp.task('update-fluxgate-common', function (cb) {
-    //execCommand('npm uninstall --save @fluxgate/common', 'common', null, cb);
-    execCommand('npm uninstall --save @fluxgate/common && npm install --save @fluxgate/common', '.', null, cb);
+  //execCommand('npm uninstall --save @fluxgate/common', 'common', null, cb);
+  execCommand('npm uninstall --save @fluxgate/common && npm install --save @fluxgate/common', '.', null, cb);
 })
 
 gulp.task('really-clean', ['clean'], function (cb) {
-    return del('node_modules');
+  return del('node_modules');
 })
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-    return del(['dist', 'build', 'aot', 'lib', 'dts', '**/*.ngfactory.ts', '**/*.ngsummary.json']);
+  return del(['dist', 'build', 'aot', 'lib', 'dts', '**/*.ngfactory.ts', '**/*.ngsummary.json']);
 })
 
 gulp.task('tslint', () => {
-    return gulp.src(['**/*.ts', '!**/*.d.ts', '!node_modules/**'])
-      .pipe(tslint())
-      .pipe(tslint.report());
+  return gulp.src(['**/*.ts', '!**/*.d.ts', '!node_modules/**'])
+    .pipe(tslint())
+    .pipe(tslint.report());
 });
 
 /**
  * kompiliert den Server
  */
 gulp.task('compile', function () {
-    var tsResult = gulp
-        .src('src/**/*.ts')
-        .pipe(sourcemaps.init()) // This means sourcemaps will be generated
-        .pipe(typescript(tscConfig.compilerOptions));
+  var tsResult = gulp
+    .src('src/**/*.ts')
+    .pipe(sourcemaps.init()) // This means sourcemaps will be generated
+    .pipe(typescript(tscConfig.compilerOptions));
 
-    return merge([
-        tsResult.dts.pipe(
-            gulp.dest('build/dts')
-        ),
-        tsResult.js.pipe(
-            sourcemaps.write('.', {
-                sourceRoot: '.',
-                includeContent: true
-            }))
-            .pipe(gulp.dest('build/src')),
-    ]);
+  return merge([
+    tsResult.dts.pipe(
+      gulp.dest('build/dts')
+    ),
+    tsResult.js.pipe(
+      sourcemaps.write('.', {
+        sourceRoot: '.',
+        includeContent: true
+      }))
+      .pipe(gulp.dest('build/src')),
+  ]);
 })
 
 gulp.task('ngc', () => {
-    return ngc('tsconfig.json');
+  return ngc('tsconfig.json');
 });
 
 //optional - use a tsconfig file
-gulp.task('test', function () {
-    //find test code - note use of 'base'
-    return gulp.src('./test/**/*.spec.ts', { base: '.' })
-        /*transpile*/
-        .pipe(typescript(tscConfig.compilerOptions))
-        /*flush to disk*/
-        .pipe(gulp.dest('build'))
-        /*execute tests*/
-        .pipe(mocha({
-            reporter: 'spec'
-        }));
+gulp.task('test', function (cb) {
+
+  // TODO:
+  execCommand('ng test --single-run', '.', null, cb);
+
+  // //find test code - note use of 'base'
+  // return gulp.src('./test/**/*.spec.ts', { base: '.' })
+  //   /*transpile*/
+  //   .pipe(typescript(tscConfig.compilerOptions))
+  //   /*flush to disk*/
+  //   .pipe(gulp.dest('build'))
+  //   /*execute tests*/
+  //   .pipe(mocha({
+  //     reporter: 'spec'
+  //   }));
 });
 
 
@@ -119,7 +123,7 @@ gulp.task('publish', ['default'], function (cb) {
 
 
 gulp.task('bundle', function (cb) {
-    execCommand('webpack', '.', null, cb);
+  execCommand('webpack', '.', null, cb);
 })
 
 
