@@ -15,11 +15,11 @@ const typescript = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
 const mocha = require('gulp-mocha');
-const tscConfig = require('./tsconfig.json');
+const tscConfig = require('./src/tsconfig.app.json');
 
 /**
     * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
-    * 
+    *
     * command      - der Kommandostring (z.B. 'gulp clean')
     * cwd          - das Arbeitsverzeichnis (z.B. 'client')
     * maxBuffer    - die Größe des Puffers für Ausgaben
