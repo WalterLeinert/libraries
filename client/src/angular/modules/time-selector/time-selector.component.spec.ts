@@ -1,12 +1,9 @@
-import { Component, Injectable, Injector } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/primeng';
 
 import { Store } from '@fluxgate/common';
-
-import { AppStore } from '../../../redux/app-store';
 import { AppInjector } from '../../services/appInjector.service';
 import { MessageServiceModule } from '../../services/message.service';
 
