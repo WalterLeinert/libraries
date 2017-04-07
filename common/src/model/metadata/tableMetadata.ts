@@ -1,5 +1,6 @@
 import { Funktion } from '../../base/objectType';
-import { Dictionary } from '../../types';
+import { Dictionary } from '../../types/dictionary';
+import { Types } from '../../types/types';
 import { Assert } from '../../util/assert';
 import { EnumTableOptions } from '../decorator/model/enumTableOptions';
 import { TableOptions } from '../decorator/model/tableOptions.interface';
@@ -18,6 +19,7 @@ export class TableMetadata {
   private propertyMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   private _primaryKeyColumn: ColumnMetadata;
+  private _versionColumn: ColumnMetadata;
   private _service: Funktion;
 
 
@@ -48,6 +50,16 @@ export class TableMetadata {
     if (metadata.options.primary) {
       this._primaryKeyColumn = metadata;
     }
+  }
+
+
+  public setVersion(propertyName: string) {
+    Assert.notNullOrEmpty(propertyName);
+    Assert.that(!Types.isPresent(this._versionColumn),
+      `Version darf nur einmal gesetzt sein: bereits gesetzt für ${this._versionColumn.propertyName}`);
+
+    const metadata = this.getColumnMetadataByProperty(propertyName);
+    this._versionColumn = metadata;
   }
 
 
@@ -179,6 +191,12 @@ export class TableMetadata {
     return this._primaryKeyColumn;
   }
 
+  /**
+   * Liefert die Version Column oder undefined
+   */
+  public get versionColumn(): ColumnMetadata {
+    return this._versionColumn;
+  }
 
   /**
    * Registriert den zugehörigen Service (Class/Constructor Function)

@@ -12,7 +12,6 @@ import { Utility } from '../util/utility';
 // import { Mandant } from './mandant';
 import { Role, UserRoleId } from './role';
 import { IUser } from './user.interface';
-import { IVersionedEntity } from './versioned-entity.interface';
 
 
 /**

@@ -22,7 +22,7 @@ import { ValidationMetadata } from './validationMetadata';
 /**
  * Verwaltet Metadaten zu Modellklassen und Attribute, die über die Decorators
  * @see{Table} oder @see{Column} annotiert wurden.
- * 
+ *
  * @export
  * @class MetadataStorage
  */
@@ -37,15 +37,16 @@ export class MetadataStorage {
   private tableColumnDict: Dictionary<string, ColumnMetadata[]> = new Dictionary<string, ColumnMetadata[]>();
   private tableEnumDict: Dictionary<string, Array<EnumMetadata<any, any, any>>> =
   new Dictionary<string, Array<EnumMetadata<any, any, any>>>();
+  private tableVersionDict: Dictionary<string, string> = new Dictionary<string, string>();
 
   private tableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
   private dbTableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
 
   /**
    * fügt eine neue {TableMetadata} hinzu.
-   * 
+   *
    * @param {TableMetadata} metadata
-   * 
+   *
    * @memberOf MetadataStorage
    */
   public addTableMetadata(metadata: TableMetadata) {
@@ -134,6 +135,10 @@ export class MetadataStorage {
             log.info(`Table ${metadata.options.name}: no primary key column`);
           }
 
+          if (this.tableVersionDict.containsKey(targetName)) {
+            metadata.setVersion(this.tableVersionDict.get(targetName));
+          }
+
           this.tableDict.set(targetName, metadata);
           this.dbTableDict.set(metadata.options.name, metadata);
         }
@@ -143,9 +148,9 @@ export class MetadataStorage {
 
   /**
    * Fügt eine neue @see{ColumnMetadata} hinzu.
-   * 
+   *
    * @param {ColumnMetadata} metadata
-   * 
+   *
    * @memberOf MetadataStorage
    */
   public addColumnMetadata(metadata: ColumnMetadata) {
@@ -161,11 +166,16 @@ export class MetadataStorage {
   }
 
 
+  public setVersion(target: Funktion, propertyName: string) {
+    this.tableVersionDict.set(target.name, propertyName);
+  }
+
+
   /**
    * Fügt eine neue @see{validationMetadata} hinzu.
-   * 
+   *
    * @param {ValidationMetadata} metadata
-   * 
+   *
    * @memberOf MetadataStorage
    */
   public addValidationMetadata(metadata: ValidationMetadata) {
@@ -195,10 +205,10 @@ export class MetadataStorage {
 
   /**
    * Liefert für das angegebene @param{target} (z.B. Modellklasse 'Artikel') die Metadaten oder null.
-   * 
+   *
    * @param {Function} target
    * @returns {TableMetadata}
-   * 
+   *
    * @memberOf MetadataStorage
    */
   public findTableMetadata(target: Funktion | string): TableMetadata {
@@ -214,10 +224,10 @@ export class MetadataStorage {
   /**
    * Liefert für den angegebenen Tabellennamen @param{tableName} (z.B. Modellklasse 'Artikel' -> 'artikel')
    * die Metadaten oder null.
-   * 
+   *
    * @param {string} tableName
    * @returns {TableMetadata}
-   * 
+   *
    * @memberOf MetadataStorage
    */
   public findTableMetadataByDbTable(tableName: string): TableMetadata {
@@ -246,7 +256,7 @@ export class MetadataStorage {
 
   /**
    * Liefert die Singleton-Instanz.
-   * 
+   *
    * @readonly
    * @static
    * @type {MetadataStorage}

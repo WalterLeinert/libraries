@@ -8,7 +8,6 @@ import { Validators } from '../model/validation/validators';
 
 // import { Mandant } from './mandant';
 import { IRole } from './role.interface';
-import { IVersionedEntity } from './versioned-entity.interface';
 
 /**
  * Werte der Role-Ids in der DB (z.Zt.)
