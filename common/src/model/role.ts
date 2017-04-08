@@ -1,6 +1,7 @@
 import { AppRegistry } from '../base/appRegistry';
 import { EnumHelper } from '../base/enumHelper';
 import { Funktion } from '../base/objectType';
+import { Client } from '../model/decorator/model/client';
 import { Column } from '../model/decorator/model/column';
 import { Table } from '../model/decorator/model/table';
 import { Validation } from '../model/decorator/model/validation';
@@ -62,6 +63,7 @@ export class Role implements IRole {
   @Validation([
     Validators.required
   ])
+  @Client()
   @Column({ name: 'id_mandant' })
   public id_mandant?: number;   // = Mandant.FIRST_ID;
 

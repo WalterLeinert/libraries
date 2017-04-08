@@ -1,3 +1,4 @@
+export * from './client';
 export * from './column';
 export * from './columnOptions';
 export * from './enum';

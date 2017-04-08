@@ -38,6 +38,7 @@ export class MetadataStorage {
   private tableEnumDict: Dictionary<string, Array<EnumMetadata<any, any, any>>> =
   new Dictionary<string, Array<EnumMetadata<any, any, any>>>();
   private tableVersionDict: Dictionary<string, string> = new Dictionary<string, string>();
+  private tableClientDict: Dictionary<string, string> = new Dictionary<string, string>();
 
   private tableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
   private dbTableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
@@ -139,6 +140,10 @@ export class MetadataStorage {
             metadata.setVersion(this.tableVersionDict.get(targetName));
           }
 
+          if (this.tableClientDict.containsKey(targetName)) {
+            metadata.setClient(this.tableClientDict.get(targetName));
+          }
+
           this.tableDict.set(targetName, metadata);
           this.dbTableDict.set(metadata.options.name, metadata);
         }
@@ -170,6 +175,9 @@ export class MetadataStorage {
     this.tableVersionDict.set(target.name, propertyName);
   }
 
+  public setClient(target: Funktion, propertyName: string) {
+    this.tableClientDict.set(target.name, propertyName);
+  }
 
   /**
    * Fügt eine neue @see{validationMetadata} hinzu.

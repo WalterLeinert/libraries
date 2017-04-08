@@ -20,6 +20,7 @@ export class TableMetadata {
   private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   private _primaryKeyColumn: ColumnMetadata;
   private _versionColumn: ColumnMetadata;
+  private _clientColumn: ColumnMetadata;
   private _service: Funktion;
 
 
@@ -61,6 +62,17 @@ export class TableMetadata {
     const metadata = this.getColumnMetadataByProperty(propertyName);
     this._versionColumn = metadata;
   }
+
+
+  public setClient(propertyName: string) {
+    Assert.notNullOrEmpty(propertyName);
+    Assert.that(!Types.isPresent(this._clientColumn),
+      `Client darf nur einmal gesetzt sein: bereits gesetzt für ${this._clientColumn.propertyName}`);
+
+    const metadata = this.getColumnMetadataByProperty(propertyName);
+    this._clientColumn = metadata;
+  }
+
 
 
   /**
@@ -197,6 +209,14 @@ export class TableMetadata {
   public get versionColumn(): ColumnMetadata {
     return this._versionColumn;
   }
+
+  /**
+   * Liefert die Client Column oder undefined
+   */
+  public get clientColumn(): ColumnMetadata {
+    return this._clientColumn;
+  }
+
 
   /**
    * Registriert den zugehörigen Service (Class/Constructor Function)

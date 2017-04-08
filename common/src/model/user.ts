@@ -1,6 +1,7 @@
 import { AppRegistry } from '../base/appRegistry';
 import { Funktion } from '../base/objectType';
 import { StringBuilder } from '../base/stringBuilder';
+import { Client } from '../model/decorator/model/client';
 import { Column } from '../model/decorator/model/column';
 import { Enum } from '../model/decorator/model/enum';
 import { Table } from '../model/decorator/model/table';
@@ -87,6 +88,7 @@ export class User implements IUser {
   @Validation([
     Validators.required
   ])
+  @Client()
   @Column({ name: 'id_mandant' })
   public id_mandant?: number;   // = Mandant.FIRST_ID;
 
