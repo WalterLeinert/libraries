@@ -1,10 +1,9 @@
-import { IEntity } from './entity.interface';
-import { IVersionedEntity } from './versioned-entity.interface';
+import { IFlxEntity } from './flx-entity.interface';
 
 /**
  * Interface für User
  */
-export interface IUser extends IEntity<number>, IVersionedEntity {
+export interface IUser extends IFlxEntity<number> {
   /**
    * Der Benutzername (login)
    */

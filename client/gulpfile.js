@@ -17,6 +17,8 @@ const merge = require('merge2');
 const mocha = require('gulp-mocha');
 const tscConfig = require('./src/tsconfig.app.json');
 
+const bufferSize = 4096 * 500;
+
 /**
     * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
     *
@@ -50,7 +52,7 @@ function execCommand(command, cwd, maxBuffer, cb) {
  */
 gulp.task('update-fluxgate-common', function (cb) {
   //execCommand('npm uninstall --save @fluxgate/common', 'common', null, cb);
-  execCommand('npm uninstall --save @fluxgate/common && npm install --save @fluxgate/common', '.', null, cb);
+  execCommand('npm uninstall --save @fluxgate/common && npm install --save @fluxgate/common', '.', bufferSize, cb);
 })
 
 gulp.task('really-clean', ['clean'], function (cb) {
@@ -98,7 +100,7 @@ gulp.task('ngc', () => {
 gulp.task('test', function (cb) {
 
   // TODO:
-  execCommand('ng test --single-run', '.', null, cb);
+  execCommand('ng test --single-run', '.', bufferSize, cb);
 
   // //find test code - note use of 'base'
   // return gulp.src('./test/**/*.spec.ts', { base: '.' })
@@ -114,20 +116,22 @@ gulp.task('test', function (cb) {
 
 
 
-gulp.task('publish', ['default'], function (cb) {
+gulp.task('build-test', gulpSequence('default', 'test'));
+
+gulp.task('publish', ['build-test'], function (cb) {
   const force = argv.f ? argv.f : '';
   const forceSwitch = (force ? '-f' : '');
 
-  execCommand('npm publish ' + forceSwitch, '.', null, cb);
+  execCommand('npm publish ' + forceSwitch, '.', bufferSize, cb);
 });
 
 
 gulp.task('bundle', function (cb) {
-  execCommand('webpack', '.', null, cb);
+  execCommand('webpack', '.', bufferSize, cb);
 })
 
 
 gulp.task('update-fluxgate', ['update-fluxgate-common'])
 
 /* single command to hook into VS Code */
-gulp.task('default', gulpSequence('clean', 'ngc', 'test'));
+gulp.task('default', gulpSequence('clean', 'ngc'));

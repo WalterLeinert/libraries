@@ -20,7 +20,7 @@ const tsProject = tsc.createProject('tsconfig.json');
 
 /**
     * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
-    * 
+    *
     * command      - der Kommandostring (z.B. 'gulp clean')
     * cwd          - das Arbeitsverzeichnis (z.B. 'client')
     * maxBuffer    - die Größe des Puffers für Ausgaben
@@ -109,7 +109,9 @@ gulp.task('test', ['compile-test'], function () {
 });
 
 
-gulp.task('publish', ['default'], function (cb) {
+gulp.task('build-test', gulpSequence('default', 'test'));
+
+gulp.task('publish', ['build-test'], function (cb) {
   const force = argv.f ? argv.f : '';
   const forceSwitch = (force ? '-f' : '');
 

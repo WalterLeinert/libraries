@@ -1,10 +1,9 @@
-import { IEntity } from './entity.interface';
-import { IVersionedEntity } from './versioned-entity.interface';
+import { IFlxEntity } from './flx-entity.interface';
 
 /**
  * Interface für User Rollen
  */
-export interface IRole extends IEntity<number>, IVersionedEntity {
+export interface IRole extends IFlxEntity<number> {
   /**
    * Rollenname
    */

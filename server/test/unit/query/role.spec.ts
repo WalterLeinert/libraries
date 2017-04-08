@@ -158,7 +158,8 @@ class RoleTest extends KnexTest {
       name: `Test-Rolename-${id}`,
       description: `Test-Roledescription-${id}`,
       id_mandant: 1,
-      deleted: false
+      deleted: false,
+      __version: 0
     };
 
     return role;
