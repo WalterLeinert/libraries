@@ -109,7 +109,7 @@ gulp.task('test', ['compile-test'], function () {
 });
 
 
-gulp.task('build-test', gulpSequence('default', 'test'));
+gulp.task('build-test', gulpSequence('default'/*, 'test'*/));
 
 gulp.task('publish', ['build-test'], function (cb) {
   const force = argv.f ? argv.f : '';
