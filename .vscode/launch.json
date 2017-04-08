@@ -24,7 +24,8 @@
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": null,
             "outFiles": [
-                "${workspaceRoot}/build/**/*.js"
+              "${workspaceRoot}/common/dist/node/src/**/*.js",
+              "${workspaceRoot}/build/**/*.js"
             ],
             "sourceMaps": true,
             "stopOnEntry": false,
