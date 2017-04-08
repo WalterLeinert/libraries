@@ -7,3 +7,4 @@ export * from './enumTableOptions.interface';
 export * from './table';
 export * from './tableOptions.interface';
 export * from './validation';
+export * from './version';
