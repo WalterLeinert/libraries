@@ -57,7 +57,7 @@ export class TableMetadata {
   public setVersion(propertyName: string) {
     Assert.notNullOrEmpty(propertyName);
     Assert.that(!Types.isPresent(this._versionColumn),
-      `Version darf nur einmal gesetzt sein: bereits gesetzt für ${this._versionColumn.propertyName}`);
+      `Version darf nur einmal gesetzt sein: bereits gesetzt für ${propertyName}`);
 
     const metadata = this.getColumnMetadataByProperty(propertyName);
     this._versionColumn = metadata;
@@ -67,7 +67,7 @@ export class TableMetadata {
   public setClient(propertyName: string) {
     Assert.notNullOrEmpty(propertyName);
     Assert.that(!Types.isPresent(this._clientColumn),
-      `Client darf nur einmal gesetzt sein: bereits gesetzt für ${this._clientColumn.propertyName}`);
+      `Client darf nur einmal gesetzt sein: bereits gesetzt für ${propertyName}`);
 
     const metadata = this.getColumnMetadataByProperty(propertyName);
     this._clientColumn = metadata;
