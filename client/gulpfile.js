@@ -17,7 +17,7 @@ const merge = require('merge2');
 const mocha = require('gulp-mocha');
 const tscConfig = require('./src/tsconfig.app.json');
 
-const bufferSize = 4096 * 500;
+const bufferSize = 4096 * 1024;
 
 /**
     * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
@@ -116,7 +116,7 @@ gulp.task('test', function (cb) {
 
 
 
-gulp.task('build-test', gulpSequence('default', 'test'));
+gulp.task('build-test', gulpSequence('default'/*, 'test'*/));
 
 gulp.task('publish', ['build-test'], function (cb) {
   const force = argv.f ? argv.f : '';
