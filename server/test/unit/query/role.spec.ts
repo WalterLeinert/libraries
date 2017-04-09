@@ -18,7 +18,7 @@ chai.should();
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { IRole, Role } from '@fluxgate/common';
+import { Clone, IRole, Role, ServiceResult, Status } from '@fluxgate/common';
 import { RoleService } from '../../../src/ts-express-decorators-flx/services';
 import { BaseService } from '../../../src/ts-express-decorators-flx/services/base.service';
 
@@ -29,15 +29,21 @@ import { KnexTest } from '../knexTest.spec';
 class RoleTest extends KnexTest {
   protected static readonly logger = getLogger(RoleTest);
 
-  private static readonly FIRST_ROLE_ID = 1000;
   private static roleService: BaseService<Role, number>;
-
+  private static maxRoleId: number;
 
   public static before() {
     using(new XLog(RoleTest.logger, levels.INFO, 'static.before'), (log) => {
       super.before();
 
       RoleTest.roleService = KnexTest.createService(RoleService);
+
+      // max. bisherige id ermitteln
+      RoleTest.roleService.find()
+        .then((roles) => {
+          const ids = roles.map((item) => item.id);
+          RoleTest.maxRoleId = Math.max(...ids);
+        });
     });
   }
 
@@ -47,7 +53,7 @@ class RoleTest extends KnexTest {
       // alle Testrollen löschen
       RoleTest.roleService.queryKnex(
         RoleTest.roleService.fromTable().where(RoleTest.roleService.idColumnName, '>=',
-          RoleTest.FIRST_ROLE_ID).delete())
+          this.maxRoleId + 1).delete())
         .then((rowsAffected) => {
           super.after();
         });
@@ -63,7 +69,6 @@ class RoleTest extends KnexTest {
   public before() {
     using(new XLog(RoleTest.logger, levels.INFO, 'before'), (log) => {
       super.before();
-      // ok
     });
   }
 
@@ -75,9 +80,12 @@ class RoleTest extends KnexTest {
       .to.become(3);
   }
 
-  @test 'should create new role with id 1000'() {
-    const role = this.createRole(RoleTest.FIRST_ROLE_ID);
-    return expect(RoleTest.roleService.create(role)).to.become(role);
+  @test 'should create new role'() {
+    const id = RoleTest.maxRoleId + 1;
+
+    const role = this.createRole(id);
+    const expectedRole = this.createExpectedRole(id);
+    return expect(RoleTest.roleService.create(role)).to.become(expectedRole);
   }
 
   @test 'should now find 4 roles'() {
@@ -87,22 +95,29 @@ class RoleTest extends KnexTest {
   }
 
   @test 'should find new role'() {
-    const role = this.createRole(RoleTest.FIRST_ROLE_ID);
-    return expect(RoleTest.roleService.findById(RoleTest.FIRST_ROLE_ID))
-      .to.become(role);
+    const expectedRole = this.createExpectedRole(RoleTest.maxRoleId + 1);
+    return expect(RoleTest.roleService.findById(expectedRole.id))
+      .to.become(expectedRole);
   }
 
   @test 'should update new role'() {
-    const role = this.createRole(RoleTest.FIRST_ROLE_ID);
+    const id = RoleTest.maxRoleId + 1;
+
+    const role = this.createExpectedRole(id);
     role.name = role.name + '-updated';
     role.description = role.description + '-updated';
+
+    const expectedRole = Clone.clone(role);
+
     return expect(RoleTest.roleService.update(role))
-      .to.become(role);
+      .to.become(expectedRole);
   }
 
-  @test 'should create new role 1001'() {
-    const role = this.createRole(RoleTest.FIRST_ROLE_ID + 1);
-    return expect(RoleTest.roleService.create(role)).to.become(role);
+  @test 'should create new role (2)'() {
+    const id = RoleTest.maxRoleId + 2;
+    const role = this.createRole(id);
+    const expectedRole = this.createExpectedRole(id);
+    return expect(RoleTest.roleService.create(role)).to.become(expectedRole);
   }
 
   @test 'should now find 5 roles'() {
@@ -112,9 +127,10 @@ class RoleTest extends KnexTest {
   }
 
   @test 'should query roles'() {
+    const id = RoleTest.maxRoleId + 1;
     return expect(RoleTest.roleService.queryKnex(
       RoleTest.roleService.fromTable()
-        .where(RoleTest.roleService.idColumnName, '>=', RoleTest.FIRST_ROLE_ID))
+        .where(RoleTest.roleService.idColumnName, '>=', id))
       .then((roles) => roles.length))
       .to.become(2);
   }
@@ -139,9 +155,11 @@ class RoleTest extends KnexTest {
 
 
   @test 'should delete test role'() {
-    const roleIdToDelete = RoleTest.FIRST_ROLE_ID;
+    const roleIdToDelete = RoleTest.maxRoleId + 1;
+    const expected = new ServiceResult(roleIdToDelete, Status.Ok);
+
     return expect(RoleTest.roleService.delete(roleIdToDelete))
-      .to.become(roleIdToDelete);
+      .to.become(expected);
   }
 
   @test 'should now find 4 roles again'() {
@@ -150,11 +168,9 @@ class RoleTest extends KnexTest {
       .to.become(4);
   }
 
-
-
   private createRole(id: number): IRole {
     const role: IRole = {
-      id: id,
+      id: undefined,
       name: `Test-Rolename-${id}`,
       description: `Test-Roledescription-${id}`,
       id_mandant: 1,
@@ -162,6 +178,12 @@ class RoleTest extends KnexTest {
       __version: 0
     };
 
+    return role;
+  }
+
+  private createExpectedRole(id: number): IRole {
+    const role: IRole = this.createRole(id);
+    role.id = id;
     return role;
   }
 
