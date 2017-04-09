@@ -57,7 +57,7 @@ export class Role implements IRole {
   @Column({ name: 'role_description', displayName: 'Description' })
   public description: string;
 
-  @Column({ name: 'deleted' })
+  @Column({ name: 'role_deleted' })
   public deleted?: boolean;
 
   @Validation([
@@ -67,7 +67,7 @@ export class Role implements IRole {
   @Column({ name: 'id_mandant' })
   public id_mandant?: number;   // = Mandant.FIRST_ID;
 
-  @Column({ name: 'role_version', displayName: 'Version' })
+  @Column({ name: 'role_version', displayName: 'Version', default: 0 })
   public __version: number;
 
 

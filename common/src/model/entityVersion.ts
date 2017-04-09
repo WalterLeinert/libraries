@@ -8,11 +8,11 @@ import { IVersionedEntity } from './versioned-entity.interface';
  */
 @Table({ name: EntityVersion.TABLE_NAME })
 export class EntityVersion implements IEntity<string>, IVersionedEntity {
-  public static readonly TABLE_NAME = 'entity_version';
+  public static readonly TABLE_NAME = 'entityversion';
 
-  @Column({ name: 'entity_version_id', primary: true, displayName: 'EntityVersionId' })
+  @Column({ name: 'entityversion_id', primary: true, displayName: 'EntityVersionId' })
   public id: string;
 
-  @Column({ name: 'entity_version_version', displayName: 'Version' })
+  @Column({ name: 'entityversion_version', displayName: 'Version' })
   public __version: number;
 }

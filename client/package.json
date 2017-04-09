@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/client",
-  "version": "2.0.6-beta.86",
+  "version": "2.0.6-beta.87",
   "description": "Fluxgate Client-Library ",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -60,7 +60,7 @@
     "@angular/platform-browser-dynamic": "^2.4.9",
     "@angular/platform-server": "^2.4.9",
     "@angular/router": "^3.4.9",
-    "@fluxgate/common": "^2.0.6-beta.11",
+    "@fluxgate/common": "^2.0.6-beta.12",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",

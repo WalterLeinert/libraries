@@ -34,23 +34,23 @@ export class User implements IUser {
   @Column({ name: 'user_id', primary: true, generated: true, displayName: 'Id' })
   public id: number;
 
-  @Column({ name: 'firstname', nullable: true, displayName: 'Firstname' })
+  @Column({ name: 'user_firstname', nullable: true, displayName: 'Firstname' })
   public firstname?: string;
 
-  @Column({ name: 'lastname', nullable: true, displayName: 'Lastname' })
+  @Column({ name: 'user_lastname', nullable: true, displayName: 'Lastname' })
   public lastname?: string;
 
   @Validation([
     Validators.required
   ])
-  @Column({ name: 'username', displayName: 'Username' })
+  @Column({ name: 'user_username', displayName: 'Username' })
   public username: string;
 
   @Validation([
     Validators.required,
     Validators.email
   ])
-  @Column({ name: 'email', nullable: true, displayName: 'Email' })
+  @Column({ name: 'user_email', nullable: true, displayName: 'Email' })
   public email?: string;
 
   @Validation([
@@ -64,10 +64,10 @@ export class User implements IUser {
     Validators.required,
     Validators.range({ min: 8 })
   ])
-  @Column({ name: 'password', displayName: 'Password' })
+  @Column({ name: 'user_password', displayName: 'Password' })
   public password: string;
 
-  @Column({ name: 'password_salt' })
+  @Column({ name: 'user_password_salt' })
   public password_salt: string;
 
 
@@ -82,7 +82,7 @@ export class User implements IUser {
     return sb.toString();
   }
 
-  @Column({ name: 'deleted' })
+  @Column({ name: 'user_deleted' })
   public deleted?: boolean;
 
   @Validation([
@@ -92,7 +92,7 @@ export class User implements IUser {
   @Column({ name: 'id_mandant' })
   public id_mandant?: number;   // = Mandant.FIRST_ID;
 
-  @Column({ name: 'user_version', displayName: 'Version' })
+  @Column({ name: 'user_version', displayName: 'Version', default: 0 })
   public __version: number;
 
 
