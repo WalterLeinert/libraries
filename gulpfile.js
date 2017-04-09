@@ -22,7 +22,7 @@ const bufferSize = 4096 * 500;
 
 /**
  * Ausführen eines Kommandos (in gulp Skripts)
- * 
+ *
  * command      - der Kommandostring (z.B. 'gulp clean')
  * cwd          - das Arbeitsverzeichnis (z.B. 'client')
  * maxBuffer    - die Größe des Puffers für Ausgaben
@@ -65,7 +65,7 @@ gulp.copy = function (src, dest) {
  * Common build
  */
 gulp.task('lint-common', function (cb) {
-  execCommand('gulp tslint', 'common', null, cb);
+  execCommand('gulp tslint', 'common', bufferSize, cb);
 })
 
 gulp.task('really-clean-common', ['clean-common'], function (cb) {
@@ -73,18 +73,22 @@ gulp.task('really-clean-common', ['clean-common'], function (cb) {
 })
 
 gulp.task('clean-common', function (cb) {
-  execCommand('gulp clean', 'common', null, cb);
+  execCommand('gulp clean', 'common', bufferSize, cb);
 })
 
 gulp.task('build-common', function (cb) {
   execCommand('gulp', 'common', bufferSize, cb);
 })
 
-gulp.task('publish-common', function (cb) {
-  execCommand('gulp publish -f', 'common', null, cb);
+gulp.task('test-common', function (cb) {
+  execCommand('gulp test', 'common', bufferSize, cb);
 })
 
-gulp.task('build-all-common', gulpSequence('clean-common', 'build-common', 'publish-common'))
+gulp.task('publish-common', function (cb) {
+  execCommand('gulp publish -f', 'common', bufferSize, cb);
+})
+
+gulp.task('build-all-common', gulpSequence('clean-common', 'build-common', 'test-common', 'publish-common'))
 
 
 
@@ -92,11 +96,11 @@ gulp.task('build-all-common', gulpSequence('clean-common', 'build-common', 'publ
  * Server build
  */
 gulp.task('update-fluxgate-server', function (cb) {
- execCommand('gulp update-fluxgate-common', 'server', null, cb);
+ execCommand('gulp update-fluxgate-common', 'server', bufferSize, cb);
 })
 
 gulp.task('lint-server', function (cb) {
-  execCommand('gulp tslint', 'server', null, cb);
+  execCommand('gulp tslint', 'server', bufferSize, cb);
 })
 
 gulp.task('really-clean-server', ['clean-server'], function (cb) {
@@ -104,18 +108,22 @@ gulp.task('really-clean-server', ['clean-server'], function (cb) {
 })
 
 gulp.task('clean-server', function (cb) {
-  execCommand('gulp clean', 'server', null, cb);
+  execCommand('gulp clean', 'server', bufferSize, cb);
 })
 
 gulp.task('build-server', function (cb) {
   execCommand('gulp', 'server', bufferSize, cb);
 })
 
-gulp.task('publish-server', function (cb) {
-  execCommand('gulp publish -f', 'server', null, cb);
+gulp.task('test-server', function (cb) {
+  execCommand('gulp test', 'server', bufferSize, cb);
 })
 
-gulp.task('build-all-server', gulpSequence('clean-server', 'update-fluxgate-server', 'build-server', 'publish-server'))
+gulp.task('publish-server', function (cb) {
+  execCommand('gulp publish -f', 'server', bufferSize, cb);
+})
+
+gulp.task('build-all-server', gulpSequence('clean-server', 'update-fluxgate-server', 'build-server', /*'test-server',*/ 'publish-server'))
 
 
 
@@ -123,11 +131,11 @@ gulp.task('build-all-server', gulpSequence('clean-server', 'update-fluxgate-serv
  * Client Tasks
  */
 gulp.task('update-fluxgate-client', function (cb) {
- execCommand('gulp update-fluxgate-common', 'client', null, cb);
+ execCommand('gulp update-fluxgate-common', 'client', bufferSize, cb);
 })
 
 gulp.task('lint-client', function (cb) {
-  execCommand('gulp tslint', 'client', null, cb);
+  execCommand('gulp tslint', 'client', bufferSize, cb);
 })
 
 gulp.task('really-clean-client', ['clean-client'], function (cb) {
@@ -135,7 +143,11 @@ gulp.task('really-clean-client', ['clean-client'], function (cb) {
 })
 
 gulp.task('clean-client', function (cb) {
-  execCommand('gulp clean', 'client', null, cb);
+  execCommand('gulp clean', 'client', bufferSize, cb);
+})
+
+gulp.task('test-client', function (cb) {
+  execCommand('gulp test', 'client', bufferSize, cb);
 })
 
 gulp.task('build-client', function (cb) {
@@ -143,10 +155,10 @@ gulp.task('build-client', function (cb) {
 })
 
 gulp.task('publish-client', function (cb) {
-  execCommand('gulp publish -f', 'client', null, cb);
+  execCommand('gulp publish -f', 'client', bufferSize, cb);
 })
 
-gulp.task('build-all-client', gulpSequence('clean-client', 'update-fluxgate-client', 'build-client', 'publish-client'))
+gulp.task('build-all-client', gulpSequence('clean-client', 'update-fluxgate-client', 'build-client', 'test-client', 'publish-client'))
 
 
 
@@ -155,15 +167,15 @@ gulp.task('build-all-client', gulpSequence('clean-client', 'update-fluxgate-clie
  */
 
 gulp.task('install-common', function (cb) {
-  execCommand('npm install', 'common', null, cb);
+  execCommand('npm install', 'common', bufferSize, cb);
 })
 
 gulp.task('install-client', function (cb) {
-  execCommand('npm install', 'client', null, cb);
+  execCommand('npm install', 'client', bufferSize, cb);
 })
 
 gulp.task('install-server', function (cb) {
-  execCommand('npm install', 'server', null, cb);
+  execCommand('npm install', 'server', bufferSize, cb);
 })
 
 
