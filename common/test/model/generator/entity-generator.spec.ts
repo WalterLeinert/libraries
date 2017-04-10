@@ -130,7 +130,7 @@ class EntityGeneratorTest {
   }
 
   @test 'should test remaining items(total: maxCount) + error for > maxCount'() {
-    for (let i = this.generator.currentId(); i < EntityGeneratorTest.MAX_ITEMS - 1; i++) {
+    for (let i = this.generator.currentId(); i < EntityGeneratorTest.MAX_ITEMS; i++) {
       const item = this.generator.createEntity<ArtikelGenerator>();
       expect(item).to.be.not.null;
       expect(item.id).to.be.undefined;

@@ -1,7 +1,5 @@
-import { InvalidOperationException } from '../../exceptions/invalidOperationException';
-
 export class SequenceGeneratorStrategy implements Iterator<number>  {
-  private index = 0;
+  private counter = 0;
 
   /**
    * Creates an instance of SequenceGeneratorStrategy.
@@ -16,21 +14,19 @@ export class SequenceGeneratorStrategy implements Iterator<number>  {
   }
 
   public next(): IteratorResult<number> {
-    const index = this.index++;
+    const counter = this.counter++;
 
-    if (this.index < this.count) {
+    if (counter < this.count) {
       return {
         done: false,
-        value: this.start + (index * this.increment)
+        value: this.start + (counter * this.increment)
       };
 
-    } else if (index === this.count) {
+    } else if (counter === this.count) {
       return {
         done: true,
         value: undefined
       };
-    } else {
-      throw new InvalidOperationException(`no next value: index = ${this.index} -- count = ${this.count}`);
     }
   }
 }

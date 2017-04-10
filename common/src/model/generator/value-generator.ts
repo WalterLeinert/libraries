@@ -1,3 +1,4 @@
+import { InvalidOperationException } from '../../exceptions/invalidOperationException';
 import { IValueGenerator } from './value-generator.interface';
 
 export abstract class ValueGenerator<T> implements IterableIterator<T>, IValueGenerator {
@@ -24,6 +25,9 @@ export abstract class ValueGenerator<T> implements IterableIterator<T>, IValueGe
   }
 
   public current(): T {
+    if (this._current.done) {
+      throw new InvalidOperationException(`no current value: max iterations exceeded`);
+    }
     return this._current.value;
   }
 

@@ -1,5 +1,5 @@
 export class RandomGeneratorStrategy implements Iterator<number>  {
-  private index = 0;
+  private counter = 0;
 
   /**
    * Creates an instance of RandomGeneratorStrategy.
@@ -13,14 +13,16 @@ export class RandomGeneratorStrategy implements Iterator<number>  {
   }
 
   public next(): IteratorResult<number> {
-    if (this.index < this.count) {
+    const counter = this.counter++;
+
+    if (counter < this.count - 1) {
       const index = Math.floor(Math.random() * this.count);
       return {
         done: false,
         value: this.start + index
       };
 
-    } else {
+    } else if (counter === this.count - 1) {
       return {
         done: true,
         value: undefined

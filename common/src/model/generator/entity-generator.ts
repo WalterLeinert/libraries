@@ -10,6 +10,7 @@ import { XLog } from '../../diagnostics/xlog';
 
 import { Funktion } from '../../base/objectType';
 import { IToString } from '../../base/toString.interface';
+import { InvalidOperationException } from '../../exceptions/invalidOperationException';
 import { NotSupportedException } from '../../exceptions/notSupportedException';
 import { Dictionary } from '../../types/dictionary';
 import { Types } from '../../types/types';
@@ -119,7 +120,11 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
 
 
   public nextId(): TId {
-    return this.config.idGenerator.next().value;
+    const result = this.config.idGenerator.next();
+    if (result.done) {
+      throw new InvalidOperationException(`no next id: ${this.config.maxCount} ids generated`);
+    }
+    return result.value;
   }
 
   public currentId(): TId {
