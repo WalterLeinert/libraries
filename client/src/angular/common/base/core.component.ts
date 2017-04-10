@@ -23,7 +23,7 @@ import { IControlDisplayInfo } from '../../../base/displayConfiguration/controlD
 import { DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';
 import { AppStore } from '../../../redux/app-store';
-import { UserStore } from '../../modules/authentication/commands/user-store';
+import { UserStore } from '../../modules/authentication/redux/user-store';
 import { AppInjector } from '../../services/appInjector.service';
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';

@@ -12,7 +12,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
 // commands
-import { UserServiceRequests } from '../commands/user-service-requests';
+import { UserServiceRequests } from '../redux/user-service-requests';
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
@@ -31,7 +31,7 @@ import { RegisterGuardService } from '../register/register-guard.service';
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="username">Name</label>
       <div class="col-sm-5">
-        <input flxAutofocus type="text" class="form-control" formControlName="username" id="username" required 
+        <input flxAutofocus type="text" class="form-control" formControlName="username" id="username" required
           [(ngModel)]="username" name="username" placeholder="Username">
       </div>
     </div>
@@ -41,8 +41,8 @@ import { RegisterGuardService } from '../register/register-guard.service';
       <div class="col-sm-5">
         <input type="password" class="form-control" formControlName="password" id="password" required
           [(ngModel)]="password" name="password" placeholder="Password">
-      </div>    
-    </div> 
+      </div>
+    </div>
 
     <div class="form-group row">
       <div class="col-sm-5">
@@ -72,17 +72,17 @@ export class LoginComponent extends BaseComponent<PassportService> {
 
   /**
    * Creates an instance of LoginComponent.
-   * 
-   * Hinweis: Die Guard-Services @see{ChangePasswordGuardService} und 
+   *
+   * Hinweis: Die Guard-Services @see{ChangePasswordGuardService} und
    * @see{RegisterGuardService} werden hier injiziert, damit diese dann korrekt
    * über Änderungen des aktuellen Benutzers informiert werden.
-   * 
+   *
    * @param {Router} router
    * @param {NavigationService} navigationService
    * @param {PassportService} service
    * @param {ChangePasswordGuardService} changePasswordGuardService
    * @param {RegisterGuardService} registerGuardService
-   * 
+   *
    * @memberOf LoginComponent
    */
   constructor(private userServiceRequests: UserServiceRequests,

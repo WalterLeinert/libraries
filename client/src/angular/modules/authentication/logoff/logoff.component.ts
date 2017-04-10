@@ -12,7 +12,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 import { Types, User } from '@fluxgate/common';
 
 // commands
-import { UserServiceRequests } from '../commands/user-service-requests';
+import { UserServiceRequests } from '../redux/user-service-requests';
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';

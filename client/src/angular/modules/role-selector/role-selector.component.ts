@@ -8,8 +8,8 @@ import { ItemsFoundCommand, ServiceCommand } from '@fluxgate/common';
 
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
-import { RoleServiceRequests } from '../authentication/commands/role-service-requests';
-import { RoleStore } from '../authentication/commands/role-store';
+import { RoleServiceRequests } from '../authentication/redux/role-service-requests';
+import { RoleStore } from '../authentication/redux/role-store';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
 
 /**

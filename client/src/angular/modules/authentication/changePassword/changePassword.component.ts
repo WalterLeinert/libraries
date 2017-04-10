@@ -14,7 +14,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 import { Types } from '@fluxgate/common';
 
 // commands
-import { UserServiceRequests } from '../commands/user-service-requests';
+import { UserServiceRequests } from '../redux/user-service-requests';
 
 
 import { BaseComponent } from '../../../common/base/base.component';
@@ -35,7 +35,7 @@ import { PassportService } from '../passport.service';
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="password">Aktuelles Kennwort</label>
       <div class="col-sm-5">
-        <input flxAutofocus type="text" class="form-control" id="password" required 
+        <input flxAutofocus type="text" class="form-control" id="password" required
           [(ngModel)]="password" name="password" placeholder="Aktuelles Kennwort">
       </div>
     </div>
@@ -45,16 +45,16 @@ import { PassportService } from '../passport.service';
       <div class="col-sm-5">
         <input type="password" class="form-control" id="passwordNew" required
           [(ngModel)]="passwordNew" name="passwordNew" placeholder="Neues Kennwort">
-      </div>    
-    </div> 
+      </div>
+    </div>
 
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="passwordNewRepeated">Kennwort erneut eingeben</label>
       <div class="col-sm-5">
         <input type="password" class="form-control" id="passwordNewRepeated" required
           [(ngModel)]="passwordNewRepeated" name="passwordNewRepeated" placeholder="Kennwort erneut eingeben">
-      </div>    
-    </div> 
+      </div>
+    </div>
 
     <div class="form-group row">
       <div class="btn-group">

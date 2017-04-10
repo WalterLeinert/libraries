@@ -3,7 +3,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/primeng';
 
-import { Store } from '@fluxgate/common';
+import { ShortTime, Store } from '@fluxgate/common';
 import { AppInjector } from '../../services/appInjector.service';
 import { MessageServiceModule } from '../../services/message.service';
 
@@ -39,10 +39,12 @@ describe('TimeSelectorComponent', () => {
   }));
 
   // it(`should have as title 'app works!'`, async(() => {
-  //   const fixture = TestBed.createComponent(AppComponent);
+  //   const fixture = TestBed.createComponent(TimeSelectorComponent);
   //   const app = fixture.debugElement.componentInstance;
+  //   app.value = new ShortTime(10, 15);
   //   expect(app.title).toEqual('app works!');
   // }));
+
 
   // it('should render title in a h1 tag', async(() => {
   //   const fixture = TestBed.createComponent(AppComponent);
