@@ -1,3 +1,3 @@
-export * from './role-service-stub';
-export * from './service-stub';
-export * from './user-service-stub';
+export * from './role-service-fake';
+export * from './service-fake';
+export * from './user-service-fake';

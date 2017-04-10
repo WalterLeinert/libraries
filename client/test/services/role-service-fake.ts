@@ -1,31 +1,31 @@
 import { Injectable } from '@angular/core';
 
-import { IUser, User } from '@fluxgate/common';
+import { IRole, Role } from '@fluxgate/common';
 import { ConstantValueGenerator, EntityGenerator, NumberIdGenerator } from '@fluxgate/common';
 
 import { MetadataService } from '../../src/angular/services/metadata.service';
-import { ServiceStub } from './service-stub';
+import { ServiceFake } from './service-fake';
 
 
 /**
- * Simuliert den User-Service
+ * Simuliert den Role-Service
  *
  * @export
- * @class UserServiceStub
- * @extends {ServiceStub<IUser, number>}
+ * @class RoleServiceFake
+ * @extends {ServiceFake<IUser, number>}
  */
 @Injectable()
-export class UserServiceStub extends ServiceStub<IUser, number> {
+export class RoleServiceFake extends ServiceFake<IRole, number> {
   public static readonly ITEMS = 10;
   public static readonly MAX_ITEMS = 100;
 
   constructor(metadataService: MetadataService) {
-    super(User, metadataService,
-      new EntityGenerator<User, number>({
-        count: UserServiceStub.ITEMS,
-        maxCount: UserServiceStub.MAX_ITEMS,
-        tableMetadata: metadataService.findTableMetadata(User),
-        idGenerator: new NumberIdGenerator(UserServiceStub.MAX_ITEMS),
+    super(Role, metadataService,
+      new EntityGenerator<Role, number>({
+        count: RoleServiceFake.ITEMS,
+        maxCount: RoleServiceFake.MAX_ITEMS,
+        tableMetadata: metadataService.findTableMetadata(Role),
+        idGenerator: new NumberIdGenerator(RoleServiceFake.MAX_ITEMS),
         columns: {
           id_mandant: new ConstantValueGenerator(1),
           role: new ConstantValueGenerator(2),

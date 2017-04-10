@@ -17,8 +17,8 @@ import {
 import { MetadataService } from '../../src/angular/services/metadata.service';
 
 
-export abstract class ServiceStub<T extends IFlxEntity<TId>, TId extends IToString> implements IService {
-  protected static readonly logger = getLogger(ServiceStub);
+export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToString> implements IService {
+  protected static readonly logger = getLogger(ServiceFake);
 
   private _topic: string;
   private _tableMetadata: TableMetadata;
@@ -126,7 +126,7 @@ export abstract class ServiceStub<T extends IFlxEntity<TId>, TId extends IToStri
    * @memberOf Service
    */
   public query(query: IQuery): Observable<T[]> {
-    return using(new XLog(ServiceStub.logger, levels.INFO, 'query'), (log) => {
+    return using(new XLog(ServiceFake.logger, levels.INFO, 'query'), (log) => {
       Assert.notNull(query, 'query');
 
       log.error(`query terms not used.`);
