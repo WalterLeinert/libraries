@@ -12,12 +12,14 @@ import { Funktion } from '../../base/objectType';
 import { IToString } from '../../base/toString.interface';
 import { NotSupportedException } from '../../exceptions/notSupportedException';
 import { Dictionary } from '../../types/dictionary';
+import { Types } from '../../types/types';
 import { IFlxEntity } from '../flx-entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { MetadataStorage } from '../metadata/metadataStorage'
 import { TableMetadata } from '../metadata/tableMetadata';
 import { BooleanValueGenerator } from './boolean-value-generator';
 import { DateValueGenerator } from './date-value-generator';
+import { IEntityGeneratorConfig } from './entity-generator-config.interface';
 import { NumberValueGenerator } from './number-value-generator';
 import { SequenceGeneratorStrategy } from './sequence-generator-strategy';
 import { ShortTimeValueGenerator } from './shortTime-value-generator';
@@ -30,7 +32,17 @@ import { IValueGenerator } from './value-generator.interface';
 export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
   protected static readonly logger = getLogger(EntityGenerator);
 
+  private config: IEntityGeneratorConfig;
   private valueGeneratorDict: Dictionary<string, IValueGenerator> = new Dictionary<string, IValueGenerator>();
+
+  constructor(
+    count: number,
+    maxCount: number,
+    tableMetadata: TableMetadata,
+    idGenerator: ValueGenerator<TId>
+  );
+
+  constructor(entityGeneratorConfig: IEntityGeneratorConfig);
 
   /**
    * Creates an instance of EntityGenerator.
@@ -42,17 +54,41 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
    * @memberOf EntityGenerator
    */
   constructor(
-    private count: number,
-    private maxCount: number,
-    private _tableMetadata: TableMetadata,
-    private _idGenerator: ValueGenerator<TId>
+    countOrConfig: number | IEntityGeneratorConfig,
+    maxCount?: number,
+    tableMetadata?: TableMetadata,
+    idGenerator?: ValueGenerator<TId>
   ) {
-    this._tableMetadata.columnMetadata.forEach((metadata) => {
+
+    if (typeof countOrConfig === 'number') {
+      this.config = {
+        count: countOrConfig,
+        maxCount: maxCount,
+        idGenerator: idGenerator,
+        tableMetadata: tableMetadata,
+        columns: {
+        }
+      }
+    } else {
+      this.config = countOrConfig;
+      if (!Types.isPresent(this.config.maxCount)) {
+        this.config.maxCount = this.config.count;
+      }
+    }
+
+
+    this.config.tableMetadata.columnMetadata.forEach((metadata) => {
       //
       // für alle Properties, die persistiert werden (asser Id-Property) Value-Generatoren erzeugen
       //
       if (!metadata.options.primary && metadata.options.persisted) {
-        this.valueGeneratorDict.set(metadata.propertyName, this.createValueGenerator(metadata, maxCount));
+        const valueGenerator = this.config.columns[metadata.propertyName];
+
+        if (valueGenerator) {
+          this.valueGeneratorDict.set(metadata.propertyName, valueGenerator);
+        }  else {
+          this.valueGeneratorDict.set(metadata.propertyName, this.createValueGenerator(metadata, this.config.maxCount));
+        }
       }
     });
   }
@@ -78,18 +114,14 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
 
 
   public generate(): T[] {
-    return this.createItems(this.count);
+    return this.createItems(this.config.count);
   }
 
 
   public nextId(): TId {
-    return this._idGenerator.next().value;
+    return this.config.idGenerator.next().value;
   }
 
-
-  protected get idGenerator(): ValueGenerator<TId> {
-    return this._idGenerator;
-  }
 
 
   /**
@@ -104,10 +136,9 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
       for (let i = 0; i < maxItems; i++) {
         const item = this.createEntity<T>();
 
-        this._tableMetadata.columnMetadata.forEach((metadata) => {
+        this.config.tableMetadata.columnMetadata.forEach((metadata) => {
           if (metadata.options.primary) {
-            const result = this.idGenerator.next();
-            item.id = result.value;
+            item.id = this.nextId();
           } else if (metadata.options.persisted) {
             const result = this.valueGeneratorDict.get(metadata.propertyName).next();
             item[metadata.propertyName] = result.value;
@@ -125,7 +156,7 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
 
 
   protected createEntity<T>(): T {
-    return this._tableMetadata.createEntity<T>();
+    return this.config.tableMetadata.createEntity<T>();
   }
 
 
