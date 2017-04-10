@@ -7,6 +7,7 @@ require('reflect-metadata');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { InvalidOperationException } from '../../../src/exceptions';
 import { Client, Column, IFlxEntity, MetadataStorage, Table, TableMetadata, Version } from '../../../src/model';
 import { ConstantValueGenerator } from '../../../src/model/generator/constant-value-generator';
 import { EntityGenerator } from '../../../src/model/generator/entity-generator';
@@ -40,7 +41,7 @@ class ArtikelGenerator implements IFlxEntity<number> {
 @suite('model.generator.EntityGenerator')
 class EntityGeneratorTest {
   public static readonly ITEMS = 10;
-  public static readonly MAX_ITEMS = 100;
+  public static readonly MAX_ITEMS = 25;
   public static readonly MANDANT = 1;
   public static readonly ROLE_ID = 2;
   public static readonly DELETED = false;
@@ -84,16 +85,61 @@ class EntityGeneratorTest {
     expect(this.items.length).to.equal(EntityGeneratorTest.ITEMS);
   }
 
-  @test 'should have expected column values'() {
+  @test 'should have expected ids'() {
     for (let i = 0; i < EntityGeneratorTest.ITEMS; i++) {
       expect(this.items[i].id).to.equal(i + 1);
     }
+  }
+
+
+  @test 'should have expected constant column values'() {
     this.items.forEach((item) => {
       expect(item.__version).to.equal(EntityGeneratorTest.VERSION);
       expect(item.deleted).to.equal(EntityGeneratorTest.DELETED);
       expect(item.mandant).to.equal(EntityGeneratorTest.MANDANT);
     });
-
   }
 
+
+  @test 'should have expected column values'() {
+    for (let i = 0; i < EntityGeneratorTest.ITEMS; i++) {
+      const item = this.items[i];
+      expect(item.name).to.equal(`name-${i + 1}`);
+    }
+  }
+
+
+  @test 'should test nextId'() {
+    for (let i = 0; i < 10; i++) {
+      const nextId = this.generator.nextId();
+      expect(nextId).to.equal(EntityGeneratorTest.ITEMS + i + 1);
+    }
+  }
+
+
+  @test 'should create new item'() {
+    for (let i = 0; i < 10; i++) {
+      const item = this.generator.createEntity<ArtikelGenerator>();
+      expect(item).to.be.not.null;
+      expect(item.id).to.be.undefined;
+
+      item.id = this.generator.nextId();
+      expect(item.id).not.to.be.undefined;
+      expect(item.id).to.equal(this.generator.currentId());
+    }
+  }
+
+  @test 'should test remaining items(total: maxCount) + error for > maxCount'() {
+    for (let i = this.generator.currentId(); i < EntityGeneratorTest.MAX_ITEMS - 1; i++) {
+      const item = this.generator.createEntity<ArtikelGenerator>();
+      expect(item).to.be.not.null;
+      expect(item.id).to.be.undefined;
+
+      item.id = this.generator.nextId();
+      expect(item.id).not.to.be.undefined;
+      expect(item.id).to.equal(this.generator.currentId());
+    }
+
+    expect(() => this.generator.nextId()).to.throw(InvalidOperationException);
+  }
 }

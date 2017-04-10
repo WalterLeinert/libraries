@@ -1,6 +1,7 @@
 import { IValueGenerator } from './value-generator.interface';
 
 export abstract class ValueGenerator<T> implements IterableIterator<T>, IValueGenerator {
+  private _current: IteratorResult<T>;
 
   constructor(private strategy: Iterator<number>) {
   }
@@ -9,16 +10,21 @@ export abstract class ValueGenerator<T> implements IterableIterator<T>, IValueGe
     const result = this.strategy.next();
 
     if (result.done) {
-      return {
+      this._current = {
         done: true,
         value: undefined
       };
     } else {
-      return {
+      this._current = {
         done: false,
         value: this.formatValue(result.value)
       };
     }
+    return this._current;
+  }
+
+  public current(): T {
+    return this._current.value;
   }
 
   public [Symbol.iterator](): IterableIterator<T> {

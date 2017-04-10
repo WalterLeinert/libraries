@@ -86,7 +86,7 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
 
         if (valueGenerator) {
           this.valueGeneratorDict.set(metadata.propertyName, valueGenerator);
-        }  else {
+        } else {
           this.valueGeneratorDict.set(metadata.propertyName, this.createValueGenerator(metadata, this.config.maxCount));
         }
       }
@@ -122,6 +122,14 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
     return this.config.idGenerator.next().value;
   }
 
+  public currentId(): TId {
+    return this.config.idGenerator.current();
+  }
+
+
+  public createEntity<T>(): T {
+    return this.config.tableMetadata.createEntity<T>();
+  }
 
 
   /**
@@ -154,10 +162,6 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
     });
   }
 
-
-  protected createEntity<T>(): T {
-    return this.config.tableMetadata.createEntity<T>();
-  }
 
 
   /**
