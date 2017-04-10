@@ -10,10 +10,12 @@ import { XLog } from '../../diagnostics/xlog';
 
 import { Funktion } from '../../base/objectType';
 import { IToString } from '../../base/toString.interface';
+import { ConfigurationException } from '../../exceptions/configurationException';
 import { InvalidOperationException } from '../../exceptions/invalidOperationException';
 import { NotSupportedException } from '../../exceptions/notSupportedException';
 import { Dictionary } from '../../types/dictionary';
 import { Types } from '../../types/types';
+import { Utility } from '../../util/utility';
 import { IFlxEntity } from '../flx-entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { MetadataStorage } from '../metadata/metadataStorage'
@@ -74,6 +76,18 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
       this.config = countOrConfig;
       if (!Types.isPresent(this.config.maxCount)) {
         this.config.maxCount = this.config.count;
+      }
+    }
+
+    //
+    // Check: ist eine gültige Property konfiguriert?
+    //
+    for (const propertyName in this.config.columns) {
+      if (!Utility.isNullOrEmpty(propertyName)) {
+        if (!this.config.tableMetadata.getColumnMetadataByProperty(propertyName)) {
+          throw new ConfigurationException(
+            `entity ${this.config.tableMetadata.className} has no property ${propertyName}`);
+        }
       }
     }
 

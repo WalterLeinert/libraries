@@ -7,7 +7,7 @@ require('reflect-metadata');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { InvalidOperationException } from '../../../src/exceptions';
+import { ConfigurationException, InvalidOperationException } from '../../../src/exceptions';
 import { Client, Column, IFlxEntity, MetadataStorage, Table, TableMetadata, Version } from '../../../src/model';
 import { ConstantValueGenerator } from '../../../src/model/generator/constant-value-generator';
 import { EntityGenerator } from '../../../src/model/generator/entity-generator';
@@ -43,7 +43,6 @@ class EntityGeneratorTest {
   public static readonly ITEMS = 10;
   public static readonly MAX_ITEMS = 25;
   public static readonly MANDANT = 1;
-  public static readonly ROLE_ID = 2;
   public static readonly DELETED = false;
   public static readonly VERSION = 0;
 
@@ -62,7 +61,6 @@ class EntityGeneratorTest {
       idGenerator: new NumberIdGenerator(EntityGeneratorTest.MAX_ITEMS),
       columns: {
         mandant: new ConstantValueGenerator(EntityGeneratorTest.MANDANT),
-        role: new ConstantValueGenerator(EntityGeneratorTest.ROLE_ID),
         deleted: new ConstantValueGenerator(EntityGeneratorTest.DELETED),
         __version: new ConstantValueGenerator(EntityGeneratorTest.VERSION),
       }
@@ -142,4 +140,28 @@ class EntityGeneratorTest {
 
     expect(() => this.generator.nextId()).to.throw(InvalidOperationException);
   }
+}
+
+
+
+
+@suite('model.generator.EntityGenerator.invalidProperty')
+class EntityGeneratorInvalidPropertyTest {
+  public static readonly ITEMS = 1;
+  public static readonly INVALID = 0;
+
+
+  @test 'should throw exception for invalid property'() {
+    const tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelGenerator);
+
+    expect(() => new EntityGenerator<ArtikelGenerator, number>({
+      count: EntityGeneratorTest.ITEMS,
+      tableMetadata: tableMetadata,
+      idGenerator: new NumberIdGenerator(EntityGeneratorInvalidPropertyTest.ITEMS),
+      columns: {
+        invalid: new ConstantValueGenerator(EntityGeneratorInvalidPropertyTest.INVALID)
+      }
+    })).to.throw(ConfigurationException);
+  }
+
 }
