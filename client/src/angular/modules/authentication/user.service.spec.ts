@@ -2,7 +2,6 @@ import { inject, TestBed } from '@angular/core/testing';
 // import { BaseRequestOptions, ConnectionBackend, Http, Response, ResponseOptions } from '@angular/http';
 // cd climport { MockBackend } from '@angular/http/testing';
 
-import { NumberIdGeneratorService } from '../../../../test/services/number-id-generator.service';
 import { UserServiceStub } from '../../../../test/services/user-service-stub';
 
 import { ConfigService } from '../../services/config.service';
@@ -15,7 +14,6 @@ describe('UserService', () => {
       providers: [
         ConfigService,
         MetadataService,
-        NumberIdGeneratorService,
         { provide: UserService, useClass: UserServiceStub }
       ]
     });

@@ -9,13 +9,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 
 import {
-  Assert, ColumnMetadata, Funktion, IFlxEntity, InvalidOperationException, IQuery, IService, IToString,
-  NotSupportedException, ServiceResult, ShortTime,
-  Status, TableMetadata, Time
+  Assert, EntityGenerator, Funktion, IFlxEntity, InvalidOperationException, IQuery, IService, IToString,
+  NotSupportedException, ServiceResult,
+  Status, TableMetadata
 } from '@fluxgate/common';
 
 import { MetadataService } from '../../src/angular/services/metadata.service';
-import { IIdGenerator } from './id-generator.interface';
 
 
 export abstract class ServiceStub<T extends IFlxEntity<TId>, TId extends IToString> implements IService {
@@ -28,14 +27,14 @@ export abstract class ServiceStub<T extends IFlxEntity<TId>, TId extends IToStri
 
 
   protected constructor(model: Funktion, private metadataService: MetadataService,
-    private _idGenerator: IIdGenerator<TId>) {
+    private _entityGenerator: EntityGenerator<T, TId>) {
     Assert.notNull(model);
     Assert.notNull(metadataService);
 
     this._tableMetadata = metadataService.findTableMetadata(model);
-    this._topic = metadataService.findTableMetadata(model).options.name;
+    this._topic = this._tableMetadata.options.name;
 
-    this._items = this.createItems(10);
+    this._items = this._entityGenerator.generate();
   }
 
 
@@ -49,9 +48,7 @@ export abstract class ServiceStub<T extends IFlxEntity<TId>, TId extends IToStri
    */
   public create(item: T): Observable<T> {
     Assert.notNull(item, 'item');
-
-    item.id = this._idGenerator.next();
-
+    item.id = this._entityGenerator.nextId();
     return Observable.of(item);
   }
 
@@ -190,37 +187,6 @@ export abstract class ServiceStub<T extends IFlxEntity<TId>, TId extends IToStri
 
 
 
-  /**
-   * erzeut ein Array vom Typ @see{T} mit @param{maxItems} Elementen.
-   * Die Elementwerte werden anhand des Typs automatisch erzeugt.
-   *
-   * @param maxItems
-   */
-  protected createItems(maxItems: number): T[] {
-    return using(new XLog(ServiceStub.logger, levels.INFO, 'createItems'), (log) => {
-      const items: T[] = [];
-      for (let i = 0; i < maxItems; i++) {
-        const item = this.createEntity<T>();
-
-        this.tableMetadata.columnMetadata.forEach((metadata) => {
-          if (metadata.options.primary) {
-            item.id = this.idGenerator.next();
-          } else if (metadata.options.persisted) {
-            item[metadata.propertyName] = this.createPropertyValue(i, metadata);
-          }
-        });
-
-        items.push(item);
-      }
-
-      log.log(`${JSON.stringify(items)}`);
-
-      return items;
-    });
-  }
-
-
-
 
   /**
    * Liefert die zugehörige @see{TableMetadata}
@@ -233,69 +199,4 @@ export abstract class ServiceStub<T extends IFlxEntity<TId>, TId extends IToStri
   protected get tableMetadata(): TableMetadata {
     return this._tableMetadata;
   }
-
-  protected createEntity<T>(): T {
-    return this._tableMetadata.createEntity<T>();
-  }
-
-  protected get idGenerator(): IIdGenerator<TId> {
-    return this._idGenerator;
-  }
-
-
-  /**
-   * Erzeugt für das i-te Element und den Metadaten @param{metadata} einen synthetisch erzeugten Wert.
-   *
-   * @private
-   * @param {number} i
-   * @param {ColumnMetadata} metadata
-   * @returns {*}
-   *
-   * @memberOf ServiceStub
-   */
-  private createPropertyValue(i: number, metadata: ColumnMetadata): any {
-    let rval;
-
-    switch (metadata.propertyType) {
-      case 'int':
-      case 'integer':
-      case 'bigint':
-      case 'number':
-        rval = i;
-        break;
-
-      case 'float':
-      case 'double':
-        rval = i;
-        break;
-
-      case 'text':
-      case 'string':
-        rval = `${metadata.propertyName}-${i}`;
-        break;
-
-      case 'boolean':
-        rval = false;
-        break;
-
-      case 'date':
-        rval = new Date();
-        break;
-
-      case 'shorttime':
-        rval = new ShortTime(20, 15);
-        break;
-
-      case 'time':
-        rval = new Time(20, 15, 0);
-        break;
-
-      default:
-        throw new NotSupportedException(`column ${metadata.propertyName}: type ${metadata.propertyType}`);
-    }
-
-    return rval;
-  }
-
-
 }
