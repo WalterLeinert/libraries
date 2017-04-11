@@ -219,10 +219,11 @@ export abstract class BaseService<T, TId extends IToString>  {
       subject = this.deserialize(subject);
 
       const dbSubject = this.createDatabaseInstance(subject);
+
       return new Promise<T>((resolve, reject) => {
-        let andWhereColumnName: string = '1';
-        const andWhereOperator: string = '=';
-        let andWhereValue: any = '1';
+
+        let query: Knex.QueryBuilder = this.fromTable()
+          .where(this.idColumnName, dbSubject[this.idColumnName]);
 
         /**
          * falls eine Version-Column vorliegt, müssen wir
@@ -230,23 +231,39 @@ export abstract class BaseService<T, TId extends IToString>  {
          * - und die Version erhöhen
          */
         if (this.metadata.versionColumn) {
-          andWhereColumnName = this.metadata.versionColumn.options.name;
+          const andWhereColumnName = this.metadata.versionColumn.options.name;
 
           const version: number = dbSubject[this.metadata.versionColumn.options.name];
-          andWhereValue = version;
+          const andWhereValue = version;
 
           dbSubject[andWhereColumnName] = version + 1;
+
+          query = query.andWhere(andWhereColumnName, '=', andWhereValue);
         }
 
-        this.fromTable()
-          .where(this.idColumnName, dbSubject[this.idColumnName])
-          .andWhere(andWhereColumnName, andWhereOperator, andWhereValue)
+
+        query
           .update(dbSubject)
 
           .then((affectedRows: number) => {
             log.debug(`updated ${this.tableName} with id: ${dbSubject[this.idColumnName]}` +
               ` (affectedRows: ${affectedRows})`, );
-            resolve(this.serialize(subject));
+
+            if (this.metadata.versionColumn) {
+              if (affectedRows <= 0) {
+                reject(this.createBusinessException(
+                  new Error(`TODO: optimistic lock detected: ${this.tableName}.${dbSubject[this.idColumnName]}`)));
+              } else {
+                resolve(this.serialize(subject));
+              }
+            } else {
+              if (affectedRows <= 0) {
+                reject(this.createSystemException(
+                  new Error(`TODO: row not found: ${this.tableName}.${dbSubject[this.idColumnName]}`)));
+              } else {
+                resolve(this.serialize(subject));
+              }
+            }
           })
           .catch((err) => {
             log.error(err);
@@ -351,18 +368,6 @@ export abstract class BaseService<T, TId extends IToString>  {
 
       return this.queryKnex(knexQuery);
     });
-  }
-
-
-
-  public nopTerm(queryBuilder: Knex.QueryBuilder): Knex.QueryBuilder {
-    return queryBuilder;
-  }
-
-
-  public andWhere(queryBuilder: Knex.QueryBuilder, columnName: string, operator: string, value: any):
-    Knex.QueryBuilder {
-    return queryBuilder.andWhere(columnName, operator, value);
   }
 
 
