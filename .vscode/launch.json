@@ -7,15 +7,6 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Programm starten",
-      "program": "${workspaceRoot}\\dist\\bundle.js",
-      "cwd": "${workspaceRoot}",
-      "outFiles": [],
-      "sourceMaps": true
-    },
-    {
-      "type": "node",
-      "request": "launch",
       "name": "common: run Mocha",
       "program": "${workspaceRoot}/common/node_modules/mocha/bin/_mocha",
       "args": [
@@ -26,7 +17,7 @@
       "runtimeExecutable": null,
       "outFiles": [
         "${workspaceRoot}/common/dist/node/src/**/*.js",
-        "${workspaceRoot}/build/**/*.js"
+         "${workspaceRoot}/common/dist/node/test/**/*.js"
       ],
       "sourceMaps": true,
       "stopOnEntry": false,
