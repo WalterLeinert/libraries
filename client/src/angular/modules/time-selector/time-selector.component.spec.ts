@@ -3,7 +3,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/primeng';
 
-import { ShortTime, Store } from '@fluxgate/common';
+import { Store } from '@fluxgate/common';
 import { AppInjector } from '../../services/appInjector.service';
 import { MessageServiceModule } from '../../services/message.service';
 
