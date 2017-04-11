@@ -194,7 +194,7 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
    *
    * @memberOf EntityGenerator
    */
-  private createValueGenerator(metadata: ColumnMetadata, count: number, start: number = 1,
+  private createValueGenerator(metadata: ColumnMetadata, count: number, start: number = 0,
     increment: number = 1): IValueGenerator {
 
     const strategy = new SequenceGeneratorStrategy(count, start, increment);

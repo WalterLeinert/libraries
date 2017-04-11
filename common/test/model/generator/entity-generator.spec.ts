@@ -7,9 +7,14 @@ require('reflect-metadata');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { Clone } from '../../../src/base/clone';
 import { ConfigurationException, InvalidOperationException } from '../../../src/exceptions';
 import { Client, Column, IFlxEntity, MetadataStorage, Table, TableMetadata, Version } from '../../../src/model';
 import { ConstantValueGenerator } from '../../../src/model/generator/constant-value-generator';
+import { DateValueGenerator } from '../../../src/model/generator/date-value-generator';
+import { DatetimeValueGenerator } from '../../../src/model/generator/datetime-value-generator';
+import { ShortTimeValueGenerator } from '../../../src/model/generator/shortTime-value-generator';
+import { TimeValueGenerator } from '../../../src/model/generator/time-value-generator';
 import { EntityGenerator } from '../../../src/model/generator/entity-generator';
 import { NumberIdGenerator } from '../../../src/model/generator/number-id-generator';
 import { ShortTime, Time } from '../../../src/types';
@@ -89,6 +94,7 @@ class EntityGeneratorTest {
   private items: ArtikelGenerator[];
 
 
+
   public before() {
     this.tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelGenerator);
     this.generator = new EntityGenerator<ArtikelGenerator, number>({
@@ -139,7 +145,14 @@ class EntityGeneratorTest {
   @test 'should have expected column values'() {
     for (let i = 0; i < EntityGeneratorTest.ITEMS; i++) {
       const item = this.items[i];
-      expect(item.name).to.equal(`name-${i + 1}`);
+      expect(item.name).to.equal(`name-${i}`);
+      expect(item.dateProperty).to.deep.equal(this.addDays(DateValueGenerator.INITIAL_VALUE, i));
+      expect(item.datetimeProperty).to.deep.equal(this.addMinutes(DatetimeValueGenerator.INITIAL_VALUE, i));
+
+      expect(item.shorttimeProperty).to.deep.equal(
+        ShortTime.createFromMinutes(ShortTimeValueGenerator.INITIAL_VALUE.toMinutes() + i));
+      expect(item.timeProperty).to.deep.equal(
+        Time.createFromSeconds(TimeValueGenerator.INITIAL_VALUE.toSeconds() + i));
     }
   }
 
@@ -177,6 +190,20 @@ class EntityGeneratorTest {
 
     expect(() => this.generator.nextId()).to.throw(InvalidOperationException);
   }
+
+  private addDays(date: Date, days: number): Date {
+    const d = Clone.clone(date);
+    d.setDate(d.getDate() + days);
+    return d;
+  }
+
+  private addMinutes(date: Date, minutes: number): Date {
+    const d = Clone.clone(date);
+    d.setMinutes(d.getMinutes() + minutes);
+    return d;
+  }
+
+
 }
 
 
