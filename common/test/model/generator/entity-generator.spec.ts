@@ -13,10 +13,10 @@ import { Client, Column, IFlxEntity, MetadataStorage, Table, TableMetadata, Vers
 import { ConstantValueGenerator } from '../../../src/model/generator/constant-value-generator';
 import { DateValueGenerator } from '../../../src/model/generator/date-value-generator';
 import { DatetimeValueGenerator } from '../../../src/model/generator/datetime-value-generator';
-import { ShortTimeValueGenerator } from '../../../src/model/generator/shortTime-value-generator';
-import { TimeValueGenerator } from '../../../src/model/generator/time-value-generator';
 import { EntityGenerator } from '../../../src/model/generator/entity-generator';
 import { NumberIdGenerator } from '../../../src/model/generator/number-id-generator';
+import { ShortTimeValueGenerator } from '../../../src/model/generator/shortTime-value-generator';
+import { TimeValueGenerator } from '../../../src/model/generator/time-value-generator';
 import { ShortTime, Time } from '../../../src/types';
 
 

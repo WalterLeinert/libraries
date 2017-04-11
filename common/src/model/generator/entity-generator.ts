@@ -18,7 +18,7 @@ import { Types } from '../../types/types';
 import { Utility } from '../../util/utility';
 import { IFlxEntity } from '../flx-entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
-import { MetadataStorage } from '../metadata/metadataStorage'
+import { MetadataStorage } from '../metadata/metadataStorage';
 import { TableMetadata } from '../metadata/tableMetadata';
 import { BooleanValueGenerator } from './boolean-value-generator';
 import { DateValueGenerator } from './date-value-generator';
@@ -72,7 +72,7 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
         tableMetadata: tableMetadata,
         columns: {
         }
-      }
+      };
     } else {
       this.config = countOrConfig;
       if (!Types.isPresent(this.config.maxCount)) {
