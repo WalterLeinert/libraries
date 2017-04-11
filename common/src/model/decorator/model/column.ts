@@ -16,7 +16,7 @@ const logger = getLogger(Column);
 
 /**
  * Column-Decorator für Modellproperties/-attribute
- * 
+ *
  * @export
  * @param {ColumnOptions} [options]
  * @returns
@@ -24,7 +24,7 @@ const logger = getLogger(Column);
 export function Column(options?: ColumnOptions) {
 
   // tslint:disable-next-line:only-arrow-functions
-  return function(target: any, propertyName: string) {
+  return function (target: any, propertyName: string) {
 
     let propertyType: Funktion = (Reflect as any).getMetadata('design:type', target, propertyName);
 
@@ -33,22 +33,31 @@ export function Column(options?: ColumnOptions) {
     // übernehmen wir Date, falls options.propertyType auf "date" gesetzt ist
     //
     if (options && options.propertyType) {
-      if (options.propertyType === ColumnTypes.DATE) {
-        propertyType = Date;
-        logger.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
-      }
-      if (options.propertyType === ColumnTypes.TIME) {
-        propertyType = Time;
-        logger.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
-      }
-      if (options.propertyType === ColumnTypes.SHORTTIME) {
-        propertyType = ShortTime;
-        logger.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
+      switch (options.propertyType) {
+        case ColumnTypes.DATE:
+        case ColumnTypes.DATETIME:
+          propertyType = Date;
+          logger.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
+          break;
+
+        case ColumnTypes.TIME:
+          propertyType = Time;
+          logger.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
+          break;
+
+        case ColumnTypes.SHORTTIME:
+          propertyType = ShortTime;
+          logger.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
+          break;
+
+        default:
+          // ok
+          break;
       }
     }
 
     // aus Propertytyp (Function) den ColumnType ermitteln
-    const type = ColumnTypes.determineTypeFromFunction(propertyType);
+    let type = ColumnTypes.determineTypeFromFunction(propertyType);
 
     if (!options) {
       options = {} as ColumnOptions;
@@ -70,9 +79,12 @@ export function Column(options?: ColumnOptions) {
       options.persisted = true;       // default: Persistieren
     }
 
-    // if (!options.displayName) {
-    //     options.displayName = propertyName;
-    // }
+    /**
+     * der bei den Optionen angegebene Typ hat immer Vorrang
+     */
+    if (options.propertyType) {
+      type = options.propertyType;
+    }
 
     MetadataStorage.instance.addColumnMetadata(new ColumnMetadata(target.constructor, propertyName,
       type, options));
