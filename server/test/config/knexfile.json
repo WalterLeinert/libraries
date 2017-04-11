@@ -1,7 +1,7 @@
 {
   "commentLocal": "lokale Testumgebung (DB lokal)",
   "local": {
-    "debug": false,
+    "debug": true,
     "client": "mysql",
     "connection": {
       "host": "localhost",
