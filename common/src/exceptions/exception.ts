@@ -72,6 +72,30 @@ export abstract class Exception implements IException {
     this._message = sb.toString();
   }
 
+
+  public toString(): string {
+    return `${this.name}: ${this.message}`;
+  }
+
+
+  public encodeException(): string {
+    const sb = new StringBuilder();
+    sb.append(Exception.EXC_PREFIX);
+    sb.append(this.kind);
+    sb.append(Exception.EXC_SEPARATOR);
+    sb.append(this.message || '');
+    sb.append(Exception.EXC_SEPARATOR);
+
+    if (this.innerException) {
+      sb.append(this.innerException.encodeException());   // Rekursion
+    }
+
+    sb.append(Exception.EXC_POSTFIX);
+
+    return sb.toString();
+  }
+
+
   protected setKind(kind: string) {
     this._kind = kind;
   }
@@ -94,28 +118,6 @@ export abstract class Exception implements IException {
 
   public get innerException(): IException {
     return this._innerException;
-  }
-
-
-  public toString(): string {
-    return `${this.name}: ${this.message}`;
-  }
-
-  public encodeException(): string {
-    const sb = new StringBuilder();
-    sb.append(Exception.EXC_PREFIX);
-    sb.append(this.kind);
-    sb.append(Exception.EXC_SEPARATOR);
-    sb.append(this.message || '');
-    sb.append(Exception.EXC_SEPARATOR);
-
-    if (this.innerException) {
-      sb.append(this.innerException.encodeException());   // Rekursion
-    }
-
-    sb.append(Exception.EXC_POSTFIX);
-
-    return sb.toString();
   }
 
 

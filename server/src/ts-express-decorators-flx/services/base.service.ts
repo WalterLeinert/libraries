@@ -7,7 +7,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  Assert, Clone, ColumnMetadata, EntityExistsException,
+  Assert, Clone, ColumnMetadata, /*EntityExistsException,*/
   EntityNotFoundException, ExceptionWrapper, Funktion,
   IException, InvalidOperationException, IQuery,
   IToString, IUser, OptimisticLockException, ServiceResult, TableMetadata, Types
