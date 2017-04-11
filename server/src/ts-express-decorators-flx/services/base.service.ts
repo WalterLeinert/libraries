@@ -7,8 +7,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 // Fluxgate
 import {
-  Assert, Clone, ColumnMetadata, ExceptionWrapper, Funktion, IException, InvalidOperationException,
-  IQuery, IToString, IUser, ServiceResult, TableMetadata, Types
+  Assert, Clone, ColumnMetadata, EntityExistsException,
+  EntityNotFoundException, ExceptionWrapper, Funktion,
+  IException, InvalidOperationException, IQuery,
+  IToString, IUser, OptimisticLockException, ServiceResult, TableMetadata, Types
 } from '@fluxgate/common';
 
 import { KnexService } from './knex.service';
@@ -252,14 +254,14 @@ export abstract class BaseService<T, TId extends IToString>  {
             if (this.metadata.versionColumn) {
               if (affectedRows <= 0) {
                 reject(this.createBusinessException(
-                  new Error(`TODO: optimistic lock detected: ${this.tableName}.${dbSubject[this.idColumnName]}`)));
+                  new OptimisticLockException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
               } else {
                 resolve(this.serialize(subject));
               }
             } else {
               if (affectedRows <= 0) {
                 reject(this.createSystemException(
-                  new Error(`TODO: row not found: ${this.tableName}.${dbSubject[this.idColumnName]}`)));
+                  new EntityNotFoundException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
               } else {
                 resolve(this.serialize(subject));
               }
@@ -293,9 +295,17 @@ export abstract class BaseService<T, TId extends IToString>  {
           .del()
           .then((affectedRows: number) => {
             log.debug(`deleted from ${this.tableName} with id: ${id} (affectedRows: ${affectedRows})`);
+
             const res = new ServiceResult<TId>(id);
-            // TODO: serialize z.Zt. nicht kompatibel
-            resolve(res);
+
+            if (affectedRows <= 0) {
+              reject(this.createSystemException(
+                new EntityNotFoundException(`table: ${this.tableName}, id: ${id}`)));
+            } else {
+              // TODO: serialize z.Zt. nicht kompatibel
+              resolve(res);
+            }
+
           })
           .catch((err) => {
             log.error(err);
