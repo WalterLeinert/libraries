@@ -7,6 +7,15 @@ export class BooleanValueGenerator extends ValueGenerator<boolean> {
   }
 
 
+  /**
+   * Erzeugt einen Boolean-Wert, der für geraden Indexwert true ist.
+   *
+   * @protected
+   * @param {number} index
+   * @returns {boolean}
+   *
+   * @memberOf BooleanValueGenerator
+   */
   protected formatValue(index: number): boolean {
     return (index % 2) === 0;
   }
