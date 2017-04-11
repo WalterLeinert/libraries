@@ -29,7 +29,7 @@
       "LoginComponent": "INFO",
       "LogoffComponent": "INFO",
 
-      "EntityGenerator": "INFO"
+      "EntityGenerator": "WARN"
     }
   }
 }
