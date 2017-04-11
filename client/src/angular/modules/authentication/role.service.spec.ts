@@ -19,7 +19,15 @@ describe('RoleService', () => {
     });
   });
 
-  it('should ...', inject([RoleService], (service: RoleService) => {
+  it('should exist', inject([RoleService], (service: RoleService) => {
     expect(service).toBeTruthy();
+  }));
+
+
+  it('should contain items', inject([RoleService], (service: RoleService) => {
+    service.find().subscribe((items) => {
+      expect(items.length).toEqual(RoleServiceFake.ITEMS);
+    });
+
   }));
 });

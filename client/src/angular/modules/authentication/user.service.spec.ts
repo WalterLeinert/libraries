@@ -19,7 +19,16 @@ describe('UserService', () => {
     });
   });
 
-  it('should ...', inject([UserService], (service: UserService) => {
+  it('should exist', inject([UserService], (service: UserService) => {
     expect(service).toBeTruthy();
+  }));
+
+
+
+  it('should contain items', inject([UserService], (service: UserService) => {
+    service.find().subscribe((items) => {
+      expect(items.length).toEqual(UserServiceFake.ITEMS);
+    });
+
   }));
 });
