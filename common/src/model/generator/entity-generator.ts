@@ -22,6 +22,7 @@ import { MetadataStorage } from '../metadata/metadataStorage'
 import { TableMetadata } from '../metadata/tableMetadata';
 import { BooleanValueGenerator } from './boolean-value-generator';
 import { DateValueGenerator } from './date-value-generator';
+import { DatetimeValueGenerator } from './datetime-value-generator';
 import { IEntityGeneratorConfig } from './entity-generator-config.interface';
 import { NumberValueGenerator } from './number-value-generator';
 import { SequenceGeneratorStrategy } from './sequence-generator-strategy';
@@ -222,6 +223,10 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
 
       case 'date':
         rval = new DateValueGenerator(strategy);
+        break;
+
+      case 'datetime':
+        rval = new DatetimeValueGenerator(strategy);
         break;
 
       case 'shorttime':

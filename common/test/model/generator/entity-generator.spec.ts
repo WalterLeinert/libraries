@@ -12,27 +12,64 @@ import { Client, Column, IFlxEntity, MetadataStorage, Table, TableMetadata, Vers
 import { ConstantValueGenerator } from '../../../src/model/generator/constant-value-generator';
 import { EntityGenerator } from '../../../src/model/generator/entity-generator';
 import { NumberIdGenerator } from '../../../src/model/generator/number-id-generator';
+import { ShortTime, Time } from '../../../src/types';
 
 
 @Table({ name: ArtikelGenerator.TABLE_NAME })
 class ArtikelGenerator implements IFlxEntity<number> {
   public static readonly TABLE_NAME = 'artikel';
 
-  @Column({ name: 'artikel_id', primary: true, generated: true })
+  @Column({ primary: true, generated: true })
   public id: number;
 
-  @Column({ name: 'artikel_name', displayName: 'Name' })
+  @Column()
   public name: string;
 
-  @Column({ name: 'artikel_deleted' })
+  @Column()
+  public booleanProperty?: boolean;
+
+  @Column({ propertyType: 'int' })
+  public intProperty: number;
+
+  @Column({ propertyType: 'integer' })
+  public integerProperty: number;
+
+  @Column({ propertyType: 'bigint' })
+  public bigintProperty: number;
+
+  @Column({ propertyType: 'float' })
+  public floatProperty: number;
+
+  @Column({ propertyType: 'double' })
+  public doubleProperty: number;
+
+  @Column({ propertyType: 'text' })
+  public textProperty: string;
+
+  @Column({ propertyType: 'string' })
+  public stringProperty: string;
+
+  @Column({ propertyType: 'date' })
+  public dateProperty: Date;
+
+  @Column({ propertyType: 'datetime' })
+  public datetimeProperty: Date;
+
+  @Column({ propertyType: 'time' })
+  public timeProperty: Time;
+
+  @Column({ propertyType: 'shorttime' })
+  public shorttimeProperty: ShortTime;
+
+  @Column()
   public deleted?: boolean;
 
   @Client()
-  @Column({ name: 'id_mandant' })
+  @Column()
   public mandant?: number;
 
   @Version()
-  @Column({ name: 'artikel_version', displayName: 'Version' })
+  @Column()
   public __version: number;
 }
 
