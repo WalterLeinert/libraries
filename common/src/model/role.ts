@@ -5,6 +5,7 @@ import { Client } from '../model/decorator/model/client';
 import { Column } from '../model/decorator/model/column';
 import { Table } from '../model/decorator/model/table';
 import { Validation } from '../model/decorator/model/validation';
+import { Version } from '../model/decorator/model/version';
 import { Validators } from '../model/validation/validators';
 
 // import { Mandant } from './mandant';
@@ -67,6 +68,7 @@ export class Role implements IRole {
   @Column({ name: 'id_mandant' })
   public id_mandant?: number;   // = Mandant.FIRST_ID;
 
+  @Version()
   @Column({ name: 'role_version', displayName: 'Version', default: 0 })
   public __version: number;
 

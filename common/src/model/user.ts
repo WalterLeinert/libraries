@@ -6,6 +6,7 @@ import { Column } from '../model/decorator/model/column';
 import { Enum } from '../model/decorator/model/enum';
 import { Table } from '../model/decorator/model/table';
 import { Validation } from '../model/decorator/model/validation';
+import { Version } from '../model/decorator/model/version';
 import { Validators } from '../model/validation/validators';
 import { Utility } from '../util/utility';
 
@@ -92,6 +93,7 @@ export class User implements IUser {
   @Column({ name: 'id_mandant' })
   public id_mandant?: number;   // = Mandant.FIRST_ID;
 
+  @Version()
   @Column({ name: 'user_version', displayName: 'Version', default: 0 })
   public __version: number;
 
