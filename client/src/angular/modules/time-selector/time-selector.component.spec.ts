@@ -1,9 +1,10 @@
-import { async, TestBed } from '@angular/core/testing';
-
+import { DebugElement } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+
 import { CalendarModule } from 'primeng/primeng';
 
-import { Store } from '@fluxgate/common';
+import { ShortTime, Store } from '@fluxgate/common';
 import { AppInjector } from '../../services/appInjector.service';
 import { MessageServiceModule } from '../../services/message.service';
 
@@ -13,6 +14,11 @@ AppInjector.instance.setTestStore(new Store());
 
 
 describe('TimeSelectorComponent', () => {
+  let comp: TimeSelectorComponent;
+  let fixture: ComponentFixture<TimeSelectorComponent>;
+  let de: DebugElement;
+  let el: HTMLElement;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -30,26 +36,30 @@ describe('TimeSelectorComponent', () => {
         AppInjector
       ]
     }).compileComponents();
+
+    fixture = TestBed.createComponent(TimeSelectorComponent);
+    comp = fixture.debugElement.componentInstance;
+    de = fixture.debugElement;
+    el = de.nativeElement;
+    //   expect(compiled.querySelector('h1').textContent).toContain('app works!');
   }));
 
   it('should create the component', async(() => {
-    const fixture = TestBed.createComponent(TimeSelectorComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
+    expect(comp).toBeTruthy();
   }));
 
-  // it(`should have as title 'app works!'`, async(() => {
-  //   const fixture = TestBed.createComponent(TimeSelectorComponent);
-  //   const app = fixture.debugElement.componentInstance;
-  //   app.value = new ShortTime(10, 15);
-  //   expect(app.title).toEqual('app works!');
-  // }));
 
+  it('should render the shorttime', async(() => {
+    comp.value = new ShortTime(10, 15);
 
-  // it('should render title in a h1 tag', async(() => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   fixture.detectChanges();
-  //   const compiled = fixture.debugElement.nativeElement;
-  //   expect(compiled.querySelector('h1').textContent).toContain('app works!');
-  // }));
+    fixture.detectChanges();
+
+    expect(comp.date).toBeTruthy();
+    expect(comp.date.getHours()).toEqual(10);
+    expect(comp.date.getMinutes()).toEqual(15);
+
+    // const input = el.querySelector('p-calendar > span > input');
+
+    // expect(input.textContent).toContain('app works!');
+  }));
 });
