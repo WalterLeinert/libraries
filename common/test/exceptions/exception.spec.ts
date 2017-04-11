@@ -17,9 +17,12 @@ const exceptionTypes = [
   'AssertionException',
   'ClientException',
   'ConfigurationException',
+  'EntityExistsException',
+  'EntityNotFoundException',
   'InvalidOperationException',
   'NotImplementedException',
   'NotSupportedException',
+  'OptimisticLockException',
   'ServerBusinessException',
   'ServerSystemException'
 ];
@@ -47,9 +50,9 @@ class SimpleExceptionTests {
       expect(actual).to.exist;
       expect(actual.message).to.equal(errorText);
       expect(actual.innerException).not.to.exist;
-      expect(actual.type).to.equal(type);
+      expect(actual.kind).to.equal(type);
 
-      expect(actual.type).to.equal(expected.type);
+      expect(actual.kind).to.equal(expected.kind);
       expect(actual.message).to.equal(expected.message);
     });
   }
@@ -72,16 +75,16 @@ class InnerExceptionTest {
       expect(actual).to.exist;
       expect(actual.message).to.equal(errorText);
       expect(actual.innerException).to.exist;
-      expect(actual.type).to.equal(test.type);
+      expect(actual.kind).to.equal(test.type);
 
-      expect(actual.type).to.equal(expected.type);
+      expect(actual.kind).to.equal(expected.kind);
       expect(actual.message).to.equal(expected.message);
 
       // inner
-      expect(actual.innerException.type).to.equal(test.innerType);
+      expect(actual.innerException.kind).to.equal(test.innerType);
       expect(actual.innerException.message).to.equal(innerErrorText);
 
-      expect(actual.innerException.type).to.equal(expectedInner.type);
+      expect(actual.innerException.kind).to.equal(expectedInner.kind);
       expect(actual.innerException.message).to.equal(expectedInner.message);
     });
   }

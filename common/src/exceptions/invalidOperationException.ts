@@ -4,7 +4,7 @@ import { FlxException } from './flxException';
 
 @FlxException()
 export class InvalidOperationException extends Exception {
-  constructor(message: string, innerException?: Exception | Error) {
+  constructor(message: string = 'invalid operation', innerException?: Exception | Error) {
     super('InvalidOperationException', message, innerException);
   }
 }

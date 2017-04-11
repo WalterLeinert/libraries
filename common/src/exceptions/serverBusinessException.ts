@@ -5,7 +5,7 @@ import { ServerException } from './serverException';
 
 /**
  * fachliche Server-Exceptions
- * 
+ *
  * @export
  * @class ServerBusinessException
  * @extends {ServerException}

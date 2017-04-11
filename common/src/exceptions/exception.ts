@@ -11,10 +11,10 @@ export function unimplemented(): void {
 
 /**
  * Assertion, die nicht auf der Exception-Basisklasse basiert (sonst: Rekursion!)
- * 
+ *
  * @export
- * @param {boolean} condition 
- * @param {string} [message] 
+ * @param {boolean} condition
+ * @param {string} [message]
  */
 export function assert(condition: boolean, message?: string): void {
   if (!condition) {
@@ -29,9 +29,9 @@ export function assert(condition: boolean, message?: string): void {
 
 
 /**
- * Exception-Basisklasse 
+ * Exception-Basisklasse
  * (analog zu https://github.com/Romakita/ts-httpexceptions/blob/master/src/exception.ts)
- * 
+ *
  * @export
  * @class Exception
  * @extends {Error}
@@ -45,7 +45,7 @@ export abstract class Exception implements IException {
   private _message: string;
   private _innerException: IException;
 
-  public constructor(private _type: string, message: string, innerException?: IException | Error) {
+  protected constructor(private _kind: string, message: string, innerException?: IException | Error) {
     if (message === undefined) {
       this._nativeError = new Error('undefined');
     } else {
@@ -72,8 +72,12 @@ export abstract class Exception implements IException {
     this._message = sb.toString();
   }
 
-  public get type(): string {
-    return this._type;
+  protected setKind(kind: string) {
+    this._kind = kind;
+  }
+
+  public get kind(): string {
+    return this._kind;
   }
 
   public get name(): string {
@@ -100,7 +104,7 @@ export abstract class Exception implements IException {
   public encodeException(): string {
     const sb = new StringBuilder();
     sb.append(Exception.EXC_PREFIX);
-    sb.append(this.type);
+    sb.append(this.kind);
     sb.append(Exception.EXC_SEPARATOR);
     sb.append(this.message || '');
     sb.append(Exception.EXC_SEPARATOR);
@@ -116,12 +120,12 @@ export abstract class Exception implements IException {
 
 
   /**
-   * Liefert true, falls die Meldung mit dem Präfix für kodierte Exceptions beginnt. 
-   * 
+   * Liefert true, falls die Meldung mit dem Präfix für kodierte Exceptions beginnt.
+   *
    * @static
-   * @param {string} message 
-   * @returns 
-   * 
+   * @param {string} message
+   * @returns
+   *
    * @memberOf Exception
    */
   public static isEncodedException(message: string) {
@@ -131,18 +135,18 @@ export abstract class Exception implements IException {
 
   /**
    * Liefert für die Fehlermeldung @param{message} eine @see{IException}
-   * 
+   *
    * Ist in der Meldung eine spezielle Exception (mit ggf. inner exceptions) kodiert,
    * wird diese konkrete Exception erzeugt.
-   * 
+   *
    * Beispiel: {exc:ServerBusinessException::unknown user::{exc:AssertionException::property username is missing::}}
-   * 
+   *
    * -> ServerBusinessException (inner: AssertionException)
-   * 
+   *
    * @static
-   * @param {string} message 
-   * @returns {IException} 
-   * 
+   * @param {string} message
+   * @returns {IException}
+   *
    * @memberOf Exception
    */
   public static decodeException(message: string): IException {
@@ -153,7 +157,7 @@ export abstract class Exception implements IException {
       // --> "{exc:ServerBusinessException::This is a ServerBusinessException.::"
       let text = message.slice(0, message.length - Exception.EXC_POSTFIX.length);
 
-      // --> "ServerBusinessException::This is a ServerBusinessException.::"    
+      // --> "ServerBusinessException::This is a ServerBusinessException.::"
       text = text.slice(Exception.EXC_PREFIX.length);
 
       const messageSeparatorIndex = text.indexOf(Exception.EXC_SEPARATOR);

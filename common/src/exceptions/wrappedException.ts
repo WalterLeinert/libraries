@@ -1,10 +1,10 @@
 import { IException } from './exception.interface';
 
 export class WrappedException implements IException {
-  private _type: string;
+  private _kind: string;
 
   constructor(private _nativeError: Error) {
-    this._type = 'WrappedException';
+    this._kind = 'WrappedException';
   }
 
   public get message(): string {
@@ -19,8 +19,8 @@ export class WrappedException implements IException {
     return this._nativeError.name;
   }
 
-  get type(): string {
-    return this._type;
+  get kind(): string {
+    return this._kind;
   }
 
   public encodeException(): string {

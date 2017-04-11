@@ -15,14 +15,14 @@ export class ExceptionWrapper {
   }
 
 
-  public static createException(type: string, error: string | IException | Error): IException {
+  public static createException(kind: string, error: string | IException | Error): IException {
     let exc: IException;
 
     if (Types.isString(error)) {
-      exc = ExceptionFactory.create(type, (error as string));
+      exc = ExceptionFactory.create(kind, (error as string));
     } else if (error instanceof Error) {
       const err = error as Error;
-      exc = ExceptionFactory.create(type, err.message, err);
+      exc = ExceptionFactory.create(kind, err.message, err);
     } else if ((error as any) instanceof Exception) {
 
       // TODO: prüfen, ob das immer so passt?
