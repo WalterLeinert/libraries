@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 
 
-import { Store } from '@fluxgate/common';
 
 import { RoleServiceFake } from '../../../../test/services/role-service-fake';
 import { AppStore } from '../../../redux/app-store';
@@ -18,8 +17,10 @@ import { RoleService } from '../authentication/role.service';
 import { DropdownSelectorModule } from '../dropdown-selector';
 import { RoleSelectorComponent } from './role-selector.component';
 
-const store = new Store();
+// ACHTUNG: Store muss als letztes eingezogen werden!
+import { Store } from '@fluxgate/common';
 
+const store = new Store();
 AppInjector.instance.setTestStore(store);
 
 

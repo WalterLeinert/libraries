@@ -4,13 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { CalendarModule } from 'primeng/primeng';
 
-import { ShortTime, Store } from '@fluxgate/common';
+import { ShortTime } from '@fluxgate/common';
+
 import { AppInjector } from '../../services/appInjector.service';
 import { MessageServiceModule } from '../../services/message.service';
-
 import { TimeSelectorComponent } from './time-selector.component';
 
-AppInjector.instance.setTestStore(new Store());
+// ACHTUNG: Store muss als letztes eingezogen werden!
+import { Store } from '@fluxgate/common';
+
+const store = new Store();
+AppInjector.instance.setTestStore(store);
 
 
 describe('TimeSelectorComponent', () => {
@@ -30,9 +34,6 @@ describe('TimeSelectorComponent', () => {
         TimeSelectorComponent
       ],
       providers: [
-        // {
-        //   provide: AppStore, useFactory: createCommandStore
-        // },
         AppInjector
       ]
     }).compileComponents();
