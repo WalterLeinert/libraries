@@ -16,7 +16,7 @@ import { MetadataService } from './metadata.service';
 
 /**
  * Abstrakte Basisklasse für CRUD-Operationen auf der DB über knex.
- * 
+ *
  * @export
  * @abstract
  * @class ServiceBase
@@ -31,11 +31,11 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Creates an instance of ServiceBase.
-   * 
+   *
    * @param {{ new (): T }} ctor
    * @param {string} _tableName
    * @param {string} _idName
-   * 
+   *
    * @memberOf ServiceBase
    */
   constructor(table: Funktion, private knexService: KnexService, private metadataService: MetadataService) {
@@ -51,10 +51,10 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Erzeugt eine neue Entity-Instanz vom Typ {T} in der DB und liefert die Instanz als @see{Promise}
-   * 
+   *
    * @param {T} subject
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ServiceBase
    */
   public create(
@@ -108,10 +108,10 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Liefert eine Entity-Instanz vom Typ {T} aus der DB als @see{Promise}
-   * 
+   *
    * @param {TId} id
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ServiceBase
    */
   public findById(
@@ -157,9 +157,9 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Liefert alle Entity-Instanzen vom Typ {T} als @see{Promise}
-   * 
+   *
    * @returns {Promise<T[]>}
-   * 
+   *
    * @memberOf ServiceBase
    */
   public find(
@@ -180,7 +180,7 @@ export abstract class BaseService<T, TId extends IToString>  {
                 //
                 // falls wir User-Objekte gefunden haben, wird für das Logging
                 // die Passwort-Info zurückgesetzt
-                //                                
+                //
                 if (logResult.length > 0) {
                   if (Types.hasMethod(logResult[0], 'resetCredentials')) {
                     logResult.forEach((item) => (item as any as IUser).resetCredentials());
@@ -203,10 +203,10 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Aktualisiert die Entity-Instanz {subject} vom Typ {T} in der DB und liefert die Instanz als @see{Promise}
-   * 
+   *
    * @param {T} subject
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ServiceBase
    */
   public update(
@@ -220,9 +220,29 @@ export abstract class BaseService<T, TId extends IToString>  {
 
       const dbSubject = this.createDatabaseInstance(subject);
       return new Promise<T>((resolve, reject) => {
+        let andWhereColumnName: string = '1';
+        const andWhereOperator: string = '=';
+        let andWhereValue: any = '1';
+
+        /**
+         * falls eine Version-Column vorliegt, müssen wir
+         * - die Entity-Version in die Query einbauen
+         * - und die Version erhöhen
+         */
+        if (this.metadata.versionColumn) {
+          andWhereColumnName = this.metadata.versionColumn.options.name;
+
+          const version: number = dbSubject[this.metadata.versionColumn.options.name];
+          andWhereValue = version;
+
+          dbSubject[andWhereColumnName] = version + 1;
+        }
+
         this.fromTable()
           .where(this.idColumnName, dbSubject[this.idColumnName])
+          .andWhere(andWhereColumnName, andWhereOperator, andWhereValue)
           .update(dbSubject)
+
           .then((affectedRows: number) => {
             log.debug(`updated ${this.tableName} with id: ${dbSubject[this.idColumnName]}` +
               ` (affectedRows: ${affectedRows})`, );
@@ -239,10 +259,10 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Löscht eine Entity-Instanz vom Typ {T} in der DB und liefert die {Id} als @see{Promise}
-   * 
+   *
    * @param {TId} id
    * @returns {Promise<TId>}
-   * 
+   *
    * @memberOf ServiceBase
    */
   public delete(
@@ -271,10 +291,10 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Führt die Query {query} aus und liefert ein Array von Entity-Instanzen vom Typ {T} als @see{Promise}
-   * 
+   *
    * @param {Knex.QueryBuilder} query
    * @returns {Promise<T[]>}
-   * 
+   *
    * @memberOf ServiceBase
    */
   public queryKnex(
@@ -297,7 +317,7 @@ export abstract class BaseService<T, TId extends IToString>  {
                 //
                 // falls wir User-Objekte gefunden haben, wird für das Logging
                 // die Passwort-Info zurückgesetzt
-                //                                
+                //
                 if (logResult.length > 0) {
                   if (Types.hasMethod(logResult[0], 'resetCredentials')) {
                     logResult.forEach((item) => (item as any as IUser).resetCredentials());
@@ -334,9 +354,21 @@ export abstract class BaseService<T, TId extends IToString>  {
   }
 
 
+
+  public nopTerm(queryBuilder: Knex.QueryBuilder): Knex.QueryBuilder {
+    return queryBuilder;
+  }
+
+
+  public andWhere(queryBuilder: Knex.QueryBuilder, columnName: string, operator: string, value: any):
+    Knex.QueryBuilder {
+    return queryBuilder.andWhere(columnName, operator, value);
+  }
+
+
   /**
    * Liefert die from(<table>) Clause für den aktuellen Tabellennamen
-   * 
+   *
    * @readonly
    * @protected
    * @type {Knex.QueryBuilder}
@@ -349,7 +381,7 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Liefert den DB-Id-Spaltennamen (primary key column)
-   * 
+   *
    * @readonly
    * @type {string}
    * @memberOf ServiceBase
@@ -365,9 +397,9 @@ export abstract class BaseService<T, TId extends IToString>  {
   /**
    * Setzt die "primary key" Spalte von "aussen". Diese wird als PK-Spalte verwendet, falls über die Metadaten
    * keine primaryKeyColumn definiert ist (kommt aus dem Controller).
-   * 
-   * @param {string} name 
-   * 
+   *
+   * @param {string} name
+   *
    * @memberOf BaseService
    */
   public setIdColumn(name: string) {
@@ -395,11 +427,11 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Erzeugt aus der DB-Row @param{row} (JSON) eine Modellinstanz vom Typ @see{T}
-   * 
+   *
    * @protected
    * @param {*} row
    * @returns {T}
-   * 
+   *
    * @memberOf BaseService
    */
   protected createModelInstance(row: any): T {
@@ -408,11 +440,11 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Erzeugt aus dem Array von DB-Rows @param{rows} (JSON) ein Array von Modellinstanzen vom Typ @see{T}
-   * 
+   *
    * @protected
    * @param {any[]} rows
    * @returns {T[]}
-   * 
+   *
    * @memberOf BaseService
    */
   protected createModelInstances(rows: any[]): T[] {
@@ -436,7 +468,7 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Liefert den DB-Tabellennamen
-   * 
+   *
    * @readonly
    * @type {string}
    * @memberOf ServiceBase
@@ -449,9 +481,9 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Serialisiert das @param{item} für die Übertragung zum Client über das REST-Api.
-   *  
+   *
    * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
-   * 
+   *
    * @param {T} item - Entity-Instanz
    * @returns {any}
    */
@@ -462,9 +494,9 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Serialisiert das @param{items}-Array für die Übertragung zum Client über das REST-Api.
-   *  
+   *
    * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
-   * 
+   *
    * @param {T} items - Array von Entity-Instanzen
    * @returns {any}
    */
@@ -475,12 +507,12 @@ export abstract class BaseService<T, TId extends IToString>  {
 
   /**
    * Deserialisiert das Json-Objekt, welches über das REST-Api vom Client zum Server übertragen wurde
-   * 
-   * TODO: ggf. die Deserialisierung von speziellen Attributtypen (wie Date) implementieren 
-   * 
+   *
+   * TODO: ggf. die Deserialisierung von speziellen Attributtypen (wie Date) implementieren
+   *
    * @param {any} json - Json-Objekt vom Client
    * @returns {T}
-   * 
+   *
    */
   private deserialize(json: any): T {
     Assert.notNull(json);
