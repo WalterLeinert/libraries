@@ -1,0 +1,8 @@
+ALTER TABLE `user` 
+ADD COLUMN `deleted` TINYINT NOT NULL DEFAULT 0 AFTER `id_role`,
+ADD COLUMN `id_mandant` INT(11) NOT NULL DEFAULT 1 AFTER `deleted`;
+
+ALTER TABLE `role` 
+ADD COLUMN `deleted` TINYINT NOT NULL DEFAULT 0 AFTER `role_description`,
+ADD COLUMN `id_mandant` INT(11) NOT NULL DEFAULT 1 AFTER `deleted`;
+
