@@ -99,8 +99,8 @@ export class ColumnTypes {
   public static JSON: ColumnType = 'json';
 
   /**
-   * SQL CLOB type. Your class's property type should be array of string. Note: value in this column 
-   * should not contain a comma (",") since this symbol is used to create a string from the array, 
+   * SQL CLOB type. Your class's property type should be array of string. Note: value in this column
+   * should not contain a comma (",") since this symbol is used to create a string from the array,
    * using .join(",") operator.
    */
   public static SIMPLE_ARRAY: ColumnType = 'simple_array';
@@ -157,6 +157,8 @@ export class ColumnTypes {
         case 'string':
           return ColumnTypes.STRING;
         case 'date':
+          return ColumnTypes.DATE;
+        case 'datetime':
           return ColumnTypes.DATETIME;
         case 'time':
           return ColumnTypes.TIME;

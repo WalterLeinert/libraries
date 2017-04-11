@@ -1,7 +1,8 @@
+import { Clone } from '../../base/clone';
 import { ValueGenerator } from './value-generator';
 
 export class DatetimeValueGenerator extends ValueGenerator<Date> {
-  public static readonly INITIAL_VALUE = new Date(2015, 10, 1, 8, 0);
+  public static readonly INITIAL_VALUE = new Date(2015, 10 /*November*/, 1, 8, 0);
 
   constructor(strategy: Iterator<number>) {
     super(strategy);
@@ -18,7 +19,7 @@ export class DatetimeValueGenerator extends ValueGenerator<Date> {
    * @memberOf DatetimeValueGenerator
    */
   protected formatValue(index: number): Date {
-    const date = DatetimeValueGenerator.INITIAL_VALUE;
+    const date = Clone.clone(DatetimeValueGenerator.INITIAL_VALUE);
     date.setMinutes(date.getMinutes() + index);
     return date;
   }
