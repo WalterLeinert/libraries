@@ -194,10 +194,16 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
    *
    * @memberOf EntityGenerator
    */
-  private createValueGenerator(metadata: ColumnMetadata, count: number): IValueGenerator {
-    let rval: IValueGenerator;
+  private createValueGenerator(metadata: ColumnMetadata, count: number, start: number = 1,
+    increment: number = 1): IValueGenerator {
 
-    const strategy = new SequenceGeneratorStrategy(count);
+    const strategy = new SequenceGeneratorStrategy(count, start, increment);
+    return this.createDefaulValueGenerator(metadata, strategy);
+  }
+
+
+  private createDefaulValueGenerator(metadata: ColumnMetadata, strategy: Iterator<number>): IValueGenerator {
+    let rval: IValueGenerator;
 
     switch (metadata.propertyType) {
       case 'int':
@@ -242,6 +248,7 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
     }
 
     return rval;
+
   }
 
 }
