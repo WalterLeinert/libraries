@@ -1,6 +1,0 @@
-ALTER
- ALGORITHM = UNDEFINED
- DEFINER = root@localhost
- SQL SECURITY DEFINER
- VIEW `_monthlyovertimelawcompensation`
- AS select `employeeportal`.`monthsetting`.`id_user` AS `id_user`,`_monthlyovertime`.`year` AS `year`,`_monthlyovertime`.`month` AS `month`,`_monthlyovertime`.`overtime` AS `overtime`,`employeeportal`.`monthsetting`.`monthsetting_weeklyworkhours` AS `weeklyWorkHours`,`employeeportal`.`monthsetting`.`monthsetting_lawcompensation` AS `lawCompensation`,((`employeeportal`.`monthsetting`.`monthsetting_weeklyworkhours` * `employeeportal`.`monthsetting`.`monthsetting_lawcompensation`) / 100) AS `lawCompensationHours`,(`_monthlyovertime`.`overtime` - ((`employeeportal`.`monthsetting`.`monthsetting_weeklyworkhours` * `employeeportal`.`monthsetting`.`monthsetting_lawcompensation`) / 100)) AS `afterLawCompensation` from (`employeeportal`.`_monthlyovertime` left join `employeeportal`.`monthsetting` on(((`_monthlyovertime`.`id_user` = `employeeportal`.`monthsetting`.`id_user`) and (`_monthlyovertime`.`year` = `employeeportal`.`monthsetting`.`monthsetting_year`) and (`_monthlyovertime`.`month` = `employeeportal`.`monthsetting`.`monthsetting_month`))))

@@ -1,1 +1,0 @@
-DROP TRIGGER IF EXISTS `Overtime Before Insert`;

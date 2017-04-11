@@ -8,7 +8,7 @@
       "user": "root",
       "password": "root",
       "port": 33306,
-      "database": "employeeportal"
+      "database": "libraries"
     },
     "pool": {
       "min": 0,
