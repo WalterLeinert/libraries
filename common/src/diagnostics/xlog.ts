@@ -123,15 +123,17 @@ export class XLog extends Disposable implements ILogger {
   /**
    * logs a message for log level @see{levels.ERROR}.
    */
-  public error(message: string, ...args: any[]): void {
-    this.logInternal(EnterExit.Log, XLog.levels.ERROR, message, ...args);
+  public error(message: string | Error, ...args: any[]): void {
+    const msg = this.extractErrorMessage(message);
+    this.logInternal(EnterExit.Log, XLog.levels.ERROR, msg, ...args);
   }
 
   /**
    * logs a message for log level @see{levels.FATAL}.
    */
-  public fatal(message: string, ...args: any[]): void {
-    this.logInternal(EnterExit.Log, XLog.levels.FATAL, message, ...args);
+  public fatal(message: string | Error, ...args: any[]): void {
+    const msg = this.extractErrorMessage(message);
+    this.logInternal(EnterExit.Log, XLog.levels.FATAL, msg, ...args);
   }
 
   public isLevelEnabled(level: ILevel): boolean {
@@ -277,5 +279,22 @@ export class XLog extends Disposable implements ILogger {
       default:
         throw new NotSupportedException('undefined log level: ' + level);
     }
+  }
+
+  private extractErrorMessage(message: string | Error): string {
+    const sb = new StringBuilder();
+
+    if (!Types.isString(message)) {
+      const err = message as Error;
+
+      sb.append(JSON.stringify(err));
+      sb.append(err.stack);
+
+      message = sb.toString();
+    } else {
+      sb.append(message.toString());
+    }
+
+    return sb.toString();
   }
 }
