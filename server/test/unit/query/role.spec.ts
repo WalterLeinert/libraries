@@ -43,12 +43,16 @@ class RoleTest extends KnexTest {
         .then((roles) => {
           const ids = roles.map((item) => item.id);
           RoleTest.maxRoleId = Math.max(...ids);
+
+          log.info(`maxRoleId = ${RoleTest.maxRoleId}`);
         });
     });
   }
 
   public static after() {
     return using(new XLog(RoleTest.logger, levels.INFO, 'static.after'), (log) => {
+
+      log.info(`maxRoleId = ${RoleTest.maxRoleId}`);
 
       // alle Testrollen löschen
       RoleTest.roleService.queryKnex(
