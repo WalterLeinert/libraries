@@ -7,6 +7,31 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Mocha Tests",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "-u",
+        "tdd",
+        "--timeout",
+        "999999",
+        "--colors",
+        "${workspaceRoot}/server/dist/test/**/*.js"
+      ],
+      "internalConsoleOptions": "openOnSessionStart",
+       "cwd": "${workspaceRoot}/server",
+       "sourceMaps": true,
+       "env": {
+        "NODE_ENV": "testing"
+      },
+       "outFiles": [
+        "${workspaceRoot}/server/dist/node/src/**/*.js",
+        "${workspaceRoot}/server/dist/node/test/**/*.js",
+        "${workspaceRoot}/server/node_modules/@fluxgate/common/dist/node/src/**/*.js"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "common: run Mocha",
       "program": "${workspaceRoot}/common/node_modules/mocha/bin/_mocha",
       "args": [
@@ -31,14 +56,15 @@
       "name": "server: run Mocha",
       "program": "${workspaceRoot}/server/node_modules/mocha/bin/_mocha",
       "args": [
-        "dist/test/**/*.spec.js",
+        "${workspaceRoot}/server/dist/test/**/*.js",
         "--no-timeouts"
       ],
       "cwd": "${workspaceRoot}/server",
       "runtimeExecutable": null,
-      "outFiles": [
+       "outFiles": [
         "${workspaceRoot}/server/dist/src/**/*.js",
-        "${workspaceRoot}/server/dist/test/**/*.js"
+        "${workspaceRoot}/server/dist/test/**/*.js",
+        "${workspaceRoot}/server/node_modules/@fluxgate/common/dist/node/src/**/*.js"
       ],
       "sourceMaps": true,
       "stopOnEntry": false,
