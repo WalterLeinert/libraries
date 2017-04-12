@@ -156,26 +156,45 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
 
 
   /**
+   * erzeugt ein neues Entity-Item mit Testdaten
+   *
+   * @protected
+   * @param createId - falls true, wird eine neue Id erzeugt und gesetzt
+   * @returns {T}
+   *
+   * @memberOf EntityGenerator
+   */
+  public createItem(createId: boolean = false): T {
+    const item = this.createEntity<T>();
+
+    this.config.tableMetadata.columnMetadata.forEach((metadata) => {
+      // für alle Spalten ausser der PrimaryKey-Spalte Werte erzeugen
+      if (metadata.options.persisted && !metadata.options.primary) {
+        const result = this.valueGeneratorDict.get(metadata.propertyName).next();
+        item[metadata.propertyName] = result.value;
+      }
+    });
+
+    if (this.config.tableMetadata.primaryKeyColumn && createId) {
+      item[this.config.tableMetadata.primaryKeyColumn.propertyName] = this.nextId();
+    }
+
+    return item;
+  }
+
+
+  /**
    * erzeut ein Array vom Typ @see{T} mit @param{maxItems} Elementen.
    * Die Elementwerte werden anhand des Typs automatisch erzeugt.
    *
    * @param maxItems
+   * @param createId - falls true, wird eine neue Id erzeugt und gesetzt
    */
-  protected createItems(maxItems: number): T[] {
+  protected createItems(maxItems: number, createId: boolean = true): T[] {
     return using(new XLog(EntityGenerator.logger, levels.INFO, 'createItems'), (log) => {
       const items: T[] = [];
       for (let i = 0; i < maxItems; i++) {
-        const item = this.createEntity<T>();
-
-        this.config.tableMetadata.columnMetadata.forEach((metadata) => {
-          if (metadata.options.primary) {
-            item.id = this.nextId();
-          } else if (metadata.options.persisted) {
-            const result = this.valueGeneratorDict.get(metadata.propertyName).next();
-            item[metadata.propertyName] = result.value;
-          }
-        });
-
+        const item = this.createItem(createId);
         items.push(item);
       }
 

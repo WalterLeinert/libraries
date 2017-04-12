@@ -165,7 +165,21 @@ class EntityGeneratorTest {
   }
 
 
-  @test 'should create new item'() {
+  @test 'should test createItem'() {
+    const item = this.generator.createItem(true);
+    expect(item).to.be.not.null;
+    expect(item.id).not.to.be.undefined;
+    expect(item.id).to.equal(this.generator.currentId());
+  }
+
+  @test 'should test createItem (without id)'() {
+    const item = this.generator.createItem(false);
+    expect(item).to.be.not.null;
+    expect(item.id).to.be.undefined;
+  }
+
+
+  @test 'should create new entity'() {
     for (let i = 0; i < 10; i++) {
       const item = this.generator.createEntity<ArtikelGenerator>();
       expect(item).to.be.not.null;
@@ -176,6 +190,7 @@ class EntityGeneratorTest {
       expect(item.id).to.equal(this.generator.currentId());
     }
   }
+
 
   @test 'should test remaining items(total: maxCount) + error for > maxCount'() {
     for (let i = this.generator.currentId(); i < EntityGeneratorTest.MAX_ITEMS; i++) {
@@ -205,8 +220,6 @@ class EntityGeneratorTest {
 
 
 }
-
-
 
 
 @suite('model.generator.EntityGenerator.invalidProperty')
