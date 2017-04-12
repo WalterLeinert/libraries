@@ -37,16 +37,14 @@ class OptimisticLockTest extends KnexTest {
   public static readonly ITEMS = 5;
   public static readonly MAX_ITEMS = 10;
 
-  private service: BaseService<QueryTest, number>;
-  private maxRoleId: number = 0;
+  private static _maxId: number = 0;
+  private static _service: BaseService<QueryTest, number>;
+
   private entityGenerator: EntityGenerator<QueryTest, number>;
   private testItems: QueryTest[];
 
   constructor() {
     super();
-
-    this.service = KnexTest.createService(QueryTestService);
-
 
     this.entityGenerator = new EntityGenerator<QueryTest, number>({
       count: OptimisticLockTest.ITEMS,
@@ -63,33 +61,42 @@ class OptimisticLockTest extends KnexTest {
   }
 
 
-  public before() {
-    using(new XLog(OptimisticLockTest.logger, levels.INFO, 'before'), (log) => {
+  public static before() {
+    using(new XLog(OptimisticLockTest.logger, levels.INFO, 'static.before'), (log) => {
       super.before();
 
+      OptimisticLockTest._service = KnexTest.createService(QueryTestService);
+
       // max. bisherige id ermitteln
-      this.service.find()
-        .then((items) => {
-          const ids = items.map((item) => item.id);
+      OptimisticLockTest._service.find()
+        .then((roles) => {
+          const ids = roles.map((item) => item.id);
+
           if (!Utility.isNullOrEmpty(ids)) {
-            this.maxRoleId = Math.max(...ids);
+            OptimisticLockTest._maxId = Math.max(...ids);
           }
+
+          log.info(`maxId = ${OptimisticLockTest._maxId}`);
         });
     });
   }
 
+  public static after() {
+    return using(new XLog(OptimisticLockTest.logger, levels.INFO, 'static.after'), (log) => {
 
-  public after() {
-    super.after();
+      log.info(`maxId = ${OptimisticLockTest._maxId}`);
 
-    this.service.queryKnex(
-      this.service.fromTable().where(this.service.idColumnName, '>=',
-        this.maxRoleId + 1).delete())
-      .then((rowsAffected) => {
+      // alle Testrollen löschen
+      OptimisticLockTest._service.queryKnex(
+        OptimisticLockTest._service
+          .fromTable()
+          .where(OptimisticLockTest._service.idColumnName, '>=', OptimisticLockTest._maxId + 1)
+        // .delete()
+      ).then((rowsAffected) => {
         super.after();
       });
+    });
   }
-
 
 
   @test 'should create 2 records'() {
@@ -97,16 +104,14 @@ class OptimisticLockTest extends KnexTest {
       const item1 = this.entityGenerator.createItem();
       const item2 = this.entityGenerator.createItem();
 
-      // this.service.create(item1).then((it1) => {
-      //   log.log(`item1 created: ${JSON.stringify(it1)}`);
-
-      //   this.service.create(item2).then((it2) => {
-      //     log.log(`item2 created: ${JSON.stringify(it2)}`);
-      //   });
-      // });
-
       Promise.all([this.service.create(item1), this.service.create(item2)]).then((items) => {
         log.log(`items created: ${JSON.stringify(items)}`);
+
+        const ids = items.map((item) => item.id);
+        if (!Utility.isNullOrEmpty(ids)) {
+          OptimisticLockTest._maxId = Math.max(...ids);
+          log.info(`maxId = ${OptimisticLockTest._maxId}`);
+        }
       });
     });
   }
@@ -114,10 +119,46 @@ class OptimisticLockTest extends KnexTest {
 
   @test 'should update 2 records'() {
     using(new XLog(OptimisticLockTest.logger, levels.INFO, 'should update 2 records'), (log) => {
-      const item1 = this.entityGenerator.createItem();
+      this.service.find().then((items) => {
+        const item = items[0];
+        const itemClone = Clone.clone(item);
 
-      // return expect(this.service.create(item1)).to.become(item1);
+        item.__test = 5000;
 
+        // update für Record mit delay von 5 s
+        this.service.update(item).then((it) => {
+          log.log(`item1 updated: id = ${it.id}, ${JSON.stringify(it)}`);
+        });
+
+
+        itemClone.__test = 0;
+
+        // update für Record mit delay von 5 s
+        // this.service.update(itemClone).then((it) => {
+        //   log.log(`itemClone updated: id = ${it.id}, ${JSON.stringify(it)}`);
+        // });
+
+      });
+
+      // this.service.findById(this.maxId).then((item) => {
+      //   item.__test = 5000;
+
+      //   // update für Record mit delay von 5 s
+      //   this.service.update(item).then((it) => {
+      //     log.log(`item1 updated: ${JSON.stringify(it)}`);
+      //   });
+      // });
+
+      // this.service.findById(this.maxId).then((item) => {
+      //   // update für Record ohne delay
+      //   this.service.update(item).then((it) => {
+      //     log.log(`item1 updated: ${JSON.stringify(it)}`);
+      //   });
+      // });
+
+      //
+      // ersten Record persistieren mit delay von 5ms
+      //
       // this.service.create(item1).then((item) => {
       //   log.log(`item1 created: ${JSON.stringify(item)}`);
       //   const x = item.name;
@@ -144,6 +185,14 @@ class OptimisticLockTest extends KnexTest {
 
       // // }, 2000);
     });
+  }
+
+  private get service(): BaseService<QueryTest, number> {
+    return OptimisticLockTest._service;
+  }
+
+  private get maxId(): number {
+    return OptimisticLockTest._maxId;
   }
 
 }

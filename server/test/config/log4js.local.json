@@ -26,6 +26,7 @@
     ],
     "levels": {
         "[all]": "INFO",
+        "ExceptionWrapper": "INFO",
         "BaseService": "DEBUG",
         "PassportController": "INFO",
         "PassportLocalService": "INFO",

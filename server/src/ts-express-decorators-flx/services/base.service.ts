@@ -263,63 +263,86 @@ export abstract class BaseService<T, TId extends IToString>  {
             }
           }
 
-          setTimeout(() => {
+          // TODO: setTimeout(() => {
 
-            let query: Knex.QueryBuilder = this.fromTable()
-              .where(this.idColumnName, dbSubject[this.idColumnName]);
+          let query: Knex.QueryBuilder = this.fromTable()
+            .where(this.idColumnName, dbSubject[this.idColumnName]);
 
-            /**
-             * falls eine Version-Column vorliegt, müssen wir
-             * - die Entity-Version in die Query einbauen
-             * - und die Version erhöhen
-             */
-            if (this.metadata.versionColumn) {
-              const andWhereColumnName = this.metadata.versionColumn.options.name;
+          // "leere"" query
+          let entityversionQuery: Knex.QueryBuilder = this.knexService.knex.table('entityversion');
 
-              const version: number = dbSubject[this.metadata.versionColumn.options.name];
-              const andWhereValue = version;
+          /**
+           * falls eine Version-Column vorliegt, müssen wir
+           * - die Entity-Version in die Query einbauen
+           * - und die Version erhöhen
+           */
+          if (this.metadata.versionColumn) {
+            const andWhereColumnName = this.metadata.versionColumn.options.name;
 
-              dbSubject[andWhereColumnName] = version + 1;
+            const version: number = dbSubject[this.metadata.versionColumn.options.name];
+            const andWhereValue = version;
 
-              query = query.andWhere(andWhereColumnName, '=', andWhereValue);
-            }
+            dbSubject[andWhereColumnName] = version + 1;
 
+            query = query.andWhere(andWhereColumnName, '=', andWhereValue);
 
-            query
-              .update(dbSubject)
+            log.debug(`query prepared for updating version in table ${this.tableName}`);
+
+            // query zum Update der Version
+            entityversionQuery = this.knexService.knex.table('entityversion')
+              .update({ entityversion_version: dbSubject[this.metadata.versionColumn.options.name] })
               .transacting(trx)
+              .where('entityversion_id', '=', this.tableName);
 
-              .then((affectedRows: number) => {
-                log.debug(`updated ${this.tableName} with id: ${dbSubject[this.idColumnName]}` +
-                  ` (affectedRows: ${affectedRows})`, );
+            log.debug(`query prepared for updating version in entityversion for table ${this.tableName}`);
+          }
 
-                if (this.metadata.versionColumn) {
-                  if (affectedRows <= 0) {
-                    trx.rollback();
-                    reject(this.createBusinessException(
-                      new OptimisticLockException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
+          entityversionQuery
+            .then((item) => {
+
+              query
+                .update(dbSubject)
+                .transacting(trx)
+
+                .then((affectedRows: number) => {
+                  log.debug(`updated ${this.tableName} with id: ${dbSubject[this.idColumnName]}` +
+                    ` (affectedRows: ${affectedRows})`, );
+
+                  if (this.metadata.versionColumn) {
+                    if (affectedRows <= 0) {
+                      trx.rollback();
+                      reject(this.createBusinessException(
+                        new OptimisticLockException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
+                    } else {
+
+                      this.knexService.knex
+                        .update({ entitversion_version: dbSubject[this.metadata.versionColumn.options.name] })
+                        .transacting(trx)
+                        .where('entitversion_id', '=', this.tableName);
+
+                      trx.commit();
+                      resolve(this.serialize(subject));
+                    }
                   } else {
-                    trx.commit();
-                    resolve(this.serialize(subject));
+                    if (affectedRows <= 0) {
+                      trx.rollback();
+                      reject(this.createSystemException(
+                        new EntityNotFoundException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
+                    } else {
+                      trx.commit();
+                      resolve(this.serialize(subject));
+                    }
                   }
-                } else {
-                  if (affectedRows <= 0) {
-                    trx.rollback();
-                    reject(this.createSystemException(
-                      new EntityNotFoundException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
-                  } else {
-                    trx.commit();
-                    resolve(this.serialize(subject));
-                  }
-                }
-              })
-              .catch((err) => {
-                log.error(err);
+                })
+                .catch((err) => {
+                  log.error(err);
 
-                trx.rollback();
-                reject(this.createSystemException(err));
-              });
-          }, delayMillisecs);
+                  trx.rollback();
+                  reject(this.createSystemException(err));
+                });
+              //  }, delayMillisecs);
+
+            });
 
         });     // transaction
       });     // promise
