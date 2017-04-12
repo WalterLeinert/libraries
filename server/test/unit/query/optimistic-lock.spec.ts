@@ -19,7 +19,7 @@ chai.should();
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { ConstantValueGenerator, EntityGenerator, NumberIdGenerator, Utility } from '@fluxgate/common';
+import { Clone, ConstantValueGenerator, EntityGenerator, NumberIdGenerator, Utility } from '@fluxgate/common';
 
 
 import { BaseService } from '../../../src/ts-express-decorators-flx/services/base.service';
@@ -39,6 +39,8 @@ class OptimisticLockTest extends KnexTest {
 
   private service: BaseService<QueryTest, number>;
   private maxRoleId: number = 0;
+  private entityGenerator: EntityGenerator<QueryTest, number>;
+  private testItems: QueryTest[];
 
   constructor() {
     super();
@@ -46,19 +48,24 @@ class OptimisticLockTest extends KnexTest {
     this.service = KnexTest.createService(QueryTestService);
 
 
-    const eg = new EntityGenerator<QueryTest, number>({
+    this.entityGenerator = new EntityGenerator<QueryTest, number>({
       count: OptimisticLockTest.ITEMS,
       maxCount: OptimisticLockTest.MAX_ITEMS,
       tableMetadata: KnexTest.metadataService.findTableMetadata(QueryTest),
-      idGenerator: new NumberIdGenerator(OptimisticLockTest.MAX_ITEMS)
+      idGenerator: new NumberIdGenerator(OptimisticLockTest.MAX_ITEMS),
+      columns: {
+        __version: new ConstantValueGenerator(0),
+        __test: new ConstantValueGenerator(0),
+      }
     });
+
+    this.testItems = this.entityGenerator.generate();
   }
 
 
   public before() {
     using(new XLog(OptimisticLockTest.logger, levels.INFO, 'before'), (log) => {
       super.before();
-
 
       // max. bisherige id ermitteln
       this.service.find()
@@ -85,11 +92,58 @@ class OptimisticLockTest extends KnexTest {
 
 
 
-  // @test 'should create 2 records'() {
-  //   return expect(this.service.find()
-  //     .then((roles) => roles.length))
-  //     .to.become(3);
-  // }
+  @test 'should create 2 records'() {
+    using(new XLog(OptimisticLockTest.logger, levels.INFO, 'should create 2 records'), (log) => {
+      const item1 = this.entityGenerator.createItem();
+      const item2 = this.entityGenerator.createItem();
 
+      // this.service.create(item1).then((it1) => {
+      //   log.log(`item1 created: ${JSON.stringify(it1)}`);
+
+      //   this.service.create(item2).then((it2) => {
+      //     log.log(`item2 created: ${JSON.stringify(it2)}`);
+      //   });
+      // });
+
+      Promise.all([this.service.create(item1), this.service.create(item2)]).then((items) => {
+        log.log(`items created: ${JSON.stringify(items)}`);
+      });
+    });
+  }
+
+
+  @test 'should update 2 records'() {
+    using(new XLog(OptimisticLockTest.logger, levels.INFO, 'should update 2 records'), (log) => {
+      const item1 = this.entityGenerator.createItem();
+
+      // return expect(this.service.create(item1)).to.become(item1);
+
+      // this.service.create(item1).then((item) => {
+      //   log.log(`item1 created: ${JSON.stringify(item)}`);
+      //   const x = item.name;
+
+      //   item.__test = 5000;
+
+      //   this.service.update(item).then((it) => {
+      //     log.log(`item1 updated: ${JSON.stringify(it)}`);
+      //   });
+
+      // });
+
+      // // setTimeout(() => {
+      // const item2 = Clone.clone(item1);
+      // item1.__test = 5000;
+
+      // this.service.update(item1).then((item) => {
+      //   log.log(`item1 updated: ${JSON.stringify(item)}`);
+      // });
+
+      // this.service.update(item2).then((item) => {
+      //   log.log(`item2 updated: ${JSON.stringify(item)}`);
+      // });
+
+      // // }, 2000);
+    });
+  }
 
 }
