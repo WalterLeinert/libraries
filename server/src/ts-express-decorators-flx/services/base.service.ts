@@ -16,6 +16,7 @@ import {
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
 
+
 /**
  * Abstrakte Basisklasse für CRUD-Operationen auf der DB über knex.
  *
@@ -224,53 +225,68 @@ export abstract class BaseService<T, TId extends IToString>  {
 
       return new Promise<T>((resolve, reject) => {
 
-        let query: Knex.QueryBuilder = this.fromTable()
-          .where(this.idColumnName, dbSubject[this.idColumnName]);
+        let delayMillisecs = 0;
 
-        /**
-         * falls eine Version-Column vorliegt, müssen wir
-         * - die Entity-Version in die Query einbauen
-         * - und die Version erhöhen
-         */
-        if (this.metadata.versionColumn) {
-          const andWhereColumnName = this.metadata.versionColumn.options.name;
+        if (this.metadata.testColumn) {
+          log.info(`testColumn exists: ${this.metadata.testColumn.propertyName}`);
 
-          const version: number = dbSubject[this.metadata.versionColumn.options.name];
-          const andWhereValue = version;
-
-          dbSubject[andWhereColumnName] = version + 1;
-
-          query = query.andWhere(andWhereColumnName, '=', andWhereValue);
+          const testValue = subject[this.metadata.testColumn.propertyName];
+          if (testValue) {
+            delayMillisecs = +testValue;
+            log.info(`delay = ${delayMillisecs} [ms]`);
+          }
         }
 
+        setTimeout(() => {
 
-        query
-          .update(dbSubject)
+          let query: Knex.QueryBuilder = this.fromTable()
+            .where(this.idColumnName, dbSubject[this.idColumnName]);
 
-          .then((affectedRows: number) => {
-            log.debug(`updated ${this.tableName} with id: ${dbSubject[this.idColumnName]}` +
-              ` (affectedRows: ${affectedRows})`, );
+          /**
+           * falls eine Version-Column vorliegt, müssen wir
+           * - die Entity-Version in die Query einbauen
+           * - und die Version erhöhen
+           */
+          if (this.metadata.versionColumn) {
+            const andWhereColumnName = this.metadata.versionColumn.options.name;
 
-            if (this.metadata.versionColumn) {
-              if (affectedRows <= 0) {
-                reject(this.createBusinessException(
-                  new OptimisticLockException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
+            const version: number = dbSubject[this.metadata.versionColumn.options.name];
+            const andWhereValue = version;
+
+            dbSubject[andWhereColumnName] = version + 1;
+
+            query = query.andWhere(andWhereColumnName, '=', andWhereValue);
+          }
+
+
+          query
+            .update(dbSubject)
+
+            .then((affectedRows: number) => {
+              log.debug(`updated ${this.tableName} with id: ${dbSubject[this.idColumnName]}` +
+                ` (affectedRows: ${affectedRows})`, );
+
+              if (this.metadata.versionColumn) {
+                if (affectedRows <= 0) {
+                  reject(this.createBusinessException(
+                    new OptimisticLockException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
+                } else {
+                  resolve(this.serialize(subject));
+                }
               } else {
-                resolve(this.serialize(subject));
+                if (affectedRows <= 0) {
+                  reject(this.createSystemException(
+                    new EntityNotFoundException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
+                } else {
+                  resolve(this.serialize(subject));
+                }
               }
-            } else {
-              if (affectedRows <= 0) {
-                reject(this.createSystemException(
-                  new EntityNotFoundException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
-              } else {
-                resolve(this.serialize(subject));
-              }
-            }
-          })
-          .catch((err) => {
-            log.error(err);
-            reject(this.createSystemException(err));
-          });
+            })
+            .catch((err) => {
+              log.error(err);
+              reject(this.createSystemException(err));
+            });
+        }, delayMillisecs);
       });
     });
   }
