@@ -4,7 +4,7 @@ MAINTAINER Walter Leinert
 
 # DB-Dump für Docker und Mysql für automatischen Import kopieren
 COPY ./database/libraries.sql /docker-entrypoint-initdb.d/000_libraries.sql
-# COPY ./database/patches/*/*.sql /docker-entrypoint-initdb.d/
+COPY ./database/patches/*/*.sql /docker-entrypoint-initdb.d/
 
 
 # Terminal u.a. für bash setzen
