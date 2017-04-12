@@ -30,7 +30,7 @@ class ArtikelTest implements IEntity<number> {
 
   @Test()
   @Column({ name: 'artikel_test', persisted: false })
-  public __test: number;
+  public __test: any;
 }
 
 
@@ -48,10 +48,9 @@ class ColumnTest {
     expect(testMetadata).to.be.not.null;
 
     expect(testMetadata.propertyName).to.equal('__test');
-    // expect(testMetadata.propertyType).to.equal(ColumnTypes.NUMBER);
   }
 
-  @test 'should test test option'() {
+  @test 'should test option value'() {
     const testMetadata = this.tableMetadata.testColumn;
 
     const tester = new ArtikelTest();
@@ -60,6 +59,17 @@ class ColumnTest {
     expect(tester[testMetadata.propertyName]).to.equal(tester.__test);
   }
 
+
+  @test 'should test custom option'() {
+    const testMetadata = this.tableMetadata.testColumn;
+
+    const tester = new ArtikelTest();
+    tester.__test = {
+      delay: 12
+    };
+
+    expect(tester[testMetadata.propertyName]).to.deep.equal(tester.__test);
+  }
 
 
   protected before() {
