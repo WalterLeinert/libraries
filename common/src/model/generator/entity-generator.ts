@@ -75,6 +75,9 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
       };
     } else {
       this.config = countOrConfig;
+      if (!this.config.columns) {
+        this.config.columns = {};
+      }
       if (!Types.isPresent(this.config.maxCount)) {
         this.config.maxCount = this.config.count;
       }

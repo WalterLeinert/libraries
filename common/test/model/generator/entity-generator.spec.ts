@@ -229,3 +229,22 @@ class EntityGeneratorInvalidPropertyTest {
   }
 
 }
+
+
+@suite('model.generator.EntityGenerator.missingColumns')
+class EntityGeneratorMissingColumnsTest {
+  public static readonly ITEMS = 1;
+  public static readonly INVALID = 0;
+
+
+  @test 'should not throw exception for missing columns'() {
+    const tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelGenerator);
+
+    expect(() => new EntityGenerator<ArtikelGenerator, number>({
+      count: EntityGeneratorTest.ITEMS,
+      tableMetadata: tableMetadata,
+      idGenerator: new NumberIdGenerator(EntityGeneratorInvalidPropertyTest.ITEMS)
+    })).not.to.throw();
+  }
+
+}
