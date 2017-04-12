@@ -15,6 +15,7 @@ import { Validator } from './../validation/validator';
 
 import { ColumnMetadata } from './columnMetadata';
 import { EnumMetadata } from './enumMetadata';
+import { SpecialColumn } from './specialColumns';
 import { TableMetadata } from './tableMetadata';
 import { ValidationMetadata } from './validationMetadata';
 
@@ -37,8 +38,8 @@ export class MetadataStorage {
   private tableColumnDict: Dictionary<string, ColumnMetadata[]> = new Dictionary<string, ColumnMetadata[]>();
   private tableEnumDict: Dictionary<string, Array<EnumMetadata<any, any, any>>> =
   new Dictionary<string, Array<EnumMetadata<any, any, any>>>();
-  private tableVersionDict: Dictionary<string, string> = new Dictionary<string, string>();
-  private tableClientDict: Dictionary<string, string> = new Dictionary<string, string>();
+  private tableSpecialColumnDict: Dictionary<string, Dictionary<string, SpecialColumn>> =
+  new Dictionary<string, Dictionary<string, SpecialColumn>>();
 
   private tableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
   private dbTableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
@@ -136,12 +137,16 @@ export class MetadataStorage {
             log.info(`Table ${metadata.options.name}: no primary key column`);
           }
 
-          if (this.tableVersionDict.containsKey(targetName)) {
-            metadata.setVersion(this.tableVersionDict.get(targetName));
-          }
 
-          if (this.tableClientDict.containsKey(targetName)) {
-            metadata.setClient(this.tableClientDict.get(targetName));
+          /**
+           * nun alle speziellen Columns übernehmen
+           */
+          if (this.tableSpecialColumnDict.containsKey(targetName)) {
+            const dict = this.tableSpecialColumnDict.get(targetName);
+
+            for (const propertyName of dict.keys) {
+              metadata.setSpecialColumn(propertyName, dict.get(propertyName));
+            }
           }
 
           this.tableDict.set(targetName, metadata);
@@ -171,13 +176,19 @@ export class MetadataStorage {
   }
 
 
-  public setVersion(target: Funktion, propertyName: string) {
-    this.tableVersionDict.set(target.name, propertyName);
+  public setSpecialColumn(target: Funktion, propertyName: string, key: SpecialColumn) {
+    let dict: Dictionary<string, SpecialColumn>;
+
+    if (!this.tableSpecialColumnDict.containsKey(target.name)) {
+      dict = new Dictionary<string, SpecialColumn>();
+      this.tableSpecialColumnDict.set(target.name, dict);
+    } else {
+      dict = this.tableSpecialColumnDict.get(target.name);
+    }
+
+    dict.set(propertyName, key);
   }
 
-  public setClient(target: Funktion, propertyName: string) {
-    this.tableClientDict.set(target.name, propertyName);
-  }
 
   /**
    * Fügt eine neue @see{validationMetadata} hinzu.

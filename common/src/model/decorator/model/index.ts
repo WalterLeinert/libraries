@@ -6,5 +6,6 @@ export * from './enumTable';
 export * from './enumTableOptions.interface';
 export * from './table';
 export * from './tableOptions.interface';
+export * from './test';
 export * from './validation';
 export * from './version';
