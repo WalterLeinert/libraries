@@ -91,7 +91,7 @@ gulp.task('compile', function() {
 
 gulp.task('compile-test', function () {
   //find test code - note use of 'base'
-  return gulp.src('./test/**/*.spec.ts', { base: '.' })
+  return gulp.src('./test/**/*.ts', { base: '.' })
     /*transpile*/
     .pipe(tsc(tscConfig.compilerOptions))
     /*flush to disk*/
