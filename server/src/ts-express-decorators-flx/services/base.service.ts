@@ -79,32 +79,40 @@ export abstract class BaseService<T, TId extends IToString>  {
       }
 
       return new Promise<T>((resolve, reject) => {
-        this.fromTable()
-          .insert(dbSubject)
-          .then((ids: number[]) => {
+        this.knexService.knex.transaction((trx) => {
 
-            if (ids.length <= 0) {
-              log.error(`ids empty`);
-              reject(this.createSystemException('create failed: ids empty'));
-            } else if (ids.length > 1) {
-              reject(this.createSystemException('create failed: ids.length > 1'));
-            } else {
-              const id = ids[0];
-              log.debug(`created new ${this.tableName} with id: ${id}`);
+          this.fromTable()
+            .insert(dbSubject)
+            .transacting(trx)
 
-              // Id der neuen Instanz zuweisen
-              dbSubject[this.idColumnName] = id;
+            .then((ids: number[]) => {
 
-              subject = this.createModelInstance(dbSubject);
-              resolve(this.serialize(subject));
-            }
-          })
-          .catch((err) => {
-            log.error(err);
-            reject(this.createSystemException(err));
-          });
+              if (ids.length <= 0) {
+                log.error(`ids empty`);
+                reject(this.createSystemException('create failed: ids empty'));
+              } else if (ids.length > 1) {
+                reject(this.createSystemException('create failed: ids.length > 1'));
+              } else {
+                const id = ids[0];
+                log.debug(`created new ${this.tableName} with id: ${id}`);
 
-      });
+                // Id der neuen Instanz zuweisen
+                dbSubject[this.idColumnName] = id;
+
+                subject = this.createModelInstance(dbSubject);
+
+                trx.commit();
+                resolve(this.serialize(subject));
+              }
+            })
+            .catch((err) => {
+              log.error(err);
+
+              trx.rollback();
+              reject(this.createSystemException(err));
+            });
+        });     // transaction
+      });     // promise
     });
   }
 
@@ -124,36 +132,45 @@ export abstract class BaseService<T, TId extends IToString>  {
     return using(new XLog(BaseService.logger, levels.INFO, 'findById', `[${this.tableName}] id = ${id}`), (log) => {
 
       return new Promise<T>((resolve, reject) => {
-        this.fromTable()
-          .where(this.idColumnName, id.toString())
-          .then((rows: any[]) => {
-            if (rows.length <= 0) {
-              log.info('result: no item found');
-              reject(this.createBusinessException(`table ${this.tableName}: item with id ${id} not found.`));
-            } else {
-              const result = this.createModelInstance(rows[0]);
+        this.knexService.knex.transaction((trx) => {
 
-              if (log.isDebugEnabled) {
-                //
-                // falls wir ein User-Objekt gefunden haben, wird für das Logging
-                // die Passwort-Info zurückgesetzt
-                //
-                const logResult = this.createModelInstance(Clone.clone(rows[0]));
-                if (Types.hasMethod(logResult, 'resetCredentials')) {
-                  (logResult as any as IUser).resetCredentials();
+          this.fromTable()
+            .where(this.idColumnName, id.toString())
+            .transacting(trx)
+
+            .then((rows: any[]) => {
+              if (rows.length <= 0) {
+                log.info('result: no item found');
+                reject(this.createBusinessException(`table ${this.tableName}: item with id ${id} not found.`));
+              } else {
+                const result = this.createModelInstance(rows[0]);
+
+                if (log.isDebugEnabled) {
+                  //
+                  // falls wir ein User-Objekt gefunden haben, wird für das Logging
+                  // die Passwort-Info zurückgesetzt
+                  //
+                  const logResult = this.createModelInstance(Clone.clone(rows[0]));
+                  if (Types.hasMethod(logResult, 'resetCredentials')) {
+                    (logResult as any as IUser).resetCredentials();
+                  }
+
+                  log.debug('result = ', logResult);
                 }
 
-                log.debug('result = ', logResult);
+                trx.commit();
+                resolve(this.deserialize(result));
               }
+            })
+            .catch((err) => {
+              log.error(err);
 
-              resolve(this.deserialize(result));
-            }
-          })
-          .catch((err) => {
-            log.error(err);
-            reject(this.createSystemException(err));
-          });
-      });
+              trx.rollback();
+              reject(this.createSystemException(err));
+            });
+
+        });     // transaction
+      });     // promise
     });
   }
 
@@ -170,36 +187,44 @@ export abstract class BaseService<T, TId extends IToString>  {
     return using(new XLog(BaseService.logger, levels.INFO, 'find', `[${this.tableName}]`), (log) => {
 
       return new Promise<T[]>((resolve, reject) => {
-        this.fromTable()
-          .then((rows) => {
-            if (rows.length <= 0) {
-              log.debug('result: no items');
-              resolve(new Array<T>());
-            } else {
-              const result = this.createModelInstances(rows);
+        this.knexService.knex.transaction((trx) => {
 
-              if (log.isDebugEnabled) {
-                const logResult = this.createModelInstances(Clone.clone(rows));
-                //
-                // falls wir User-Objekte gefunden haben, wird für das Logging
-                // die Passwort-Info zurückgesetzt
-                //
-                if (logResult.length > 0) {
-                  if (Types.hasMethod(logResult[0], 'resetCredentials')) {
-                    logResult.forEach((item) => (item as any as IUser).resetCredentials());
+          this.fromTable()
+            .transacting(trx)
+
+            .then((rows) => {
+              if (rows.length <= 0) {
+                log.debug('result: no items');
+                resolve(new Array<T>());
+              } else {
+                const result = this.createModelInstances(rows);
+
+                if (log.isDebugEnabled) {
+                  const logResult = this.createModelInstances(Clone.clone(rows));
+                  //
+                  // falls wir User-Objekte gefunden haben, wird für das Logging
+                  // die Passwort-Info zurückgesetzt
+                  //
+                  if (logResult.length > 0) {
+                    if (Types.hasMethod(logResult[0], 'resetCredentials')) {
+                      logResult.forEach((item) => (item as any as IUser).resetCredentials());
+                    }
                   }
+                  log.debug('result = ', logResult);
                 }
-                log.debug('result = ', logResult);
-              }
 
-              resolve(this.serializeArray(result));
-            }
-          })
-          .catch((err) => {
-            log.error(err);
-            reject(this.createSystemException(err));
-          });
-      });
+                trx.commit();
+                resolve(this.serializeArray(result));
+              }
+            })
+            .catch((err) => {
+              log.error(err);
+
+              trx.rollback();
+              reject(this.createSystemException(err));
+            });
+        });     // transaction
+      });     // promise
     });
   }
 
@@ -224,70 +249,80 @@ export abstract class BaseService<T, TId extends IToString>  {
       const dbSubject = this.createDatabaseInstance(subject);
 
       return new Promise<T>((resolve, reject) => {
+        this.knexService.knex.transaction((trx) => {
 
-        let delayMillisecs = 0;
+          let delayMillisecs = 0;
 
-        if (this.metadata.testColumn) {
-          log.info(`testColumn exists: ${this.metadata.testColumn.propertyName}`);
+          if (this.metadata.testColumn) {
+            log.info(`testColumn exists: ${this.metadata.testColumn.propertyName}`);
 
-          const testValue = subject[this.metadata.testColumn.propertyName];
-          if (testValue) {
-            delayMillisecs = +testValue;
-            log.info(`delay = ${delayMillisecs} [ms]`);
-          }
-        }
-
-        setTimeout(() => {
-
-          let query: Knex.QueryBuilder = this.fromTable()
-            .where(this.idColumnName, dbSubject[this.idColumnName]);
-
-          /**
-           * falls eine Version-Column vorliegt, müssen wir
-           * - die Entity-Version in die Query einbauen
-           * - und die Version erhöhen
-           */
-          if (this.metadata.versionColumn) {
-            const andWhereColumnName = this.metadata.versionColumn.options.name;
-
-            const version: number = dbSubject[this.metadata.versionColumn.options.name];
-            const andWhereValue = version;
-
-            dbSubject[andWhereColumnName] = version + 1;
-
-            query = query.andWhere(andWhereColumnName, '=', andWhereValue);
+            const testValue = subject[this.metadata.testColumn.propertyName];
+            if (testValue) {
+              delayMillisecs = +testValue;
+              log.info(`delay = ${delayMillisecs} [ms]`);
+            }
           }
 
+          setTimeout(() => {
 
-          query
-            .update(dbSubject)
+            let query: Knex.QueryBuilder = this.fromTable()
+              .where(this.idColumnName, dbSubject[this.idColumnName]);
 
-            .then((affectedRows: number) => {
-              log.debug(`updated ${this.tableName} with id: ${dbSubject[this.idColumnName]}` +
-                ` (affectedRows: ${affectedRows})`, );
+            /**
+             * falls eine Version-Column vorliegt, müssen wir
+             * - die Entity-Version in die Query einbauen
+             * - und die Version erhöhen
+             */
+            if (this.metadata.versionColumn) {
+              const andWhereColumnName = this.metadata.versionColumn.options.name;
 
-              if (this.metadata.versionColumn) {
-                if (affectedRows <= 0) {
-                  reject(this.createBusinessException(
-                    new OptimisticLockException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
+              const version: number = dbSubject[this.metadata.versionColumn.options.name];
+              const andWhereValue = version;
+
+              dbSubject[andWhereColumnName] = version + 1;
+
+              query = query.andWhere(andWhereColumnName, '=', andWhereValue);
+            }
+
+
+            query
+              .update(dbSubject)
+              .transacting(trx)
+
+              .then((affectedRows: number) => {
+                log.debug(`updated ${this.tableName} with id: ${dbSubject[this.idColumnName]}` +
+                  ` (affectedRows: ${affectedRows})`, );
+
+                if (this.metadata.versionColumn) {
+                  if (affectedRows <= 0) {
+                    trx.rollback();
+                    reject(this.createBusinessException(
+                      new OptimisticLockException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
+                  } else {
+                    trx.commit();
+                    resolve(this.serialize(subject));
+                  }
                 } else {
-                  resolve(this.serialize(subject));
+                  if (affectedRows <= 0) {
+                    trx.rollback();
+                    reject(this.createSystemException(
+                      new EntityNotFoundException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
+                  } else {
+                    trx.commit();
+                    resolve(this.serialize(subject));
+                  }
                 }
-              } else {
-                if (affectedRows <= 0) {
-                  reject(this.createSystemException(
-                    new EntityNotFoundException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
-                } else {
-                  resolve(this.serialize(subject));
-                }
-              }
-            })
-            .catch((err) => {
-              log.error(err);
-              reject(this.createSystemException(err));
-            });
-        }, delayMillisecs);
-      });
+              })
+              .catch((err) => {
+                log.error(err);
+
+                trx.rollback();
+                reject(this.createSystemException(err));
+              });
+          }, delayMillisecs);
+
+        });     // transaction
+      });     // promise
     });
   }
 
@@ -306,28 +341,38 @@ export abstract class BaseService<T, TId extends IToString>  {
 
     return using(new XLog(BaseService.logger, levels.INFO, 'delete', `[${this.tableName}] id = ${id}`), (log) => {
       return new Promise<ServiceResult<TId>>((resolve, reject) => {
-        this.fromTable()
-          .where(this.idColumnName, id.toString())
-          .del()
-          .then((affectedRows: number) => {
-            log.debug(`deleted from ${this.tableName} with id: ${id} (affectedRows: ${affectedRows})`);
+        this.knexService.knex.transaction((trx) => {
 
-            const res = new ServiceResult<TId>(id);
+          this.fromTable()
+            .where(this.idColumnName, id.toString())
+            .del()
+            .transacting(trx)
 
-            if (affectedRows <= 0) {
-              reject(this.createSystemException(
-                new EntityNotFoundException(`table: ${this.tableName}, id: ${id}`)));
-            } else {
-              // TODO: serialize z.Zt. nicht kompatibel
-              resolve(res);
-            }
+            .then((affectedRows: number) => {
+              log.debug(`deleted from ${this.tableName} with id: ${id} (affectedRows: ${affectedRows})`);
 
-          })
-          .catch((err) => {
-            log.error(err);
-            reject(this.createSystemException(err));
-          });
-      });
+              const res = new ServiceResult<TId>(id);
+
+              if (affectedRows <= 0) {
+                trx.rollback();
+                reject(this.createSystemException(
+                  new EntityNotFoundException(`table: ${this.tableName}, id: ${id}`)));
+              } else {
+                // TODO: serialize z.Zt. nicht kompatibel
+                trx.commit();
+                resolve(res);
+              }
+
+            })
+            .catch((err) => {
+              log.error(err);
+
+              trx.rollback();
+              reject(this.createSystemException(err));
+            });
+
+        });     // transaction
+      });     // promise
     });
   }
 
@@ -347,36 +392,47 @@ export abstract class BaseService<T, TId extends IToString>  {
     return using(new XLog(BaseService.logger, levels.INFO, 'queryKnex', `[${this.tableName}]`), (log) => {
 
       return new Promise<T[]>((resolve, reject) => {
-        query
-          .then((rows) => {
-            if (rows.length <= 0) {
-              log.debug('result: no item found');
-              resolve(new Array<T>());
-            } else {
-              const result = this.createModelInstances(rows);
+        this.knexService.knex.transaction((trx) => {
 
-              if (log.isDebugEnabled) {
-                const logResult = this.createModelInstances(Clone.clone(rows));
-                //
-                // falls wir User-Objekte gefunden haben, wird für das Logging
-                // die Passwort-Info zurückgesetzt
-                //
-                if (logResult.length > 0) {
-                  if (Types.hasMethod(logResult[0], 'resetCredentials')) {
-                    logResult.forEach((item) => (item as any as IUser).resetCredentials());
+          query
+            .transacting(trx)
+
+            .then((rows) => {
+              if (rows.length <= 0) {
+                log.debug('result: no item found');
+
+                trx.commit();
+                resolve(new Array<T>());
+              } else {
+                const result = this.createModelInstances(rows);
+
+                if (log.isDebugEnabled) {
+                  const logResult = this.createModelInstances(Clone.clone(rows));
+                  //
+                  // falls wir User-Objekte gefunden haben, wird für das Logging
+                  // die Passwort-Info zurückgesetzt
+                  //
+                  if (logResult.length > 0) {
+                    if (Types.hasMethod(logResult[0], 'resetCredentials')) {
+                      logResult.forEach((item) => (item as any as IUser).resetCredentials());
+                    }
                   }
+                  log.debug('result = ', logResult);
                 }
-                log.debug('result = ', logResult);
-              }
 
-              resolve(this.serializeArray(result));
-            }
-          })
-          .catch((err) => {
-            log.error(err);
-            reject(this.createSystemException(err));
-          });
-      });
+                trx.commit();
+                resolve(this.serializeArray(result));
+              }
+            })
+            .catch((err) => {
+              log.error(err);
+
+              trx.rollback();
+              reject(this.createSystemException(err));
+            });
+
+        });     // transaction
+      });     // promise
     });
   }
 
