@@ -37,7 +37,8 @@
       "cwd": "${workspaceRoot}/server",
       "runtimeExecutable": null,
       "outFiles": [
-        "${workspaceRoot}/server/dist/src/**/*.js"
+        "${workspaceRoot}/server/dist/src/**/*.js",
+        "${workspaceRoot}/server/dist/test/**/*.js"
       ],
       "sourceMaps": true,
       "stopOnEntry": false,
