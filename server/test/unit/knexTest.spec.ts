@@ -70,7 +70,7 @@ export abstract class KnexTest extends BaseTest {
   }
 
   /**
-   * Helpermethode zum Erzeugen von Service-Klassen 
+   * Helpermethode zum Erzeugen von Service-Klassen
    */
   protected static createService<T>(model: ICtor<T>): T {
     return Activator.createInstance<T>(model, KnexTest.knexService, KnexTest.metadataService);
@@ -95,7 +95,7 @@ export abstract class KnexTest extends BaseTest {
   }
 
 
-  private static get metadataService(): MetadataService {
+  protected static get metadataService(): MetadataService {
     return KnexTest._metadataService;
   }
 
