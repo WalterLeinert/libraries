@@ -9,47 +9,47 @@ import { PropertyReflector } from './propertyReflector';
 
 
 export enum ReflectionType {
-    Class,
-    Number,
-    String
+  Class,
+  Number,
+  String
 }
 
 export class TypeReflector {
-    public static NoParent = new TypeReflector({});
-    private reflectionType: ReflectionType;
-    private propertyDict: Dictionary<string, PropertyReflector> = new Dictionary<string, PropertyReflector>();
-    private _parent: TypeReflector;
+  public static NoParent = new TypeReflector({});
+  private reflectionType: ReflectionType;
+  private propertyDict: Dictionary<string, PropertyReflector> = new Dictionary<string, PropertyReflector>();
+  private _parent: TypeReflector;
 
-    constructor(obj: any) {
-        Assert.notNull(obj);
+  constructor(obj: any) {
+    Assert.notNull(obj);
 
-        if (typeof obj === 'function') {
-            this.reflectionType = ReflectionType.Class;
-            // todo
+    if (typeof obj === 'function') {
+      this.reflectionType = ReflectionType.Class;
+      // todo
 
-            // alle Properties der Row über Reflection ermitteln        
-            const keys = Reflect.ownKeys(obj);
+      // alle Properties der Row über Reflection ermitteln
+      const keys = Reflect.ownKeys(obj);
 
-            keys.forEach((key) => {
-                // tslint:disable-next-line:no-unused-variable
-                const propertyType: Funktion = (Reflect as any).getMetadata('design:type', obj, key);
+      keys.forEach((key) => {
+        // tslint:disable-next-line:no-unused-variable
+        const propertyType: Funktion = (Reflect as any).getMetadata('design:type', obj, key);
 
-                const descr = Reflect.getOwnPropertyDescriptor(obj, key);
-                this.propertyDict.set(key.toString(), new PropertyReflector(key.toString(), descr));
-            });
+        const descr = Reflect.getOwnPropertyDescriptor(obj, key);
+        this.propertyDict.set(key.toString(), new PropertyReflector(key.toString(), descr));
+      });
 
-            this._parent = Object.getPrototypeOf(obj);
-            if (this._parent === Object.prototype) {
-                this._parent = TypeReflector.NoParent;
-            }
-        }
+      this._parent = Object.getPrototypeOf(obj);
+      if (this._parent === Object.prototype) {
+        this._parent = TypeReflector.NoParent;
+      }
     }
+  }
 
-    public get parent(): TypeReflector {
-        return this.parent;
-    }
+  public get parent(): TypeReflector {
+    return this.parent;
+  }
 
-    public get propertyReflectors(): PropertyReflector[] {
-        return [];      // TODO
-    }
+  public get propertyReflectors(): PropertyReflector[] {
+    return [];      // TODO
+  }
 }

@@ -2,7 +2,7 @@ import { AssertionException } from '../exceptions/assertionException';
 
 /**
  * Runtime Assertions v.a. für Programmierfehler (fail hard and early)
- * 
+ *
  * @export
  * @class Assert
  */
@@ -16,11 +16,11 @@ export class Assert {
   /**
    * Stellt sicher, dass @param{condition} erfüllt ist.
    * Wirft einen @see{AssertionError} falls nicht.
-   * 
+   *
    * @static
    * @param {boolean} condition
    * @param {string} [message]
-   * 
+   *
    * @memberOf Assert
    */
   public static that(condition: boolean, message?: string) {
@@ -33,11 +33,11 @@ export class Assert {
   /**
    * Stellt sicher, dass die Werte vom Typ {T} @param{value1} und @param{value2} gleich sind.
    * Wirft einen @see{AssertionError} falls nicht.
-   * 
+   *
    * @static
    * @param {boolean} condition
    * @param {string} [message]
-   * 
+   *
    * @memberOf Assert
    */
   public static equal<T>(value1: T, value2: T, message?: string) {
@@ -50,11 +50,11 @@ export class Assert {
   /**
    * Stellt sicher, dass der Wert vom Typ {T} @param{value} nicht null ist.
    * Wirft einen @see{AssertionError} falls nicht.
-   * 
+   *
    * @static
    * @param {boolean} condition
    * @param {string} [message]
-   * 
+   *
    * @memberOf Assert
    */
   public static notNull<T>(value: T, message?: string) {
@@ -66,11 +66,11 @@ export class Assert {
   /**
    * Stellt sicher, dass @param{subject} nicht null oder leer ist.
    * Wirft einen @see{AssertionError} falls nicht.
-   * 
+   *
    * @static
    * @param {(string | any[])} subject
    * @param {string} [message]
-   * 
+   *
    * @memberOf Assert
    */
   public static notNullOrEmpty(subject: string | any[], message?: string) {

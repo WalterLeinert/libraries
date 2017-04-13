@@ -6,14 +6,14 @@ import { TableOptions } from './tableOptions.interface';
 
 /**
  * Table-Decorator für Modellklassen
- * 
+ *
  * @export
  * @param {TableOptions} [options]
  * @returns
  */
 export function Table(options?: TableOptions) {
   // tslint:disable-next-line:only-arrow-functions
-  return function(target: Funktion) {
+  return function (target: Funktion) {
     if (!options) {
       options = {} as TableOptions;
     }

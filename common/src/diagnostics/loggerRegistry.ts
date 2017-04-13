@@ -82,8 +82,10 @@ export class LoggerRegistry {
   }
 
   public static dump() {
+    // tslint:disable-next-line:no-console
     console.log(`LoggerRegistry.dump: ${LoggerRegistry.getLoggerCount()} loggers:`);
     LoggerRegistry.loggerDict.keys.forEach((key) => {
+      // tslint:disable-next-line:no-console
       console.log(`  ${key}`);
     });
   }

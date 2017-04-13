@@ -10,7 +10,7 @@ import { IService } from './service.interface';
 /**
  * Virtueller Service: implementiert nur die find-Methode, welche
  * die Enum-Werte liefert
- * 
+ *
  * @export
  * @class EnumTableService
  * @implements {IServiceCrud}
@@ -23,9 +23,9 @@ export class EnumTableService implements IService {
 
   /**
    * Liefert die die Liste der Enum-Werte als @see{Observable}.
-   * 
-   * @returns {Observable<any[]>} 
-   * 
+   *
+   * @returns {Observable<any[]>}
+   *
    * @memberOf EnumTableService
    */
   public find(): Observable<any[]> {

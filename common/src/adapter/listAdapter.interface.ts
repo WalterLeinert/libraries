@@ -5,10 +5,10 @@ import { Observable } from 'rxjs/Observable';
  */
 export interface IListAdapter<T> {
 
-    /**
-     * Liefert ein Array von Items vom Typ @type{T} als @see{Observable}
-     * 
-     * @returns{Observable<T[]>}
-     */
-    getItems(): Observable<T[]>;
+  /**
+   * Liefert ein Array von Items vom Typ @type{T} als @see{Observable}
+   *
+   * @returns{Observable<T[]>}
+   */
+  getItems(): Observable<T[]>;
 }

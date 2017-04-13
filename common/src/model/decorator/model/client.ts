@@ -6,7 +6,7 @@ import { SpecialColumns } from '../../metadata/specialColumns';
  */
 export function Client() {
   // tslint:disable-next-line:only-arrow-functions
-  return function(target: any, propertyName: string) {
+  return function (target: any, propertyName: string) {
     MetadataStorage.instance.setSpecialColumn(target.constructor, propertyName, SpecialColumns.CLIENT);
   };
 }

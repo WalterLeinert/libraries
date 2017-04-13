@@ -3,7 +3,7 @@ import { FlxException } from './flxException';
 
 /**
  * Exception für ungültige/fehlende Argumente
- * 
+ *
  * @export
  * @class ArgumentException
  * @extends {Exception}

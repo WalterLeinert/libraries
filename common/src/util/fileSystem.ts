@@ -67,13 +67,13 @@ export class FileSystem {
    * Liefert den Inhalt der Datei unter dem Pfad @param{path} mit dem Encoding @param{encoding}.
    * Fehler werden mit Hilfe des @param{errorLogger} Callbacks für ein bestimmtes Topic @param{topic}
    * ausgeben.
-   * 
+   *
    * @static
    * @param {(message: string) => void} errorLogger
    * @param {string} path
    * @param {string} topic
    * @returns {string} - undefined bei Fehler
-   * 
+   *
    * @memberOf FileSystem
    */
   public static readTextFile(errorLogger: (message: string) => void, path: string, topic: string,

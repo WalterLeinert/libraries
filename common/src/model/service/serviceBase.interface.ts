@@ -7,7 +7,7 @@ export interface IServiceBase extends IRestUri {
 
   /**
    * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
-   * 
+   *
    * @type {string}
    */
   getModelClassName(): string;
@@ -15,7 +15,7 @@ export interface IServiceBase extends IRestUri {
   /**
    * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
    * Sonst wird ein Error geworfen.
-   * 
+   *
    * @param{any} item - eine Entity-Instanz
    * @type {any}
    */
@@ -24,7 +24,7 @@ export interface IServiceBase extends IRestUri {
   /**
    * Setzt die Id der Entity @param{item} über die Metainformation, falls vorhanden.
    * Sonst wird ein Error geworfen.
-   * 
+   *
    * @param{any} item - eine Entity-Instanz
    * @param{any} id - eine Entity-Id
    * @type {any}

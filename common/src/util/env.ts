@@ -9,7 +9,7 @@ const logger = getLogger(fromEnvironment);
 /**
  * Liefert den Wert der Environment-Variable @param{variable}, falls gesetzt oder den
  * Wert @param{defaultValue}.
- * 
+ *
  * @export
  * @param {string} variable
  * @param {string} defaultValue
@@ -27,4 +27,4 @@ export function fromEnvironment(variable: string, defaultValue: string): string 
   }
 
   return rval;
-} 
+}

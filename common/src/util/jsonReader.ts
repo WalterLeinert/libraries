@@ -7,7 +7,7 @@ const trueFlag = true;
 export class JsonReader {
 
   /**
-   * Liest eine Json-Datei @param{jsonPath} und liefert das entsprechede Json-Objekt als @see{T} 
+   * Liest eine Json-Datei @param{jsonPath} und liefert das entsprechede Json-Objekt als @see{T}
    */
   public static readJsonSync<T>(jsonPath: string): T {
     if (!FileSystem.fileExists(jsonPath)) {

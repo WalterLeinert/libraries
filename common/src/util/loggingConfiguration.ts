@@ -29,7 +29,7 @@ export class LoggingConfiguration {
 
     /**
      * Liefert den absoluten Pfad auf die Log4js Konfigurationsdatei
-     * 
+     *
      * @param {string} systemMode - der Systemmodus (z.B. 'local' oder 'development')
      * @param {string} filename - der Name der Konfigurationsdatei (default: 'log4js)
      */

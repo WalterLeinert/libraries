@@ -99,6 +99,7 @@ const doc: IRootObject = {
 class ReflectionTest {
 
   @test 'should stringify doc'() {
+    // tslint:disable-next-line:no-console
     console.log(JSON.stringify(doc));
   }
 }

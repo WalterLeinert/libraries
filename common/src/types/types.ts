@@ -43,11 +43,11 @@ export class Types {
 
   /**
    * Liefert true, falls @param{obj} nicht null oder undefined ist.
-   * 
+   *
    * @static
-   * @param {*} obj 
-   * @returns {boolean} 
-   * 
+   * @param {*} obj
+   * @returns {boolean}
+   *
    * @memberOf Types
    */
   public static isPresent(obj: any): boolean {
@@ -75,14 +75,14 @@ export class Types {
   }
 
   /**
-   * Erzeugt eine neue Instanz für die "Klasse" @param{clazz} über die "constructor" function 
+   * Erzeugt eine neue Instanz für die "Klasse" @param{clazz} über die "constructor" function
    * -> simuliert den default constructor
-   * 
+   *
    * @static
-   * @template T 
-   * @param {Object} obj 
-   * @returns {*} 
-   * 
+   * @template T
+   * @param {Object} obj
+   * @returns {*}
+   *
    * @memberOf Types
    */
   public static construct<T>(clazz: ObjectType<T>): T {

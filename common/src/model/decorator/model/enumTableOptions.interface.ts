@@ -2,7 +2,7 @@ import { TableOptions } from './tableOptions.interface';
 
 /**
  * Optionen für EnumTable-Decorator
- * 
+ *
  * @export
  * @interface IEnumTableOptions
  */

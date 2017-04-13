@@ -2,18 +2,18 @@ export class Utility {
 
   /**
    * Liefert eine Hashcode für den String @param{text}
-   * 
+   *
    * http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
-   * 
+   *
    * @static
-   * @param {string} text 
-   * @returns {number} 
-   * 
+   * @param {string} text
+   * @returns {number}
+   *
    * @memberOf Utility
    */
   public static hashCodeForString(text: string): number {
     let hash = 0;
-   
+
     if (text.length === 0) {
       return hash;
     }

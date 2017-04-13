@@ -1,7 +1,7 @@
 
 /**
  * Interface für Commands.
- * 
+ *
  * @export
  * @interface ICommand
  * @template TState

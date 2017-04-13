@@ -6,12 +6,12 @@ import { MetadataStorage } from '../../metadata/metadataStorage';
 
 
 /**
- * Enum-Decorator für Modellproperties/-attribute, deren Werteliste aus einer Tabelle stammen 
- * 
+ * Enum-Decorator für Modellproperties/-attribute, deren Werteliste aus einer Tabelle stammen
+ *
  * @export
  * @template T
  * @param {(type?: any) => ObjectType<T>} dataSource - die Modelklasse (Function)
- * @param {(string | ((object: T) => any))} foreignText - Propertyselektor in Modelklasse für 
+ * @param {(string | ((object: T) => any))} foreignText - Propertyselektor in Modelklasse für
  * Text-Property (-> textField)
  * @param {(string | ((object: T) => any))} foreignId - Propertyselektor in Modelklasse für
  * Id-Property (-> valueField)
@@ -24,7 +24,7 @@ export function Enum<T, TText, TId>(
   cacheable: boolean = false
 ) {
   // tslint:disable-next-line:only-arrow-functions
-  return function(target: any, propertyName: string) {
+  return function (target: any, propertyName: string) {
     Assert.notNull(dataSource);
     MetadataStorage.instance.addEnumMetadata(
       new EnumMetadata(target.constructor, propertyName, dataSource, foreignText, foreignId, cacheable));

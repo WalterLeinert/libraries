@@ -7,7 +7,7 @@ export type ColorType = string | IRGB;
 
 /**
  * Modelliert RGB-Farbinformation
- * 
+ *
  * @export
  * @interface IRGB
  */
@@ -20,7 +20,7 @@ export interface IRGB {
 
 /**
  * Modelliert eine Farbe.
- * 
+ *
  * @export
  * @class Color
  */
@@ -31,9 +31,9 @@ export class Color {
 
   /**
    * Creates an instance of Color.
-   * 
+   *
    * @param {(string | IRGB)} color
-   * 
+   *
    * @memberOf Color
    */
   private constructor(color: ColorType) {
@@ -47,12 +47,12 @@ export class Color {
 
   /**
    * Creates an instance of Color and holds a cache of colors
-   * 
+   *
    * @static
    * @param {ColorType} color
    * @returns
-   * 
-   * @memberOf Color  
+   *
+   * @memberOf Color
    */
   public static from(color: ColorType) {
     if (typeof color === 'string') {

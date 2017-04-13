@@ -1,6 +1,6 @@
 import { IUniqueIdentifiable } from './uniqueIdentifiable.interface';
 
-export abstract class Identifiable implements IUniqueIdentifiable {  
+export abstract class Identifiable implements IUniqueIdentifiable {
   public abstract get instanceId(): number;
 }
 

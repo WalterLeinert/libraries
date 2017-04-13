@@ -10,7 +10,7 @@ import { AppRegistry } from '../base';
 
 
 /**
- * 
+ *
  */
 export type SystemMode =
 
@@ -37,7 +37,7 @@ export interface IUserCredentials {
 
 /**
  * Interface für Applikationskonfiguration
- * 
+ *
  * @export
  * @interface IAppConfig
  */
@@ -45,7 +45,7 @@ export interface IAppConfig {
 
   /**
    * Basis-Url des Servers (REST-Api)
-   * 
+   *
    * @type {string}
    * @memberOf IAppConfig
    */
@@ -53,7 +53,7 @@ export interface IAppConfig {
 
   /**
    * Basis-Url des Print-Services (REST-Api)
-   * 
+   *
    * @type {string}
    * @memberOf IAppConfig
    */
@@ -63,7 +63,7 @@ export interface IAppConfig {
 
   /**
    * Der Modus, in dem das komplette System läuft (Client + Server)
-   * 
+   *
    * @type {RunMode}
    * @memberOf IAppConfig
    */

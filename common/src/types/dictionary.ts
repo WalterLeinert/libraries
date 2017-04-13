@@ -9,7 +9,7 @@ import { Types } from './types';
 /**
  * Der Key-Typ des Dictionary
  * Hinweis: in javascript sind als Key-Typen nur string und number erlaubt.
- * 
+ *
  * @enum {number}
  */
 enum KeyType {
@@ -25,7 +25,7 @@ export type KeyTypes = number | string | Identifiable | any;
 
 /**
  * Generische Implementierung eines Dictionaries
- * 
+ *
  * @export
  * @class Dictionary
  * @implements {IDictionary<TKey, TValue>}
@@ -43,11 +43,11 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
 
   /**
    * Fügt unter dem Key @param{key} einen neuen Wert @param{value} hinzu.
-   * 
+   *
    * @param {TKey} key
    * @param {TValue} value
    * @returns
-   * 
+   *
    * @memberOf Dictionary
    */
   public set(key: TKey, value: TValue) {
@@ -78,10 +78,10 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
 
   /**
    * Liefert den Wert zum Key @param{key} oder undefined.
-   * 
+   *
    * @param {TKey} key
    * @returns {TValue} value
-   * 
+   *
    * @memberOf Dictionary
    */
   public get(key: TKey): TValue {
@@ -106,10 +106,10 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
 
   /**
    * Entfernt den Eintrag unter dem Key @param{key}.
-   * 
+   *
    * @param {TKey} key
    * @returns
-   * 
+   *
    * @memberOf Dictionary
    */
   public remove(key: TKey) {
@@ -138,10 +138,10 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
 
   /**
    * Liefert true, falls ein Eintrag für den Key @param{key} existiert.
-   * 
+   *
    * @param {TKey} key
    * @returns {boolean}
-   * 
+   *
    * @memberOf Dictionary
    */
   public containsKey(key: TKey): boolean {
@@ -166,7 +166,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
 
   /**
    * Liefert alle Keys.
-   * 
+   *
    * @readonly
    * @type {TKey[]}
    * @memberOf Dictionary
@@ -198,7 +198,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
 
   /**
    * Liefert alle Werte.
-   * 
+   *
    * @readonly
    * @type {TValue[]}
    * @memberOf Dictionary
@@ -230,7 +230,7 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
 
   /**
    * Leert das Dictionary
-   * 
+   *
    * @memberOf Dictionary
    */
   public clear() {
@@ -242,9 +242,9 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
 
   /**
    * Liefert die Anzahl der Einträge im Dictionary
-   * 
+   *
    * @returns {number}
-   * 
+   *
    * @memberOf Dictionary
    */
   public get count(): number {
@@ -265,9 +265,9 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
 
   /**
    * Liefert true, falls das Dictionary leer ist.
-   * 
+   *
    * @returns {boolean}
-   * 
+   *
    * @memberOf Dictionary
    */
   public get isEmpty(): boolean {

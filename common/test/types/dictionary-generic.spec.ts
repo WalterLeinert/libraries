@@ -89,7 +89,7 @@ class DictionaryTester<TKey, TValue> {
 
       for (let i = 0; i < test.keys.length; i++) {
         const key = test.keys[i];
-        
+
         expect(() => dict.remove(key)).not.to.Throw();
         expect(dict.count).to.be.equal(test.keys.length - (i + 1));
       }

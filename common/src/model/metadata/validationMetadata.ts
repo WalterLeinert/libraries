@@ -3,7 +3,7 @@ import { Validator } from '../validation/validator';
 
 /**
  * Metadaten zur Validierung von Attributen
- * 
+ *
  * @export
  * @class ValidationMetadata
  */

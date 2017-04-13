@@ -14,7 +14,7 @@ export enum OptionType {
   Number,
   Integer,
   PositiveInteger,
-  // (epoch seconds, e.g. 1396031701, or ISO 8601 format YYYY-MM-DD[THH:MM:SS[.sss][Z]], 
+  // (epoch seconds, e.g. 1396031701, or ISO 8601 format YYYY-MM-DD[THH:MM:SS[.sss][Z]],
   // e.g. "2014-03-28T18:35:01.489Z")
   Date,
   ArrayOfBool,
@@ -94,7 +94,7 @@ export class Option<T> implements IOption {
 
 
 /**
- * Interface für Funktion zum Parsen von Custom-Types 
+ * Interface für Funktion zum Parsen von Custom-Types
  */
 // tslint:disable-next-line:callable-types
 export interface IParseFunc {

@@ -8,7 +8,7 @@ import { Types } from './types';
 
 /**
  * Modelliert eine Zeit (HH:mm), da Date keine reine Zeit unterstützt
- * 
+ *
  * @export
  * @class ShortTime
  */
@@ -16,11 +16,11 @@ export class ShortTime {
 
   /**
    * Erzeugt aus dem String @param{text} eine @see{ShortTime}-Instanz.
-   * 
+   *
    * @static
    * @param {string} text
    * @returns {ShortTime}
-   * 
+   *
    * @memberOf ShortTime
    */
   public static parse(text: string): ShortTime {
@@ -44,11 +44,11 @@ export class ShortTime {
   /**
    * Erzeugt eine @see{ShortTime}-Instanz aus dem angegebenen Objekt, falls dieses
    * die Properties der @see{ShortTime}-Klasse enthält.
-   * 
+   *
    * @static
    * @param {*} obj
    * @returns
-   * 
+   *
    * @memberOf ShortTime
    */
   public static createFrom(obj: any) {
@@ -70,11 +70,11 @@ export class ShortTime {
 
   /**
    * Erzeugt aus der Zeitangabe in Minuten eine @see{ShortTime}-Instanz.
-   * 
+   *
    * @static
    * @param {number} minutes
    * @returns {ShortTime}
-   * 
+   *
    * @memberOf ShortTime
    */
   public static createFromMinutes(minutes: number): ShortTime {
@@ -87,10 +87,10 @@ export class ShortTime {
 
   /**
    * Creates an instance of ShortTime.
-   * 
+   *
    * @param {Hour} _hour
    * @param {number} _minute
-   * 
+   *
    * @memberOf ShortTime
    */
   public constructor(public hour: Hour, public minute: number) {
@@ -104,9 +104,9 @@ export class ShortTime {
 
   /**
    * Liefert die String-Repräsentation.
-   * 
+   *
    * @returns {string}
-   * 
+   *
    * @memberOf ShortTime
    */
   public toString(): string {
@@ -122,10 +122,10 @@ export class ShortTime {
   /**
    * Liefert die Zeit in Stunden als Dezimalzahl. Ist @param{decimalPlaces} angegeben,
    * dann werden nur die entsprechende Anzahl von Nachkommastellen berücksichtigt.
-   * 
+   *
    * @param {number} [decimalPlaces]
    * @returns
-   * 
+   *
    * @memberOf ShortTime
    */
   public toHours(decimalPlaces?: number) {
@@ -142,10 +142,10 @@ export class ShortTime {
   /**
    * Addiert zur Zeit der aktuellen Instanz die Zeit @param{time} und liefert
    * das Ergebnis.
-   * 
+   *
    * @param {ShortTime} time
    * @returns {ShortTime}
-   * 
+   *
    * @memberOf ShortTime
    */
   public add(time: ShortTime): ShortTime {
@@ -156,10 +156,10 @@ export class ShortTime {
   /**
    * Subrahiert von der Zeit der aktuellen Instanz die Zeit @param{time} und liefert
    * das Ergebnis.
-   * 
+   *
    * @param {ShortTime} time
    * @returns {ShortTime}
-   * 
+   *
    * @memberOf ShortTime
    */
   public subtract(time: ShortTime): ShortTime {

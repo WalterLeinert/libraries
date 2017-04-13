@@ -5,9 +5,9 @@ import { Utility } from '../util/utility';
 
 /**
  * 2-Tupel (Basisklasse)
- * 
+ *
  * Die Klasse ist über @see{instanceId} identifizierbar und hashable.
- * 
+ *
  * @export
  * @class Tuple
  * @template T1
@@ -24,9 +24,9 @@ export class Tuple<T1, T2> extends Identifiable {
 
   /**
    * liefert den Hashcode für das Tuple
-   * 
-   * HINWEIS: der Hashcode wird über toString() berechnet 
-   * 
+   *
+   * HINWEIS: der Hashcode wird über toString() berechnet
+   *
    * @readonly
    * @type {number}
    * @memberOf Tuple
@@ -39,7 +39,7 @@ export class Tuple<T1, T2> extends Identifiable {
 
 /**
  * 3-Tupel
- * 
+ *
  * @export
  * @class Tuple3
  * @template T1
@@ -59,7 +59,7 @@ export class Tuple3<T1, T2, T3> extends Tuple<T1, T2> {
 
 /**
  * 4-Tupel
- * 
+ *
  * @export
  * @class Tuple4
  * @template T1

@@ -10,7 +10,7 @@ export enum MessageSeverity {
 
 /**
  * Interface für allgemeine Messages
- * 
+ *
  * @export
  * @interface IMessage
  */
@@ -18,7 +18,7 @@ export interface IMessage {
 
   /**
    * Severity
-   * 
+   *
    * @type {MessageSeverity}
    * @memberOf IMessage
    */
@@ -26,7 +26,7 @@ export interface IMessage {
 
   /**
    * Summary der Message
-   * 
+   *
    * @type {string}
    * @memberOf IMessage
    */
@@ -35,7 +35,7 @@ export interface IMessage {
 
   /**
    * Messagedetails
-   * 
+   *
    * @type {string}
    * @memberOf IMessage
    */

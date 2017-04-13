@@ -111,7 +111,7 @@ class Cloner<T> extends ClonerBase<T> {
 
   /**
    * bei allen geklonten Objekten Referenzen auf geklonte Objekte korrigieren
-   * 
+   *
    * @memberOf Cloner
    */
   public resolveFixups() {
@@ -122,12 +122,12 @@ class Cloner<T> extends ClonerBase<T> {
 
   /**
    * Liefert einen Clone von @param{value}
-   * 
+   *
    * @static
    * @template T
    * @param {T} value
    * @returns {T}
-   * 
+   *
    * @memberOf Clone
    */
   public clone<T>(value: T): T {
@@ -162,7 +162,7 @@ class Cloner<T> extends ClonerBase<T> {
 
 
 
-    // neue Instanz erzeugen    
+    // neue Instanz erzeugen
     const clonedObj = Types.construct<any>(value as any);
 
     if (this.checkCycles) {
@@ -203,7 +203,7 @@ class Verifier<T> extends ClonerBase<T> {
    */
   public verifyClone<T>(value: T, clonedValue: T, attrName?: string) {
     if (value === clonedValue) {
-      // undefined und null werden wie reguläre Primitive behandelt 
+      // undefined und null werden wie reguläre Primitive behandelt
       if (value === undefined || value == null) {
         return;
       }
@@ -212,7 +212,7 @@ class Verifier<T> extends ClonerBase<T> {
       }
     }
 
-    // primitive Typen sind ok 
+    // primitive Typen sind ok
     if (Types.isPrimitive(value)) {
       return;
     }
@@ -258,12 +258,12 @@ export class Clone {
 
   /**
    * Liefert einen Clone von @param{value}
-   * 
+   *
    * @static
    * @template T
    * @param {T} value
    * @returns {T}
-   * 
+   *
    * @memberOf Clone
    */
   public static clone<T>(value: T, allowCycles: boolean = false): T {

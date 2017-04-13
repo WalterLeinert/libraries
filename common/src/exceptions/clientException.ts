@@ -4,7 +4,7 @@ import { FlxException } from './flxException';
 
 /**
  * Exceptions auf Clientseite
- * 
+ *
  * @export
  * @class ClientException
  * @extends {Exception}

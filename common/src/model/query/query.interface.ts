@@ -5,11 +5,11 @@ import { IAttributeSelector } from './attributeSelector.interface';
  */
 export interface IQuery {
 
-    /**
-     * Liste von Attributselektoren: diese werden z.Zt. als UND-verknüpft interpretiert!
-     * 
-     * @type {IAttributeSelector[]}
-     * @memberOf IQuery
-     */
-    selectors: IAttributeSelector[];
+  /**
+   * Liste von Attributselektoren: diese werden z.Zt. als UND-verknüpft interpretiert!
+   *
+   * @type {IAttributeSelector[]}
+   * @memberOf IQuery
+   */
+  selectors: IAttributeSelector[];
 }
