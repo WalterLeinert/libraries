@@ -19,6 +19,14 @@ import { IBaseService, IBaseServiceRaw } from '../../src/ts-express-decorators-f
 
 import { BaseTest } from './baseTest.spec';
 
+export interface IKnexGeneratorConfig<TId> {
+  modelClass: Funktion;
+  count: number;
+  maxCount: number;
+  idGenerator: ValueGenerator<TId>;
+  columnConfig?: IEntityGeneratorColumnConfig;
+}
+
 
 /**
  * Basisklasse für alle Service-Klassen, die mit Knex auf die DB zugreifen.
@@ -28,28 +36,32 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
 
   private static _knexService: KnexService;
   private static _metadataService: MetadataService;
-
-  private static _maxId: number = 0;
   private static _service: IBaseServiceRaw;
+
+  /**
+   * Id der ersten Test-Entity (ab dieser werden am Testende alle Entities gelöscht)
+   */
+  private static _firstTestId: number = 0;
 
   private entityGenerator: EntityGenerator<T, TId>;
   private _generatedItems: T[];
 
-  constructor(modelClass: Funktion, count: number, maxCount: number,
-    idGenerator: ValueGenerator<TId>, columnConfig?: IEntityGeneratorColumnConfig) {
+  constructor(generatorConfig?: IKnexGeneratorConfig<TId>) {
     super();
 
     using(new XLog(KnexTest.logger, levels.INFO, 'ctor'), (log) => {
+      if (generatorConfig) {
+        this.entityGenerator = new EntityGenerator<T, TId>({
+          count: generatorConfig.count,
+          maxCount: generatorConfig.maxCount,
+          tableMetadata: KnexTest.metadataService.findTableMetadata(generatorConfig.modelClass),
+          idGenerator: generatorConfig.idGenerator,
+          columns: generatorConfig.columnConfig
+        });
 
-      this.entityGenerator = new EntityGenerator<T, TId>({
-        count: count,
-        maxCount: maxCount,
-        tableMetadata: KnexTest.metadataService.findTableMetadata(modelClass),
-        idGenerator: idGenerator,
-        columns: columnConfig
-      });
+        this._generatedItems = this.entityGenerator.generate();
+      }
 
-      this._generatedItems = this.entityGenerator.generate();
     });
   }
 
@@ -68,9 +80,13 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
 
       const item = eg.createItem();
       KnexTest._service.create(item).then((it) => {
-        log.log(`maxId = ${it.id}`);
+        log.log(`created temp. entity: id = ${it.id}`);
 
-        KnexTest._maxId = it.id;
+        KnexTest._firstTestId = it.id;
+
+        KnexTest._service.delete(KnexTest._firstTestId).then((rowsAffected) => {
+          log.log(`deleted temp. entity: id = ${it.id}`);
+        });
       });
 
     });
@@ -116,20 +132,23 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
     using(new XLog(KnexTest.logger, levels.INFO, 'static.after'), (log) => {
 
       try {
-        setTimeout(() => {
-          const lowerId = KnexTest._maxId;
-          KnexTest._service.deleteForTest(lowerId).then((result) => {
-            log.log(`deleteForTest: lowerId = ${lowerId}, res = ${JSON.stringify(result)}`);
 
-            KnexTest._knexService.knex.destroy().then((resDestroy) => {
-              log.log(`resDestroy = ${resDestroy}`);
+        /**
+         * alle Entities mit ids >= _maxId wieder entfernen
+         */
+        KnexTest._service.queryKnex(
+          KnexTest._service
+            .fromTable()
+            .where(KnexTest._service.idColumnName, '>=', KnexTest._firstTestId)
+            .delete()
+        ).then((rowsAffected) => {
+          log.log(`deleted test data (id >= ${KnexTest._firstTestId}, res = ${JSON.stringify(rowsAffected)}`);
 
-              done();
-            });
+          KnexTest.knexService.knex.destroy().then(() => {
+            log.log(`knex destroy called`);
+            done();
           });
-
-        }, 1000);
-
+        });
 
       } finally {
         super.after(() => {
@@ -183,7 +202,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
   }
 
   protected get maxId(): number {
-    return KnexTest._maxId;
+    return KnexTest._firstTestId;
   }
 
   protected get generatedItems(): T[] {

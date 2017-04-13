@@ -18,7 +18,7 @@ chai.should();
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { Clone, ConstantValueGenerator, IRole, NumberIdGenerator, Role, ServiceResult, Status } from '@fluxgate/common';
+import { IRole, NumberIdGenerator, Role } from '@fluxgate/common';
 
 import { RoleService } from '../../../src/ts-express-decorators-flx/services';
 
@@ -29,21 +29,11 @@ import { KnexTest } from '../knexTest.spec';
 class RoleTest extends KnexTest<Role, number> {
   protected static readonly logger = getLogger(RoleTest);
 
-  public static readonly ITEMS = 5;
-  public static readonly MAX_ITEMS = 10;
-
-  constructor() {
-    super(Role, RoleTest.ITEMS, RoleTest.MAX_ITEMS,
-      new NumberIdGenerator(RoleTest.MAX_ITEMS), {
-        __version: new ConstantValueGenerator(0),
-      });
-  }
-
   public static before() {
     using(new XLog(RoleTest.logger, levels.INFO, 'static.before'), (log) => {
       super.before();
 
-      super.setup(Role, RoleService, new NumberIdGenerator(RoleTest.MAX_ITEMS));
+      super.setup(Role, RoleService, new NumberIdGenerator(1));
     });
   }
 
@@ -62,17 +52,17 @@ class RoleTest extends KnexTest<Role, number> {
     return expect(this.service.create(role)).to.become(expectedRole);
   }
 
-  // @test 'should now find 4 roles'() {
-  //   return expect(this.service.find()
-  //     .then((roles) => roles.length))
-  //     .to.become(4);
-  // }
+  @test 'should now find 4 roles'() {
+    return expect(this.service.find()
+      .then((roles) => roles.length))
+      .to.become(4);
+  }
 
-  // @test 'should find new role'() {
-  //   const expectedRole = this.createExpectedRole(this.maxId + 1);
-  //   return expect(this.service.findById(expectedRole.id))
-  //     .to.become(expectedRole);
-  // }
+  @test 'should find new role'() {
+    const expectedRole = this.createExpectedRole(this.maxId + 1);
+    return expect(this.service.findById(expectedRole.id))
+      .to.become(expectedRole);
+  }
 
   // @test 'should update new role'() {
   //   const id = this.maxId + 1;
