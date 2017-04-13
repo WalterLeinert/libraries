@@ -29,11 +29,14 @@ import { KnexTest } from '../knexTest.spec';
 class RoleTest extends KnexTest<Role, number> {
   protected static readonly logger = getLogger(RoleTest);
 
-  public static before() {
+  public static before(done: () => void) {
     using(new XLog(RoleTest.logger, levels.INFO, 'static.before'), (log) => {
-      super.before();
+      super.before(() => {
 
-      super.setup(Role, RoleService, new NumberIdGenerator(1));
+        super.setup(Role, RoleService, new NumberIdGenerator(1), () => {
+          done();
+        });
+      });
     });
   }
 
@@ -45,7 +48,7 @@ class RoleTest extends KnexTest<Role, number> {
   }
 
   @test 'should create new role'() {
-    const id = this.maxId + 1;
+    const id = this.firstTestId + 1;
 
     const role = this.createRole(id);
     const expectedRole = this.createExpectedRole(id);
@@ -59,7 +62,7 @@ class RoleTest extends KnexTest<Role, number> {
   }
 
   @test 'should find new role'() {
-    const expectedRole = this.createExpectedRole(this.maxId + 1);
+    const expectedRole = this.createExpectedRole(this.firstTestId + 1);
     return expect(this.service.findById(expectedRole.id))
       .to.become(expectedRole);
   }

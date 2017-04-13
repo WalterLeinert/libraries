@@ -46,6 +46,14 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
   private entityGenerator: EntityGenerator<T, TId>;
   private _generatedItems: T[];
 
+  /**
+   * Creates an instance of KnexTest.
+   *
+   * @param {IKnexGeneratorConfig<TId>} [generatorConfig] - wird nur benötigt, falls im Test mit dem Generator
+   * gearbeitet werden soll.
+   *
+   * @memberOf KnexTest
+   */
   constructor(generatorConfig?: IKnexGeneratorConfig<TId>) {
     super();
 
@@ -61,13 +69,24 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
 
         this._generatedItems = this.entityGenerator.generate();
       }
-
     });
   }
 
 
+  /**
+   * Initialisiert den Service und ermittelt die erste freie Id (TODO: funktioniert nur bei number-Ids)
+   *
+   * @protected
+   * @static
+   * @param {Funktion} modelClass
+   * @param {ICtor<IBaseServiceRaw>} serviceClass
+   * @param {ValueGenerator<any>} idGenerator
+   * @param {() => void} done
+   *
+   * @memberOf KnexTest
+   */
   protected static setup(modelClass: Funktion, serviceClass: ICtor<IBaseServiceRaw>,
-    idGenerator: ValueGenerator<any>) {
+    idGenerator: ValueGenerator<any>, done: () => void) {
     using(new XLog(KnexTest.logger, levels.INFO, 'static.setup'), (log) => {
       KnexTest._service = KnexTest.createService(serviceClass);
 
@@ -86,6 +105,8 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
 
         KnexTest._service.delete(KnexTest._firstTestId).then((rowsAffected) => {
           log.log(`deleted temp. entity: id = ${it.id}`);
+
+          done();
         });
       });
 
@@ -97,9 +118,12 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
    * wird einmal vor allen Tests ausgeführt
    * - Knex-Initialisierung
    */
-  protected static before() {
+  protected static before(done: () => void) {
     using(new XLog(KnexTest.logger, levels.INFO, 'static.before'), (log) => {
-      super.before();
+
+      super.before(() => {
+        log.log(`static.before: done`);
+      });
 
       const knexConfigPath = path.join(process.cwd(), '/test/config/knexfile.json');
       log.log(`knexConfigPath = ${knexConfigPath}`);
@@ -119,6 +143,8 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
 
       KnexTest._knexService = new KnexService();
       KnexTest._metadataService = new MetadataService();
+
+      done();
     });
 
   }
@@ -134,7 +160,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
       try {
 
         /**
-         * alle Entities mit ids >= _maxId wieder entfernen
+         * alle Entities mit ids >= _firstTestId wieder entfernen
          */
         KnexTest._service.queryKnex(
           KnexTest._service
@@ -201,7 +227,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
     return KnexTest._service;
   }
 
-  protected get maxId(): number {
+  protected get firstTestId(): number {
     return KnexTest._firstTestId;
   }
 

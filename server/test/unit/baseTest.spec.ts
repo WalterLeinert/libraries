@@ -19,9 +19,10 @@ export abstract class BaseTest {
   /**
    * wird einmal vor allen Tests ausgeführt
    */
-  protected static before() {
+  protected static before(done: () => void) {
     using(new XLog(BaseTest.logger, levels.DEBUG, 'static.before'), (log) => {
       BaseTest.initializeLogging();
+      done();
     });
   }
 
