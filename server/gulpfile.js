@@ -92,9 +92,11 @@ gulp.task('compile', function() {
 gulp.task('compile-test', function () {
   //find test code - note use of 'base'
   return gulp.src('./test/**/*.ts', { base: '.' })
+    .pipe(sourcemaps.init())
     /*transpile*/
     .pipe(tsc(tscConfig.compilerOptions))
     /*flush to disk*/
+    .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
     .pipe(gulp.dest('dist'));
 });
 
