@@ -6,7 +6,7 @@ import { getLogger, ILogger } from '@fluxgate/common';
 // Fluxgate
 import { IToString, ServiceResult } from '@fluxgate/common';
 
-import { BaseService } from '../services/base.service';
+import { BaseService } from '../services/baseService';
 
 
 /**
@@ -24,7 +24,7 @@ export abstract class ControllerBase<T, TId extends IToString> {
   protected static logger = getLogger(ControllerBase);
 
   constructor(private service: BaseService<T, TId>, private _tableName: string, private _idName: string) {
-    this.service.setIdColumn(this._idName);
+    this.service.idColumnName = this._idName;
   }
 
 

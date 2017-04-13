@@ -4,7 +4,7 @@ import { Authenticated, Controller, Post, Request } from 'ts-express-decorators'
 // Fluxgate
 import { IQuery } from '@fluxgate/common';
 
-import { BaseService } from '../services/base.service';
+import { BaseService } from '../services/baseService';
 
 
 @Controller('/query')

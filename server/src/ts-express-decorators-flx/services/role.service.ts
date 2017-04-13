@@ -3,7 +3,7 @@ import { Service } from 'ts-express-decorators';
 // Fluxgate
 import { AppRegistry, Funktion, IRole, Role } from '@fluxgate/common';
 
-import { BaseService } from './base.service';
+import { BaseService } from './baseService';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
 

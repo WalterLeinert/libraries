@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 import { AppRegistry, Assert, Encryption, Funktion, IUser, Role, User } from '@fluxgate/common';
 
 import { Messages } from '../../resources/messages';
-import { BaseService } from './base.service';
+import { BaseService } from './baseService';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
 

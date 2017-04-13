@@ -13,6 +13,8 @@ import {
   IToString, IUser, OptimisticLockException, ServiceResult, TableMetadata, Types
 } from '@fluxgate/common';
 
+
+import { IBaseService } from './baseService.interface';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
 
@@ -26,7 +28,7 @@ import { MetadataService } from './metadata.service';
  * @template T
  * @template TId
  */
-export abstract class BaseService<T, TId extends IToString>  {
+export abstract class BaseService<T, TId extends IToString> implements IBaseService<T, TId>  {
   protected static logger = getLogger(BaseService);
 
   private primaryKeyColumn: ColumnMetadata = null;
@@ -512,7 +514,7 @@ export abstract class BaseService<T, TId extends IToString>  {
    *
    * @memberOf BaseService
    */
-  public setIdColumn(name: string) {
+  public set idColumnName(name: string) {
     Assert.notNullOrEmpty(name);
 
     using(new XLog(BaseService.logger, levels.INFO, 'setIdColumn', `name = ${name}`), (log) => {
@@ -529,6 +531,7 @@ export abstract class BaseService<T, TId extends IToString>  {
       }
     });
   }
+
 
 
   protected createDatabaseInstance(entity: T): any {

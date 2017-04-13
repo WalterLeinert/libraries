@@ -3,7 +3,7 @@ import { Service } from 'ts-express-decorators';
 // Fluxgate
 import { EntityVersion, NotSupportedException, ServiceResult } from '@fluxgate/common';
 
-import { BaseService } from './base.service';
+import { BaseService } from './baseService';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
 
