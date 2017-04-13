@@ -479,6 +479,60 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
 
 
   /**
+   * Löscht alle Entity-Instanzen vom Typ {T} in der DB , die eine Id >= als @param{lowerId} haben
+   *
+   * @param {TId} lowerId
+   * @returns {Promise<TId>}
+   *
+   * @memberOf ServiceBase
+   */
+  public deleteForTest(
+    lowerId: TId
+  ): Promise<ServiceResult<TId>> {
+
+    return using(new XLog(BaseService.logger, levels.INFO, 'deleteForTest', `[${this.tableName}] lowerId = ${lowerId}`),
+      (log) => {
+        return new Promise<ServiceResult<TId>>((resolve, reject) => {
+
+          log.log(`deleting all entites with id >= ${lowerId}`);
+
+          this.knexService.knex.transaction((trx) => {
+
+            this.fromTable()
+              .where(this.idColumnName, '>=', (lowerId as any as number))
+              .del()
+              .transacting(trx)
+
+              .then((affectedRows: number) => {
+                log.debug(`deleted from ${this.tableName} with lowerId: ${lowerId} (affectedRows: ${affectedRows})`);
+
+                const res = new ServiceResult<TId>(lowerId);
+
+                if (affectedRows <= 0) {
+                  trx.rollback();
+                  reject(this.createSystemException(
+                    new EntityNotFoundException(`table: ${this.tableName}, id: ${lowerId}`)));
+                } else {
+                  // TODO: serialize z.Zt. nicht kompatibel
+                  trx.commit();
+                  resolve(res);
+                }
+
+              })
+              .catch((err) => {
+                log.error(err);
+
+                trx.rollback();
+                reject(this.createSystemException(err));
+              });
+
+          });     // transaction
+        });     // promise
+      });
+  }
+
+
+  /**
    * Liefert die from(<table>) Clause für den aktuellen Tabellennamen
    *
    * @readonly

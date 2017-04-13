@@ -54,21 +54,25 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
   }
 
 
-  protected static setup(serviceClass: ICtor<IBaseServiceRaw>) {
+  protected static setup(modelClass: Funktion, serviceClass: ICtor<IBaseServiceRaw>,
+    idGenerator: ValueGenerator<any>) {
     using(new XLog(KnexTest.logger, levels.INFO, 'static.setup'), (log) => {
       KnexTest._service = KnexTest.createService(serviceClass);
 
-      // max. bisherige id ermitteln
-      KnexTest._service.find()
-        .then((items) => {
-          const ids = items.map((item) => item.id);
+      const eg = new EntityGenerator<any, any>({
+        count: 1,
+        maxCount: 1,
+        tableMetadata: KnexTest.metadataService.findTableMetadata(modelClass),
+        idGenerator: idGenerator
+      });
 
-          if (!Utility.isNullOrEmpty(ids)) {
-            KnexTest._maxId = Math.max(...ids);
-          }
+      const item = eg.createItem();
+      KnexTest._service.create(item).then((it) => {
+        log.log(`maxId = ${it.id}`);
 
-          log.info(`maxId = ${KnexTest._maxId}`);
-        });
+        KnexTest._maxId = it.id;
+      });
+
     });
   }
 
@@ -108,22 +112,29 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
    * wird einmal nach allen Tests ausgeführt
    * - Knex-Cleanup
    */
-  protected static after() {
+  protected static after(done: () => void) {
     using(new XLog(KnexTest.logger, levels.INFO, 'static.after'), (log) => {
 
       try {
-        // alle erzeugten Testitems löschen
-        KnexTest._service.queryKnex(
-          KnexTest._service
-            .fromTable()
-            .where(KnexTest._service.idColumnName, '>=', KnexTest._maxId + 1)
-            .delete()
-        ).then((rowsAffected) => {
-          KnexTest.knexService.knex.destroy();
-        });
+        setTimeout(() => {
+          const lowerId = KnexTest._maxId;
+          KnexTest._service.deleteForTest(lowerId).then((result) => {
+            log.log(`deleteForTest: lowerId = ${lowerId}, res = ${JSON.stringify(result)}`);
+
+            KnexTest._knexService.knex.destroy().then((resDestroy) => {
+              log.log(`resDestroy = ${resDestroy}`);
+
+              done();
+            });
+          });
+
+        }, 1000);
+
 
       } finally {
-        super.after();
+        super.after(() => {
+          log.log(`static.after: done`);
+        });
       }
     });
   }

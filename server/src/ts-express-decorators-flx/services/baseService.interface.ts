@@ -99,6 +99,11 @@ export interface IBaseService<T, TId extends IToString> {
     id: TId
   ): Promise<ServiceResult<TId>>;
 
+  deleteForTest(
+    lowerId: TId
+  ): Promise<ServiceResult<TId>>;
+
+
 
   /**
    * Führt die Query {query} aus und liefert ein Array von Entity-Instanzen vom Typ {T} als @see{Promise}

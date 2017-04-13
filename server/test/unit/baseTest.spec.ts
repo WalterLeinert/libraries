@@ -26,9 +26,10 @@ export abstract class BaseTest {
   }
 
 
-  protected static after() {
+  protected static after(done: () => void) {
     // tslint:disable-next-line:no-empty
     using(new XLog(BaseTest.logger, levels.DEBUG, 'static.after'), (log) => {
+      done();
     });
   }
 
