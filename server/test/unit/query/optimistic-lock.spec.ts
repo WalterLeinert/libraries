@@ -19,10 +19,8 @@ chai.should();
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 // -------------------------- logging -------------------------------
 
-import { Clone, ConstantValueGenerator, EntityGenerator, NumberIdGenerator, Utility } from '@fluxgate/common';
+import { Clone, ConstantValueGenerator, NumberIdGenerator } from '@fluxgate/common';
 
-
-import { BaseService } from '../../../src/ts-express-decorators-flx/services/base.service';
 import { KnexTest } from '../knexTest.spec';
 import { QueryTest } from './query-test';
 import { QueryTestService } from './query-test.service';
@@ -31,33 +29,19 @@ import { QueryTestService } from './query-test.service';
 
 
 @suite('test optimistic locking')
-class OptimisticLockTest extends KnexTest {
+class OptimisticLockTest extends KnexTest<QueryTest, number> {
   protected static readonly logger = getLogger(OptimisticLockTest);
 
   public static readonly ITEMS = 5;
   public static readonly MAX_ITEMS = 10;
 
-  private static _maxId: number = 0;
-  private static _service: BaseService<QueryTest, number>;
-
-  private entityGenerator: EntityGenerator<QueryTest, number>;
-  private testItems: QueryTest[];
-
   constructor() {
-    super();
-
-    this.entityGenerator = new EntityGenerator<QueryTest, number>({
-      count: OptimisticLockTest.ITEMS,
-      maxCount: OptimisticLockTest.MAX_ITEMS,
-      tableMetadata: KnexTest.metadataService.findTableMetadata(QueryTest),
-      idGenerator: new NumberIdGenerator(OptimisticLockTest.MAX_ITEMS),
-      columns: {
+    super(QueryTest, OptimisticLockTest.ITEMS, OptimisticLockTest.MAX_ITEMS,
+      new NumberIdGenerator(OptimisticLockTest.MAX_ITEMS), {
         __version: new ConstantValueGenerator(0),
         __test: new ConstantValueGenerator(0),
-      }
-    });
+      });
 
-    this.testItems = this.entityGenerator.generate();
   }
 
 
@@ -65,53 +49,18 @@ class OptimisticLockTest extends KnexTest {
     using(new XLog(OptimisticLockTest.logger, levels.INFO, 'static.before'), (log) => {
       super.before();
 
-      OptimisticLockTest._service = KnexTest.createService(QueryTestService);
-
-      // max. bisherige id ermitteln
-      OptimisticLockTest._service.find()
-        .then((roles) => {
-          const ids = roles.map((item) => item.id);
-
-          if (!Utility.isNullOrEmpty(ids)) {
-            OptimisticLockTest._maxId = Math.max(...ids);
-          }
-
-          log.info(`maxId = ${OptimisticLockTest._maxId}`);
-        });
-    });
-  }
-
-  public static after() {
-    return using(new XLog(OptimisticLockTest.logger, levels.INFO, 'static.after'), (log) => {
-
-      log.info(`maxId = ${OptimisticLockTest._maxId}`);
-
-      // alle Testrollen löschen
-      OptimisticLockTest._service.queryKnex(
-        OptimisticLockTest._service
-          .fromTable()
-          .where(OptimisticLockTest._service.idColumnName, '>=', OptimisticLockTest._maxId + 1)
-        // .delete()
-      ).then((rowsAffected) => {
-        super.after();
-      });
+      super.setup(QueryTestService);
     });
   }
 
 
   @test 'should create 2 records'() {
     using(new XLog(OptimisticLockTest.logger, levels.INFO, 'should create 2 records'), (log) => {
-      const item1 = this.entityGenerator.createItem();
-      const item2 = this.entityGenerator.createItem();
+      const item1 = this.createItem();
+      const item2 = this.createItem();
 
       Promise.all([this.service.create(item1), this.service.create(item2)]).then((items) => {
         log.log(`items created: ${JSON.stringify(items)}`);
-
-        const ids = items.map((item) => item.id);
-        if (!Utility.isNullOrEmpty(ids)) {
-          OptimisticLockTest._maxId = Math.max(...ids);
-          log.info(`maxId = ${OptimisticLockTest._maxId}`);
-        }
       });
     });
   }
@@ -120,7 +69,7 @@ class OptimisticLockTest extends KnexTest {
   @test 'should update 2 records'() {
     using(new XLog(OptimisticLockTest.logger, levels.INFO, 'should update 2 records'), (log) => {
       this.service.find().then((items) => {
-        const item = items[0];
+        const item = items[items.length - 1];
         const itemClone = Clone.clone(item);
 
         item.__test = 5000;
@@ -186,13 +135,4 @@ class OptimisticLockTest extends KnexTest {
       // // }, 2000);
     });
   }
-
-  private get service(): BaseService<QueryTest, number> {
-    return OptimisticLockTest._service;
-  }
-
-  private get maxId(): number {
-    return OptimisticLockTest._maxId;
-  }
-
 }
