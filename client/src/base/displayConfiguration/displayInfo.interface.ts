@@ -11,7 +11,7 @@ export interface IDisplayInfo {
 
   /**
    * anzuzeigender Propertyname
-   * 
+   *
    * @type {string}
    * @memberOf IDisplayInfo
    */
@@ -19,7 +19,7 @@ export interface IDisplayInfo {
 
   /**
    * Propertyname des angebundenen Werts
-   * 
+   *
    * @type {string}
    * @memberOf IDisplayInfo
    */
@@ -27,7 +27,7 @@ export interface IDisplayInfo {
 
   /**
    * steuert, ob das Control Werteingaben zulässt
-   * 
+   *
    * @type {boolean}
    * @memberOf IDisplayInfo
    */
@@ -35,7 +35,7 @@ export interface IDisplayInfo {
 
   /**
    * Propertyname des angebundenen Werts
-   * 
+   *
    * @type {string}
    * @memberOf IDisplayInfo
    */
@@ -43,7 +43,7 @@ export interface IDisplayInfo {
 
   /**
    * Der Typ der Property
-   * 
+   *
    * @type {string}
    * @memberOf IDisplayInfo
    */
@@ -51,7 +51,7 @@ export interface IDisplayInfo {
 
   /**
    * Plichtfeld?
-   * 
+   *
    * @type {boolean}
    * @memberOf IDisplayInfo
    */

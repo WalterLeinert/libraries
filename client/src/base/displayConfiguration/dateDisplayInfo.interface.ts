@@ -5,7 +5,7 @@ export interface IDateDisplayInfo {
 
   /**
    * Liefert das minimal auswählbare Datum
-   * 
+   *
    * @type {Date}
    * @memberOf IDateDisplayInfo
    */
@@ -13,7 +13,7 @@ export interface IDateDisplayInfo {
 
   /**
    * Liefert das maximal auswählbare Datum
-   * 
+   *
    * @type {Date}
    * @memberOf IDateDisplayInfo
    */

@@ -55,9 +55,9 @@ export class MessageService {
 
   /**
    * Liefert die Message als shared @see{Observable}.
-   * 
-   * @returns {Observable<IMessage>} 
-   * 
+   *
+   * @returns {Observable<IMessage>}
+   *
    * @memberOf MessageService
    */
   public getMessage(): CustomSubject<IMessage> {

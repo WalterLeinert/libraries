@@ -1,6 +1,6 @@
 /**
  * Steuert in Html-Templates den Einbau entsprechender Controls
- * 
+ *
  * @export
  * @enum {number}
  */

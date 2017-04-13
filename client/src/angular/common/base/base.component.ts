@@ -47,11 +47,11 @@ export abstract class BaseComponent<TService extends IServiceBase> extends Exten
 
   /**
    * Creates an instance of BaseComponent.
-   * 
+   *
    * @param {Router} _router - der zugehörige Router
    * @param {ActivatedRoute} _route - die aktivierte Route
    * @param {*} _service - der zugehörige Service
-   * 
+   *
    * @memberOf BaseComponent
    */
   protected constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
@@ -81,7 +81,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends Exten
   /**
    * Führt die CRUD-Aktion in @param{routeParam} mit Hilfe des Services @param{service} durch (default:
    * aktueller Service), aktualisiert die an die Komponente angebundene Liste von Items mit Hilfe von @param{refresher}
-   * 
+   *
    * @protected
    * @template T - Typ der Model-Instanz
    * @template TId - Typ der Id-Spalte der Model-Instanz
@@ -89,7 +89,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends Exten
    * @param {IRouterNavigationAction<T>} routeParams - Info mit action und subject
    * @param {IService<T>} service - (optional) zu verwendender Service
    * @returns Observable<TId> - die Id der Model-Instanz, die nach der Aktionen zu selektieren ist.
-   * 
+   *
    * @memberOf BaseComponent
    */
   protected performAction<T, TId>(items: T[], routeParams: IRouterNavigationAction<T>,
@@ -153,15 +153,15 @@ export abstract class BaseComponent<TService extends IServiceBase> extends Exten
    * Holt alle Model-Items mittels des Services @param{service} bzw. des Komponentenservices
    * und liefert einen IRefreshHelper als Observable
    * mit den Items und einem selectedItem, welches anhand von @param{id} ermittelt wird.
-   * 
+   *
    * @protected
-   * @template T 
-   * @template TId 
+   * @template T
+   * @template TId
    * @param {TId} idToSelect - Id des zu selektierenden Items
    * @param {InstanceAccessor<T, TId>} idAccessor - (optional) liefert die zu verwendende Id des items
    * @param {IService<T>} service - (optional) zu verwendender Service
-   * @returns {Observable<IRefreshHelper<T>>} 
-   * 
+   * @returns {Observable<IRefreshHelper<T>>}
+   *
    * @memberOf BaseComponent
    */
   protected refreshItems<T, TId>(idToSelect: TId, idAccessor?: InstanceAccessor<T, TId>,
@@ -261,7 +261,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends Exten
 
   /**
    * Liefert den zugehörigen Service
-   * 
+   *
    * @readonly
    * @protected
    * @type {TService}

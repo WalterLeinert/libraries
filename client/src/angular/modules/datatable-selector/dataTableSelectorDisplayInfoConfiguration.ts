@@ -18,7 +18,7 @@ import { MetadataService } from '../../services';
 
 /**
  * * Konfiguriert die DisplayInfos für @see{DataTableSelectorComponent}
- * 
+ *
  * @export
  * @class DataTableSelectorDisplayInfoConfiguration
  * @extends {MetadataDisplayInfoConfiguration}

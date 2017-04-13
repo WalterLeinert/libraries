@@ -10,7 +10,7 @@ import { ConfigService } from '../../services/config.service';
 
 /**
  * Service für REST-Api für Entity @see{Role}.
- * 
+ *
  * @export
  * @class RoleService
  * @extends {Service<Role>}

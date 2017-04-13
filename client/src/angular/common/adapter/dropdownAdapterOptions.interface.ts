@@ -14,7 +14,7 @@ export interface IDropdownAdapterOptions {
     valueField?: string;
 
     /**
-     * Falls true, wird vor allen Werten der Auswahlliste ein spezieller Eintrag eingefügt 
+     * Falls true, wird vor allen Werten der Auswahlliste ein spezieller Eintrag eingefügt
      */
     allowNoSelection?: boolean;
 

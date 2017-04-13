@@ -8,7 +8,7 @@ export const AuthenticationNavigation = new OpaqueToken('Authentication.Navigati
 
 /**
  * Interface für Redirect-Urls nach Authentifizierungsaktionen
- * 
+ *
  * @export
  * @interface IAuthenticationNavigation
  */

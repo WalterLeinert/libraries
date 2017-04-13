@@ -9,7 +9,7 @@ import { BaseComponent } from './base.component';
 
 /**
  * Basisklasse (Komponente) für alle GUI-Komponenten mit 2 Services.
- * 
+ *
  * @export
  * @class Base2Component
  * @implements {OnInit}
@@ -20,11 +20,11 @@ export abstract class Base2Component<TService1 extends IServiceBase, TService2 e
 
   /**
    * Creates an instance of BaseComponent.
-   * 
+   *
    * @param {Router} _router - der zugehörige Router
    * @param {ActivatedRoute} _route - die aktivierte Route
    * @param {*} _service2 - der zugehörige Service
-   * 
+   *
    * @memberOf BaseComponent
    */
   protected constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
@@ -34,7 +34,7 @@ export abstract class Base2Component<TService1 extends IServiceBase, TService2 e
 
   /**
    * Liefert den zugehörigen Service2
-   * 
+   *
    * @readonly
    * @protected
    * @type {TService}

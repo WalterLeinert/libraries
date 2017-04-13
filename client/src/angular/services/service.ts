@@ -25,7 +25,7 @@ import { ServiceBase } from './serviceBase';
 
 /**
  * Abstract base class for common rest-api service calls
- * 
+ *
  * @export
  * @abstract
  * @class Service
@@ -40,10 +40,10 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
   /**
    * Creates an instance of Service.
-   * 
+   *
    * @param {Http} _http - Http client
    * @param {string} baseUrl - base url of request
-   * 
+   *
    * @memberOf Service
    */
   protected constructor(model: Funktion, private metadataService: MetadataService,
@@ -65,10 +65,10 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
   /**
    * Create the entity {item} and return {Observable<T>}
-   * 
+   *
    * @param {T} item
    * @returns {Observable<T>}
-   * 
+   *
    * @memberOf Service
    */
   public create(item: T): Observable<T> {
@@ -84,9 +84,9 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
   /**
    * Find all entities of type T and return {Observable<T[]>}.
-   * 
+   *
    * @returns {Observable<T[]>}
-   * 
+   *
    * @memberOf Service
    */
   public find(): Observable<T[]> {
@@ -99,10 +99,10 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
   /**
    * Find the entity with the given id and return {Observable<T>}
-   * 
+   *
    * @param {TId} id -- entity id.
    * @returns {Observable<T>}
-   * 
+   *
    * @memberOf Service
    */
   public findById(id: TId): Observable<T> {
@@ -118,10 +118,10 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
   /**
    * Update the entity {item} with the given id and return {Observable<T>}
-   * 
+   *
    * @param {T} item
    * @returns {Observable<T>}
-   * 
+   *
    * @memberOf Service
    */
   public update(item: T): Observable<T> {
@@ -136,10 +136,10 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
   /**
    * Delete the entity with the given id and return {Observable<T>}
-   * 
+   *
    * @param {TId} id
    * @returns {Observable<ServiceResult<TId>>}
-   * 
+   *
    * @memberOf Service
    */
   public delete(id: TId): Observable<ServiceResult<TId>> {
@@ -155,10 +155,10 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
   /**
    * Finds all entities for the given query @param{query}
-   * 
+   *
    * @param {IQuery} query
    * @returns {Observable<T[]>}
-   * 
+   *
    * @memberOf Service
    */
   public query(query: IQuery): Observable<T[]> {
@@ -177,7 +177,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
   /**
    * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
-   * 
+   *
    * @type {string}
    */
   public getModelClassName(): string {
@@ -187,7 +187,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
   /**
    * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
    * Sonst wird ein Error geworfen.
-   * 
+   *
    * @type {any}
    * @memberOf Service
    */
@@ -202,7 +202,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
   /**
    * Setzt die Id der Entity @param{item} über die Metainformation, falls vorhanden.
    * Sonst wird ein Error geworfen.
-   * 
+   *
    * @type {any}
    * @memberOf Service
    */
@@ -216,9 +216,9 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
   /**
    * Serialisiert das @param{item} für die Übertragung zum Server über das REST-Api.
-   * 
+   *
    * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
-   * 
+   *
    * @param {T} item - Entity-Instanz
    * @returns {any}
    */
@@ -229,10 +229,10 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
   /**
    * Deserialisiert das Json-Objekt, welches über das REST-Api vom Server zum Client übertragen wurde
-   * 
+   *
    * @param {any} json - Json-Objekt vom Server
    * @returns {T}
-   * 
+   *
    * @memberOf Service
    */
   protected deserialize(json: any): T {
@@ -241,7 +241,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
   /**
    * Deserialisiert ein Array von Json-Objekten, welches über das REST-Api vom Server zum Client übertragen wurde
-   * 
+   *
    * @param {any} json - Array von Json-Objekten vom Server
    * @returns {T[]}
    */
@@ -252,8 +252,8 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
 
   /**
-   * Liefert die zugehörige @see{TableMetadata} 
-   * 
+   * Liefert die zugehörige @see{TableMetadata}
+   *
    * @readonly
    * @protected
    * @type {TableMetadata}

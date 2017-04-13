@@ -13,13 +13,13 @@ import { ConfirmationDialogComponent, ConfirmationDialogModule } from '../module
 
 /**
  * Guard-Service: dient zur Abfrage für ungespeicherte Änderungen in einer zugehörigen Komponente
- * 
+ *
  * @export
  * @class ComponentGuardService
  * @implements {CanActivate}
  * @implements {CanDeactivate<T>}
- * @template T 
- * @template TService 
+ * @template T
+ * @template TService
  */
 @Injectable()
 export class ComponentGuardService<T extends BaseComponent<TService>, TService extends IServiceBase>
@@ -46,7 +46,7 @@ export class ComponentGuardService<T extends BaseComponent<TService>, TService e
       //   header: 'Unsaved Changes',
       //   message: 'You have unsaved changes: OK to discard?'
       // }, () => confirm = true);
-      // return confirm;      
+      // return confirm;
 
 
       return confirm('You have unsaved changes: OK to discard?');     // TODO: durch eigenen Dialog ersetzen

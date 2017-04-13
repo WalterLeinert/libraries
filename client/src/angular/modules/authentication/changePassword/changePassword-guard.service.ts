@@ -11,7 +11,7 @@ import { MessageService } from '../../../services/message.service';
 /**
  * Guard-Service, der die PasswordChange-Route nur zulässt,
  * falls ein User angemeldet.
- * 
+ *
  * @export
  * @class PasswordChangeGuardService
  * @implements {CanActivate}

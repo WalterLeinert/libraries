@@ -10,7 +10,7 @@ import { MessageService } from '../../../services/message.service';
 /**
  * Guard-Service, der die Register-Route nur zulässt,
  * falls ein user angemeldet ist und dieser ein Admin ist.
- * 
+ *
  * @export
  * @class RegisterGuardService
  * @implements {CanActivate}

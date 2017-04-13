@@ -13,7 +13,7 @@ export interface IAutoformConfig {
 
   /**
    * Die Spaltenkonfiguration für Anzeige/Wertebinding
-   * 
+   *
    * @type {IControlDisplayInfo[]}
    * @memberOf IDataTableSelectorConfig
    */

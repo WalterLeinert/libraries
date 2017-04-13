@@ -3,7 +3,7 @@ import { Assert, NotSupportedException, TableMetadata } from '@fluxgate/common';
 
 /**
  * Hilfsklasse für die Serialisierung/Deserialisierung des Models.
- * 
+ *
  * @export
  * @class Serializer
  * @template T
@@ -16,9 +16,9 @@ export class Serializer<T> {
 
     /**
      * Serialisiert das @param{item} für die Übertragung zum Server über das REST-Api.
-     * 
+     *
      * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
-     * 
+     *
      * @param {T} item - Entity-Instanz
      * @returns {any}
      */
@@ -30,10 +30,10 @@ export class Serializer<T> {
 
     /**
      * Deserialisiert das Json-Objekt, welches über das REST-Api vom Server zum Client übertragen wurde
-     * 
+     *
      * @param {any} json - Json-Objekt vom Server
      * @returns {T}
-     * 
+     *
      * @memberOf Service
      */
     public deserialize(json: any): T {
@@ -47,7 +47,7 @@ export class Serializer<T> {
 
     /**
      * Deserialisiert ein Array von Json-Objekten, welches über das REST-Api vom Server zum Client übertragen wurde
-     * 
+     *
      * @param {any} json - Array von Json-Objekten vom Server
      * @returns {T[]}
      */
