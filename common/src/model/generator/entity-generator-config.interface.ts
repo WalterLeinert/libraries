@@ -2,6 +2,17 @@ import { TableMetadata } from '../metadata/tableMetadata';
 import { IValueGenerator } from './value-generator.interface';
 
 
+export interface IEntityGeneratorColumnConfig {
+
+  /**
+   * Dictionary:
+   * key: Propertyname
+   * value: ein spezieller Value-Generator
+   */
+  [key: string]: IValueGenerator;
+}
+
+
 /**
  * Interface für die Konfiguration des Entitygenerators
  *
@@ -44,13 +55,5 @@ export interface IEntityGeneratorConfig {
   /**
    * Spaltenkonfiguration
    */
-  columns?: {
-
-    /**
-     * Dictionary:
-     * key: Propertyname
-     * value: ein spezieller Value-Generator
-     */
-    [key: string]: IValueGenerator
-  };
+  columns?: IEntityGeneratorColumnConfig;
 }

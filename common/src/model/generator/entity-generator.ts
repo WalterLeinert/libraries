@@ -16,7 +16,7 @@ import { NotSupportedException } from '../../exceptions/notSupportedException';
 import { Dictionary } from '../../types/dictionary';
 import { Types } from '../../types/types';
 import { Utility } from '../../util/utility';
-import { IFlxEntity } from '../flx-entity.interface';
+import { IEntity } from '../entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { MetadataStorage } from '../metadata/metadataStorage';
 import { TableMetadata } from '../metadata/tableMetadata';
@@ -33,7 +33,7 @@ import { ValueGenerator } from './value-generator';
 import { IValueGenerator } from './value-generator.interface';
 
 
-export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
+export class EntityGenerator<T extends IEntity<TId>, TId extends IToString> {
   protected static readonly logger = getLogger(EntityGenerator);
 
   private config: IEntityGeneratorConfig;
@@ -121,7 +121,7 @@ export class EntityGenerator<T extends IFlxEntity<TId>, TId extends IToString> {
    * @param metadataStorage
    * @param idGenerator
    */
-  public static create<T extends IFlxEntity<TId>, TId extends IToString>(
+  public static create<T extends IEntity<TId>, TId extends IToString>(
     count: number,
     maxCount: number,
     model: Funktion,
