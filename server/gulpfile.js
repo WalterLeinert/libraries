@@ -49,7 +49,7 @@ function execCommand(command, cwd, maxBuffer, cb) {
 /**
  * Common build
  */
-gulp.task('update-fluxgate-common', function (cb) {
+gulp.task('update-fluxgate:common', function (cb) {
   //execCommand('npm uninstall --save @fluxgate/common', 'common', null, cb);
   execCommand('npm uninstall --save @fluxgate/common && npm install --save @fluxgate/common', '.', null, cb);
 })
@@ -127,7 +127,7 @@ gulp.task('bundle', function (cb) {
 })
 
 
-gulp.task('update-fluxgate', ['update-fluxgate-common'])
+gulp.task('update-fluxgate', ['update-fluxgate:common'])
 
 /* single command to hook into VS Code */
 gulp.task('default', gulpSequence('clean', 'compile'/*gulp*/ /*, 'bundle'*/));
