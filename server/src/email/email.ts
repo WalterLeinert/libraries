@@ -8,7 +8,7 @@ import { IServerConfiguration } from '../ts-express-decorators-flx/serverBase';
 
 /**
  * Interface für eigentliche Email
- * 
+ *
  * @export
  * @interface IMessage
  */
@@ -24,7 +24,7 @@ export interface IMessage {
 
 /**
  * Klasse für Versand von Emails über den Server
- * 
+ *
  * @export
  * @class Email
  */

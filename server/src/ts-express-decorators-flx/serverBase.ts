@@ -24,7 +24,7 @@ import { KnexService } from './services/knex.service';
 
 /**
  * Konfiguration des Server v.a. für Https
- * 
+ *
  * @export
  * @interface IServerConfiguration
  */
@@ -34,7 +34,7 @@ export interface IServerConfiguration {
 
     /**
      * Pfad auf die Zertifikatdatei (relativ oder absolut)
-     * 
+     *
      * @type {string}
      * @memberOf IServerConfiguration
      */
@@ -42,7 +42,7 @@ export interface IServerConfiguration {
 
     /**
      * Pfad auf die Datei mit private Key (relativ oder absolut)
-     * 
+     *
      * @type {string}
      * @memberOf IServerConfiguration
      */
@@ -87,7 +87,7 @@ export interface IServerConfiguration {
 
 /**
  * Basisklasse für Express-Server aus Basis von ts-express-decorators (@see ServerLoader)
- * 
+ *
  * @export
  * @class ServerBase
  * @extends {ServerLoader}
@@ -132,7 +132,7 @@ export abstract class ServerBase extends ServerLoader {
 
   /**
    * Initialisierung und Start
-   * 
+   *
    * @returns {Promise<U>|Promise<TResult>}
    */
   public Initialize(): Promise<ServerBase> {
@@ -179,7 +179,7 @@ export abstract class ServerBase extends ServerLoader {
 
 
   /**
-   * This method let you configure the middleware required by your application to works.  
+   * This method let you configure the middleware required by your application to works.
    * @returns {Server}
    */
   public $onMountingMiddlewares(): void | Promise<any> {
@@ -208,7 +208,7 @@ export abstract class ServerBase extends ServerLoader {
 
 
   /**
-   * 
+   *
    */
   public $onError(error: any, request: Express.Request, response: Express.Response, next: Express.NextFunction): void {
     using(new XLog(ServerBase.logger, levels.INFO, 'onError'), (log) => {
@@ -299,7 +299,7 @@ export abstract class ServerBase extends ServerLoader {
 
       //
       // Ports
-      // 
+      //
       if (!(Types.isPresent(configuration.express.port) || Types.isPresent(configuration.express.httpsPort))) {
         throw new ConfigurationException('At least one port must be configured.');
       }

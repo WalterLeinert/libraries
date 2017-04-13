@@ -22,7 +22,7 @@ export class KnexService {
 
   /**
    * Liefert die @see{Knex} DB-Fassade
-   * 
+   *
    * @readonly
    * @type {Knex}
    * @memberOf KnexService

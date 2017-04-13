@@ -11,9 +11,9 @@ import { BaseService } from '../services/base.service';
 
 /**
  * Abstrakte Basisklasse für alle REST-Controller.
- * 
+ *
  * Delegiert alle Controller-Calls an den zugehörigen Service @see{TId}.
- * 
+ *
  * @export
  * @abstract
  * @class ControllerBase
@@ -30,10 +30,10 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
   /**
    * Erzeugt und persistiert eine neue Instanz der Entity {T}.
-   * 
+   *
    * @param {T} subject
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected createInternal(
@@ -45,10 +45,10 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
   /**
    * Liefert eine Entity vom Typ {T} für die angegebene id.
-   * 
+   *
    * @param {TId} id
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected findByIdInternal(
@@ -60,9 +60,9 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
   /**
    * Liefert alle Entities vom Typ {T}.
-   * 
+   *
    * @returns {Promise<T[]>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected findInternal(
@@ -73,10 +73,10 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
   /**
    * Aktualisiert die Entity vom Typ {T}.
-   * 
+   *
    * @param {T} subject
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected updateInternal(
@@ -88,10 +88,10 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
   /**
    * Löscht die Entity vom Typ {T} für die angegebene id.
-   * 
+   *
    * @param {TId} id
    * @returns {Promise<TId>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected deleteInternal(
@@ -103,7 +103,7 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
   /**
    * Liefert den zugehörigen Tabellennamen
-   * 
+   *
    * @readonly
    * @protected
    * @type {string}
@@ -115,7 +115,7 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
   /**
    * Liefert den zugehörigen PrimaryKey-Tabellenspaltennamen.
-   * 
+   *
    * @readonly
    * @protected
    * @type {string}

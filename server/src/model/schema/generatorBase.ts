@@ -18,7 +18,7 @@ import { IGenerator } from './generator.interface';
 import { TableInfo } from './tableInfo';
 
 /**
- * 
+ *
  */
 export abstract class GeneratorBase implements IGenerator {
   protected static logger = getLogger(GeneratorBase);

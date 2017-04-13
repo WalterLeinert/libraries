@@ -14,7 +14,7 @@ export class MetadataService {
    *
    * @param {Function} model
    * @returns {TableMetadata}
-   * 
+   *
    * @memberOf MetadataService
    */
   public findTableMetadata(model: Funktion): TableMetadata {

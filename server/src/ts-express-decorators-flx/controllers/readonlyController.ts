@@ -12,9 +12,9 @@ import { ControllerBase } from './controllerBase';
 
 /**
  * Abstrakte Basisklasse für alle REST-Controller, die z.B. auf DB-Views arbeiten
- * 
+ *
  * Erlaubt keine modifizierenden Aktionen.
- * 
+ *
  * @export
  * @abstract
  * @class ControllerBase
@@ -31,10 +31,10 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
 
   /**
    * Erzeugt und persistiert eine neue Instanz der Entity {T}.
-   * 
+   *
    * @param {T} subject
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected createInternal(
@@ -46,10 +46,10 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
 
   /**
    * Liefert eine Entity vom Typ {T} für die angegebene id.
-   * 
+   *
    * @param {TId} id
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected findByIdInternal(
@@ -61,9 +61,9 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
 
   /**
    * Liefert alle Entities vom Typ {T}.
-   * 
+   *
    * @returns {Promise<T[]>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected findInternal(
@@ -74,10 +74,10 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
 
   /**
    * Aktualisiert die Entity vom Typ {T}.
-   * 
+   *
    * @param {T} subject
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected updateInternal(
@@ -89,10 +89,10 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
 
   /**
    * Löscht die Entity vom Typ {T} für die angegebene id.
-   * 
+   *
    * @param {TId} id
    * @returns {Promise<TId>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected deleteInternal(

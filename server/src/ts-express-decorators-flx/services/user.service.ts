@@ -74,10 +74,10 @@ export class UserService extends BaseService<IUser, number> {
   /**
    * Erzeugt einen neuen User in der DB und liefert die Instanz als @see{Promise}.
    * Das Passwort wird zusammen mit einem Salt als Hash beim User hinterlegt.
-   * 
+   *
    * @param {User} user
    * @returns {Promise<User>}
-   * 
+   *
    * @memberOf UserService
    */
   public create(user: IUser): Promise<IUser> {
@@ -104,10 +104,10 @@ export class UserService extends BaseService<IUser, number> {
   /**
    * Ändert für den existierenden User das Passwort in der DB und liefert die Instanz als @see{Promise}.
    * Das Passwort wird zusammen mit einem Salt als Hash beim User hinterlegt.
-   * 
+   *
    * @param {User} user - mit neuem Passwort
    * @returns {Promise<User>}
-   * 
+   *
    * @memberOf UserService
    */
   public changePassword(user: IUser): Promise<IUser> {
@@ -137,12 +137,12 @@ export class UserService extends BaseService<IUser, number> {
 
   /**
    * Liefert einen @see{User} für den Benutzernamen @param{username} und das Passwort @param{password}
-   * als @see{Promise}, falls der Benutzer mit diesen Credentials existiert. 
-   * 
+   * als @see{Promise}, falls der Benutzer mit diesen Credentials existiert.
+   *
    * @param {string} username
    * @param {string} password
    * @returns {Promise<User>}
-   * 
+   *
    * @memberOf UserService
    */
   public findByCredentialUsername(username: string, password: string): Promise<IUser> {
@@ -214,11 +214,11 @@ export class UserService extends BaseService<IUser, number> {
 
 
   /**
-   * Liefert einen @see{User} für den Namen @param{username} als @see{Promise} 
-   * 
+   * Liefert einen @see{User} für den Namen @param{username} als @see{Promise}
+   *
    * @param {string} username
    * @returns {Promise<User>}
-   * 
+   *
    * @memberOf UserService
    */
   public findByUsername(username: string): Promise<IUser> {
@@ -250,11 +250,11 @@ export class UserService extends BaseService<IUser, number> {
 
 
   /**
-   * Liefert einen @see{User} für die Email @param{email} als @see{Promise} 
-   * 
+   * Liefert einen @see{User} für die Email @param{email} als @see{Promise}
+   *
    * @param {string} email
    * @returns {Promise<User>}
-   * 
+   *
    * @memberOf UserService
    */
   public findByEmail(email: string): Promise<IUser> {
@@ -286,12 +286,12 @@ export class UserService extends BaseService<IUser, number> {
 
   /**
    * Liefert einen @see{User} für die Email @param{email} und das Passwort @param{password} als @see{Promise},
-   * falls der Benutzer mit diesen Credentials existiert. 
-   * 
+   * falls der Benutzer mit diesen Credentials existiert.
+   *
    * @param {string} email
    * @param {string} password
    * @returns
-   * 
+   *
    * @memberOf UserService
    */
   public findByCredentialEmail(email: string, password: string): Promise<IUser> {
