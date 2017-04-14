@@ -69,32 +69,16 @@ gulp.task('tslint', () => {
     .pipe(gulp_tslint.report());
 });
 
-
-gulp.task('compile-browser', function() {
+gulp.task('compile', function() {
     const tsResult = gulp.src('src/**/*.ts')
-        .pipe(removeCode({ browser: true }))
         .pipe(sourcemaps.init())
         .pipe(tsProject());
 
     return merge([
-        tsResult.dts.pipe(gulp.dest('dist/browser/dts')),
+        tsResult.dts.pipe(gulp.dest('dist/dts')),
         tsResult.js
           .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
-          .pipe(gulp.dest('dist/browser/src'))
-    ]);
-});
-
-gulp.task('compile-node', function() {
-    const tsResult = gulp.src('src/**/*.ts')
-        .pipe(removeCode({ node: true }))
-        .pipe(sourcemaps.init())
-        .pipe(tsProject());
-
-    return merge([
-        tsResult.dts.pipe(gulp.dest('dist/node/dts')),
-        tsResult.js
-          .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
-          .pipe(gulp.dest('dist/node/src'))
+          .pipe(gulp.dest('dist/src'))
     ]);
 });
 
@@ -103,23 +87,29 @@ gulp.task('compile-node', function() {
 /**
  * build an run tests
  */
-gulp.task('test', ['set-env'], function () {
+gulp.task('test', ['set-env' ], function () {
   //find test code - note use of 'base'
   return gulp.src('./test/**/*.spec.ts', { base: '.' })
     /*transpile*/
     .pipe(tsc(tscConfig.compilerOptions))
     /*flush to disk*/
-    .pipe(gulp.dest('dist/node'))
+    .pipe(gulp.dest('dist'))
     /*execute tests*/
     .pipe(mocha({
       reporter: 'spec'
     }));
 });
 
+gulp.task('update-fluxgate', function (cb) {
+  execCommand('npm uninstall --save @fluxgate/core @fluxgate/platform && ' +
+    'npm install --save @fluxgate/core @fluxgate/platform', '.', null, cb);
+})
 
-gulp.task('build-test', gulpSequence('default', 'test'));
 
-gulp.task('publish', ['build-test'], function (cb) {
+
+gulp.task('compile:test', gulpSequence('default', 'test'));
+
+gulp.task('publish', ['compile:test'], function (cb) {
   const force = argv.f ? argv.f : '';
   const forceSwitch = (force ? '-f' : '');
 
@@ -141,4 +131,4 @@ gulp.task('set-env', function () {
 });
 
 
-gulp.task('default', gulpSequence('set-env', 'clean', 'compile-browser', 'compile-node'));
+gulp.task('default', gulpSequence('set-env', 'clean', 'compile'));

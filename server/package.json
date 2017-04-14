@@ -1,16 +1,12 @@
 {
   "name": "@fluxgate/server",
-  "version": "2.0.6-beta.20",
+  "version": "2.1.0-beta.0",
   "description": "Fluxgate Server-Library ",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
   "scripts": {
     "tslint": "tslint ./src/**/*.ts",
     "debug_test": "node-debug _mocha -t 0 test/index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "http://server.fluxgate.de:89/fluxgate/server.git"
   },
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
@@ -53,7 +49,9 @@
     "yargs": "^7.0.2"
   },
   "dependencies": {
-    "@fluxgate/common": "^2.0.6-beta.26",
+    "@fluxgate/common": "^2.1.0-beta.0",
+    "@fluxgate/core": "^2.1.0-beta.0",
+    "@fluxgate/platform": "^2.1.0-beta.0",
     "emailjs": "^1.0.8",
     "express": "^4.14.1",
     "js-shortid": "^0.1.1",
@@ -69,7 +67,7 @@
     "ts-log-debug": "^2.2.0"
   },
   "peerDependencies": {
-    "@fluxgate/common": ">=2.0.6-beta.0"
+    "@fluxgate/common": ">=2.1.0-beta.0"
   },
   "directories": {
     "lib": "lib"

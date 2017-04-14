@@ -1,4 +1,5 @@
-import { InvalidOperationException } from '../../exceptions/invalidOperationException';
+import { InvalidOperationException } from '@fluxgate/core';
+
 import { IValueGenerator } from './value-generator.interface';
 
 export abstract class ValueGenerator<T> implements IterableIterator<T>, IValueGenerator {

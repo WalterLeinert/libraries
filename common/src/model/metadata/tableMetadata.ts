@@ -1,6 +1,5 @@
-import { Funktion } from '../../base/objectType';
-import { Dictionary } from '../../types/dictionary';
-import { Assert } from '../../util/assert';
+import { Assert, Dictionary, Funktion } from '@fluxgate/core';
+
 import { EnumTableOptions } from '../decorator/model/enumTableOptions';
 import { TableOptions } from '../decorator/model/tableOptions.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';

@@ -1,11 +1,7 @@
 // -------------------------- logging -------------------------------
-import { IConfig } from '../diagnostics/config.interface';
-import { getLogger } from '../diagnostics/logger';
-// tslint:disable-next-line:no-unused-variable
-import { ILogger } from '../diagnostics/logger.interface';
+import { getLogger, IConfig, } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-// Fluxgate
 import { AppRegistry } from '../base';
 
 

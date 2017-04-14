@@ -1,4 +1,5 @@
-import { IException } from '../exceptions/exception.interface';
+import { IException } from '@fluxgate/core';
+
 import { IEntity } from '../model/entity.interface';
 
 import { ServiceCommand } from './service-command';

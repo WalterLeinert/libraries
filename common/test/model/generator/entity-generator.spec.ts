@@ -7,8 +7,8 @@ require('reflect-metadata');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Clone } from '../../../src/base/clone';
-import { ConfigurationException, InvalidOperationException } from '../../../src/exceptions';
+import { Clone, ConfigurationException, InvalidOperationException, ShortTime, Time } from '@fluxgate/core';
+
 import { Client, Column, IFlxEntity, MetadataStorage, Table, TableMetadata, Version } from '../../../src/model';
 import { ConstantValueGenerator } from '../../../src/model/generator/constant-value-generator';
 import { DateValueGenerator } from '../../../src/model/generator/date-value-generator';
@@ -17,7 +17,6 @@ import { EntityGenerator } from '../../../src/model/generator/entity-generator';
 import { NumberIdGenerator } from '../../../src/model/generator/number-id-generator';
 import { ShortTimeValueGenerator } from '../../../src/model/generator/shortTime-value-generator';
 import { TimeValueGenerator } from '../../../src/model/generator/time-value-generator';
-import { ShortTime, Time } from '../../../src/types';
 
 
 @Table({ name: ArtikelGenerator.TABLE_NAME })

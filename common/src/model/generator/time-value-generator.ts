@@ -1,4 +1,5 @@
-import { Time } from '../../types/time';
+import { Time } from '@fluxgate/core';
+
 import { ValueGenerator } from './value-generator';
 
 export class TimeValueGenerator extends ValueGenerator<Time> {

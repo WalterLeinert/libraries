@@ -1,4 +1,5 @@
-import { Clone } from '../../base/clone';
+import { Clone } from '@fluxgate/core';
+
 import { ValueGenerator } from './value-generator';
 
 export class DateValueGenerator extends ValueGenerator<Date> {

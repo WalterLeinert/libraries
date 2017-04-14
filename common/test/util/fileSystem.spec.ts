@@ -7,8 +7,8 @@ import process = require('process');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { AssertionException } from '../../src/exceptions/assertionException';
-import { FileSystem } from '../../src/util';
+import { AssertionException } from '@fluxgate/core';
+import { FileSystem } from '@fluxgate/platform';
 
 
 @suite('FileSystem')

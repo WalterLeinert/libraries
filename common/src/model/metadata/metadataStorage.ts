@@ -1,15 +1,11 @@
-// Logging
-import { using } from '../../base/disposable';
-import { levels } from '../../diagnostics/level';
-import { getLogger } from '../../diagnostics/logger';
+// -------------------------- logging -------------------------------
+import { using } from '@fluxgate/core';
 // tslint:disable-next-line:no-unused-variable
-import { ILogger } from '../../diagnostics/logger.interface';
-import { XLog } from '../../diagnostics/xlog';
+import { getLogger, ILogger, levels, XLog } from '@fluxgate/platform';
+// -------------------------- logging -------------------------------
 
-import { Funktion } from '../../base/objectType';
-import { Dictionary } from '../../types/dictionary';
-import { Types } from '../../types/types';
-import { Assert } from '../../util/assert';
+import { Assert, Dictionary, Funktion, Types } from '@fluxgate/core';
+
 import { CompoundValidator } from './../validation/compoundValidator';
 import { Validator } from './../validation/validator';
 

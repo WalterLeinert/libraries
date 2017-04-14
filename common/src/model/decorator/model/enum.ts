@@ -1,6 +1,5 @@
-import { ICtor } from '../../../base/ctor';
-import { InstanceAccessor } from '../../../types/instanceAccessor';
-import { Assert } from '../../../util/assert';
+import { Assert, ICtor, InstanceAccessor } from '@fluxgate/core';
+
 import { EnumMetadata } from '../../metadata/enumMetadata';
 import { MetadataStorage } from '../../metadata/metadataStorage';
 

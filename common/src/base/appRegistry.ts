@@ -1,5 +1,5 @@
-import { Assert } from '../util/assert';
-import { Dictionary } from './../types/dictionary';
+import { Assert, Dictionary } from '@fluxgate/core';
+
 
 /**
  * Globale Registry für anwendungsweite Daten

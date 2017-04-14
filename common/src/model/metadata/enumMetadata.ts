@@ -1,6 +1,5 @@
-import { Funktion } from '../../base/objectType';
-import { InstanceAccessor } from '../../types';
-import { Assert } from '../../util/assert';
+import { Assert, Funktion, InstanceAccessor } from '@fluxgate/core';
+
 import { MetadataStorage } from './metadataStorage';
 
 

@@ -1,4 +1,4 @@
-import { ArgumentException } from '@fluxgate/common';
+import { ArgumentException } from '@fluxgate/core';
 
 export enum DataType {
   Number = 0,

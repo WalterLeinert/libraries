@@ -1,6 +1,6 @@
+import { EnumHelper, Funktion } from '@fluxgate/core';
+
 import { AppRegistry } from '../base/appRegistry';
-import { EnumHelper } from '../base/enumHelper';
-import { Funktion } from '../base/objectType';
 import { Client } from '../model/decorator/model/client';
 import { Column } from '../model/decorator/model/column';
 import { Table } from '../model/decorator/model/table';

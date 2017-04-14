@@ -1,4 +1,5 @@
-import { ShortTime } from '../../types/shortTime';
+import { ShortTime } from '@fluxgate/core';
+
 import { ValueGenerator } from './value-generator';
 
 export class ShortTimeValueGenerator extends ValueGenerator<ShortTime> {

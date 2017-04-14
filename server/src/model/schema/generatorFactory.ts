@@ -1,4 +1,4 @@
-import { NotSupportedException } from '@fluxgate/common';
+import { NotSupportedException } from '@fluxgate/core';
 
 import { IConfigInfo } from './configInfo';
 import { IGenerator } from './generator.interface';

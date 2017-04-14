@@ -1,4 +1,5 @@
-import { Utility } from '../../util/utility';
+import { Utility } from '@fluxgate/core';
+
 import { IValidation } from './validation.interface';
 import { ValidationResult } from './validationResult';
 

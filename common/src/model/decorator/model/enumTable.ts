@@ -1,7 +1,6 @@
-// Logging
-import { getLogger } from '../../../diagnostics/logger';
+import { Funktion } from '@fluxgate/core';
+import { getLogger } from '@fluxgate/platform';
 
-import { Funktion } from '../../../base/objectType';
 import { EnumTableMetadata } from '../../metadata/enumTableMetadata';
 import { MetadataStorage } from '../../metadata/metadataStorage';
 import { EnumTableOptions } from './enumTableOptions';

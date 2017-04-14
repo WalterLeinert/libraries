@@ -4,10 +4,10 @@ import * as path from 'path';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { NotSupportedException, StringBuilder } from '@fluxgate/common';
+import { NotSupportedException, StringBuilder } from '@fluxgate/core';
 
 import { ColumnInfo, DataType } from './columnInfo';
 import { IConfigInfo } from './configInfo';

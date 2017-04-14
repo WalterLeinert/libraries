@@ -1,6 +1,5 @@
-import { StringBuilder } from '../../base';
-import { Assert } from '../../util/assert';
-import { Utility } from '../../util/utility';
+import { Assert, StringBuilder, Utility } from '@fluxgate/core';
+
 import { ValidationResult } from './validationResult';
 import { Validator } from './validator';
 

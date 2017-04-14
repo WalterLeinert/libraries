@@ -1,9 +1,6 @@
-// Logging
-import { getLogger } from '../../../diagnostics/logger';
+import { Funktion, ShortTime, Time } from '@fluxgate/core';
+import { getLogger } from '@fluxgate/platform';
 
-import { Funktion } from '../../../base/objectType';
-import { ShortTime } from '../../../types/shortTime';
-import { Time } from '../../../types/time';
 import { ColumnTypeUndefinedError } from '../../error/columnTypeUndefinedError';
 import { ColumnMetadata } from '../../metadata/columnMetadata';
 import { ColumnTypes } from '../../metadata/columnTypes';

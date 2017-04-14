@@ -1,4 +1,5 @@
-import { Funktion } from '../../../base/objectType';
+import { Funktion } from '@fluxgate/core';
+
 import { MetadataStorage } from '../../metadata/metadataStorage';
 import { TableMetadata } from '../../metadata/tableMetadata';
 

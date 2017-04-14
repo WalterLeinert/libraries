@@ -1,4 +1,4 @@
-import { IToString } from '../../base/toString.interface';
+import { IToString } from '@fluxgate/core';
 
 export enum Status {
   Ok,

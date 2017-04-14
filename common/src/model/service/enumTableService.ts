@@ -1,8 +1,8 @@
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
 
-import { NotSupportedException } from '../../exceptions/notSupportedException';
-import { Assert } from '../../util/assert';
+import { Assert, NotSupportedException } from '@fluxgate/core';
+
 import { TableMetadata } from '../metadata/tableMetadata';
 import { IService } from './service.interface';
 

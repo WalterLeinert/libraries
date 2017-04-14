@@ -1,7 +1,5 @@
-import { Funktion } from '../../base/objectType';
-import { NotSupportedException } from '../../exceptions/notSupportedException';
-import { ShortTime } from '../../types/shortTime';
-import { Time } from '../../types/time';
+import { Funktion, NotSupportedException, ShortTime, Time } from '@fluxgate/core';
+
 
 /**
  * z.T. übernommen aus https://github.com/typeorm/typeorm

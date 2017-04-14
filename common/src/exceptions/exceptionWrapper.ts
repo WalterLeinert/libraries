@@ -1,17 +1,11 @@
-// -------------------------------------- logging --------------------------------------------
-import { using } from '../base/disposable';
-import { levels } from '../diagnostics/level';
-import { getLogger } from '../diagnostics/logger';
+// -------------------------- logging -------------------------------
+import { using } from '@fluxgate/core';
 // tslint:disable-next-line:no-unused-variable
-import { ILogger } from '../diagnostics/logger.interface';
-import { XLog } from '../diagnostics/xlog';
-// -------------------------------------- logging --------------------------------------------
+import { getLogger, ILogger, levels, XLog } from '@fluxgate/platform';
+// -------------------------- logging -------------------------------
 
-import { Types } from '../types/types';
-import { Exception } from './exception';
-import { IException } from './exception.interface';
-import { ExceptionFactory } from './exceptionFactory';
-import { NotSupportedException } from './notSupportedException';
+import { Exception, ExceptionFactory, IException, NotSupportedException, Types } from '@fluxgate/core';
+
 
 export class ExceptionWrapper {
   protected static readonly logger = getLogger(ExceptionWrapper);

@@ -1,21 +1,15 @@
-// -------------------------------------- logging --------------------------------------------
-import { using } from '../../base/disposable';
-import { levels } from '../../diagnostics/level';
-import { getLogger } from '../../diagnostics/logger';
+// -------------------------- logging -------------------------------
+import { using } from '@fluxgate/core';
 // tslint:disable-next-line:no-unused-variable
-import { ILogger } from '../../diagnostics/logger.interface';
-import { XLog } from '../../diagnostics/xlog';
-// -------------------------------------- logging --------------------------------------------
+import { getLogger, ILogger, levels, XLog } from '@fluxgate/platform';
+// -------------------------- logging -------------------------------
+
+import {
+  ConfigurationException, Dictionary, Funktion, InvalidOperationException, IToString,
+  NotSupportedException, Types, Utility
+} from '@fluxgate/core';
 
 
-import { Funktion } from '../../base/objectType';
-import { IToString } from '../../base/toString.interface';
-import { ConfigurationException } from '../../exceptions/configurationException';
-import { InvalidOperationException } from '../../exceptions/invalidOperationException';
-import { NotSupportedException } from '../../exceptions/notSupportedException';
-import { Dictionary } from '../../types/dictionary';
-import { Types } from '../../types/types';
-import { Utility } from '../../util/utility';
 import { IEntity } from '../entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { MetadataStorage } from '../metadata/metadataStorage';

@@ -1,7 +1,7 @@
 import * as process from 'process';
 
 // Logging
-import { getLogger } from '../diagnostics/logger';
+import { getLogger } from '@fluxgate/platform';
 
 
 const logger = getLogger(fromEnvironment);

@@ -1,10 +1,11 @@
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger } from '@fluxgate/common';
+import { getLogger, ILogger } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IToString, ServerSystemException, ServiceResult } from '@fluxgate/common';
+import { ServiceResult } from '@fluxgate/common';
+import { IToString, ServerSystemException } from '@fluxgate/core';
 
 import { BaseService } from '../services/baseService';
 import { ControllerBase } from './controllerBase';
