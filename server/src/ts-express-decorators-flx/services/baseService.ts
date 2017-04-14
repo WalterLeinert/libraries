@@ -313,8 +313,8 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                   if (this.metadata.versionColumn) {
                     if (affectedRows <= 0) {
                       trx.rollback();
-                      reject(this.createBusinessException(
-                        new OptimisticLockException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
+                      reject(
+                        new OptimisticLockException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`));
                     } else {
 
                       this.knexService.knex
@@ -328,8 +328,8 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                   } else {
                     if (affectedRows <= 0) {
                       trx.rollback();
-                      reject(this.createSystemException(
-                        new EntityNotFoundException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`)));
+                      reject(
+                        new EntityNotFoundException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`));
                     } else {
                       trx.commit();
                       resolve(this.serialize(subject));
