@@ -1,7 +1,6 @@
 // -------------------------- logging -------------------------------
-import { using } from '@fluxgate/core';
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, XLog } from '@fluxgate/platform';
+import { getLogger, ILogger, levels, using,XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import { CustomSubject, PublisherSubscriber } from '@fluxgate/core';
