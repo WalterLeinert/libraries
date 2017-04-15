@@ -6,7 +6,7 @@ import 'rxjs/add/operator/findIndex';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 
-import { Assert, IListAdapter } from '@fluxgate/common';
+import { Assert, IListAdapter } from '@fluxgate/core';
 
 import { IDropdownAdapter, IDropdownAdapterOptions } from '.';
 

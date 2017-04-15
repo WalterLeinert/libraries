@@ -17,7 +17,6 @@
     "@types/log4js": "0.0.32",
     "@types/node": "7.0.5",
     "@types/tinycolor2": "^1.1.0",
-    "codelyzer": "^2.0.1",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-mocha": "^3.0.1",
@@ -58,6 +57,8 @@
     "@angular/platform-server": "^2.4.9",
     "@angular/router": "^3.4.9",
     "@fluxgate/common": "^2.1.0-beta.0",
+    "@fluxgate/core": "^2.1.0-beta.0",
+    "@fluxgate/platform": "^2.1.0-beta.0",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",
@@ -69,7 +70,9 @@
     "tinycolor2": "^1.4.1"
   },
   "peerDependencies": {
-    "@fluxgate/common": ">=2.0.6-beta.0"
+    "@fluxgate/core": "^2.1.0-beta.0",
+    "@fluxgate/platform": "^2.1.0-beta.0",
+    "@fluxgate/common": ">=2.1.0-beta.0"
   },
   "directories": {
     "lib": "lib"

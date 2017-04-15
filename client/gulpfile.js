@@ -47,12 +47,9 @@ function execCommand(command, cwd, maxBuffer, cb) {
 }
 
 
-/**
- * Common build
- */
-gulp.task('update-fluxgate:common', function (cb) {
-  //execCommand('npm uninstall --save @fluxgate/common', 'common', null, cb);
-  execCommand('npm uninstall --save @fluxgate/common && npm install --save @fluxgate/common', '.', bufferSize, cb);
+gulp.task('update-fluxgate', function (cb) {
+  execCommand('npm uninstall --save @fluxgate/core @fluxgate/common @fluxgate/platform && ' +
+    'npm install --save @fluxgate/core @fluxgate/common @fluxgate/platform', '.', null, cb);
 })
 
 gulp.task('really-clean', ['clean'], function (cb) {
@@ -130,8 +127,6 @@ gulp.task('bundle', function (cb) {
   execCommand('webpack', '.', bufferSize, cb);
 })
 
-
-gulp.task('update-fluxgate', ['update-fluxgate:common'])
 
 /* single command to hook into VS Code */
 gulp.task('default', gulpSequence('clean', 'ngc'));

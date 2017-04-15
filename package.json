@@ -13,6 +13,7 @@
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
   "devDependencies": {
+    "codelyzer": "^2.1.1",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-sequence": "^0.4.6",

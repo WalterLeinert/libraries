@@ -1,7 +1,7 @@
 
 import { Observable } from 'rxjs/Observable';
 
-import { IListAdapter } from '@fluxgate/common';
+import { IListAdapter } from '@fluxgate/core';
 
 import { Service } from '../../services/service';
 
