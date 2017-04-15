@@ -1,7 +1,8 @@
 import { Service } from 'ts-express-decorators';
 
 // Fluxgate
-import { EntityVersion, NotSupportedException, ServiceResult } from '@fluxgate/common';
+import { EntityVersion, ServiceResult } from '@fluxgate/common';
+import { NotSupportedException } from '@fluxgate/core';
 
 import { BaseService } from './baseService';
 import { KnexService } from './knex.service';

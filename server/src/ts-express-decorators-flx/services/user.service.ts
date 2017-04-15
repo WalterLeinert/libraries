@@ -3,11 +3,12 @@ import { Service } from 'ts-express-decorators';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { AppRegistry, Assert, Encryption, Funktion, IUser, Role, User } from '@fluxgate/common';
+import { AppRegistry, IUser, Role, User } from '@fluxgate/common';
+import { Assert, Encryption, Funktion } from '@fluxgate/core';
 
 import { Messages } from '../../resources/messages';
 import { BaseService } from './baseService';

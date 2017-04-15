@@ -2,14 +2,15 @@ import * as Express from 'express';
 import * as path from 'path';
 import { ServerSettings } from 'ts-express-decorators';
 
-
-// -------------------------- logging -------------------------------
+// -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
-// -------------------------- logging -------------------------------
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
+
 
 // Fluxgate
-import { AppConfig, IAppConfig, JsonReader } from '@fluxgate/common';
+import { AppConfig, IAppConfig } from '@fluxgate/common';
+import { JsonReader } from '@fluxgate/platform';
 
 import { GlobalErrorHandler } from './middlewares/globalErrorHandler';
 import { ServerBase } from './serverBase';

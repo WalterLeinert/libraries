@@ -6,14 +6,14 @@ import { Forbidden } from 'ts-httpexceptions';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 
 // Fluxgate
-import {
-  AppConfig, Assert, Clone, ConfigurationException, FileSystem, StringBuilder, Types, Utility
-} from '@fluxgate/common';
+import { AppConfig } from '@fluxgate/common';
+import { Assert, Clone, ConfigurationException, StringBuilder, Types, Utility } from '@fluxgate/core';
+import { FileSystem } from '@fluxgate/platform';
 
 
 // lokale Komponenten

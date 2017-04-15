@@ -2,9 +2,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-// -------------------------- logging -------------------------------
+
+// -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
+
 
 import { IConfigInfo } from './configInfo';
 import { GeneratorBase } from './generatorBase';

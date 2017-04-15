@@ -2,16 +2,18 @@ import * as Knex from 'knex';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
 import {
-  Assert, Clone, ColumnMetadata, /*EntityExistsException,*/
-  EntityNotFoundException, ExceptionWrapper, Funktion,
-  IException, InvalidOperationException, IQuery,
-  IToString, IUser, OptimisticLockException, ServiceResult, TableMetadata, Types
-} from '@fluxgate/common';
+  Assert, Clone, /*EntityExistsException,*/
+  EntityNotFoundException, Funktion,
+  IException, InvalidOperationException,
+  IToString, OptimisticLockException, Types
+} from '@fluxgate/core';
+
+import { ColumnMetadata, ExceptionWrapper, IQuery, IUser, ServiceResult, TableMetadata } from '@fluxgate/common';
 
 
 import { IBaseService } from './baseService.interface';

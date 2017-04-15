@@ -5,10 +5,11 @@ import * as path from 'path';
 import * as util from 'util';
 
 
-// -------------------------- logging -------------------------------
+// -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
-// -------------------------- logging -------------------------------
+// -------------------------------------- logging --------------------------------------------
+
 
 import { ArgumentException, NotSupportedException } from '@fluxgate/core';
 

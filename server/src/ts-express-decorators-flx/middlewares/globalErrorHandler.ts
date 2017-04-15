@@ -9,7 +9,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // fluxgate
-import { Exception } from '@fluxgate/common';
+import { Exception } from '@fluxgate/core';
 
 @MiddlewareError()
 export class GlobalErrorHandler implements IMiddlewareError {
