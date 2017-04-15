@@ -13,6 +13,7 @@ Die Library enthält grundlegende Funktionalitäten für alle anderen Libraries 
   - Exception-Klassen
   - Assertions
   - Basisdatentypen (wie Color, Dictionary, Time, ShortTime, Tuple)
+  - Publisher-Subscriber
 
 ### Platform
 
