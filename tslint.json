@@ -87,6 +87,6 @@
      * A list of relative or absolute paths to directories that contain custom rules.
      * See the Custom Rules documentation below for more details.
      */
-    "node_modules/codelyzer"
+    "client/node_modules/codelyzer"
   ]
 }
