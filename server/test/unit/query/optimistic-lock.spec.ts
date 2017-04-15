@@ -5,7 +5,7 @@
 require('reflect-metadata');
 
 import * as chai from 'chai';
-import { expect } from 'chai';
+// import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import { suite, test } from 'mocha-typescript';
 
@@ -19,7 +19,8 @@ chai.should();
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Clone, ConstantValueGenerator, NumberIdGenerator } from '@fluxgate/common';
+import { ConstantValueGenerator, NumberIdGenerator } from '@fluxgate/common';
+import { Clone } from '@fluxgate/core';
 
 import { KnexTest } from '../knexTest.spec';
 import { QueryTest } from './query-test';

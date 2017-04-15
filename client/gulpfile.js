@@ -90,7 +90,7 @@ gulp.task('compile', function () {
 })
 
 gulp.task('ngc', () => {
-  return ngc('tsconfig.json');
+  return ngc('src/tsconfig.app.json');
 });
 
 //optional - use a tsconfig file

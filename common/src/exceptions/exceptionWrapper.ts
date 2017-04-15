@@ -1,6 +1,6 @@
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using,XLog } from '@fluxgate/platform';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import { Exception, ExceptionFactory, IException, NotSupportedException, Types } from '@fluxgate/core';
