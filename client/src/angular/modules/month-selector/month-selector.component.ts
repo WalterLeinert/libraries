@@ -3,7 +3,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Types } from '@fluxgate/common';
+import { Types } from '@fluxgate/core';
 
 import { DisplayInfo } from '../../../base/displayConfiguration/displayInfo';
 import { PrimeNgCalendarLocale } from '../../../primeng/calendarLocale';

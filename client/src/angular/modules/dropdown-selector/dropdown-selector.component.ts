@@ -10,12 +10,12 @@ import { SelectItem } from 'primeng/primeng';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { Assert, Clone, IService, TableMetadata, Types, Utility } from '@fluxgate/common';
-
+import { IService, TableMetadata } from '@fluxgate/common';
+import { Assert, Clone, Types, Utility } from '@fluxgate/core';
 
 
 import { DataTypes, DisplayInfo, } from '../../../base';

@@ -8,10 +8,10 @@ import { IUser } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Types } from '@fluxgate/common';
+import { Types } from '@fluxgate/core';
 
 // commands
 import { UserServiceRequests } from '../redux/user-service-requests';

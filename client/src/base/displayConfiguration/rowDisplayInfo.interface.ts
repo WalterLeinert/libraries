@@ -1,5 +1,5 @@
 // Fluxgate
-import { Color, InstanceAccessor } from '@fluxgate/common';
+import { Color, InstanceAccessor } from '@fluxgate/core';
 
 
 /**

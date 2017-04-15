@@ -6,13 +6,14 @@ import { Component, Inject, Injector } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-// fluxgate
-import { Assert, IRole, Types, User } from '@fluxgate/common';
-
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
+
+// fluxgate
+import { IRole, User } from '@fluxgate/common';
+import { Assert, Types } from '@fluxgate/core';
 
 // commands
 import { UserServiceRequests } from '../redux/user-service-requests';

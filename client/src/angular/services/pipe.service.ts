@@ -1,7 +1,7 @@
 import { CurrencyPipe, DatePipe, DecimalPipe, LowerCasePipe, PercentPipe, UpperCasePipe } from '@angular/common';
 import { Inject, Injectable, LOCALE_ID, PipeTransform } from '@angular/core';
 
-import { Assert, Dictionary, NotSupportedException, Tuple } from '@fluxgate/common';
+import { Assert, Dictionary, NotSupportedException, Tuple } from '@fluxgate/core';
 
 /**
  * z.Zt. verfügbare Pipes

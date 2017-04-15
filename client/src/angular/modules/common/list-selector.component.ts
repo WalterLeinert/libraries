@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert, Funktion, IService, TableMetadata, Types } from '@fluxgate/common';
+import { IService, TableMetadata } from '@fluxgate/common';
+import { Assert, Funktion, Types } from '@fluxgate/core';
 
 import { MetadataService } from '../../services';
 import { MessageService } from '../../services/message.service';

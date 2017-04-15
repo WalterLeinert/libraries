@@ -3,7 +3,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Assert, Types } from '@fluxgate/common';
+import { Assert, Types } from '@fluxgate/core';
 
 import { MetadataService } from '../../services';
 import { MessageService } from '../../services/message.service';

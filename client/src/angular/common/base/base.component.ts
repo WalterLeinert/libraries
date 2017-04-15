@@ -9,15 +9,13 @@ import { Observable } from 'rxjs/Observable';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
 // Fluxgate
-import {
-  Assert, InstanceAccessor, InstanceSetter, IService, IServiceBase, NotSupportedException,
-  ServiceResult, Utility
-} from '@fluxgate/common';
+import { IService, IServiceBase, ServiceResult } from '@fluxgate/common';
+import { Assert, InstanceAccessor, InstanceSetter, NotSupportedException, Utility } from '@fluxgate/core';
 
 import { IRefreshHelper, IRouterNavigationAction } from '../../common/routing';
 import { IAutoformConfig, IAutoformNavigation } from '../../modules/autoform/autoformConfig.interface';

@@ -1,5 +1,5 @@
-import { Assert, NotSupportedException, TableMetadata } from '@fluxgate/common';
-
+import { TableMetadata } from '@fluxgate/common';
+import { Assert, NotSupportedException } from '@fluxgate/core';
 
 /**
  * Hilfsklasse für die Serialisierung/Deserialisierung des Models.

@@ -1,5 +1,5 @@
 // Fluxgate
-import { InstanceAccessor } from '@fluxgate/common';
+import { InstanceAccessor } from '@fluxgate/core';
 
 export interface IDateDisplayInfo {
 

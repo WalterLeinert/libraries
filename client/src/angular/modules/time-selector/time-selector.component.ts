@@ -6,11 +6,11 @@ import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { Hour, ShortTime, Types } from '@fluxgate/common';
+import { Hour, ShortTime, Types } from '@fluxgate/core';
 
 import { ControlBaseComponent } from '../../common/base/control-base.component';
 import { MessageService } from '../../services/message.service';

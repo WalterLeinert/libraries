@@ -1,5 +1,6 @@
 // Fluxgate
-import { ColumnType, ColumnTypes, NotSupportedException } from '@fluxgate/common';
+import { ColumnType, ColumnTypes } from '@fluxgate/common';
+import { NotSupportedException } from '@fluxgate/core';
 
 import { ControlType } from '../../angular/modules/common/controlType';
 

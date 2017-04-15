@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { Assert, Funktion, MetadataStorage, TableMetadata } from '@fluxgate/common';
+import { MetadataStorage, TableMetadata } from '@fluxgate/common';
+import { Assert, Funktion } from '@fluxgate/core';
 
 
 @Injectable()

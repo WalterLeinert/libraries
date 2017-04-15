@@ -1,7 +1,7 @@
 import { FormGroup } from '@angular/forms';
 
 // Fluxgate
-import { Clone } from '@fluxgate/common';
+import { Clone } from '@fluxgate/core';
 
 
 export interface IMessageDict {

@@ -3,8 +3,9 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { IEntity, IRole, Utility } from '@fluxgate/common';
+import { IEntity, IRole } from '@fluxgate/common';
 import { ItemsFoundCommand, ServiceCommand } from '@fluxgate/common';
+import { Utility } from '@fluxgate/core';
 
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';

@@ -6,12 +6,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
 // Fluxgate
-import { Assert, Clone, Color, NotSupportedException, TableMetadata, Utility } from '@fluxgate/common';
+import { TableMetadata } from '@fluxgate/common';
+import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/core';
 
 import { IControlDisplayInfo } from '../../../base';
 import { BaseComponent } from '../../common/base';

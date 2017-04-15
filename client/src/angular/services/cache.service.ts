@@ -1,5 +1,6 @@
 // Fluxgate
-import { Dictionary, IService, NotSupportedException } from '@fluxgate/common';
+import { IService } from '@fluxgate/common';
+import { Dictionary, NotSupportedException } from '@fluxgate/core';
 
 import { ProxyService } from './proxy.service';
 

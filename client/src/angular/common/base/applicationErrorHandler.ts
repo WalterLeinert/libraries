@@ -2,10 +2,10 @@ import { ApplicationRef, ErrorHandler, Inject, Injectable, Injector, NgModule } 
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { MessageSeverity, ServerBusinessException } from '@fluxgate/common';
+import { MessageSeverity, ServerBusinessException } from '@fluxgate/core';
 
 import { MessageService, MessageServiceModule } from '../../services/message.service';
 

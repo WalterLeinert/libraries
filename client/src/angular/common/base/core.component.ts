@@ -8,17 +8,22 @@ import { Subscription } from 'rxjs/Subscription';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
 import {
-  Assert, CompoundValidator, CustomSubject, Dictionary, Funktion, IEntity, IMessage, IUser,
-  MessageSeverity, PatternValidator, RangeValidator,
-  RequiredValidator, ServerBusinessException, TableMetadata, UniqueIdentifiable, Utility
+  Assert, CustomSubject, Dictionary, Funktion, IMessage,
+  MessageSeverity, ServerBusinessException, UniqueIdentifiable, Utility
+} from '@fluxgate/core';
+
+import {
+  CompoundValidator, IEntity, IServiceState, IUser,
+  PatternValidator, RangeValidator, RequiredValidator,
+  ServiceCommand, SetCurrentItemCommand, Store, TableMetadata
 } from '@fluxgate/common';
 
-import { IServiceState, ServiceCommand, SetCurrentItemCommand, Store } from '@fluxgate/common';
+
 import { IControlDisplayInfo } from '../../../base/displayConfiguration/controlDisplayInfo.interface';
 import { DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';

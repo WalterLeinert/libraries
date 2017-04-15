@@ -8,12 +8,13 @@ import 'rxjs/add/observable/throw';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 
 // Fluxgate
-import { Assert, Clone, Color, InstanceAccessor, TableMetadata, Types } from '@fluxgate/common';
+import { TableMetadata } from '@fluxgate/common';
+import { Assert, Clone, Color, InstanceAccessor, Types } from '@fluxgate/core';
 
 
 import { IControlDisplayInfo } from '../../../base';

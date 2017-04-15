@@ -9,12 +9,12 @@ import { Observable } from 'rxjs/Observable';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger } from '@fluxgate/common';
+import { getLogger, ILogger } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 
-import { IQuery, IToString, ServiceResult, TableMetadata } from '@fluxgate/common';
-import { Assert, Funktion, InvalidOperationException, IService } from '@fluxgate/common';
+import { IQuery, IService, ServiceResult, TableMetadata } from '@fluxgate/common';
+import { Assert, Funktion, InvalidOperationException, IToString } from '@fluxgate/core';
 
 
 import { Serializer } from '../../base/serializer';
