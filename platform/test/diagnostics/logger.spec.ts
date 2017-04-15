@@ -4,9 +4,7 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { using } from '@fluxgate/core';
-
-import { configure, getLogger, IConfig, ILevel, levels, XLog } from '../../src/diagnostics/';
+import { configure, getLogger, IConfig, ILevel, levels, using, XLog } from '../../src/diagnostics/';
 
 
 class Test {
