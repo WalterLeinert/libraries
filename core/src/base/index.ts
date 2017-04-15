@@ -1,6 +1,7 @@
 export * from './activator';
 export * from './clone';
 export * from './ctor';
+export * from './constants';
 export * from './disposable.interface';
 export * from './disposable';
 export * from './enumHelper';
