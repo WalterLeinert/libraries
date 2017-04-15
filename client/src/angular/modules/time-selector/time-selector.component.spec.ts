@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { CalendarModule } from 'primeng/primeng';
 
-import { ShortTime } from '@fluxgate/common';
+import { ShortTime } from '@fluxgate/core';
 
 import { AppInjector } from '../../services/appInjector.service';
 import { MessageServiceModule } from '../../services/message.service';

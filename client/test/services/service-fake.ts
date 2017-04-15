@@ -7,12 +7,10 @@ import { Observable } from 'rxjs/Observable';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-
 import {
-  Assert, EntityGenerator, Funktion, IFlxEntity, InvalidOperationException, IQuery, IService, IToString,
-  NotSupportedException, ServiceResult,
-  Status, TableMetadata
+  EntityGenerator, IFlxEntity, IQuery, IService, ServiceResult, Status, TableMetadata
 } from '@fluxgate/common';
+import { Assert, Funktion, InvalidOperationException, IToString, NotSupportedException } from '@fluxgate/core';
 
 import { MetadataService } from '../../src/angular/services/metadata.service';
 

@@ -21,7 +21,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
-import { configure, IAppConfig } from '@fluxgate/common';
+import { IAppConfig } from '@fluxgate/common';
+import { configure } from '@fluxgate/platform';
 
 
 // Unfortunately there's no typing for the `__karma__` variable. Just declare it as any.
@@ -30,7 +31,7 @@ declare var require: any;
 
 // Prevent Karma from running prematurely.
 // tslint:disable-next-line:only-arrow-functions
-__karma__.loaded = function() {
+__karma__.loaded = function () {
   // ok
 };
 
