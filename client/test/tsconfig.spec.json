@@ -8,7 +8,7 @@
     "lib": [
       "es2016"
     ],
-    "outDir": "../out-tsc/spec",
+    "outDir": "../dist",
     "module": "commonjs",
     "target": "es5",
     "baseUrl": "",

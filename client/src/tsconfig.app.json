@@ -11,7 +11,8 @@
     "noImplicitReturns": true,
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
-    "outDir": "dist",
+    "outDir": "../dist",
+    "rootDir": "./",
     "lib": [
       "es2016",
       "dom"
@@ -20,13 +21,9 @@
       "node_modules/@types"
     ]
   },
-  "files": [
-    "index.ts"
-  ],
   "exclude": [
     "node_modules",
-    "dist",
-    "build"
+    "dist"
   ],
   "angularCompilerOptions": {
     "genDir": "compiled",

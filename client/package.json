@@ -1,9 +1,9 @@
 {
   "name": "@fluxgate/client",
-  "version": "2.0.6-beta.98",
+  "version": "2.1.0-beta.1",
   "description": "Fluxgate Client-Library ",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "typings": "dist/dts/index.d.ts",
   "scripts": {
     "tslint": "tslint ./src/**/*.ts"
   },
@@ -14,12 +14,11 @@
     "@angular/compiler-cli": "^2.4.9",
     "@types/http-status-codes": "^1.0.29",
     "@types/jasmine": "^2.5.43",
-    "@types/log4js": "0.0.32",
     "@types/node": "7.0.5",
-    "@types/tinycolor2": "^1.1.0",
     "codelyzer": "^2.1.1",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
+    "gulp-env": "^0.4.0",
     "gulp-mocha": "^3.0.1",
     "gulp-ngc": "^0.2.0",
     "gulp-sequence": "^0.4.6",
@@ -36,6 +35,7 @@
     "karma-jasmine": "^1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-phantomjs-launcher": "^1.0.4",
+    "log4js": "^1.1.1",
     "merge2": "^1.0.3",
     "ts-loader": "^2.0.0",
     "ts-node": "^3.0.2",
@@ -67,8 +67,7 @@
     "moment": "^2.17.1",
     "ng2-toastr": "^1.6.0",
     "primeng": "^2.0.3",
-    "rxjs": "^5.1.0",
-    "tinycolor2": "^1.4.1"
+    "rxjs": "^5.1.0"
   },
   "peerDependencies": {
     "@fluxgate/core": ">=2.1.0-beta.0",
