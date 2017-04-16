@@ -1,6 +1,5 @@
 *
-!dist/src/*
-!dist/dts/*
+!dist/**/*
 !package.json
 !*.md
 node_modules
