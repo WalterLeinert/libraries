@@ -1,6 +1,7 @@
 /**
  * Gulp Buildfile
  */
+'use strict';
 
 const gulp = require('gulp');
 const env = require('gulp-env');
