@@ -91,6 +91,9 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
     using(new XLog(KnexTest.logger, levels.INFO, 'static.setup'), (log) => {
       KnexTest._service = KnexTest.createService(serviceClass);
 
+      /**
+       * eine EntityGenerator erzeugen, der genau ein Item erzeugen kann.
+       */
       const eg = new EntityGenerator<any, any>({
         count: 1,
         maxCount: 1,
@@ -98,6 +101,10 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
         idGenerator: idGenerator
       });
 
+      /**
+       * ein neues Item erzeugen und wieder löschen, damit wir die Id erhalten (-> _firstTestId),
+       * ab der wir alle Test-Items löschen können
+       */
       const item = eg.createItem();
       KnexTest._service.create(item).then((it) => {
         log.log(`created temp. entity: id = ${it.id}`);
