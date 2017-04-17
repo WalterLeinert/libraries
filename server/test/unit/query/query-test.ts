@@ -22,7 +22,7 @@ export class QueryTest implements IFlxEntity<number> {
   @Column({ name: 'version' })
   public __version: number;
 
-  @Test()
+  // @Test()
   @Column({ name: 'test' })
   public __test: number;
 }

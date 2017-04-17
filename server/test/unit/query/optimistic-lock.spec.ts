@@ -73,70 +73,23 @@ class OptimisticLockTest extends KnexTest<QueryTest, number> {
   }
 
 
-  @test 'should update 2 records'(done: (err?: any) => void) {
+  @test 'should generate optimitsic lock exception'(done: (err?: any) => void) {
     using(new XLog(OptimisticLockTest.logger, levels.INFO, 'should update 2 records'), (log) => {
       this.service.find().then((items) => {
         const item = items[items.length - 1];
         const itemClone = Clone.clone(item);
 
-        item.__test = 5000;
-
-        // update für denselben Record ohne und mit delay von 5 s -> optimistic lock exception
+        // update für denselben Record direkt nacheinander -> optimistic lock exception
         this.service.update(itemClone).then((itClone) => {
           this.service.update(item).then((it) => {
-            // ok
+            done();
           }).catch((err) => {
             expect(err).to.be.instanceOf(OptimisticLockException);
             done();
           });
-
         });
+
       });
-
-      // this.service.findById(this.maxId).then((item) => {
-      //   item.__test = 5000;
-
-      //   // update für Record mit delay von 5 s
-      //   this.service.update(item).then((it) => {
-      //     log.log(`item1 updated: ${JSON.stringify(it)}`);
-      //   });
-      // });
-
-      // this.service.findById(this.maxId).then((item) => {
-      //   // update für Record ohne delay
-      //   this.service.update(item).then((it) => {
-      //     log.log(`item1 updated: ${JSON.stringify(it)}`);
-      //   });
-      // });
-
-      //
-      // ersten Record persistieren mit delay von 5ms
-      //
-      // this.service.create(item1).then((item) => {
-      //   log.log(`item1 created: ${JSON.stringify(item)}`);
-      //   const x = item.name;
-
-      //   item.__test = 5000;
-
-      //   this.service.update(item).then((it) => {
-      //     log.log(`item1 updated: ${JSON.stringify(it)}`);
-      //   });
-
-      // });
-
-      // // setTimeout(() => {
-      // const item2 = Clone.clone(item1);
-      // item1.__test = 5000;
-
-      // this.service.update(item1).then((item) => {
-      //   log.log(`item1 updated: ${JSON.stringify(item)}`);
-      // });
-
-      // this.service.update(item2).then((item) => {
-      //   log.log(`item2 updated: ${JSON.stringify(item)}`);
-      // });
-
-      // // }, 2000);
     });
   }
 }
