@@ -28,7 +28,7 @@ gulp.task('info', function () {
 })
 
 
-gulp.task('npm:install', ['install:core', 'install:platform', 'install:common', 'install:client', 'install:server'])
+gulp.task('npm-install', ['install:core', 'install:platform', 'install:common', 'install:client', 'install:server'])
 gulp.task('update-fluxgate', ['update-fluxgate:platform', 'update-fluxgate:common', 'update-fluxgate:client', 'update-fluxgate:server'])
 
 gulp.task('really-clean', ['really-clean:core', 'update-fluxgate:platform', 'update-fluxgate:common', 'really-clean:server', 'really-clean:client'], function (cb) {
