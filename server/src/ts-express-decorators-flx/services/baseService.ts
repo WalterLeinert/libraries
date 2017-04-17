@@ -317,8 +317,12 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                   if (this.metadata.versionColumn) {
                     if (affectedRows <= 0) {
                       trx.rollback();
-                      reject(
-                        new OptimisticLockException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`));
+
+                      const exc = new OptimisticLockException(
+                        `table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`);
+
+                      log.error(exc);
+                      reject(exc);
                     } else {
 
                       this.knexService.knex
@@ -326,16 +330,28 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                         .transacting(trx)
                         .where('entitversion_id', '=', this.tableName);
 
+                      subject = this.createModelInstance(dbSubject);
+
                       trx.commit();
+
+                      log.debug('subject after commit: ', subject);
                       resolve(this.serialize(subject));
                     }
                   } else {
                     if (affectedRows <= 0) {
                       trx.rollback();
-                      reject(
-                        new EntityNotFoundException(`table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`));
+
+                      const exc = new EntityNotFoundException(
+                        `table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`);
+                      log.error(exc);
+
+                      reject(exc);
                     } else {
+                      subject = this.createModelInstance(dbSubject);
+
                       trx.commit();
+
+                      log.debug('subject after commit: ', subject);
                       resolve(this.serialize(subject));
                     }
                   }
@@ -347,7 +363,6 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                   reject(this.createSystemException(err));
                 });
               //  }, delayMillisecs);
-
             });
 
         });     // transaction
