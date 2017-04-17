@@ -5,7 +5,7 @@
 require('reflect-metadata');
 
 import * as chai from 'chai';
-// import { expect } from 'chai';
+import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import { suite, test } from 'mocha-typescript';
 
@@ -20,7 +20,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import { ConstantValueGenerator, NumberIdGenerator } from '@fluxgate/common';
-import { Clone } from '@fluxgate/core';
+import { Clone, OptimisticLockException } from '@fluxgate/core';
 
 import { KnexTest } from '../knexTest.spec';
 import { QueryTest } from './query-test';
@@ -62,18 +62,18 @@ class OptimisticLockTest extends KnexTest<QueryTest, number> {
 
 
   @test 'should create 2 records'() {
-    using(new XLog(OptimisticLockTest.logger, levels.INFO, 'should create 2 records'), (log) => {
+    return using(new XLog(OptimisticLockTest.logger, levels.INFO, 'should create 2 records'), (log) => {
       const item1 = this.createItem();
       const item2 = this.createItem();
 
-      Promise.all([this.service.create(item1), this.service.create(item2)]).then((items) => {
+      return Promise.all([this.service.create(item1), this.service.create(item2)]).then((items) => {
         log.log(`items created: ${JSON.stringify(items)}`);
       });
     });
   }
 
 
-  @test 'should update 2 records'() {
+  @test 'should update 2 records'(done: (err?: any) => void) {
     using(new XLog(OptimisticLockTest.logger, levels.INFO, 'should update 2 records'), (log) => {
       this.service.find().then((items) => {
         const item = items[items.length - 1];
@@ -81,19 +81,16 @@ class OptimisticLockTest extends KnexTest<QueryTest, number> {
 
         item.__test = 5000;
 
-        // update für Record mit delay von 5 s
-        this.service.update(item).then((it) => {
-          log.log(`item1 updated: id = ${it.id}, ${JSON.stringify(it)}`);
+        // update für denselben Record ohne und mit delay von 5 s -> optimistic lock exception
+        this.service.update(itemClone).then((itClone) => {
+          this.service.update(item).then((it) => {
+            // ok
+          }).catch((err) => {
+            expect(err).to.be.instanceOf(OptimisticLockException);
+            done();
+          });
+
         });
-
-
-        itemClone.__test = 0;
-
-        // update für Record mit delay von 5 s
-        // this.service.update(itemClone).then((it) => {
-        //   log.log(`itemClone updated: id = ${it.id}, ${JSON.stringify(it)}`);
-        // });
-
       });
 
       // this.service.findById(this.maxId).then((item) => {
