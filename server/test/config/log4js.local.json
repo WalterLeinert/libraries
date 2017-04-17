@@ -25,13 +25,16 @@
         }
     ],
     "levels": {
-        "[all]": "INFO",
-        "ExceptionWrapper": "INFO",
-        "BaseService": "DEBUG",
-        "PassportController": "INFO",
-        "PassportLocalService": "INFO",
-        "ArtikelController": "INFO",
-        "KollektionController": "INFO",
-        "ControllerBase": "INFO"
+        "[all]": "WARN",
+        "comment": {
+          "ExceptionWrapper": "INFO",
+          "BaseService": "DEBUG",
+          "PassportController": "INFO",
+          "PassportLocalService": "INFO",
+          "ArtikelController": "INFO",
+          "KollektionController": "INFO",
+          "ControllerBase": "INFO"
+        }
+
     }
 }
