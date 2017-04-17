@@ -16,7 +16,6 @@ const merge = require('merge2');
 const mocha = require('gulp-mocha');
 const tscConfig = require('./tsconfig.json');
 const tsProject = tsc.createProject('tsconfig.json');
-const removeCode = require('gulp-remove-code');
 
 /**
     * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
