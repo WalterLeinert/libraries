@@ -91,7 +91,7 @@ class VersionTest extends KnexTest<QueryTest, number> {
       this.service.update(item).then((it) => {
         expect(it.__version).to.equal(item.__version + 1);
         done();
-
       });
-    }
+    });
+  }
 }
