@@ -223,7 +223,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
   /**
    * Helpermethode zum Erzeugen von Service-Klassen
    */
-  private static createService<T>(model: ICtor<T>): T {
+  protected static createService<T>(model: ICtor<T>): T {
     return Activator.createInstance<T>(model, KnexTest.knexService, KnexTest.metadataService);
   }
 
