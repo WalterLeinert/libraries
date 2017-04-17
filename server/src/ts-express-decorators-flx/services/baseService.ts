@@ -301,6 +301,8 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
             log.debug(`query prepared for updating version in entityversion for table ${this.tableName}`);
           }
 
+          log.debug('dbSbject: ', dbSubject);
+
           entityversionQuery
             .then((item) => {
 
