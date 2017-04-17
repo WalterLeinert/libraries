@@ -292,11 +292,11 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
 
             log.debug(`query prepared for updating version in table ${this.tableName}`);
 
-            // query zum Update der Version
+            // query zum Inkrement der Version
             entityversionQuery = this.knexService.knex.table('entityversion')
-              .update({ entityversion_version: dbSubject[this.metadata.versionColumn.options.name] })
-              .transacting(trx)
-              .where('entityversion_id', '=', this.tableName);
+              .where('entityversion_id', '=', this.tableName)
+              .increment('entityversion_version', 1)
+              .transacting(trx);
 
             log.debug(`query prepared for updating version in entityversion for table ${this.tableName}`);
           }
