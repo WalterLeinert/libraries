@@ -8,7 +8,6 @@ const gulpSequence = require('gulp-sequence');
 const del = require('del');
 
 
-
 require('./build/gulpfile.npm');
 require('./build/gulpfile.docker');
 
@@ -28,21 +27,62 @@ gulp.task('info', function () {
 })
 
 
-gulp.task('npm-install', ['install:core', 'install:platform', 'install:common', 'install:client', 'install:server'])
-gulp.task('update-fluxgate', ['update-fluxgate:platform', 'update-fluxgate:common', 'update-fluxgate:client', 'update-fluxgate:server'])
+gulp.task('npm-install', [
+  'install:core',
+  'install:platform',
+  'install:common',
+  'install:client',
+  'install:server'
+])
 
-gulp.task('really-clean', ['really-clean:core', 'update-fluxgate:platform', 'update-fluxgate:common', 'really-clean:server', 'really-clean:client'], function (cb) {
-    return del('node_modules');
+gulp.task('update-fluxgate', [
+  'update-fluxgate:platform',
+  'update-fluxgate:common',
+  'update-fluxgate:client',
+  'update-fluxgate:server'
+])
+
+gulp.task('really-clean', [
+  'really-clean:core',
+  'really-clean:platform',
+  'really-clean:common',
+  'really-clean:client',
+  'really-clean:server'
+], function (cb) {
+  return del('node_modules');
 })
 
-gulp.task('clean', ['clean:core', 'clean:platform', 'clean:common', 'clean:client', 'clean:server'], function(cb) {
-  return del('dist');
-})
-gulp.task('tslint', ['tslint:core', 'tslint:platform', 'tslint:common', 'tslint:server', 'tslint:client'])
+gulp.task('clean', [
+  'clean:core',
+  'clean:platform',
+  'clean:common',
+  'clean:server',
+  'clean:client'
+])
 
-gulp.task('publish', ['publish:core', 'publish:platform', 'publish:common', 'publish:client', 'publish:server'])
+gulp.task('tslint', [
+  'tslint:core',
+  'tslint:platform',
+  'tslint:common',
+  'tslint:client',
+  'tslint:server'
+])
 
+gulp.task('publish', [
+  'publish:core',
+  'publish:platform',
+  'publish:common',
+  'publish:client',
+  'publish:server'
+])
 
-gulp.task('build-all', gulpSequence('build-all:core', 'build-all:platform', 'build-all:common', ['build-all:server', 'build-all:client']))
+gulp.task('build-all',
+  gulpSequence(
+    'build-all:core',
+    'build-all:platform',
+    'build-all:common',
+    ['build-all:server', 'build-all:client']
+  )
+)
 
 gulp.task('default', gulpSequence('build-all'))
