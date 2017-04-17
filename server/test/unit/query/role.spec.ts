@@ -76,6 +76,7 @@ class RoleTest extends KnexTest<Role, number> {
     role.description = role.description + '-updated';
 
     const expectedRole = Clone.clone(role);
+    expectedRole.__version = role.__version + 1;
 
     return expect(this.service.update(role))
       .to.become(expectedRole);
