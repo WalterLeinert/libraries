@@ -2,7 +2,7 @@ import path = require('path');
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { configure, getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { configure, getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { Activator } from '@fluxgate/common';
+import { Activator } from '@fluxgate/core';
 
 class Test {
   constructor(name: string, id: number) {

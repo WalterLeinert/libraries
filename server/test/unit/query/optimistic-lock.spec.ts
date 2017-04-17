@@ -37,20 +37,26 @@ class OptimisticLockTest extends KnexTest<QueryTest, number> {
   public static readonly MAX_ITEMS = 10;
 
   constructor() {
-    super(QueryTest, OptimisticLockTest.ITEMS, OptimisticLockTest.MAX_ITEMS,
-      new NumberIdGenerator(OptimisticLockTest.MAX_ITEMS), {
+    super({
+      modelClass: QueryTest,
+      count: OptimisticLockTest.ITEMS,
+      maxCount: OptimisticLockTest.MAX_ITEMS,
+      idGenerator: new NumberIdGenerator(OptimisticLockTest.MAX_ITEMS),
+      columnConfig: {
         __version: new ConstantValueGenerator(0),
         __test: new ConstantValueGenerator(0),
-      });
-
+      }
+    });
   }
 
-
-  public static before() {
+  public static before(done: () => void) {
     using(new XLog(OptimisticLockTest.logger, levels.INFO, 'static.before'), (log) => {
-      super.before();
+      super.before(() => {
 
-      super.setup(QueryTestService);
+        super.setup(QueryTest, QueryTestService, new NumberIdGenerator(1), () => {
+          done();
+        });
+      });
     });
   }
 

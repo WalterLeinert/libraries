@@ -109,8 +109,6 @@ gulp.task('test', ['compile:test'], function () {
 });
 
 
-gulp.task('compile:test', gulpSequence('default'/*, 'test'*/));
-
 gulp.task('publish', ['compile:test'], function (cb) {
   const force = argv.f ? argv.f : '';
   const forceSwitch = (force ? '-f' : '');
