@@ -10,7 +10,26 @@
       "name": "common: run Mocha",
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
-        "common/dist/node/test/**/*.spec.js",
+        "common/dist/test/**/*.spec.js",
+        "--no-timeouts"
+      ],
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": null,
+      "outFiles": [
+      ],
+      "sourceMaps": true,
+      "stopOnEntry": false,
+      "env": {
+        "NODE_ENV": "testing"
+      }
+    },
+        {
+      "type": "node",
+      "request": "launch",
+      "name": "platform: run Mocha",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "platform/dist/node/test/**/*.spec.js",
         "--no-timeouts"
       ],
       "cwd": "${workspaceRoot}",
