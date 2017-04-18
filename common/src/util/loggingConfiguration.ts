@@ -6,9 +6,8 @@ import process = require('process');
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { StringBuilder, Utility } from '@fluxgate/core';
+import { fromEnvironment, StringBuilder, Utility } from '@fluxgate/core';
 
-import { fromEnvironment } from './env';
 
 export interface ILoggingConfigurationOptions {
   systemMode?: string;
