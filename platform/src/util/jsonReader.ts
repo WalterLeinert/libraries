@@ -49,7 +49,7 @@ export class JsonReader {
           const config = JSON.parse(data.toString()) as T;
           cb(null, config);
         } catch (err) {
-          console.error('Die Json-Konfiguration ${jsonPath} ist kein gültiges JSON-Format.');
+          console.error(`Die Json-Konfiguration ${jsonPath} ist kein gültiges JSON-Format.`);
           cb(err, null);
         }
       });
