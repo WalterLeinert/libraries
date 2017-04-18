@@ -1,4 +1,5 @@
 {
+    "___comment": "Konfiguration für Debugging",
     "appenders": [
         {
             "type": "file",
@@ -25,7 +26,7 @@
         }
     ],
     "levels": {
-        "[all]": "INFO",
+        "[all]": "WARN",
         "BaseService": "INFO",
         "PassportController": "INFO",
         "PassportLocalService": "INFO",

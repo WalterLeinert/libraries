@@ -20,7 +20,7 @@
       "sourceMaps": true,
       "stopOnEntry": false,
       "env": {
-        "NODE_ENV": "testing"
+        "NODE_ENV": "debug"
       }
     },
         {
@@ -39,7 +39,7 @@
       "sourceMaps": true,
       "stopOnEntry": false,
       "env": {
-        "NODE_ENV": "testing"
+        "NODE_ENV": "debug"
       }
     },
     {
@@ -58,7 +58,7 @@
       "sourceMaps": true,
       "stopOnEntry": false,
       "env": {
-        "NODE_ENV": "testing"
+        "NODE_ENV": "debug"
       }
     }
   ]

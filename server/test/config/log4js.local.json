@@ -1,4 +1,5 @@
 {
+    "___comment": "Konfiguration für Unittests",
     "appenders": [
         {
             "type": "file",

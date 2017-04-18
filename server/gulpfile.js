@@ -5,6 +5,7 @@
 // require("reflect-metadata");
 
 const gulp = require('gulp');
+const env = require('gulp-env');
 const tslint = require('gulp-tslint');
 const del = require('del');
 const gulpSequence = require('gulp-sequence');
@@ -101,7 +102,7 @@ gulp.task('compile:test', function () {
 
 
 //optional - use a tsconfig file
-gulp.task('test', ['compile:test'], function () {
+gulp.task('test', ['set-env', 'compile:test'], function () {
   gulp.src('./dist/test/**/*.spec.js', {read: false})
     .pipe(mocha({
       reporter: 'spec'
@@ -122,6 +123,14 @@ gulp.task('bundle', function (cb) {
   execCommand('webpack', '.', null, cb);
 })
 
+gulp.task('set-env', function () {
+  env({
+    vars: {
+      NODE_ENV: 'local'
+    }
+  })
+});
+
 
 /* single command to hook into VS Code */
-gulp.task('default', gulpSequence('clean', 'compile'/*gulp*/ /*, 'bundle'*/));
+gulp.task('default', gulpSequence('set-env', 'clean', 'compile'/*gulp*/ /*, 'bundle'*/));
