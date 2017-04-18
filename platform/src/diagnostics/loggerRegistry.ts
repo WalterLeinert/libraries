@@ -60,13 +60,12 @@ export class LoggerRegistry {
     Assert.that(LoggerRegistry.hasLogger(categoryName));
 
     const logger = LoggerRegistry.loggerDict.get(categoryName);
+    logger.setLevel(LoggerRegistry.defaultLevel);
 
     if (LoggerRegistry._config) {
       const level = LoggerRegistry._config.levels[categoryName];
       if (level) {
         logger.setLevel(level);
-      } else {
-        logger.setLevel(LoggerRegistry.defaultLevel);
       }
     }
 
@@ -101,7 +100,7 @@ export class LoggerRegistry {
 
   private static applyConfiguration(config: IConfig) {
     LoggerRegistry.forEachLogger((logger) => {
-      const catLevel = LoggerRegistry._config.levels[logger.categoryName];
+      const catLevel = LoggerRegistry._config.levels[logger.category];
       if (catLevel) {
         logger.setLevel(Level.toLevel(catLevel));
       } else {

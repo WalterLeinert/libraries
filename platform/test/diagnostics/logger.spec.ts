@@ -127,7 +127,8 @@ class LoggerConfigTest {
   @test 'should test log level for Test3'() {
     // tslint:disable-next-line:no-unused-variable
     const test = new Test3('hirsch');
-    expect(Test3.logger.level.isEqualTo(levels.WARN)).to.be.true;
+    // expect(Test3.logger.level.isEqualTo(levels.WARN)).to.be.true;
+    expect(Test3.logger.level.toString()).to.equal(levels.WARN.toString());
   }
 
   protected before() {

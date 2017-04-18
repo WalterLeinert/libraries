@@ -183,8 +183,8 @@ export class XLog extends Disposable implements ILogger {
     return this._level;
   }
 
-  public get categoryName(): string {
-    return this.logger.categoryName;
+  public get category(): string {
+    return this.logger.category;
   }
 
   /**

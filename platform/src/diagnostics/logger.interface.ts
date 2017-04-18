@@ -2,7 +2,7 @@ import { ILevel } from './level.interface';
 
 export interface ILogger {
   level: ILevel;
-  categoryName: string;
+  category: string;
 
   setLevel(level: string | ILevel): void;
 

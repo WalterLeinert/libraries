@@ -56,9 +56,7 @@ export function configure(config: string | IConfig, options?: any): void {
   log4js.configure(config, options);
   // endRemoveIf(browser)
 
-  // removeIf(node)
   LoggerRegistry.configure(config, options);
-  // endRemoveIf(node)
 }
 
 
@@ -139,12 +137,12 @@ export class Logger implements ILogger {
     return this.logger.level;
   }
 
-  public get categoryName(): string {
-    return this.logger.categoryName;
+  public get category(): string {
+    return this.logger.category;
   }
 
   public toString(): string {
-    return this.logger.categoryName;
+    return this.logger.category;
   }
 
 }

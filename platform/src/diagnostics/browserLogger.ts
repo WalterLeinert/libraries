@@ -11,7 +11,7 @@ import { ILogger } from './logger.interface';
 export class BrowserLogger implements ILogger {
   private _level: ILevel = levels.WARN;
 
-  private constructor(private _categoryName: string) {
+  private constructor(private _category: string) {
   }
 
   /**
@@ -118,8 +118,8 @@ export class BrowserLogger implements ILogger {
   }
 
 
-  public get categoryName(): string {
-    return this._categoryName;
+  public get category(): string {
+    return this._category;
   }
 
   private createLogPrefix(level: ILevel): StringBuilder {
@@ -128,7 +128,7 @@ export class BrowserLogger implements ILogger {
     sb.append(' [');
     sb.append(level.toString());
     sb.append('] ');
-    sb.append(this.categoryName);
+    sb.append(this.category);
     sb.append(' ');
 
     return sb;
