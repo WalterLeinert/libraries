@@ -6,7 +6,7 @@ import { configure, getLogger, ILogger, levels, using, XLog } from '@fluxgate/pl
 // -------------------------- logging -------------------------------
 
 
-import { fromEnvironment } from '@fluxgate/common';
+import { fromEnvironment } from '@fluxgate/core';
 
 
 /**
@@ -35,7 +35,7 @@ export abstract class BaseTest {
   }
 
 
-  private static initializeLogging() {
+  public static initializeLogging() {
     using(new XLog(BaseTest.logger, levels.DEBUG, 'initializeLogging'), (log) => {
       // Logging konfigurieren ...
       const systemMode = fromEnvironment('NODE_ENV', 'development');

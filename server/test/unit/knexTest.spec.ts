@@ -10,9 +10,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  EntityGenerator, fromEnvironment, IEntity, IEntityGeneratorColumnConfig, ValueGenerator
+  EntityGenerator, IEntity, IEntityGeneratorColumnConfig, ValueGenerator
 } from '@fluxgate/common';
-import { Activator, Funktion, ICtor, IToString } from '@fluxgate/core';
+import { Activator, fromEnvironment, Funktion, ICtor, IToString } from '@fluxgate/core';
 import { JsonReader } from '@fluxgate/platform';
 
 import { KnexService, MetadataService } from '../../src/ts-express-decorators-flx/services';
