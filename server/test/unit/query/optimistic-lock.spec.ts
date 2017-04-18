@@ -5,9 +5,9 @@
 require('reflect-metadata');
 
 import * as chai from 'chai';
-import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { suite, test } from 'mocha-typescript';
+// tslint:disable-next-line:no-unused-variable
+import { only, suite, test } from 'mocha-typescript';
 
 
 // Chai mit Promises verwenden (... to.become() ... etc.)
@@ -67,13 +67,13 @@ class OptimisticLockTest extends KnexTest<QueryTest, number> {
       const item2 = this.createItem();
 
       return Promise.all([this.service.create(item1), this.service.create(item2)]).then((items) => {
-        log.log(`items created: ${JSON.stringify(items)}`);
+        // ok
       });
     });
   }
 
 
-  @test 'should generate optimitsic lock exception'(done: (err?: any) => void) {
+  @test 'should generate optimistic lock exception'(done: (err?: any) => void) {
     using(new XLog(OptimisticLockTest.logger, levels.INFO, 'should update 2 records'), (log) => {
       this.service.find().then((items) => {
         const item = items[items.length - 1];
@@ -81,11 +81,16 @@ class OptimisticLockTest extends KnexTest<QueryTest, number> {
 
         // update für denselben Record direkt nacheinander -> optimistic lock exception
         this.service.update(itemClone).then((itClone) => {
+          // erster update war erfolgreich -> version = 1
           this.service.update(item).then((it) => {
-            done();
+            //  2. update schlägt fehl
+            done(`should not happen`);
           }).catch((err) => {
-            expect(err).to.be.instanceOf(OptimisticLockException);
-            done();
+            if (err instanceof OptimisticLockException) {
+              done();
+            } else {
+              done(`${err}: OptimisticLockException expected`);
+            }
           });
         });
 
