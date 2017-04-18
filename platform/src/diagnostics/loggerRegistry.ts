@@ -27,8 +27,11 @@ export class LoggerRegistry {
   public static configure(config: string | IConfig, options?: any): void {
 
     if (typeof config === 'string') {
-      JsonReader.readJson<IConfig>(config, (conf) => {
+      JsonReader.readJson<IConfig>(config, (err, conf) => {
         //
+        if (err) {
+          throw err;
+        }
         const cfg = conf as IConfig;
 
         LoggerRegistry.registerConfiguration(cfg);
