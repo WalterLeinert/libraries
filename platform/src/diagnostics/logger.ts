@@ -31,6 +31,8 @@ export function getLogger(category: string | Funktion): ILogger {
 
     LoggerRegistry.registerLogger(categoryName, logger);
     // endRemoveIf(browser)
+  } else {
+    logger = LoggerRegistry.getLogger(categoryName);
   }
 
   return logger;
@@ -58,6 +60,8 @@ export function configure(config: string | IConfig, options?: any): void {
 
       LoggerRegistry.configure(conf as IConfig, options);
     });
+  } else {
+    LoggerRegistry.configure(config as IConfig, options);
   }
   // endRemoveIf(browser)
 
@@ -65,7 +69,7 @@ export function configure(config: string | IConfig, options?: any): void {
   if (typeof config === 'string') {
     throw new NotSupportedException('only supported on node platforms');
   }
-
-  LoggerRegistry.configure(config, options);
+  LoggerRegistry.configure(config as IConfig, options);
   // endRemoveIf(node)
+
 }
