@@ -2,6 +2,11 @@
 
 import { suite, test } from 'mocha-typescript';
 
+// -------------------------- logging -------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------- logging -------------------------------
+
 enum TableType {
   Master,
   Detail
@@ -97,9 +102,11 @@ const doc: IRootObject = {
 
 @suite('json-format')
 class ReflectionTest {
+  protected static logger = getLogger(ReflectionTest);
 
   @test 'should stringify doc'() {
+    ReflectionTest.logger.setLevel(levels.INFO);
     // tslint:disable-next-line:no-console
-    console.log(JSON.stringify(doc));
+    ReflectionTest.logger.info(JSON.stringify(doc));
   }
 }
