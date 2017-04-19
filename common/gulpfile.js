@@ -127,7 +127,7 @@ gulp.task('publish', ['test'], function (cb) {
 gulp.task('set-env', function () {
   env({
     vars: {
-      PLATFORM: 'node'
+      NODE_ENV: 'local'
     }
   })
 });

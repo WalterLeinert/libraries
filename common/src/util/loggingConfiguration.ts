@@ -9,12 +9,41 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { fromEnvironment, StringBuilder, Utility } from '@fluxgate/core';
 
 
+/**
+ * Interface für die Logging-Konfiguration
+ *
+ * @export
+ * @interface ILoggingConfigurationOptions
+ */
 export interface ILoggingConfigurationOptions {
+  /**
+   * der Systemmodus (z.B. 'local' oder 'development')
+   */
   systemMode?: string;
+
+  /**
+   * der Basisname der Loggingkonfiguration (default: log4js)
+   */
   filename?: string;
+
+  /**
+   * relativer Pfad auf Verzeichnis mit Logging-Konfiguration (default: /config)
+   */
   relativePath?: string;
+
+  /**
+   * falls gesetzt, wird die Logging-Konfigurationsdatei überwacht und alle @see{reloadSecs} Sekunden neu gelesen
+   */
+  reloadSecs?: number;
 }
 
+
+/**
+ * Hilfsklasse zum Lesen und Anwenden der Logging-Konfiguration
+ *
+ * @export
+ * @class LoggingConfiguration
+ */
 export class LoggingConfiguration {
   protected static readonly logger = getLogger(LoggingConfiguration);
 
