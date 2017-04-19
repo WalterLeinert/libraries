@@ -1,7 +1,7 @@
 // Logging
-// TODO: import { getLogger } from '../diagnostics/logger';
+import { getLogger } from '../diagnostics/logger';
 // tslint:disable-next-line:no-unused-variable
-// TODO: import { ILogger } from '../diagnostics/logger.interface';
+import { ILogger } from '../diagnostics/logger.interface';
 
 import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { IDisposable } from './disposable.interface';
@@ -11,7 +11,7 @@ import { IDisposable } from './disposable.interface';
  * Abstract base class for disposable resources
  */
 export abstract class Disposable implements IDisposable {
-  // TODO: protected static logger = getLogger(Disposable);
+  protected static logger = getLogger(Disposable);
 
   /** if true, throw Error on double dispose */
   public static throwExceptionOnAlreadyDisposed = false;
@@ -29,9 +29,7 @@ export abstract class Disposable implements IDisposable {
     // using(new EnterExitLogger(Disposable.logger, levels.DEBUG, 'dispose'), (log) => {
     try {
       if (Disposable.doMethodTraces) {
-        // tslint:disable-next-line:no-console
-        console.debug('>> dispose');
-        // TODO: Disposable.logger.debug('>> dispose');
+        Disposable.logger.debug('>> dispose');
       }
 
 
@@ -39,9 +37,7 @@ export abstract class Disposable implements IDisposable {
         if (Disposable.throwExceptionOnAlreadyDisposed) {
           throw new InvalidOperationException('Instance already disposed: ' + JSON.stringify(this));
         } else {
-          // tslint:disable-next-line:no-console
-          console.debug('Instance already disposed: ', this);
-          // TODO: Disposable.logger.debug('Instance already disposed: ', this);
+          Disposable.logger.debug('Instance already disposed: ', this);
         }
       } else {
         this.onDispose();
@@ -49,9 +45,7 @@ export abstract class Disposable implements IDisposable {
 
     } finally {
       if (Disposable.doMethodTraces) {
-        // tslint:disable-next-line:no-console
-        console.debug('<< dispose');
-        // TODO: Disposable.logger.debug('<< dispose');
+        Disposable.logger.debug('<< dispose');
       }
       this.disposed = true;
     }

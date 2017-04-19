@@ -84,24 +84,26 @@ gulp.task('compile', function() {
 
 
 
-/**
- * build an run tests
- */
-gulp.task('test', ['set-env'], function () {
+gulp.task('compile:test', ['default'], function () {
   //find test code - note use of 'base'
-  return gulp.src('./test/**/*.spec.ts', { base: '.' })
+  return gulp.src('./test/**/*.ts', { base: '.' })
+    .pipe(sourcemaps.init())
     /*transpile*/
     .pipe(tsc(tscConfig.compilerOptions))
     /*flush to disk*/
-    .pipe(gulp.dest('dist'))
-    /*execute tests*/
+    .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+    .pipe(gulp.dest('dist'));
+});
+
+
+gulp.task('test', ['set-env', 'compile:test'], function () {
+  gulp.src('./dist/test/**/*.spec.js', {read: false})
     .pipe(mocha({
       reporter: 'spec'
     }));
 });
 
 
-gulp.task('compile:test', gulpSequence('default', 'test'));
 
 gulp.task('publish', ['compile:test'], function (cb) {
   const force = argv.f ? argv.f : '';

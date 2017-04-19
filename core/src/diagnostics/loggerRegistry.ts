@@ -1,6 +1,6 @@
-import { Assert, Dictionary } from '@fluxgate/core';
+import { Dictionary } from '../types/dictionary';
+import { Assert } from '../util/assert';
 
-import { JsonReader } from '../util/jsonReader';
 import { IConfig } from './config.interface';
 import { levels } from './level';
 import { Level } from './level';
@@ -19,26 +19,13 @@ export class LoggerRegistry {
    * Konfiguriert das Logging
    *
    * @static
-   * @param {string | IConfig} config
+   * @param {IConfig} config
    * @param {*} [options]
    *
-   * @memberOf BrowserLogger
+   * @memberOf LoggerRegistry
    */
-  public static configure(config: string | IConfig, options?: any): void {
-
-    if (typeof config === 'string') {
-      JsonReader.readJson<IConfig>(config, (err, conf) => {
-        //
-        if (err) {
-          throw err;
-        }
-        const cfg = conf as IConfig;
-
-        LoggerRegistry.registerConfiguration(cfg);
-      });
-    } else {
-      LoggerRegistry.registerConfiguration(config);
-    }
+  public static configure(config: IConfig, options?: any): void {
+    LoggerRegistry.registerConfiguration(config);
   }
 
 

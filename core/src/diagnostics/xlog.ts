@@ -1,7 +1,9 @@
 import * as moment from 'moment';
 
-import { Disposable, NotSupportedException, StringBuilder, Types } from '@fluxgate/core';
-
+import { Disposable } from '../base/disposable';
+import { StringBuilder } from '../base/stringBuilder';
+import { NotSupportedException } from '../exceptions/notSupportedException';
+import { Types } from '../types/types';
 import { levels } from './level';
 import { Level } from './level';
 import { ILevel } from './level.interface';

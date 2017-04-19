@@ -1,6 +1,8 @@
 import * as moment from 'moment';
 
-import { InvalidOperationException, StringBuilder, Types } from '@fluxgate/core';
+import { StringBuilder } from '../base/stringBuilder';
+import { InvalidOperationException } from '../exceptions/invalidOperationException';
+import { Types } from '../types/types';
 
 
 import { levels } from './level';
@@ -8,7 +10,7 @@ import { ILevel } from './level.interface';
 import { ILogger } from './logger.interface';
 
 
-export class BrowserLogger implements ILogger {
+export class ConsoleLogger implements ILogger {
   private _level: ILevel = levels.WARN;
 
   private constructor(private _category: string) {
@@ -18,7 +20,7 @@ export class BrowserLogger implements ILogger {
    * erzeugt eine neue Logger-Instanz
    */
   public static create(categoryName: string) {
-    const logger = new BrowserLogger(categoryName);
+    const logger = new ConsoleLogger(categoryName);
     return logger;
   }
 
@@ -36,7 +38,7 @@ export class BrowserLogger implements ILogger {
       const sb = this.createLogPrefix(levels.DEBUG);
       sb.append(message);
       // tslint:disable-next-line:no-console
-      console.debug(sb.toString(), ...args);
+      console.log(sb.toString(), ...args);
     }
   }
 

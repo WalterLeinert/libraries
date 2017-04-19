@@ -1,8 +1,13 @@
-import { Types } from '@fluxgate/core';
-
+import { Types } from '../types/types';
 import { ILevel } from './level.interface';
 
-
+/**
+ * Level-Implementierung kompatibel zu log4js
+ *
+ * @export
+ * @class Level
+ * @implements {ILevel}
+ */
 export class Level implements ILevel {
 
   public constructor(private level: number, private levelStr: string) {
