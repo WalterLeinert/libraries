@@ -1,12 +1,7 @@
-import { Funktion, Types } from '@fluxgate/core';
+import { Funktion, NotSupportedException } from '@fluxgate/core';
+import { getLogger as getConsoleLogger, IConfig, ILogger, Logger, LoggerRegistry } from '@fluxgate/core';
 
-import { BrowserLogger } from './browserLogger';
-import { IConfig } from './config.interface';
-import { Level } from './level';
-import { ILevel } from './level.interface';
-import { ILogger } from './logger.interface';
-import { LoggerRegistry } from './loggerRegistry';
-
+import { JsonReader } from '../util/jsonReader';
 
 /**
  * Liefert den Logger für die angegebene Kategorie
@@ -23,22 +18,22 @@ export function getLogger(category: string | Funktion): ILogger {
     categoryName = category.name;
   }
 
-  if (!LoggerRegistry.hasLogger(categoryName)) {
-    let logger: ILogger;
+  let logger: ILogger;
 
+  if (!LoggerRegistry.hasLogger(categoryName)) {
     // removeIf(node)
-    logger = new Logger(BrowserLogger.create(categoryName));
+    logger = getConsoleLogger(categoryName);
     // endRemoveIf(node)
 
     // removeIf(browser)
     const log4js = require('log4js');
     logger = new Logger(log4js.getLogger(categoryName));
-    // endRemoveIf(browser)
 
     LoggerRegistry.registerLogger(categoryName, logger);
+    // endRemoveIf(browser)
   }
 
-  return LoggerRegistry.getLogger(categoryName);
+  return logger;
 }
 
 
@@ -54,95 +49,23 @@ export function configure(config: string | IConfig, options?: any): void {
   // removeIf(browser)
   const log4js = require('log4js');
   log4js.configure(config, options);
+
+  if (typeof config === 'string') {
+    JsonReader.readJson<IConfig>(config, (err, conf) => {
+      if (err) {
+        throw err;
+      }
+
+      LoggerRegistry.configure(conf as IConfig, options);
+    });
+  }
   // endRemoveIf(browser)
 
+  // removeIf(node)
+  if (typeof config === 'string') {
+    throw new NotSupportedException('only supported on node platforms');
+  }
+
   LoggerRegistry.configure(config, options);
-}
-
-
-/**
- * Proxy für log4js bzw. @see{BrowserLogger}.
- */
-export class Logger implements ILogger {
-
-  public constructor(private logger: ILogger) {
-  }
-
-
-  public trace(message: string, ...args: any[]): void {
-    this.logger.trace(message, ...args);
-  }
-
-
-  public debug(message: string, ...args: any[]): void {
-    this.logger.debug(message, ...args);
-  }
-
-  public info(message: string, ...args: any[]): void {
-    this.logger.info(message, ...args);
-  }
-
-  public warn(message: string, ...args: any[]): void {
-    this.logger.warn(message, ...args);
-  }
-
-  public error(message: string, ...args: any[]): void {
-    this.logger.error(message, ...args);
-  }
-
-  public fatal(message: string, ...args: any[]): void {
-    this.logger.fatal(message, ...args);
-  }
-
-  public isLevelEnabled(level: ILevel): boolean {
-    return this.logger.isLevelEnabled(level);
-  }
-
-  public isTraceEnabled(): boolean {
-    return this.logger.isTraceEnabled();
-  }
-
-  public isDebugEnabled(): boolean {
-    return this.logger.isDebugEnabled();
-  }
-
-  public isInfoEnabled(): boolean {
-    return this.logger.isInfoEnabled();
-  }
-
-  public isWarnEnabled(): boolean {
-    return this.logger.isWarnEnabled();
-  }
-
-  public isErrorEnabled(): boolean {
-    return this.logger.isErrorEnabled();
-  }
-
-  public isFatalEnabled(): boolean {
-    return this.logger.isFatalEnabled();
-  }
-
-  public setLevel(level: string | ILevel): void {
-    let lev: ILevel;
-
-    if (!Types.isString(level)) {
-      lev = level as ILevel;
-    } else {
-      lev = Level.toLevel(level as string);
-    }
-    this.logger.setLevel(lev);
-  }
-
-  public get level(): ILevel {
-    return this.logger.level;
-  }
-
-  public get category(): string {
-    return this.logger.category;
-  }
-
-  public toString(): string {
-    return this.logger.category;
-  }
-
+  // endRemoveIf(node)
 }
