@@ -3,7 +3,7 @@
 import { configure, getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { Assert } from '@fluxgate/core';
+import { Assert, fromEnvironment, Utility } from '@fluxgate/core';
 import { FileSystem } from '@fluxgate/platform';
 
 
@@ -32,6 +32,10 @@ export class Logging {
 
       } else {
         configOptions = info;
+      }
+
+      if (Utility.isNullOrEmpty(configOptions.systemMode)) {
+        configOptions.systemMode = fromEnvironment('NODE_ENV', 'development');
       }
 
       const configPath = LoggingConfiguration.getConfigurationPath(configOptions);

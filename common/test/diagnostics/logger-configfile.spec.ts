@@ -1,15 +1,11 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
 
-import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
-
-
-import { fromEnvironment } from '@fluxgate/core';
 import { getLogger, ILevel, levels, using, XLog } from '@fluxgate/platform';
+import { expect } from 'chai';
+import { /*only,*/ suite, test } from 'mocha-typescript';
 
-import { Logging } from '../../src/util/logging';
-import { ILoggingConfigurationOptions } from '../../src/util/loggingConfiguration';
+import { BaseTest } from '../../src/testing/baseTest';
 
 class Test {
   public static readonly logger = getLogger(Test);
@@ -67,8 +63,8 @@ class Test3 {
  *
  * @class LoggerConfigFileTest
  */
-@suite('Logger configfile') @only
-class LoggerConfigFileTest {
+@suite('Logger configfile')
+class LoggerConfigFileTest extends BaseTest {
 
 
   @test 'should test log level for Test'() {
@@ -84,14 +80,26 @@ class LoggerConfigFileTest {
     expect(Test3.logger.level.isEqualTo(levels.ERROR)).to.be.true;
   }
 
+  protected static before(done: (err?: any) => void) {
+    super.before((err?: any) => {
+      if (err) {
+        done(err);
+      }
 
-  protected before() {
-    // Logging konfigurieren ...
-    const systemMode = fromEnvironment('NODE_ENV', 'development');
-    Logging.configureLogging('common', {
-      systemMode: systemMode,
-      relativePath: 'test/config'
+      BaseTest.initializeLogging('common', {
+        relativePath: 'common/test/config'
+      });
+      done();
     });
   }
+
+  // protected before() {
+  //   // Logging konfigurieren ...
+  //   const systemMode = fromEnvironment('NODE_ENV', 'development');
+  //   Logging.configureLogging('common', {
+  //     systemMode: systemMode,
+  //     relativePath: 'test/config'
+  //   });
+  // }
 
 }
