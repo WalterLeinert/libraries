@@ -66,7 +66,7 @@ class VersionTest extends KnexTest<QueryTest, number> {
   }
 
 
-  @test 'should update record -> version == 1'(done: () => void) {
+  @test 'should update record -> version == 1'(done: (err?: any) => void) {
     this.service.find().then((items) => {
 
       const itemsSorted = items.sort((it1, it2) => it1.id - it2.id);
@@ -74,14 +74,17 @@ class VersionTest extends KnexTest<QueryTest, number> {
 
       item.name = item.name + '-updated';
       this.service.update(item).then((it) => {
-        expect(it.__version).to.equal(item.__version + 1);
-        done();
+        if (it.__version !== item.__version + 1) {
+          done(`entity: versions different: ${it.__version} !== ${item.__version}`);
+        } else {
+          done();
+        }
       });
     });
   }
 
 
-  @test 'should update record -> version == 2'(done: () => void) {
+  @test 'should update record -> version == 2'(done: (err?: any) => void) {
     this.service.find().then((items) => {
 
       const itemsSorted = items.sort((it1, it2) => it1.id - it2.id);
@@ -89,8 +92,11 @@ class VersionTest extends KnexTest<QueryTest, number> {
 
       item.name = item.name + '-updated2';
       this.service.update(item).then((it) => {
-        expect(it.__version).to.equal(item.__version + 1);
-        done();
+        if (it.__version !== item.__version + 1) {
+          done(`entity: versions different: ${it.__version} !== ${item.__version}`);
+        } else {
+          done();
+        }
       });
     });
   }
