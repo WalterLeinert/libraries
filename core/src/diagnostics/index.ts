@@ -1,3 +1,4 @@
+export * from './consoleLogger';
 export * from './config.interface';
 export * from './level';
 export * from './level.interface';
