@@ -68,6 +68,14 @@ gulp.task('tslint', [
   'tslint:server'
 ])
 
+gulp.task('test', [
+  'test:core',
+  'test:platform',
+  'test:common',
+  'test:client',
+  'test:server'
+])
+
 gulp.task('publish', [
   'publish:core',
   'publish:platform',
