@@ -12,7 +12,7 @@ export class LoggerRegistry {
   private static loggerDict: Dictionary<string, ILogger> = new Dictionary<string, ILogger>();
 
   private static _config: IConfig;
-  private static defaultLevel: ILevel = levels.ERROR;
+  private static defaultLevel: ILevel = levels.WARN;
 
 
   /**
@@ -42,6 +42,7 @@ export class LoggerRegistry {
   }
 
   public static registerLogger(categoryName: string, logger: ILogger) {
+    logger.setLevel(LoggerRegistry.defaultLevel);
     LoggerRegistry.loggerDict.set(categoryName, logger);
   }
 
