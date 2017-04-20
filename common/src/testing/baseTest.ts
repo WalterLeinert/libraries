@@ -19,7 +19,7 @@ export abstract class BaseTest {
   /**
    * wird einmal vor allen Tests ausgeführt
    */
-  protected static before(done: () => void) {
+  protected static before(done: (err?: any) => void) {
     using(new XLog(BaseTest.logger, levels.DEBUG, 'static.before'), (log) => {
       BaseTest.initializeLogging();
       done();
@@ -27,7 +27,7 @@ export abstract class BaseTest {
   }
 
 
-  protected static after(done: () => void) {
+  protected static after(done: (err?: any) => void) {
     // tslint:disable-next-line:no-empty
     using(new XLog(BaseTest.logger, levels.DEBUG, 'static.after'), (log) => {
       done();
@@ -52,15 +52,17 @@ export abstract class BaseTest {
   }
 
 
-  protected before() {
+  protected before(done: (err?: any) => void) {
     // tslint:disable-next-line:no-empty
     using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
+      done();
     });
   }
 
-  protected after() {
+  protected after(done: (err?: any) => void) {
     // tslint:disable-next-line:no-empty
     using(new XLog(BaseTest.logger, levels.DEBUG, 'after'), (log) => {
+      done();
     });
   }
 

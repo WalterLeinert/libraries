@@ -29,7 +29,6 @@
         "[all]": "ERROR",
         "Test": "TRACE",
         "Test2": "INFO",
-        "ReduxBaseTest": "INFO",
-        "ReduxTest": "INFO"
+        "ReduxBaseTest": "WARN"
     }
 }

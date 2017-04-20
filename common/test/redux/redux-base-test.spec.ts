@@ -1,5 +1,8 @@
 // tslint:disable:member-access
 
+// tslint:disable-next-line:no-var-requires
+require('reflect-metadata');
+
 import { Subscription } from 'rxjs/Subscription';
 
 
@@ -24,6 +27,7 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
   protected static readonly logger = getLogger(ReduxBaseTest);
 
   private store: Store;
+  private _serviceFake: TService;
   private _serviceRequests: ServiceRequests<T, TId, TService>;
   private subscriptions: Subscription[] = [];
   private _commands: Array<ServiceCommand<T, TId>> = [];
@@ -35,13 +39,15 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
   }
 
 
-  protected before() {
+  protected before(done: (err?: any) => void) {
     this.store = new Store();
-    this._serviceRequests = new this.serviceRequestClazz(new this.serviceClazz(), this.store);
+    this._serviceFake = new this.serviceClazz();
+    this._serviceRequests = new this.serviceRequestClazz(this._serviceFake, this.store);
 
     this.subscribeToStore(this.storeId);
-    this._commands = [];
-    this._states = [];
+    this.reset();
+
+    done();
   }
 
 
@@ -65,12 +71,22 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
     });
   }
 
+
+  protected reset() {
+    this._commands = [];
+    this._states = [];
+  }
+
   protected getStoreState(storeId: string): IServiceState<T, TId> {
     return this.store.getState<IServiceState<T, TId>>(storeId);
   }
 
   protected get serviceRequests(): ServiceRequests<T, TId, TService> {
     return this._serviceRequests;
+  }
+
+  protected get serviceFake(): IService<T, TId> {
+    return this._serviceFake;
   }
 
   protected get commands(): Array<ServiceCommand<T, TId>> {
