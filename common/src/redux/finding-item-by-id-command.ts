@@ -31,6 +31,7 @@ export class FindingItemByIdCommand<T extends IEntity<TId>, TId> extends Service
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
+      items: [...state.items],
       state: ServiceRequestStates.RUNNING,
       error: undefined
     };

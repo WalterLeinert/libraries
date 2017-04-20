@@ -32,6 +32,7 @@ export class ItemFoundByIdCommand<T extends IEntity<TId>, TId> extends ServiceCo
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
+      items: [...state.items],
       item: this.item,
       state: ServiceRequestStates.DONE,
       error: undefined

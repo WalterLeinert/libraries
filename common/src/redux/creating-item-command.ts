@@ -34,6 +34,7 @@ export class CreatingItemCommand<T extends IEntity<TId>, TId> extends ServiceCom
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
+      items: [...state.items],
       state: ServiceRequestStates.RUNNING,
       error: undefined
     };

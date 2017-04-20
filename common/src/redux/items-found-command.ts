@@ -34,7 +34,7 @@ export class ItemsFoundCommand<T extends IEntity<TId>, TId> extends ServiceComma
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
-      items: this.items,
+      items: [...this.items],
       state: ServiceRequestStates.DONE,
       error: undefined
     };

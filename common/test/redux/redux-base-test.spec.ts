@@ -67,6 +67,11 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
 
       this._commands.push(command);
       const state = this.getStoreState(command.storeId);
+
+      if (log.isDebugEnabled()) {
+        log.debug(`state = ${JSON.stringify(state)}`);
+      }
+
       this._states.push(state);
     });
   }

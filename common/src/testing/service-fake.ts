@@ -47,6 +47,7 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
   public create(item: T): Observable<T> {
     Assert.notNull(item, 'item');
     item.id = this._entityGenerator.nextId();
+    this._items.push(item);
     return Observable.of(item);
   }
 
@@ -109,7 +110,7 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
 
     const index = this._items.findIndex((item) => item.id === id);
     Assert.that(index >= 0 && index < this._items.length);
-    this._items.slice(index, 1);
+    this._items.splice(index, 1);
 
     return Observable.of(new ServiceResult(id, Status.Ok));
   }

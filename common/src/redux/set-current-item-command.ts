@@ -33,6 +33,7 @@ export class SetCurrentItemCommand<T extends IEntity<TId>, TId> extends ServiceC
     const item: T = this.item;
     return {
       ...state,
+      items: [...state.items],
       currentItem: item,
       error: undefined
     };
