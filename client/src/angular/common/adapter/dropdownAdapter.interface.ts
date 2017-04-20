@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 
 /**
- * Interface für Adapter zur Anbindung von Wertelisten an DropDown-Controls 
+ * Interface für Adapter zur Anbindung von Wertelisten an DropDown-Controls
  */
 export interface IDropdownAdapter {
     /**

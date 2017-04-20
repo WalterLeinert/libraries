@@ -1,17 +1,13 @@
-// -------------------------------------- logging --------------------------------------------
-import { using } from '../base/disposable';
-import { levels } from '../diagnostics/level';
-import { getLogger } from '../diagnostics/logger';
+// -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { ILogger } from '../diagnostics/logger.interface';
-import { XLog } from '../diagnostics/xlog';
-// -------------------------------------- logging --------------------------------------------
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------- logging -------------------------------
 
+import { Assert } from '@fluxgate/core';
 
 import { ColumnTypes } from '../model/metadata/columnTypes';
 import { MetadataStorage } from '../model/metadata/metadataStorage';
 import { TableMetadata } from '../model/metadata/tableMetadata';
-import { Assert } from '../util/assert';
 import { IPrintOptions } from './model/printOptions.interface';
 import { IPrintTask } from './model/printTask.interface';
 import { ITableRow } from './model/tableRow.interface';

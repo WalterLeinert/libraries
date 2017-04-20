@@ -4,3 +4,4 @@ export * from './angular/modules';
 export * from './angular/services';
 export * from './base';
 export * from './primeng';
+export * from './redux';

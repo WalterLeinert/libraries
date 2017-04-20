@@ -1,9 +1,9 @@
-import { IEntity } from './entity.interface';
+import { IFlxEntity } from './flx-entity.interface';
 
 /**
- * Interface für User Rollen 
+ * Interface für User Rollen
  */
-export interface IRole extends IEntity {
+export interface IRole extends IFlxEntity<number> {
   /**
    * Rollenname
    */

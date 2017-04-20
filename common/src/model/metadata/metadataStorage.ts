@@ -1,20 +1,16 @@
-// Logging
-import { using } from '../../base/disposable';
-import { levels } from '../../diagnostics/level';
-import { getLogger } from '../../diagnostics/logger';
+// -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { ILogger } from '../../diagnostics/logger.interface';
-import { XLog } from '../../diagnostics/xlog';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------- logging -------------------------------
 
-import { Funktion } from '../../base/objectType';
-import { Dictionary } from '../../types/dictionary';
-import { Types } from '../../types/types';
-import { Assert } from '../../util/assert';
+import { Assert, Dictionary, Funktion, Types } from '@fluxgate/core';
+
 import { CompoundValidator } from './../validation/compoundValidator';
 import { Validator } from './../validation/validator';
 
 import { ColumnMetadata } from './columnMetadata';
 import { EnumMetadata } from './enumMetadata';
+import { SpecialColumn } from './specialColumns';
 import { TableMetadata } from './tableMetadata';
 import { ValidationMetadata } from './validationMetadata';
 
@@ -22,7 +18,7 @@ import { ValidationMetadata } from './validationMetadata';
 /**
  * Verwaltet Metadaten zu Modellklassen und Attribute, die über die Decorators
  * @see{Table} oder @see{Column} annotiert wurden.
- * 
+ *
  * @export
  * @class MetadataStorage
  */
@@ -37,15 +33,17 @@ export class MetadataStorage {
   private tableColumnDict: Dictionary<string, ColumnMetadata[]> = new Dictionary<string, ColumnMetadata[]>();
   private tableEnumDict: Dictionary<string, Array<EnumMetadata<any, any, any>>> =
   new Dictionary<string, Array<EnumMetadata<any, any, any>>>();
+  private tableSpecialColumnDict: Dictionary<string, Dictionary<string, SpecialColumn>> =
+  new Dictionary<string, Dictionary<string, SpecialColumn>>();
 
   private tableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
   private dbTableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
 
   /**
    * fügt eine neue {TableMetadata} hinzu.
-   * 
+   *
    * @param {TableMetadata} metadata
-   * 
+   *
    * @memberOf MetadataStorage
    */
   public addTableMetadata(metadata: TableMetadata) {
@@ -134,6 +132,18 @@ export class MetadataStorage {
             log.info(`Table ${metadata.options.name}: no primary key column`);
           }
 
+
+          /**
+           * nun alle speziellen Columns übernehmen
+           */
+          if (this.tableSpecialColumnDict.containsKey(targetName)) {
+            const dict = this.tableSpecialColumnDict.get(targetName);
+
+            for (const propertyName of dict.keys) {
+              metadata.setSpecialColumn(propertyName, dict.get(propertyName));
+            }
+          }
+
           this.tableDict.set(targetName, metadata);
           this.dbTableDict.set(metadata.options.name, metadata);
         }
@@ -143,9 +153,9 @@ export class MetadataStorage {
 
   /**
    * Fügt eine neue @see{ColumnMetadata} hinzu.
-   * 
+   *
    * @param {ColumnMetadata} metadata
-   * 
+   *
    * @memberOf MetadataStorage
    */
   public addColumnMetadata(metadata: ColumnMetadata) {
@@ -161,11 +171,25 @@ export class MetadataStorage {
   }
 
 
+  public setSpecialColumn(target: Funktion, propertyName: string, key: SpecialColumn) {
+    let dict: Dictionary<string, SpecialColumn>;
+
+    if (!this.tableSpecialColumnDict.containsKey(target.name)) {
+      dict = new Dictionary<string, SpecialColumn>();
+      this.tableSpecialColumnDict.set(target.name, dict);
+    } else {
+      dict = this.tableSpecialColumnDict.get(target.name);
+    }
+
+    dict.set(propertyName, key);
+  }
+
+
   /**
    * Fügt eine neue @see{validationMetadata} hinzu.
-   * 
+   *
    * @param {ValidationMetadata} metadata
-   * 
+   *
    * @memberOf MetadataStorage
    */
   public addValidationMetadata(metadata: ValidationMetadata) {
@@ -195,10 +219,10 @@ export class MetadataStorage {
 
   /**
    * Liefert für das angegebene @param{target} (z.B. Modellklasse 'Artikel') die Metadaten oder null.
-   * 
+   *
    * @param {Function} target
    * @returns {TableMetadata}
-   * 
+   *
    * @memberOf MetadataStorage
    */
   public findTableMetadata(target: Funktion | string): TableMetadata {
@@ -214,10 +238,10 @@ export class MetadataStorage {
   /**
    * Liefert für den angegebenen Tabellennamen @param{tableName} (z.B. Modellklasse 'Artikel' -> 'artikel')
    * die Metadaten oder null.
-   * 
+   *
    * @param {string} tableName
    * @returns {TableMetadata}
-   * 
+   *
    * @memberOf MetadataStorage
    */
   public findTableMetadataByDbTable(tableName: string): TableMetadata {
@@ -246,7 +270,7 @@ export class MetadataStorage {
 
   /**
    * Liefert die Singleton-Instanz.
-   * 
+   *
    * @readonly
    * @static
    * @type {MetadataStorage}

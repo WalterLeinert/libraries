@@ -6,7 +6,7 @@ import { IService } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import { DisplayInfo, } from '../../../base';
@@ -35,7 +35,7 @@ import { MessageService } from '../../services/message.service';
 export class EnumValueComponent extends CoreComponent {
   protected static logger = getLogger(EnumValueComponent);
 
-  private _dataService: IService;
+  private _dataService: IService<any, any>;
 
 
   /**
@@ -48,7 +48,7 @@ export class EnumValueComponent extends CoreComponent {
 
   /**
    * Die Property in der angebundenen Werteliste, welche nach Auswahl
-   * als 'selectedValue' übernommen werden soll.
+   * als 'value' übernommen werden soll.
    *
    * @type {string}
    * @memberOf EnumValueComponent
@@ -56,7 +56,7 @@ export class EnumValueComponent extends CoreComponent {
   @Input() public valueField: string;
 
   /**
-   * diese Property steuert, welches Enum-Item angezeigt werden soll. Der Werte 
+   * diese Property steuert, welches Enum-Item angezeigt werden soll. Der Werte
    * wird über @see{valueField} bestimmt.
    *
    * @type {string}
@@ -139,11 +139,11 @@ export class EnumValueComponent extends CoreComponent {
   // -------------------------------------------------------------------------------------
   // Property dataService
   // -------------------------------------------------------------------------------------
-  public get dataService(): IService {
+  public get dataService(): IService<any, any> {
     return this._dataService;
   }
 
-  @Input() public set dataService(value: IService) {
+  @Input() public set dataService(value: IService<any, any>) {
     if (this._dataService !== value) {
       this._dataService = value;
     }

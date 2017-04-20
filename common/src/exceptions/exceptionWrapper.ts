@@ -1,10 +1,14 @@
-import { Types } from '../types/types';
-import { Exception } from './exception';
-import { IException } from './exception.interface';
-import { ExceptionFactory } from './exceptionFactory';
-import { NotSupportedException } from './notSupportedException';
+// -------------------------- logging -------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------- logging -------------------------------
+
+import { Exception, ExceptionFactory, IException, NotSupportedException, Types } from '@fluxgate/core';
+
 
 export class ExceptionWrapper {
+  protected static readonly logger = getLogger(ExceptionWrapper);
+
 
   public static createBusinessException(error: string | IException | Error): IException {
     return ExceptionWrapper.createException('ServerBusinessException', error);
@@ -15,23 +19,27 @@ export class ExceptionWrapper {
   }
 
 
-  public static createException(type: string, error: string | IException | Error): IException {
-    let exc: IException;
+  public static createException(kind: string, error: string | IException | Error): IException {
+    return using(new XLog(ExceptionWrapper.logger, levels.INFO, 'createException'), (log) => {
+      let exc: IException;
 
-    if (Types.isString(error)) {
-      exc = ExceptionFactory.create(type, (error as string));
-    } else if (error instanceof Error) {
-      const err = error as Error;
-      exc = ExceptionFactory.create(type, err.message, err);
-    } else if ((error as any) instanceof Exception) {
+      if (Types.isString(error)) {
+        exc = ExceptionFactory.create(kind, (error as string));
+      } else if (error instanceof Error) {
+        const err = error as Error;
+        exc = ExceptionFactory.create(kind, err.message, err);
+      } else if ((error as any) instanceof Exception) {
 
-      // TODO: prüfen, ob das immer so passt?
-      exc = error as any as Exception;
-    } else {
-      throw new NotSupportedException(`error not supported: ${error}`);
-    }
+        // TODO: prüfen, ob das immer so passt?
+        exc = error as any as Exception;
+      } else {
+        throw new NotSupportedException(`error not supported: ${error}`);
+      }
 
-    return exc;
+      log.log(`exc = ${exc}`);
+
+      return exc;
+    });
   }
 
 }

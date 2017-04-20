@@ -1,0 +1,92 @@
+{
+  /*
+   * Possible values:
+   * - the name of a built-in config
+   * - the name of an NPM module which has a "main" file that exports a config object
+   * - a relative path to a JSON file
+   */
+  "extends": "tslint:recommended",
+  "rules": {
+    "eofline": false,
+
+    /*
+     * Any rules specified here will override those from the base config we are extending.
+     */
+    "curly": true,
+
+    "align": [
+      true
+    ],
+
+    "quotemark": [
+      true,
+      "single"
+    ],
+
+    "no-consecutive-blank-lines": [
+      false
+    ],
+
+    "no-unused-variable": [
+      true
+    ],
+
+    "variable-name": [
+      "check-format",
+      "ban-keywords"
+    ],
+
+    "trailing-comma": [
+      false
+    ],
+
+    "object-literal-shorthand": false,
+    "object-literal-sort-keys": false,
+
+    "member-ordering": [true, {
+      "order": [
+        "static-field",
+        "instance-field",
+        "constructor",
+        "public-instance-method",
+        "protected-instance-method",
+        "private-instance-method"
+      ]
+    }],
+
+    /*
+     * codelyzer Rules für angular
+     */
+    "directive-selector": [true, "attribute", "flx", "camelCase"],
+    "component-selector": [true, "element", "flx", "kebab-case"],
+    "use-input-property-decorator": true,
+    "use-output-property-decorator": true,
+    "use-host-property-decorator": true,
+    "no-attribute-parameter-decorator": true,
+    "no-input-rename": true,
+    "no-output-rename": true,
+    "no-forward-ref": true,
+    "use-life-cycle-interface": true,
+    "use-pipe-transform-interface": true,
+    "pipe-naming": [true, "camelCase", "flx"],
+    "component-class-suffix": true,
+    "directive-class-suffix": true,
+    "import-destructuring-spacing": true,
+    "templates-use-public": true,
+    "no-access-missing-member": false,    // funktioniert sonst nicht für Members in Basisklassen
+    "invoke-injectable": true
+  },
+  "jsRules": {
+    /*
+     * Any rules specified here will override those from the base config we are extending.
+     */
+    "curly": true
+  },
+  "rulesDirectory": [
+    /*
+     * A list of relative or absolute paths to directories that contain custom rules.
+     * See the Custom Rules documentation below for more details.
+     */
+    "client/node_modules/codelyzer"
+  ]
+}

@@ -1,10 +1,7 @@
 import * as moment from 'moment';
 
-import { Funktion } from '../../base/objectType';
-import { InvalidOperationException } from '../../exceptions/invalidOperationException';
-import { ShortTime } from '../../types/shortTime';
-import { Time } from '../../types/time';
-import { Assert } from '../../util/assert';
+import { Assert, Funktion, InvalidOperationException, ShortTime, Time, Types } from '@fluxgate/core';
+
 import { ColumnOptions } from '../decorator/model/columnOptions';
 import { IValidation } from './../validation/validation.interface';
 import { ValidationResult } from './../validation/validationResult';
@@ -14,7 +11,7 @@ import { EnumMetadata } from '.';
 
 /**
  * Modelliert Metadaten für Modell-/DB-Attribute
- * 
+ *
  * @export
  * @class ColumnMetadata
  */
@@ -36,16 +33,28 @@ export class ColumnMetadata {
   /**
    * Wandelt einen Wert @param{value} für die aktuelle Property in einen Wert von Type @see{propertyType}.
    * Normalerweise wird der Wert @param{value} direkt zurückgeliefert.
-   * 
+   *
    * @param {*} value
    * @returns {*}
-   * 
+   *
    * @memberOf ColumnMetadata
    */
   public convertToProperty(value: any): any {
     let rval = null;
 
     switch (this.propertyType) {
+
+      case ColumnTypes.BOOLEAN:
+        rval = false;
+        if (Types.isBoolean(value)) {
+          rval = value as boolean;
+        } else if (Types.isNumber(value)) {
+          rval = (value as number) !== 0;
+        } else {
+          throw new InvalidOperationException(`Column ${this.propertyName}: Konvertierung von Boolean-Wert` +
+            ` ${JSON.stringify(value)} nicht möglich.`);
+        }
+        break;
 
       case ColumnTypes.DATE:
       case ColumnTypes.DATETIME:
@@ -90,10 +99,10 @@ export class ColumnMetadata {
 
   /**
    * Wandelt den Quellwert @param{value} in einen Wert vom Zieltyp.
-   * 
+   *
    * @param {*} propValue
    * @returns {*}
-   * 
+   *
    * @memberOf ColumnMetadata
    */
   public convertFromProperty(value: any): any {
@@ -141,10 +150,10 @@ export class ColumnMetadata {
 
   /**
    * Validiert
-   * 
-   * @param {*} value 
-   * @returns {ValidationResult} 
-   * 
+   *
+   * @param {*} value
+   * @returns {ValidationResult}
+   *
    * @memberOf ColumnMetadata
    */
   public validate(value: any): ValidationResult {

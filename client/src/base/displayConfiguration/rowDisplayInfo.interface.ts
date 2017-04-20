@@ -1,5 +1,5 @@
 // Fluxgate
-import { Color, InstanceAccessor } from '@fluxgate/common';
+import { Color, InstanceAccessor } from '@fluxgate/core';
 
 
 /**
@@ -10,7 +10,7 @@ export interface IRowDisplayInfo {
 
   /**
    * steuert, ob die Zeile editierbar ist
-   * 
+   *
    * @type {boolean}
    * @memberOf IRowDisplayInfo
    */
@@ -18,7 +18,7 @@ export interface IRowDisplayInfo {
 
   /**
    * Color-Property der Zeile
-   * 
+   *
    * @type {Color | InstanceAccessor<any, Color>} - Farbe oder Lambda-Expression für Ermittlung der Farbe
    * @memberOf IRowDisplayInfo
    */

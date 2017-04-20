@@ -1,15 +1,15 @@
-import { Funktion } from '../../base/objectType';
-import { Dictionary } from '../../types';
-import { Assert } from '../../util/assert';
+import { Assert, Dictionary, Funktion } from '@fluxgate/core';
+
 import { EnumTableOptions } from '../decorator/model/enumTableOptions';
 import { TableOptions } from '../decorator/model/tableOptions.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { EnumTableService } from '../service/enumTableService';
 import { IServiceCrud } from '../service/serviceCrud.interface';
+import { SpecialColumns } from './specialColumns';
 
 /**
  *  Modelliert Metadaten für Modellklasse/DB-Tabelle
- * 
+ *
  * @export
  * @class TableMetadata
  */
@@ -17,17 +17,18 @@ export class TableMetadata {
   private _columnMetadata: ColumnMetadata[] = [];
   private propertyMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
-  private _primaryKeyColumn: ColumnMetadata;
+  // private _primaryKeyColumn: ColumnMetadata;
+  private _specialColMap: Dictionary<SpecialColumns, ColumnMetadata> = new Dictionary<SpecialColumns, ColumnMetadata>();
   private _service: Funktion;
 
 
   /**
    * Creates an instance of TableMetadata.
-   * 
+   *
    * @param {Function} target - Modelklasse
    * @param {TableOptions} options - Tableoptions
    * @param {boolean} isEnumTable - falls true, virtuelle Tabelle mit Enum-Werten
-   * 
+   *
    * @memberOf TableMetadata
    */
   constructor(public target: Funktion, public options: TableOptions | EnumTableOptions) {
@@ -35,9 +36,9 @@ export class TableMetadata {
 
   /**
    * Fügt eine {ColumnMetadata} für eine DB-Spalte hinzu.
-   * 
+   *
    * @param {ColumnMetadata} metadata
-   * 
+   *
    * @memberOf TableMetadata
    */
   public add(metadata: ColumnMetadata) {
@@ -46,14 +47,24 @@ export class TableMetadata {
     this.dbColMap.set(metadata.options.name, metadata);
 
     if (metadata.options.primary) {
-      this._primaryKeyColumn = metadata;
+      this.setSpecialColumn(metadata.propertyName, SpecialColumns.PRIMARY_KEY);
     }
+  }
+
+
+  public setSpecialColumn(propertyName: string, key: SpecialColumns) {
+    Assert.notNullOrEmpty(propertyName);
+    Assert.that(!this._specialColMap.containsKey(key),
+      `${key} darf nur einmal gesetzt sein: bereits gesetzt für ${propertyName}`);
+
+    const metadata = this.getColumnMetadataByProperty(propertyName);
+    this._specialColMap.set(key, metadata);
   }
 
 
   /**
    * Liefert alle {ColumnMetadata}-Infos.
-   * 
+   *
    * @readonly
    * @type {ColumnMetadata[]}
    * @memberOf TableMetadata
@@ -64,11 +75,11 @@ export class TableMetadata {
 
 
   /**
-   * Erzeugt eine neue Modellinstanz 
-   * 
+   * Erzeugt eine neue Modellinstanz
+   *
    * @template T
    * @returns
-   * 
+   *
    * @memberOf TableMetadata
    */
   public createEntity<T>() {
@@ -77,20 +88,20 @@ export class TableMetadata {
 
   /**
    * Erzeugt aus dem JSON-Object @param{json} eine Modelinstanz vom Typ @see{T}
-   * 
+   *
    * @template T
    * @param {Function} target
    * @param {*} json
-   * @param {boolean} mapColumns - falls true, sind im Json-Objekt die Propertynamen die DB-Spaltennamen und 
+   * @param {boolean} mapColumns - falls true, sind im Json-Objekt die Propertynamen die DB-Spaltennamen und
    *                                 müssen gemappt werden
    * @returns {T}
-   * 
+   *
    * @memberOf TableMetadata
    */
   public createModelInstance<T>(json: any, mapColumns = true): T {
     const instance = this.createEntity();
 
-    // alle Properties der Row über Reflection ermitteln        
+    // alle Properties der Row über Reflection ermitteln
     const props = Reflect.ownKeys(json);
 
     // ... und dann die Werte der Zielentity zuweisen
@@ -114,12 +125,12 @@ export class TableMetadata {
 
 
   /**
-   * Erzeugt aus der Modelinstanz vom Typ @see{T} ein JSON-Object @param{json} mit den zugehörigen Spaltennamen. 
-   * 
+   * Erzeugt aus der Modelinstanz vom Typ @see{T} ein JSON-Object @param{json} mit den zugehörigen Spaltennamen.
+   *
    * @template T
    * @param {T} subject
    * @returns {*}
-   * 
+   *
    * @memberOf TableMetadata
    */
   public createDatabaseInstance<T>(entity: T): any {
@@ -136,11 +147,11 @@ export class TableMetadata {
 
 
   /**
-   * Liefert eine {ColumnMetadata} oder null für die Property @param{propertyName} 
-   * 
+   * Liefert eine {ColumnMetadata} oder null für die Property @param{propertyName}
+   *
    * @param {string} propertyName
    * @returns
-   * 
+   *
    * @memberOf TableMetadata
    */
   public getColumnMetadataByProperty(propertyName: string) {
@@ -149,10 +160,10 @@ export class TableMetadata {
 
   /**
    * Liefert eine {ColumnMetadata} oder null für den DB-Spaltennamen @param{dbColName}.
-   * 
+   *
    * @param {string} dbColName
    * @returns
-   * 
+   *
    * @memberOf TableMetadata
    */
   public getColumnMetadataByDbCol(dbColName: string) {
@@ -176,7 +187,28 @@ export class TableMetadata {
    * Liefert die Primary Key Column oder undefined
    */
   public get primaryKeyColumn(): ColumnMetadata {
-    return this._primaryKeyColumn;
+    return this._specialColMap.get(SpecialColumns.PRIMARY_KEY);
+  }
+
+  /**
+   * Liefert die Version Column oder undefined
+   */
+  public get versionColumn(): ColumnMetadata {
+    return this._specialColMap.get(SpecialColumns.VERSION);
+  }
+
+  /**
+   * Liefert die Client Column oder undefined
+   */
+  public get clientColumn(): ColumnMetadata {
+    return this._specialColMap.get(SpecialColumns.CLIENT);
+  }
+
+  /**
+   * Liefert die Test Column oder undefined
+   */
+  public get testColumn(): ColumnMetadata {
+    return this._specialColMap.get(SpecialColumns.TEST);
   }
 
 
@@ -190,16 +222,16 @@ export class TableMetadata {
 
   /**
    * Liefert eine zugehörige Serviceinstanz.
-   * 
-   * Wenn die Table keine EnumTable ist, wird die Serviceinstance über den @param{injector} ermittelt; 
+   *
+   * Wenn die Table keine EnumTable ist, wird die Serviceinstance über den @param{injector} ermittelt;
    * sonst wird ein entsprechender @see{EnumTableService} erzeugt.
-   * 
-   * @param {*} injector 
-   * @returns {IServiceCrud} 
-   * 
+   *
+   * @param {*} injector
+   * @returns {IServiceCrud}
+   *
    * @memberOf TableMetadata
    */
-  public getServiceInstance(injector: any): IServiceCrud {
+  public getServiceInstance(injector: any): IServiceCrud<any, any> {
     if (this.options instanceof EnumTableOptions) {
       return new EnumTableService(this, this.options.enumValues);
     } else {
@@ -220,4 +252,5 @@ export class TableMetadata {
     this.columnMetadata.forEach((column) => map[column.propertyName] = column.propertyName);
     return map;
   }
+
 }

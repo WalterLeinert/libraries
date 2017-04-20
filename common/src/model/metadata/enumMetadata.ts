@@ -1,6 +1,5 @@
-import { Funktion } from '../../base/objectType';
-import { InstanceAccessor } from '../../types';
-import { Assert } from '../../util/assert';
+import { Assert, Funktion, InstanceAccessor } from '@fluxgate/core';
+
 import { MetadataStorage } from './metadataStorage';
 
 
@@ -12,7 +11,7 @@ export type RelationTypeInFunction = ((type?: any) => Funktion) | Funktion;
 
 /**
  * Modelliert Metadaten für Enum-Modell-/DB-Attribute
- * 
+ *
  * @export
  * @class EnumMetadata
  */
@@ -23,11 +22,11 @@ export class EnumMetadata<T, TText, TId> {
 
   /**
    * Creates an instance of EnumMetadata.
-   * 
+   *
    * @param {Function} target - Modelklasse
    * @param {string} propertyName - Name der Modelproperty
    * @param {RelationTypeInFunction} dataSource - die Modelklasse, die Enumwerte liefert
-   * 
+   *
    * @memberOf EnumMetadata
    */
   constructor(public target: Funktion, public propertyName: string,
@@ -69,7 +68,7 @@ export class EnumMetadata<T, TText, TId> {
 
   /**
    * Liefert den Namen der Property in der Target-Modelklasse, deren Wert im GUI angezeigt werden soll
-   * 
+   *
    * @readonly
    * @type {string}
    * @memberOf EnumMetadata
@@ -84,7 +83,7 @@ export class EnumMetadata<T, TText, TId> {
 
   /**
    * Liefert den Namen der Property in der Target-Modelklasse, deren Wert im entspr. Modell angebunden werden soll.
-   * 
+   *
    * @readonly
    * @type {string}
    * @memberOf EnumMetadata

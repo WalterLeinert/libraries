@@ -1,19 +1,21 @@
-// -------------------------- logging -------------------------------
+// -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger } from '@fluxgate/common';
-// -------------------------- logging -------------------------------
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
+
 
 // Fluxgate
-import { IToString, ServiceResult } from '@fluxgate/common';
+import { ServiceResult } from '@fluxgate/common';
+import { IToString } from '@fluxgate/core';
 
-import { BaseService } from '../services/base.service';
+import { BaseService } from '../services/baseService';
 
 
 /**
  * Abstrakte Basisklasse für alle REST-Controller.
- * 
+ *
  * Delegiert alle Controller-Calls an den zugehörigen Service @see{TId}.
- * 
+ *
  * @export
  * @abstract
  * @class ControllerBase
@@ -24,16 +26,16 @@ export abstract class ControllerBase<T, TId extends IToString> {
   protected static logger = getLogger(ControllerBase);
 
   constructor(private service: BaseService<T, TId>, private _tableName: string, private _idName: string) {
-    this.service.setIdColumn(this._idName);
+    this.service.idColumnName = this._idName;
   }
 
 
   /**
    * Erzeugt und persistiert eine neue Instanz der Entity {T}.
-   * 
+   *
    * @param {T} subject
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected createInternal(
@@ -45,10 +47,10 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
   /**
    * Liefert eine Entity vom Typ {T} für die angegebene id.
-   * 
+   *
    * @param {TId} id
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected findByIdInternal(
@@ -60,9 +62,9 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
   /**
    * Liefert alle Entities vom Typ {T}.
-   * 
+   *
    * @returns {Promise<T[]>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected findInternal(
@@ -73,10 +75,10 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
   /**
    * Aktualisiert die Entity vom Typ {T}.
-   * 
+   *
    * @param {T} subject
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected updateInternal(
@@ -88,10 +90,10 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
   /**
    * Löscht die Entity vom Typ {T} für die angegebene id.
-   * 
+   *
    * @param {TId} id
    * @returns {Promise<TId>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected deleteInternal(
@@ -103,7 +105,7 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
   /**
    * Liefert den zugehörigen Tabellennamen
-   * 
+   *
    * @readonly
    * @protected
    * @type {string}
@@ -115,7 +117,7 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
   /**
    * Liefert den zugehörigen PrimaryKey-Tabellenspaltennamen.
-   * 
+   *
    * @readonly
    * @protected
    * @type {string}

@@ -14,7 +14,6 @@ import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.m
 import { ChangePasswordGuardService } from './changePassword/changePassword-guard.service';
 import { ChangePasswordComponent } from './changePassword/changePassword.component';
 // import { AuthenticationRoutingModule } from './authentication-routing.module';
-import { CurrentUserService } from './currentUser.service';
 import { LoginComponent } from './login/login.component';
 import { LogoffComponent } from './logoff/logoff.component';
 import { PassportService } from './passport.service';
@@ -50,7 +49,6 @@ import { RoleService } from './role.service';
     RegisterComponent
   ],
   providers: [
-    CurrentUserService,
     PassportService,
     RoleService,
     RegisterGuardService,

@@ -4,7 +4,7 @@ import { AfterViewInit, Directive, ElementRef, NgModule, Renderer } from '@angul
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
@@ -14,19 +14,19 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
 
 /**
  * Directive zum setzen des Focus auf das Element.
- * 
+ *
  * @example
  * <input flxAutofocus type="text" ... name="username" >
- * 
- * Mit Hilfe der Methode @see{focusIf} kann man in einer Komponente manuell den Focus auf ein 
+ *
+ * Mit Hilfe der Methode @see{focusIf} kann man in einer Komponente manuell den Focus auf ein
  * Element setzen, welches das Attribute 'flxAutofocus' und den angegebenen Wert für das
  * name-Attribut hat.
- * 
+ *
  * Beispiel:
- * 
+ *
  * ...
  * import { AutofocusDirective } from '../../common/directives/autofocus.directive';
- * 
+ *
  * export class LoginComponent extends BaseComponent<PassportService> {
  *   @ViewChildren(AutofocusDirective) inputs;
  * ...
@@ -36,7 +36,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
  *   }
  * }
  *
- * 
+ *
  * @export
  * @class AutofocusDirective
  */
@@ -75,11 +75,11 @@ export class AutofocusDirective implements AfterViewInit {
 
 
   /**
-   * 
-   * 
+   *
+   *
    * @param {string} nameAttribute
    * @returns
-   * 
+   *
    * @memberOf AutofocusDirective
    */
   private focusIf(nameAttribute: string): boolean {

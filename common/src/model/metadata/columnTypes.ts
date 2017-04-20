@@ -1,7 +1,5 @@
-import { Funktion } from '../../base/objectType';
-import { NotSupportedException } from '../../exceptions/notSupportedException';
-import { ShortTime } from '../../types/shortTime';
-import { Time } from '../../types/time';
+import { Funktion, NotSupportedException, ShortTime, Time } from '@fluxgate/core';
+
 
 /**
  * z.T. übernommen aus https://github.com/typeorm/typeorm
@@ -99,8 +97,8 @@ export class ColumnTypes {
   public static JSON: ColumnType = 'json';
 
   /**
-   * SQL CLOB type. Your class's property type should be array of string. Note: value in this column 
-   * should not contain a comma (",") since this symbol is used to create a string from the array, 
+   * SQL CLOB type. Your class's property type should be array of string. Note: value in this column
+   * should not contain a comma (",") since this symbol is used to create a string from the array,
    * using .join(",") operator.
    */
   public static SIMPLE_ARRAY: ColumnType = 'simple_array';
@@ -157,6 +155,8 @@ export class ColumnTypes {
         case 'string':
           return ColumnTypes.STRING;
         case 'date':
+          return ColumnTypes.DATE;
+        case 'datetime':
           return ColumnTypes.DATETIME;
         case 'time':
           return ColumnTypes.TIME;

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { Assert, Funktion, MetadataStorage, TableMetadata } from '@fluxgate/common';
+import { MetadataStorage, TableMetadata } from '@fluxgate/common';
+import { Assert, Funktion } from '@fluxgate/core';
 
 
 @Injectable()
@@ -8,10 +9,10 @@ export class MetadataService {
 
   /**
    * Liefert @see{TableMetadata} für die angegebene Modellklasse @param{model} (z.B. Artikel)
-   * 
+   *
    * @param {Function} model
    * @returns {TableMetadata}
-   * 
+   *
    * @memberOf MetadataService
    */
   public findTableMetadata(model: Funktion): TableMetadata;

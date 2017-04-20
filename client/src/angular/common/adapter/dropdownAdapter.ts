@@ -6,7 +6,7 @@ import 'rxjs/add/operator/findIndex';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 
-import { Assert, IListAdapter } from '@fluxgate/common';
+import { Assert, IListAdapter } from '@fluxgate/core';
 
 import { IDropdownAdapter, IDropdownAdapterOptions } from '.';
 
@@ -37,7 +37,7 @@ export abstract class DropdownAdapter<T> implements IDropdownAdapter {
 
 
     /**
-     * @param{IListAdapter<T>} listAdapter - der zugehörige Listadapter 
+     * @param{IListAdapter<T>} listAdapter - der zugehörige Listadapter
      */
     protected constructor(private listAdapter: IListAdapter<T>, adapterOptions?: IDropdownAdapterOptions) {
         Assert.notNull(listAdapter);
@@ -77,7 +77,7 @@ export abstract class DropdownAdapter<T> implements IDropdownAdapter {
 
 
     /**
-     * Liefert die Liste der anzubindenden Werte 
+     * Liefert die Liste der anzubindenden Werte
      */
     protected getItems(): Observable<T[]> {
         return this.listAdapter.getItems();

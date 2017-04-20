@@ -1,14 +1,14 @@
-// -------------------------- logging -------------------------------
+// -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
-// -------------------------- logging -------------------------------
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
 
 import { IServerConfiguration } from '../ts-express-decorators-flx/serverBase';
 
 
 /**
  * Interface für eigentliche Email
- * 
+ *
  * @export
  * @interface IMessage
  */
@@ -24,7 +24,7 @@ export interface IMessage {
 
 /**
  * Klasse für Versand von Emails über den Server
- * 
+ *
  * @export
  * @class Email
  */

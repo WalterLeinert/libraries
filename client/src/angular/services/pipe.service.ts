@@ -1,10 +1,10 @@
 import { CurrencyPipe, DatePipe, DecimalPipe, LowerCasePipe, PercentPipe, UpperCasePipe } from '@angular/common';
 import { Inject, Injectable, LOCALE_ID, PipeTransform } from '@angular/core';
 
-import { Assert, Dictionary, NotSupportedException, Tuple } from '@fluxgate/common';
+import { Assert, Dictionary, NotSupportedException, Tuple } from '@fluxgate/core';
 
 /**
- * z.Zt. verfügbare Pipes 
+ * z.Zt. verfügbare Pipes
  */
 export type PipeType = 'date' | 'decimal' | 'percent' | 'currency' | 'uppercase' | 'lowercase';
 
@@ -22,7 +22,7 @@ export class PipeTypes {
 
 /**
  * Service, der Standardpipes über ein Dictionary zur Verfügung stellt.
- * 
+ *
  * @export
  * @class PipeService
  */
@@ -40,11 +40,11 @@ export class PipeService {
   /**
    * Liefert die Pipe für @param{pipe} und die Locale @param{locale}. Ist für das Tupel
    * noch keine Pipe registriert, wird dies dann durchgeführt.
-   * 
+   *
    * @param {PipeType} pipe
    * @param {string} [locale=this._locale]
    * @returns {PipeTransform}
-   * 
+   *
    * @memberOf PipeService
    */
   public getPipe(pipe: PipeType, locale: string = this._locale): PipeTransform {
@@ -84,12 +84,12 @@ export class PipeService {
 
   /**
    * Liefert true, falls die Pipe @param{pipe} und dem Locale @param{locale} bereits registriert ist.
-   * 
+   *
    * @private
    * @param {PipeType} pipe
    * @param {string} [locale=this._locale]
    * @returns {boolean}
-   * 
+   *
    * @memberOf PipeService
    */
   private hasPipe(pipe: PipeType, locale: string = this._locale): boolean {

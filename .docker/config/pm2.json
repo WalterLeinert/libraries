@@ -1,0 +1,19 @@
+{
+  "apps" : [{
+    "name"        : "libraries",
+    "script"      : "server.js",
+    "args"        : ["--log", "/var/log/pm2/pm2.log"],
+    "watch"       : true,
+    "node_args"   : "--harmony",
+    "merge_logs"  : true,
+    "env": {
+        "NODE_ENV": "development"
+    },
+    "env_development": {
+        "NODE_ENV": "development"
+    },
+    "env_production": {
+        "NODE_ENV": "production"
+    }
+  }]
+}

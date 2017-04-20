@@ -1,25 +1,35 @@
-import { Injector, OnDestroy, OnInit } from '@angular/core';
+import { EventEmitter, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
+import 'rxjs/add/observable/from';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
 import {
-  Assert, CompoundValidator, Dictionary, Funktion, IMessage,
-  MessageSeverity, PatternValidator, RangeValidator,
-  RequiredValidator, TableMetadata, UniqueIdentifiable, Utility
+  Assert, CustomSubject, Dictionary, Funktion, IMessage,
+  MessageSeverity, ServerBusinessException, UniqueIdentifiable, Utility
+} from '@fluxgate/core';
+
+import {
+  CompoundValidator, IEntity, IServiceState, IUser,
+  PatternValidator, RangeValidator, RequiredValidator,
+  ServiceCommand, SetCurrentItemCommand, Store, TableMetadata
 } from '@fluxgate/common';
 
-import { ControlType } from '../../../angular/modules/common/controlType';
+
 import { IControlDisplayInfo } from '../../../base/displayConfiguration/controlDisplayInfo.interface';
 import { DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';
+import { AppStore } from '../../../redux/app-store';
+import { UserStore } from '../../modules/authentication/redux/user-store';
+import { AppInjector } from '../../services/appInjector.service';
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
 import { FormGroupInfo, IMessageDict } from './formGroupInfo';
@@ -27,7 +37,7 @@ import { FormGroupInfo, IMessageDict } from './formGroupInfo';
 
 export interface IValidatorDict {
   [name: string]: [     // key: Propertyname
-    any,                // Propertywert 
+    any,                // Propertywert
     ValidatorFn[] | ValidatorFn     // Array von Validatoren
   ];
 }
@@ -35,12 +45,11 @@ export interface IValidatorDict {
 
 /**
  * Basisklasse (Komponente) ohne Router, Service für alle GUI-Komponenten
- * 
+ *
  * @export
  * @class CoreComponent
  * @implements {OnInit, OnDestroy}
  */
-// tslint:disable-next-line:max-classes-per-file
 export abstract class CoreComponent extends UniqueIdentifiable implements OnInit, OnDestroy {
   protected static readonly logger = getLogger(CoreComponent);
 
@@ -53,23 +62,32 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   public static WARN_TEXT = 'Warning';
   public static ERROR_TEXT = 'Error';
 
-
   // >> Formvalidierung
   private formInfos: Dictionary<string, FormGroupInfo> = new Dictionary<string, FormGroupInfo>();
   // << Formvalidierung
+  private subscriptions: Subscription[] = [];
+
+  private store: Store;
+
+  protected currentUserChanged: EventEmitter<IUser> = new EventEmitter();
 
   protected constructor(private _messageService: MessageService) {
     super();
+
+    this.store = AppInjector.instance.getInstance<Store>(AppStore);
+
+    this.subscribeToStore(UserStore.ID);
+    this.updateUserState();
   }
 
 
   /**
    * Init-Methode der Komponente: kann in konkreter Komponente überschrieben werden
-   * 
+   *
    * @memberOf BaseComponent
    */
   public ngOnInit() {
-    using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnInit', `name = ${this.constructor.name}`), (log) => {
+    using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnInit', `class: ${this.constructor.name}`), (log) => {
       // ok
     });
   }
@@ -77,11 +95,16 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * Destroy-Methode der Komponente: kann in konkreter Komponente überschrieben werden
-   * 
+   *
    * @memberOf BaseComponent
    */
   public ngOnDestroy() {
-    using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnDestroy', `name = ${this.constructor.name}`), (log) => {
+    using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnDestroy', `class: ${this.constructor.name}`), (log) => {
+
+      log.log(`unsubscribe store ${this.subscriptions.length} subscriptions`);
+      Observable.from(this.subscriptions).subscribe((sub) => {
+        sub.unsubscribe();
+      });
 
       if (CoreComponent.subscriptionMap.containsKey(this)) {
         if (log.isDebugEnabled()) {
@@ -109,12 +132,12 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * Liefert true, falls eine zugehörige (Reactive) Form existiert und diese dirty ist.
    * Die Form kann aus mehreren FormGroups bestehen.
    * Muss in konkreten Komponentenklassen überschrieben werden, falls zusätzliche Bedingungen greifen sollen.
-   * 
+   *
    * Ist @param{groupName} angegeben, so wird nur die entsprechende Group untersucht.
-   * 
+   *
    * @param groupName - der Name der FormGroup
-   * @returns {boolean} 
-   * 
+   * @returns {boolean}
+   *
    * @memberOf CoreComponent
    */
 
@@ -135,9 +158,9 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * löscht alle Messages
-   * 
+   *
    * @protected
-   * 
+   *
    * @memberOf BaseComponent
    */
   protected clearMessages() {
@@ -146,11 +169,11 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * fügt eine neue Info-Meldungung hinzu
-   * 
+   *
    * @protected
    * @param {string} text
    * @param {string} [summary='Hinweis']
-   * 
+   *
    * @memberOf BaseComponent
    */
   protected addSuccessMessage(text: string, summary = CoreComponent.SUCCESS_TEXT) {
@@ -160,11 +183,11 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * fügt eine neue Info-Meldungung hinzu
-   * 
+   *
    * @protected
    * @param {string} text
    * @param {string} [summary='Hinweis']
-   * 
+   *
    * @memberOf BaseComponent
    */
   protected addInfoMessage(text: string, summary = CoreComponent.INFO_TEXT) {
@@ -173,11 +196,11 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * fügt eine neue Warn-Meldungung hinzu
-   * 
+   *
    * @protected
    * @param {string} text
    * @param {string} [summary='Hinweis']
-   * 
+   *
    * @memberOf BaseComponent
    */
   protected addWarnMessage(text: string, summary = CoreComponent.WARN_TEXT) {
@@ -187,11 +210,11 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * fügt eine neue Fehlermeldungung hinzu
-   * 
+   *
    * @protected
    * @param {string} text
    * @param {string} [summary='Fehlermeldung']
-   * 
+   *
    * @memberOf BaseComponent
    */
   protected addErrorMessage(text: string, summary = CoreComponent.ERROR_TEXT) {
@@ -200,10 +223,10 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * fügt eine neue Meldung hinzu
-   * 
+   *
    * @protected
    * @param {Message} message
-   * 
+   *
    * @memberOf BaseComponent
    */
   protected addMessage(message: IMessage) {
@@ -212,24 +235,28 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * Behandelt eine Fehlermeldung
-   * 
+   *
    * @protected
    * @param {Error} error
    * @param {string} [summary='Fehlermeldung']
-   * 
+   *
    * @memberOf BaseComponent
    */
   protected handleError(error: Error, summary?: string) {
-    this.addErrorMessage(error.message, summary);
+    if (error instanceof ServerBusinessException) {
+      this.addInfoMessage(error.message, summary);
+    } else {
+      this.addErrorMessage(error.message, summary);
+    }
   }
 
 
   /**
    * Die rxjs Subscription @param{subscription} für spätere Freigabe registrieren.
-   * 
+   *
    * @protected
-   * @param {Subscription} subscription 
-   * 
+   * @param {Subscription} subscription
+   *
    * @memberOf CoreComponent
    */
   protected registerSubscription(subscription: Subscription) {
@@ -261,16 +288,16 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * Erzeugt mit Hilfe eines @see{FormBuilder}s für die Modelklasse @param{clazz} über die Metadaten
    * und den Injector eine FormGroup @param{groupName} und liefert eine neu erzeugte Modelinstanz.
-   * 
+   *
    * @protected
-   * @template T 
-   * @param {FormBuilder} formBuilder 
-   * @param {Funktion} model 
-   * @param {MetadataService} metadataService 
-   * @param {Injector} injector 
-   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME] 
-   * @returns {T} 
-   * 
+   * @template T
+   * @param {FormBuilder} formBuilder
+   * @param {Funktion} model
+   * @param {MetadataService} metadataService
+   * @param {Injector} injector
+   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
+   * @returns {T}
+   *
    * @memberOf CoreComponent
    */
   protected buildFormFromModel<T>(formBuilder: FormBuilder, clazz: Funktion, metadataService: MetadataService,
@@ -288,8 +315,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * Erzeugt mit Hilfe eines @see{FormBuilder}s für @param{dataItem} und die Infos @param{displayInfos} eine FormGroup
    * und registriert sich auf Formänderungen; über @param{tableMetadata} werden Validierungsinfos aus dem Model besorgt
-   * 
-   * @param formBuilder der zugehörige FormBuilder 
+   *
+   * @param formBuilder der zugehörige FormBuilder
    * @param dataItem anzubindendes Datenobjekt
    * @param displayInfos Konfiguration der Controls
    * @param tableMetadata Metadaten
@@ -307,7 +334,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
       // Dictionary mit dem Validierunginformationen
       const validatorDict: {
         [name: string]: [     // key: Propertyname
-          any,                // Propertywert 
+          any,                // Propertywert
           ValidatorFn[]       // Array von Validatoren
         ]
       } = {};
@@ -363,19 +390,15 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
         }
 
 
-        // TODO: workaround: entfernen, sobald die Controls den Angular-Control Contract implementieren
-        if (!(info.controlType === ControlType.Time || info.controlType === ControlType.DropdownSelector)) {
-
-          if (validators.length <= 0) {
-            validators.push(Validators.nullValidator);    // noop Validator als einzigen Validator hinzufügen
-          }
-          validatorDict[info.valueField] = [
-            dataItem[info.valueField],
-            validators
-          ];
-
-          formInfo.setValidationMessages(info.valueField, messageDict);
+        if (validators.length <= 0) {
+          validators.push(Validators.nullValidator);    // noop Validator als einzigen Validator hinzufügen
         }
+        validatorDict[info.valueField] = [
+          dataItem[info.valueField],
+          validators
+        ];
+
+        formInfo.setValidationMessages(info.valueField, messageDict);
       });
 
       if (log.isDebugEnabled()) {
@@ -438,7 +461,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * Setzt den Form-Status für die entsprechende FormGroup zurück (z.B. nach submit).
-   * 
+   *
    * @param value - der Wert/die Werte, auf den die FormGroup gesetzt werden soll
    * @param groupName - der Name der FormGroup
    */
@@ -450,12 +473,12 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
 
   /**
-   * Liefert true, falls das Control @param{controlName} der Gruppe 
-   * @param{groupName} den Status invalid hat. 
-   * 
+   * Liefert true, falls das Control @param{controlName} der Gruppe
+   * @param{groupName} den Status invalid hat.
+   *
    * @param {string} controlName
    * @param groupName  der Name der FormGroup
-   * @returns {boolean} 
+   * @returns {boolean}
    */
   protected isFormControlInvalid(controlName: string, groupName: string = FormGroupInfo.DEFAULT_NAME): boolean {
     Assert.notNullOrEmpty(groupName);
@@ -468,11 +491,11 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * Liefert die zugehörige @see{FormGroup} für den Namen @param{groupName}.
-   * 
+   *
    * @protected
-   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME] 
-   * @returns {FormGroup} 
-   * 
+   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
+   * @returns {FormGroup}
+   *
    * @memberOf CoreComponent
    */
   protected getForm(groupName: string = FormGroupInfo.DEFAULT_NAME): FormGroup {
@@ -487,7 +510,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * Liefert die default FormGroup
-   * 
+   *
    * @readonly
    * @protected
    * @type {FormGroup}
@@ -498,14 +521,14 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   }
 
   /**
-   * Liefert die Validierungsfehler für das angegebene Control @param{controlName} und die 
+   * Liefert die Validierungsfehler für das angegebene Control @param{controlName} und die
    * FormGroup @param{groupName}
-   * 
+   *
    * @protected
-   * @param {string} controlName 
-   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME] 
-   * @returns {string} 
-   * 
+   * @param {string} controlName
+   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
+   * @returns {string}
+   *
    * @memberOf CoreComponent
    */
   protected getFormErrors(controlName: string, groupName: string = FormGroupInfo.DEFAULT_NAME): string {
@@ -521,6 +544,105 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    */
   protected get messageService(): MessageService {
     return this._messageService;
+  }
+
+
+  /**
+   * Registriert den Store @param{storeId} für Statusänderungen.
+   *
+   * @protected
+   * @template T
+   * @template TId
+   * @param {string} storeId
+   * @returns {Subscription}
+   *
+   * @memberOf CoreComponent
+   */
+  protected subscribeToStore<T, TId>(storeId: string): Subscription {
+    const subscription = this.getStoreSubject(storeId).subscribe((command) => {
+      this.onStoreUpdated(command);
+    });
+    this.subscriptions.push(subscription);
+    return subscription;
+  }
+
+
+  /**
+   * "virtuelle" Methode; muss in konkreten Klassen überschrieben werden, um die entsprechenden Statusupdates
+   * mitzubekommen.
+   *
+   * @protected
+   * @template T
+   * @template TId
+   * @param {ServiceCommand<T, TId>} value
+   *
+   * @memberOf CoreComponent
+   */
+  protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
+    Assert.notNull(command);
+
+    using(new XLog(CoreComponent.logger, levels.INFO, 'onStoreUpdated', `class: ${this.constructor.name}`), (log) => {
+      log.log(`command = ${command.constructor.name}: ${JSON.stringify(command)}`);
+
+      const state = this.getStoreState(command.storeId);
+      if (state.error) {
+        log.error(`${state.error}`);
+      }
+
+      if (command.storeId === UserStore.ID && command instanceof SetCurrentItemCommand) {
+        this.updateUserState(command);
+      }
+    });
+  }
+
+
+
+  /**
+   * Liefert den Store-Status für die Id @param{storeId};
+   *
+   * @protected
+   * @template T
+   * @template TId
+   * @param {string} storeId
+   * @returns {IServiceState<T, TId>}
+   *
+   * @memberOf CoreComponent
+   */
+  protected getStoreState<T extends IEntity<TId>, TId>(storeId: string): IServiceState<T, TId> {
+    return this.store.getState<IServiceState<T, TId>>(storeId);
+  }
+
+
+  /**
+   * Liefert den aktuell angemeldeten User.
+   *
+   * @protected
+   * @returns {IUser}
+   *
+   * @memberOf CoreComponent
+   */
+  protected getCurrentUser(): IUser {
+    const state = this.getStoreState<IUser, number>(UserStore.ID);
+    return state.currentItem;
+  }
+
+
+  /**
+   * Feuert den currentUserChanged-Event, immer wenn sich der aktuelle/angemeldete User ändert.
+   *
+   * @private
+   *
+   * @memberOf CoreComponent
+   */
+  private updateUserState(command?: ServiceCommand<IUser, number>) {
+    if (command instanceof SetCurrentItemCommand) {
+      this.currentUserChanged.emit(this.getCurrentUser());
+    }
+  }
+
+
+  private getStoreSubject(storeId: string): CustomSubject<any> {
+    return this.store.subject(storeId);
   }
 
 }

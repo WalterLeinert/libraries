@@ -1,7 +1,7 @@
 import { FormGroup } from '@angular/forms';
 
 // Fluxgate
-import { Clone } from '@fluxgate/common';
+import { Clone } from '@fluxgate/core';
 
 
 export interface IMessageDict {
@@ -11,7 +11,7 @@ export interface IMessageDict {
 
 /**
  * Hilfsklasse für die Behandlung mehrerer FormGroups auf einer Form (v.a. für Valdierung)
- * 
+ *
  * @class FormGroupInfo
  */
 export class FormGroupInfo {
@@ -77,11 +77,11 @@ export class FormGroupInfo {
 
 
   /**
-   * Liefert true, falls das Control @param{controlName} den Status invalid hat. 
-   * 
-   * @param {string} controlName 
-   * @returns {boolean} 
-   * 
+   * Liefert true, falls das Control @param{controlName} den Status invalid hat.
+   *
+   * @param {string} controlName
+   * @returns {boolean}
+   *
    * @memberOf FormGroupInfo
    */
   public isFormControlInvalid(controlName: string): boolean {

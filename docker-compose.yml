@@ -1,0 +1,47 @@
+    # 1. Update config values (localhost --> mongo and localhost --> redis) in config.development.json
+    # 2. Set APP_ENV environment variable to proper value in Dockerfile-redis (default is "development")
+    #    export APP_ENV=development
+    # 3. Run docker-compose build
+    # 4. Run docker-compose up
+    # 5. Live long and prosper
+
+version: "2"
+
+services:
+    node:
+      container_name: node-libraries
+      build:
+        context: .
+        dockerfile: .docker/docker-node.dockerfile
+      hostname: "libraries-node"
+      ports:
+      - "8100:8100"
+      links:
+        - mysql:libraries-mysql
+      volumes:
+        - ./server/dist:/var/www/libraries
+        - ./server/node_modules:/var/www/libraries/node_modules
+      working_dir: /var/www/libraries/server/src
+      env_file:
+        - ./.docker/env/app.${APP_ENV}.env
+      networks:
+        - libraries-network
+
+    mysql:
+      container_name: mysql-libraries
+      build:
+        context: .
+        dockerfile: .docker/docker-mysql.dockerfile
+      hostname: "libraries-mysql"
+      ports:
+      - "33306:3306"
+      env_file:
+        - ./.docker/env/mysql.${APP_ENV}.env
+        - ./.docker/env/app.${APP_ENV}.env
+      networks:
+        - libraries-network
+
+
+networks:
+    libraries-network:
+      driver: bridge

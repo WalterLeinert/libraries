@@ -1,55 +1,57 @@
+import { Observable } from 'rxjs/Observable';
+import { ServiceResult } from './serviceResult';
+
 /**
  * Interface mit CRUD-Funktionen
- * 
- * Hier sind keine generischen Typen verwendet, damit man das Interface auch 
+ *
+ * Hier sind keine generischen Typen verwendet, damit man das Interface auch
  * generisch in Zusammenhang mit Reflection un Metadaten verwenden kann.
  */
-export interface IServiceCrud {
+export interface IServiceCrud<T, TId> {
 
-    /**
-     * Create the entity {item} and return {Observable<T>}
-     * 
-     * @param {T} item
-     * @returns {Observable<T>}
-     * 
-     */
-    create(item: any): any;
+  /**
+   * Create the entity {item} and return {Observable<T>}
+   *
+   * @param {T} item
+   * @returns {Observable<T>}
+   *
+   */
+  create(item: T): Observable<T>;
 
-    /**
-     * Find all entities of type T and return {Observable<T[]>}.
-     * 
-     * @returns {Observable<T[]>}
-     * 
-     */
-    find(): any;
+  /**
+   * Find all entities of type T and return {Observable<T[]>}.
+   *
+   * @returns {Observable<T[]>}
+   *
+   */
+  find(): Observable<T[]>;
 
-    /**
-     * Find the entity with the given id and return {Observable<T>}
-     * 
-     * @param {TId} id -- entity id.
-     * @returns {Observable<T>}
-     * 
-     */
-    findById(id: any): any;
+  /**
+   * Find the entity with the given id and return {Observable<T>}
+   *
+   * @param {TId} id -- entity id.
+   * @returns {Observable<T>}
+   *
+   */
+  findById(id: TId): Observable<T>;
 
-    /**
-     * Update the entity {item} with the given id and return {Observable<T>}
-     * 
-     * @param {T} item
-     * @returns {Observable<T>}
-     * 
-     */
-    update(item: any): any;
+  /**
+   * Update the entity {item} with the given id and return {Observable<T>}
+   *
+   * @param {T} item
+   * @returns {Observable<T>}
+   *
+   */
+  update(item: T): Observable<T>;
 
 
-    /**
-     * Delete the entity with the given id and return {Observable<T>}
-     * 
-     * @param {TId} id
-     * @returns {Observable<T>}
-     * 
-     * @memberOf Service
-     */
-    delete(id: any): any;
+  /**
+   * Delete the entity with the given id and return {Observable<T>}
+   *
+   * @param {TId} id
+   * @returns {Observable<ServiceResult<TId>>}
+   *
+   */
+  delete(id: TId): Observable<ServiceResult<TId>>;
 
 }

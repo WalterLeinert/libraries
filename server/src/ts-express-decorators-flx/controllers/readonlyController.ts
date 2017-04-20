@@ -1,20 +1,21 @@
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger } from '@fluxgate/common';
+import { getLogger, ILogger } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IToString, ServerSystemException, ServiceResult } from '@fluxgate/common';
+import { ServiceResult } from '@fluxgate/common';
+import { IToString, ServerSystemException } from '@fluxgate/core';
 
-import { BaseService } from '../services/base.service';
+import { BaseService } from '../services/baseService';
 import { ControllerBase } from './controllerBase';
 
 
 /**
  * Abstrakte Basisklasse für alle REST-Controller, die z.B. auf DB-Views arbeiten
- * 
+ *
  * Erlaubt keine modifizierenden Aktionen.
- * 
+ *
  * @export
  * @abstract
  * @class ControllerBase
@@ -31,10 +32,10 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
 
   /**
    * Erzeugt und persistiert eine neue Instanz der Entity {T}.
-   * 
+   *
    * @param {T} subject
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected createInternal(
@@ -46,10 +47,10 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
 
   /**
    * Liefert eine Entity vom Typ {T} für die angegebene id.
-   * 
+   *
    * @param {TId} id
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected findByIdInternal(
@@ -61,9 +62,9 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
 
   /**
    * Liefert alle Entities vom Typ {T}.
-   * 
+   *
    * @returns {Promise<T[]>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected findInternal(
@@ -74,10 +75,10 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
 
   /**
    * Aktualisiert die Entity vom Typ {T}.
-   * 
+   *
    * @param {T} subject
    * @returns {Promise<T>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected updateInternal(
@@ -89,10 +90,10 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
 
   /**
    * Löscht die Entity vom Typ {T} für die angegebene id.
-   * 
+   *
    * @param {TId} id
    * @returns {Promise<TId>}
-   * 
+   *
    * @memberOf ControllerBase
    */
   protected deleteInternal(

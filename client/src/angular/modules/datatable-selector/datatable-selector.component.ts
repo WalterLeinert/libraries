@@ -1,18 +1,20 @@
 // Angular
-import { Component, EventEmitter, Injector, Input, Output, PipeTransform } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output, PipeTransform, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import 'rxjs/add/observable/throw';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 
 // Fluxgate
-import { Assert, Clone, Color, InstanceAccessor, TableMetadata, Types } from '@fluxgate/common';
+import { TableMetadata } from '@fluxgate/common';
+import { Assert, Clone, Color, InstanceAccessor, Types } from '@fluxgate/core';
 
 
 import { IControlDisplayInfo } from '../../../base';
@@ -30,7 +32,7 @@ export type selectionMode = 'single' | 'multiple' | '';
 
 /**
  * Komponente DataTableSelector (Selektion eines Objekts aus einer Objektliste über eine PrimeNG-DataTable)
- * 
+ *
  * @export
  * @class DataTableSelectorComponent
  * @implements {OnInit}
@@ -48,16 +50,16 @@ export type selectionMode = 'single' | 'multiple' | '';
   <p-dataTable [value]="dataItems" sortMode="sortMode" resizableColumns="true" [rows]="rows"
     [paginator]="true" [globalFilter]="gb"
     [editable]="editable"
-    [selectionMode]="selectionMode" [(selection)]="selectedValue">
-    
+    [selectionMode]="selectionMode" [(selection)]="value">
+
     <div *ngIf="configInternal && configInternal.columnInfos">    <!-- div *ngIf="configInternal -->
       <ul *ngFor="let info of configInternal.columnInfos">
 
-            
+
         <!--
           normale Text-/Eingabefelder
           -->
-        <div *ngIf="info.controlType === controlType.Input">          
+        <div *ngIf="info.controlType === controlType.Input">
           <p-column field="{{info.valueField}}" header="{{info.textField}}"
             [sortable]="sortable" [editable]="isEditable(info)">
 
@@ -101,7 +103,7 @@ export type selectionMode = 'single' | 'multiple' | '';
 
 
         <!--
-          Zeitfelder          
+          Zeitfelder
           -->
         <div *ngIf="info.controlType === controlType.Time">
           <p-column field="{{info.valueField}}" header="{{info.textField}}"
@@ -114,7 +116,7 @@ export type selectionMode = 'single' | 'multiple' | '';
             </div>
 
             <template let-col let-data="rowData" pTemplate="editor">
-                <flx-time-selector [(time)]="data[col.field]" [style.color]="getColor(data, info)">
+                <flx-time-selector [(ngModel)]="data[col.field]" [style.color]="getColor(data, info)">
                 </flx-time-selector>
             </template>
 
@@ -131,7 +133,7 @@ export type selectionMode = 'single' | 'multiple' | '';
 
             <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
-                <flx-enum-value [dataService]="info.enumInfo.selectorDataService" 
+                <flx-enum-value [dataService]="info.enumInfo.selectorDataService"
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                   [itemSelector]="data[col.field]"
                   [style]="{'width':'100%'}" [style.color]="getColor(data, info)"
@@ -141,9 +143,9 @@ export type selectionMode = 'single' | 'multiple' | '';
             </div>
 
             <template let-col let-data="rowData" pTemplate="editor">
-              <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService" 
+              <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService"
                 [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
-                [(selectedValue)]="data[col.field]"            
+                [ngModel]="data[col.field]"
                 [style]="{'width':'100%'}" [style.color]="getColor(data, info)"
                 name="flxDropdownSelector" [debug]="false">
               </flx-dropdown-selector>
@@ -163,23 +165,23 @@ export type selectionMode = 'single' | 'multiple' | '';
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
           </template>
 
-          
+
           <template let-data="rowData" pTemplate="body">
             <div *ngIf="isEditing(data)">
-              <div>                
+              <div>
                 <button pButton type="text" class="ui-button-secondary"
-                  icon="fa-check" (click)="saveRow(data)" pTooltip="Save changes">                  
+                  icon="fa-check" (click)="saveRow(data)" pTooltip="Save changes">
                 </button>
                 <button pButton type="text" class="ui-button-secondary"
-                  icon="fa-times" (click)="cancelEdit(data)" pTooltip="Cancel changes">                  
+                  icon="fa-times" (click)="cancelEdit(data)" pTooltip="Cancel changes">
                 </button>
               </div>
             </div>
 
             <div *ngIf="!isEditing(data)">
-              <div>                
-                <button pButton type="text" class="ui-button-secondary" 
-                  icon="fa-pencil" (click)="editRow(data)" pTooltip="Edit row">                  
+              <div>
+                <button pButton type="text" class="ui-button-secondary"
+                  icon="fa-pencil" (click)="editRow(data)" pTooltip="Edit row">
                 </button>
               </div>
             </div>
@@ -194,12 +196,24 @@ export type selectionMode = 'single' | 'multiple' | '';
 </div>
 
 <div *ngIf="debug">
-  <p>selectedIndex: {{selectedIndex}}, selectedValue: {{selectedValue | json}}</p>
+  <p>selectedIndex: {{selectedIndex}}, value: {{value | json}}</p>
 </div>
   `,
-  styles: []
+  styles: [],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: DataTableSelectorComponent,
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: DataTableSelectorComponent,
+      multi: true,
+    }
+  ]
 })
-export class DataTableSelectorComponent extends ListSelectorComponent {
+export class DataTableSelectorComponent extends ListSelectorComponent<any> {
   protected static logger = getLogger(DataTableSelectorComponent);
 
   /**
@@ -211,13 +225,16 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   /**
    * selectionMode: single|multiple
-   * 
+   *
    * @type {selectionMode}
    * @memberOf DataTableSelectorComponent
    */
   private _selectionMode: selectionMode = 'single';
 
   private selectionModeSaved: selectionMode;
+
+
+  @ViewChild(NgModel) public model: NgModel;
 
   /**
    * falls true, wird hinter der letzten Spalte eine Spalte mit Edit-Button angezeigt
@@ -228,8 +245,8 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
 
   /**
-   * Sortmodus: single|multiple 
-   * 
+   * Sortmodus: single|multiple
+   *
    * @type {sortMode}
    * @memberOf DataTableSelectorComponent
    */
@@ -244,7 +261,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   /**
    * Anzahl der anzuzeigenden Gridzeilen
-   * 
+   *
    * @type {number}
    * @memberOf DataTableSelectorComponent
    */
@@ -252,7 +269,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   /**
    * Die Spaltenkonfiguration, die von aussen gesetzt werden kann.
-   * 
+   *
    * @type {IDataTableSelectorConfig}
    * @memberOf DataTableSelectorComponent
    */
@@ -261,7 +278,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   /**
    * Die Spaltenkonfiguration, die intern verwendet wird.
    * Entweder wird sie von @see{config} übernommen oder automatisch über die @see{dataItems} erzeugt.
-   * 
+   *
    * @type {IDataTableSelectorConfig}
    * @memberOf DataTableSelectorComponent
    */
@@ -271,12 +288,12 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
 
   /**
-   * die Daten der aktuell editierten Zeile 
+   * die Daten der aktuell editierten Zeile
    */
   private editedRow: any;
 
   /**
-   * die geklonten Daten der aktuell editierten Zeile 
+   * die geklonten Daten der aktuell editierten Zeile
    */
   private savedRow: any;
 
@@ -288,13 +305,13 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   /**
    * Creates an instance of DataTableSelectorComponent.
-   * 
+   *
    * @param {Router} router
    * @param {MetadataService} metadataService
    * @param {PipeService} pipeService
    * @param {Injector} injector
    * @param {ChangeDetectorRef} changeDetectorRef
-   * 
+   *
    * @memberOf DataTableSelectorComponent
    */
   constructor(router: Router, metadataService: MetadataService, messageService: MessageService,
@@ -325,11 +342,11 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   /**
    * Formatiert den Wert @param{value} mittels der Information in @param{info}
-   * 
+   *
    * @param {*} value
    * @param {IControlDisplayInfo} info
    * @returns {*}
-   * 
+   *
    * @memberOf DataTableSelectorComponent
    */
   public formatValue(value: any, info: IControlDisplayInfo): any {
@@ -358,9 +375,9 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   /**
    * Wird bei Click auf den Edit-Button aufgerufen
-   * 
+   *
    * @param {*} data - die Modelinstanz der aktuellen Zeile
-   * 
+   *
    * @memberOf DataTableSelectorComponent
    */
   public editRow(data: any) {
@@ -404,11 +421,11 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
 
   /**
-   * Liefert true, falls die 
-   * 
+   * Liefert true, falls die
+   *
    * @param {IControlDisplayInfo} info
    * @returns {boolean}
-   * 
+   *
    * @memberOf DataTableSelectorComponent
    */
   public isEditable(info: IControlDisplayInfo): boolean {
@@ -474,12 +491,20 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
   }
 
 
+  public validate(control: FormControl): { [key: string]: any } {
+    return (!this.parseError) ? null : {
+      datatableError: {
+        valid: false,
+      },
+    };
+  }
+
 
   protected initBoundData(items: any[], tableMetadata: TableMetadata) {
     this.dataItems = undefined;
 
     this.selectedIndex = -1;
-    this.selectedValue = undefined;
+    this.value = undefined;
 
     super.initBoundData(items, tableMetadata);
   }
@@ -536,14 +561,14 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
 
   /**
-   * Liefert den Index des Items (selectedValue) in der Wertelist
-   * 
+   * Liefert den Index des Items (value) in der Wertelist
+   *
    * TODO: Achtung: funktionert nicht nach Umsortierung der DataTable !!
-   * 
+   *
    * @protected
    * @param {*} value
    * @returns {number}
-   * 
+   *
    * @memberOf DataTableSelectorComponent
    */
   protected indexOfValue(value: any): number {
@@ -572,18 +597,18 @@ export class DataTableSelectorComponent extends ListSelectorComponent {
 
   /**
    * Überwachung der editable-Property: false editable -> Selektionsmöglichkeit ausschalten
-   * 
+   *
    * @protected
    * @param {boolean} value
-   * 
-   * @memberOf DataTableSelectorComponent  
+   *
+   * @memberOf DataTableSelectorComponent
    */
   protected onEditableChange(value: boolean) {
     super.onEditableChange(value);
 
     if (value !== undefined) {
       if (value) {
-        this.selectedValue = undefined;
+        this.value = undefined;
 
         this.selectionModeSaved = this.selectionMode;
         this.selectionMode = undefined;

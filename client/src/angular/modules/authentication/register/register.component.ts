@@ -6,13 +6,17 @@ import { Component, Inject, Injector } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-// fluxgate
-import { IRole, Types, User } from '@fluxgate/common';
-
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
+
+// fluxgate
+import { IRole, User } from '@fluxgate/common';
+import { Assert, Types } from '@fluxgate/core';
+
+// commands
+import { UserServiceRequests } from '../redux/user-service-requests';
 
 import { Base2Component } from '../../../common/base';
 import { MetadataService } from '../../../services';
@@ -66,7 +70,7 @@ import { RoleService } from '../role.service';
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="role">Role</label>
       <div class="col-sm-5">
-        <flx-dropdown-selector [dataService]="service2" [textField]="'description'" [valueField]="'id'" [selectedValue]="user.role"
+        <flx-dropdown-selector [dataService]="service2" [textField]="'description'" [valueField]="'id'" [ngModel]="user.role"
           (selectedValueChange)="onSelectedRoleChanged($event)"
           [style]="{'width':'200px'}" [debug]="false" id="role" >   <!-- formControlName="role" -->
           </flx-dropdown-selector>
@@ -78,7 +82,7 @@ import { RoleService } from '../role.service';
         <button type="submit" class="btn btn-primary" [disabled]="isRegisterDisabled()" (click)='signup()'>Register</button>
       </div>
     </div>
-    
+
   </form>
 </div>
   `,
@@ -98,12 +102,20 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
   public user: User;
   public selectedRole: IRole;
 
-  constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
+  constructor(private userServiceRequests: UserServiceRequests,
+    private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
     @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation, service: PassportService,
     roleService: RoleService, metadataService: MetadataService, injector: Injector) {
+
     super(router, route, messageService, service, roleService);
 
-    this.buildFormFromModel<User>(this.fb, User, metadataService, injector);
+    const userTableMetadata = metadataService.findTableMetadata(User.name);
+    Assert.notNull(userTableMetadata, `Metadaten f�r Tabelle ${User.name}`);
+
+    this.user = userTableMetadata.createEntity<User>();
+
+    const displayInfos = this.createDisplayInfos(this.user, User, metadataService, injector);
+    this.buildForm(this.fb, this.user, displayInfos, userTableMetadata);
   }
 
   public signup() {
@@ -112,6 +124,8 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
         .subscribe((result) => {
           log.log(JSON.stringify(result));
 
+          this.userServiceRequests.setCurrent(result);
+
           this.resetForm();
 
           if (Types.isPresent(this.authenticationNavigation.registerRedirectUrl)) {
@@ -119,7 +133,6 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
               this.authenticationNavigation.registerRedirectUrl
             ]);
           }
-
         },
         (error: Error) => {
           this.handleError(error);

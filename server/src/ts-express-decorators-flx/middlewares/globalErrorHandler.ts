@@ -4,12 +4,12 @@ import { Exception as TsExpressException } from 'ts-httpexceptions';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
 // fluxgate
-import { Exception } from '@fluxgate/common';
+import { Exception } from '@fluxgate/core';
 
 @MiddlewareError()
 export class GlobalErrorHandler implements IMiddlewareError {

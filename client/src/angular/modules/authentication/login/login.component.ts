@@ -5,20 +5,21 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
+// commands
+import { UserServiceRequests } from '../redux/user-service-requests';
+
 import { BaseComponent } from '../../../common/base/base.component';
-
-import { ChangePasswordGuardService } from '../changePassword/changePassword-guard.service';
-import { RegisterGuardService } from '../register/register-guard.service';
-
 import { MessageService } from '../../../services/message.service';
 import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
+import { ChangePasswordGuardService } from '../changePassword/changePassword-guard.service';
 import { PassportService } from '../passport.service';
-
+import { RegisterGuardService } from '../register/register-guard.service';
 
 @Component({
   selector: 'flx-login',
@@ -26,11 +27,11 @@ import { PassportService } from '../passport.service';
 <div class="container">
   <h1>Login</h1>
 
-  <form [formGroup]="getForm()">
+  <form [formGroup]="form">
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="username">Name</label>
       <div class="col-sm-5">
-        <input flxAutofocus type="text" class="form-control" formControlName="username" id="username" required 
+        <input flxAutofocus type="text" class="form-control" formControlName="username" id="username" required
           [(ngModel)]="username" name="username" placeholder="Username">
       </div>
     </div>
@@ -40,12 +41,12 @@ import { PassportService } from '../passport.service';
       <div class="col-sm-5">
         <input type="password" class="form-control" formControlName="password" id="password" required
           [(ngModel)]="password" name="password" placeholder="Password">
-      </div>    
-    </div> 
+      </div>
+    </div>
 
     <div class="form-group row">
       <div class="col-sm-5">
-        <button type="submit" class="btn btn-primary" [disabled]="getForm().invalid" (click)='login()'>Login</button>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid" (click)='login()'>Login</button>
       </div>
     </div>
   </form>
@@ -71,24 +72,26 @@ export class LoginComponent extends BaseComponent<PassportService> {
 
   /**
    * Creates an instance of LoginComponent.
-   * 
-   * Hinweis: Die Guard-Services @see{ChangePasswordGuardService} und 
+   *
+   * Hinweis: Die Guard-Services @see{ChangePasswordGuardService} und
    * @see{RegisterGuardService} werden hier injiziert, damit diese dann korrekt
    * über Änderungen des aktuellen Benutzers informiert werden.
-   * 
+   *
    * @param {Router} router
    * @param {NavigationService} navigationService
    * @param {PassportService} service
    * @param {ChangePasswordGuardService} changePasswordGuardService
    * @param {RegisterGuardService} registerGuardService
-   * 
+   *
    * @memberOf LoginComponent
    */
-  constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
+  constructor(private userServiceRequests: UserServiceRequests,
+    private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
     @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation,
     service: PassportService, changePasswordGuardService: ChangePasswordGuardService,
     registerGuardService: RegisterGuardService) {
     super(router, route, messageService, service);
+
     using(new XLog(LoginComponent.logger, levels.INFO, 'ctor'), (log) => {
 
       this.buildFormFromValidators(this.fb, {
@@ -104,6 +107,9 @@ export class LoginComponent extends BaseComponent<PassportService> {
       this.registerSubscription(this.service.login(this.username, this.password)
         .subscribe((result) => {
           log.log(JSON.stringify(result));
+
+          this.userServiceRequests.setCurrent(result);
+
           this.navigate([
             this.authenticationNavigation.loginRedirectUrl
           ]);

@@ -5,12 +5,13 @@ import * as path from 'path';
 import * as util from 'util';
 
 
-// -------------------------- logging -------------------------------
+// -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
-// -------------------------- logging -------------------------------
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
 
-import { ArgumentException, NotSupportedException } from '@fluxgate/common';
+
+import { ArgumentException, NotSupportedException } from '@fluxgate/core';
 
 import { ColumnInfo, DataType } from './columnInfo';
 import { IConfigInfo } from './configInfo';
@@ -18,7 +19,7 @@ import { IGenerator } from './generator.interface';
 import { TableInfo } from './tableInfo';
 
 /**
- * 
+ *
  */
 export abstract class GeneratorBase implements IGenerator {
   protected static logger = getLogger(GeneratorBase);

@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Assert, Types } from '@fluxgate/common';
+import { Assert, Types } from '@fluxgate/core';
 
 import { MetadataService } from '../../services';
 import { MessageService } from '../../services/message.service';
@@ -12,32 +13,43 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
 @Component({
   selector: 'flx-year-selector',
   template: `
-<div>
-  <flx-dropdown-selector [data]="years" [(selectedValue)]="selectedValue"
-    [style]="style"
-    [debug]="debug" name="yearSelector">
-  </flx-dropdown-selector>
-</div>
+<flx-dropdown-selector [data]="years" [(ngModel)]="value"
+  [style]="style"
+  [debug]="debug" name="yearSelector">
+</flx-dropdown-selector>
 `,
-  styles: []
+  styles: [],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: YearSelectorComponent,
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: YearSelectorComponent,
+      multi: true,
+    }
+  ]
 })
-export class YearSelectorComponent extends SelectorBaseComponent {
+export class YearSelectorComponent extends SelectorBaseComponent<number> {
   public static readonly YEAR_MIN = 1900;
   public static readonly YEAR_MAX = 2050;
 
   public years: number[] = [
   ];
 
-
+  @ViewChild(NgModel) public model: NgModel;
   @Input() public lowerYear: number;
   @Input() public upperYear: number;
-
 
   constructor(router: Router, metadataService: MetadataService, messageService: MessageService,
     changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, messageService, changeDetectorRef);
 
-    this.style = '{\'width\':\'70px\'}';
+    this.style = {
+      width: '70px'
+    };
   }
 
   // tslint:disable-next-line:use-life-cycle-interface
@@ -68,7 +80,7 @@ export class YearSelectorComponent extends SelectorBaseComponent {
     }
     this.years = years;
 
-    if (this.selectedValue === undefined) {
+    if (this.value === undefined) {
       // das aktuelle Jahr vorselektieren
       const thisYear = new Date().getFullYear();
 
@@ -76,8 +88,16 @@ export class YearSelectorComponent extends SelectorBaseComponent {
         return item === thisYear;
       });
 
-      this.selectedValue = year;
+      this.value = year;
     }
   }
 
+
+  public validate(control: FormControl): { [key: string]: any } {
+    return (!this.parseError) ? null : {
+      yearError: {
+        valid: false,
+      },
+    };
+  }
 }

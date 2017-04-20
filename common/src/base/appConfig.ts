@@ -1,16 +1,15 @@
 // -------------------------- logging -------------------------------
-import { IConfig } from '../diagnostics/config.interface';
-import { getLogger } from '../diagnostics/logger';
 // tslint:disable-next-line:no-unused-variable
-import { ILogger } from '../diagnostics/logger.interface';
+import { getLogger, ILogger } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-// Fluxgate
+import { IConfig } from '@fluxgate/platform';
+
 import { AppRegistry } from '../base';
 
 
 /**
- * 
+ *
  */
 export type SystemMode =
 
@@ -37,7 +36,7 @@ export interface IUserCredentials {
 
 /**
  * Interface für Applikationskonfiguration
- * 
+ *
  * @export
  * @interface IAppConfig
  */
@@ -45,7 +44,7 @@ export interface IAppConfig {
 
   /**
    * Basis-Url des Servers (REST-Api)
-   * 
+   *
    * @type {string}
    * @memberOf IAppConfig
    */
@@ -53,7 +52,7 @@ export interface IAppConfig {
 
   /**
    * Basis-Url des Print-Services (REST-Api)
-   * 
+   *
    * @type {string}
    * @memberOf IAppConfig
    */
@@ -63,7 +62,7 @@ export interface IAppConfig {
 
   /**
    * Der Modus, in dem das komplette System läuft (Client + Server)
-   * 
+   *
    * @type {RunMode}
    * @memberOf IAppConfig
    */

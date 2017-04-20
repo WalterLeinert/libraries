@@ -5,6 +5,7 @@
 // require("reflect-metadata");
 
 const gulp = require('gulp');
+const env = require('gulp-env');
 const tslint = require('gulp-tslint');
 const del = require('del');
 const gulpSequence = require('gulp-sequence');
@@ -20,7 +21,7 @@ const tsProject = tsc.createProject('tsconfig.json');
 
 /**
     * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
-    * 
+    *
     * command      - der Kommandostring (z.B. 'gulp clean')
     * cwd          - das Arbeitsverzeichnis (z.B. 'client')
     * maxBuffer    - die Größe des Puffers für Ausgaben
@@ -46,13 +47,11 @@ function execCommand(command, cwd, maxBuffer, cb) {
 }
 
 
-/**
- * Common build
- */
-gulp.task('update-fluxgate-common', function (cb) {
-  //execCommand('npm uninstall --save @fluxgate/common', 'common', null, cb);
-  execCommand('npm uninstall --save @fluxgate/common && npm install --save @fluxgate/common', '.', null, cb);
+gulp.task('update-fluxgate', function (cb) {
+  execCommand('npm uninstall --save @fluxgate/core @fluxgate/common @fluxgate/platform && ' +
+    'npm install --save @fluxgate/core @fluxgate/common @fluxgate/platform', '.', null, cb);
 })
+
 
 gulp.task('really-clean', ['clean'], function (cb) {
   return del('node_modules');
@@ -89,19 +88,21 @@ gulp.task('compile', function() {
 
 
 
-gulp.task('compile-test', function () {
+gulp.task('compile:test', function () {
   //find test code - note use of 'base'
-  return gulp.src('./test/**/*.spec.ts', { base: '.' })
+  return gulp.src('./test/**/*.ts', { base: '.' })
+    .pipe(sourcemaps.init())
     /*transpile*/
     .pipe(tsc(tscConfig.compilerOptions))
     /*flush to disk*/
+    .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
     .pipe(gulp.dest('dist'));
 });
 
 
 
 //optional - use a tsconfig file
-gulp.task('test', ['compile-test'], function () {
+gulp.task('test', ['set-env', 'compile:test'], function () {
   gulp.src('./dist/test/**/*.spec.js', {read: false})
     .pipe(mocha({
       reporter: 'spec'
@@ -109,7 +110,7 @@ gulp.task('test', ['compile-test'], function () {
 });
 
 
-gulp.task('publish', ['default'], function (cb) {
+gulp.task('publish', ['compile:test'], function (cb) {
   const force = argv.f ? argv.f : '';
   const forceSwitch = (force ? '-f' : '');
 
@@ -117,12 +118,19 @@ gulp.task('publish', ['default'], function (cb) {
 });
 
 
+
 gulp.task('bundle', function (cb) {
   execCommand('webpack', '.', null, cb);
 })
 
+gulp.task('set-env', function () {
+  env({
+    vars: {
+      NODE_ENV: 'local'
+    }
+  })
+});
 
-gulp.task('update-fluxgate', ['update-fluxgate-common'])
 
 /* single command to hook into VS Code */
-gulp.task('default', gulpSequence('clean', 'compile'/*gulp*/ /*, 'bundle'*/));
+gulp.task('default', gulpSequence('set-env', 'clean', 'compile'/*gulp*/ /*, 'bundle'*/));

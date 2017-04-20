@@ -1,12 +1,14 @@
+import { Funktion, StringBuilder, Utility } from '@fluxgate/core';
+
 import { AppRegistry } from '../base/appRegistry';
-import { Funktion } from '../base/objectType';
-import { StringBuilder } from '../base/stringBuilder';
+import { Client } from '../model/decorator/model/client';
 import { Column } from '../model/decorator/model/column';
 import { Enum } from '../model/decorator/model/enum';
 import { Table } from '../model/decorator/model/table';
 import { Validation } from '../model/decorator/model/validation';
+import { Version } from '../model/decorator/model/version';
 import { Validators } from '../model/validation/validators';
-import { Utility } from '../util/utility';
+
 
 // import { Mandant } from './mandant';
 import { Role, UserRoleId } from './role';
@@ -26,29 +28,29 @@ export class User implements IUser {
    */
   public static readonly USER_CONFIG_KEY = 'IUser';
 
-  public static Null = new User(-1, '-no-name-', -1);
+  public static Null = new User(-1, '-no-name-', -1, 'none');
 
 
   @Column({ name: 'user_id', primary: true, generated: true, displayName: 'Id' })
   public id: number;
 
-  @Column({ name: 'firstname', nullable: true, displayName: 'Firstname' })
+  @Column({ name: 'user_firstname', nullable: true, displayName: 'Firstname' })
   public firstname?: string;
 
-  @Column({ name: 'lastname', nullable: true, displayName: 'Lastname' })
+  @Column({ name: 'user_lastname', nullable: true, displayName: 'Lastname' })
   public lastname?: string;
 
   @Validation([
     Validators.required
   ])
-  @Column({ name: 'username', displayName: 'Username' })
+  @Column({ name: 'user_username', displayName: 'Username' })
   public username: string;
 
   @Validation([
     Validators.required,
     Validators.email
   ])
-  @Column({ name: 'email', nullable: true, displayName: 'Email' })
+  @Column({ name: 'user_email', nullable: true, displayName: 'Email' })
   public email?: string;
 
   @Validation([
@@ -62,10 +64,10 @@ export class User implements IUser {
     Validators.required,
     Validators.range({ min: 8 })
   ])
-  @Column({ name: 'password', displayName: 'Password' })
+  @Column({ name: 'user_password', displayName: 'Password' })
   public password: string;
 
-  @Column({ name: 'password_salt' })
+  @Column({ name: 'user_password_salt' })
   public password_salt: string;
 
 
@@ -80,27 +82,32 @@ export class User implements IUser {
     return sb.toString();
   }
 
-  @Column({ name: 'deleted' })
+  @Column({ name: 'user_deleted' })
   public deleted?: boolean;
 
   @Validation([
     Validators.required
   ])
+  @Client()
   @Column({ name: 'id_mandant' })
   public id_mandant?: number;   // = Mandant.FIRST_ID;
 
+  @Version()
+  @Column({ name: 'user_version', displayName: 'Version', default: 0 })
+  public __version: number;
 
-  constructor(id?: number, username?: string, role?: number) {
+
+  constructor(id?: number, username?: string, role?: number, lastname?: string) {
     this.id = id;
     this.username = username;
     this.role = role;
-    this.lastname = 'none';
+    this.lastname = lastname;
   }
 
 
   /**
    * Setzt Passwort und Salt zurück
-   * 
+   *
    * @memberOf User
    */
   public resetCredentials() {
@@ -111,7 +118,7 @@ export class User implements IUser {
 
   /**
    * Liefert true, falls der User ein Admin ist.
-   * 
+   *
    * @readonly
    * @type {boolean}
    * @memberOf User

@@ -1,7 +1,7 @@
 
 import { Observable } from 'rxjs/Observable';
 
-import { IListAdapter } from '@fluxgate/common';
+import { IListAdapter } from '@fluxgate/core';
 
 import { Service } from '../../services/service';
 
@@ -12,7 +12,7 @@ export class TableListAdapter<T, TId> implements IListAdapter<T> {
     private _className: string;
 
     /**
-     * @param{string} className - der Name der Modelklasse (z.B. 'Artikel') 
+     * @param{string} className - der Name der Modelklasse (z.B. 'Artikel')
      */
     constructor(className: string, private service: Service<T, TId>) {
     }

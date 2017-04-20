@@ -7,15 +7,15 @@ import * as HttpStatusCodes from 'http-status-codes';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, Constants, Exception, ServerSystemException, StringBuilder } from '@fluxgate/common';
+import { Assert, Constants, Exception, IException, ServerSystemException, StringBuilder } from '@fluxgate/core';
 
 
 /**
  * Abstract base class for common rest-api service calls
- * 
+ *
  * @export
  * @abstract
  * @class Service
@@ -29,10 +29,10 @@ export abstract class ServiceBase {
 
   /**
    * Creates an instance of ServiceBase.
-   * 
+   *
    * @param {Http} _http - Http client
    * @param {string} baseUrl - base url of request
-   * 
+   *
    * @memberOf ServiceBase
    */
   protected constructor(private _http: Http, baseUrl: string, private _topic: string) {
@@ -53,7 +53,7 @@ export abstract class ServiceBase {
 
   /**
    * Liefert die Url inkl. Topic
-   * 
+   *
    * @type {string}
    */
   public getUrl(): string {
@@ -62,7 +62,7 @@ export abstract class ServiceBase {
 
   /**
    * Liefert das Topic.
-   * 
+   *
    * @type {string}
    */
   public getTopic(): string {
@@ -72,7 +72,7 @@ export abstract class ServiceBase {
 
   /**
    * Liefert den Topicpfad (z.B. '/artikel' bei Topic 'artikel').
-   * 
+   *
    * @type {string}
    */
   public getTopicPath(): string {
@@ -82,14 +82,22 @@ export abstract class ServiceBase {
 
   /**
    * Handles server communication errors.
-   * 
+   *
    * @private
    * @param {Response} error
    * @returns
-   * 
+   *
    * @memberOf ServiceBase
    */
   public static handleServerError(response: Response): ErrorObservable {
+    return Observable.throw(ServiceBase.createServerException(response));
+  }
+
+
+  /**
+   * Erzeugt eine Serverexception für die Response @param{response}
+   */
+  public static createServerException(response: Response): IException {
     return using(new XLog(ServiceBase.logger, levels.INFO, 'handleServerError'), (log) => {
       // In a real world app, we might use a remote logging infrastructure
       let errorMessage = '** unknown error **';
@@ -105,20 +113,18 @@ export abstract class ServiceBase {
       log.error(`errorMessage = ${errorMessage}: [ ${ServiceBase.formatResponseStatus(response)} ]`);
 
       if (Exception.isEncodedException(errorMessage)) {
-        const exc = Exception.decodeException(errorMessage);
-        return Observable.throw(exc);
+        return Exception.decodeException(errorMessage);
       }
 
-      return Observable.throw(new ServerSystemException(errorMessage));
+      return new ServerSystemException(errorMessage);
     });
   }
 
 
 
-
   /**
    * Liefert den Http-Clientservice
-   * 
+   *
    * @readonly
    * @protected
    * @type {Http}

@@ -1,19 +1,22 @@
 // Angular
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
 
 // PrimeNG
 import { SelectItem } from 'primeng/primeng';
 
-// Fluxgate
-import { Assert, Clone, IService, TableMetadata, Utility } from '@fluxgate/common';
-
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
+
+// Fluxgate
+import { IService, TableMetadata } from '@fluxgate/common';
+import { Assert, Clone, Types, Utility } from '@fluxgate/core';
+
 
 import { DataTypes, DisplayInfo, } from '../../../base';
 import { CacheService, MetadataService } from '../../services';
@@ -33,18 +36,30 @@ import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
 @Component({
   selector: 'flx-dropdown-selector',
   template: `
-<p-dropdown [(options)]="options" [autoWidth]="autoWidth" [style]="style" [(ngModel)]="selectedValue" 
+<p-dropdown [(options)]="options" [style]="style" [(ngModel)]="value"
   [readonly]="readonly"
   (onChange)="onChange($event.value)">
 </p-dropdown>
 
 <div *ngIf="debug">
-  <p>selectedIndex: {{selectedIndex}}, selectedValue: {{selectedValue | json}}</p>
+  <p>selectedIndex: {{selectedIndex}}, value: {{value | json}}</p>
 </div>
 `,
-  styles: []
+  styles: [],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: DropdownSelectorComponent,
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: DropdownSelectorComponent,
+      multi: true,
+    }
+  ]
 })
-export class DropdownSelectorComponent extends ListSelectorComponent {
+export class DropdownSelectorComponent extends ListSelectorComponent<any> {
   protected static logger = getLogger(DropdownSelectorComponent);
 
   public static readonly ALLOW_NO_SELECTION_TEXT = '(Auswahl)';
@@ -59,6 +74,8 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     valuesCacheable: false
   };
 
+
+  @ViewChild(NgModel) public model: NgModel;
 
   @Input() public readonly: boolean;
 
@@ -96,7 +113,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
    * @type {boolean}
    * @memberOf DropdownSelectorComponent
    */
-  @Input() public autoWidth: boolean = true;
+  @Input() public autoWidth: boolean;
 
 
   /**
@@ -109,7 +126,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
   /**
    * Die Property in der angebundenen Werteliste, welche nach Auswahl
-   * als 'selectedValue' übernommen werden soll.
+   * als 'value' übernommen werden soll.
    *
    * @type {string}
    * @memberOf DropdownSelectorComponent
@@ -138,6 +155,14 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     super.ngOnInit();
   }
 
+
+  public validate(control: FormControl): { [key: string]: any } {
+    return (!this.parseError) ? null : {
+      dropdownError: {
+        valid: false
+      },
+    };
+  }
 
 
   public get config(): IDropdownSelectorConfig {
@@ -212,7 +237,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
         if (!config.displayInfo.valueField) {
           config.displayInfo.valueField = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.valueField;
         }
-        if (!config.displayInfo.required) {
+        if (!Types.isPresent(config.displayInfo.required)) {
           config.displayInfo.required = DropdownSelectorComponent.DEFAULT_CONFIG.displayInfo.required;
         }
 
@@ -225,13 +250,13 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
         }
 
 
-        if (!config.allowNoSelection) {
+        if (!Types.isPresent(config.allowNoSelection)) {
           config.allowNoSelection = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelection;
         }
-        if (!config.allowNoSelectionText) {
+        if (!Types.isPresent(config.allowNoSelectionText)) {
           config.allowNoSelectionText = DropdownSelectorComponent.DEFAULT_CONFIG.allowNoSelectionText;
         }
-        if (config.valuesCacheable === undefined) {
+        if (!Types.isPresent(config.valuesCacheable)) {
           config.valuesCacheable = DropdownSelectorComponent.DEFAULT_CONFIG.valuesCacheable;
         }
 
@@ -259,15 +284,16 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
           this.configInternal = Clone.clone(DropdownSelectorComponent.DEFAULT_CONFIG);
           this.configInternal.displayInfo.textField = this.textField;
           this.configInternal.displayInfo.valueField = this.valueField;
-
-          if (this.allowNoSelection) {
-            this.configInternal.allowNoSelection = this.allowNoSelection;
-          }
-
-          if (this.allowNoSelectionText) {
-            this.configInternal.allowNoSelectionText = this.allowNoSelectionText;
-          }
         }
+      }
+
+      if (Types.isPresent(this.allowNoSelection)) {
+        Assert.that(Types.isBoolean(this.allowNoSelection));
+        this.configInternal.allowNoSelection = this.allowNoSelection;
+      }
+
+      if (Types.isPresent(this.allowNoSelectionText)) {
+        this.configInternal.allowNoSelectionText = this.allowNoSelectionText;
       }
 
       if (log.isDebugEnabled) {
@@ -283,6 +309,13 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
     if (items && items.length > 0) {
       this.options = [];
 
+      if (this.configInternal.allowNoSelection) {
+        this.options.push({
+          label: this.configInternal.allowNoSelectionText,
+          value: {}
+        });
+      }
+
       // ... und dann entsprechende Option-Objekte erzeugen
       for (const item of items) {
         this.options.push({
@@ -292,7 +325,6 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
       }
     }
   }
-
 
 
   protected get isDataEmpty(): boolean {
@@ -344,12 +376,12 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
 
   /**
-   * Liefert den Index des Werts (selectedValue) in der Optionsliste
-   * 
+   * Liefert den Index des Werts (value) in der Optionsliste
+   *
    * @protected
    * @param {*} value
    * @returns {number}
-   * 
+   *
    * @memberOf DropdownSelectorComponent
    */
   protected indexOfValue(value: any): number {
@@ -369,7 +401,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
 
 
 
-  protected createDataService(service: IService) {
+  protected createDataService(service: IService<any, any>) {
     if (this.configInternal && this.configInternal.valuesCacheable) {
       return new CacheService(service);
     }
@@ -431,7 +463,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
       let firstPropName: string;
 
       if (typeof firstItem === 'object') {
-        // alle Properties des ersten Items über Reflection ermitteln        
+        // alle Properties des ersten Items über Reflection ermitteln
         const props = Reflect.ownKeys(firstItem);
 
         // ... und dann entsprechende ColumnInfos erzeugen
@@ -462,6 +494,4 @@ export class DropdownSelectorComponent extends ListSelectorComponent {
       this.configInternal = config;
     }
   }
-
-
 }

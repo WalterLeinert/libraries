@@ -1,40 +1,52 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+// tslint:disable:member-ordering
 
+import { Component, Input, ViewChild } from '@angular/core';
+import { NgModel } from '@angular/forms';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { Hour, ShortTime } from '@fluxgate/common';
+import { Hour, ShortTime, Types } from '@fluxgate/core';
 
-import { CoreComponent } from '../../common/base/core.component';
+import { ControlBaseComponent } from '../../common/base/control-base.component';
 import { MessageService } from '../../services/message.service';
 
 
 @Component({
   selector: 'flx-time-selector',
   template: `
-<div>
-  <p-calendar [(ngModel)]="date" [timeOnly]="true" hourFormat="24"
-    [readonlyInput]="readonly"
-    (onBlur)="onBlur($event)" (onSelect)="onSelect($event)"
-  >
-  </p-calendar>
-</div>
+<p-calendar [(ngModel)]="date" [timeOnly]="true" hourFormat="24"
+  [readonlyInput]="readonly"
+  (onBlur)="onBlur($event)" (onSelect)="onSelect($event)"
+>
+</p-calendar>
 `,
-  styles: []
+  styles: [],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: TimeSelectorComponent,
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: TimeSelectorComponent,
+      multi: true,
+    }
+  ]
 })
-export class TimeSelectorComponent extends CoreComponent {
+export class TimeSelectorComponent extends ControlBaseComponent<ShortTime> {
   protected static readonly logger = getLogger(TimeSelectorComponent);
 
   public date: Date;
 
+  @ViewChild(NgModel) public model: NgModel;
   @Input() public readonly: boolean;
 
-  private _time: ShortTime;
-  @Output() public timeChange = new EventEmitter<ShortTime>();
 
   constructor(messageService: MessageService) {
     super(messageService);
@@ -47,39 +59,60 @@ export class TimeSelectorComponent extends CoreComponent {
 
   public onBlur(eventData: any) {
     using(new XLog(TimeSelectorComponent.logger, levels.INFO, 'onBlur'), (log) => {
-      this.updateTime();
+      super.onTouched();
+
+      // TODO: Validierung über angular triggern
+
+      const controlValue = eventData.target.value;
+      if (Types.isPresent(controlValue)) {
+        try {
+          const t = ShortTime.parse(controlValue);
+          this.updateTime(t);
+          this.parseError = false;
+        } catch (exc) {
+          log.warn(`TODO: angular Validierung einbinden (value: ${controlValue})`);
+          this.parseError = true;
+          eventData.target.value = null;
+        }
+      }
     });
   }
 
   public onSelect(eventData: any) {
     using(new XLog(TimeSelectorComponent.logger, levels.INFO, 'onSelect'), (log) => {
+      this.parseError = false;
       this.updateTime();
     });
   }
 
-  // -------------------------------------------------------------------------------------
-  // Property time
-  // -------------------------------------------------------------------------------------
-  protected onTimeChange(value: ShortTime) {
-    this.date = new Date();
-    this.date.setHours(value.hour, value.minute);
 
-    this.timeChange.emit(value);
+  public validate(control: FormControl): { [key: string]: any } {
+    return (!this.parseError) ? null : {
+      timeError: {
+        valid: false
+      },
+    };
   }
 
-  public get time(): ShortTime {
-    return this._time;
-  }
+  protected onValueChange(value: ShortTime) {
+    if (value) {
+      const date = new Date();
+      date.setHours(value.hour);
+      date.setMinutes(value.minute);
 
-  @Input() public set time(value: ShortTime) {
-    if (this._time !== value) {
-      this._time = value;
-      this.onTimeChange(value);
+      this.date = date;
     }
   }
 
-
-  private updateTime() {
-    this.time = new ShortTime(this.date.getHours() as Hour, this.date.getMinutes());
+  private updateTime(time?: ShortTime) {
+    if (!time) {
+      if (this.date) {
+        time = new ShortTime(this.date.getHours() as Hour, this.date.getMinutes());
+      }
+    }
+    if (time) {
+      this.value = time;
+      // this.model.control.reset(this.value);
+    }
   }
 }

@@ -1,4 +1,5 @@
-import { StringBuilder } from '../../base';
+import { StringBuilder } from '@fluxgate/core';
+
 import { ValidationResult } from './validationResult';
 import { Validator } from './validator';
 

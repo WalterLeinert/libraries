@@ -1,0 +1,11 @@
+import { Funktion } from '@fluxgate/core';
+
+export class CommandStoreMetadata {
+
+  constructor(public target: Funktion) {
+  }
+
+  public createStore<T>() {
+    return Reflect.construct(this.target as (() => void), []) as T;
+  }
+}

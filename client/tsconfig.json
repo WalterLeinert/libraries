@@ -1,35 +1,27 @@
 {
   "compilerOptions": {
+    "baseUrl": "src/",
+    "module": "commonjs",
     "target": "es5",
-    "module": "es2015",
+    "noImplicitAny": false,
     "sourceMap": true,
     "declaration": true,
-    "moduleResolution": "node",
+    "declarationDir": "dts/",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "allowUnusedLabels": false,
-    "noImplicitReturns": true,
-    "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "outDir": "dist",
+    "moduleResolution": "node",
+    "isolatedModules": false,
+    "suppressImplicitAnyIndexErrors": false,
+    "importHelpers": true,
     "lib": [
-      "es2016",
+      "es6",
       "dom"
     ],
-    "typeRoots": [
-      "node_modules/@types"
-    ]
+    "outDir": "dist",
+    "rootDir": "."
   },
-  "files": [
-    "index.ts"
-  ],
   "exclude": [
     "node_modules",
-    "dist",
-    "build"
-  ],
-  "angularCompilerOptions": {
-    "genDir": "compiled",
-    "skipTemplateCodegen": "true"
-  }
+    "./test/**/*.spec.ts"
+  ]
 }

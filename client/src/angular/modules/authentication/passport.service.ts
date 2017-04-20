@@ -9,24 +9,24 @@ import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/Observable/ErrorObservable';
 
 // Fluxgate
-import { Assert, Constants, IUser, PasswordChange, StringBuilder, User } from '@fluxgate/common';
-import { IServiceBase, NotSupportedException } from '@fluxgate/common';
+import { IServiceBase, IUser, PasswordChange, User } from '@fluxgate/common';
+import { Assert, Constants, NotSupportedException, StringBuilder } from '@fluxgate/core';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import { Serializer } from '../../../base/serializer';
+import { CoreComponent } from '../../common/base/core.component';
 import { MetadataService } from '../../services';
 import { ConfigService } from '../../services/config.service';
 import { MessageService } from '../../services/message.service';
 import { ServiceBase } from '../../services/serviceBase';
-import { CurrentUser } from './currentUser';
 
 
 @Injectable()
-export class PassportService extends CurrentUser implements IServiceBase {
+export class PassportService extends CoreComponent implements IServiceBase<any, any> {
   protected static logger = getLogger(PassportService);
 
   public static get LOGIN() { return '/login'; }
@@ -42,11 +42,11 @@ export class PassportService extends CurrentUser implements IServiceBase {
 
   /**
    * Creates an instance of PassportService.
-   * 
+   *
    * @param {Http} http
    * @param {ConfigService} configService
    * @param {string} _topic - das Topic des Service
-   * 
+   *
    * @memberOf PassportService
    */
   constructor(private http: Http, configService: ConfigService, private metadataService: MetadataService,
@@ -79,10 +79,10 @@ export class PassportService extends CurrentUser implements IServiceBase {
 
   /**
    * Meldet den Benutzer mit Benutzernamen {username} beim System an.
-   * 
+   *
    * @param {string} username
    * @param {string} password
-   * 
+   *
    * @memberOf PassportService
    */
   public login(username: string, password: string): Observable<IUser> {
@@ -101,7 +101,6 @@ export class PassportService extends CurrentUser implements IServiceBase {
         .map((response: Response) => this.deserialize(response.json()))
         .do((u) => {
           log.log('user: ' + JSON.stringify(u));
-          this.onUserChange(u);
         })
         .catch(this.handleServerError);
     });
@@ -110,10 +109,10 @@ export class PassportService extends CurrentUser implements IServiceBase {
 
   /**
    * Registriert einen neuen Benutzer im System
-   * 
+   *
    * @param {User} user
    * @returns {Observable<User>}
-   * 
+   *
    * @memberOf PassportService
    */
   public signup(user: User): Observable<User> {
@@ -124,7 +123,6 @@ export class PassportService extends CurrentUser implements IServiceBase {
           .map((response: Response) => this.deserialize(response.json()))
           .do((u) => {
             log.log(`user = ${JSON.stringify(u)}`);
-            this.onUserChange(u);
           })
           .catch(this.handleServerError);
       });
@@ -133,9 +131,9 @@ export class PassportService extends CurrentUser implements IServiceBase {
 
   /**
    * Meldet den aktuellen Benutzer ab
-   * 
+   *
    * @returns {Observable<any>}
-   * 
+   *
    * @memberOf PassportService
    */
   public logoff() {
@@ -145,7 +143,6 @@ export class PassportService extends CurrentUser implements IServiceBase {
           // ok
         }).do((user) => {
           log.log(`user = ${JSON.stringify(user)}`);
-          this.onUserChange(null);
         })
         .do((data) => PassportService.logger.info('result: ' + JSON.stringify(data)))
         .catch(this.handleServerError);
@@ -155,11 +152,11 @@ export class PassportService extends CurrentUser implements IServiceBase {
 
   /**
    * Ändert das Passwort des aktuellen Benutzers.
-   * 
+   *
    * @param {string} username - aktueller Username
    * @param {string} password - aktuelles Passwort
    * @param {string} passwordNew - neues Passwort
-   * 
+   *
    * @memberOf PassportService
    */
   public changePassword(username: string, password: string, passwordNew: string): Observable<IUser> {
@@ -179,27 +176,8 @@ export class PassportService extends CurrentUser implements IServiceBase {
 
 
   /**
-   * Liefert den aktuell angemeldeten User.
-   * 
-   * @returns {Observable<User>}
-   * 
-   * @memberOf UserService
-   */
-  public getCurrentUser(): Observable<User> {
-    return using(new XLog(PassportService.logger, levels.INFO, 'getCurrentUser'), (log) => {
-      return this.http.get(this.getUrl() + PassportService.CURRENT_USER)
-        .map((response: Response) => this.deserialize(response.json()))
-        .do((user) => {
-          log.log(`user = ${JSON.stringify(user)}`);
-        })
-        .catch(this.handleServerError);
-    });
-  }
-
-
-  /**
    * Liefert die Url inkl. Topic
-   * 
+   *
    * @type {string}
    */
   public getUrl(): string {
@@ -221,7 +199,7 @@ export class PassportService extends CurrentUser implements IServiceBase {
 
   /**
    * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
-   * 
+   *
    * @type {string}
    */
   public getModelClassName(): string {
@@ -239,7 +217,7 @@ export class PassportService extends CurrentUser implements IServiceBase {
 
   /**
    * Handles server communication errors.
-   * 
+   *
    * @private
    * @param {Response} error
    * @returns
@@ -251,9 +229,9 @@ export class PassportService extends CurrentUser implements IServiceBase {
 
   /**
    * Serialisiert das @param{item} für die Übertragung zum Server über das REST-Api.
-   * 
+   *
    * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
-   * 
+   *
    * @param {T} item - Entity-Instanz
    * @returns {any}
    */
@@ -264,10 +242,10 @@ export class PassportService extends CurrentUser implements IServiceBase {
 
   /**
    * Deserialisiert das Json-Objekt, welches über das REST-Api vom Server zum Client übertragen wurde
-   * 
+   *
    * @param {any} json - Json-Objekt vom Server
    * @returns {T}
-   * 
+   *
    * @memberOf Service
    */
   private deserialize(json: any): IUser {

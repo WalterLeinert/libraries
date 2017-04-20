@@ -4,16 +4,20 @@
 import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-
-import { IUser, Types } from '@fluxgate/common';
+import { IUser } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { BaseComponent } from '../../../common/base/base.component';
+import { Types } from '@fluxgate/core';
 
+// commands
+import { UserServiceRequests } from '../redux/user-service-requests';
+
+
+import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
 import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
 import { PassportService } from '../passport.service';
@@ -31,7 +35,7 @@ import { PassportService } from '../passport.service';
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="password">Aktuelles Kennwort</label>
       <div class="col-sm-5">
-        <input flxAutofocus type="text" class="form-control" id="password" required 
+        <input flxAutofocus type="text" class="form-control" id="password" required
           [(ngModel)]="password" name="password" placeholder="Aktuelles Kennwort">
       </div>
     </div>
@@ -41,16 +45,16 @@ import { PassportService } from '../passport.service';
       <div class="col-sm-5">
         <input type="password" class="form-control" id="passwordNew" required
           [(ngModel)]="passwordNew" name="passwordNew" placeholder="Neues Kennwort">
-      </div>    
-    </div> 
+      </div>
+    </div>
 
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="passwordNewRepeated">Kennwort erneut eingeben</label>
       <div class="col-sm-5">
         <input type="password" class="form-control" id="passwordNewRepeated" required
           [(ngModel)]="passwordNewRepeated" name="passwordNewRepeated" placeholder="Kennwort erneut eingeben">
-      </div>    
-    </div> 
+      </div>
+    </div>
 
     <div class="form-group row">
       <div class="btn-group">
@@ -81,37 +85,34 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   public passwordNewRepeated: string;
   private currentUser: IUser;
 
-  constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
+  constructor(private userServiceRequests: UserServiceRequests,
+    router: Router, route: ActivatedRoute, messageService: MessageService,
     @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation,
     service: PassportService) {
     super(router, route, messageService, service);
   }
 
-  public ngOnInit() {
-    super.ngOnInit();
-
-    this.registerSubscription(this.service.getCurrentUser().subscribe(
-      (user) => this.currentUser = user
-    ));
-  }
-
   public changePassword() {
-    if (this.passwordNew !== this.passwordNewRepeated) {
-      super.addInfoMessage(`Die Kennworte stimmen nicht überein.`);
-      return;
-    }
+    using(new XLog(ChangePasswordComponent.logger, levels.INFO, 'changePassword'), (log) => {
+      if (this.passwordNew !== this.passwordNewRepeated) {
+        super.addInfoMessage(`Die Kennworte stimmen nicht überein.`);
+        return;
+      }
 
-    this.registerSubscription(this.service.changePassword(this.currentUser.username, this.password, this.passwordNew)
-      .subscribe((user) => {
-        ChangePasswordComponent.logger.info(`ChangePasswordComponent.changePassword: user = ${user}`);
+      this.registerSubscription(this.service.changePassword(this.currentUser.username, this.password, this.passwordNew)
+        .subscribe((user) => {
+          log.info(`user = ${user}`);
 
-        if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
-          this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);
-        }
-      },
-      (error: Error) => {
-        this.handleError(error);
-      }));
+          this.userServiceRequests.setCurrent(user);
+
+          if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
+            this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);
+          }
+        },
+        (error: Error) => {
+          this.handleError(error);
+        }));
+    });
   }
 
 

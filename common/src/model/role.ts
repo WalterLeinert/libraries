@@ -1,14 +1,15 @@
+import { EnumHelper, Funktion } from '@fluxgate/core';
+
 import { AppRegistry } from '../base/appRegistry';
-import { EnumHelper } from '../base/enumHelper';
-import { Funktion } from '../base/objectType';
+import { Client } from '../model/decorator/model/client';
 import { Column } from '../model/decorator/model/column';
 import { Table } from '../model/decorator/model/table';
 import { Validation } from '../model/decorator/model/validation';
+import { Version } from '../model/decorator/model/version';
 import { Validators } from '../model/validation/validators';
 
 // import { Mandant } from './mandant';
 import { IRole } from './role.interface';
-
 
 /**
  * Werte der Role-Ids in der DB (z.Zt.)
@@ -57,14 +58,19 @@ export class Role implements IRole {
   @Column({ name: 'role_description', displayName: 'Description' })
   public description: string;
 
-  @Column({ name: 'deleted' })
+  @Column({ name: 'role_deleted' })
   public deleted?: boolean;
 
   @Validation([
     Validators.required
   ])
+  @Client()
   @Column({ name: 'id_mandant' })
   public id_mandant?: number;   // = Mandant.FIRST_ID;
+
+  @Version()
+  @Column({ name: 'role_version', displayName: 'Version', default: 0 })
+  public __version: number;
 
 
   /**

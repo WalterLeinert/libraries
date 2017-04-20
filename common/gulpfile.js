@@ -1,6 +1,7 @@
 /**
  * Gulp Buildfile
  */
+'use strict';
 
 const gulp = require('gulp');
 const env = require('gulp-env');
@@ -15,11 +16,10 @@ const merge = require('merge2');
 const mocha = require('gulp-mocha');
 const tscConfig = require('./tsconfig.json');
 const tsProject = tsc.createProject('tsconfig.json');
-const removeCode = require('gulp-remove-code');
 
 /**
     * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
-    * 
+    *
     * command      - der Kommandostring (z.B. 'gulp clean')
     * cwd          - das Arbeitsverzeichnis (z.B. 'client')
     * maxBuffer    - die Größe des Puffers für Ausgaben
@@ -69,55 +69,49 @@ gulp.task('tslint', () => {
     .pipe(gulp_tslint.report());
 });
 
-
-gulp.task('compile-browser', function() {
+gulp.task('compile', function() {
     const tsResult = gulp.src('src/**/*.ts')
-        .pipe(removeCode({ browser: true }))
         .pipe(sourcemaps.init())
         .pipe(tsProject());
 
     return merge([
-        tsResult.dts.pipe(gulp.dest('dist/browser/dts')),
+        tsResult.dts.pipe(gulp.dest('dist/dts')),
         tsResult.js
           .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
-          .pipe(gulp.dest('dist/browser/src'))
-    ]);
-});
-
-gulp.task('compile-node', function() {
-    const tsResult = gulp.src('src/**/*.ts')
-        .pipe(removeCode({ node: true }))
-        .pipe(sourcemaps.init())
-        .pipe(tsProject());
-
-    return merge([
-        tsResult.dts.pipe(gulp.dest('dist/node/dts')),
-        tsResult.js
-          .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
-          .pipe(gulp.dest('dist/node/src'))
+          .pipe(gulp.dest('dist/src'))
     ]);
 });
 
 
 
-/**
- * build an run tests
- */
-gulp.task('test', ['set-env'], function () {
+
+gulp.task('compile:test', ['default'], function () {
   //find test code - note use of 'base'
-  return gulp.src('./test/**/*.spec.ts', { base: '.' })
+  return gulp.src('./test/**/*.ts', { base: '.' })
+    .pipe(sourcemaps.init())
     /*transpile*/
     .pipe(tsc(tscConfig.compilerOptions))
     /*flush to disk*/
-    .pipe(gulp.dest('dist/node'))
-    /*execute tests*/
+    .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+    .pipe(gulp.dest('dist'));
+});
+
+
+gulp.task('test', ['set-env', 'compile:test'], function () {
+  gulp.src('./dist/test/**/*.spec.js', {read: false})
     .pipe(mocha({
       reporter: 'spec'
     }));
 });
 
+gulp.task('update-fluxgate', function (cb) {
+  execCommand('npm uninstall --save @fluxgate/core @fluxgate/platform && ' +
+    'npm install --save @fluxgate/core @fluxgate/platform', '.', null, cb);
+})
 
-gulp.task('publish', ['default'], function (cb) {
+
+
+gulp.task('publish', ['test'], function (cb) {
   const force = argv.f ? argv.f : '';
   const forceSwitch = (force ? '-f' : '');
 
@@ -133,10 +127,10 @@ gulp.task('publish', ['default'], function (cb) {
 gulp.task('set-env', function () {
   env({
     vars: {
-      PLATFORM: 'node'
+      NODE_ENV: 'debug'
     }
   })
 });
 
 
-gulp.task('default', gulpSequence('set-env', 'clean', 'compile-browser', 'compile-node', 'test'));
+gulp.task('default', gulpSequence('set-env', 'clean', 'compile'));

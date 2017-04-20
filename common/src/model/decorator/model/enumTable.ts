@@ -1,7 +1,6 @@
-// Logging
-import { getLogger } from '../../../diagnostics/logger';
+import { Funktion } from '@fluxgate/core';
+import { getLogger } from '@fluxgate/platform';
 
-import { Funktion } from '../../../base/objectType';
 import { EnumTableMetadata } from '../../metadata/enumTableMetadata';
 import { MetadataStorage } from '../../metadata/metadataStorage';
 import { EnumTableOptions } from './enumTableOptions';
@@ -11,14 +10,14 @@ const logger = getLogger(EnumTable);
 
 /**
  * Table-Decorator für Modellklassen
- * 
+ *
  * @export
  * @param {TableOptions} [options]
  * @returns
  */
 export function EnumTable(options: IEnumTableOptions) {
   // tslint:disable-next-line:only-arrow-functions
-  return function(target: Funktion) {
+  return function (target: Funktion) {
 
     if (!options.name) {
       options.name = target.name.toLowerCase();

@@ -11,10 +11,10 @@ export class AppRegistryService {
 
   /**
    * Liefertfür den angegebenen Key @param{key} die Dateninstanz vom Typ {T}
-   * 
+   *
    * @param {string} key
    * @returns {T}
-   * 
+   *
    * @memberOf MetadataService
    */
   public get<T>(key: string): T {

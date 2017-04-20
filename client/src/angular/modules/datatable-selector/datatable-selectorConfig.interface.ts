@@ -9,7 +9,7 @@ export interface IDataTableSelectorConfig {
 
   /**
    * die Zeilenkonfiguration für Anzeige/Editierbarkeit
-   * 
+   *
    * @type {IRowDisplayInfo}
    * @memberOf IDataTableSelectorConfig
    */
@@ -17,7 +17,7 @@ export interface IDataTableSelectorConfig {
 
     /**
      * Die Spaltenkonfiguration für Anzeige/Wertebinding
-     * 
+     *
      * @type {IControlDisplayInfo[]}
      * @memberOf IDataTableSelectorConfig
      */

@@ -1,19 +1,21 @@
-import { EventEmitter, Input, Output } from '@angular/core';
+// tslint:disable:member-ordering
+
+import { Input } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
-import { CoreComponent } from '../../common/base/core.component';
+import { ControlBaseComponent } from '../../common/base/control-base.component';
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
 
 /**
  * Basisklasse für alle Selector-Komponenten
  */
-export abstract class SelectorBaseComponent extends CoreComponent {
+export abstract class SelectorBaseComponent<T> extends ControlBaseComponent<T> {
   protected static logger = getLogger(SelectorBaseComponent);
 
 
@@ -32,6 +34,8 @@ export abstract class SelectorBaseComponent extends CoreComponent {
    */
   private _editable: boolean = false;
 
+  private _style: any;
+
 
   /**
    * locale-Property
@@ -40,60 +44,9 @@ export abstract class SelectorBaseComponent extends CoreComponent {
    */
   private _locale: string = 'en';
 
-
-  /**
-   * * setzt das style-Attribut von p-dropdown
-   *
-   * @type {string}
-   */
-  @Input() public style: string;
-
-
-  /**
-   * selectedValueChange Event: wird bei jeder Selektionsänderung gefeuert.
-   *
-   * Eventdaten: @type{any} - selektiertes Item.
-   *
-   */
-  @Output() public selectedValueChange = new EventEmitter<any>();
-
-
-  /**
-   * das aktuell selektierte Item
-   *
-   * @type {any}
-   */
-  private _selectedValue: any;
-
-
   protected constructor(router: Router, private _metadataService: MetadataService, messageService: MessageService,
     private _changeDetectorRef: ChangeDetectorRef) {
     super(messageService);
-  }
-
-
-  // -------------------------------------------------------------------------------------
-  // Property selectedValue und der Change Event
-  // -------------------------------------------------------------------------------------
-
-  protected onSelectedValueChange(value: any) {
-    using(new XLog(SelectorBaseComponent.logger, levels.INFO, 'onSelectedValueChange'), (log) => {
-      if (log.isInfoEnabled()) {
-        log.log(`value = ${JSON.stringify(value)}`);
-      }
-      this.selectedValueChange.emit(value);
-    });
-  }
-
-  public get selectedValue(): any {
-    return this._selectedValue;
-  }
-
-  @Input() public set selectedValue(value: any) {
-    if (this._selectedValue !== value) {
-      this._selectedValue = value;
-      this.onSelectedValueChange(value);
-    }
   }
 
 
@@ -146,4 +99,15 @@ export abstract class SelectorBaseComponent extends CoreComponent {
     }
   }
 
+
+  /**
+   * Property editable
+   */
+  public get style(): any {
+    return this._style;
+  }
+
+  @Input() public set style(value: any) {
+    this._style = value;
+  }
 }

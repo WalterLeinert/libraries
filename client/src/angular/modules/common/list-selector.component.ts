@@ -6,14 +6,15 @@ import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { Assert, Funktion, IService, TableMetadata, Types } from '@fluxgate/common';
+import { IService, TableMetadata } from '@fluxgate/common';
+import { Assert, Funktion, Types } from '@fluxgate/core';
 
 import { MetadataService } from '../../services';
 import { MessageService } from '../../services/message.service';
 import { SelectorBaseComponent } from './selectorBase.component';
 
 
-export abstract class ListSelectorComponent extends SelectorBaseComponent {
+export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> {
 
 
   /**
@@ -29,7 +30,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
    * @type {any[]}
    * @memberOf DataTableSelectorComponent
    */
-  private _data: any[];
+  private _data: T[];
 
   /**
    * dataChange Event: wird bei jeder SelektionÄänderung von data gefeuert.
@@ -38,7 +39,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
    *
    * @memberOf DataTableSelectorComponent
    */
-  @Output() public dataChange = new EventEmitter<any>();
+  @Output() public dataChange = new EventEmitter<T[]>();
 
   /**
    * der Service zum Bereitstellen der Daten
@@ -48,7 +49,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
    * @type {IService}
    * @memberOf DataTableSelectorComponent
    */
-  private _dataService: IService;
+  private _dataService: IService<T, any>;
 
   /**
    * die Service-Methode zum Bereitstellen der Daten. Muss eine Methode von @see{dataService} sein.
@@ -97,7 +98,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
       this.initBoundData(this.data, this.getMetadataForValues(this.data));
     } else {
 
-      // Hinweis: dataService und dataServiceFunction dürfen während der Initialisierung auch undefiniert sein! 
+      // Hinweis: dataService und dataServiceFunction dürfen während der Initialisierung auch undefiniert sein!
       if (!this.dataService && !this.dataServiceFunction) {
         return;
       }
@@ -127,11 +128,11 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
    * Setup des Databindings für die Liste @param{items} und der Spaltenkonfiguration.
    * Ist @param{tableMetadata} angegeben und keine Konfiguration von "aussen" gesetzt,
    * so wird über die Metadaten eine automatische Konfiguration durchgeführt.
-   * 
+   *
    * @protected
    * @param {any[]} items
    * @param {TableMetadata} tableMetadata
-   * 
+   *
    * @memberOf ListSelectorComponent
    */
   protected initBoundData(items: any[], tableMetadata: TableMetadata) {
@@ -158,11 +159,11 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
 
   /**
    * Intialisiert die Daten fürs Databinding
-   * 
+   *
    * @protected
    * @abstract
    * @param {any[]} items
-   * 
+   *
    * @memberOf ListSelectorComponent
    */
   protected abstract setupData(items: any[]): void;
@@ -170,25 +171,25 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
 
   /**
    * Initialisiert die Konfiguration der Anzeigewerte und Werte
-   * 
+   *
    * @protected
    * @abstract
    * @param {any[]} items
    * @param {TableMetadatan} tableMetadata - Metadaten oder null/indefined
-   * 
+   *
    * @memberOf ListSelectorComponent
    */
   protected abstract setupConfig(items: any[], tableMetadata: TableMetadata): void;
 
   /**
-   * Liefert den Index des Items (selectedValue) in der Wertelist
-   * 
+   * Liefert den Index des Items (value) in der Wertelist
+   *
    * TODO: Achtung: funktionert nicht nach Umsortierung der DataTable !!
-   * 
+   *
    * @protected
    * @param {*} value
    * @returns {number}
-   * 
+   *
    * @memberOf DropdownSelectorComponent
    */
   protected abstract indexOfValue(value: any): number;
@@ -197,12 +198,12 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
    * Liefert den Wert für das @param{item} der Liste. Der Wert ist das Item selbst oder eine entsprechende Property,
    * falls die valueField-Property einen entsprechenden Propertynamen enthält
    * (nur bei @see{DropdownSelectorComponent})
-   * 
+   *
    * @protected
    * @abstract
    * @param {*} item
    * @returns {*}
-   * 
+   *
    * @memberOf ListSelectorComponent
    */
   protected abstract getValue(item: any): any;
@@ -210,7 +211,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
 
   /**
    * Liefert true, falls im konkreten Control keine Daten angebunden sind oder die Liste keine Items enthält
-   * 
+   *
    * @readonly
    * @protected
    * @abstract
@@ -222,7 +223,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
 
   /**
    * Liefert die Anzahl der Data-Items beim konkreten Control
-   * 
+   *
    * @readonly
    * @protected
    * @abstract
@@ -235,12 +236,12 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
   /**
    * Liefert den Wert des Items an der Position @param{index}.
    * Hierbei wird ggf. die valueField-Property ausgewertet.
-   * 
+   *
    * @protected
    * @abstract
    * @param {number} index
    * @returns {*}
-   * 
+   *
    * @memberOf ListSelectorComponent
    */
   protected abstract getDataValue(index: number): any;
@@ -248,7 +249,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
 
 
   /**
-   * Falls ein positiver und gültiger selectedIndex angegeben ist, wird der selectedValue auf des
+   * Falls ein positiver und gültiger selectedIndex angegeben ist, wird der value auf des
    * entsprechende Item gesetzt.
    *
    * @private
@@ -265,20 +266,20 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
         }
 
         /**
-         * - falls kein selectedValue existiert, setzen wir den selectedValue auf den Wert von
+         * - falls kein value existiert, setzen wir den value auf den Wert von
          *   selectedIndex oder 0
-         * - falls bereits ein selectedValue existiert, versuchen wir einen selectedValue mit der 
+         * - falls bereits ein value existiert, versuchen wir einen value mit der
          *   aktuellen Konfiguration zu setzen
          */
-        if (this.selectedValue === undefined) {
+        if (this.value === undefined) {
           if (this.selectedIndex >= 0 && this.selectedIndex < this.dataLength) {
-            this.selectedValue = this.getDataValue(this.selectedIndex);
+            this.value = this.getDataValue(this.selectedIndex);
           } else if (this.dataLength > 0) {
-            this.selectedValue = this.getDataValue(0);
+            this.value = this.getDataValue(0);
           }
         } else {
           if (this.selectedIndex >= 0 && this.selectedIndex < this.dataLength) {
-            this.selectedValue = this.getDataValue(this.selectedIndex);
+            this.value = this.getDataValue(this.selectedIndex);
           }
         }
 
@@ -290,17 +291,14 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
   }
 
 
-  // -------------------------------------------------------------------------------------
-  // Property selectedValue und der Change Event
-  // -------------------------------------------------------------------------------------
+  protected onValueChange(value: any) {
+    super.onValueChange(value);
 
-  protected onSelectedValueChange(value: any) {
-    super.onSelectedValueChange(value);
-
+    // this.changeDetectorRef.markForCheck();
     this.changeDetectorRef.detectChanges();
 
     let index = -1;
-    if (this.selectedValue) {
+    if (Types.isPresent(this.value)) {
       index = this.indexOfValue(value);
     }
     this.selectedIndex = index;
@@ -336,7 +334,7 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
   // Property data und der Change Event
   // -------------------------------------------------------------------------------------
 
-  protected onDataChange(values: any[]) {
+  protected onDataChange(values: T[]) {
     this.dataChange.emit(values);
 
     //
@@ -346,11 +344,11 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
     this.initBoundData(values, this.getMetadataForValues(values));
   }
 
-  public get data(): any[] {
+  public get data(): T[] {
     return this._data;
   }
 
-  @Input() public set data(data: any[]) {
+  @Input() public set data(data: T[]) {
     if (this._data !== data) {
       this._data = data;
       this.onDataChange(data);
@@ -361,11 +359,11 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
   // -------------------------------------------------------------------------------------
   // Property dataService
   // -------------------------------------------------------------------------------------
-  public get dataService(): IService {
+  public get dataService(): IService<T, any> {
     return this._dataService;
   }
 
-  @Input() public set dataService(value: IService) {
+  @Input() public set dataService(value: IService<T, any>) {
     if (this._dataService !== value) {
       this._dataService = value;
     }
@@ -406,9 +404,9 @@ export abstract class ListSelectorComponent extends SelectorBaseComponent {
 
   /**
    * Erlaubt das Wrappen des Service in abgeleiteten Klassen
-   * @param service 
+   * @param service
    */
-  protected createDataService(service: IService) {
+  protected createDataService(service: IService<T, any>) {
     return service;
   }
 

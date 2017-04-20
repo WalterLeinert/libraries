@@ -15,7 +15,7 @@ import { ConfigService } from '../../services/config.service';
 
 /**
  * Service für REST-Api für Entity @see{User}.
- * 
+ *
  * @export
  * @class UserService
  * @extends {Service<User>}
@@ -30,10 +30,10 @@ export class UserService extends Service<User, number> {
 
   /**
    * Markiert den User als deleted und führt einen Update in der DB durch.
-   * 
-   * @param user 
+   *
+   * @param user
    */
-  public markAsDeleted(user: User): Observable<User> {
+  public setDeleted(user: User): Observable<User> {
     user.deleted = true;
     return super.update(user);
   }

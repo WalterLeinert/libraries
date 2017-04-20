@@ -4,10 +4,10 @@ import * as path from 'path';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { NotSupportedException, StringBuilder } from '@fluxgate/common';
+import { NotSupportedException, StringBuilder } from '@fluxgate/core';
 
 import { ColumnInfo, DataType } from './columnInfo';
 import { IConfigInfo } from './configInfo';
@@ -67,10 +67,10 @@ export class PojoGenerator extends GeneratorBase {
 
   /**
    * erzeugt eine Indexdatei, die alle Modellklassen exportiert
-   * 
+   *
    * @private
    * @param {TableInfo[]} tableInfos
-   * 
+   *
    * @memberOf PojoGenerator
    */
   private generateIndex(tableInfos: TableInfo[]) {
@@ -97,11 +97,11 @@ export class PojoGenerator extends GeneratorBase {
 
   /**
    * Erzeugt einen Tabellenheader
-   * 
+   *
    * @private
    * @param {any} fd
    * @param {TableInfo} info
-   * 
+   *
    * @memberOf PojoGenerator
    */
   private dumpTableHeader(fd, info: TableInfo) {
@@ -119,11 +119,11 @@ export class PojoGenerator extends GeneratorBase {
 
   /**
    * erzeugt eine Interfacedefinition für eine Modellklasse
-   * 
+   *
    * @private
    * @param {number} fd
    * @param {TableInfo} info
-   * 
+   *
    * @memberOf PojoGenerator
    */
   private dumpInterface(fd: number, info: TableInfo): void {
@@ -162,12 +162,12 @@ export class PojoGenerator extends GeneratorBase {
 
   /**
    * Erzeugt eine Modellklasse
-   * 
+   *
    * @private
    * @param {number} fd
    * @param {TableInfo} info
    * @param {boolean} dumpInterface
-   * 
+   *
    * @memberOf PojoGenerator
    */
   private dumpClass(fd: number, info: TableInfo, dumpInterface: boolean): void {
@@ -201,12 +201,12 @@ export class PojoGenerator extends GeneratorBase {
 
   /**
    * Entfernt vom Text @path{text} den Stringpräfix @param{prefix}
-   * 
+   *
    * @private
    * @param {string} text
    * @param {string} prefix
    * @returns
-   * 
+   *
    * @memberOf PojoGenerator
    */
   private stripPrefix(text: string, prefix: string) {
@@ -219,11 +219,11 @@ export class PojoGenerator extends GeneratorBase {
 
   /**
    * Erzeugt einen @Column-Decorator für die Spalte @param{column}
-   * 
+   *
    * @private
    * @param {number} fd
    * @param {ColumnInfo} colInfo
-   * 
+   *
    * @memberOf PojoGenerator
    */
   private dumpColumnDecorator(fd: number, colInfo: ColumnInfo) {
@@ -254,12 +254,12 @@ export class PojoGenerator extends GeneratorBase {
   }
 
   /**
-   * 
-   * 
+   *
+   *
    * @private
    * @param {number} fd
    * @param {TableInfo} info
-   * 
+   *
    * @memberOf PojoGenerator
    */
   // tslint:disable-next-line:no-unused-variable

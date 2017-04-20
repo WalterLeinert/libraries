@@ -7,8 +7,9 @@ require('reflect-metadata');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { Types } from '@fluxgate/core';
+
 import { Column, ColumnTypes, Enum, EnumTable, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
-import { Types } from '../../../../src/types';
 
 
 @Table({ name: ArtikelEnumTable.TABLE_NAME })

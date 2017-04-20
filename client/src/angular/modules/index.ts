@@ -6,5 +6,7 @@ export * from './dropdown-selector';
 export * from './enum-value';
 export * from './messages';
 export * from './month-selector';
+export * from './role-selector';
 export * from './time-selector';
+export * from './user-selector';
 export * from './year-selector';

@@ -1,5 +1,6 @@
 // Fluxgate
-import { ColumnType, ColumnTypes, NotSupportedException } from '@fluxgate/common';
+import { ColumnType, ColumnTypes } from '@fluxgate/common';
+import { NotSupportedException } from '@fluxgate/core';
 
 import { ControlType } from '../../angular/modules/common/controlType';
 
@@ -16,11 +17,11 @@ export class DataTypes {
   /**
    * Liefert für den @see{ColumnType} @param{columnType} den entsprechenden @see{DataType}.
    * Falls keine Zuordnung existiert wird eine @see{NotSupportedException} geworfen.
-   * 
+   *
    * @static
    * @param {ColumnType} columnType
    * @returns {DataType}
-   * 
+   *
    * @memberOf DataTypes
    */
   public static mapColumnTypeToDataType(columnType: ColumnType): DataType {
@@ -50,11 +51,11 @@ export class DataTypes {
   /**
    * Liefert für den @param{type} den entsprechenden @see{ControlType}.
    * Falls keine Zuordnung existiert wird eine @see{NotSupportedException} geworfen.
-   * 
+   *
    * @static
    * @param {ColumnType} columnType
    * @returns {DataType}
-   * 
+   *
    * @memberOf DataTypes
    */
   public static mapDataTypeToControlType(type: DataType): ControlType {

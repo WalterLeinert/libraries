@@ -17,7 +17,7 @@ export interface IControlDisplayInfo extends IDisplayInfo {
 
   /**
    * Html-Style
-   * 
+   *
    * @type {string}
    * @memberOf IControlDisplayInfo
    */
@@ -26,7 +26,7 @@ export interface IControlDisplayInfo extends IDisplayInfo {
 
   /**
    * Die Ausrichtung des Werts
-   * 
+   *
    * @type {TextAlignment}
    * @memberOf IControlDisplayInfo
    */
@@ -34,7 +34,7 @@ export interface IControlDisplayInfo extends IDisplayInfo {
 
   /**
    * Der Type des Controls für die Anzeige/Eingabe
-   * 
+   *
    * @type {ControlType}
    * @memberOf IControlDisplayInfo
    */
@@ -42,7 +42,7 @@ export interface IControlDisplayInfo extends IDisplayInfo {
 
   /**
    * Anzeigeinformation für Enums, falls @see{controlType} den Wert @see{ControlType.DropdownSelector} hat.
-   * 
+   *
    * @type {*}
    * @memberOf IControlDisplayInfo
    */
@@ -50,7 +50,7 @@ export interface IControlDisplayInfo extends IDisplayInfo {
 
   /**
    * Anzeigeinformation für Datum
-   * 
+   *
    * @type {*}
    * @memberOf IControlDisplayInfo
    */
@@ -58,7 +58,7 @@ export interface IControlDisplayInfo extends IDisplayInfo {
 
   /**
    * Der Name der Pipe, über die der Wert formatiert werden soll oder eine Pipe-Instanz
-   * 
+   *
    * @type {PipeTypes | PipeTransform}
    * @memberOf IControlDisplayInfo
    */
@@ -67,7 +67,7 @@ export interface IControlDisplayInfo extends IDisplayInfo {
 
   /**
    * Pipe-Argumente
-   * 
+   *
    * @type {string}
    * @memberOf IControlDisplayInfo
    */
@@ -76,7 +76,7 @@ export interface IControlDisplayInfo extends IDisplayInfo {
 
   /**
    * Die Locale der Pipe.
-   * 
+   *
    * @type {string}
    * @memberOf IControlDisplayInfo
    */

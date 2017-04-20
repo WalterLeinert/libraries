@@ -1,15 +1,15 @@
 
 /**
  * Interface für die Durchführung von Refresh-Aktionen auf Model-Listen
- * 
+ *
  * @export
  * @interface IRefreshHelper
- * @template T 
+ * @template T
  */
 export interface IRefreshHelper<T> {
   /**
    * Liste von Model-Items
-   * 
+   *
    * @type {T[]}
    * @memberOf IRefreshHelper
    */
@@ -17,7 +17,7 @@ export interface IRefreshHelper<T> {
 
   /**
    * zu selektierendes Item (oder undefined)
-   * 
+   *
    * @type {T}
    * @memberOf IRefreshHelper
    */

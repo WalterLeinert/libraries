@@ -1,4 +1,5 @@
 {
+    "___comment": "Konfiguration für Unittests",
     "appenders": [
         {
             "type": "file",
@@ -25,12 +26,16 @@
         }
     ],
     "levels": {
-        "[all]": "INFO",
-        "BaseService": "INFO",
-        "PassportController": "INFO",
-        "PassportLocalService": "INFO",
-        "ArtikelController": "INFO",
-        "KollektionController": "INFO",
-        "ControllerBase": "INFO"
+        "[all]": "WARN",
+        "comment": {
+          "ExceptionWrapper": "INFO",
+          "BaseService": "DEBUG",
+          "PassportController": "INFO",
+          "PassportLocalService": "INFO",
+          "ArtikelController": "INFO",
+          "KollektionController": "INFO",
+          "ControllerBase": "INFO"
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 // Fluxgate
-import { Dictionary, IService, NotSupportedException } from '@fluxgate/common';
+import { IService } from '@fluxgate/common';
+import { Dictionary, NotSupportedException } from '@fluxgate/core';
 
 import { ProxyService } from './proxy.service';
 
@@ -11,7 +12,7 @@ export class CacheService extends ProxyService {
 
   private static modelCache: Dictionary<string, any[]> = new Dictionary<string, any[]>();
 
-  constructor(service: IService) {
+  constructor(service: IService<any, any>) {
     super();
     this.proxyService(service);
   }

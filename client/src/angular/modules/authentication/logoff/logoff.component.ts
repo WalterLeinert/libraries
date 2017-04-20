@@ -6,10 +6,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Types } from '@fluxgate/common';
+import { User } from '@fluxgate/common';
+import { Types } from '@fluxgate/core';
+
+// commands
+import { UserServiceRequests } from '../redux/user-service-requests';
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
@@ -25,7 +29,8 @@ import { PassportService } from './../passport.service';
 export class LogoffComponent extends BaseComponent<PassportService> {
   protected static logger = getLogger(LogoffComponent);
 
-  constructor(router: Router, route: ActivatedRoute, messageService: MessageService, service: PassportService,
+  constructor(private userServiceRequests: UserServiceRequests,
+    router: Router, route: ActivatedRoute, messageService: MessageService, service: PassportService,
     @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation) {
     super(router, route, messageService, service);
   }
@@ -40,6 +45,8 @@ export class LogoffComponent extends BaseComponent<PassportService> {
       this.registerSubscription(this.service.logoff()
         .subscribe(() => {
           log.log('done');
+
+          this.userServiceRequests.setCurrent(User.Null);
 
           if (Types.isPresent(this.authenticationNavigation.logoutRedirectUrl)) {
             this.navigate([this.authenticationNavigation.logoutRedirectUrl]);

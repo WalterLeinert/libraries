@@ -1,10 +1,10 @@
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
-import { Assert } from '@fluxgate/common';
+import { Assert } from '@fluxgate/core';
 
 import { ControlDisplayInfo } from './controlDisplayInfo';
 import { IControlDisplayInfo } from './controlDisplayInfo.interface';
@@ -14,7 +14,7 @@ import { TextAlignments } from './textAlignment';
 
 /**
  * Basisklasse für die Konfiguration der DisplayInfos.
- * 
+ *
  * @export
  * @abstract
  * @class DisplayInfoConfiguration
@@ -24,10 +24,10 @@ export abstract class DisplayInfoConfiguration implements IDisplayInfoConfigurat
 
   /**
    * Erzeugt neue DisplayInfos
-   * 
+   *
    * @param {*} [item] - muss angegeben sein, falls die Infos über Reflection erzeugt werden müssen.
-   * @returns {IControlDisplayInfo[]} 
-   * 
+   * @returns {IControlDisplayInfo[]}
+   *
    * @memberOf DisplayInfoConfiguration
    */
   public createConfig(item?: any): IControlDisplayInfo[] {
@@ -36,10 +36,10 @@ export abstract class DisplayInfoConfiguration implements IDisplayInfoConfigurat
 
   /**
    * Konfiguriert existierende DisplayInfos
-   * 
-   * @param {IControlDisplayInfo[]} displayInfos 
-   * @returns {IControlDisplayInfo[]} 
-   * 
+   *
+   * @param {IControlDisplayInfo[]} displayInfos
+   * @returns {IControlDisplayInfo[]}
+   *
    * @memberOf DisplayInfoConfiguration
    */
   public configureConfig(displayInfos: IControlDisplayInfo[]): void {
@@ -58,12 +58,12 @@ export abstract class DisplayInfoConfiguration implements IDisplayInfoConfigurat
 
   /**
    * setzt die komplette DisplayInfo-Konfiguration auf
-   * 
+   *
    * @private
-   * @param {IControlDisplayInfo[]} [displayInfos] 
-   * @param {*} [item] 
-   * @returns {IControlDisplayInfo[]} 
-   * 
+   * @param {IControlDisplayInfo[]} [displayInfos]
+   * @param {*} [item]
+   * @returns {IControlDisplayInfo[]}
+   *
    * @memberOf DisplayInfoConfiguration
    */
   private setupConfig(displayInfos?: IControlDisplayInfo[], item?: any): IControlDisplayInfo[] {
@@ -95,10 +95,10 @@ export abstract class DisplayInfoConfiguration implements IDisplayInfoConfigurat
 
   /**
    * Konfiguriert ein DisplayInfo
-   * 
+   *
    * @private
-   * @param {IControlDisplayInfo} colInfo 
-   * 
+   * @param {IControlDisplayInfo} colInfo
+   *
    * @memberOf DisplayInfoConfiguration
    */
   private configureDisplayInfo(displayInfo: IControlDisplayInfo) {

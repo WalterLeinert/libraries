@@ -3,12 +3,13 @@ import { Injector } from '@angular/core';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/common';
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
 // Fluxgate
-import { Assert, InvalidOperationException, TableMetadata } from '@fluxgate/common';
+import { TableMetadata } from '@fluxgate/common';
+import { Assert, InvalidOperationException } from '@fluxgate/core';
 
 import { ControlType } from '../../angular/modules/common/controlType';
 import { MetadataService } from '../../angular/services/metadata.service';
@@ -20,7 +21,7 @@ import { TextAlignments } from './textAlignment';
 
 /**
  * Konfiguriert die DisplayInfos über die Metadaten.
- * 
+ *
  * @export
  * @class MetadataDisplayInfoConfiguration
  * @extends {DisplayInfoConfiguration}
@@ -88,9 +89,9 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
 
   /**
    * falls keine Column-Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
-   * 
+   *
    * @private
-   * 
+   *
    * @memberOf DataTableSelectorComponent
    */
   protected createDisplayInfos(): IControlDisplayInfo[] {

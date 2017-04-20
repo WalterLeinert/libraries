@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Types } from '@fluxgate/common';
+import { Types } from '@fluxgate/core';
 
 import { DisplayInfo } from '../../../base/displayConfiguration/displayInfo';
 import { PrimeNgCalendarLocale } from '../../../primeng/calendarLocale';
@@ -36,25 +37,37 @@ export interface IMonth {
 @Component({
   selector: 'flx-month-selector',
   template: `
-<div>
-  <flx-dropdown-selector [data]="months" [(selectedValue)]="selectedValue"
-    [textField]="textField" [valueField]="valueField"
-    [style]="style"
-    [debug]="debug" name="monthSelector">
-  </flx-dropdown-selector>
-</div>
+<flx-dropdown-selector [data]="months" [(ngModel)]="value"
+  [textField]="textField" [valueField]="valueField"
+  [style]="style"
+  [debug]="debug" name="monthSelector">
+</flx-dropdown-selector>
 `,
-  styles: []
+  styles: [],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: MonthSelectorComponent,
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: MonthSelectorComponent,
+      multi: true,
+    }
+  ]
+
 })
-export class MonthSelectorComponent extends SelectorBaseComponent {
+export class MonthSelectorComponent extends SelectorBaseComponent<number> {
 
   public months: IMonth[] = [
   ];
 
+  @ViewChild(NgModel) public model: NgModel;
 
   /**
    * Die textField-Property: steuert, welche Property in @see{IMonth} angezeigt wird.
-   * 
+   *
    * @type {string}
    * @memberOf MonthSelectorComponent
    */
@@ -62,7 +75,7 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
 
   /**
    * Die Property in der angebundenen Werteliste, welche nach Auswahl
-   * als 'selectedValue' übernommen werden soll.
+   * als 'value' übernommen werden soll.
    *
    * @type {string}
    * @memberOf MonthSelectorComponent
@@ -74,7 +87,9 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
     changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, messageService, changeDetectorRef);
 
-    this.style = '{\'width\':\'150px\'}';
+    this.style = {
+      width: '150px'
+    };
   }
 
 
@@ -84,6 +99,15 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
 
     this.updateData();
   }
+
+  public validate(control: FormControl): { [key: string]: any } {
+    return (!this.parseError) ? null : {
+      monthError: {
+        valid: false
+      },
+    };
+  }
+
 
   protected onLocaleChange(value: string) {
     super.onLocaleChange(value);
@@ -124,7 +148,7 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
 
     this.months = months;
 
-    if (this.selectedValue === undefined) {
+    if (this.value === undefined) {
       // den aktuellen Monat vorselektieren
       const thisMonth = new Date().getMonth() + 1;
 
@@ -132,10 +156,8 @@ export class MonthSelectorComponent extends SelectorBaseComponent {
         return item.id === thisMonth;
       });
 
-      this.selectedValue = this.getValue(month);
+      this.value = this.getValue(month);
     }
-
   }
-
 
 }
