@@ -14,7 +14,7 @@ export class CommonTest extends BaseTest {
       }
 
       BaseTest.initializeLogging('common', {
-        relativePath: 'common/test/config'
+        relativePath: 'test/config'
       });
       done();
     });
