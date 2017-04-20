@@ -173,7 +173,7 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
   }
 
   public getTopic(): string {
-    return this._tableMetadata.options.name;;
+    return this._tableMetadata.options.name;
   }
 
   public getTopicPath(): string {

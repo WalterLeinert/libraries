@@ -1,4 +1,4 @@
-import { Column, IFlxEntity, Table, Test, Version } from '@fluxgate/common';
+import { Column, IFlxEntity, Table, Version } from '@fluxgate/common';
 
 
 /**
