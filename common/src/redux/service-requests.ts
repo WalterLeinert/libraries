@@ -1,14 +1,15 @@
 // fluxgate
 import { Assert, IException, IToString } from '@fluxgate/core';
 
+import { IEntity } from '../model/entity.interface';
 import {
   CreatingItemCommand, DeletingItemCommand, ErrorCommand,
-  FindingItemByIdCommand, FindingItemsCommand, IEntity,
+  FindingItemByIdCommand, FindingItemsCommand,
   ItemCreatedCommand, ItemDeletedCommand, ItemFoundByIdCommand, ItemsFoundCommand, ItemUpdatedCommand,
   SetCurrentItemCommand, Store, UpdatingItemCommand
-} from '@fluxgate/common';
+} from './';
 
-import { Service } from '../angular/services/service';
+import { IService } from '../model/service/service.interface';
 
 
 /**
@@ -20,7 +21,8 @@ import { Service } from '../angular/services/service';
  * @template TId
  * @template TService
  */
-export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToString, TService extends Service<T, TId>> {
+export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToString,
+  TService extends IService<T, TId>> {
 
   protected constructor(private _storeId: string, private _service: TService, private _store: Store) {
     Assert.notNullOrEmpty(_storeId);

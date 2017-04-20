@@ -16,9 +16,9 @@ import { Base2Component } from './base2.component';
  * @template TService - der konkrete Service
  */
 export abstract class Base3Component<
-  TService1 extends IServiceBase,
-  TService2 extends IServiceBase,
-  TService3 extends IServiceBase> extends Base2Component<TService1, TService2> {
+  TService1 extends IServiceBase<any, any>,
+  TService2 extends IServiceBase<any, any>,
+  TService3 extends IServiceBase<any, any>> extends Base2Component<TService1, TService2> {
 
   /**
    * Creates an instance of BaseComponent.

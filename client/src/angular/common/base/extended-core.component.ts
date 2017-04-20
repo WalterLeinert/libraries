@@ -15,10 +15,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
-import { AppRegistry, IEntity } from '@fluxgate/common';
+import { AppRegistry, IEntity, ServiceRequests } from '@fluxgate/common';
 
-
-import { ServiceRequests } from '../../../redux/service-requests';
 import { IRouterNavigationAction, NavigationAction } from '../../common/routing';
 import { MessageService } from '../../services/message.service';
 import { Service } from '../../services/service';

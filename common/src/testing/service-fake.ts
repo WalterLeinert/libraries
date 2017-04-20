@@ -7,30 +7,30 @@ import { Observable } from 'rxjs/Observable';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import {
-  EntityGenerator, IFlxEntity, IQuery, IService, ServiceResult, Status, TableMetadata
-} from '@fluxgate/common';
-import { Assert, Funktion, InvalidOperationException, IToString, NotSupportedException } from '@fluxgate/core';
+import { Assert, InvalidOperationException, IToString, NotSupportedException } from '@fluxgate/core';
 
-import { MetadataService } from '../../src/angular/services/metadata.service';
+import { EntityGenerator, IFlxEntity, IQuery, IService, ServiceResult, Status, TableMetadata } from '../model';
 
 
-export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToString> implements IService {
+/**
+ * abstrakte Basisklasse zur Simulation echter Services mit Hilfe von @see{EntityGenerator}
+ *
+ * @export
+ * @abstract
+ * @class ServiceFake
+ * @implements {IService<T, TId>}
+ * @template T
+ * @template TId
+ */
+export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToString> implements IService<T, TId> {
   protected static readonly logger = getLogger(ServiceFake);
-
-  private _topic: string;
-  private _tableMetadata: TableMetadata;
 
   private _items: T[];
 
 
-  protected constructor(model: Funktion, private metadataService: MetadataService,
-    private _entityGenerator: EntityGenerator<T, TId>) {
-    Assert.notNull(model);
-    Assert.notNull(metadataService);
-
-    this._tableMetadata = metadataService.findTableMetadata(model);
-    this._topic = this._tableMetadata.options.name;
+  protected constructor(private _tableMetadata: TableMetadata, private _entityGenerator: EntityGenerator<T, TId>) {
+    Assert.notNull(_tableMetadata);
+    Assert.notNull(_entityGenerator);
 
     this._items = this._entityGenerator.generate();
   }
@@ -172,7 +172,7 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
   }
 
   public getTopic(): string {
-    return this._topic;
+    return this._tableMetadata.options.name;;
   }
 
   public getTopicPath(): string {
@@ -182,8 +182,6 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
   public getUrl(): string {
     throw new NotSupportedException();
   }
-
-
 
 
   /**

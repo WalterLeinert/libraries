@@ -401,7 +401,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
 
 
 
-  protected createDataService(service: IService) {
+  protected createDataService(service: IService<any, any>) {
     if (this.configInternal && this.configInternal.valuesCacheable) {
       return new CacheService(service);
     }

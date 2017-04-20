@@ -35,7 +35,7 @@ import { MessageService } from '../../services/message.service';
 export class EnumValueComponent extends CoreComponent {
   protected static logger = getLogger(EnumValueComponent);
 
-  private _dataService: IService;
+  private _dataService: IService<any, any>;
 
 
   /**
@@ -139,11 +139,11 @@ export class EnumValueComponent extends CoreComponent {
   // -------------------------------------------------------------------------------------
   // Property dataService
   // -------------------------------------------------------------------------------------
-  public get dataService(): IService {
+  public get dataService(): IService<any, any> {
     return this._dataService;
   }
 
-  @Input() public set dataService(value: IService) {
+  @Input() public set dataService(value: IService<any, any>) {
     if (this._dataService !== value) {
       this._dataService = value;
     }

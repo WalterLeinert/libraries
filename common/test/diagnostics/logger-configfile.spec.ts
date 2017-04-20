@@ -5,7 +5,7 @@ import { getLogger, ILevel, levels, using, XLog } from '@fluxgate/platform';
 import { expect } from 'chai';
 import { /*only,*/ suite, test } from 'mocha-typescript';
 
-import { BaseTest } from '../../src/testing/baseTest';
+import { CommonTest } from '../common.spec';
 
 class Test {
   public static readonly logger = getLogger(Test);
@@ -64,7 +64,7 @@ class Test3 {
  * @class LoggerConfigFileTest
  */
 @suite('Logger configfile')
-class LoggerConfigFileTest extends BaseTest {
+class LoggerConfigFileTest extends CommonTest {
 
 
   @test 'should test log level for Test'() {
@@ -79,27 +79,5 @@ class LoggerConfigFileTest extends BaseTest {
   @test 'should test log level for Test3'() {
     expect(Test3.logger.level.isEqualTo(levels.ERROR)).to.be.true;
   }
-
-  protected static before(done: (err?: any) => void) {
-    super.before((err?: any) => {
-      if (err) {
-        done(err);
-      }
-
-      BaseTest.initializeLogging('common', {
-        relativePath: 'common/test/config'
-      });
-      done();
-    });
-  }
-
-  // protected before() {
-  //   // Logging konfigurieren ...
-  //   const systemMode = fromEnvironment('NODE_ENV', 'development');
-  //   Logging.configureLogging('common', {
-  //     systemMode: systemMode,
-  //     relativePath: 'test/config'
-  //   });
-  // }
 
 }

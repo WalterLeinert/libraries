@@ -39,7 +39,7 @@ import { FormGroupInfo } from './formGroupInfo';
   templateUrl: './base.component.html',
   styleUrls: ['./base.component.css']
 })*/
-export abstract class BaseComponent<TService extends IServiceBase> extends ExtendedCoreComponent {
+export abstract class BaseComponent<TService extends IServiceBase<any, any>> extends ExtendedCoreComponent {
   protected static readonly logger = getLogger(BaseComponent);
 
 
@@ -91,12 +91,12 @@ export abstract class BaseComponent<TService extends IServiceBase> extends Exten
    * @memberOf BaseComponent
    */
   protected performAction<T, TId>(items: T[], routeParams: IRouterNavigationAction<T>,
-    service?: IService): Observable<TId> {
+    service?: IService<T, TId>): Observable<TId> {
 
     Assert.notNull(routeParams);
 
     if (!service) {
-      service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
+      service = this.service as any as IService<T, TId>;    // TODO: ggf. Laufzeitcheck
     }
 
     //
@@ -163,7 +163,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends Exten
    * @memberOf BaseComponent
    */
   protected refreshItems<T, TId>(idToSelect: TId, idAccessor?: InstanceAccessor<T, TId>,
-    service?: IService): Observable<IRefreshHelper<T>> {
+    service?: IService<T, TId>): Observable<IRefreshHelper<T>> {
 
     let selectedItem: T;
 
@@ -172,7 +172,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends Exten
     }
 
     if (!service) {
-      service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
+      service = this.service as any as IService<T, TId>;    // TODO: ggf. Laufzeitcheck
     }
 
     return service.find().
@@ -205,7 +205,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends Exten
     groupName: string = FormGroupInfo.DEFAULT_NAME,
     idAccessor?: InstanceAccessor<T, TId>,
     idSetter?: InstanceSetter<T, TId>,
-    service?: IService): Observable<T> {
+    service?: IService<T, TId>): Observable<T> {
 
     if (idAccessor === undefined) {
       idAccessor = ((elem: T) => service.getEntityId(elem));  // default: über Metadaten
@@ -217,7 +217,7 @@ export abstract class BaseComponent<TService extends IServiceBase> extends Exten
 
 
     if (!service) {
-      service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
+      service = this.service as any as IService<T, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.create(item)
       .do((elem: T) => {
@@ -225,35 +225,44 @@ export abstract class BaseComponent<TService extends IServiceBase> extends Exten
         this.addSuccessMessage('Record created.');
         this.resetFormGroup(item, groupName);
       })   // Id setzen
-      .catch(this.handleError);
+      .catch((err: any, caught: Observable<T>) => {
+        this.handleError(err);
+        throw err;
+      });
   }
 
   protected updateItem<T, TId>(item: T, groupName: string = FormGroupInfo.DEFAULT_NAME,
-    service?: IService): Observable<T> {
+    service?: IService<T, TId>): Observable<T> {
     if (!service) {
-      service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
+      service = this.service as any as IService<T, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.update(item)
       .do((elem: T) => {
         this.addSuccessMessage('Record updated.');
         this.resetFormGroup(item, groupName);
       })
-      .catch(this.handleError);
+      .catch((err: any, caught: Observable<T>) => {
+        this.handleError(err);
+        throw err;
+      });
   }
 
-  protected deleteItem<TId>(id: TId, service?: IService): Observable<TId> {
+  protected deleteItem<TId>(id: TId, service?: IService<any, TId>): Observable<TId> {
     if (!service) {
-      service = this.service as any as IService;    // TODO: ggf. Laufzeitcheck
+      service = this.service as any as IService<any, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.delete(id)
-      .do((elemId: TId) => {
+      .do((elemId: ServiceResult<TId>) => {
         this.addSuccessMessage('Record deleted.');
         this.resetForm();
       })
       .map((result: ServiceResult<TId>) => {
         return result.id;
       })
-      .catch(this.handleError);
+      .catch((err: any, caught: Observable<TId>) => {
+        this.handleError(err);
+        throw err;
+      });
   }
 
 

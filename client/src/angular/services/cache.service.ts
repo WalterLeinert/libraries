@@ -12,7 +12,7 @@ export class CacheService extends ProxyService {
 
   private static modelCache: Dictionary<string, any[]> = new Dictionary<string, any[]>();
 
-  constructor(service: IService) {
+  constructor(service: IService<any, any>) {
     super();
     this.proxyService(service);
   }

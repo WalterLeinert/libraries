@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { IRole, Role } from '@fluxgate/common';
+import { IRole, Role, ServiceFake } from '@fluxgate/common';
 import { ConstantValueGenerator, EntityGenerator, NumberIdGenerator } from '@fluxgate/common';
 
 import { MetadataService } from '../../src/angular/services/metadata.service';
-import { ServiceFake } from './service-fake';
 
 
 /**
@@ -20,7 +19,7 @@ export class RoleServiceFake extends ServiceFake<IRole, number> {
   public static readonly MAX_ITEMS = 100;
 
   constructor(metadataService: MetadataService) {
-    super(Role, metadataService,
+    super(metadataService.findTableMetadata(Role),
       new EntityGenerator<Role, number>({
         count: RoleServiceFake.ITEMS,
         maxCount: RoleServiceFake.MAX_ITEMS,

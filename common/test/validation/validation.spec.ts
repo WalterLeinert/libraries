@@ -7,7 +7,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 import { ValidationResult } from '../../src/model/validation/validationResult';
 import { Validators } from '../../src/model/validation/validators';
-
+import { CommonTest } from '../common.spec';
 
 const expectedResults = [
   {
@@ -64,7 +64,7 @@ const expectedResults = [
 
 
 @suite('Validation')
-class ValidationTest {
+class ValidationTest extends CommonTest {
 
   @test 'should validate email addresses'() {
     const validator = Validators.email;

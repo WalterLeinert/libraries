@@ -22,7 +22,7 @@ import { ConfirmationDialogComponent, ConfirmationDialogModule } from '../module
  * @template TService
  */
 @Injectable()
-export class ComponentGuardService<T extends BaseComponent<TService>, TService extends IServiceBase>
+export class ComponentGuardService<T extends BaseComponent<TService>, TService extends IServiceBase<T, any>>
   implements CanActivate, CanDeactivate<T>  {
 
   constructor(private _router: Router /*, private _confirmationDialog: ConfirmationDialogComponent*/) {

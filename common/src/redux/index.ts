@@ -14,6 +14,7 @@ export * from './item-updated-command';
 export * from './items-found-command';
 export * from './service-command';
 export * from './service-request-state';
+export * from './service-requests';
 export * from './service-state.interface';
 export * from './set-current-item-command';
 export * from './store';

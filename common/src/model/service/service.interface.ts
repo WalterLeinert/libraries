@@ -5,5 +5,5 @@ import { IServiceCrud } from './serviceCrud.interface';
  * Interface für alle Services
  */
 // tslint:disable-next-line:no-empty-interface
-export interface IService extends IServiceCrud, IServiceBase {
+export interface IService<T, TId> extends IServiceCrud<T, TId>, IServiceBase<T, TId> {
 }

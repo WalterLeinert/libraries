@@ -28,6 +28,7 @@
     "levels": {
         "[all]": "ERROR",
         "Test": "TRACE",
-        "Test2": "INFO"
+        "Test2": "INFO",
+        "ReduxTest": "INFO"
     }
 }

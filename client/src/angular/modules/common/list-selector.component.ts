@@ -49,7 +49,7 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    * @type {IService}
    * @memberOf DataTableSelectorComponent
    */
-  private _dataService: IService;
+  private _dataService: IService<T, any>;
 
   /**
    * die Service-Methode zum Bereitstellen der Daten. Muss eine Methode von @see{dataService} sein.
@@ -359,11 +359,11 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
   // -------------------------------------------------------------------------------------
   // Property dataService
   // -------------------------------------------------------------------------------------
-  public get dataService(): IService {
+  public get dataService(): IService<T, any> {
     return this._dataService;
   }
 
-  @Input() public set dataService(value: IService) {
+  @Input() public set dataService(value: IService<T, any>) {
     if (this._dataService !== value) {
       this._dataService = value;
     }
@@ -406,7 +406,7 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    * Erlaubt das Wrappen des Service in abgeleiteten Klassen
    * @param service
    */
-  protected createDataService(service: IService) {
+  protected createDataService(service: IService<T, any>) {
     return service;
   }
 

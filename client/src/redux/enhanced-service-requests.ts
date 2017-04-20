@@ -1,9 +1,8 @@
 // fluxgate
-import { IEntity, Store } from '@fluxgate/common';
+import { IEntity, ServiceRequests, Store } from '@fluxgate/common';
 import { InvalidOperationException, IToString, Types } from '@fluxgate/core';
 
 import { Service } from '../angular/services/service';
-import { ServiceRequests } from './service-requests';
 
 
 /**

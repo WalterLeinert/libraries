@@ -26,7 +26,7 @@ import { ServiceBase } from '../../services/serviceBase';
 
 
 @Injectable()
-export class PassportService extends CoreComponent implements IServiceBase {
+export class PassportService extends CoreComponent implements IServiceBase<any, any> {
   protected static logger = getLogger(PassportService);
 
   public static get LOGIN() { return '/login'; }

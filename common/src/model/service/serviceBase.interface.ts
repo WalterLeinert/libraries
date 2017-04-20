@@ -3,7 +3,7 @@ import { IRestUri } from './restUri.interface';
 /**
  * Interface mit gemeinsamen Funktionen aller Services
  */
-export interface IServiceBase extends IRestUri {
+export interface IServiceBase<T, TId> extends IRestUri {
 
   /**
    * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
@@ -19,7 +19,7 @@ export interface IServiceBase extends IRestUri {
    * @param{any} item - eine Entity-Instanz
    * @type {any}
    */
-  getEntityId(item: any): any;
+  getEntityId(item: T): TId;
 
   /**
    * Setzt die Id der Entity @param{item} über die Metainformation, falls vorhanden.
@@ -29,5 +29,5 @@ export interface IServiceBase extends IRestUri {
    * @param{any} id - eine Entity-Id
    * @type {any}
    */
-  setEntityId(item: any, id: any);
+  setEntityId(item: T, id: TId);
 }

@@ -1,10 +1,13 @@
+import { Observable } from 'rxjs/Observable';
+import { ServiceResult } from './serviceResult';
+
 /**
  * Interface mit CRUD-Funktionen
  *
  * Hier sind keine generischen Typen verwendet, damit man das Interface auch
  * generisch in Zusammenhang mit Reflection un Metadaten verwenden kann.
  */
-export interface IServiceCrud {
+export interface IServiceCrud<T, TId> {
 
   /**
    * Create the entity {item} and return {Observable<T>}
@@ -13,7 +16,7 @@ export interface IServiceCrud {
    * @returns {Observable<T>}
    *
    */
-  create(item: any): any;
+  create(item: T): Observable<T>;
 
   /**
    * Find all entities of type T and return {Observable<T[]>}.
@@ -21,7 +24,7 @@ export interface IServiceCrud {
    * @returns {Observable<T[]>}
    *
    */
-  find(): any;
+  find(): Observable<T[]>;
 
   /**
    * Find the entity with the given id and return {Observable<T>}
@@ -30,7 +33,7 @@ export interface IServiceCrud {
    * @returns {Observable<T>}
    *
    */
-  findById(id: any): any;
+  findById(id: TId): Observable<T>;
 
   /**
    * Update the entity {item} with the given id and return {Observable<T>}
@@ -39,17 +42,16 @@ export interface IServiceCrud {
    * @returns {Observable<T>}
    *
    */
-  update(item: any): any;
+  update(item: T): Observable<T>;
 
 
   /**
    * Delete the entity with the given id and return {Observable<T>}
    *
    * @param {TId} id
-   * @returns {Observable<T>}
+   * @returns {Observable<ServiceResult<TId>>}
    *
-   * @memberOf Service
    */
-  delete(id: any): any;
+  delete(id: TId): Observable<ServiceResult<TId>>;
 
 }

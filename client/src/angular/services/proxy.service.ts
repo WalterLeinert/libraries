@@ -11,7 +11,7 @@ import { Service } from './service';
  * Delegiert service calls an den eigentlichen Service.
  */
 @Injectable()
-export class ProxyService implements IService {
+export class ProxyService implements IService<any, any> {
 
   /**
    * der eigentliche Service

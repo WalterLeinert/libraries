@@ -13,9 +13,9 @@ import { IService } from './service.interface';
  *
  * @export
  * @class EnumTableService
- * @implements {IServiceCrud}
+ * @implements {IService}
  */
-export class EnumTableService implements IService {
+export class EnumTableService implements IService<any, any> {
 
   public constructor(private _tableMetadata: TableMetadata, private enumValues: any[]) {
     Assert.notNullOrEmpty(enumValues, 'enumValues');

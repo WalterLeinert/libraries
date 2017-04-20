@@ -31,7 +31,7 @@ import { ServiceBase } from './serviceBase';
  * @class Service
  * @template T
  */
-export abstract class Service<T, TId extends IToString> extends ServiceBase implements IService {
+export abstract class Service<T, TId extends IToString> extends ServiceBase implements IService<T, TId> {
   protected static logger = getLogger(Service);
 
   private _tableMetadata: TableMetadata;
