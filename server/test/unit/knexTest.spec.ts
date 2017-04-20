@@ -201,18 +201,22 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
   /**
    * wird vor jedem Test aufgerufen
    */
-  protected before() {
+  protected before(done: (err?: any) => void) {
     using(new XLog(KnexTest.logger, levels.INFO, 'before'), (log) => {
-      super.before();
+      super.before(() => {
+        done();
+      });
     });
   }
 
   /**
    * wird nach jedem Test aufgerufen
    */
-  protected after() {
+  protected after(done: (err?: any) => void) {
     using(new XLog(KnexTest.logger, levels.INFO, 'after'), (log) => {
-      super.after();
+      super.after(() => {
+        done();
+      });
     });
   }
 
