@@ -29,10 +29,10 @@
       "name": "common: run Mocha",
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
-        "common/dist/test/**/*.spec.js",
+        "dist/test/**/*.spec.js",
         "--no-timeouts"
       ],
-      "cwd": "${workspaceRoot}",
+      "cwd": "${workspaceRoot}/common",
       "runtimeExecutable": null,
       "outFiles": [
       ],
