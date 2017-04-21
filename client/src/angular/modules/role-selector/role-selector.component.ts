@@ -3,14 +3,13 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { IEntity, IRole } from '@fluxgate/common';
+import { IEntity, IRole, RoleStore } from '@fluxgate/common';
 import { ItemsFoundCommand, ServiceCommand } from '@fluxgate/common';
 import { Utility } from '@fluxgate/core';
 
+import { RoleServiceRequests } from '../../redux/role-service-requests';
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
-import { RoleServiceRequests } from '../authentication/redux/role-service-requests';
-import { RoleStore } from '../authentication/redux/role-store';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
 
 /**

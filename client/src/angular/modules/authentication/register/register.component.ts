@@ -16,7 +16,7 @@ import { IRole, User } from '@fluxgate/common';
 import { Assert, Types } from '@fluxgate/core';
 
 // commands
-import { UserServiceRequests } from '../redux/user-service-requests';
+import { UserServiceRequests } from '../../../redux/user-service-requests';
 
 import { Base2Component } from '../../../common/base';
 import { MetadataService } from '../../../services';

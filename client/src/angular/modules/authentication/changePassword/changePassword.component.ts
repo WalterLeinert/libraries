@@ -14,7 +14,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { Types } from '@fluxgate/core';
 
 // commands
-import { UserServiceRequests } from '../redux/user-service-requests';
+import { UserServiceRequests } from '../../../redux/user-service-requests';
 
 
 import { BaseComponent } from '../../../common/base/base.component';

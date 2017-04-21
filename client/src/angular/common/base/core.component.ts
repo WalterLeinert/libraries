@@ -20,15 +20,14 @@ import {
 import {
   CompoundValidator, IEntity, IServiceState, IUser,
   PatternValidator, RangeValidator, RequiredValidator,
-  ServiceCommand, SetCurrentItemCommand, Store, TableMetadata
+  ServiceCommand, SetCurrentItemCommand, Store, TableMetadata, UserStore
 } from '@fluxgate/common';
 
 
 import { IControlDisplayInfo } from '../../../base/displayConfiguration/controlDisplayInfo.interface';
 import { DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';
-import { AppStore } from '../../../redux/app-store';
-import { UserStore } from '../../modules/authentication/redux/user-store';
+import { AppStore } from '../../redux/app-store';
 import { AppInjector } from '../../services/appInjector.service';
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';

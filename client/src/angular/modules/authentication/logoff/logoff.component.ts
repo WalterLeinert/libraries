@@ -13,7 +13,7 @@ import { User } from '@fluxgate/common';
 import { Types } from '@fluxgate/core';
 
 // commands
-import { UserServiceRequests } from '../redux/user-service-requests';
+import { UserServiceRequests } from '../../../redux/user-service-requests';
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';

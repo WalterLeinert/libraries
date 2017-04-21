@@ -3,7 +3,7 @@ import { Injectable, Injector, OpaqueToken } from '@angular/core';
 import { Store } from '@fluxgate/common';
 import { Funktion, InvalidOperationException, Types, UniqueIdentifiable } from '@fluxgate/core';
 
-import { AppStore } from '../../redux/app-store';
+import { AppStore } from '../redux/app-store';
 
 
 /**

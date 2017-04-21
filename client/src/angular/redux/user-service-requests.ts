@@ -1,12 +1,11 @@
 import { Inject, Injectable, NgModule } from '@angular/core';
 
 // fluxgate
-import { IUser, Store } from '@fluxgate/common';
+import { IUser, Store, UserStore } from '@fluxgate/common';
 
 import { UserService } from '../modules/authentication/user.service';
 import { AppStore } from './app-store';
 import { EnhancedServiceRequests } from './enhanced-service-requests';
-import { UserStore } from './user-store';
 
 @Injectable()
 export class UserServiceRequests extends EnhancedServiceRequests<IUser, number, UserService> {
