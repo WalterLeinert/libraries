@@ -1,6 +1,6 @@
 // fluxgate
-import { IUser } from '@fluxgate/common';
-import { CommandStore, IServiceState, ReduxStore, ServiceCommand } from '@fluxgate/common';
+import { CommandStore, IServiceState, ReduxStore, ServiceCommand } from '..';
+import { IUser } from '../../model/user.interface';
 
 
 @ReduxStore()

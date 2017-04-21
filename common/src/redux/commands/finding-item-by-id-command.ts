@@ -1,40 +1,37 @@
-import { IEntity } from '../model/entity.interface';
+import { IEntity } from '../../model/entity.interface';
 
+import { ServiceRequestStates } from '../service-request-state';
+import { IServiceState } from '../service-state.interface';
 import { ServiceCommand } from './service-command';
-import { ServiceRequestStates } from './service-request-state';
-import { IServiceState } from './service-state.interface';
-
 
 /**
- * async Kommando zum Update eines Items über einen Rest-Service.
+ * async Kommando zum Finden eines Items über die Id über einen Rest-Service.
  *
- * Der eigentliche Update wird im zugehörigen ServiceRequest ausgeführt,
+ * Das eigentliche Finden wird im zugehörigen ServiceRequest ausgeführt,
  * wo ein dispatch dieses Kommandos erfolgt.
  *
  * @export
- * @class UpdatingItemCommand
+ * @class FindingItemByIdCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class UpdatingItemCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
+export class FindingItemByIdCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
-  constructor(storeId: string, private item: T) {
+  constructor(storeId: string, private id: TId) {
     super(storeId);
   }
-
 
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
    *
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
-   *
-   * @memberOf UpdateItemCommand
    */
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
+      items: [...state.items],
       state: ServiceRequestStates.RUNNING,
       error: undefined
     };

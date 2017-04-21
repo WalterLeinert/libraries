@@ -6,7 +6,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { Assert, CustomSubject, InvalidOperationException } from '@fluxgate/core';
 
 import { CommandStore } from './command-store';
-import { ICommand } from './command.interface';
+import { ICommand } from './commands/command.interface';
 import { CommandStoreStorage } from './decorators/command-store-storage';
 
 /**

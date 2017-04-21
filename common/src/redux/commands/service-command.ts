@@ -1,8 +1,8 @@
-import { IEntity } from '../model/entity.interface';
+import { IEntity } from '../../model/entity.interface';
 
+import { ServiceRequestStates } from '../service-request-state';
+import { IServiceState } from '../service-state.interface';
 import { ICommand } from './command.interface';
-import { ServiceRequestStates } from './service-request-state';
-import { IServiceState } from './service-state.interface';
 
 
 /**

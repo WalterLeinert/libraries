@@ -1,8 +1,8 @@
-import { IEntity } from '../model/entity.interface';
+import { IEntity } from '../../model/entity.interface';
 
+import { ServiceRequestStates } from '../service-request-state';
+import { IServiceState } from '../service-state.interface';
 import { ServiceCommand } from './service-command';
-import { ServiceRequestStates } from './service-request-state';
-import { IServiceState } from './service-state.interface';
 
 /**
  * Kommando nach Erzeugen eines neuen Items über einen Rest-Service.

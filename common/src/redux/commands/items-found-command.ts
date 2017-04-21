@@ -1,25 +1,25 @@
-import { IEntity } from '../model/entity.interface';
+import { IEntity } from '../../model/entity.interface';
 
+import { ServiceRequestStates } from '../service-request-state';
+import { IServiceState } from '../service-state.interface';
 import { ServiceCommand } from './service-command';
-import { ServiceRequestStates } from './service-request-state';
-import { IServiceState } from './service-state.interface';
+
 
 /**
+ * Kommando zum Finden/Liefern von Items über einen Rest-Service.
  *
- * Kommando nach Finden eines Items über die Id über einen Rest-Service.
- *
- * Das eigentliche Finden wird im zugehörigen ServiceRequest ausgeführt,
+ * Das eigentliche Finden von Items wird im zugehörigen ServiceRequest ausgeführt,
  * wo ein dispatch dieses Kommandos erfolgt.
  *
  * @export
- * @class FoundItemCommand
+ * @class FindItemsCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class ItemFoundByIdCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
+export class ItemsFoundCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
-  constructor(storeId: string, private item: T) {
+  constructor(storeId: string, private items: T[]) {
     super(storeId);
   }
 
@@ -28,12 +28,13 @@ export class ItemFoundByIdCommand<T extends IEntity<TId>, TId> extends ServiceCo
    *
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
+   *
+   * @memberOf FindItemsCommand
    */
   public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
     return {
       ...state,
-      items: [...state.items],
-      item: this.item,
+      items: [...this.items],
       state: ServiceRequestStates.DONE,
       error: undefined
     };

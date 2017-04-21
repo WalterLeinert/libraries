@@ -5,7 +5,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { CustomSubject, PublisherSubscriber } from '@fluxgate/core';
 
-import { ICommand } from './command.interface';
+import { ICommand } from './commands/command.interface';
 
 
 /**
