@@ -16,7 +16,7 @@ import { IRole, User } from '@fluxgate/common';
 import { Assert, Types } from '@fluxgate/core';
 
 // commands
-import { UserServiceRequests } from '../../../redux/user-service-requests';
+import { CurrentUserServiceRequests } from '../../../redux/current-user-service-requests';
 
 import { Base2Component } from '../../../common/base';
 import { MetadataService } from '../../../services';
@@ -102,14 +102,14 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
   public user: User;
   public selectedRole: IRole;
 
-  constructor(private userServiceRequests: UserServiceRequests,
+  constructor(private serviceRequests: CurrentUserServiceRequests,
     private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
     @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation, service: PassportService,
     roleService: RoleService, metadataService: MetadataService, injector: Injector) {
 
     super(router, route, messageService, service, roleService);
 
-    const userTableMetadata = metadataService.findTableMetadata(User.name);
+    const userTableMetadata = metadataService.findTableMetadata(User);
     Assert.notNull(userTableMetadata, `Metadaten f�r Tabelle ${User.name}`);
 
     this.user = userTableMetadata.createEntity<User>();
@@ -124,7 +124,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
         .subscribe((result) => {
           log.log(JSON.stringify(result));
 
-          this.userServiceRequests.setCurrent(result);
+          this.serviceRequests.setCurrent(result);
 
           this.resetForm();
 

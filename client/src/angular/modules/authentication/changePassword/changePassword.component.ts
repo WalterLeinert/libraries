@@ -14,7 +14,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { Types } from '@fluxgate/core';
 
 // commands
-import { UserServiceRequests } from '../../../redux/user-service-requests';
+import { CurrentUserServiceRequests } from '../../../redux/current-user-service-requests';
 
 
 import { BaseComponent } from '../../../common/base/base.component';
@@ -85,7 +85,7 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   public passwordNewRepeated: string;
   private currentUser: IUser;
 
-  constructor(private userServiceRequests: UserServiceRequests,
+  constructor(private serviceRequests: CurrentUserServiceRequests,
     router: Router, route: ActivatedRoute, messageService: MessageService,
     @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation,
     service: PassportService) {
@@ -103,7 +103,7 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
         .subscribe((user) => {
           log.info(`user = ${user}`);
 
-          this.userServiceRequests.setCurrent(user);
+          this.serviceRequests.setCurrent(user);
 
           if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
             this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);

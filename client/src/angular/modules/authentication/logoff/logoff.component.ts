@@ -13,7 +13,7 @@ import { User } from '@fluxgate/common';
 import { Types } from '@fluxgate/core';
 
 // commands
-import { UserServiceRequests } from '../../../redux/user-service-requests';
+import { CurrentUserServiceRequests } from '../../../redux/current-user-service-requests';
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
@@ -29,7 +29,7 @@ import { PassportService } from './../passport.service';
 export class LogoffComponent extends BaseComponent<PassportService> {
   protected static logger = getLogger(LogoffComponent);
 
-  constructor(private userServiceRequests: UserServiceRequests,
+  constructor(private serviceRequests: CurrentUserServiceRequests,
     router: Router, route: ActivatedRoute, messageService: MessageService, service: PassportService,
     @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation) {
     super(router, route, messageService, service);
@@ -46,7 +46,7 @@ export class LogoffComponent extends BaseComponent<PassportService> {
         .subscribe(() => {
           log.log('done');
 
-          this.userServiceRequests.setCurrent(User.Null);
+          this.serviceRequests.setCurrent(User.Null);
 
           if (Types.isPresent(this.authenticationNavigation.logoutRedirectUrl)) {
             this.navigate([this.authenticationNavigation.logoutRedirectUrl]);

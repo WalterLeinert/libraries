@@ -12,7 +12,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // commands
-import { UserServiceRequests } from '../../../redux/user-service-requests';
+import { CurrentUserServiceRequests } from '../../../redux/current-user-service-requests';
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
@@ -85,7 +85,7 @@ export class LoginComponent extends BaseComponent<PassportService> {
    *
    * @memberOf LoginComponent
    */
-  constructor(private userServiceRequests: UserServiceRequests,
+  constructor(private serviceRequests: CurrentUserServiceRequests,
     private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
     @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation,
     service: PassportService, changePasswordGuardService: ChangePasswordGuardService,
@@ -108,7 +108,7 @@ export class LoginComponent extends BaseComponent<PassportService> {
         .subscribe((result) => {
           log.log(JSON.stringify(result));
 
-          this.userServiceRequests.setCurrent(result);
+          this.serviceRequests.setCurrent(result);
 
           this.navigate([
             this.authenticationNavigation.loginRedirectUrl
