@@ -32,7 +32,7 @@
     "mocha-typescript": "^1.0.18",
     "ts-loader": "^2.0.1",
     "tslint": "^4.5.1",
-    "typescript": "^2.2.1",
+    "typescript": "^2.2.2",
     "webpack": "^2.2.1",
     "webpack-fail-plugin": "^1.0.6",
     "webpack-merge": "^3.0.0",
