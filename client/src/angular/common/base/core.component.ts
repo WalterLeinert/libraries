@@ -18,9 +18,9 @@ import {
 } from '@fluxgate/core';
 
 import {
-  CompoundValidator, IEntity, IServiceState, IUser,
-  PatternValidator, RangeValidator, RequiredValidator,
-  ServiceCommand, SetCurrentItemCommand, Store, TableMetadata, UserStore
+  CompoundValidator, CurrentUserStore, IEntity, IServiceState,
+  IUser, PatternValidator, RangeValidator,
+  RequiredValidator, ServiceCommand, SetCurrentItemCommand, Store, TableMetadata
 } from '@fluxgate/common';
 
 
@@ -75,7 +75,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
     this.store = AppInjector.instance.getInstance<Store>(AppStore);
 
-    this.subscribeToStore(UserStore.ID);
+    this.subscribeToStore(CurrentUserStore.ID);
     this.updateUserState();
   }
 
@@ -588,7 +588,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
         log.error(`${state.error}`);
       }
 
-      if (command.storeId === UserStore.ID && command instanceof SetCurrentItemCommand) {
+      if (command.storeId === CurrentUserStore.ID && command instanceof SetCurrentItemCommand) {
         this.updateUserState(command);
       }
     });
@@ -621,7 +621,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf CoreComponent
    */
   protected getCurrentUser(): IUser {
-    const state = this.getStoreState<IUser, number>(UserStore.ID);
+    const state = this.getStoreState<IUser, number>(CurrentUserStore.ID);
     return state.currentItem;
   }
 
