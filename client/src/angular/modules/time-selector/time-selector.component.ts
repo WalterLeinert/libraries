@@ -37,7 +37,8 @@ import { MessageService } from '../../services/message.service';
       useExisting: TimeSelectorComponent,
       multi: true,
     }
-  ]
+  ],
+  animations: []
 })
 export class TimeSelectorComponent extends ControlBaseComponent<ShortTime> {
   protected static readonly logger = getLogger(TimeSelectorComponent);
