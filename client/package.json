@@ -1,9 +1,9 @@
 {
   "name": "@fluxgate/client",
-  "version": "2.1.1-beta.11",
+  "version": "2.1.1-beta.13",
   "description": "Fluxgate Client-Library ",
-  "main": "dist/main.bundle.js",
-  "typings": "dist/dts/index.d.ts",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "tslint": "tslint ./src/**/*.ts"
   },

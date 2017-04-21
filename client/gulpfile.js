@@ -68,31 +68,31 @@ gulp.task('tslint', () => {
     .pipe(tslint.report());
 });
 
-gulp.task('compile-nong', function() {
-    const tsResult = gulp.src('src/**/*.ts')
-        .pipe(sourcemaps.init())
-        .pipe(tsProject());
+// gulp.task('compile-nong', function() {
+//     const tsResult = gulp.src('src/**/*.ts')
+//         .pipe(sourcemaps.init())
+//         .pipe(tsProject());
 
-    return merge([
-        tsResult.dts.pipe(gulp.dest('dist/dts')),
-        tsResult.js
-          .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
-          .pipe(gulp.dest('dist/src'))
-    ]);
-});
+//     return merge([
+//         tsResult.dts.pipe(gulp.dest('dist/dts')),
+//         tsResult.js
+//           .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+//           .pipe(gulp.dest('dist/src'))
+//     ]);
+// });
 
-gulp.task('compile:dts', function() {
-    const tsResult = gulp.src('src/**/*.ts')
-        .pipe(tsProject());
+// gulp.task('compile:dts', function() {
+//     const tsResult = gulp.src('src/**/*.ts')
+//         .pipe(tsProject());
 
-  return tsResult.dts.pipe(gulp.dest('dist/dts'));
-});
+//   return tsResult.dts.pipe(gulp.dest('dist/dts'));
+// });
 
 
 
-gulp.task('compile-ng', function(cb) {
-    execCommand('ng build', '.', bufferSize, cb);
-});
+// gulp.task('compile-ng', function(cb) {
+//     execCommand('ng build', '.', bufferSize, cb);
+// });
 
 gulp.task('compile:test', function() {
     const tsResult = gulp.src('test/**/*.ts')
@@ -104,10 +104,10 @@ gulp.task('compile:test', function() {
       .pipe(gulp.dest('dist/test'));
 });
 
-gulp.task('compile', gulpSequence('compile-ng', 'compile:dts'));
+gulp.task('compile', gulpSequence('compile-ngc'));
 
 
-gulp.task('ngc', () => {
+gulp.task('compile-ngc', () => {
   return ngc('src/tsconfig.app.json');
 });
 
