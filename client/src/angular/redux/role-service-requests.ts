@@ -4,7 +4,7 @@ import { Inject, Injectable, NgModule } from '@angular/core';
 import { IRole, RoleStore, Store } from '@fluxgate/common';
 
 
-import { RoleService } from '../modules/authentication/role.service'
+import { RoleService } from '../modules/authentication/role.service';
 import { AppStore } from './app-store';
 import { EnhancedServiceRequests } from './enhanced-service-requests';
 
