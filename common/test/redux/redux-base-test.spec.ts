@@ -15,7 +15,7 @@ import { Assert, CustomSubject, ICtor } from '@fluxgate/core';
 
 import { IEntity } from '../../src/model';
 import { IService } from '../../src/model/service/service.interface';
-import { ServiceCommand } from '../../src/redux/service-command';
+import { ServiceCommand } from '../../src/redux/commands/service-command';
 import { IServiceState } from '../../src/redux/service-state.interface';
 import { Store } from '../../src/redux/store';
 

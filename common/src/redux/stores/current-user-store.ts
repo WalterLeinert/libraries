@@ -23,12 +23,12 @@ export class CurrentUserStore extends CommandStore<IServiceState<IUser, number>>
     super(CurrentUserStore.ID, ServiceCommand.INITIAL_STATE);
   }
 
-  public dispatch(command: ICommand<any>) {
-    if (command instanceof SetCurrentItemCommand) {
-      super.dispatch(command);
+  public dispatch(command: ICommand<IServiceState<IUser, number>>) {
+    if (!(command instanceof SetCurrentItemCommand)) {
+      throw new NotSupportedException(`storeId ${command.storeId}: command not supported ${JSON.stringify(command)}`);
     }
 
-    throw new NotSupportedException(`storeId ${command.storeId}: command not supported ${JSON.stringify(command)}`);
+    super.dispatch(command);
   }
 
 }

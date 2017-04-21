@@ -62,7 +62,7 @@ export class CommandStore<T> {
    *
    * @memberOf CommandStore
    */
-  public dispatch(command: ICommand<any>) {
+  public dispatch(command: ICommand<T>) {
     using(new XLog(CommandStore.logger, levels.INFO, 'dispatch'), (log) => {
       log.log(`command = ${command.constructor.name}: ${JSON.stringify(command)}`);
 
