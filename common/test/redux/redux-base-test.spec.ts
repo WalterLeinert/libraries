@@ -42,7 +42,7 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
   protected before(done: (err?: any) => void) {
     this.store = new Store();
     this._serviceFake = new this.serviceClazz();
-    this._serviceRequests = new this.serviceRequestClazz(this._serviceFake, this.store);
+    this._serviceRequests = new this.serviceRequestClazz(this.storeId, this._serviceFake, this.store);
 
     this.subscribeToStore(this.storeId);
     this.reset();
