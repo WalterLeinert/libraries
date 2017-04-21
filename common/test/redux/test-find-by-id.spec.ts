@@ -8,10 +8,10 @@ import { suite, test } from 'mocha-typescript';
 import { IUser } from '../../src/model';
 import { ServiceCommand, ServiceRequestStates } from '../../src/redux';
 import { FindingItemByIdCommand, ItemFoundByIdCommand } from '../../src/redux';
+import { UserStore } from '../../src/redux/stores';
 
 import { UserServiceFake } from '../../src/testing/user-service-fake';
 import { UserServiceRequestsFake } from '../../src/testing/user-service-requests-fake';
-import { UserStoreFake } from '../../src/testing/user-store-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
@@ -19,7 +19,7 @@ import { ReduxBaseTest } from './redux-base-test.spec';
 class ReduxFindByIdTest extends ReduxBaseTest<IUser, number, any> {
 
   constructor() {
-    super(UserStoreFake.ID, UserServiceRequestsFake, UserServiceFake);
+    super(UserStore.ID, UserServiceRequestsFake, UserServiceFake);
   }
 
   @test 'should dispatch commands: FindingItemByIdCommand, ItemFoundCommand'() {

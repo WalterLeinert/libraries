@@ -8,10 +8,10 @@ import { suite, test } from 'mocha-typescript';
 import { IUser } from '../../src/model';
 import { IServiceState, ServiceRequestStates } from '../../src/redux';
 import { DeletingItemCommand, ItemDeletedCommand } from '../../src/redux';
+import { UserStore } from '../../src/redux/stores';
 
 import { UserServiceFake } from '../../src/testing/user-service-fake';
 import { UserServiceRequestsFake } from '../../src/testing/user-service-requests-fake';
-import { UserStoreFake } from '../../src/testing/user-store-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
@@ -21,7 +21,7 @@ class ReduxDeleteTest extends ReduxBaseTest<IUser, number, any> {
   private beforeState: IServiceState<IUser, number>;
 
   constructor() {
-    super(UserStoreFake.ID, UserServiceRequestsFake, UserServiceFake);
+    super(UserStore.ID, UserServiceRequestsFake, UserServiceFake);
   }
 
 
@@ -68,7 +68,7 @@ class ReduxDeleteTest extends ReduxBaseTest<IUser, number, any> {
       // before-Status erzeugen
       //
       this.serviceRequests.find();
-      this.beforeState = this.getStoreState(UserStoreFake.ID);
+      this.beforeState = this.getStoreState(UserStore.ID);
       this.reset();
 
       // Test: Item löschen

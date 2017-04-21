@@ -9,10 +9,10 @@ import { Clone } from '@fluxgate/core';
 import { IUser } from '../../src/model';
 import { IServiceState, ServiceCommand, ServiceRequestStates } from '../../src/redux';
 import { ItemUpdatedCommand, UpdatingItemCommand } from '../../src/redux';
+import { UserStore } from '../../src/redux/stores';
 
 import { UserServiceFake } from '../../src/testing/user-service-fake';
 import { UserServiceRequestsFake } from '../../src/testing/user-service-requests-fake';
-import { UserStoreFake } from '../../src/testing/user-store-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
@@ -22,7 +22,7 @@ class ReduxUpdateTest extends ReduxBaseTest<IUser, number, any> {
   private item: IUser;
 
   constructor() {
-    super(UserStoreFake.ID, UserServiceRequestsFake, UserServiceFake);
+    super(UserStore.ID, UserServiceRequestsFake, UserServiceFake);
   }
 
 

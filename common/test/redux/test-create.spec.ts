@@ -9,10 +9,10 @@ import { Clone } from '@fluxgate/core';
 import { IUser } from '../../src/model';
 import { IServiceState, ServiceRequestStates } from '../../src/redux';
 import { CreatingItemCommand, ItemCreatedCommand } from '../../src/redux';
+import { UserStore } from '../../src/redux/stores';
 
 import { UserServiceFake } from '../../src/testing/user-service-fake';
 import { UserServiceRequestsFake } from '../../src/testing/user-service-requests-fake';
-import { UserStoreFake } from '../../src/testing/user-store-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
@@ -22,7 +22,7 @@ class ReduxCreateTest extends ReduxBaseTest<IUser, number, any> {
   private itemCloned: IUser;
 
   constructor() {
-    super(UserStoreFake.ID, UserServiceRequestsFake, UserServiceFake);
+    super(UserStore.ID, UserServiceRequestsFake, UserServiceFake);
   }
 
 
@@ -69,7 +69,7 @@ class ReduxCreateTest extends ReduxBaseTest<IUser, number, any> {
       // before-Status erzeugen
       //
       this.serviceRequests.find();
-      this.beforeState = this.getStoreState(UserStoreFake.ID);
+      this.beforeState = this.getStoreState(UserStore.ID);
       this.reset();
 
       // Test: neues Item erzeugen
