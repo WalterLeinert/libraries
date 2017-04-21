@@ -3,7 +3,7 @@
 import { configure, getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { Assert, fromEnvironment, Utility } from '@fluxgate/core';
+import { Assert, fromEnvironment, Types, Utility } from '@fluxgate/core';
 import { FileSystem } from '@fluxgate/platform';
 
 
@@ -25,11 +25,10 @@ export class Logging {
     using(new XLog(Logging.logger, levels.INFO, 'configureLogging'), (log) => {
       let configOptions: ILoggingConfigurationOptions;
 
-      if (info === 'string') {
+      if (Types.isString(info)) {
         configOptions = {
           systemMode: info as string
         };
-
       } else {
         configOptions = info;
       }

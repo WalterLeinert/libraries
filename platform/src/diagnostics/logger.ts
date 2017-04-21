@@ -1,5 +1,5 @@
 import { Funktion, NotSupportedException } from '@fluxgate/core';
-import { getLogger as getConsoleLogger, IConfig, ILogger, Logger, LoggerRegistry } from '@fluxgate/core';
+import { getLogger as getConsoleLogger, IConfig, ILogger, Logger, LoggerRegistry, Types } from '@fluxgate/core';
 
 import { JsonReader } from '../util/jsonReader';
 
@@ -12,10 +12,10 @@ import { JsonReader } from '../util/jsonReader';
  */
 export function getLogger(category: string | Funktion): ILogger {
   let categoryName: string;
-  if (typeof category === 'string') {
-    categoryName = category;
+  if (Types.isString(category)) {
+    categoryName = category as string;
   } else {
-    categoryName = category.name;
+    categoryName = (category as Funktion).name;
   }
 
   let logger: ILogger;
@@ -52,8 +52,8 @@ export function configure(config: string | IConfig, options?: any): void {
   const log4js = require('log4js');
   log4js.configure(config, options);
 
-  if (typeof config === 'string') {
-    JsonReader.readJson<IConfig>(config, (err, conf) => {
+  if (Types.isString(config)) {
+    JsonReader.readJson<IConfig>(config as string, (err, conf) => {
       if (err) {
         throw err;
       }
@@ -66,7 +66,7 @@ export function configure(config: string | IConfig, options?: any): void {
   // endRemoveIf(browser)
 
   // removeIf(node)
-  if (typeof config === 'string') {
+  if (Types.isString(config)) {
     throw new NotSupportedException('only supported on node platforms');
   }
   LoggerRegistry.configure(config as IConfig, options);

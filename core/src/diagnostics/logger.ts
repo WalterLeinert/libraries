@@ -17,10 +17,10 @@ import { LoggerRegistry } from './loggerRegistry';
  */
 export function getLogger(category: string | Funktion): ILogger {
   let categoryName: string;
-  if (typeof category === 'string') {
-    categoryName = category;
+  if (Types.isString(category)) {
+    categoryName = category as string;
   } else {
-    categoryName = category.name;
+    categoryName = (category as Funktion).name;
   }
 
   if (!LoggerRegistry.hasLogger(categoryName)) {

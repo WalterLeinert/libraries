@@ -60,7 +60,7 @@ export class ColumnMetadata {
       case ColumnTypes.DATETIME:
         if (value instanceof Date) {
           rval = value;
-        } else if (typeof value === 'string') {
+        } else if (Types.isString(value)) {
           rval = new Date(value);
         } else {
           throw new InvalidOperationException(`Column ${this.propertyName}: Konvertierung von Datumswert` +
@@ -71,7 +71,7 @@ export class ColumnMetadata {
       case ColumnTypes.TIME:
         if (value instanceof Time) {
           rval = value;
-        } else if (typeof value === 'string') {
+        } else if (Types.isString(value)) {
           rval = Time.parse(value);
         } else {
           rval = Time.createFrom(value);    // wir interpretieren den Wert als Time
@@ -81,7 +81,7 @@ export class ColumnMetadata {
       case ColumnTypes.SHORTTIME:
         if (value instanceof ShortTime) {
           rval = value;
-        } else if (typeof value === 'string') {
+        } else if (Types.isString(value)) {
           rval = ShortTime.parse(value);
         } else {
           rval = ShortTime.createFrom(value);    // wir interpretieren den Wert als ShortTime

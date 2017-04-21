@@ -6,7 +6,7 @@ import process = require('process');
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { fromEnvironment, StringBuilder, Utility } from '@fluxgate/core';
+import { fromEnvironment, StringBuilder, Types, Utility } from '@fluxgate/core';
 
 
 /**
@@ -71,9 +71,9 @@ export class LoggingConfiguration {
         };
 
       } else {
-        if (typeof info === 'string') {
+        if (Types.isString(info)) {
           options = {
-            systemMode: info,
+            systemMode: info as string,
             filename: LoggingConfiguration.DEFAULT_FILENAME,
             relativePath: LoggingConfiguration.DEFAULT_RELATIVE_PATH
           };

@@ -477,7 +477,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
           const value = firstItem[prop];
 
           // erste string Property merken
-          if (typeof value === 'string') {
+          if (Types.isString(value)) {
             firstPropName = prop.toString();
             break;
           }
