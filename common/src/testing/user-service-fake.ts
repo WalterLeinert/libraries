@@ -1,9 +1,9 @@
 
-import { IUser, User } from '../../src/model';
-import { ConstantValueGenerator, EntityGenerator, NumberIdGenerator } from '../../src/model/generator';
-import { MetadataStorage } from '../../src/model/metadata';
+import { IUser, User } from '../model';
+import { ConstantValueGenerator, EntityGenerator, NumberIdGenerator } from '../model/generator';
+import { MetadataStorage } from '../model/metadata';
 
-import { ServiceFake } from '../../src/testing/service-fake';
+import { ServiceFake } from './service-fake';
 
 
 /**

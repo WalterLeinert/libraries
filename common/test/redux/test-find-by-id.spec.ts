@@ -9,17 +9,17 @@ import { IUser } from '../../src/model';
 import { ServiceCommand, ServiceRequestStates } from '../../src/redux';
 import { FindingItemByIdCommand, ItemFoundByIdCommand } from '../../src/redux';
 
+import { UserServiceFake } from '../../src/testing/user-service-fake';
+import { UserServiceRequestsFake } from '../../src/testing/user-service-requests-fake';
+import { UserStoreFake } from '../../src/testing/user-store-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
-import { UserServiceFake } from './user-service-fake';
-import { UserServiceRequests } from './user-service-requests';
-import { UserStore } from './user-store';
 
 
 @suite('redux: findById')
 class ReduxFindByIdTest extends ReduxBaseTest<IUser, number, any> {
 
   constructor() {
-    super(UserStore.ID, UserServiceRequests, UserServiceFake);
+    super(UserStoreFake.ID, UserServiceRequestsFake, UserServiceFake);
   }
 
   @test 'should dispatch commands: FindingItemByIdCommand, ItemFoundCommand'() {

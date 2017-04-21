@@ -9,21 +9,21 @@ import { IUser } from '../../src/model';
 import { ServiceCommand, ServiceRequestStates } from '../../src/redux';
 import { FindingItemsCommand, ItemsFoundCommand } from '../../src/redux';
 
+import { UserServiceFake } from '../../src/testing/user-service-fake';
+import { UserServiceRequestsFake } from '../../src/testing/user-service-requests-fake';
+import { UserStoreFake } from '../../src/testing/user-store-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
-import { UserServiceFake } from './user-service-fake';
-import { UserServiceRequests } from './user-service-requests';
-import { UserStore } from './user-store';
 
 
 @suite('redux: find')
 class ReduxFindTest extends ReduxBaseTest<IUser, number, any> {
 
   constructor() {
-    super(UserStore.ID, UserServiceRequests, UserServiceFake);
+    super(UserStoreFake.ID, UserServiceRequestsFake, UserServiceFake);
   }
 
   @test 'should test initial state'() {
-    const state = this.getStoreState(UserStore.ID);
+    const state = this.getStoreState(UserStoreFake.ID);
     expect(state).to.deep.equal(ServiceCommand.INITIAL_STATE);
   }
 
