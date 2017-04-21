@@ -10,5 +10,10 @@
   "exclude": [
     "test.ts",
     "**/*.spec.ts"
-  ]
+  ],
+   "angularCompilerOptions": {
+    "genDir": "compiled",
+    "skipTemplateCodegen": "true",
+    "skipMetadataEmit" : false
+  }
 }

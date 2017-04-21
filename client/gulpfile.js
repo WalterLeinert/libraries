@@ -68,7 +68,7 @@ gulp.task('tslint', () => {
     .pipe(tslint.report());
 });
 
-gulp.task('compile', function() {
+gulp.task('compile-nong', function() {
     const tsResult = gulp.src('src/**/*.ts')
         .pipe(sourcemaps.init())
         .pipe(tsProject());
@@ -81,6 +81,19 @@ gulp.task('compile', function() {
     ]);
 });
 
+gulp.task('compile:dts', function() {
+    const tsResult = gulp.src('src/**/*.ts')
+        .pipe(tsProject());
+
+  return tsResult.dts.pipe(gulp.dest('dist/dts'));
+});
+
+
+
+gulp.task('compile-ng', function(cb) {
+    execCommand('ng build', '.', bufferSize, cb);
+});
+
 gulp.task('compile:test', function() {
     const tsResult = gulp.src('test/**/*.ts')
       .pipe(sourcemaps.init())
@@ -91,6 +104,7 @@ gulp.task('compile:test', function() {
       .pipe(gulp.dest('dist/test'));
 });
 
+gulp.task('compile', gulpSequence('compile-ng', 'compile:dts'));
 
 
 gulp.task('ngc', () => {

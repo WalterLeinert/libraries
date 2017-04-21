@@ -1,11 +1,15 @@
 {
   "name": "@fluxgate/client",
-  "version": "2.1.1-beta.4",
+  "version": "2.1.1-beta.11",
   "description": "Fluxgate Client-Library ",
-  "main": "dist/src/index.js",
+  "main": "dist/main.bundle.js",
   "typings": "dist/dts/index.d.ts",
   "scripts": {
     "tslint": "tslint ./src/**/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://server.fluxgate.de:89/fluxgate/libraries.git"
   },
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
