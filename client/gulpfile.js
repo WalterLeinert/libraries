@@ -4,6 +4,7 @@
 'use strict';
 
 const gulp = require('gulp');
+const env = require('gulp-env');
 const ngc = require('gulp-ngc');
 const gulp_tslint = require('gulp-tslint');
 const del = require('del');
@@ -112,7 +113,7 @@ gulp.task('compile-ngc', () => {
 });
 
 //optional - use a tsconfig file
-gulp.task('test', function (cb) {
+gulp.task('test', ['set-env'], function (cb) {
 
   // TODO:
   execCommand('ng test --single-run', '.', bufferSize, cb);
@@ -131,9 +132,7 @@ gulp.task('test', function (cb) {
 
 
 
-gulp.task('build-test', gulpSequence('default'/*, 'test'*/));
-
-gulp.task('publish', ['build-test'], function (cb) {
+gulp.task('publish', ['test'], function (cb) {
   const force = argv.f ? argv.f : '';
   const forceSwitch = (force ? '-f' : '');
 
@@ -144,6 +143,14 @@ gulp.task('publish', ['build-test'], function (cb) {
 gulp.task('bundle', function (cb) {
   execCommand('webpack', '.', bufferSize, cb);
 })
+
+gulp.task('set-env', function () {
+  env({
+    vars: {
+      NODE_ENV: 'local'
+    }
+  })
+});
 
 
 /* single command to hook into VS Code */

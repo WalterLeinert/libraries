@@ -110,7 +110,7 @@ gulp.task('test', ['set-env', 'compile:test'], function () {
 });
 
 
-gulp.task('publish', ['compile:test'], function (cb) {
+gulp.task('publish', ['test'], function (cb) {
   const force = argv.f ? argv.f : '';
   const forceSwitch = (force ? '-f' : '');
 
