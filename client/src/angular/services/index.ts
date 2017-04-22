@@ -9,4 +9,5 @@ export * from './message.service';
 export * from './pipe.service';
 export * from './print.service';
 export * from './proxy.service';
+export * from './resolver-base';
 export * from './service';

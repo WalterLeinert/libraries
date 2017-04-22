@@ -1,5 +1,6 @@
 export * from './authentication.module';
 export * from './authenticationNavigation';
+export * from './changePassword/changePassword.component';
 export * from './login/login.component';
 export * from './logoff/logoff.component';
 export * from './passport.service';

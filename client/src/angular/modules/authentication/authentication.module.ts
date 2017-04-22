@@ -9,6 +9,8 @@ import { ConfirmDialogModule } from 'primeng/primeng';
 
 import { AutofocusModule, HighlightModule } from '../../common/directives';
 
+import { CurrentUserServiceRequestsModule } from '../../redux/current-user-service-requests';
+import { RoleServiceRequestsModule } from '../../redux/role-service-requests';
 import { MessageServiceModule } from '../../services/message.service';
 import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
 import { ChangePasswordGuardService } from './changePassword/changePassword-guard.service';
@@ -33,7 +35,9 @@ import { RoleService } from './role.service';
     HighlightModule,
     AutofocusModule,
     DropdownSelectorModule,
-    MessageServiceModule
+    MessageServiceModule,
+    CurrentUserServiceRequestsModule,
+    RoleServiceRequestsModule
     // AuthenticationRoutingModule
   ],
   declarations: [
