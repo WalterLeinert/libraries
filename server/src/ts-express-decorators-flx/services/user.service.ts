@@ -7,7 +7,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { AppRegistry, IUser, Role, User } from '@fluxgate/common';
+import { AppRegistry, IQuery, IUser, Role, User } from '@fluxgate/common';
 import { Assert, Encryption, Funktion } from '@fluxgate/core';
 
 import { Messages } from '../../resources/messages';
@@ -149,14 +149,19 @@ export class UserService extends BaseService<IUser, number> {
   public findByCredentialUsername(username: string, password: string): Promise<IUser> {
     return using(new XLog(UserService.logger, levels.INFO, 'findByCredentialUsername', `username = ${username}`),
       (log) => {
+        const query: IQuery = {
+          selectors: [
+            {
+              name: 'username',
+              operator: '=',
+              value: username
+            }]
+        };
 
         const message = Messages.WRONG_CREDENTIALS('Benutzername');
 
         return new Promise<IUser>((resolve, reject) => {
-          super.queryKnex(
-            super.fromTable()
-              .where('user_username', username))
-
+          this.query(query)
             .then((users) => {
 
               try {
@@ -224,11 +229,17 @@ export class UserService extends BaseService<IUser, number> {
    */
   public findByUsername(username: string): Promise<IUser> {
     return using(new XLog(UserService.logger, levels.INFO, 'findByUsername', `username = ${username}`), (log) => {
+      const query: IQuery = {
+        selectors: [
+          {
+            name: 'username',
+            operator: '=',
+            value: username
+          }]
+      };
 
       return new Promise<IUser>((resolve, reject) => {
-        super
-          .fromTable()
-          .where('user_username', username)
+        this.query(query)
           .then((users) => {
             if (!users || users.length <= 0) {
               log.log('no user found');
@@ -260,11 +271,17 @@ export class UserService extends BaseService<IUser, number> {
    */
   public findByEmail(email: string): Promise<IUser> {
     return using(new XLog(UserService.logger, levels.INFO, 'findByEmail', `email = ${email}`), (log) => {
+      const query: IQuery = {
+        selectors: [
+          {
+            name: 'email',
+            operator: '=',
+            value: email
+          }]
+      };
 
       return new Promise<IUser>((resolve, reject) => {
-        super
-          .fromTable()
-          .where('user_email', email)
+        this.query(query)
           .then((users) => {
             if (!users || users.length <= 0) {
               log.log('no user found');
@@ -297,14 +314,19 @@ export class UserService extends BaseService<IUser, number> {
    */
   public findByCredentialEmail(email: string, password: string): Promise<IUser> {
     return using(new XLog(UserService.logger, levels.INFO, 'findByCredentialEmail', `email = ${email}`), (log) => {
+      const query: IQuery = {
+        selectors: [
+          {
+            name: 'email',
+            operator: '=',
+            value: email
+          }]
+      };
 
       const message = Messages.WRONG_CREDENTIALS('Email');
 
       return new Promise<IUser>((resolve, reject) => {
-        super.queryKnex(
-          super.fromTable()
-            .where('user_email', email)
-        )
+        this.query(query)
           .then((users) => {
             if (!users || users.length <= 0) {
               log.log(message);
