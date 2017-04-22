@@ -83,7 +83,6 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   public password: string;
   public passwordNew: string;
   public passwordNewRepeated: string;
-  private currentUser: IUser;
 
   constructor(private serviceRequests: CurrentUserServiceRequests,
     router: Router, route: ActivatedRoute, messageService: MessageService,
@@ -99,7 +98,8 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
         return;
       }
 
-      this.registerSubscription(this.service.changePassword(this.currentUser.username, this.password, this.passwordNew)
+      this.registerSubscription(this.service.changePassword(this.getCurrentUser().username,
+        this.password, this.passwordNew)
         .subscribe((user) => {
           log.info(`user = ${user}`);
 
