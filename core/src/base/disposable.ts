@@ -1,7 +1,7 @@
 // Logging
-import { getLogger } from '../diagnostics/logger';
 // tslint:disable-next-line:no-unused-variable
 import { ILogger } from '../diagnostics/logger.interface';
+import { getLogger } from '../diagnostics/logging-core';
 
 import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { IDisposable } from './disposable.interface';

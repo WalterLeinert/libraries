@@ -53,13 +53,8 @@ export function configure(config: string | IConfig, options?: any): void {
   log4js.configure(config, options);
 
   if (Types.isString(config)) {
-    JsonReader.readJson<IConfig>(config as string, (err, conf) => {
-      if (err) {
-        throw err;
-      }
-
-      LoggerRegistry.configure(conf as IConfig, options);
-    });
+    const conf = JsonReader.readJsonSync<IConfig>(config as string);
+    LoggerRegistry.configure(conf as IConfig, options);
   } else {
     LoggerRegistry.configure(config as IConfig, options);
   }
