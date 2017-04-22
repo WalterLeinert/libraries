@@ -155,7 +155,7 @@ export class UserService extends BaseService<IUser, number> {
         return new Promise<IUser>((resolve, reject) => {
           super.queryKnex(
             super.fromTable()
-              .where('username', username))
+              .where('user_username', username))
 
             .then((users) => {
 
@@ -228,7 +228,7 @@ export class UserService extends BaseService<IUser, number> {
       return new Promise<IUser>((resolve, reject) => {
         super
           .fromTable()
-          .where('username', username)
+          .where('user_username', username)
           .then((users) => {
             if (!users || users.length <= 0) {
               log.log('no user found');
@@ -264,7 +264,7 @@ export class UserService extends BaseService<IUser, number> {
       return new Promise<IUser>((resolve, reject) => {
         super
           .fromTable()
-          .where('email', email)
+          .where('user_email', email)
           .then((users) => {
             if (!users || users.length <= 0) {
               log.log('no user found');
@@ -303,7 +303,7 @@ export class UserService extends BaseService<IUser, number> {
       return new Promise<IUser>((resolve, reject) => {
         super.queryKnex(
           super.fromTable()
-            .where('email', email)
+            .where('user_email', email)
         )
           .then((users) => {
             if (!users || users.length <= 0) {
