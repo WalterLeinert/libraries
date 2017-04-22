@@ -245,7 +245,7 @@ export class UserService extends BaseService<IUser, number> {
               log.log('no user found');
               resolve(undefined);
             } else {
-              const user = this.createModelInstance(users[0]);
+              const user = users[0];
               user.resetCredentials();
               log.log('user: ', user);
               resolve(user);
