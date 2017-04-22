@@ -1,11 +1,12 @@
 // fluxgate
-import { Assert, IException, IToString } from '@fluxgate/core';
+import { Assert, IException, IToString, Types } from '@fluxgate/core';
 
 import { IEntity } from '../model/entity.interface';
 import {
   CreatingItemCommand, DeletingItemCommand, ErrorCommand,
-  FindingItemByIdCommand, FindingItemsCommand,
-  ItemCreatedCommand, ItemDeletedCommand, ItemFoundByIdCommand, ItemsFoundCommand, ItemUpdatedCommand,
+  FindingItemByIdCommand, FindingItemsCommand, IServiceState,
+  ItemCreatedCommand, ItemDeletedCommand, ItemFoundByIdCommand, ItemsFoundCommand,
+  ItemUpdatedCommand, ServiceRequestStates,
   SetCurrentItemCommand, Store, UpdatingItemCommand
 } from './';
 
@@ -95,17 +96,34 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ServiceRequests
    */
-  public find(): void {
+  public find(useCache: boolean = false): void {
+    const state = this.getStoreState<T, TId>(this._storeId);
+
     this.store.dispatch(new FindingItemsCommand(this._storeId));
 
-    this.service.find().subscribe(
-      (items) => {
-        this.store.dispatch(new ItemsFoundCommand(this._storeId, items));
-      },
-      (exc: IException) => {
-        this.store.dispatch(new ErrorCommand(this._storeId, exc));
-      });
+    const finder = () => {
+      this.service.find().subscribe(
+        (items) => {
+          this.store.dispatch(new ItemsFoundCommand(this._storeId, items));
+        },
+        (exc: IException) => {
+          this.store.dispatch(new ErrorCommand(this._storeId, exc));
+        });
+    };
+
+    if (useCache) {
+      if (state.state === ServiceRequestStates.UNDEFINED) {
+        finder();
+
+      } else {
+        // items aus dem State liefern
+        this.store.dispatch(new ItemsFoundCommand(this._storeId, [...state.items]));
+      }
+    } else {
+      finder();
+    }
   }
+
 
   /**
    * Führt die find-Methode aus und führt ein dispatch des zugehörigen Kommandos durch.
@@ -220,6 +238,9 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
   }
 
 
+  public getStoreState<T extends IEntity<TId>, TId>(storeId: string): IServiceState<T, TId> {
+    return this.store.getState<IServiceState<T, TId>>(storeId);
+  }
 
   protected get service(): TService {
     return this._service;
