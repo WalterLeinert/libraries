@@ -49,6 +49,10 @@ export class CommandStore<T> {
     return this._parent;
   }
 
+  public get children(): Array<CommandStore<T>> {
+    return this._children.values;
+  }
+
   public addChild(child: CommandStore<T>) {
     Assert.notNull(child);
     this._children.set(child.name, child);
@@ -87,7 +91,14 @@ export class CommandStore<T> {
     using(new XLog(CommandStore.logger, levels.INFO, 'dispatch'), (log) => {
       log.log(`command = ${command.constructor.name}: ${JSON.stringify(command)}`);
 
+
       this.state = command.execute(this.state);
+
+      // rekursiv an alle Children dispatchen
+      for (const child of this.children) {
+        child.dispatch(command);
+      }
+
       this.pubSub.publish(this._channel, command);
     });
   }

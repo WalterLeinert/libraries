@@ -3,7 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, CustomSubject, InvalidOperationException } from '@fluxgate/core';
+import { Assert, CustomSubject, InvalidOperationException, Types } from '@fluxgate/core';
 
 import { CommandStore } from './command-store';
 import { ICommand } from './commands/command.interface';
@@ -49,14 +49,24 @@ export class Store {
     }
   }
 
+
   public dispatch(command: ICommand<any>) {
     Assert.notNull(command);
 
     using(new XLog(Store.logger, levels.INFO, 'dispatch'), (log) => {
       const commandStore = this.commandStores[command.storeId];
-      commandStore.dispatch(command);
+
+      // root CommandStore suchen
+      let store = commandStore;
+      while (Types.isPresent(store.parent)) {
+        store = store.parent;
+      }
+
+      // ... und command dort dispatchen
+      store.dispatch(command);
     });
   }
+
 
   /**
    * Liefert den Status des Stores mit der Id @param{storeId}.
