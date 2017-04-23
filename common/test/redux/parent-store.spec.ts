@@ -2,7 +2,7 @@
 // tslint:disable:member-access
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { IUser } from '../../src/model';
 import {
@@ -24,7 +24,7 @@ import { ReduxBaseTest } from './redux-base-test.spec';
  */
 @ReduxParentStore(() => UserStore)
 export class UserSelectorStore extends CommandStore<IServiceState<IUser, number>> {
-  public static ID = 'roleSelectorStore';
+  public static ID = 'userSelectorStore';
 
   constructor(parent?: CommandStore<IServiceState<IUser, number>>) {
     super(UserSelectorStore.ID, ServiceCommand.INITIAL_STATE, parent);
@@ -46,7 +46,7 @@ export class MyUserServiceRequestsFake extends ServiceRequests<IUser, number, Us
 }
 
 
-@suite('redux: parentStore') @only
+@suite('redux: parentStore')
 class ParentStoreTest extends ReduxBaseTest<IUser, number, any> {
 
   constructor() {
