@@ -14,7 +14,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  IEntity, IService, ItemCreatedCommand, ItemDeletedCommand,
+  IEntity, IService, IServiceState, ItemCreatedCommand, ItemDeletedCommand,
   ItemUpdatedCommand, ServiceCommand, ServiceRequests
 } from '@fluxgate/common';
 import { MessageService } from '../../services/message.service';
@@ -91,7 +91,7 @@ export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TSer
       `class: ${this.constructor.name}`), (log) => {
         log.log(`command = ${command.constructor.name}: ${JSON.stringify(command)}`);
 
-        const state = this.getStoreState(command.storeId);
+        const state = super.getStoreState(command.storeId);
         if (state.error) {
           this.handleError(state.error);
         } else if (command instanceof ItemCreatedCommand) {
@@ -102,6 +102,33 @@ export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TSer
           this.addSuccessMessage('Record deleted.');
         }
       });
+  }
+
+
+  /**
+   * Liefert den Store-State für den @see{CommandStore} der serviceRequests.
+   */
+  protected getState(): IServiceState<T, TId> {
+    return this.getStoreState(this.storeId);
+  }
+
+  /**
+   * Liefert den Store-State für den die angegebene @param{storeId}.
+   */
+  protected getStoreState(storeId: string): IServiceState<T, TId> {
+    return super.getStoreState<T, TId>(storeId);
+  }
+
+  /**
+   * Liefert die storeId der zugehörigen ServiceRequests.
+   *
+   * @readonly
+   * @protected
+   * @type {string}
+   * @memberOf ServiceRequestsComponent
+   */
+  protected get storeId(): string {
+    return this._serviceRequests.storeId;
   }
 
 
