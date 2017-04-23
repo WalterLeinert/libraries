@@ -7,3 +7,4 @@ export * from './control-base.component';
 export * from './core.component';
 export * from './extended-core.component';
 export * from './formGroupInfo';
+export * from './service-requests-component';
