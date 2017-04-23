@@ -1,3 +1,6 @@
+// tslint:disable-next-line:no-var-requires
+require('reflect-metadata');
+
 import { Funktion, ShortTime, Time } from '@fluxgate/core';
 import { getLogger } from '@fluxgate/platform';
 
