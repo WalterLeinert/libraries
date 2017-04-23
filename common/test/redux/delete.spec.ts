@@ -16,7 +16,7 @@ import { ReduxBaseTest } from './redux-base-test.spec';
 
 
 @suite('redux: delete')
-class ReduxDeleteTest extends ReduxBaseTest<IUser, number, any> {
+class DeleteTest extends ReduxBaseTest<IUser, number, any> {
   private static readonly DELETE_ID = 1;
   private beforeState: IServiceState<IUser, number>;
 
@@ -43,7 +43,7 @@ class ReduxDeleteTest extends ReduxBaseTest<IUser, number, any> {
     const state1 = this.states[1];
     expect(state1).to.deep.equal({
       ...this.beforeState,
-      items: this.beforeState.items.filter((item) => item.id !== ReduxDeleteTest.DELETE_ID),
+      items: this.beforeState.items.filter((item) => item.id !== DeleteTest.DELETE_ID),
       deletedId: 1,
       state: ServiceRequestStates.DONE
     });
@@ -72,7 +72,7 @@ class ReduxDeleteTest extends ReduxBaseTest<IUser, number, any> {
       this.reset();
 
       // Test: Item löschen
-      this.serviceRequests.delete(ReduxDeleteTest.DELETE_ID);
+      this.serviceRequests.delete(DeleteTest.DELETE_ID);
 
       done();
     });

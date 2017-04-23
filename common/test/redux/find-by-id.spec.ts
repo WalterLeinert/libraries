@@ -16,7 +16,7 @@ import { ReduxBaseTest } from './redux-base-test.spec';
 
 
 @suite('redux: findById')
-class ReduxFindByIdTest extends ReduxBaseTest<IUser, number, any> {
+class FindByIdTest extends ReduxBaseTest<IUser, number, any> {
 
   constructor() {
     super(UserStore.ID, UserServiceRequestsFake, UserServiceFake);

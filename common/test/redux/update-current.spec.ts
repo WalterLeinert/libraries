@@ -16,9 +16,10 @@ import { UserServiceRequestsFake } from '../../src/testing/user-service-requests
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('redux: update')
-class ReduxUpdateTest extends ReduxBaseTest<IUser, number, any> {
+@suite('redux: update (current)')
+class UpdateCurrentTest extends ReduxBaseTest<IUser, number, any> {
   private static readonly UPDATE_ID = 1;
+  private beforeState: IServiceState<IUser, number>;
   private item: IUser;
 
   constructor() {
@@ -26,7 +27,7 @@ class ReduxUpdateTest extends ReduxBaseTest<IUser, number, any> {
   }
 
 
-  @test 'should dispatch commands: UpdatingItemCommand, ItemUpdatedCommand'() {
+  @test 'should update currentItem after dispatch commands: UpdatingItemCommand, ItemUpdatedCommand'() {
     const itemExpected = Clone.clone(this.item);
     const item = Clone.clone(this.item);
     item.username = item.username + '-updated';
@@ -41,7 +42,7 @@ class ReduxUpdateTest extends ReduxBaseTest<IUser, number, any> {
 
     const state0 = this.states[0];
     expect(state0).to.deep.equal({
-      ...ServiceCommand.INITIAL_STATE,
+      ...this.beforeState,
       state: ServiceRequestStates.RUNNING
     });
 
@@ -50,8 +51,9 @@ class ReduxUpdateTest extends ReduxBaseTest<IUser, number, any> {
     const state1 = this.states[1];
 
     const expectedState: IServiceState<IUser, number> = {
-      ...ServiceCommand.INITIAL_STATE,
+      ...this.beforeState,
       item: itemExpected,
+      currentItem: itemExpected,
       state: ServiceRequestStates.DONE
     };
 
@@ -61,8 +63,16 @@ class ReduxUpdateTest extends ReduxBaseTest<IUser, number, any> {
 
   protected before(done: (err?: any) => void) {
     super.before(() => {
-      this.serviceFake.findById(ReduxUpdateTest.UPDATE_ID).subscribe((item) => {
+      this.serviceFake.findById(UpdateCurrentTest.UPDATE_ID).subscribe((item) => {
         this.item = item;
+
+        // currentItem setzen -> nach update prüfen
+        this.serviceRequests.setCurrent(item);
+        // snapshot vom Status
+        this.beforeState = this.getStoreState(UserStore.ID);
+
+        this.reset();
+
         done();
       }, (error) => {
         done(error);

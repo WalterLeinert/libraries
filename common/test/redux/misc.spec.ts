@@ -14,7 +14,7 @@ import { ReduxBaseTest } from './redux-base-test.spec';
 
 
 @suite('redux: misc')
-class ReduxMiscTest extends ReduxBaseTest<IUser, number, any> {
+class MiscTest extends ReduxBaseTest<IUser, number, any> {
 
   constructor() {
     super(UserStore.ID, UserServiceRequestsFake, UserServiceFake);

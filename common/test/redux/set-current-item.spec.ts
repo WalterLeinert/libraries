@@ -15,7 +15,7 @@ import { ReduxBaseTest } from './redux-base-test.spec';
 
 
 @suite('redux: set current')
-class ReduxSetCurrentTest extends ReduxBaseTest<IUser, number, any> {
+class SetCurrentTest extends ReduxBaseTest<IUser, number, any> {
   private static readonly CURRENT_INDEX = 2;
   private beforeState: IServiceState<IUser, number>;
 
@@ -31,7 +31,7 @@ class ReduxSetCurrentTest extends ReduxBaseTest<IUser, number, any> {
     const state0 = this.states[0];
     expect(state0).to.deep.equal({
       ...this.beforeState,
-      currentItem: this.beforeState.items[ReduxSetCurrentTest.CURRENT_INDEX]
+      currentItem: this.beforeState.items[SetCurrentTest.CURRENT_INDEX]
     });
   }
 
@@ -47,7 +47,7 @@ class ReduxSetCurrentTest extends ReduxBaseTest<IUser, number, any> {
 
 
       // Test: 2. Item als current setzen
-      this.serviceRequests.setCurrent(this.beforeState.items[ReduxSetCurrentTest.CURRENT_INDEX]);
+      this.serviceRequests.setCurrent(this.beforeState.items[SetCurrentTest.CURRENT_INDEX]);
 
       done();
     });
