@@ -93,7 +93,7 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
 
   /**
    * Führt die find-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
-   *
+   * @param {boolean} useCache - falls true, werden nur die Daten aus dem State übernommen; sonst Servercall
    * @memberOf ServiceRequests
    */
   public find(useCache: boolean = false): void {
@@ -240,6 +240,14 @@ export abstract class ServiceRequests<T extends IEntity<TId>, TId extends IToStr
 
   public getStoreState<T extends IEntity<TId>, TId>(storeId: string): IServiceState<T, TId> {
     return this.store.getState<IServiceState<T, TId>>(storeId);
+  }
+
+  public getEntityId(item: T): TId {
+    return this._service.getEntityId(item);
+  }
+
+  public getModelClassName(): string {
+    return this._service.getModelClassName();
   }
 
   protected get service(): TService {
