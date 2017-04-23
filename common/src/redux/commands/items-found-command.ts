@@ -39,4 +39,8 @@ export class ItemsFoundCommand<T extends IEntity<TId>, TId> extends ServiceComma
       error: undefined
     };
   }
+
+  public hasModifiedItems(): boolean {
+    return true;
+  }
 }

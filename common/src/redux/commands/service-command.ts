@@ -55,4 +55,8 @@ export abstract class ServiceCommand<T extends IEntity<TId>, TId> implements ICo
   public execute(state: IServiceState<T, TId> = ServiceCommand.INITIAL_STATE): IServiceState<T, TId> {
     return state;
   }
+
+  public hasModifiedItems(): boolean {
+    return false;
+  }
 }

@@ -35,8 +35,14 @@ export class ItemDeletedCommand<T extends IEntity<TId>, TId> extends ServiceComm
       ...state,
       items: state.items.filter((item) => item.id !== this.id),
       deletedId: this.id,
+      currentItem: (state.currentItem && state.currentItem.id === this.id) ? null : state.currentItem,
+      item: (state.item && state.item.id === this.id) ? null : state.item,
       state: ServiceRequestStates.DONE,
       error: undefined
     };
+  }
+
+  public hasModifiedItems(): boolean {
+    return true;
   }
 }

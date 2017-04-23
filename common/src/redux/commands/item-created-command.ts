@@ -39,4 +39,8 @@ export class ItemCreatedCommand<T extends IEntity<TId>, TId> extends ServiceComm
       error: undefined
     };
   }
+
+  public hasModifiedItems(): boolean {
+    return true;
+  }
 }
