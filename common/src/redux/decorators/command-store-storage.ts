@@ -5,6 +5,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { Assert, Dictionary, Funktion, Types } from '@fluxgate/core';
 
+import { CommandStore } from '../command-store';
 import { Store } from '../store';
 import { CommandStoreMetadata } from './command-store-metadata';
 
@@ -42,10 +43,32 @@ export class CommandStoreStorage {
    * @memberOf CommandStoreStorage
    */
   public registerStores(store: Store) {
-    this.metadataDict.values.forEach((metadata) => {
-      store.add(metadata.createStore<any>());
-    });
+    const storeDict: Dictionary<string, CommandStore<any>> = new Dictionary<string, CommandStore<any>>();
+
+    // zunächst alle Root-CommandStores erzeugen und registrieren, damit diese dann im folgenden Pass
+    // vorhanden sind
+    this.metadataDict.values
+      .filter((item) => !Types.isPresent(item.parent))
+      .forEach((meta) => {
+        storeDict.set(meta.target.name, meta.createStore<any>());
+      });
+
+    // dann alle CommandStores mit Parents erzeugen und registrieren
+    this.metadataDict.values
+      .filter((item) => Types.isPresent(item.parent))
+      .forEach((meta) => {
+        const parent = storeDict.get(meta.parent.name);
+        storeDict.set(meta.target.name, meta.createStore<any>(parent));
+      });
+
+    // schliesslich alle Root-CommandStores beim store registrieren
+    storeDict.values
+      // .filter((item) => !Types.isPresent(item.parent))
+      .forEach((item) => {
+        store.add(item);
+      });
   }
+
 
 
   /**

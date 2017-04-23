@@ -25,7 +25,7 @@ export class CommandStore<T> {
   private pubSub: PublisherSubscriber = new PublisherSubscriber();
   private state: T;
 
-  constructor(private _name: string, initialState: T) {
+  constructor(private _name: string, initialState: T, private _parent?: CommandStore<T>) {
     using(new XLog(CommandStore.logger, levels.INFO, 'ctor'), (log) => {
       this.state = initialState;
       this._channel = '$$' + _name + '$$';
@@ -42,6 +42,10 @@ export class CommandStore<T> {
    */
   public get name(): string {
     return this._name;
+  }
+
+  public get parent(): CommandStore<T> {
+    return this._parent;
   }
 
   /**

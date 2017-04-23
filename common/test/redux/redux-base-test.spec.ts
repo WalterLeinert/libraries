@@ -26,7 +26,7 @@ import { CommonTest } from '../common.spec';
 export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IService<T, TId>> extends CommonTest {
   protected static readonly logger = getLogger(ReduxBaseTest);
 
-  private store: Store;
+  private _store: Store;
   private _serviceFake: TService;
   private _serviceRequests: ServiceRequests<T, TId, TService>;
   private subscriptions: Subscription[] = [];
@@ -40,9 +40,9 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
 
 
   protected before(done: (err?: any) => void) {
-    this.store = new Store();
+    this._store = new Store();
     this._serviceFake = new this.serviceClazz();
-    this._serviceRequests = new this.serviceRequestClazz(this.storeId, this._serviceFake, this.store);
+    this._serviceRequests = new this.serviceRequestClazz(this.storeId, this._serviceFake, this._store);
 
     this.subscribeToStore(this.storeId);
     this.reset();
@@ -83,7 +83,7 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
   }
 
   protected getStoreState(storeId: string): IServiceState<T, TId> {
-    return this.store.getState<IServiceState<T, TId>>(storeId);
+    return this._store.getState<IServiceState<T, TId>>(storeId);
   }
 
   protected get serviceRequests(): ServiceRequests<T, TId, TService> {
@@ -102,8 +102,12 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
     return this._states;
   }
 
+  protected get store(): Store {
+    return this._store;
+  }
+
   private getStoreSubject(storeId: string): CustomSubject<any> {
-    return this.store.subject(storeId);
+    return this._store.subject(storeId);
   }
 
 }

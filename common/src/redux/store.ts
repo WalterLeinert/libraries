@@ -73,6 +73,20 @@ export class Store {
     return commandStore.getState();
   }
 
+  /**
+   * Liefert den CommandStore mit der Id @param{storeId}.
+   *
+   * @template T
+   * @param {string} storeId
+   * @returns {CommandStore<T>}
+   *
+   * @memberOf Store
+   */
+  public getCommandStore<T>(storeId: string): CommandStore<T> {
+    Assert.notNullOrEmpty(storeId);
+    return this.commandStores[storeId];
+  }
+
 
   /**
    * Liefert das Subject für die Id @param{storeId} für eine anschliessende Subscription.
