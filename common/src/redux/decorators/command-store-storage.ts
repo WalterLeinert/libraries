@@ -58,7 +58,10 @@ export class CommandStoreStorage {
       .filter((item) => Types.isPresent(item.parent))
       .forEach((meta) => {
         const parent = storeDict.get(meta.parent.name);
-        storeDict.set(meta.target.name, meta.createStore<any>(parent));
+        const child = meta.createStore<any>(parent);
+        storeDict.set(meta.target.name, child);
+
+        parent.addChild(child);
       });
 
     // schliesslich alle Root-CommandStores beim store registrieren

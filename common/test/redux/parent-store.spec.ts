@@ -1,8 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
 
-require('reflect-metadata');
-
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
@@ -33,10 +31,11 @@ class ParentStoreTest extends ReduxBaseTest<IUser, number, any> {
 
 
   @test 'should have parentStore'() {
-    const commandStore = this.store.getCommandStore(UserSelectorStore.ID)
-    expect(commandStore.parent).to.exist;
+    const userStore = this.store.getCommandStore(UserStore.ID);
+    expect(userStore.containsChild(UserSelectorStore.ID)).to.be.true;
 
-    expect(commandStore.parent.name).to.equal(UserStore.ID);
+    const userSelectorStore = userStore.getChild(UserSelectorStore.ID);
+    expect(userSelectorStore.parent).to.equal(userStore);
   }
 
 }

@@ -3,7 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { CustomSubject, PublisherSubscriber } from '@fluxgate/core';
+import { Assert, CustomSubject, Dictionary, PublisherSubscriber } from '@fluxgate/core';
 
 import { ICommand } from './commands/command.interface';
 
@@ -24,6 +24,7 @@ export class CommandStore<T> {
   private _channel: string;
   private pubSub: PublisherSubscriber = new PublisherSubscriber();
   private state: T;
+  private _children: Dictionary<string, CommandStore<any>> = new Dictionary<string, CommandStore<any>>();
 
   constructor(private _name: string, initialState: T, private _parent?: CommandStore<T>) {
     using(new XLog(CommandStore.logger, levels.INFO, 'ctor'), (log) => {
@@ -47,6 +48,22 @@ export class CommandStore<T> {
   public get parent(): CommandStore<T> {
     return this._parent;
   }
+
+  public addChild(child: CommandStore<T>) {
+    Assert.notNull(child);
+    this._children.set(child.name, child);
+  }
+
+  public containsChild(storeId: string): boolean {
+    Assert.notNullOrEmpty(storeId);
+    return this._children.containsKey(storeId);
+  }
+
+  public getChild(storeId: string): CommandStore<T> {
+    Assert.notNullOrEmpty(storeId);
+    return this._children.get(storeId);
+  }
+
 
   /**
    * Liefert den Status
