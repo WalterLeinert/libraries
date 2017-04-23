@@ -64,9 +64,8 @@ export class CommandStoreStorage {
         parent.addChild(child);
       });
 
-    // schliesslich alle Root-CommandStores beim store registrieren
+    // schliesslich alle CommandStores beim store registrieren
     storeDict.values
-      // .filter((item) => !Types.isPresent(item.parent))
       .forEach((item) => {
         store.add(item);
       });
