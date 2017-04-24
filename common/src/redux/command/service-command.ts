@@ -1,6 +1,6 @@
 import { IEntity } from '../../model/entity.interface';
 import { IServiceState } from '../state/service-state.interface';
-import { ServiceRequests } from './../service-requests/service-requests';
+import { IServiceRequests, ServiceRequests } from './../service-requests';
 import { ICommand } from './command.interface';
 
 
@@ -17,7 +17,7 @@ import { ICommand } from './command.interface';
 export abstract class ServiceCommand<T extends IEntity<TId>, TId> implements ICommand<IServiceState> {
 
 
-  protected constructor(private _storeId: string) {
+  protected constructor(private _serviceRequests: IServiceRequests) {
   }
 
   /**
@@ -28,7 +28,7 @@ export abstract class ServiceCommand<T extends IEntity<TId>, TId> implements ICo
    * @memberOf ServiceCommand
    */
   public get storeId(): string {
-    return this._storeId;
+    return this._serviceRequests.storeId;
   }
 
 

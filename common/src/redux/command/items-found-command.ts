@@ -2,6 +2,7 @@ import { IEntity } from '../../model/entity.interface';
 
 import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
+import { IServiceRequests } from './../service-requests';
 import { ServiceCommand } from './service-command';
 
 
@@ -19,8 +20,8 @@ import { ServiceCommand } from './service-command';
  */
 export class ItemsFoundCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
-  constructor(storeId: string, private items: T[]) {
-    super(storeId);
+  constructor(serviceRequests: IServiceRequests, private items: T[]) {
+    super(serviceRequests);
   }
 
   /**

@@ -48,14 +48,14 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
    * @memberOf ServiceRequests
    */
   public create(item: T): void {
-    this.dispatch(new CreatingItemCommand(this.storeId, item));
+    this.dispatch(new CreatingItemCommand(this, item));
 
     this.service.create(item).subscribe(
       (elem) => {
-        this.dispatch(new ItemCreatedCommand(this.storeId, elem));
+        this.dispatch(new ItemCreatedCommand(this, elem));
       },
       (exc: IException) => {
-        this.dispatch(new ErrorCommand(this.storeId, exc));
+        this.dispatch(new ErrorCommand(this, exc));
       });
   }
 
@@ -68,15 +68,15 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
   public find(useCache: boolean = false): void {
     const state = this.getCrudState(this.storeId);
 
-    this.dispatch(new FindingItemsCommand(this.storeId));
+    this.dispatch(new FindingItemsCommand(this));
 
     const finder = () => {
       this.service.find().subscribe(
         (items) => {
-          this.dispatch(new ItemsFoundCommand(this.storeId, items));
+          this.dispatch(new ItemsFoundCommand(this, items));
         },
         (exc: IException) => {
-          this.dispatch(new ErrorCommand(this.storeId, exc));
+          this.dispatch(new ErrorCommand(this, exc));
         });
     };
 
@@ -86,7 +86,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
 
       } else {
         // items aus dem State liefern
-        this.dispatch(new ItemsFoundCommand(this.storeId, [...state.items]));
+        this.dispatch(new ItemsFoundCommand(this, [...state.items]));
       }
     } else {
       finder();
@@ -95,14 +95,14 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
 
 
   public findById(id: TId): void {
-    this.dispatch(new FindingItemByIdCommand(this.storeId, id));
+    this.dispatch(new FindingItemByIdCommand(this, id));
 
     this.service.findById(id).subscribe(
       (elem) => {
-        this.dispatch(new ItemFoundByIdCommand(this.storeId, elem));
+        this.dispatch(new ItemFoundByIdCommand(this, elem));
       },
       (exc: IException) => {
-        this.dispatch(new ErrorCommand(this.storeId, exc));
+        this.dispatch(new ErrorCommand(this, exc));
       });
   }
 
@@ -115,14 +115,14 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
    * @memberOf ServiceRequests
    */
   public update(item: T): void {
-    this.dispatch(new UpdatingItemCommand(this.storeId, item));
+    this.dispatch(new UpdatingItemCommand(this, item));
 
     this.service.update(item).subscribe(
       (elem) => {
-        this.dispatch(new ItemUpdatedCommand(this.storeId, elem));
+        this.dispatch(new ItemUpdatedCommand(this, elem));
       },
       (exc: IException) => {
-        this.dispatch(new ErrorCommand(this.storeId, exc));
+        this.dispatch(new ErrorCommand(this, exc));
       });
   }
 
@@ -135,14 +135,14 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
    * @memberOf ServiceRequests
    */
   public delete(id: TId): void {
-    this.dispatch(new DeletingItemCommand(this.storeId, id));
+    this.dispatch(new DeletingItemCommand(this, id));
 
     this.service.delete(id).subscribe(
       (result) => {
-        this.dispatch(new ItemDeletedCommand(this.storeId, result.id));
+        this.dispatch(new ItemDeletedCommand(this, result.id));
       },
       (exc: IException) => {
-        this.dispatch(new ErrorCommand(this.storeId, exc));
+        this.dispatch(new ErrorCommand(this, exc));
       });
   }
 

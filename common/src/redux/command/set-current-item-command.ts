@@ -1,6 +1,7 @@
 import { IEntity } from '../../model/entity.interface';
 
 import { ICurrentItemServiceState } from '../state/current-item-service-state.interface';
+import { IServiceRequests } from './../service-requests';
 import { ServiceCommand } from './service-command';
 
 
@@ -17,8 +18,8 @@ import { ServiceCommand } from './service-command';
  */
 export class SetCurrentItemCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
-  constructor(storeId: string, private item: T) {
-    super(storeId);
+  constructor(serviceRequests: IServiceRequests, private item: T) {
+    super(serviceRequests);
   }
 
   /**

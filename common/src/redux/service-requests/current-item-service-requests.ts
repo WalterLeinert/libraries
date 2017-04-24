@@ -37,7 +37,7 @@ export class CurrentItemServiceRequests<T extends IEntity<TId>, TId extends IToS
    * @memberOf ServiceRequests
    */
   public setCurrent(item: T): void {
-    this.dispatch(new SetCurrentItemCommand(this.storeId, item));
+    this.dispatch(new SetCurrentItemCommand(this, item));
   }
 
   public getCurrentItemState(storeId: string): ICurrentItemServiceState<T, TId> {

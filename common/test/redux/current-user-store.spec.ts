@@ -2,7 +2,7 @@
 // tslint:disable:member-access
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { NotSupportedException } from '@fluxgate/core';
 
@@ -17,7 +17,7 @@ import { UserServiceFake } from '../../src/testing/user-service-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('redux: CurrentUserStore') @only
+@suite('redux: CurrentUserStore')
 class CurrentUserStoreTest extends ReduxBaseTest<IUser, number, any> {
   private user: IUser = new User(1, 'walter', 1, 'Leinert');
 
