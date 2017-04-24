@@ -69,7 +69,7 @@ class UpdateCurrentTest extends ReduxBaseTest<IUser, number, any> {
         // currentItem setzen -> nach update prüfen
         this.currentItemServiceRequests.setCurrent(item);
         // snapshot vom Status
-        this.beforeState = this.getStoreState(UserStore.ID);
+        this.beforeState = this.getStoreState();
 
         this.reset();
 

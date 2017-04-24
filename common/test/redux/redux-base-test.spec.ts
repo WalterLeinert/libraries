@@ -85,15 +85,15 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
   }
 
 
-  protected getStoreState(storeId: string): IServiceState {
-    return this._serviceRequests.getStoreState(storeId);
+  protected getStoreState(): IServiceState {
+    return this._serviceRequests.getStoreState(this.storeId);
   }
-  protected getCrudState(storeId: string): ICrudServiceState<T, TId> {
-    return this.crudServiceRequests.getCrudState(storeId);
+  protected getCrudState(): ICrudServiceState<T, TId> {
+    return this.crudServiceRequests.getCrudState(this.storeId);
   }
 
-  protected getCurrentItemState(storeId: string): ICurrentItemServiceState<T, TId> {
-    return this.currentItemServiceRequests.getCurrentItemState(storeId);
+  protected getCurrentItemState(): ICurrentItemServiceState<T, TId> {
+    return this.currentItemServiceRequests.getCurrentItemState(this.storeId);
   }
 
   protected get crudServiceRequests(): ICrudServiceRequests<T, TId> {

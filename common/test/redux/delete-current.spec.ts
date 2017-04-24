@@ -32,7 +32,7 @@ export class UserSelectorStore extends CommandStore<IExtendedCrudServiceState<IU
 }
 
 
-@suite('redux: delete (current)') @only
+@suite('redux: delete (current)')
 class DeleteCurrentTest extends ReduxBaseTest<IUser, number, any> {
   private static readonly DELETE_ID = 1;
   private beforeState: IServiceState;
@@ -93,7 +93,7 @@ class DeleteCurrentTest extends ReduxBaseTest<IUser, number, any> {
       //
       this.crudServiceRequests.find();
 
-      const state = this.getCrudState(UserStore.ID);
+      const state = this.getCrudState();
 
       this.itemToDelete = state.items.filter((item) => item.id === DeleteCurrentTest.DELETE_ID)[0];
 
@@ -101,7 +101,7 @@ class DeleteCurrentTest extends ReduxBaseTest<IUser, number, any> {
       this.currentItemServiceRequests.setCurrent(this.itemToDelete);
 
       // snapshot vom Status
-      this.beforeState = this.getStoreState(UserStore.ID);
+      this.beforeState = this.getStoreState();
 
       this.reset();
 

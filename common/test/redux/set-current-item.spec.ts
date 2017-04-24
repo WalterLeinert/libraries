@@ -2,11 +2,11 @@
 // tslint:disable:member-access
 
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
+import { only, suite, test } from 'mocha-typescript';
 
 
 import { IUser, User } from '../../src/model';
-import { ICurrentItemServiceState, UserStore } from '../../src/redux';
+import { CurrentUserStore, ICurrentItemServiceState } from '../../src/redux';
 import { SetCurrentItemCommand } from '../../src/redux';
 
 import { CurrentUserServiceRequestsFake } from '../../src/testing/current-user-service-requests-fake';
@@ -20,7 +20,7 @@ class SetCurrentTest extends ReduxBaseTest<IUser, number, any> {
   private user: IUser = new User(1, 'walter');
 
   constructor() {
-    super(UserStore.ID, CurrentUserServiceRequestsFake, UserServiceFake);
+    super(CurrentUserStore.ID, CurrentUserServiceRequestsFake, UserServiceFake);
   }
 
 
@@ -44,7 +44,7 @@ class SetCurrentTest extends ReduxBaseTest<IUser, number, any> {
       //
       // before-Status erzeugen
       //
-      this.beforeState = this.getCurrentItemState(UserStore.ID);
+      this.beforeState = this.getCurrentItemState();
       this.reset();
 
 

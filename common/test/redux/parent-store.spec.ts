@@ -2,13 +2,13 @@
 // tslint:disable:member-access
 
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
+import { only, suite, test } from 'mocha-typescript';
 
 import { IUser } from '../../src/model';
 import {
   CommandStore, ExtendedCrudServiceRequests, FindingItemByIdCommand, IExtendedCrudServiceState,
   IServiceState,
-  ItemFoundByIdCommand, ReduxParentStore, ServiceRequestStates, Store
+  ItemFoundByIdCommand, ReduxParentStore, ServiceRequestStates
 } from '../../src/redux';
 import { UserStore } from '../../src/redux/store';
 
@@ -57,11 +57,14 @@ class ParentStoreTest extends ReduxBaseTest<IUser, number, any> {
     expect(this.commands[0]).to.be.instanceOf(FindingItemByIdCommand);
 
     const state0 = this.getCrudStateAt(0);
-    expect(state0).to.deep.equal(this.beforeState);
+    expect(state0).to.deep.equal({
+      ...this.beforeState,
+      state: ServiceRequestStates.RUNNING
+    });
 
     expect(this.commands[1]).to.be.instanceOf(ItemFoundByIdCommand);
 
-    const state1 = this.getCrudStateAt[1];
+    const state1 = this.getCrudStateAt(1);
     expect(state1).to.deep.equal({
       ...this.beforeState,
       item: state1.item,
@@ -74,7 +77,7 @@ class ParentStoreTest extends ReduxBaseTest<IUser, number, any> {
     super.before(() => {
 
       // snapshot vom Status
-      this.beforeState = this.getStoreState(UserStore.ID);
+      this.beforeState = this.getStoreState();
       this.reset();
 
       this.crudServiceRequests.findById(1);

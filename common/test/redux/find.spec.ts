@@ -23,7 +23,7 @@ class FindTest extends ReduxBaseTest<IUser, number, any> {
   }
 
   @test 'should test initial state'() {
-    const state = this.getCrudState(UserStore.ID);
+    const state = this.getCrudState();
     expect(state).to.deep.equal(CrudServiceRequests.INITIAL_STATE);
   }
 

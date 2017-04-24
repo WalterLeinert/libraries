@@ -28,7 +28,8 @@ export class CurrentUserStore extends CommandStore<ICurrentItemServiceState<IUse
 
   public dispatch(command: ICommand<ICurrentItemServiceState<IUser, number>>) {
     if (!(command instanceof SetCurrentItemCommand)) {
-      throw new NotSupportedException(`storeId ${command.storeId}: command not supported ${JSON.stringify(command)}`);
+      throw new NotSupportedException(`storeId ${command.storeId}: command not supported ` +
+        `${JSON.stringify(command.toString())}`);
     }
 
     super.dispatch(command);

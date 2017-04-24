@@ -68,7 +68,7 @@ class DeleteTest extends ReduxBaseTest<IUser, number, any> {
       // before-Status erzeugen
       //
       this.crudServiceRequests.find();
-      this.beforeState = this.getCrudState(UserStore.ID);
+      this.beforeState = this.getCrudState();
       this.reset();
 
       // Test: Item löschen
