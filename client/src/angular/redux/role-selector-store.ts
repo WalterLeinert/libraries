@@ -12,7 +12,7 @@ import {
  * @class RoleSelectorStore
  * @extends {CommandStore<IExtendedCrudServiceState<IRole, number>>}
  */
-@ReduxParentStore(RoleStore)
+@ReduxParentStore(() => RoleStore)
 export class RoleSelectorStore extends CommandStore<IExtendedCrudServiceState<IRole, number>> {
   public static ID = 'roleSelectorStore';
 

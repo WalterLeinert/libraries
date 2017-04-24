@@ -12,7 +12,7 @@ import {
  * @class UserSelectorStore
  * @extends {CommandStore<IExtendedCrudServiceState<IUser, number>>}
  */
-@ReduxParentStore(UserStore)
+@ReduxParentStore(() => UserStore)
 export class UserSelectorStore extends CommandStore<IExtendedCrudServiceState<IUser, number>> {
   public static ID = 'userSelectorStore';
 
