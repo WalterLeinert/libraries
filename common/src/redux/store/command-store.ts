@@ -90,8 +90,7 @@ export class CommandStore<TState extends IServiceState> {
    */
   public dispatch(command: ICommand<TState>) {
     using(new XLog(CommandStore.logger, levels.INFO, 'dispatch'), (log) => {
-      log.log(`command = ${command.constructor.name}: ${JSON.stringify(command)}`);
-
+      log.log(`command = ${command.toString()}`);
 
       this.state = command.execute(this.state);
 

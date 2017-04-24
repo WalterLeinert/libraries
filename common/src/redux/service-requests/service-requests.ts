@@ -46,4 +46,17 @@ export abstract class ServiceRequests implements IServiceRequests {
   public getStoreState(storeId: string): IServiceState {
     return this._store.getState(storeId);
   }
+
+  /**
+   * erzeugt aus dem bisherigen Status @param{state} einen neuen Status.
+   *
+   * @param {IServiceState} [state=ServiceRequests.INITIAL_STATE]
+   * @returns {IServiceState}
+   *
+   * @memberOf ServiceCommand
+   */
+  public updateState(command: ICommand<IServiceState>, state: IServiceState): IServiceState {
+    return state;
+  }
+
 }

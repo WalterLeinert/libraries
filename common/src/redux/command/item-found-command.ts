@@ -30,7 +30,7 @@ export class ItemFoundCommand<T extends IEntity<TId>, TId> extends ServiceComman
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
    */
-  public execute(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
+  protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
       items: [...state.items],

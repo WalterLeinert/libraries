@@ -20,10 +20,14 @@ import { ServiceCommand } from './service-command';
  */
 export class ItemUpdatedCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
-  constructor(serviceRequests: IServiceRequests, private item: T) {
+  constructor(serviceRequests: IServiceRequests, public item: T) {
     super(serviceRequests);
   }
 
+
+  public hasModifiedItems(): boolean {
+    return true;
+  }
 
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
@@ -33,18 +37,14 @@ export class ItemUpdatedCommand<T extends IEntity<TId>, TId> extends ServiceComm
    *
    * @memberOf UpdateItemCommand
    */
-  public execute(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
+  protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
       items: state.items.map((item) => item.id !== this.item.id ? item : this.item),
       item: this.item,
-      // TODO currentItem: (state.currentItem && state.currentItem.id === this.item.id) ? this.item : state.currentItem,
       state: ServiceRequestStates.DONE,
       error: undefined
     };
   }
 
-  public hasModifiedItems(): boolean {
-    return true;
-  }
 }

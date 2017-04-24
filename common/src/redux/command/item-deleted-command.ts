@@ -19,8 +19,12 @@ import { ServiceCommand } from './service-command';
  */
 export class ItemDeletedCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
-  constructor(serviceRequests: IServiceRequests, private id: TId) {
+  constructor(serviceRequests: IServiceRequests, public id: TId) {
     super(serviceRequests);
+  }
+
+  public hasModifiedItems(): boolean {
+    return true;
   }
 
   /**
@@ -31,19 +35,14 @@ export class ItemDeletedCommand<T extends IEntity<TId>, TId> extends ServiceComm
    *
    * @memberOf DeleteItemCommand
    */
-  public execute(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
+  protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
       items: state.items.filter((item) => item.id !== this.id),
       deletedId: this.id,
-      // TODO: currentItem: (state.currentItem && state.currentItem.id === this.id) ? null : state.currentItem,
       item: (state.item && state.item.id === this.id) ? null : state.item,
       state: ServiceRequestStates.DONE,
       error: undefined
     };
-  }
-
-  public hasModifiedItems(): boolean {
-    return true;
   }
 }

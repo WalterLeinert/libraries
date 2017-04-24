@@ -30,7 +30,7 @@ export class SetCurrentItemCommand<T extends IEntity<TId>, TId> extends ServiceC
    *
    * @memberOf SetCurrentItemCommand
    */
-  public execute(state: ICurrentItemServiceState<T, TId>): ICurrentItemServiceState<T, TId> {
+  protected updateState(state: ICurrentItemServiceState<T, TId>): ICurrentItemServiceState<T, TId> {
     const item: T = this.item;
     return {
       ...state,

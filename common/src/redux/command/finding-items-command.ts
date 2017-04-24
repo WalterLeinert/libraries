@@ -32,7 +32,7 @@ export class FindingItemsCommand<T extends IEntity<TId>, TId> extends ServiceCom
    *
    * @memberOf FindItemsCommand
    */
-  public execute(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
+  protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
       items: [...state.items],

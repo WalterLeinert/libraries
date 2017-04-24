@@ -24,6 +24,10 @@ export class ItemCreatedCommand<T extends IEntity<TId>, TId> extends ServiceComm
   }
 
 
+  public hasModifiedItems(): boolean {
+    return true;
+  }
+
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
    *
@@ -31,7 +35,7 @@ export class ItemCreatedCommand<T extends IEntity<TId>, TId> extends ServiceComm
    * @returns {IServiceState<T, TId>}
    *
    */
-  public execute(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
+  protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
       items: [...state.items, this.item],
@@ -39,9 +43,5 @@ export class ItemCreatedCommand<T extends IEntity<TId>, TId> extends ServiceComm
       state: ServiceRequestStates.DONE,
       error: undefined
     };
-  }
-
-  public hasModifiedItems(): boolean {
-    return true;
   }
 }

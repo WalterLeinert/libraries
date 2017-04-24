@@ -1,10 +1,12 @@
 import { IToString } from '@fluxgate/core';
 import { IEntity } from '../../model/entity.interface';
 import { IService } from '../../model/service/service.interface';
-import { Store } from '../store';
+import { Store } from '../store/store';
+import { ICommand, ItemDeletedCommand, ItemUpdatedCommand } from './../command/';
 import { ICrudServiceState } from './../state/crud-service-state.interface';
 import { ICurrentItemServiceState } from './../state/current-item-service-state.interface';
 import { IExtendedCrudServiceState } from './../state/extended-crud-service-state.interface';
+import { IServiceState } from './../state/service-state.interface';
 import { CrudServiceRequests } from './crud-service-requests';
 import { ICrudServiceRequests } from './crud-service-requests.interface';
 import { CurrentItemServiceRequests } from './current-item-service-requests';
@@ -82,5 +84,32 @@ export abstract class ExtendedCrudServiceRequests<T extends IEntity<TId>, TId ex
 
   public getCurrentItemState(storeId: string): ICurrentItemServiceState<T, TId> {
     return this.currentItemServiceRequests.getCurrentItemState(storeId);
+  }
+
+
+  public updateState(command: ICommand<IServiceState>, state: IServiceState): IServiceState {
+    if (command instanceof ItemDeletedCommand) {
+      const extState = state as IExtendedCrudServiceState<T, TId>;
+
+      // currentItem ggf. zurücksetzen
+      return {
+        ...state,
+        currentItem: (extState.currentItem && extState.currentItem.id === command.id) ? null : extState.currentItem,
+      };
+    }
+
+    if (command instanceof ItemUpdatedCommand) {
+      const extState = state as IExtendedCrudServiceState<T, TId>;
+
+      // currentItem ggf. aktualisieren
+      return {
+        ...state,
+        currentItem: (extState.currentItem && extState.currentItem.id === command.item.id) ?
+          command.item : extState.currentItem,
+      };
+    }
+
+
+    return state;
   }
 }

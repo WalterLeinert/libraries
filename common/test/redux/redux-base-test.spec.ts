@@ -65,7 +65,7 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
     Assert.notNull(command);
 
     using(new XLog(ReduxBaseTest.logger, levels.INFO, 'onStoreUpdated', `class: ${this.constructor.name}`), (log) => {
-      log.log(`command = ${command.constructor.name}: ${JSON.stringify(command)}`);
+      log.log(`command = ${command.toString()}`);
 
       this._commands.push(command);
       const state = this._serviceRequests.getStoreState(command.storeId);

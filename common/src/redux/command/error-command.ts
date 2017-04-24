@@ -31,7 +31,7 @@ export class ErrorCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T,
    * @returns {IServiceState<T, TId>}
    *
    */
-  public execute(state: IServiceState): IServiceState {
+  protected updateState(state: IServiceState): IServiceState {
     return {
       ...state,
       state: ServiceRequestStates.ERROR,

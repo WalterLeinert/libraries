@@ -29,7 +29,7 @@ export class FindingItemByIdCommand<T extends IEntity<TId>, TId> extends Service
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
    */
-  public execute(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
+  protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
       items: [...state.items],

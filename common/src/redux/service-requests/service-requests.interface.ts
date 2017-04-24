@@ -1,5 +1,5 @@
+import { ICommand } from '../command/command.interface';
 import { IServiceState } from '../state/service-state.interface';
-
 
 /**
  * Basis-Interface für Servicerequests.
@@ -32,4 +32,16 @@ export interface IServiceRequests {
    * @memberOf IServiceRequests
    */
   getStoreState(storeId: string): IServiceState;
+
+
+
+  /**
+   * erzeugt aus dem bisherigen Status @param{state} (ggf) einen neuen Status.
+   *
+   * @param {IServiceState}
+   * @returns {IServiceState}
+   *
+   * @memberOf ServiceCommand
+   */
+  updateState(command: ICommand<IServiceState>, state: IServiceState): IServiceState;
 }

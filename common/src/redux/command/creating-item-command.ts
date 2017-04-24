@@ -32,7 +32,7 @@ export class CreatingItemCommand<T extends IEntity<TId>, TId> extends ServiceCom
    * @returns {IServiceState<T, TId>}
    *
    */
-  public execute(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
+  protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
       items: [...state.items],

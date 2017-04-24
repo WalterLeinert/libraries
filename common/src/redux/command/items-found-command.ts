@@ -24,6 +24,11 @@ export class ItemsFoundCommand<T extends IEntity<TId>, TId> extends ServiceComma
     super(serviceRequests);
   }
 
+  public hasModifiedItems(): boolean {
+    return true;
+  }
+
+
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
    *
@@ -32,7 +37,7 @@ export class ItemsFoundCommand<T extends IEntity<TId>, TId> extends ServiceComma
    *
    * @memberOf FindItemsCommand
    */
-  public execute(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
+  protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
       items: [...this.items],
@@ -41,7 +46,4 @@ export class ItemsFoundCommand<T extends IEntity<TId>, TId> extends ServiceComma
     };
   }
 
-  public hasModifiedItems(): boolean {
-    return true;
-  }
 }
