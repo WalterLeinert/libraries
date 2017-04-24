@@ -18,7 +18,7 @@ import {
 } from '@fluxgate/core';
 
 import {
-  CompoundValidator, CurrentUserStore, IEntity, IServiceState,
+  CompoundValidator, CurrentUserStore, ICurrentItemServiceState, IEntity, IServiceState,
   IUser, PatternValidator, RangeValidator,
   RequiredValidator, ServiceCommand, SetCurrentItemCommand, Store, TableMetadata
 } from '@fluxgate/common';
@@ -607,8 +607,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    *
    * @memberOf CoreComponent
    */
-  protected getStoreState<T extends IEntity<TId>, TId>(storeId: string): IServiceState<T, TId> {
-    return this.store.getState<IServiceState<T, TId>>(storeId);
+  protected getStoreState<TState extends IServiceState>(storeId: string): TState {
+    return this.store.getState(storeId) as TState;
   }
 
 
@@ -621,7 +621,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf CoreComponent
    */
   protected getCurrentUser(): IUser {
-    const state = this.getStoreState<IUser, number>(CurrentUserStore.ID);
+    const state = this.getStoreState<ICurrentItemServiceState<IUser, number>>(CurrentUserStore.ID);
     return state.currentItem;
   }
 

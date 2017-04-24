@@ -170,37 +170,38 @@ export abstract class ExtendedCoreComponent extends CoreComponent {
   }
 
   // TODO: diese Methode umbenennen in findItems (ohne 'ByServiceRequest'), die Methoden aus BaseComponent
-  protected findItemsByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(item: T,
-    groupName: string = FormGroupInfo.DEFAULT_NAME,
-    serviceRequests: ServiceRequests<T, TId, TService>): void {
-    serviceRequests.find();
-  }
+  // TODO obsolete?
+  // protected findItemsByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(item: T,
+  //   groupName: string = FormGroupInfo.DEFAULT_NAME,
+  //   serviceRequests: ServiceRequests<T, TId, TService>): void {
+  //   serviceRequests.find();
+  // }
 
-  protected findItemByIdServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(id: TId,
-    groupName: string = FormGroupInfo.DEFAULT_NAME,
-    serviceRequests: ServiceRequests<T, TId, TService>): void {
-    serviceRequests.findById(id);
-  }
-
-
-  protected createItemByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(item: T,
-    groupName: string = FormGroupInfo.DEFAULT_NAME,
-    serviceRequests: ServiceRequests<T, TId, TService>): void {
-    serviceRequests.create(item);
-  }
+  // protected findItemByIdServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(id: TId,
+  //   groupName: string = FormGroupInfo.DEFAULT_NAME,
+  //   serviceRequests: ServiceRequests<T, TId, TService>): void {
+  //   serviceRequests.findById(id);
+  // }
 
 
-  protected updateItemByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(item: T,
-    groupName: string = FormGroupInfo.DEFAULT_NAME,
-    serviceRequests: ServiceRequests<T, TId, TService>): void {
-    serviceRequests.update(item);
-  }
+  // protected createItemByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(item: T,
+  //   groupName: string = FormGroupInfo.DEFAULT_NAME,
+  //   serviceRequests: ServiceRequests<T, TId, TService>): void {
+  //   serviceRequests.create(item);
+  // }
 
-  protected deleteItemByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(id: TId,
-    groupName: string = FormGroupInfo.DEFAULT_NAME,
-    serviceRequests: ServiceRequests<T, TId, TService>): void {
-    serviceRequests.delete(id);
-  }
+
+  // protected updateItemByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(item: T,
+  //   groupName: string = FormGroupInfo.DEFAULT_NAME,
+  //   serviceRequests: ServiceRequests<T, TId, TService>): void {
+  //   serviceRequests.update(item);
+  // }
+
+  // protected deleteItemByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(id: TId,
+  //   groupName: string = FormGroupInfo.DEFAULT_NAME,
+  //   serviceRequests: ServiceRequests<T, TId, TService>): void {
+  //   serviceRequests.delete(id);
+  // }
 
 
 

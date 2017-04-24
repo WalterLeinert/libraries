@@ -14,8 +14,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  IEntity, IService, IServiceState, ItemCreatedCommand, ItemDeletedCommand,
-  ItemUpdatedCommand, ServiceCommand, ServiceRequests
+  IEntity, IExtendedCrudServiceRequests, IExtendedCrudServiceState, IServiceState, ItemCreatedCommand,
+  ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
 import { MessageService } from '../../services/message.service';
 import { ExtendedCoreComponent } from './extended-core.component';
@@ -30,8 +30,8 @@ import { ExtendedCoreComponent } from './extended-core.component';
  * @implements {OnInit}
  * @template TService - der konkrete Service
  */
-export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TServiceRequests extends ServiceRequests<
-  T, TId, IService<T, TId>>> extends ExtendedCoreComponent {
+export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TServiceRequests
+  extends IExtendedCrudServiceRequests<T, TId>> extends ExtendedCoreComponent {
   protected static readonly logger = getLogger(ServiceRequestsComponent);
 
 
@@ -108,15 +108,15 @@ export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TSer
   /**
    * Liefert den Store-State für den @see{CommandStore} der serviceRequests.
    */
-  protected getState(): IServiceState<T, TId> {
+  protected getState(): IExtendedCrudServiceState<T, TId> {
     return this.getStoreState(this.storeId);
   }
 
   /**
    * Liefert den Store-State für den die angegebene @param{storeId}.
    */
-  protected getStoreState(storeId: string): IServiceState<T, TId> {
-    return super.getStoreState<T, TId>(storeId);
+  protected getStoreState(storeId: string): IExtendedCrudServiceState<T, TId> {
+    return super.getStoreState<IExtendedCrudServiceState<T, TId>>(storeId);
   }
 
   /**

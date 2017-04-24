@@ -1,5 +1,5 @@
 // fluxgate
-import { IEntity, ServiceRequests, Store } from '@fluxgate/common';
+import { ExtendedCrudServiceRequests, IEntity, Store } from '@fluxgate/common';
 import { InvalidOperationException, IToString, Types } from '@fluxgate/core';
 
 import { Service } from '../services/service';
@@ -16,7 +16,7 @@ import { Service } from '../services/service';
  */
 export abstract class EnhancedServiceRequests<T extends IEntity<TId>, TId extends IToString,
   TService extends Service<T, TId>>
-  extends ServiceRequests<T, TId, TService> {
+  extends ExtendedCrudServiceRequests<T, TId, TService> {
 
   constructor(storeId: string, service: TService, store: Store) {
     super(storeId, service, store);

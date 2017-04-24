@@ -4,7 +4,7 @@ import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular
 import { Router } from '@angular/router';
 
 import { IEntity, IUser, UserStore } from '@fluxgate/common';
-import { ItemsFoundCommand, ServiceCommand } from '@fluxgate/common';
+import { ItemsFoundCommand, IExtendedCrudServiceState, ServiceCommand } from '@fluxgate/common';
 import { Utility } from '@fluxgate/core';
 
 import { UserServiceRequests } from '../../redux/user-service-requests';
@@ -80,7 +80,7 @@ export class UserSelectorComponent extends SelectorBaseComponent<IUser> {
   protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
     super.onStoreUpdated(command);
 
-    const state = this.getStoreState<IUser, number>(UserStore.ID);
+    const state = this.getStoreState<IExtendedCrudServiceState<IUser, number>>(UserStore.ID);
 
     if (command.storeId === UserStore.ID) {
 

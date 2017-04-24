@@ -4,11 +4,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 
-
-
 import { RoleServiceFake } from '../../../../test/services/role-service-fake';
 import { AppStore } from '../../redux/app-store';
-import { RoleServiceRequestsModule } from '../../redux/role-service-requests';
+import { RoleSelectorServiceRequestsModule } from '../../redux/role-selector-service-requests';
 import { AppInjector } from '../../services/appInjector.service';
 import { ConfigService } from '../../services/config.service';
 import { MessageServiceModule } from '../../services/message.service';
@@ -38,7 +36,7 @@ describe('RoleSelectorComponent', () => {
         RouterTestingModule,
         MessageServiceModule,
         DropdownSelectorModule,
-        RoleServiceRequestsModule
+        RoleSelectorServiceRequestsModule
       ],
       declarations: [
         RoleSelectorComponent

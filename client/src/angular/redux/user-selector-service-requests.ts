@@ -1,18 +1,19 @@
 import { Inject, Injectable, NgModule } from '@angular/core';
 
 // fluxgate
-import {
-  CurrentItemServiceRequests, CurrentUserStore, IUser, Store
-} from '@fluxgate/common';
+import { ExtendedCrudServiceRequests, IUser, Store } from '@fluxgate/common';
+
 
 import { UserService } from '../modules/authentication/user.service';
 import { AppStore } from './app-store';
+import { UserSelectorStore } from './user-selector-store';
+
 
 @Injectable()
-export class CurrentUserServiceRequests extends CurrentItemServiceRequests<IUser, number> {
+export class UserSelectorServiceRequests extends ExtendedCrudServiceRequests<IUser, number, UserService> {
 
   constructor(service: UserService, @Inject(AppStore) store: Store) {
-    super(CurrentUserStore.ID, store);
+    super(UserSelectorStore.ID, service, store);
   }
 }
 
@@ -26,8 +27,8 @@ export class CurrentUserServiceRequests extends CurrentItemServiceRequests<IUser
   exports: [
   ],
   providers: [
-    CurrentUserServiceRequests,
-    UserService
+    UserSelectorServiceRequests,
+    UserSelectorServiceRequests
   ]
 })
-export class CurrentUserServiceRequestsModule { }
+export class UserSelectorServiceRequestsModule { }

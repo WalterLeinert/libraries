@@ -4,10 +4,10 @@ import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular
 import { Router } from '@angular/router';
 
 import { IEntity, IRole, RoleStore } from '@fluxgate/common';
-import { ItemsFoundCommand, ServiceCommand } from '@fluxgate/common';
+import { ItemsFoundCommand, ServiceCommand, IExtendedCrudServiceState } from '@fluxgate/common';
 import { Utility } from '@fluxgate/core';
 
-import { RoleServiceRequests } from '../../redux/role-service-requests';
+import { RoleSelectorServiceRequests } from '../../redux/role-selector-service-requests';
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
@@ -53,7 +53,7 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
   public roles: IRole[];
 
   constructor(router: Router, metadataService: MetadataService, messageService: MessageService,
-    private serviceRequests: RoleServiceRequests,
+    private serviceRequests: RoleSelectorServiceRequests,
     changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, messageService, changeDetectorRef);
 
@@ -80,7 +80,7 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
   protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
     super.onStoreUpdated(command);
 
-    const state = this.getStoreState<IRole, number>(RoleStore.ID);
+    const state = this.getStoreState<IExtendedCrudServiceState<IRole, number>>(RoleStore.ID);
 
     if (command.storeId === RoleStore.ID) {
 
