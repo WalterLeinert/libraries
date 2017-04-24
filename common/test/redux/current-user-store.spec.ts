@@ -9,7 +9,7 @@ import { NotSupportedException } from '@fluxgate/core';
 import { IUser, User } from '../../src/model';
 
 import {
-  CurrentUserStore, ExtendedCrudServiceRequests, SetCurrentItemCommand
+  CurrentItemServiceRequests, CurrentUserStore, SetCurrentItemCommand
 } from '../../src/redux';
 
 import { ExtendedUserServiceRequestsFake } from '../../src/testing';
@@ -34,7 +34,7 @@ class CurrentUserStoreTest extends ReduxBaseTest<IUser, number, any> {
 
     const state0 = this.getCurrentItemStateAt(0);
     expect(state0).to.deep.equal({
-      ...ExtendedCrudServiceRequests.INITIAL_STATE,
+      ...CurrentItemServiceRequests.INITIAL_STATE,
       currentItem: this.user
     });
   }
