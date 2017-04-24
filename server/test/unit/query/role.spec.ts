@@ -21,7 +21,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { IRole, NumberIdGenerator, Role, ServiceResult, Status } from '@fluxgate/common';
 import { Clone } from '@fluxgate/core';
 
-import { RoleService } from '../../../src/ts-express-decorators-flx/services';
+import { RoleService } from '../../../src/ts-express-decorators-flx/services/role.service';
 
 import { KnexTest } from '../knexTest.spec';
 
