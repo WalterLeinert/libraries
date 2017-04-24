@@ -4,10 +4,10 @@ import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular
 import { Router } from '@angular/router';
 
 import { IEntity, IUser, UserStore } from '@fluxgate/common';
-import { ItemsFoundCommand, IExtendedCrudServiceState, ServiceCommand } from '@fluxgate/common';
+import { IExtendedCrudServiceState, ItemsFoundCommand, ServiceCommand } from '@fluxgate/common';
 import { Utility } from '@fluxgate/core';
 
-import { UserServiceRequests } from '../../redux/user-service-requests';
+import { UserSelectorServiceRequests } from '../../redux/user-selector-service-requests';
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
@@ -53,7 +53,7 @@ export class UserSelectorComponent extends SelectorBaseComponent<IUser> {
   public users: IUser[];
 
   constructor(router: Router, metadataService: MetadataService, messageService: MessageService,
-    private serviceRequests: UserServiceRequests,
+    private serviceRequests: UserSelectorServiceRequests,
     changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, messageService, changeDetectorRef);
 
@@ -77,13 +77,13 @@ export class UserSelectorComponent extends SelectorBaseComponent<IUser> {
     // this.changeDetectorRef.markForCheck();
   }
 
+
   protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
     super.onStoreUpdated(command);
 
-    const state = this.getStoreState<IExtendedCrudServiceState<IUser, number>>(UserStore.ID);
+    const state = this.getStoreState<IExtendedCrudServiceState<IUser, number>>(this.serviceRequests.storeId);
 
-    if (command.storeId === UserStore.ID) {
-
+    if (command.storeId === this.serviceRequests.storeId) {
       if (command instanceof ItemsFoundCommand) {
         this.value = Utility.isNullOrEmpty(state.items) ? null : state.items[0];
         this.users = state.items;

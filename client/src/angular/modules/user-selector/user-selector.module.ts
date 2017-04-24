@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { UserServiceRequestsModule } from '../../redux/user-service-requests';
+import { UserSelectorServiceRequestsModule } from '../../redux/user-selector-service-requests';
 import { MessageServiceModule } from '../../services/message.service';
 import { DropdownSelectorModule } from '../dropdown-selector';
 import { UserSelectorComponent } from './user-selector.component';
@@ -13,7 +13,7 @@ import { UserSelectorComponent } from './user-selector.component';
     FormsModule,
     MessageServiceModule,
     DropdownSelectorModule,
-    UserServiceRequestsModule
+    UserSelectorServiceRequestsModule
   ],
   declarations: [
     UserSelectorComponent

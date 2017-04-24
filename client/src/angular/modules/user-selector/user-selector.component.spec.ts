@@ -1,0 +1,68 @@
+import { CommonModule } from '@angular/common';
+import { DebugElement } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+
+import { UserServiceFake } from '../../../../test/services/user-service-fake';
+import { AppStore } from '../../redux/app-store';
+import { UserSelectorServiceRequestsModule } from '../../redux/user-selector-service-requests';
+import { AppInjector } from '../../services/appInjector.service';
+import { ConfigService } from '../../services/config.service';
+import { MessageServiceModule } from '../../services/message.service';
+import { MetadataService } from '../../services/metadata.service';
+import { UserService } from '../authentication/user.service';
+import { DropdownSelectorModule } from '../dropdown-selector';
+import { UserSelectorComponent } from './user-selector.component';
+
+
+// ACHTUNG: Store muss als letztes eingezogen werden!
+import { Store } from '@fluxgate/common';
+
+export function createCommandStore(): Store {
+  return new Store();
+}
+
+
+describe('UserSelectorComponent', () => {
+  let comp: UserSelectorComponent;
+  let fixture: ComponentFixture<UserSelectorComponent>;
+  let de: DebugElement;
+  let el: HTMLElement;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        CommonModule,
+        FormsModule,
+        RouterTestingModule,
+        MessageServiceModule,
+        DropdownSelectorModule,
+        UserSelectorServiceRequestsModule
+      ],
+      declarations: [
+        UserSelectorComponent
+      ],
+      providers: [
+        {
+          provide: AppStore, useFactory: createCommandStore
+        },
+        AppInjector,
+        ConfigService,
+        MetadataService,
+        { provide: UserService, useClass: UserServiceFake }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(UserSelectorComponent);
+    comp = fixture.debugElement.componentInstance;
+    de = fixture.debugElement;
+    el = de.nativeElement;
+    //   expect(compiled.querySelector('h1').textContent).toContain('app works!');
+  }));
+
+  it('should create the component', async(() => {
+    expect(comp).toBeTruthy();
+  }));
+
+});
