@@ -2,15 +2,14 @@
 // tslint:disable:member-access
 
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
+import { only, suite, test } from 'mocha-typescript';
 
 import { NotSupportedException } from '@fluxgate/core';
 
 import { IUser, User } from '../../src/model';
 
 import {
-  CurrentItemServiceRequests,
-  CurrentUserStore, SetCurrentItemCommand
+  CurrentUserStore, ExtendedCrudServiceRequests, SetCurrentItemCommand
 } from '../../src/redux';
 
 import { ExtendedUserServiceRequestsFake } from '../../src/testing';
@@ -18,7 +17,7 @@ import { UserServiceFake } from '../../src/testing/user-service-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('redux: CurrentUserStore')
+@suite('redux: CurrentUserStore') @only
 class CurrentUserStoreTest extends ReduxBaseTest<IUser, number, any> {
   private user: IUser = new User(1, 'walter', 1, 'Leinert');
 
@@ -35,7 +34,7 @@ class CurrentUserStoreTest extends ReduxBaseTest<IUser, number, any> {
 
     const state0 = this.getCurrentItemStateAt(0);
     expect(state0).to.deep.equal({
-      ...CurrentItemServiceRequests.INITIAL_STATE,
+      ...ExtendedCrudServiceRequests.INITIAL_STATE,
       currentItem: this.user
     });
   }
