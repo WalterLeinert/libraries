@@ -5,9 +5,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { Assert, CustomSubject, InvalidOperationException, Types } from '@fluxgate/core';
 
+import { ICommand } from '../command/command.interface';
+import { CommandStoreStorage } from '../decorators/command-store-storage';
+import { IServiceState } from '../state/service-state.interface';
 import { CommandStore } from './command-store';
-import { ICommand } from './commands/command.interface';
-import { CommandStoreStorage } from './decorators/command-store-storage';
 
 /**
  * Modelliert den Store beim redux/command Pattern.
@@ -77,7 +78,7 @@ export class Store {
    *
    * @memberOf Store
    */
-  public getState<T>(storeId: string): T {
+  public getState(storeId: string): IServiceState {
     Assert.notNullOrEmpty(storeId);
     const commandStore = this.commandStores[storeId];
     return commandStore.getState();
@@ -92,7 +93,7 @@ export class Store {
    *
    * @memberOf Store
    */
-  public getCommandStore<T>(storeId: string): CommandStore<T> {
+  public getCommandStore<T extends IServiceState>(storeId: string): CommandStore<T> {
     Assert.notNullOrEmpty(storeId);
     return this.commandStores[storeId];
   }

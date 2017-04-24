@@ -7,23 +7,23 @@ import { suite, test } from 'mocha-typescript';
 import { Clone } from '@fluxgate/core';
 
 import { IUser } from '../../src/model';
-import { IServiceState, ServiceCommand, ServiceRequestStates } from '../../src/redux';
+import { IServiceState, ServiceRequestStates } from '../../src/redux';
 import { ItemUpdatedCommand, UpdatingItemCommand } from '../../src/redux';
-import { UserStore } from '../../src/redux/stores';
+import { UserStore } from '../../src/redux/store';
 
+import { ExtendedUserServiceRequestsFake } from '../../src/testing';
 import { UserServiceFake } from '../../src/testing/user-service-fake';
-import { UserServiceRequestsFake } from '../../src/testing/user-service-requests-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
 @suite('redux: update (current)')
 class UpdateCurrentTest extends ReduxBaseTest<IUser, number, any> {
   private static readonly UPDATE_ID = 1;
-  private beforeState: IServiceState<IUser, number>;
+  private beforeState: IServiceState;
   private item: IUser;
 
   constructor() {
-    super(UserStore.ID, UserServiceRequestsFake, UserServiceFake);
+    super(UserStore.ID, ExtendedUserServiceRequestsFake, UserServiceFake);
   }
 
 
@@ -35,12 +35,12 @@ class UpdateCurrentTest extends ReduxBaseTest<IUser, number, any> {
     itemExpected.username = item.username;
     itemExpected.__version++;
 
-    this.serviceRequests.update(item);
+    this.crudServiceRequests.update(item);
 
     expect(this.commands.length).to.equal(2);
     expect(this.commands[0]).to.be.instanceOf(UpdatingItemCommand);
 
-    const state0 = this.states[0];
+    const state0 = this.getCrudStateAt(0);
     expect(state0).to.deep.equal({
       ...this.beforeState,
       state: ServiceRequestStates.RUNNING
@@ -48,9 +48,9 @@ class UpdateCurrentTest extends ReduxBaseTest<IUser, number, any> {
 
     expect(this.commands[1]).to.be.instanceOf(ItemUpdatedCommand);
 
-    const state1 = this.states[1];
+    const state1 = this.getCrudStateAt(1);
 
-    const expectedState: IServiceState<IUser, number> = {
+    const expectedState: IServiceState = {
       ...this.beforeState,
       item: itemExpected,
       currentItem: itemExpected,
@@ -67,7 +67,7 @@ class UpdateCurrentTest extends ReduxBaseTest<IUser, number, any> {
         this.item = item;
 
         // currentItem setzen -> nach update prüfen
-        this.serviceRequests.setCurrent(item);
+        this.currentItemServiceRequests.setCurrent(item);
         // snapshot vom Status
         this.beforeState = this.getStoreState(UserStore.ID);
 

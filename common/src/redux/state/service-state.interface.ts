@@ -1,48 +1,16 @@
 import { IException } from '@fluxgate/core';
 
-import { IEntity } from '../model/entity.interface';
 import { ServiceRequestState } from './service-request-state';
 
 /**
- * Interface für den Service-Status
+ * Basis-Interface für den Service-Status aller ServiceRequests
  *
  * @export
  * @interface IServiceState
  * @template T
  * @template TId
  */
-export interface IServiceState<T extends IEntity<TId>, TId> {
-  /**
-   * aktuelles Item (z.B. nach Selektion im Grid)
-   *
-   * @type {T}
-   * @memberOf IServiceState
-   */
-  currentItem: T;
-
-  /**
-   * aktuelle Item-Liste (z.B. für Anzeige im Grid)
-   *
-   * @type {T[]}
-   * @memberOf IServiceState
-   */
-  items: T[];
-
-  /**
-   * aktuelles Item (z.B. nach create/update)
-   *
-   * @type {T}
-   * @memberOf IServiceState
-   */
-  item: T;
-
-  /**
-   * Id des gelöschten Items
-   *
-   * @type {TId}
-   * @memberOf IServiceState
-   */
-  deletedId: TId;
+export interface IServiceState {
 
   /**
    * Der Status des zugehörigen Servicerequests.

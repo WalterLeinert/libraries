@@ -7,9 +7,9 @@ import { suite, test } from 'mocha-typescript';
 import { Clone } from '@fluxgate/core';
 
 import { IUser } from '../../src/model';
-import { IServiceState, ServiceCommand, ServiceRequestStates } from '../../src/redux';
+import { CrudServiceRequests, ICrudServiceState, ServiceRequestStates } from '../../src/redux';
 import { ItemUpdatedCommand, UpdatingItemCommand } from '../../src/redux';
-import { UserStore } from '../../src/redux/stores';
+import { UserStore } from '../../src/redux/store';
 
 import { UserServiceFake } from '../../src/testing/user-service-fake';
 import { UserServiceRequestsFake } from '../../src/testing/user-service-requests-fake';
@@ -34,23 +34,23 @@ class UpdateTest extends ReduxBaseTest<IUser, number, any> {
     itemExpected.username = item.username;
     itemExpected.__version++;
 
-    this.serviceRequests.update(item);
+    this.crudServiceRequests.update(item);
 
     expect(this.commands.length).to.equal(2);
     expect(this.commands[0]).to.be.instanceOf(UpdatingItemCommand);
 
-    const state0 = this.states[0];
+    const state0 = this.getCrudStateAt(0);
     expect(state0).to.deep.equal({
-      ...ServiceCommand.INITIAL_STATE,
+      ...CrudServiceRequests.INITIAL_STATE,
       state: ServiceRequestStates.RUNNING
     });
 
     expect(this.commands[1]).to.be.instanceOf(ItemUpdatedCommand);
 
-    const state1 = this.states[1];
+    const state1 = this.getCrudStateAt(1);
 
-    const expectedState: IServiceState<IUser, number> = {
-      ...ServiceCommand.INITIAL_STATE,
+    const expectedState: ICrudServiceState<IUser, number> = {
+      ...CrudServiceRequests.INITIAL_STATE,
       item: itemExpected,
       state: ServiceRequestStates.DONE
     };

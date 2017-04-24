@@ -5,22 +5,22 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 
-import { IUser } from '../../src/model';
-import { IServiceState, UserStore } from '../../src/redux';
+import { IUser, User } from '../../src/model';
+import { ICurrentItemServiceState, UserStore } from '../../src/redux';
 import { SetCurrentItemCommand } from '../../src/redux';
 
+import { CurrentUserServiceRequestsFake } from '../../src/testing/current-user-service-requests-fake';
 import { UserServiceFake } from '../../src/testing/user-service-fake';
-import { UserServiceRequestsFake } from '../../src/testing/user-service-requests-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('redux: set current')
+@suite('redux: set current item')
 class SetCurrentTest extends ReduxBaseTest<IUser, number, any> {
-  private static readonly CURRENT_INDEX = 2;
-  private beforeState: IServiceState<IUser, number>;
+  private beforeState: ICurrentItemServiceState<IUser, number>;
+  private user: IUser = new User(1, 'walter');
 
   constructor() {
-    super(UserStore.ID, UserServiceRequestsFake, UserServiceFake);
+    super(UserStore.ID, CurrentUserServiceRequestsFake, UserServiceFake);
   }
 
 
@@ -28,26 +28,28 @@ class SetCurrentTest extends ReduxBaseTest<IUser, number, any> {
     expect(this.commands.length).to.equal(1);
     expect(this.commands[0]).to.be.instanceOf(SetCurrentItemCommand);
 
-    const state0 = this.states[0];
+    const state0 = this.getCurrentItemStateAt(0);
     expect(state0).to.deep.equal({
       ...this.beforeState,
-      currentItem: this.beforeState.items[SetCurrentTest.CURRENT_INDEX]
+      currentItem: this.user
     });
   }
 
 
   protected before(done: (err?: any) => void) {
     super.before(() => {
+
+      this.user = new User(1, 'walter');
+
       //
       // before-Status erzeugen
       //
-      this.serviceRequests.find();
-      this.beforeState = this.getStoreState(UserStore.ID);
+      this.beforeState = this.getCurrentItemState(UserStore.ID);
       this.reset();
 
 
-      // Test: 2. Item als current setzen
-      this.serviceRequests.setCurrent(this.beforeState.items[SetCurrentTest.CURRENT_INDEX]);
+      // Test: user als current setzen
+      this.currentItemServiceRequests.setCurrent(this.user);
 
       done();
     });

@@ -2,8 +2,8 @@ import { IException } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
 
-import { ServiceRequestStates } from '../service-request-state';
-import { IServiceState } from '../service-state.interface';
+import { ServiceRequestStates } from '../state/service-request-state';
+import { IServiceState } from '../state/service-state.interface';
 import { ServiceCommand } from './service-command';
 
 
@@ -30,7 +30,7 @@ export class ErrorCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T,
    * @returns {IServiceState<T, TId>}
    *
    */
-  public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
+  public execute(state: IServiceState): IServiceState {
     return {
       ...state,
       state: ServiceRequestStates.ERROR,

@@ -5,8 +5,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { Assert, Dictionary, Funktion, Types } from '@fluxgate/core';
 
-import { CommandStore } from '../command-store';
-import { Store } from '../store';
+import { CommandStore } from '../store/command-store';
+import { Store } from '../store/store';
 import { CommandStoreMetadata } from './command-store-metadata';
 
 

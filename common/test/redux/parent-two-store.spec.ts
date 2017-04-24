@@ -6,37 +6,36 @@ import { suite, test } from 'mocha-typescript';
 
 import { IRole } from '../../src/model';
 import {
-  CommandStore, IServiceState, ReduxParentStore,
-  ServiceCommand, ServiceRequests, Store
+  CommandStore, IServiceState, ReduxParentStore, ServiceRequests, Store
 } from '../../src/redux';
-import { RoleStore } from '../../src/redux/stores';
+import { RoleStore } from '../../src/redux/store';
 import { RoleServiceFake } from '../../src/testing/role-service-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
 
 @ReduxParentStore(() => RoleStore)
-export class RoleSelectorStore1 extends CommandStore<IServiceState<IRole, number>> {
+export class RoleSelectorStore1 extends CommandStore<IServiceState> {
   public static ID = 'roleSelectorStore1';
 
-  constructor(parent?: CommandStore<IServiceState<IRole, number>>) {
-    super(RoleSelectorStore1.ID, ServiceCommand.INITIAL_STATE, parent);
+  constructor(parent?: CommandStore<IServiceState>) {
+    super(RoleSelectorStore1.ID, ServiceRequests.INITIAL_STATE, parent);
   }
 }
 
 @ReduxParentStore(() => RoleStore)
-export class RoleSelectorStore2 extends CommandStore<IServiceState<IRole, number>> {
+export class RoleSelectorStore2 extends CommandStore<IServiceState> {
   public static ID = 'roleSelectorStore2';
 
-  constructor(parent?: CommandStore<IServiceState<IRole, number>>) {
-    super(RoleSelectorStore2.ID, ServiceCommand.INITIAL_STATE, parent);
+  constructor(parent?: CommandStore<IServiceState>) {
+    super(RoleSelectorStore2.ID, ServiceRequests.INITIAL_STATE, parent);
   }
 }
 
 
-export class MyRoleServiceRequestsFake extends ServiceRequests<IRole, number, RoleServiceFake> {
+export class MyRoleServiceRequestsFake extends ServiceRequests {
   constructor(storeId: string, service: RoleServiceFake, store: Store) {
-    super(storeId, service, store);
+    super(storeId, store);
   }
 }
 

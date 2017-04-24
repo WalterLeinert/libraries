@@ -5,7 +5,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { Assert, CustomSubject, Dictionary, PublisherSubscriber } from '@fluxgate/core';
 
-import { ICommand } from './commands/command.interface';
+import { ICommand } from '../command/command.interface';
+import { IServiceState } from '../state/service-state.interface';
 
 
 /**
@@ -18,15 +19,15 @@ import { ICommand } from './commands/command.interface';
  * @class CommandStore
  * @template T
  */
-export class CommandStore<T> {
+export class CommandStore<TState extends IServiceState> {
   protected static readonly logger = getLogger(CommandStore);
 
   private _channel: string;
   private pubSub: PublisherSubscriber = new PublisherSubscriber();
-  private state: T;
+  private state: TState;
   private _children: Dictionary<string, CommandStore<any>> = new Dictionary<string, CommandStore<any>>();
 
-  constructor(private _name: string, initialState: T, private _parent?: CommandStore<T>) {
+  constructor(private _name: string, initialState: TState, private _parent?: CommandStore<TState>) {
     using(new XLog(CommandStore.logger, levels.INFO, 'ctor'), (log) => {
       this.state = initialState;
       this._channel = '$$' + _name + '$$';
@@ -45,15 +46,15 @@ export class CommandStore<T> {
     return this._name;
   }
 
-  public get parent(): CommandStore<T> {
+  public get parent(): CommandStore<TState> {
     return this._parent;
   }
 
-  public get children(): Array<CommandStore<T>> {
+  public get children(): Array<CommandStore<TState>> {
     return this._children.values;
   }
 
-  public addChild(child: CommandStore<T>) {
+  public addChild(child: CommandStore<TState>) {
     Assert.notNull(child);
     this._children.set(child.name, child);
   }
@@ -63,7 +64,7 @@ export class CommandStore<T> {
     return this._children.containsKey(storeId);
   }
 
-  public getChild(storeId: string): CommandStore<T> {
+  public getChild(storeId: string): CommandStore<TState> {
     Assert.notNullOrEmpty(storeId);
     return this._children.get(storeId);
   }
@@ -76,7 +77,7 @@ export class CommandStore<T> {
    *
    * @memberOf CommandStore
    */
-  public getState(): T {
+  public getState(): TState {
     return this.state;
   }
 
@@ -87,7 +88,7 @@ export class CommandStore<T> {
    *
    * @memberOf CommandStore
    */
-  public dispatch(command: ICommand<T>) {
+  public dispatch(command: ICommand<TState>) {
     using(new XLog(CommandStore.logger, levels.INFO, 'dispatch'), (log) => {
       log.log(`command = ${command.constructor.name}: ${JSON.stringify(command)}`);
 

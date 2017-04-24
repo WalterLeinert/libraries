@@ -1,9 +1,9 @@
 // fluxgate
 import { IUser } from '../model';
-import { CrudServiceRequests, Store } from '../redux';
+import { ExtendedCrudServiceRequests, Store } from '../redux';
 import { UserServiceFake } from './user-service-fake';
 
-export class UserServiceRequestsFake extends CrudServiceRequests<IUser, number, UserServiceFake> {
+export class ExtendedUserServiceRequestsFake extends ExtendedCrudServiceRequests<IUser, number, UserServiceFake> {
   constructor(storeId: string, service: UserServiceFake, store: Store) {
     super(storeId, service, store);
   }

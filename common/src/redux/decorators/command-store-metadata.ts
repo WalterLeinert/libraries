@@ -1,7 +1,7 @@
 import { Assert, Funktion } from '@fluxgate/core';
 
 import { RelationTypeInFunction } from '../../model/metadata/enumMetadata';
-import { CommandStore } from '../command-store';
+import { CommandStore } from '../store/command-store';
 
 export class CommandStoreMetadata {
 

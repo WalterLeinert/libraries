@@ -1,7 +1,7 @@
 import { IEntity } from '../../model/entity.interface';
 
-import { ServiceRequestStates } from '../service-request-state';
-import { IServiceState } from '../service-state.interface';
+import { ICrudServiceState } from '../state/crud-service-state.interface';
+import { ServiceRequestStates } from '../state/service-request-state';
 import { ServiceCommand } from './service-command';
 
 /**
@@ -30,7 +30,7 @@ export class ItemCreatedCommand<T extends IEntity<TId>, TId> extends ServiceComm
    * @returns {IServiceState<T, TId>}
    *
    */
-  public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
+  public execute(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
       items: [...state.items, this.item],

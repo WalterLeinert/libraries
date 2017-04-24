@@ -1,25 +1,24 @@
 import { IEntity } from '../../model/entity.interface';
 
-import { ServiceRequestStates } from '../service-request-state';
-import { IServiceState } from '../service-state.interface';
+import { ICrudServiceState } from '../state/crud-service-state.interface';
+import { ServiceRequestStates } from '../state/service-request-state';
 import { ServiceCommand } from './service-command';
 
-
 /**
- * async Kommando zum Finden/Liefern von Items über einen Rest-Service.
+ * async Kommando zum Löschen von Items über einen Rest-Service.
  *
- * Das eigentliche Finden von Items wird im zugehörigen ServiceRequest ausgeführt,
+ * Das eigentliche Löschen wird im zugehörigen ServiceRequest ausgeführt,
  * wo ein dispatch dieses Kommandos erfolgt.
  *
  * @export
- * @class FindingItemsCommand
+ * @class DeletingItemCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class FindingItemsCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
+export class DeletingItemCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
-  constructor(storeId: string) {
+  constructor(storeId: string, private id: TId) {
     super(storeId);
   }
 
@@ -29,9 +28,9 @@ export class FindingItemsCommand<T extends IEntity<TId>, TId> extends ServiceCom
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
    *
-   * @memberOf FindItemsCommand
+   * @memberOf DeleteItemCommand
    */
-  public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
+  public execute(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
       items: [...state.items],

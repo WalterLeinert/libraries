@@ -1,6 +1,6 @@
 import { IEntity } from '../../model/entity.interface';
 
-import { IServiceState } from '../service-state.interface';
+import { ICurrentItemServiceState } from '../state/current-item-service-state.interface';
 import { ServiceCommand } from './service-command';
 
 
@@ -29,11 +29,10 @@ export class SetCurrentItemCommand<T extends IEntity<TId>, TId> extends ServiceC
    *
    * @memberOf SetCurrentItemCommand
    */
-  public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
+  public execute(state: ICurrentItemServiceState<T, TId>): ICurrentItemServiceState<T, TId> {
     const item: T = this.item;
     return {
       ...state,
-      items: [...state.items],
       currentItem: item,
       error: undefined
     };

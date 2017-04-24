@@ -7,9 +7,9 @@ import { suite, test } from 'mocha-typescript';
 import { Clone } from '@fluxgate/core';
 
 import { IUser } from '../../src/model';
-import { IServiceState, ServiceRequestStates } from '../../src/redux';
+import { ICrudServiceState, ServiceRequestStates } from '../../src/redux';
 import { CreatingItemCommand, ItemCreatedCommand } from '../../src/redux';
-import { UserStore } from '../../src/redux/stores';
+import { UserStore } from '../../src/redux/store';
 
 import { UserServiceFake } from '../../src/testing/user-service-fake';
 import { UserServiceRequestsFake } from '../../src/testing/user-service-requests-fake';
@@ -18,7 +18,7 @@ import { ReduxBaseTest } from './redux-base-test.spec';
 
 @suite('redux: create')
 class CreateTest extends ReduxBaseTest<IUser, number, any> {
-  private beforeState: IServiceState<IUser, number>;
+  private beforeState: ICrudServiceState<IUser, number>;
   private itemCloned: IUser;
 
   constructor() {
@@ -30,7 +30,7 @@ class CreateTest extends ReduxBaseTest<IUser, number, any> {
     expect(this.commands.length).to.equal(2);
     expect(this.commands[0]).to.be.instanceOf(CreatingItemCommand);
 
-    const state0 = this.states[0];
+    const state0 = this.getCrudStateAt(0);
     expect(state0).to.deep.equal({
       ...this.beforeState,
       state: ServiceRequestStates.RUNNING
@@ -41,7 +41,7 @@ class CreateTest extends ReduxBaseTest<IUser, number, any> {
     expect(this.commands.length).to.equal(2);
     expect(this.commands[1]).to.be.instanceOf(ItemCreatedCommand);
 
-    const state1 = this.states[1];
+    const state1 = this.getCrudStateAt(1);
     expect(state1).to.deep.equal({
       ...this.beforeState,
       items: [...this.beforeState.items, state1.item],
@@ -68,15 +68,15 @@ class CreateTest extends ReduxBaseTest<IUser, number, any> {
       //
       // before-Status erzeugen
       //
-      this.serviceRequests.find();
-      this.beforeState = this.getStoreState(UserStore.ID);
+      this.crudServiceRequests.find();
+      this.beforeState = this.getCrudState(UserStore.ID);
       this.reset();
 
       // Test: neues Item erzeugen
       this.itemCloned = Clone.clone(this.beforeState.items[0]);
       this.itemCloned.id = undefined;
 
-      this.serviceRequests.create(this.itemCloned);
+      this.crudServiceRequests.create(this.itemCloned);
 
       done();
     });

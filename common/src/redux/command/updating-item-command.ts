@@ -1,7 +1,7 @@
 import { IEntity } from '../../model/entity.interface';
 
-import { ServiceRequestStates } from '../service-request-state';
-import { IServiceState } from '../service-state.interface';
+import { ICrudServiceState } from '../state/crud-service-state.interface';
+import { ServiceRequestStates } from '../state/service-request-state';
 import { ServiceCommand } from './service-command';
 
 
@@ -32,7 +32,7 @@ export class UpdatingItemCommand<T extends IEntity<TId>, TId> extends ServiceCom
    *
    * @memberOf UpdateItemCommand
    */
-  public execute(state: IServiceState<T, TId>): IServiceState<T, TId> {
+  public execute(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
       state: ServiceRequestStates.RUNNING,

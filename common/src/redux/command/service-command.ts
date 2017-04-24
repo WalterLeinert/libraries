@@ -1,7 +1,6 @@
 import { IEntity } from '../../model/entity.interface';
-
-import { ServiceRequestStates } from '../service-request-state';
-import { IServiceState } from '../service-state.interface';
+import { IServiceState } from '../state/service-state.interface';
+import { ServiceRequests } from './../service-requests/service-requests';
 import { ICommand } from './command.interface';
 
 
@@ -15,19 +14,8 @@ import { ICommand } from './command.interface';
  * @implements {ICommand<IServiceState<T>>}
  * @template T
  */
-export abstract class ServiceCommand<T extends IEntity<TId>, TId> implements ICommand<IServiceState<T, TId>> {
+export abstract class ServiceCommand<T extends IEntity<TId>, TId> implements ICommand<IServiceState> {
 
-  /**
-   * Initialer Zustand
-   */
-  public static readonly INITIAL_STATE: IServiceState<any, any> = {
-    currentItem: null,
-    items: [],
-    item: null,
-    deletedId: null,
-    state: ServiceRequestStates.UNDEFINED,
-    error: undefined
-  };
 
   protected constructor(private _storeId: string) {
   }
@@ -52,7 +40,7 @@ export abstract class ServiceCommand<T extends IEntity<TId>, TId> implements ICo
    *
    * @memberOf ServiceCommand
    */
-  public execute(state: IServiceState<T, TId> = ServiceCommand.INITIAL_STATE): IServiceState<T, TId> {
+  public execute(state: IServiceState = ServiceRequests.INITIAL_STATE): IServiceState {
     return state;
   }
 
