@@ -581,7 +581,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     Assert.notNull(command);
 
     using(new XLog(CoreComponent.logger, levels.INFO, 'onStoreUpdated', `class: ${this.constructor.name}`), (log) => {
-      log.log(`command = ${command.constructor.name}: ${JSON.stringify(command)}`);
+      log.log(`command = ${command.constructor.name}: ${command.toString()}`);
 
       const state = this.getStoreState(command.storeId);
       if (state.error) {

@@ -89,7 +89,7 @@ export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TSer
 
     using(new XLog(ServiceRequestsComponent.logger, levels.INFO, 'onStoreUpdated',
       `class: ${this.constructor.name}`), (log) => {
-        log.log(`command = ${command.constructor.name}: ${JSON.stringify(command)}`);
+        log.log(`command = ${command.constructor.name}: ${command.toString()}`);
 
         const state = super.getStoreState(command.storeId);
         if (state.error) {
