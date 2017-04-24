@@ -8,8 +8,9 @@ import { DataTableModule } from 'primeng/primeng';
 import { CalendarModule } from 'primeng/primeng';
 import { TooltipModule } from 'primeng/primeng';
 
-import { PipeService, ProxyService } from '../../services';
 import { MessageServiceModule } from '../../services/message.service';
+import { PipeService } from '../../services/pipe.service';
+import { ProxyService } from '../../services/proxy.service';
 import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
 import { EnumValueModule } from '../enum-value/enum-value.module';
 import { TimeSelectorModule } from '../time-selector/time-selector.module';

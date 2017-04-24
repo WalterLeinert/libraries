@@ -13,7 +13,7 @@ import { TableMetadata } from '@fluxgate/common';
 import {
   IControlDisplayInfo, IRowDisplayInfo, MetadataDisplayInfoConfiguration
 } from '../../../base/displayConfiguration';
-import { MetadataService } from '../../services';
+import { MetadataService } from '../../services/metadata.service';
 
 
 /**

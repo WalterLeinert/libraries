@@ -18,8 +18,9 @@ import { Assert, Clone, Color, InstanceAccessor, Types } from '@fluxgate/core';
 
 
 import { IControlDisplayInfo } from '../../../base';
-import { MetadataService, PipeService, PipeType } from '../../services';
 import { MessageService } from '../../services/message.service';
+import { MetadataService } from '../../services/metadata.service';
+import { PipeService, PipeType } from '../../services/pipe.service';
 import { ControlType } from '../common';
 import { ListSelectorComponent } from '../common/list-selector.component';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';

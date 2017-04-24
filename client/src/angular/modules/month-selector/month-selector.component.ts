@@ -7,8 +7,8 @@ import { Types } from '@fluxgate/core';
 
 import { DisplayInfo } from '../../../base/displayConfiguration/displayInfo';
 import { PrimeNgCalendarLocale } from '../../../primeng/calendarLocale';
-import { MetadataService } from '../../services';
 import { MessageService } from '../../services/message.service';
+import { MetadataService } from '../../services/metadata.service';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
 
 

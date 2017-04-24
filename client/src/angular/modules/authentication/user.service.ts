@@ -9,8 +9,9 @@ import { Observable } from 'rxjs/Observable';
 // Fluxgate
 import { User } from '@fluxgate/common';
 
-import { MetadataService, Service } from '../../services';
 import { ConfigService } from '../../services/config.service';
+import { MetadataService } from '../../services/metadata.service';
+import { Service } from '../../services/service';
 
 
 /**

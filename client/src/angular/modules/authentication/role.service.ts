@@ -4,8 +4,9 @@ import { Http } from '@angular/http';
 // Fluxgate
 import { Role } from '@fluxgate/common';
 
-import { MetadataService, Service } from '../../services';
 import { ConfigService } from '../../services/config.service';
+import { MetadataService } from '../../services/metadata.service';
+import { Service } from '../../services/service';
 
 
 /**
@@ -18,7 +19,7 @@ import { ConfigService } from '../../services/config.service';
 @Injectable()
 export class RoleService extends Service<Role, number> {
 
-    constructor(metadataService: MetadataService, http: Http, configService: ConfigService) {
-        super(Role, metadataService, http, configService);
-    }
+  constructor(metadataService: MetadataService, http: Http, configService: ConfigService) {
+    super(Role, metadataService, http, configService);
+  }
 }

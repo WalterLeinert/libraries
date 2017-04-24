@@ -19,9 +19,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { Serializer } from '../../../base/serializer';
 import { CoreComponent } from '../../common/base/core.component';
-import { MetadataService } from '../../services';
 import { ConfigService } from '../../services/config.service';
 import { MessageService } from '../../services/message.service';
+import { MetadataService } from '../../services/metadata.service';
 import { ServiceBase } from '../../services/serviceBase';
 
 

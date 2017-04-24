@@ -7,7 +7,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { RoleServiceFake } from '../../../../test/services/role-service-fake';
 import { AppStore } from '../../redux/app-store';
 import { RoleSelectorServiceRequestsModule } from '../../redux/role-selector-service-requests';
-import { AppInjector } from '../../services/appInjector.service';
 import { ConfigService } from '../../services/config.service';
 import { MessageServiceModule } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
@@ -15,11 +14,19 @@ import { RoleService } from '../authentication/role.service';
 import { DropdownSelectorModule } from '../dropdown-selector';
 import { RoleSelectorComponent } from './role-selector.component';
 
+
 // ACHTUNG: Store muss als letztes eingezogen werden!
 import { Store } from '@fluxgate/common';
+import { AppInjector } from '../../services/appInjector.service';
 
-const store = new Store();
-AppInjector.instance.setTestStore(store);
+let store;
+
+export function createCommandStore(): Store {
+  store = new Store();
+  AppInjector.instance.setTestStore(store);
+  return store;
+}
+
 
 
 describe('RoleSelectorComponent', () => {
@@ -43,7 +50,7 @@ describe('RoleSelectorComponent', () => {
       ],
       providers: [
         {
-          provide: AppStore, useValue: store
+          provide: AppStore, useFactory: createCommandStore
         },
         AppInjector,
         ConfigService,

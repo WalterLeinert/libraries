@@ -9,8 +9,8 @@ import 'rxjs/add/observable/throw';
 import { IService, TableMetadata } from '@fluxgate/common';
 import { Assert, Funktion, Types } from '@fluxgate/core';
 
-import { MetadataService } from '../../services';
 import { MessageService } from '../../services/message.service';
+import { MetadataService } from '../../services/metadata.service';
 import { SelectorBaseComponent } from './selectorBase.component';
 
 

@@ -19,8 +19,8 @@ import { Assert, Types } from '@fluxgate/core';
 import { CurrentUserServiceRequests } from '../../../redux/current-user-service-requests';
 
 import { Base2Component } from '../../../common/base';
-import { MetadataService } from '../../../services';
 import { MessageService } from '../../../services/message.service';
+import { MetadataService } from '../../../services/metadata.service';
 import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
 import { PassportService } from '../passport.service';
 import { RoleService } from '../role.service';

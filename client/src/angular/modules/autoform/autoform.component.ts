@@ -16,8 +16,9 @@ import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/
 
 import { IControlDisplayInfo } from '../../../base';
 import { BaseComponent } from '../../common/base';
-import { MetadataService, ProxyService } from '../../services';
 import { MessageService } from '../../services/message.service';
+import { MetadataService } from '../../services/metadata.service';
+import { ProxyService } from '../../services/proxy.service';
 import { ControlType } from '../common';
 import { IAutoformConfig } from './autoformConfig.interface';
 import { AutoformConfiguration } from './autoformConfiguration';

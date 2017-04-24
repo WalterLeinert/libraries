@@ -9,8 +9,8 @@ import { DialogModule } from 'primeng/primeng';
 import { CalendarModule } from 'primeng/primeng';
 
 import { AutofocusModule } from '../../common/directives/autofocus.directive';
-import { ProxyService } from '../../services';
 import { MessageServiceModule } from '../../services/message.service';
+import { ProxyService } from '../../services/proxy.service';
 import { ConfirmationDialogModule } from '../common/confirmation-dialog/confirmation-dialog.component';
 import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
 import { TimeSelectorModule } from '../time-selector/time-selector.module';

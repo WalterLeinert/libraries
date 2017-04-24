@@ -19,8 +19,9 @@ import { Assert, Clone, Types, Utility } from '@fluxgate/core';
 
 
 import { DataTypes, DisplayInfo, } from '../../../base';
-import { CacheService, MetadataService } from '../../services';
+import { CacheService } from '../../services/cache.service';
 import { MessageService } from '../../services/message.service';
+import { MetadataService } from '../../services/metadata.service';
 import { ListSelectorComponent } from '../common';
 import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
 

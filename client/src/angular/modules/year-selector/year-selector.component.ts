@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 
 import { Assert, Types } from '@fluxgate/core';
 
-import { MetadataService } from '../../services';
 import { MessageService } from '../../services/message.service';
+import { MetadataService } from '../../services/metadata.service';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
 
 

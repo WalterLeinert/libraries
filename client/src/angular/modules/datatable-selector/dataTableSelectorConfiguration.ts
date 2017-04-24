@@ -7,7 +7,7 @@ import { TableMetadata } from '@fluxgate/common';
 import {
   IControlDisplayInfo, ReflectionDisplayInfoConfiguration
 } from '../../../base/displayConfiguration';
-import { MetadataService } from '../../services';
+import { MetadataService } from '../../services/metadata.service';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 import { DataTableSelectorDisplayInfoConfiguration } from './dataTableSelectorDisplayInfoConfiguration';
 

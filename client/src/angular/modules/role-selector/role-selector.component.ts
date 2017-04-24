@@ -3,8 +3,8 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { IEntity, IRole, RoleStore } from '@fluxgate/common';
-import { ItemsFoundCommand, ServiceCommand, IExtendedCrudServiceState } from '@fluxgate/common';
+import { IEntity, IRole } from '@fluxgate/common';
+import { IExtendedCrudServiceState, ItemsFoundCommand, ServiceCommand } from '@fluxgate/common';
 import { Utility } from '@fluxgate/core';
 
 import { RoleSelectorServiceRequests } from '../../redux/role-selector-service-requests';
@@ -57,7 +57,7 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
     changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, messageService, changeDetectorRef);
 
-    this.subscribeToStore(RoleStore.ID);
+    this.subscribeToStore(this.serviceRequests.storeId);
     this.serviceRequests.find();
 
     this.style = {
@@ -80,10 +80,9 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
   protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
     super.onStoreUpdated(command);
 
-    const state = this.getStoreState<IExtendedCrudServiceState<IRole, number>>(RoleStore.ID);
+    const state = this.getStoreState<IExtendedCrudServiceState<IRole, number>>(this.serviceRequests.storeId);
 
-    if (command.storeId === RoleStore.ID) {
-
+    if (command.storeId === this.serviceRequests.storeId) {
       if (command instanceof ItemsFoundCommand) {
         this.value = Utility.isNullOrEmpty(state.items) ? null : state.items[0];
         this.roles = state.items;

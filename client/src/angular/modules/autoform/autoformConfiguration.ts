@@ -7,7 +7,7 @@ import { TableMetadata } from '@fluxgate/common';
 import {
   IControlDisplayInfo, MetadataDisplayInfoConfiguration, ReflectionDisplayInfoConfiguration
 } from '../../../base/displayConfiguration';
-import { MetadataService } from '../../services';
+import { MetadataService } from '../../services/metadata.service';
 import { IAutoformConfig } from './autoformConfig.interface';
 
 

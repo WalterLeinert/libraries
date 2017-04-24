@@ -14,7 +14,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  IEntity, IExtendedCrudServiceRequests, IExtendedCrudServiceState, IServiceState, ItemCreatedCommand,
+  IEntity, IExtendedCrudServiceRequests, IExtendedCrudServiceState, ItemCreatedCommand,
   ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
 import { MessageService } from '../../services/message.service';
