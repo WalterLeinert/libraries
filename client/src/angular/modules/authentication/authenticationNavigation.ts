@@ -1,20 +1,20 @@
 import { OpaqueToken } from '@angular/core';
 
 /**
- * Token für Zugriff auf das Interface @see{IAuthenticationNavigation}
+ * Token für Zugriff auf das Interface @see{AuthenticationNavigation}
  * mit Redirect-Urls nach Authentifizierungsaktionen
  */
-export const AuthenticationNavigation = new OpaqueToken('Authentication.Navigation');
+export const AuthenticationNavigationToken = new OpaqueToken('Authentication.Navigation');
 
 /**
- * Interface für Redirect-Urls nach Authentifizierungsaktionen
+ * Klasse für Redirect-Urls nach Authentifizierungsaktionen
  *
  * @export
- * @interface IAuthenticationNavigation
+ * @interface AuthenticationNavigation
  */
-export interface IAuthenticationNavigation {
-  loginRedirectUrl: string;
-  registerRedirectUrl?: string;
-  logoutRedirectUrl: string;
-  changeUserRedirectUrl: string;
+export class AuthenticationNavigation {
+  public loginRedirectUrl: string;
+  public registerRedirectUrl?: string;
+  public logoutRedirectUrl: string;
+  public changeUserRedirectUrl: string;
 }

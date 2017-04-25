@@ -21,7 +21,7 @@ import { CurrentUserServiceRequests } from '../../../redux/current-user-service-
 import { Base2Component } from '../../../common/base';
 import { MessageService } from '../../../services/message.service';
 import { MetadataService } from '../../../services/metadata.service';
-import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
+import { AuthenticationNavigation, AuthenticationNavigationToken } from '../authenticationNavigation';
 import { PassportService } from '../passport.service';
 import { RoleService } from '../role.service';
 
@@ -104,7 +104,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
 
   constructor(private serviceRequests: CurrentUserServiceRequests,
     private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
-    @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation, service: PassportService,
+    @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation, service: PassportService,
     roleService: RoleService, metadataService: MetadataService, injector: Injector) {
 
     super(router, route, messageService, service, roleService);

@@ -15,7 +15,7 @@ import { CurrentUserServiceRequests } from '../../../redux/current-user-service-
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
-import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
+import { AuthenticationNavigation, AuthenticationNavigationToken } from '../authenticationNavigation';
 import { PassportService } from './../passport.service';
 
 @Component({
@@ -29,7 +29,7 @@ export class LogoffComponent extends BaseComponent<PassportService> {
 
   constructor(private serviceRequests: CurrentUserServiceRequests,
     router: Router, route: ActivatedRoute, messageService: MessageService, service: PassportService,
-    @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation) {
+    @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation) {
     super(router, route, messageService, service);
   }
 

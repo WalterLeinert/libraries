@@ -16,7 +16,7 @@ import { CurrentUserServiceRequests } from '../../../redux/current-user-service-
 
 import { BaseComponent } from '../../../common/base/base.component';
 import { MessageService } from '../../../services/message.service';
-import { AuthenticationNavigation, IAuthenticationNavigation } from '../authenticationNavigation';
+import { AuthenticationNavigation, AuthenticationNavigationToken } from '../authenticationNavigation';
 import { ChangePasswordGuardService } from '../changePassword/changePassword-guard.service';
 import { PassportService } from '../passport.service';
 import { RegisterGuardService } from '../register/register-guard.service';
@@ -87,7 +87,7 @@ export class LoginComponent extends BaseComponent<PassportService> {
    */
   constructor(private serviceRequests: CurrentUserServiceRequests,
     private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
-    @Inject(AuthenticationNavigation) private authenticationNavigation: IAuthenticationNavigation,
+    @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation,
     service: PassportService, changePasswordGuardService: ChangePasswordGuardService,
     registerGuardService: RegisterGuardService) {
     super(router, route, messageService, service);
