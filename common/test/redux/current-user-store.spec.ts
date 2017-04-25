@@ -2,7 +2,7 @@
 // tslint:disable:member-access
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { NotSupportedException } from '@fluxgate/core';
 

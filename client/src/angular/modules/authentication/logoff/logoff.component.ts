@@ -7,9 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
-// -------------------------- logging -------------------------------
 
-import { User } from '@fluxgate/common';
 import { Types } from '@fluxgate/core';
 
 // commands

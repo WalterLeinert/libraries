@@ -15,13 +15,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
-import { AppRegistry, IEntity, ServiceRequests } from '@fluxgate/common';
+import { AppRegistry } from '@fluxgate/common';
 
 import { IRouterNavigationAction, NavigationAction } from '../../common/routing';
 import { MessageService } from '../../services/message.service';
-import { Service } from '../../services/service';
 import { CoreComponent } from './core.component';
-import { FormGroupInfo } from './formGroupInfo';
 
 
 /**
