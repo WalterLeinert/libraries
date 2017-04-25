@@ -11,9 +11,10 @@
     "test.ts",
     "**/*.spec.ts"
   ],
-   "angularCompilerOptions": {
-    "genDir": "compiled",
-    "skipTemplateCodegen": "true",
+  "angularCompilerOptions": {
+    "annotateForClosureCompiler": true,
+    "strictMetadataEmit": false,
+    "skipTemplateCodegen": true,
     "skipMetadataEmit" : false
   }
 }
