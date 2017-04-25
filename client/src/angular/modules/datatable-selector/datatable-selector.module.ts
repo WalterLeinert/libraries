@@ -4,9 +4,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 // PrimeNG
-import { DataTableModule } from 'primeng/primeng';
-import { CalendarModule } from 'primeng/primeng';
-import { TooltipModule } from 'primeng/primeng';
+import { CalendarModule } from 'primeng/components/calendar/calendar';
+import { DataTableModule } from 'primeng/components/datatable/datatable';
+import { TooltipModule } from 'primeng/components/tooltip/tooltip';
 
 import { MessageServiceModule } from '../../services/message.service';
 import { PipeService } from '../../services/pipe.service';

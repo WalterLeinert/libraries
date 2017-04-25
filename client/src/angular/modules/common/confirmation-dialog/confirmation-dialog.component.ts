@@ -7,8 +7,8 @@ import { Observable } from 'rxjs/Observable';
 
 
 // PrimeNG
-import { ConfirmDialogModule } from 'primeng/primeng';
-import { ConfirmationService } from 'primeng/primeng';
+import { ConfirmationService } from 'primeng/components/common/api';
+import { ConfirmDialogModule } from 'primeng/components/confirmdialog/confirmdialog';
 
 
 // -------------------------------------- logging --------------------------------------------

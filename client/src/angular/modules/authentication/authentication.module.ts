@@ -2,10 +2,11 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { GrowlModule } from 'primeng/primeng';
-import { MessagesModule } from 'primeng/primeng';
-import { DropdownModule } from 'primeng/primeng';
-import { ConfirmDialogModule } from 'primeng/primeng';
+
+import { ConfirmDialogModule } from 'primeng/components/confirmdialog/confirmdialog';
+import { DropdownModule } from 'primeng/components/dropdown/dropdown';
+import { GrowlModule } from 'primeng/components/growl/growl';
+import { MessagesModule } from 'primeng/components/messages/messages';
 
 import { AutofocusModule, HighlightModule } from '../../common/directives';
 

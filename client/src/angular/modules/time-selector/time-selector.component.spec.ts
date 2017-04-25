@@ -3,7 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { CalendarModule } from 'primeng/primeng';
+// PrimeNG
+import { CalendarModule } from 'primeng/components/calendar/calendar';
 
 import { ShortTime } from '@fluxgate/core';
 

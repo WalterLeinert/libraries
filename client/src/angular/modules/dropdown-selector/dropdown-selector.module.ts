@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 // PrimeNG
-import { DropdownModule } from 'primeng/primeng';
+import { DropdownModule } from 'primeng/components/dropdown/dropdown';
 
 import { MessageServiceModule } from '../../services/message.service';
 import { DropdownSelectorComponent } from './dropdown-selector.component';

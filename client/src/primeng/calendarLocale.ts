@@ -1,4 +1,4 @@
-import { LocaleSettings } from 'primeng/primeng';
+import { LocaleSettings } from 'primeng/components/calendar/calendar';
 
 export class PrimeNgCalendarLocale {
     public static de: LocaleSettings = {

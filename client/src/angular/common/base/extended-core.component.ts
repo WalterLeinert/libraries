@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 
 
 // PrimeNG
-import { Confirmation, ConfirmationService } from 'primeng/primeng';
+import { Confirmation, ConfirmationService } from 'primeng/components/common/api';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable

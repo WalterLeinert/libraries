@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // PrimeNG
-import { ButtonModule, ConfirmDialogModule, SharedModule } from 'primeng/primeng';
-import { MessagesModule } from 'primeng/primeng';
-import { DialogModule } from 'primeng/primeng';
-import { CalendarModule } from 'primeng/primeng';
+import { ButtonModule } from 'primeng/components/button/button';
+import { CalendarModule } from 'primeng/components/calendar/calendar';
+import { SharedModule } from 'primeng/components/common/shared';
+import { ConfirmDialogModule } from 'primeng/components/confirmdialog/confirmdialog';
+import { DialogModule } from 'primeng/components/dialog/dialog';
+import { MessagesModule } from 'primeng/components/messages/messages';
 
 import { AutofocusModule } from '../../common/directives/autofocus.directive';
 import { MessageServiceModule } from '../../services/message.service';

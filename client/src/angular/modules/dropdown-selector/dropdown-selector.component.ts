@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 
 
 // PrimeNG
-import { SelectItem } from 'primeng/primeng';
+import { SelectItem } from 'primeng/components/common/api';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
