@@ -1,8 +1,5 @@
 // tslint:disable:max-classes-per-file
 
-// Angular
-import { Injectable, NgModule } from '@angular/core';
-
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
@@ -12,9 +9,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { CustomSubject, IMessage, MessageSeverity, NotSupportedException, PublisherSubscriber } from '@fluxgate/core';
 
 
-@Injectable()
-export class MessageService {
-  protected static readonly logger = getLogger(MessageService);
+export class MessageServiceBase {
+  protected static readonly logger = getLogger(MessageServiceBase);
 
   private static readonly TOPIC = 'messages';
 
@@ -22,9 +18,9 @@ export class MessageService {
 
 
   public addMessage(message: IMessage) {
-    using(new XLog(MessageService.logger, levels.INFO, 'addMessage'), (log) => {
+    using(new XLog(MessageServiceBase.logger, levels.INFO, 'addMessage'), (log) => {
 
-      this.pubSub.publish(MessageService.TOPIC, message);
+      this.pubSub.publish(MessageServiceBase.TOPIC, message);
 
       switch (message.severity) {
         case MessageSeverity.Success:
@@ -62,13 +58,6 @@ export class MessageService {
    * @memberOf MessageService
    */
   public getMessage(): CustomSubject<IMessage> {
-    return this.pubSub.subscribe<IMessage>(MessageService.TOPIC);
+    return this.pubSub.subscribe<IMessage>(MessageServiceBase.TOPIC);
   }
 }
-
-
-// tslint:disable-next-line:max-classes-per-file
-@NgModule({
-  providers: [MessageService]
-})
-export class MessageServiceModule { }

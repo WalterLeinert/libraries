@@ -1,4 +1,3 @@
-export * from './applicationErrorHandler';
 export * from './autoformConfig.interface';
 export * from './autoformConfiguration';
 export * from './autoformConstants';

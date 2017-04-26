@@ -18,7 +18,7 @@ import { IService, IServiceBase, ServiceResult } from '@fluxgate/common';
 import { Assert, InstanceAccessor, InstanceSetter, NotSupportedException, Utility } from '@fluxgate/core';
 
 import { IRefreshHelper, IRouterNavigationAction } from '../../common/routing';
-import { MessageService } from '../../services/message.service';
+import { MessageServiceBase } from '../../services/messageServiceBase';
 import { IAutoformConfig, IAutoformNavigation } from './autoformConfig.interface';
 import { AutoformConstants } from './autoformConstants';
 import { ExtendedCoreComponent } from './extended-core.component';
@@ -52,7 +52,7 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
    *
    * @memberOf BaseComponent
    */
-  protected constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
+  protected constructor(router: Router, route: ActivatedRoute, messageService: MessageServiceBase,
     private _service: TService) {
     super(router, route, messageService);
   }
