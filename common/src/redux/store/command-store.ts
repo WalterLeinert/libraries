@@ -60,6 +60,7 @@ export class CommandStore<TState extends IServiceState> extends UniqueIdentifiab
   public setParent(parent: CommandStore<TState>) {
     Assert.notNull(parent);
     this._parent = parent;
+    this._parent.addChild(this);
   }
 
   public get parent(): CommandStore<TState> {
