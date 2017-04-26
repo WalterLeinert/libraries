@@ -1,6 +1,7 @@
 export * from './autoform';
 export * from './authentication';
 export * from './common';
+export * from './directives';
 export * from './datatable-selector';
 export * from './dropdown-selector';
 export * from './enum-value';
