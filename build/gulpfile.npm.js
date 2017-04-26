@@ -61,6 +61,10 @@ gulp.task('install:client', function (cb) {
   execCommand('npm install', 'client', bufferSize, cb);
 })
 
+gulp.task('install:components', function (cb) {
+  execCommand('npm install', 'components', bufferSize, cb);
+})
+
 gulp.task('install:server', function (cb) {
   execCommand('npm install', 'server', bufferSize, cb);
 })
