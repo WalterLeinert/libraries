@@ -1,6 +1,5 @@
 export * from './appInjector.service';
 export * from './cache.service';
-// export * from './componentServices.service';
 export * from './config.service';
 export * from './metadata.service';
 export * from './messageServiceBase';
