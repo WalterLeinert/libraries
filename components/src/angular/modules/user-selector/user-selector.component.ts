@@ -58,7 +58,7 @@ export class UserSelectorComponent extends SelectorBaseComponent<IUser> {
     changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, messageService, changeDetectorRef);
 
-    this.subscribeToStore(UserStore.ID);
+    this.subscribeToStore(this.serviceRequests.storeId);
     this.serviceRequests.find();
 
     this.style = {
