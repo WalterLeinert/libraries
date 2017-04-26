@@ -12,12 +12,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // fluxgate
-import { Base2Component, MessageService, MetadataService } from '@fluxgate/client';
+import { Base2Component, MetadataService } from '@fluxgate/client';
 import { IRole, User } from '@fluxgate/common';
 import { Assert, Types } from '@fluxgate/core';
 
-// commands
 import { CurrentUserServiceRequests } from '../../../redux/current-user-service-requests';
+import { MessageService } from '../../../services/message.service';
 import { AuthenticationNavigation, AuthenticationNavigationToken } from '../authenticationNavigation';
 import { PassportService } from '../passport.service';
 import { RoleService } from '../role.service';

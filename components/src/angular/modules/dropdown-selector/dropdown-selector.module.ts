@@ -6,8 +6,7 @@ import { FormsModule } from '@angular/forms';
 // PrimeNG
 import { DropdownModule } from 'primeng/components/dropdown/dropdown';
 
-import { MessageServiceModule } from '@fluxgate/client';
-
+import { MessageServiceModule } from '../../services/message.service';
 import { DropdownSelectorComponent } from './dropdown-selector.component';
 
 

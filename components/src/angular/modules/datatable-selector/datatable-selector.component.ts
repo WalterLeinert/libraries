@@ -14,12 +14,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  ControlType, IControlDisplayInfo, MessageService, MetadataService, PipeService, PipeType
+  ControlType, IControlDisplayInfo, MetadataService, PipeService, PipeType
 } from '@fluxgate/client';
 import { TableMetadata } from '@fluxgate/common';
 import { Assert, Clone, Color, InstanceAccessor, Types } from '@fluxgate/core';
 
-
+import { MessageService } from '../../services/message.service';
 import { ListSelectorComponent } from '../common/list-selector.component';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
 import { DataTableSelectorConfiguration } from './dataTableSelectorConfiguration';

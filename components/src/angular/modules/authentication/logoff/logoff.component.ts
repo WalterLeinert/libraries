@@ -8,12 +8,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
-import { BaseComponent, MessageService } from '@fluxgate/client';
+import { BaseComponent } from '@fluxgate/client';
 import { Types } from '@fluxgate/core';
 
 // commands
 import { CurrentUserServiceRequests } from '../../../redux/current-user-service-requests';
-
+import { MessageService } from '../../../services/message.service';
 import { AuthenticationNavigation, AuthenticationNavigationToken } from '../authenticationNavigation';
 import { PassportService } from './../passport.service';
 

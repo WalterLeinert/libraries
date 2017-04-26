@@ -6,9 +6,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // PrimeNG
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 
-import { AppInjector, MessageServiceModule } from '@fluxgate/client';
+import { AppInjector } from '@fluxgate/client';
 import { ShortTime } from '@fluxgate/core';
 
+import { MessageServiceModule } from '../../services/message.service';
 import { TimeSelectorComponent } from './time-selector.component';
 
 // ACHTUNG: Store muss als letztes eingezogen werden!

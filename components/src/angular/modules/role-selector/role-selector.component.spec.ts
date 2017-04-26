@@ -4,10 +4,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { AppInjector, AppStore, ConfigService, MessageServiceModule, MetadataService } from '@fluxgate/client';
+import { AppInjector, AppStore, ConfigService, MetadataService } from '@fluxgate/client';
 
 import { RoleServiceFake } from '../../../../test/services/role-service-fake';
 import { RoleSelectorServiceRequestsModule } from '../../redux/role-selector-service-requests';
+import { MessageServiceModule } from '../../services/message.service';
 
 import { RoleService } from '../authentication/role.service';
 import { DropdownSelectorModule } from '../dropdown-selector';

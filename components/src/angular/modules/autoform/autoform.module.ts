@@ -10,9 +10,9 @@ import { ConfirmDialogModule } from 'primeng/components/confirmdialog/confirmdia
 import { DialogModule } from 'primeng/components/dialog/dialog';
 import { MessagesModule } from 'primeng/components/messages/messages';
 
-import { AutofocusModule, MessageServiceModule, ProxyService } from '@fluxgate/client';
+import { AutofocusModule, ProxyService } from '@fluxgate/client';
 
-
+import { MessageServiceModule } from '../../services/message.service';
 import { ConfirmationDialogModule } from '../common/confirmation-dialog/confirmation-dialog.component';
 import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
 import { TimeSelectorModule } from '../time-selector/time-selector.module';

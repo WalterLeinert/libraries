@@ -15,11 +15,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  CacheService, DataTypes, DisplayInfo, MessageService, MetadataService
+  CacheService, DataTypes, DisplayInfo, MetadataService
 } from '@fluxgate/client';
 import { IService, TableMetadata } from '@fluxgate/common';
 import { Assert, Clone, Types, Utility } from '@fluxgate/core';
 
+import { MessageService } from '../../services/message.service';
 import { ListSelectorComponent } from '../common';
 import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
 

@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { MessageServiceModule } from '@fluxgate/client';
-
+import { MessageServiceModule } from '../../services/message.service';
 import { DropdownSelectorModule } from '../dropdown-selector';
 import { YearSelectorComponent } from './year-selector.component';
 
