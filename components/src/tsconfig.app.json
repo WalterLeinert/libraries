@@ -1,20 +1,25 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "baseUrl": "../src",
     "outDir": "../dist",
-    "rootDir": "./",
+    "rootDir": "..",
     "module": "es2015",
-    "baseUrl": "",
     "types": []
   },
+  "files": [
+    "../public_api.ts",
+    "../node_modules/zone.js/dist/zone.js.d.ts"
+  ],
   "exclude": [
     "test.ts",
     "**/*.spec.ts"
   ],
   "angularCompilerOptions": {
+    "skipTemplateCodegen": true,
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": false,
-    "skipTemplateCodegen": true,
-    "skipMetadataEmit": false
+    "flatModuleOutFile": "index.js",
+    "flatModuleId": "fluxgate-components"
   }
 }
