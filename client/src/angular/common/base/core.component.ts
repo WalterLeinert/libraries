@@ -27,7 +27,7 @@ import {
 import { IControlDisplayInfo } from '../../../base/displayConfiguration/controlDisplayInfo.interface';
 import { DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';
-import { AppStore } from '../../redux/app-store';
+import { APP_STORE } from '../../redux/app-store';
 import { AppInjector } from '../../services/appInjector.service';
 import { MessageServiceBase } from '../../services/messageServiceBase';
 import { MetadataService } from '../../services/metadata.service';
@@ -73,7 +73,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   protected constructor(private _messageService: MessageServiceBase) {
     super();
 
-    this.store = AppInjector.instance.getInstance<Store>(AppStore);
+    this.store = AppInjector.instance.getInstance<Store>(APP_STORE);
 
     this.subscribeToStore(CurrentUserStore.ID);
     this.updateUserState();

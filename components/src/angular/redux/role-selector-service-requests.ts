@@ -1,7 +1,8 @@
 import { Inject, Injectable, NgModule } from '@angular/core';
 
 // fluxgate
-import { AppStore } from '@fluxgate/client';
+import { APP_STORE } from '@fluxgate/client';
+
 import { ExtendedCrudServiceRequests, IRole, Store } from '@fluxgate/common';
 
 import { RoleService } from '../modules/authentication/role.service';
@@ -11,7 +12,7 @@ import { RoleSelectorStore } from './role-selector-store';
 @Injectable()
 export class RoleSelectorServiceRequests extends ExtendedCrudServiceRequests<IRole, number, RoleService> {
 
-  constructor(service: RoleService, @Inject(AppStore) store: Store) {
+  constructor(service: RoleService, @Inject(APP_STORE) store: Store) {
     super(RoleSelectorStore.ID, service, store);
   }
 }

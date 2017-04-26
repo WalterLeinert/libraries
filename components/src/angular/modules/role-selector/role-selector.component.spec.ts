@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { DebugElement } from '@angular/core';
+import { DebugElement, Injector } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { AppInjector, ConfigService, MetadataService, STORE_PROVIDER } from '@fluxgate/client';
+import { APP_STORE_PROVIDER, AppInjector, ConfigService, MetadataService } from '@fluxgate/client';
 
 import { RoleServiceFake } from '../../../../test/services/role-service-fake';
 import { RoleSelectorServiceRequestsModule } from '../../redux/role-selector-service-requests';
@@ -35,13 +35,15 @@ describe('RoleSelectorComponent', () => {
         RoleSelectorComponent
       ],
       providers: [
-        STORE_PROVIDER,
+        APP_STORE_PROVIDER,
         AppInjector,
         ConfigService,
         MetadataService,
         { provide: RoleService, useClass: RoleServiceFake }
       ]
     }).compileComponents();
+
+    AppInjector.instance.setInjector(TestBed.get(Injector, Injector));
 
     fixture = TestBed.createComponent(RoleSelectorComponent);
     comp = fixture.debugElement.componentInstance;

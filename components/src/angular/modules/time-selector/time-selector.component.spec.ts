@@ -1,4 +1,4 @@
-import { DebugElement } from '@angular/core';
+import { DebugElement, Injector } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -6,17 +6,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // PrimeNG
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 
-import { AppInjector } from '@fluxgate/client';
+import { APP_STORE_PROVIDER, AppInjector } from '@fluxgate/client';
 import { ShortTime } from '@fluxgate/core';
 
 import { MessageServiceModule } from '../../services/message.service';
 import { TimeSelectorComponent } from './time-selector.component';
-
-// ACHTUNG: Store muss als letztes eingezogen werden!
-import { Store } from '@fluxgate/common';
-
-const store = new Store();
-AppInjector.instance.setTestStore(store);
 
 
 describe('TimeSelectorComponent', () => {
@@ -37,9 +31,12 @@ describe('TimeSelectorComponent', () => {
         TimeSelectorComponent
       ],
       providers: [
+        APP_STORE_PROVIDER,
         AppInjector
       ]
     }).compileComponents();
+
+    AppInjector.instance.setInjector(TestBed.get(Injector, Injector));
 
     fixture = TestBed.createComponent(TimeSelectorComponent);
     comp = fixture.debugElement.componentInstance;

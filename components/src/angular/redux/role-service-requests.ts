@@ -1,7 +1,7 @@
 import { Inject, Injectable, NgModule } from '@angular/core';
 
 // fluxgate
-import { AppStore } from '@fluxgate/client';
+import { APP_STORE } from '@fluxgate/client';
 import { IRole, RoleStore, Store } from '@fluxgate/common';
 
 
@@ -12,7 +12,7 @@ import { EnhancedServiceRequests } from './enhanced-service-requests';
 @Injectable()
 export class RoleServiceRequests extends EnhancedServiceRequests<IRole, number, RoleService> {
 
-  constructor(service: RoleService, @Inject(AppStore) store: Store) {
+  constructor(service: RoleService, @Inject(APP_STORE) store: Store) {
     super(RoleStore.ID, service, store);
   }
 }

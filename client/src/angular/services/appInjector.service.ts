@@ -1,9 +1,6 @@
 import { Injectable, Injector, OpaqueToken } from '@angular/core';
 
-import { Store } from '@fluxgate/common';
 import { Funktion, UniqueIdentifiable } from '@fluxgate/core';
-
-import { AppStore } from '../redux/app-store';
 
 
 /**
@@ -20,14 +17,9 @@ import { AppStore } from '../redux/app-store';
 export class AppInjector extends UniqueIdentifiable {
   public static readonly instance = new AppInjector();
   private injector: Injector;
-  private testStore: Store;
 
   private constructor() {
     super();
-  }
-
-  public setTestStore(store: Store) {
-    this.testStore = store;
   }
 
 
@@ -55,12 +47,7 @@ export class AppInjector extends UniqueIdentifiable {
    *
    * @memberOf AppInjector
    */
-  public getInstance<T>(token: Funktion | OpaqueToken): T {
-    if (this.testStore) {
-      if (token === AppStore) {
-        return this.testStore as any as T;
-      }
-    }
+  public getInstance<T>(token: Funktion | OpaqueToken | any): T {
     return this.injector.get(token) as T;
   }
 

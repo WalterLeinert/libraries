@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { DebugElement } from '@angular/core';
+import { DebugElement, Injector } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { AppInjector, AppStore, ConfigService, MetadataService } from '@fluxgate/client';
+import { APP_STORE_PROVIDER, AppInjector, ConfigService, MetadataService } from '@fluxgate/client';
 
 import { UserServiceFake } from '../../../../test/services/user-service-fake';
 import { UserSelectorServiceRequestsModule } from '../../redux/user-selector-service-requests';
@@ -42,15 +42,15 @@ describe('UserSelectorComponent', () => {
         UserSelectorComponent
       ],
       providers: [
-        {
-          provide: AppStore, useFactory: createCommandStore
-        },
+        APP_STORE_PROVIDER,
         AppInjector,
         ConfigService,
         MetadataService,
         { provide: UserService, useClass: UserServiceFake }
       ]
     }).compileComponents();
+
+    AppInjector.instance.setInjector(TestBed.get(Injector, Injector));
 
     fixture = TestBed.createComponent(UserSelectorComponent);
     comp = fixture.debugElement.componentInstance;
