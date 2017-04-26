@@ -10,6 +10,7 @@ import {
 import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
 import { Store } from '../store';
+import { CommandStore } from '../store/command-store';
 import { ICrudServiceRequests } from './crud-service-requests.interface';
 import { ServiceRequests } from './service-requests';
 
@@ -35,8 +36,9 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
   };
 
 
-  public constructor(storeId: string, private _service: TService, store: Store) {
-    super(storeId, store);
+  public constructor(storeId: string | CommandStore<any>, private _service: TService,
+    store: Store, parentStoreId?: string) {
+    super(storeId, store, parentStoreId);
   }
 
 

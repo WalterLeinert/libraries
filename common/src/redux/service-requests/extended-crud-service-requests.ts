@@ -2,6 +2,7 @@ import { IToString } from '@fluxgate/core';
 import { IEntity } from '../../model/entity.interface';
 import { IService } from '../../model/service/service.interface';
 import { Store } from '../store/store';
+import { CommandStore } from '../store/command-store';
 import { ICommand, ItemDeletedCommand, ItemUpdatedCommand, SetCurrentItemCommand } from './../command/';
 import { ICurrentItemServiceState } from './../state/current-item-service-state.interface';
 import { IExtendedCrudServiceState } from './../state/extended-crud-service-state.interface';
@@ -28,8 +29,8 @@ export abstract class ExtendedCrudServiceRequests<T extends IEntity<TId>, TId ex
     currentItem: null
   };
 
-  protected constructor(storeId: string, service: TService, store: Store) {
-    super(storeId, service, store);
+  protected constructor(storeId: string | CommandStore<any>, service: TService, store: Store, parentStoreId?: string) {
+    super(storeId, service, store, parentStoreId);
 
   }
 

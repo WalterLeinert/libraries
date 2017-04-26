@@ -1,6 +1,7 @@
-import { Assert } from '@fluxgate/core';
+import { Assert, Types } from '@fluxgate/core';
 import { ServiceRequestStates } from '../state/service-request-state';
 import { IServiceState } from '../state/service-state.interface';
+import { CommandStore } from '../store/command-store';
 import { Store } from '../store/store';
 import { ICommand } from './../command/command.interface';
 import { IServiceRequests } from './service-requests.interface';
@@ -24,10 +25,25 @@ export abstract class ServiceRequests implements IServiceRequests {
     error: undefined
   };
 
+  private _storeId: string;
 
-  protected constructor(private _storeId: string, private _store: Store) {
-    Assert.notNullOrEmpty(_storeId);
+
+  protected constructor(storeId: string | CommandStore<any>, private _store: Store, parentStoreId?: string) {
+    Assert.notNull(storeId);
     Assert.notNull(_store);
+
+    if (Types.isString(storeId)) {
+      this._storeId = storeId as string;
+      Assert.that(!Types.isPresent(parentStoreId), 'if storeId is given, not parentStoreId is allowed');
+    } else {
+      const commandStore = storeId as CommandStore<any>;
+      if (Types.isPresent(parentStoreId)) {
+        const parentStore = this._store.getCommandStore(parentStoreId);
+        commandStore.setParent(parentStore);
+      }
+      this._store.add(commandStore);
+      this._storeId = commandStore.name;
+    }
   }
 
 

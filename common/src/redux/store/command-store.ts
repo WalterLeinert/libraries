@@ -3,7 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, CustomSubject, Dictionary, PublisherSubscriber } from '@fluxgate/core';
+import { Assert, CustomSubject, Dictionary, PublisherSubscriber, Types, UniqueIdentifiable } from '@fluxgate/core';
 
 import { ICommand } from '../command/command.interface';
 import { IServiceState } from '../state/service-state.interface';
@@ -19,18 +19,28 @@ import { IServiceState } from '../state/service-state.interface';
  * @class CommandStore
  * @template T
  */
-export class CommandStore<TState extends IServiceState> {
+export class CommandStore<TState extends IServiceState> extends UniqueIdentifiable {
   protected static readonly logger = getLogger(CommandStore);
 
+  public static NoId = '--';
+
+  private _name: string;
   private _channel: string;
   private pubSub: PublisherSubscriber = new PublisherSubscriber();
   private state: TState;
   private _children: Dictionary<string, CommandStore<any>> = new Dictionary<string, CommandStore<any>>();
 
-  constructor(private _name: string, initialState: TState, private _parent?: CommandStore<TState>) {
+  constructor(name: string = CommandStore.NoId, initialState: TState, private _parent?: CommandStore<TState>) {
+    super();
     using(new XLog(CommandStore.logger, levels.INFO, 'ctor'), (log) => {
+      if (Types.isPresent(name) && name !== CommandStore.NoId) {
+        this._name = name;
+      } else {
+        this._name = `${this.constructor.name}-${this.instanceId}`;
+      }
+
       this.state = initialState;
-      this._channel = '$$' + _name + '$$';
+      this._channel = '$$' + this._name + '$$';
       log.log(`name = ${this._name}, initialState = ${JSON.stringify(initialState)}`);
     });
   }
@@ -44,6 +54,12 @@ export class CommandStore<TState extends IServiceState> {
    */
   public get name(): string {
     return this._name;
+  }
+
+
+  public setParent(parent: CommandStore<TState>) {
+    Assert.notNull(parent);
+    this._parent = parent;
   }
 
   public get parent(): CommandStore<TState> {
