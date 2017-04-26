@@ -14,7 +14,7 @@ export class MessageServiceBase {
 
   private static readonly TOPIC = 'messages';
 
-  private pubSub = new PublisherSubscriber();
+  protected pubSub = new PublisherSubscriber();
 
 
   public addMessage(message: IMessage) {
