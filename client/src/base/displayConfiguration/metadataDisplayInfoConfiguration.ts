@@ -11,7 +11,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { TableMetadata } from '@fluxgate/common';
 import { Assert, InvalidOperationException } from '@fluxgate/core';
 
-import { ControlType } from '../../angular/modules/common/controlType';
+import { ControlType } from '../../angular/common/base/controlType';
 import { MetadataService } from '../../angular/services/metadata.service';
 import { ControlDisplayInfo } from './controlDisplayInfo';
 import { IControlDisplayInfo } from './controlDisplayInfo.interface';

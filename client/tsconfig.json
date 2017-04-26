@@ -1,21 +1,29 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "src",
+    "baseUrl": "src/",
+    "module": "commonjs",
+    "target": "es5",
+    "noImplicitAny": false,
     "sourceMap": true,
     "declaration": true,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
+    "declarationDir": "dts/",
     "experimentalDecorators": true,
-    "target": "es5",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
+    "isolatedModules": false,
+    "suppressImplicitAnyIndexErrors": false,
+    "importHelpers": true,
     "lib": [
-      "es2016",
+      "es6",
       "dom"
     ],
-     "outDir": "dist",
-    "rootDir": "."
-  }
+    "outDir": "build/",
+    "types": [
+      "node"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "dts"
+  ]
 }

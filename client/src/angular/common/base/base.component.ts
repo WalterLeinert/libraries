@@ -18,9 +18,9 @@ import { IService, IServiceBase, ServiceResult } from '@fluxgate/common';
 import { Assert, InstanceAccessor, InstanceSetter, NotSupportedException, Utility } from '@fluxgate/core';
 
 import { IRefreshHelper, IRouterNavigationAction } from '../../common/routing';
-import { IAutoformConfig, IAutoformNavigation } from '../../modules/autoform/autoformConfig.interface';
-import { AutoformConstants } from '../../modules/autoform/autoformConstants';
 import { MessageService } from '../../services/message.service';
+import { IAutoformConfig, IAutoformNavigation } from './autoformConfig.interface';
+import { AutoformConstants } from './autoformConstants';
 import { ExtendedCoreComponent } from './extended-core.component';
 import { FormGroupInfo } from './formGroupInfo';
 
