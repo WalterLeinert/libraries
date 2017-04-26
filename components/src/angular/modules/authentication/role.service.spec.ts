@@ -4,7 +4,7 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { ConfigService, MetadataService } from '@fluxgate/client';
 
-import { RoleServiceFake } from '../../../../test/services/role-service-fake';
+import { RoleServiceFake } from '../../../testing/role-service-fake';
 import { RoleService } from './role.service';
 
 describe('RoleService', () => {

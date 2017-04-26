@@ -4,7 +4,7 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { ConfigService, MetadataService } from '@fluxgate/client';
 
-import { UserServiceFake } from '../../../../test/services/user-service-fake';
+import { UserServiceFake } from '../../../testing/user-service-fake';
 import { UserService } from './user.service';
 
 describe('UserService', () => {

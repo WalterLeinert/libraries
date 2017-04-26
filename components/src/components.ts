@@ -37,3 +37,5 @@ export {
 } from './angular/redux';
 
 export { MessageService, MessageServiceModule } from './angular/services';
+
+export { RoleServiceFake, UserServiceFake } from './testing';

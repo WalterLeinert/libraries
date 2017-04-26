@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { APP_STORE_PROVIDER, AppInjector, ConfigService, MetadataService } from '@fluxgate/client';
 
-import { UserServiceFake } from '../../../../test/services/user-service-fake';
+import { UserServiceFake } from '../../../testing/user-service-fake';
 import { UserSelectorServiceRequestsModule } from '../../redux/user-selector-service-requests';
 import { MessageServiceModule } from '../../services/message.service';
 import { UserService } from '../authentication/user.service';
