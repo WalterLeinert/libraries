@@ -78,9 +78,10 @@
     "zone.js": "^0.8.4"
   },
   "peerDependencies": {
+    "@fluxgate/client": ">=2.1.1-beta.0",
+    "@fluxgate/common": ">=2.1.1-beta.0",
     "@fluxgate/core": ">=2.1.1-beta.0",
-    "@fluxgate/platform": ">=2.1.1-beta.0",
-    "@fluxgate/common": ">=2.1.1-beta.0"
+    "@fluxgate/platform": ">=2.1.1-beta.0"
   },
   "directories": {
     "lib": "lib"

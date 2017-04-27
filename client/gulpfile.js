@@ -105,8 +105,8 @@ gulp.task('test', ['set-env', 'compile:test'], function () {
 });
 
 gulp.task('update-fluxgate', function (cb) {
-  execCommand('npm uninstall --save @fluxgate/core @fluxgate/platform && ' +
-    'npm install --save @fluxgate/core @fluxgate/platform', '.', null, cb);
+  execCommand('npm uninstall --save @fluxgate/core @fluxgate/platform @fluxgate/common && ' +
+    'npm install --save @fluxgate/core @fluxgate/platform @fluxgate/common', '.', null, cb);
 })
 
 
