@@ -3,6 +3,10 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
+// -------------------------------------- logging --------------------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
 
 import { MetadataService } from '@fluxgate/client';
 import { IEntity, IRole } from '@fluxgate/common';
@@ -48,6 +52,7 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
   ]
 })
 export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
+  protected static readonly logger = getLogger(RoleSelectorComponent);
 
   @ViewChild(NgModel) public model: NgModel;
   @Input() public textField: string = 'description';
@@ -95,5 +100,17 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
         this.roles = state.items;
       }
     }
+  }
+
+  protected onValueChange(value: IRole) {
+    using(new XLog(RoleSelectorComponent.logger, levels.DEBUG, 'onValueChange'), (log) => {
+      super.onValueChange(value);
+
+      if (log.isDebugEnabled()) {
+        log.log(`class: ${this.constructor.name}: value = ${JSON.stringify(value)}`);
+      }
+
+      this.serviceRequests.setCurrent(value);
+    });
   }
 }

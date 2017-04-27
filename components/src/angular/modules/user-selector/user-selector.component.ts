@@ -3,6 +3,11 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
+// -------------------------------------- logging --------------------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
+
 // fluxgate
 import { MetadataService } from '@fluxgate/client';
 import { IEntity, IUser } from '@fluxgate/common';
@@ -47,6 +52,7 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
   ]
 })
 export class UserSelectorComponent extends SelectorBaseComponent<IUser> {
+  protected static readonly logger = getLogger(UserSelectorComponent);
 
   @ViewChild(NgModel) public model: NgModel;
   @Input() public textField: string = 'fullName';
@@ -92,4 +98,17 @@ export class UserSelectorComponent extends SelectorBaseComponent<IUser> {
       }
     }
   }
+
+  protected onValueChange(value: IUser) {
+    using(new XLog(UserSelectorComponent.logger, levels.DEBUG, 'onValueChange'), (log) => {
+      super.onValueChange(value);
+
+      if (log.isDebugEnabled()) {
+        log.log(`class: ${this.constructor.name}: value = ${JSON.stringify(value)}`);
+      }
+
+      this.serviceRequests.setCurrent(value);
+    });
+  }
+
 }
