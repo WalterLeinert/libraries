@@ -1,7 +1,7 @@
 /**
  * Master Gulp Buildfile
  */
-'user strict';
+'use strict';
 
 var gulp = require('gulp');
 const gulpSequence = require('gulp-sequence');
@@ -92,8 +92,17 @@ gulp.task('publish', [
   'publish:server'
 ])
 
+gulp.task('doc', [
+  'doc:core',
+  'doc:platform',
+  'doc:common',
+  'doc:client',
+  'doc:components',
+  'doc:server'
+])
+
 gulp.task('build-all:client-components',
- gulpSequence('build-all:client', 'build-all:components')
+  gulpSequence('build-all:client', 'build-all:components')
 );
 
 

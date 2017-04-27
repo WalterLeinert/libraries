@@ -4,6 +4,7 @@
 'use strict';
 
 const gulp = require('gulp');
+const compodoc = require('@compodoc/gulp-compodoc');
 const env = require('gulp-env');
 const del = require('del');
 const gulpSequence = require('gulp-sequence');
@@ -59,7 +60,7 @@ gulp.task('really-clean', ['clean'], function (cb) {
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-  return del(['dist', 'build', 'lib', 'dts']);
+  return del(['dist', 'build', 'lib', 'dts', 'documentation']);
 })
 
 
@@ -122,6 +123,16 @@ gulp.task('publish', ['test'], function (cb) {
 
   execCommand('npm publish ' + forceSwitch, '.', null, cb);
 });
+
+gulp.task('doc', () => {
+  return gulp.src('src/**/*.ts')
+    .pipe(compodoc({
+      output: 'documentation',
+      tsconfig: 'src/tsconfig.json',
+      serve: false
+    }))
+});
+
 
 
 // Hinweis: kein bundeling mehr für leichters Debuggen

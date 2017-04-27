@@ -3,6 +3,7 @@
  */
 
 const gulp = require('gulp');
+const compodoc = require('@compodoc/gulp-compodoc');
 const env = require('gulp-env');
 const del = require('del');
 const gulpSequence = require('gulp-sequence');
@@ -59,7 +60,7 @@ gulp.task('really-clean', ['clean'], function (cb) {
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-  return del(['dist', 'build', 'lib', 'dts']);
+  return del(['dist', 'build', 'lib', 'dts', 'documentation']);
 })
 
 
@@ -134,6 +135,15 @@ gulp.task('update-fluxgate', function (cb) {
   execCommand('npm uninstall --save @fluxgate/core && npm install --save @fluxgate/core', '.', null, cb);
 })
 
+
+gulp.task('doc', () => {
+  return gulp.src('src/**/*.ts')
+    .pipe(compodoc({
+      output: 'documentation',
+      tsconfig: 'src/tsconfig.json',
+      serve: false
+    }))
+});
 
 gulp.task('set-env', function () {
   env({

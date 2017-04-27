@@ -5,6 +5,7 @@
 // require("reflect-metadata");
 
 const gulp = require('gulp');
+const compodoc = require('@compodoc/gulp-compodoc');
 const env = require('gulp-env');
 const tslint = require('gulp-tslint');
 const del = require('del');
@@ -59,7 +60,7 @@ gulp.task('really-clean', ['clean'], function (cb) {
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-  return del(['dist', 'build', 'js', 'lib', 'dts', 'release']);
+  return del(['dist', 'build', 'js', 'lib', 'dts', 'release', 'documentation']);
 })
 
 
@@ -122,6 +123,17 @@ gulp.task('publish', ['test'], function (cb) {
 gulp.task('bundle', function (cb) {
   execCommand('webpack', '.', null, cb);
 })
+
+
+gulp.task('doc', () => {
+  return gulp.src('src/**/*.ts')
+    .pipe(compodoc({
+      output: 'documentation',
+      tsconfig: 'src/tsconfig.json',
+      serve: false
+    }))
+});
+
 
 gulp.task('set-env', function () {
   env({
