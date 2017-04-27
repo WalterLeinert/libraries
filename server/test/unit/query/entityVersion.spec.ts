@@ -7,6 +7,7 @@ require('reflect-metadata');
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
+import 'mocha';
 // tslint:disable-next-line:no-unused-variable
 import { only, suite, test } from 'mocha-typescript';
 
