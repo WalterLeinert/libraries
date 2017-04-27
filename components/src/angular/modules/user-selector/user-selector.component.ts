@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 // fluxgate
 import { MetadataService } from '@fluxgate/client';
-import { IEntity, IUser, UserStore } from '@fluxgate/common';
+import { IEntity, IUser } from '@fluxgate/common';
 import { IExtendedCrudServiceState, ItemsFoundCommand, ServiceCommand } from '@fluxgate/common';
 import { Utility } from '@fluxgate/core';
 
@@ -42,7 +42,8 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
       provide: NG_VALIDATORS,
       useExisting: UserSelectorComponent,
       multi: true,
-    }
+    },
+    UserSelectorServiceRequests
   ]
 })
 export class UserSelectorComponent extends SelectorBaseComponent<IUser> {

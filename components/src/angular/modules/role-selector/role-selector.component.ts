@@ -43,7 +43,8 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
       provide: NG_VALIDATORS,
       useExisting: RoleSelectorComponent,
       multi: true,
-    }
+    },
+    RoleSelectorServiceRequests
   ]
 })
 export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
@@ -85,6 +86,10 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
     const state = this.getStoreState<IExtendedCrudServiceState<IRole, number>>(this.serviceRequests.storeId);
 
     if (command.storeId === this.serviceRequests.storeId) {
+      if (command instanceof ItemsFoundCommand) {
+        this.value = Utility.isNullOrEmpty(state.items) ? null : state.items[0];
+        this.roles = state.items;
+      }
       if (command instanceof ItemsFoundCommand) {
         this.value = Utility.isNullOrEmpty(state.items) ? null : state.items[0];
         this.roles = state.items;
