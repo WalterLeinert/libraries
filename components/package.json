@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/components",
-  "version": "2.1.1-beta.23",
+  "version": "2.1.1-beta.25",
   "description": "Fluxgate Angular Component-Library ",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

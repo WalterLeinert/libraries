@@ -17,6 +17,10 @@ export {
 } from './angular/modules/datatable-selector';
 
 export {
+  AutofocusDirective, AutofocusModule, FocusDirective, FocusModule, HighlightDirective, HighlightModule
+} from './angular/modules/directives';
+
+export {
   DropdownSelectorComponent, DropdownSelectorModule, IDropdownSelectorConfig
 } from './angular/modules/dropdown-selector';
 
@@ -36,6 +40,8 @@ export {
   UserSelectorServiceRequestsModule, UserSelectorStore, UserServiceRequests, UserServiceRequestsModule
 } from './angular/redux';
 
-export { MessageService, MessageServiceModule } from './angular/services';
+export {
+  MessageService, MessageServiceModule, ComponentGuardModule, ComponentGuardService, ComponentServices, ComponentServicesModule
+} from './angular/services';
 
 export { RoleServiceFake, UserServiceFake } from './testing';
