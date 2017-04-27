@@ -22,7 +22,7 @@ export function getLogger(category: string | Funktion): ILogger {
   }
 
   if (!LoggerRegistry.hasLogger(categoryName)) {
-    let logger = new Logger(ConsoleLogger.create(categoryName));
+    const logger = new Logger(ConsoleLogger.create(categoryName));
 
     LoggerRegistry.registerLogger(categoryName, logger);
   }
