@@ -3,7 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, CustomSubject, InvalidOperationException, Types } from '@fluxgate/core';
+import { Assert, CustomSubject, Dictionary, InvalidOperationException, Types } from '@fluxgate/core';
 
 import { ICommand } from '../command/command.interface';
 import { CommandStoreStorage } from '../decorators/command-store-storage';
@@ -20,7 +20,7 @@ import { CommandStore } from './command-store';
  */
 export class Store {
   protected static readonly logger = getLogger(Store);
-  private commandStores: { [storeName: string]: CommandStore<any> } = {};
+  private commandStores: Dictionary<string, CommandStore<any>> = new Dictionary<string, CommandStore<any>>();
 
   /**
    * Creates an instance of Store.
@@ -55,7 +55,7 @@ export class Store {
     Assert.notNull(command);
 
     using(new XLog(Store.logger, levels.INFO, 'dispatch'), (log) => {
-      const commandStore = this.commandStores[command.storeId];
+      const commandStore = this.getCommandStore(command.storeId);
 
       // root CommandStore suchen
       let store = commandStore;
@@ -80,7 +80,7 @@ export class Store {
    */
   public getState(storeId: string): IServiceState {
     Assert.notNullOrEmpty(storeId);
-    const commandStore = this.commandStores[storeId];
+    const commandStore = this.getCommandStore(storeId);
     return commandStore.getState();
   }
 
@@ -95,7 +95,7 @@ export class Store {
    */
   public getCommandStore<T extends IServiceState>(storeId: string): CommandStore<T> {
     Assert.notNullOrEmpty(storeId);
-    return this.commandStores[storeId];
+    return this.commandStores.get(storeId);
   }
 
 
@@ -109,8 +109,21 @@ export class Store {
    */
   public subject(storeId: string): CustomSubject<any> {
     Assert.notNullOrEmpty(storeId);
-    const commandStore = this.commandStores[storeId];
+    const commandStore = this.getCommandStore(storeId);
     return commandStore.subject();
+  }
+
+
+  /**
+   * Setzt den Status aller CommandStores auf den initialen Zustand.
+   * Erforderlich z.B. bei Logoff/User-Wechsel
+   *
+   * @memberOf Store
+   */
+  public reset() {
+    this.commandStores.values.forEach((store) => {
+      store.reset();
+    });
   }
 
 
@@ -125,10 +138,10 @@ export class Store {
     Assert.notNullOrEmpty(stores);
 
     stores.forEach((store) => {
-      if (this.commandStores[store.name]) {
+      if (this.commandStores.containsKey(store.name)) {
         throw new InvalidOperationException(`Store enthält bereits einen CommandStore ${store.name}`);
       }
-      this.commandStores[store.name] = store;
+      this.commandStores.set(store.name, store);
     });
   }
 

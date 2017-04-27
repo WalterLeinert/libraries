@@ -3,7 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, CustomSubject, Dictionary, PublisherSubscriber, Types, UniqueIdentifiable } from '@fluxgate/core';
+import { Assert, Clone, CustomSubject, Dictionary, PublisherSubscriber, Types, UniqueIdentifiable } from '@fluxgate/core';
 
 import { ICommand } from '../command/command.interface';
 import { IServiceState } from '../state/service-state.interface';
@@ -30,7 +30,15 @@ export class CommandStore<TState extends IServiceState> extends UniqueIdentifiab
   private state: TState;
   private _children: Dictionary<string, CommandStore<any>> = new Dictionary<string, CommandStore<any>>();
 
-  constructor(name: string = CommandStore.NoId, initialState: TState, private _parent?: CommandStore<TState>) {
+  /**
+   * Creates an instance of CommandStore.
+   * @param {string} [name=CommandStore.NoId] - Name des Stores (storeId)
+   * @param {TState} _initialState - initialer Status
+   * @param {CommandStore<TState>} [_parent] - Parent-Store
+   *
+   * @memberOf CommandStore
+   */
+  constructor(name: string = CommandStore.NoId, private _initialState: TState, private _parent?: CommandStore<TState>) {
     super();
     using(new XLog(CommandStore.logger, levels.INFO, 'ctor'), (log) => {
       if (Types.isPresent(name) && name !== CommandStore.NoId) {
@@ -39,9 +47,9 @@ export class CommandStore<TState extends IServiceState> extends UniqueIdentifiab
         this._name = `${this.constructor.name}-${this.instanceId}`;
       }
 
-      this.state = initialState;
+      this.reset();
       this._channel = '$$' + this._name + '$$';
-      log.log(`name = ${this._name}, initialState = ${JSON.stringify(initialState)}`);
+      log.log(`name = ${this._name}, initialState = ${JSON.stringify(_initialState)}`);
     });
   }
 
@@ -129,5 +137,14 @@ export class CommandStore<TState extends IServiceState> extends UniqueIdentifiab
    */
   public subject(): CustomSubject<any> {
     return this.pubSub.subscribe(this._channel);
+  }
+
+  /**
+   * Setzt den Status des CommandStores auf den initialen Zustand.
+   *
+   * @memberOf CommandStore
+   */
+  public reset() {
+    this.state = Clone.clone(this._initialState);
   }
 }

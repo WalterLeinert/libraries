@@ -611,6 +611,10 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     return this.store.getState(storeId) as TState;
   }
 
+  protected resetStore() {
+    return this.store.reset();
+  }
+
 
   /**
    * Liefert den aktuell angemeldeten User.
