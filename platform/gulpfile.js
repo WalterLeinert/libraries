@@ -100,24 +100,24 @@ gulp.task('compile:node', function() {
 });
 
 
-/**
- * build an run tests
- */
-gulp.task('test', ['set-env'], function () {
-  //find test code - note use of 'base'
-  return gulp.src('./test/**/*.spec.ts', { base: '.' })
-    /*transpile*/
-    .pipe(tsc(tscConfig.compilerOptions))
-    /*flush to disk*/
-    .pipe(gulp.dest('dist/node'))
-    /*execute tests*/
-    .pipe(mocha({
-      reporter: 'spec'
-    }));
-});
+// /**
+//  * build an run tests
+//  */
+// gulp.task('test', ['set-env'], function () {
+//   //find test code - note use of 'base'
+//   return gulp.src('./test/**/*.spec.ts', { base: '.' })
+//     /*transpile*/
+//     .pipe(tsc(tscConfig.compilerOptions))
+//     /*flush to disk*/
+//     .pipe(gulp.dest('dist/node'))
+//     /*execute tests*/
+//     .pipe(mocha({
+//       reporter: 'spec'
+//     }));
+// });
 
 
-gulp.task('compile:test', gulpSequence('default', 'test'));
+gulp.task('compile:test', gulpSequence('default'));
 
 gulp.task('publish', ['compile:test'], function (cb) {
   const force = argv.f ? argv.f : '';
