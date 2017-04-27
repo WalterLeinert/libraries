@@ -99,6 +99,10 @@ gulp.task('compile:node', function() {
     ]);
 });
 
+gulp.task('test', ['set-env', 'compile:test'], function () {
+  console.warn('*** echte Tests aktivieren, sobald Tests existieren');
+  // TODO: echte Tests aktivieren, sobald Tests existieren
+});
 
 // /**
 //  * build an run tests
