@@ -5,7 +5,7 @@ import { MetadataStorage } from '../../metadata/metadataStorage';
 
 
 /**
- * Enum-Decorator für Modellproperties/-attribute, deren Werteliste aus einer Tabelle stammen
+ * Decorator: definiert eine Modellproperty, deren Werteliste aus einer Tabelle stammt
  *
  * @export
  * @template T

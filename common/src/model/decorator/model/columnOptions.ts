@@ -1,5 +1,12 @@
 import { ColumnType } from '../../metadata/columnTypes';
 
+
+/**
+ * Optionen für den Column-Decorator
+ *
+ * @export
+ * @interface ColumnOptions
+ */
 // tslint:disable-next-line:interface-name
 export interface ColumnOptions {
 

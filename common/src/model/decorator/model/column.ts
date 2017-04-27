@@ -15,7 +15,7 @@ import { ColumnOptions } from './columnOptions';
 const logger = getLogger(Column);
 
 /**
- * Column-Decorator für Modellproperties/-attribute
+ * Decorator: definiert die Modellproperty und deren Abbildung auf eine DB-Columns
  *
  * @export
  * @param {ColumnOptions} [options]

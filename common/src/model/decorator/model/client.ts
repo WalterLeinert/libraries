@@ -2,7 +2,7 @@ import { MetadataStorage } from '../../metadata/metadataStorage';
 import { SpecialColumns } from '../../metadata/specialColumns';
 
 /**
- * Definiert die Version-Spalte für Implementierung von Mandantenfähigkeit
+ * Decorator: definiert die Property des Mandanten (Mandantenfähigkeit)
  */
 export function Client() {
   // tslint:disable-next-line:only-arrow-functions
