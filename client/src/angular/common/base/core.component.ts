@@ -70,6 +70,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   private subscriptions: Subscription[] = [];
 
   private store: Store;
+  private _confirmationService: ConfirmationService;
 
   protected currentUserChanged: EventEmitter<IUser> = new EventEmitter();
 
@@ -77,7 +78,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     super();
 
     this.store = AppInjector.instance.getInstance<Store>(APP_STORE);
-    const confirmationService = AppInjector.instance.getInstance<ConfirmationService>(ConfirmationService);
+    this._confirmationService = AppInjector.instance.getInstance<ConfirmationService>(ConfirmationService);
 
     this.subscribeToStore(CurrentUserStore.ID);
     this.updateUserState();
@@ -549,6 +550,12 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     return this._messageService;
   }
 
+  /**
+   * Liefert den PrimeNG Service für Aktionsbestätigungen @see{ConfirmationService}
+   */
+  protected get confirmationService(): ConfirmationService {
+    return this._confirmationService;
+  }
 
   /**
    * Registriert den Store @param{storeId} für Statusänderungen.

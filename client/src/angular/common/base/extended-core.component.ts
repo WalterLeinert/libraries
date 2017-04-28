@@ -12,10 +12,6 @@ import { Confirmation, ConfirmationService } from 'primeng/components/common/api
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
-// -------------------------------------- logging --------------------------------------------
-
-// Fluxgate
-import { AppRegistry } from '@fluxgate/common';
 
 import { IRouterNavigationAction, NavigationAction } from '../../common/routing';
 import { MessageService } from '../../services/message.service';
@@ -32,16 +28,6 @@ import { CoreComponent } from './core.component';
  * @extends {CoreComponent}
  */
 export abstract class ExtendedCoreComponent extends CoreComponent {
-
-  /**
-   * der PrimeNG Service für Aktionsbestätigungen
-   *
-   * @private
-   * @type {ConfirmationService}
-   * @memberOf BaseComponent
-   */
-  private confirmationService: ConfirmationService;
-
 
   /**
    * Creates an instance of BaseComponent.
@@ -103,10 +89,6 @@ export abstract class ExtendedCoreComponent extends CoreComponent {
    */
   protected confirmAction(options: Confirmation, acceptAction: () => void, rejectAction?: () => void) {
     using(new XLog(ExtendedCoreComponent.logger, levels.INFO, 'confirm'), (log) => {
-
-      if (this.confirmationService === undefined) {
-        this.confirmationService = this.getConfirmationService();
-      }
 
       options.accept = () => {
         log.log('accept');
@@ -200,15 +182,4 @@ export abstract class ExtendedCoreComponent extends CoreComponent {
   //   serviceRequests: ServiceRequests<T, TId, TService>): void {
   //   serviceRequests.delete(id);
   // }
-
-
-
-  private getConfirmationService(): ConfirmationService {
-    const confirmationService = AppRegistry.instance.get<ConfirmationService>('ConfirmationService');
-    return confirmationService;
-    // const injector: Injector =
-    //   ReflectiveInjector.resolveAndCreate([{ provide: ConfirmationService, useClass: ConfirmationService }]);
-    // return injector.get(ConfirmationService);
-  }
-
 }
