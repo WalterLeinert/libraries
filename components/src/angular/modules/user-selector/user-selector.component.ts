@@ -9,13 +9,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 // fluxgate
-import { MetadataService } from '@fluxgate/client';
+import { MessageService, MetadataService } from '@fluxgate/client';
 import { IEntity, IUser } from '@fluxgate/common';
 import { IExtendedCrudServiceState, ItemsFoundCommand, ServiceCommand } from '@fluxgate/common';
 import { Utility } from '@fluxgate/core';
 
 import { UserSelectorServiceRequests } from '../../redux/user-selector-service-requests';
-import { MessageService } from '../../services/message.service';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
 
 /**

@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { MessageServiceModule } from '../../services/message.service';
+import { MessageService, MetadataService } from '@fluxgate/client';
+
 import { DropdownSelectorModule } from '../dropdown-selector';
 import { MonthSelectorComponent } from './month-selector.component';
 
@@ -10,7 +11,6 @@ import { MonthSelectorComponent } from './month-selector.component';
   imports: [
     CommonModule,
     FormsModule,
-    MessageServiceModule,
     DropdownSelectorModule
   ],
   declarations: [
@@ -20,6 +20,8 @@ import { MonthSelectorComponent } from './month-selector.component';
     MonthSelectorComponent
   ],
   providers: [
+    MessageService,
+    MetadataService
   ]
 })
 export class MonthSelectorModule { }

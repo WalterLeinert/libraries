@@ -3,10 +3,9 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { MetadataService } from '@fluxgate/client';
+import { MessageService, MetadataService } from '@fluxgate/client';
 import { Assert, Types } from '@fluxgate/core';
 
-import { MessageService } from '../../services/message.service';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
 
 

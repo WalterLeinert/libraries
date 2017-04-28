@@ -11,7 +11,6 @@ export * from './core.component';
 export * from './extended-core.component';
 export * from './form-action';
 export * from './formGroupInfo';
-export * from './messageServiceBase';
 export * from './resolver-base';
 export * from './service';
 export * from './serviceBase';

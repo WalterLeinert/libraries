@@ -18,8 +18,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { AppRegistry } from '@fluxgate/common';
 
 import { IRouterNavigationAction, NavigationAction } from '../../common/routing';
+import { MessageService } from '../../services/message.service';
 import { CoreComponent } from './core.component';
-import { MessageServiceBase } from './messageServiceBase';
 
 
 /**
@@ -50,7 +50,7 @@ export abstract class ExtendedCoreComponent extends CoreComponent {
    * @param {ActivatedRoute} _route - die aktivierte Route
    * @param {*} _service - der zugehörige Service
    */
-  protected constructor(private _router: Router, private _route: ActivatedRoute, messageService: MessageServiceBase) {
+  protected constructor(private _router: Router, private _route: ActivatedRoute, messageService: MessageService) {
     super(messageService);
   }
 

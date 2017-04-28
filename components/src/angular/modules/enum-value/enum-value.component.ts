@@ -9,9 +9,8 @@ import { IService } from '@fluxgate/common';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { CoreComponent, DisplayInfo } from '@fluxgate/client';
+import { CoreComponent, DisplayInfo, MessageService } from '@fluxgate/client';
 
-import { MessageService } from '../../services/message.service';
 
 /**
  * Fluxgate EnumValue-Komponente

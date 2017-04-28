@@ -8,9 +8,8 @@ import { CalendarModule } from 'primeng/components/calendar/calendar';
 import { DataTableModule } from 'primeng/components/datatable/datatable';
 import { TooltipModule } from 'primeng/components/tooltip/tooltip';
 
-import { PipeService, ProxyService } from '@fluxgate/client';
+import { MessageService, MetadataService, PipeService, ProxyService } from '@fluxgate/client';
 
-import { MessageServiceModule } from '../../services/message.service';
 import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
 import { EnumValueModule } from '../enum-value/enum-value.module';
 import { TimeSelectorModule } from '../time-selector/time-selector.module';
@@ -25,7 +24,6 @@ import { DataTableSelectorComponent } from './datatable-selector.component';
     CalendarModule,
     TooltipModule,
 
-    MessageServiceModule,
     EnumValueModule,
     DropdownSelectorModule,
     TimeSelectorModule
@@ -37,8 +35,10 @@ import { DataTableSelectorComponent } from './datatable-selector.component';
     DataTableSelectorComponent
   ],
   providers: [
-    ProxyService,
-    PipeService
+    MessageService,
+    MetadataService,
+    PipeService,
+    ProxyService
   ]
 })
 export class DataTableSelectorModule { }

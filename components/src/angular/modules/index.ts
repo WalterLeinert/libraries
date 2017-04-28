@@ -1,5 +1,6 @@
 export * from './autoform';
 export * from './authentication';
+export * from './client-services.module';
 export * from './common';
 export * from './directives';
 export * from './datatable-selector';

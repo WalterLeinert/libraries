@@ -1,3 +1,5 @@
+export { ClientServicesModule } from './angular/modules';
+
 export {
   AuthenticationModule, AuthenticationNavigation, AuthenticationNavigationToken, ChangePasswordComponent,
   LoginComponent, LogoffComponent, PassportService, RegisterComponent, RegisterGuardService,
@@ -41,7 +43,7 @@ export {
 } from './angular/redux';
 
 export {
-  MessageService, MessageServiceModule, ComponentGuardModule, ComponentGuardService, ComponentServices, ComponentServicesModule
+  ComponentGuardModule, ComponentGuardService, ComponentServices, ComponentServicesModule
 } from './angular/services';
 
 export { RoleServiceFake, UserServiceFake } from './testing';

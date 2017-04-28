@@ -6,7 +6,8 @@ import { FormsModule } from '@angular/forms';
 // PrimeNG
 import { DropdownModule } from 'primeng/components/dropdown/dropdown';
 
-import { MessageServiceModule } from '../../services/message.service';
+import { MessageService, MetadataService } from '@fluxgate/client';
+
 import { DropdownSelectorComponent } from './dropdown-selector.component';
 
 
@@ -14,14 +15,14 @@ import { DropdownSelectorComponent } from './dropdown-selector.component';
   imports: [
     CommonModule,
     FormsModule,
-    DropdownModule,
-
-    MessageServiceModule
+    DropdownModule
   ],
   exports: [
     DropdownSelectorComponent
   ],
   declarations: [
+    MessageService,
+    MetadataService,
     DropdownSelectorComponent
   ]
 })

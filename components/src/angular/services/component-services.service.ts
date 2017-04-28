@@ -2,7 +2,7 @@
 import { Injectable, NgModule } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { MessageService } from './message.service';
+import { MessageService, MetadataService } from '@fluxgate/client';
 
 
 @Injectable()
@@ -18,6 +18,7 @@ export class ComponentServices {
 @NgModule({
   providers: [
     MessageService,
+    MetadataService,
     ComponentServices
   ]
 })

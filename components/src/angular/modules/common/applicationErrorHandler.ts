@@ -5,9 +5,9 @@ import { ApplicationRef, ErrorHandler, Inject, Injectable, Injector, NgModule } 
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { MessageSeverity, ServerBusinessException } from '@fluxgate/core';
 
-import { MessageService, MessageServiceModule } from '../../services/message.service';
+import { MessageService } from '@fluxgate/client';
+import { MessageSeverity, ServerBusinessException } from '@fluxgate/core';
 
 
 export interface ILoggingErrorHandlerOptions {
@@ -65,9 +65,9 @@ const LOGGING_ERROR_HANDLER_PROVIDERS = [
 // tslint:disable-next-line:max-classes-per-file
 @NgModule({
   imports: [
-    MessageServiceModule
   ],
   providers: [
+    MessageService,
     LOGGING_ERROR_HANDLER_PROVIDERS
   ]
 })

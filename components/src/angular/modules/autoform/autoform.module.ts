@@ -10,9 +10,8 @@ import { ConfirmDialogModule } from 'primeng/components/confirmdialog/confirmdia
 import { DialogModule } from 'primeng/components/dialog/dialog';
 import { MessagesModule } from 'primeng/components/messages/messages';
 
-import { ProxyService } from '@fluxgate/client';
+import { MessageService, MetadataService, ProxyService } from '@fluxgate/client';
 
-import { MessageServiceModule } from '../../services/message.service';
 import { ConfirmationDialogModule } from '../common/confirmation-dialog/confirmation-dialog.component';
 import { AutofocusModule } from '../directives/autofocus.directive';
 import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
@@ -36,7 +35,6 @@ import { AutoformComponent } from './autoform.component';
 
     // Fluxgate
     AutofocusModule,
-    MessageServiceModule,
     TimeSelectorModule,
     DropdownSelectorModule,
     ConfirmationDialogModule
@@ -48,6 +46,8 @@ import { AutoformComponent } from './autoform.component';
     AutoformComponent
   ],
   providers: [
+    MessageService,
+    MetadataService,
     ProxyService
   ]
 })

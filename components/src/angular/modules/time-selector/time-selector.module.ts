@@ -7,7 +7,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // PrimeNG
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 
-import { MessageServiceModule } from '../../services/message.service';
+import { MessageService } from '@fluxgate/client';
+
 import { TimeSelectorComponent } from './time-selector.component';
 
 
@@ -16,8 +17,7 @@ import { TimeSelectorComponent } from './time-selector.component';
     BrowserAnimationsModule,
     CommonModule,
     FormsModule,
-    CalendarModule,
-    MessageServiceModule
+    CalendarModule
   ],
   declarations: [
     TimeSelectorComponent
@@ -26,6 +26,7 @@ import { TimeSelectorComponent } from './time-selector.component';
     TimeSelectorComponent
   ],
   providers: [
+    MessageService
   ]
 })
 export class TimeSelectorModule { }

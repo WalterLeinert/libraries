@@ -10,10 +10,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { ControlBaseComponent } from '@fluxgate/client';
+import { ControlBaseComponent, MessageService } from '@fluxgate/client';
 import { Hour, ShortTime, Types } from '@fluxgate/core';
-
-import { MessageService } from '../../services/message.service';
 
 
 @Component({

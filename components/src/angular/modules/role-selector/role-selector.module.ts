@@ -2,10 +2,9 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { ConfigService, MetadataService } from '@fluxgate/client';
+import { ConfigService, MessageService, MetadataService } from '@fluxgate/client';
 
 import { RoleSelectorServiceRequestsModule } from '../../redux/role-selector-service-requests';
-import { MessageServiceModule } from '../../services/message.service';
 import { DropdownSelectorModule } from '../dropdown-selector';
 import { RoleSelectorComponent } from './role-selector.component';
 
@@ -13,7 +12,6 @@ import { RoleSelectorComponent } from './role-selector.component';
   imports: [
     CommonModule,
     FormsModule,
-    MessageServiceModule,
     DropdownSelectorModule,
     RoleSelectorServiceRequestsModule
   ],
@@ -25,6 +23,7 @@ import { RoleSelectorComponent } from './role-selector.component';
   ],
   providers: [
     ConfigService,
+    MessageService,
     MetadataService
   ]
 })

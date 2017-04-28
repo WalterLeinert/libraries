@@ -6,16 +6,14 @@ import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 
 // Fluxgate
-import { MetadataService } from '@fluxgate/client';
+import { MessageService, MetadataService } from '@fluxgate/client';
 import { IService, TableMetadata } from '@fluxgate/common';
 import { Assert, Funktion, Types } from '@fluxgate/core';
 
-import { MessageService } from '../../services/message.service';
 import { SelectorBaseComponent } from './selectorBase.component';
 
 
 export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> {
-
 
   /**
    * Schutz vor rekursivem Ping-Pong

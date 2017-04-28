@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 
 // fluxgate
-import { CoreComponent } from '@fluxgate/client';
+import { CoreComponent, MessageService } from '@fluxgate/client';
 import { IUser } from '@fluxgate/common';
 
-import { MessageService } from '../../../services/message.service';
 
 /**
  * Guard-Service, der die PasswordChange-Route nur zulässt,
