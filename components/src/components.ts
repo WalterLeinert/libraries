@@ -43,7 +43,9 @@ export {
 } from './angular/redux';
 
 export {
-  ComponentGuardModule, ComponentGuardService, ComponentServices, ComponentServicesModule
+  ComponentGuardModule, ComponentGuardService,
+  ComponentServices, ComponentServicesModule,
+  MessageService, MessageServicesModule
 } from './angular/services';
 
 export { RoleServiceFake, UserServiceFake } from './testing';

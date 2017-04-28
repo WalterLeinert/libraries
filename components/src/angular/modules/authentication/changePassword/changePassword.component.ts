@@ -9,8 +9,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { BaseComponent, MessageService } from '@fluxgate/client';
+import { BaseComponent } from '@fluxgate/client';
 import { Types } from '@fluxgate/core';
+
+import { MessageService } from '../../../services/message.service';
 
 // commands
 import { CurrentUserServiceRequests } from '../../../redux/current-user-service-requests';

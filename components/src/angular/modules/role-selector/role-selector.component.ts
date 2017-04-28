@@ -8,12 +8,13 @@ import { Router } from '@angular/router';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { MessageService, MetadataService } from '@fluxgate/client';
+import { MetadataService } from '@fluxgate/client';
 import { IEntity, IRole } from '@fluxgate/common';
 import { IExtendedCrudServiceState, ItemsFoundCommand, ServiceCommand } from '@fluxgate/common';
 import { Utility } from '@fluxgate/core';
 
 import { RoleSelectorServiceRequests } from '../../redux/role-selector-service-requests';
+import { MessageService } from '../../services/message.service';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
 
 

@@ -6,8 +6,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 
-import { MessageService } from '@fluxgate/client';
 import { MessageSeverity, ServerBusinessException } from '@fluxgate/core';
+
+import { MessageService } from '../../services/message.service';
 
 
 export interface ILoggingErrorHandlerOptions {

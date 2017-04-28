@@ -9,7 +9,9 @@ import { Router } from '@angular/router';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { ControlBaseComponent, MessageService, MetadataService } from '@fluxgate/client';
+import { ControlBaseComponent, MetadataService } from '@fluxgate/client';
+
+import { MessageService } from '../../services/message.service';
 
 
 /**
