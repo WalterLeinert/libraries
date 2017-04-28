@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IListAdapter } from '@fluxgate/core';
 
-import { Service } from '../../services/service';
+import { Service } from '../base/service';
 
 /**
  * Adapter zum Bereitstellen einer Liste von Items vom Typ {T} aus einer DB-Tabelle

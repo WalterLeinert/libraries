@@ -12,9 +12,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { ColumnTypes, IPrintOptions, IPrintTask, ITableRow, TableMetadata, TableType } from '@fluxgate/common';
 import { Assert } from '@fluxgate/core';
 
+import { ServiceBase } from '../common/base/serviceBase';
 import { ConfigService } from './config.service';
 import { MetadataService } from './metadata.service';
-import { ServiceBase } from './serviceBase';
 
 
 @Injectable()

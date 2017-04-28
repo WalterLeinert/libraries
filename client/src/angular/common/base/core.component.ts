@@ -5,6 +5,9 @@ import 'rxjs/add/observable/from';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+// PrimeNG
+import { Confirmation, ConfirmationService } from 'primeng/components/common/api';
+
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -29,9 +32,9 @@ import { DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';
 import { APP_STORE } from '../../redux/app-store';
 import { AppInjector } from '../../services/appInjector.service';
-import { MessageServiceBase } from '../../services/messageServiceBase';
 import { MetadataService } from '../../services/metadata.service';
 import { FormGroupInfo, IMessageDict } from './formGroupInfo';
+import { MessageServiceBase } from './messageServiceBase';
 
 
 export interface IValidatorDict {
@@ -74,6 +77,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     super();
 
     this.store = AppInjector.instance.getInstance<Store>(APP_STORE);
+    const confirmationService = AppInjector.instance.getInstance<ConfirmationService>(ConfirmationService);
 
     this.subscribeToStore(CurrentUserStore.ID);
     this.updateUserState();

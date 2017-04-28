@@ -17,8 +17,8 @@ import {
   IEntity, IExtendedCrudServiceRequests, IExtendedCrudServiceState, ItemCreatedCommand,
   ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
-import { MessageServiceBase } from '../../services/messageServiceBase';
 import { ExtendedCoreComponent } from './extended-core.component';
+import { MessageServiceBase } from './messageServiceBase';
 
 
 /**

@@ -17,9 +17,9 @@ import { IQuery, IService, ServiceResult, TableMetadata } from '@fluxgate/common
 import { Assert, Funktion, InvalidOperationException, IToString } from '@fluxgate/core';
 
 
-import { Serializer } from '../../base/serializer';
-import { ConfigService } from './config.service';
-import { MetadataService } from './metadata.service';
+import { Serializer } from '../../../base/serializer';
+import { ConfigService } from '../../services/config.service';
+import { MetadataService } from '../../services/metadata.service';
 import { ServiceBase } from './serviceBase';
 
 

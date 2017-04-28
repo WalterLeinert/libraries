@@ -18,8 +18,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { AppRegistry } from '@fluxgate/common';
 
 import { IRouterNavigationAction, NavigationAction } from '../../common/routing';
-import { MessageServiceBase } from '../../services/messageServiceBase';
 import { CoreComponent } from './core.component';
+import { MessageServiceBase } from './messageServiceBase';
 
 
 /**

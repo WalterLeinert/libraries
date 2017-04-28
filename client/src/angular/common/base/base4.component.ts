@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 // Fluxgate
 import { IServiceBase } from '@fluxgate/common';
 
-import { MessageServiceBase } from '../../services/messageServiceBase';
 import { Base3Component } from './base3.component';
+import { MessageServiceBase } from './messageServiceBase';
 
 /**
  * Basisklasse (Komponente) für alle GUI-Komponenten mit 3 Services.

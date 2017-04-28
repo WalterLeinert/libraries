@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 // Fluxgate
 import { IServiceBase } from '@fluxgate/common';
 
-import { MessageServiceBase } from '../../services/messageServiceBase';
 import { Base2Component } from './base2.component';
+import { MessageServiceBase } from './messageServiceBase';
 
 
 /**
