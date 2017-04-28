@@ -51,7 +51,7 @@ export function Deprecated(message?: string, printStack: boolean = true) {
 
       // "Error: deprecated" entfernen
       const stackArray = err.stack.split('\n').slice(1);
-      const length = Math.min(stackArray.length, 5);
+      const length = Math.min(stackArray.length, 10);
       const stackReduced = stackArray.slice(2, length);
 
       sb.appendLine(stackReduced.join('\n'));
