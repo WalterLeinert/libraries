@@ -32,7 +32,7 @@ import { DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';
 import { APP_STORE } from '../../redux/app-store';
 import { AppInjector } from '../../services/appInjector.service';
-import { MessageServiceBase } from '../../services/message-service-base';
+import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
 import { FormGroupInfo, IMessageDict } from './formGroupInfo';
 
@@ -73,7 +73,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   protected currentUserChanged: EventEmitter<IUser> = new EventEmitter();
 
-  protected constructor(private _messageService: MessageServiceBase) {
+  protected constructor(private _messageService: MessageService) {
     super();
 
     this.store = AppInjector.instance.getInstance<Store>(APP_STORE);
@@ -545,7 +545,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * Liefert den @see{MessageService}
    */
-  protected get messageService(): MessageServiceBase {
+  protected get messageService(): MessageService {
     return this._messageService;
   }
 

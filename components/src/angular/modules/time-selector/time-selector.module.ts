@@ -8,7 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 import { ConfirmationService } from 'primeng/components/common/api';
 
-import { MessageService } from '../../services/message.service';
+import { MessageService } from '@fluxgate/client';
 import { TimeSelectorComponent } from './time-selector.component';
 
 

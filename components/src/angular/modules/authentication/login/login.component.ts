@@ -12,11 +12,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 
-import { BaseComponent } from '@fluxgate/client';
+import { BaseComponent, MessageService } from '@fluxgate/client';
 
 // commands
 import { CurrentUserServiceRequests } from '../../../redux/current-user-service-requests';
-import { MessageService } from '../../../services/message.service';
 import { AuthenticationNavigation, AuthenticationNavigationToken } from '../authenticationNavigation';
 import { ChangePasswordGuardService } from '../changePassword/changePassword-guard.service';
 import { PassportService } from '../passport.service';

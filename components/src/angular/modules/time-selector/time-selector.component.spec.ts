@@ -7,10 +7,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 import { ConfirmationService } from 'primeng/components/common/api';
 
-import { APP_STORE_PROVIDER, AppInjector } from '@fluxgate/client';
+import { APP_STORE_PROVIDER, AppInjector, MessageService } from '@fluxgate/client';
 import { ShortTime } from '@fluxgate/core';
 
-import { MessageService } from '../../services/message.service';
 import { TimeSelectorComponent } from './time-selector.component';
 
 

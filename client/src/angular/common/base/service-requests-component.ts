@@ -17,7 +17,7 @@ import {
   IEntity, IExtendedCrudServiceRequests, IExtendedCrudServiceState, ItemCreatedCommand,
   ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
-import { MessageServiceBase } from '../../services/message-service-base';
+import { MessageService } from '../../services/message.service';
 import { ExtendedCoreComponent } from './extended-core.component';
 
 
@@ -44,7 +44,7 @@ export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TSer
    *
    * @memberOf ServiceRequestComponent
    */
-  protected constructor(router: Router, route: ActivatedRoute, messageService: MessageServiceBase,
+  protected constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
     private _serviceRequests: TServiceRequests) {
     super(router, route, messageService);
 

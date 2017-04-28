@@ -45,7 +45,7 @@ export {
 export {
   ComponentGuardModule, ComponentGuardService,
   ComponentServices, ComponentServicesModule,
-  MessageService, MessageServicesModule
+  MessageServiceModule
 } from './angular/services';
 
 export { RoleServiceFake, UserServiceFake } from './testing';

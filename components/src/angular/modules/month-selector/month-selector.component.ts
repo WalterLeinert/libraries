@@ -3,10 +3,9 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { DisplayInfo, MetadataService, PrimeNgCalendarLocale } from '@fluxgate/client';
+import { DisplayInfo, MessageService, MetadataService, PrimeNgCalendarLocale } from '@fluxgate/client';
 import { Types } from '@fluxgate/core';
 
-import { MessageService } from '../../services/message.service';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
 
 

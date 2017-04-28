@@ -13,12 +13,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import {
   AutoformConfiguration, BaseComponent, ControlType, FormAction, FormActions,
-  IAutoformConfig, IControlDisplayInfo, IDataFormAction, MetadataService, ProxyService
+  IAutoformConfig, IControlDisplayInfo, IDataFormAction, MessageService, MetadataService, ProxyService
 } from '@fluxgate/client';
 import { TableMetadata } from '@fluxgate/common';
 import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/core';
-
-import { MessageService } from '../../services/message.service';
 
 
 @Component({

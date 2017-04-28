@@ -15,12 +15,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  ConfigService, CoreComponent, MetadataService, Serializer, ServiceBase
+  ConfigService, CoreComponent, MessageService, MetadataService, Serializer, ServiceBase
 } from '@fluxgate/client';
 import { IServiceBase, IUser, PasswordChange, User } from '@fluxgate/common';
 import { Assert, Constants, NotSupportedException, StringBuilder } from '@fluxgate/core';
 
-import { MessageService } from '../../services/message.service';
 
 @Injectable()
 export class PassportService extends CoreComponent implements IServiceBase<any, any> {
