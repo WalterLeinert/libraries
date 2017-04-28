@@ -3,7 +3,7 @@
 ### Walter Leinert: 2016, 2017
 
 
-## Überblick 
+## Überblick
 Die Libraries stellen die Grundlage für die Implementierung von Projekten als Web-Anwendungen auf Basis von angular.io (angular 2), express und knex dar.
 
 ### Core
@@ -17,7 +17,7 @@ Die Library enthält grundlegende Funktionalitäten für alle anderen Libraries 
 
 ### Platform
 
-Die Library enthält (wenige) Funktionalitäten für die Plattformen Node (Server) und Browser (Client), die entweder auf beiden Plattformen unterschiedlich oder 
+Die Library enthält (wenige) Funktionalitäten für die Plattformen Node (Server) und Browser (Client), die entweder auf beiden Plattformen unterschiedlich oder
 nur auf einer Plattform verfügbar sind.
 
   - Logging (XLog, log4js)
@@ -33,7 +33,7 @@ Die Library enthält Funktionalitäten, die in den Libraries server und client v
   - Service-Interfaces
   - Basisklassen für User, Rollen und Mandanten im System
   - Redux/Command-Pattern (generische Basisklassen für die Kapselung von Servercalls im Client und zentrale Behandlung der Calls und die Notifizierung von registrierten Listenern)
-  
+
 
 ### Server
 
@@ -46,7 +46,21 @@ Unterstützt wird auch:
 
 ### Client
 
-Die Library enthält Funktionalitäten zur effizienten Implementierung von Web-Anwendungen auf Basis von angular.io.
+Die Library enthält Basisfunktionalität für Components sowie das konkrete Web-Projekt
+
+  - Basisklassen für eigene GUI-Komponenten in Components
+  - Direktiven
+  - Support für reactive forms (model driven form builder) und mit automatischer Validierung aus den annotierten Modelklassen
+  - Service-Klassen wie
+    - ConfigService
+    - MetadataService
+    - MessageService
+    - PrintService
+    - generische Rest-API Service-Klasse
+
+### Components
+
+Die Library stellt Komponenten und Module zur Verfügung zur effizienten Implementierung von Web-Anwendungen auf Basis von angular.
 
   - Basisklassen für eigene GUI-Komponenten
   - Direktiven
@@ -64,10 +78,3 @@ Die Library enthält Funktionalitäten zur effizienten Implementierung von Web-A
     - flx-time-selector
     - flx-user-selector
     - flx-role-selector
-  - Service-Klassen wie
-    - ConfigService
-    - MetadataService
-    - MessageService
-    - PrintService
-    - generische Rest-API Service-Klasse
-
