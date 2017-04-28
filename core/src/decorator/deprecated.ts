@@ -48,6 +48,7 @@ export function Deprecated(message?: string, printStack: boolean = true) {
             }
             sb.append(message);
         }
+        sb.append(' ***');
 
         if (printStack) {
             sb.appendLine();
