@@ -4,6 +4,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 
+import { ConfirmationService } from 'primeng/components/common/api';
+
 import { APP_STORE_PROVIDER, AppInjector, ConfigService, MetadataService } from '@fluxgate/client';
 
 import { UserServiceFake } from '../../../testing/user-service-fake';
@@ -41,6 +43,7 @@ describe('UserSelectorComponent', () => {
         UserSelectorComponent
       ],
       providers: [
+        ConfirmationService,
         APP_STORE_PROVIDER,
         AppInjector,
         ConfigService,

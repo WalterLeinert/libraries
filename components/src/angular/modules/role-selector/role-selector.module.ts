@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+// PrimeNG
+import { ConfirmationService } from 'primeng/components/common/api';
+
 import { ConfigService, MetadataService } from '@fluxgate/client';
 
 import { RoleSelectorServiceRequestsModule } from '../../redux/role-selector-service-requests';
@@ -23,6 +26,7 @@ import { RoleSelectorComponent } from './role-selector.component';
     RoleSelectorComponent
   ],
   providers: [
+    ConfirmationService,
     ConfigService,
     MessageService,
     MetadataService

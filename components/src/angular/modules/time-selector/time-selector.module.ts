@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // PrimeNG
 import { CalendarModule } from 'primeng/components/calendar/calendar';
+import { ConfirmationService } from 'primeng/components/common/api';
 
 import { MessageService } from '../../services/message.service';
 import { TimeSelectorComponent } from './time-selector.component';
@@ -25,6 +26,7 @@ import { TimeSelectorComponent } from './time-selector.component';
     TimeSelectorComponent
   ],
   providers: [
+    ConfirmationService,
     MessageService
   ]
 })

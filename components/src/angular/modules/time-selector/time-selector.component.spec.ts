@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // PrimeNG
 import { CalendarModule } from 'primeng/components/calendar/calendar';
+import { ConfirmationService } from 'primeng/components/common/api';
 
 import { APP_STORE_PROVIDER, AppInjector } from '@fluxgate/client';
 import { ShortTime } from '@fluxgate/core';
@@ -30,6 +31,7 @@ describe('TimeSelectorComponent', () => {
         TimeSelectorComponent
       ],
       providers: [
+        ConfirmationService,
         APP_STORE_PROVIDER,
         AppInjector,
         MessageService
