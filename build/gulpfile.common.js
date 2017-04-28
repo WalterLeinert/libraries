@@ -77,6 +77,10 @@ gulp.task('publish:common', function (cb) {
   execCommand('gulp publish -f', 'common', bufferSize, cb);
 })
 
+gulp.task('doc:common', function (cb) {
+  execCommand('gulp doc', 'common', bufferSize, cb);
+})
+
 gulp.task('build-all:common', gulpSequence('clean:common', 'update-fluxgate:common', 'build:common', 'test:common', 'publish:common'))
 //-----------------------------------------------------------------------
 // End: common

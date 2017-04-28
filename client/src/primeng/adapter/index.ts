@@ -1,2 +1,2 @@
 export * from './primeNgDataTableAdapter';
-export * from './primeNgDropownAdapter'
+export * from './primeNgDropownAdapter';

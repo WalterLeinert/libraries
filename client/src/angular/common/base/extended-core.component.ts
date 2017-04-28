@@ -7,21 +7,15 @@ import 'rxjs/add/operator/map';
 
 
 // PrimeNG
-import { Confirmation, ConfirmationService } from 'primeng/primeng';
+import { Confirmation, ConfirmationService } from 'primeng/components/common/api';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
-// -------------------------------------- logging --------------------------------------------
-
-// Fluxgate
-import { AppRegistry, IEntity, ServiceRequests } from '@fluxgate/common';
 
 import { IRouterNavigationAction, NavigationAction } from '../../common/routing';
 import { MessageService } from '../../services/message.service';
-import { Service } from '../../services/service';
 import { CoreComponent } from './core.component';
-import { FormGroupInfo } from './formGroupInfo';
 
 
 /**
@@ -34,16 +28,6 @@ import { FormGroupInfo } from './formGroupInfo';
  * @extends {CoreComponent}
  */
 export abstract class ExtendedCoreComponent extends CoreComponent {
-
-  /**
-   * der PrimeNG Service für Aktionsbestätigungen
-   *
-   * @private
-   * @type {ConfirmationService}
-   * @memberOf BaseComponent
-   */
-  private confirmationService: ConfirmationService;
-
 
   /**
    * Creates an instance of BaseComponent.
@@ -106,10 +90,6 @@ export abstract class ExtendedCoreComponent extends CoreComponent {
   protected confirmAction(options: Confirmation, acceptAction: () => void, rejectAction?: () => void) {
     using(new XLog(ExtendedCoreComponent.logger, levels.INFO, 'confirm'), (log) => {
 
-      if (this.confirmationService === undefined) {
-        this.confirmationService = this.getConfirmationService();
-      }
-
       options.accept = () => {
         log.log('accept');
         acceptAction();
@@ -170,46 +150,36 @@ export abstract class ExtendedCoreComponent extends CoreComponent {
   }
 
   // TODO: diese Methode umbenennen in findItems (ohne 'ByServiceRequest'), die Methoden aus BaseComponent
-  protected findItemsByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(item: T,
-    groupName: string = FormGroupInfo.DEFAULT_NAME,
-    serviceRequests: ServiceRequests<T, TId, TService>): void {
-    serviceRequests.find();
-  }
+  // TODO obsolete?
+  // protected findItemsByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(item: T,
+  //   groupName: string = FormGroupInfo.DEFAULT_NAME,
+  //   serviceRequests: ServiceRequests<T, TId, TService>): void {
+  //   serviceRequests.find();
+  // }
 
-  protected findItemByIdServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(id: TId,
-    groupName: string = FormGroupInfo.DEFAULT_NAME,
-    serviceRequests: ServiceRequests<T, TId, TService>): void {
-    serviceRequests.findById(id);
-  }
-
-
-  protected createItemByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(item: T,
-    groupName: string = FormGroupInfo.DEFAULT_NAME,
-    serviceRequests: ServiceRequests<T, TId, TService>): void {
-    serviceRequests.create(item);
-  }
+  // protected findItemByIdServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(id: TId,
+  //   groupName: string = FormGroupInfo.DEFAULT_NAME,
+  //   serviceRequests: ServiceRequests<T, TId, TService>): void {
+  //   serviceRequests.findById(id);
+  // }
 
 
-  protected updateItemByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(item: T,
-    groupName: string = FormGroupInfo.DEFAULT_NAME,
-    serviceRequests: ServiceRequests<T, TId, TService>): void {
-    serviceRequests.update(item);
-  }
-
-  protected deleteItemByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(id: TId,
-    groupName: string = FormGroupInfo.DEFAULT_NAME,
-    serviceRequests: ServiceRequests<T, TId, TService>): void {
-    serviceRequests.delete(id);
-  }
+  // protected createItemByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(item: T,
+  //   groupName: string = FormGroupInfo.DEFAULT_NAME,
+  //   serviceRequests: ServiceRequests<T, TId, TService>): void {
+  //   serviceRequests.create(item);
+  // }
 
 
+  // protected updateItemByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(item: T,
+  //   groupName: string = FormGroupInfo.DEFAULT_NAME,
+  //   serviceRequests: ServiceRequests<T, TId, TService>): void {
+  //   serviceRequests.update(item);
+  // }
 
-  private getConfirmationService(): ConfirmationService {
-    const confirmationService = AppRegistry.instance.get<ConfirmationService>('ConfirmationService');
-    return confirmationService;
-    // const injector: Injector =
-    //   ReflectiveInjector.resolveAndCreate([{ provide: ConfirmationService, useClass: ConfirmationService }]);
-    // return injector.get(ConfirmationService);
-  }
-
+  // protected deleteItemByServiceRequest<T extends IEntity<TId>, TId, TService extends Service<T, TId>>(id: TId,
+  //   groupName: string = FormGroupInfo.DEFAULT_NAME,
+  //   serviceRequests: ServiceRequests<T, TId, TService>): void {
+  //   serviceRequests.delete(id);
+  // }
 }

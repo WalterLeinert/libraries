@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 // Fluxgate
 import { IService } from '@fluxgate/common';
 
-import { Service } from './service';
+import { Service } from '../common/base/service';
 
 
 /**

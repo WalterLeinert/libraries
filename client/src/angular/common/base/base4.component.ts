@@ -6,6 +6,7 @@ import { IServiceBase } from '@fluxgate/common';
 import { MessageService } from '../../services/message.service';
 import { Base3Component } from './base3.component';
 
+
 /**
  * Basisklasse (Komponente) für alle GUI-Komponenten mit 3 Services.
  *

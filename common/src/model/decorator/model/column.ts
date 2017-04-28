@@ -1,3 +1,6 @@
+// tslint:disable-next-line:no-var-requires
+require('reflect-metadata');
+
 import { Funktion, ShortTime, Time } from '@fluxgate/core';
 import { getLogger } from '@fluxgate/platform';
 
@@ -12,7 +15,7 @@ import { ColumnOptions } from './columnOptions';
 const logger = getLogger(Column);
 
 /**
- * Column-Decorator für Modellproperties/-attribute
+ * Decorator: definiert die Modellproperty und deren Abbildung auf eine DB-Columns
  *
  * @export
  * @param {ColumnOptions} [options]

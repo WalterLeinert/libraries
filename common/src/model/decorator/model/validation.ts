@@ -5,12 +5,12 @@ import { IValidation } from '../../validation/validation.interface';
 
 
 /**
- * Pattern-Decorator zur Validierung von string-Modellproperties/-attributes
- * Übergeben wird ein Array von Validatoren
+ * Decorator: definiert ein Array von Validatoren, welches auf einen CompoudValidator abgebildet wird.
+ * Die Validierunginformation wird in den Metadaten abgelegt und kann im Client und Server ausgewerte werden.
  */
 export function Validation(validators: IValidation[]) {
   // tslint:disable-next-line:only-arrow-functions
-  return function(target: any, propertyName: string) {
+  return function (target: any, propertyName: string) {
     MetadataStorage.instance.addValidationMetadata(new ValidationMetadata(target.constructor, propertyName,
       new CompoundValidator(validators)));
   };

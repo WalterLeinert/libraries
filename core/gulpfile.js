@@ -3,6 +3,7 @@
  */
 
 const gulp = require('gulp');
+const compodoc = require('@compodoc/gulp-compodoc');
 const env = require('gulp-env');
 const del = require('del');
 const gulpSequence = require('gulp-sequence');
@@ -58,7 +59,7 @@ gulp.task('really-clean', ['clean'], function (cb) {
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-  return del(['dist', 'build', 'lib', 'dts']);
+  return del(['dist', 'build', 'lib', 'dts', 'documentation']);
 })
 
 
@@ -69,17 +70,17 @@ gulp.task('tslint', () => {
 });
 
 
-gulp.task('compile', function() {
-    const tsResult = gulp.src('src/**/*.ts')
-        .pipe(sourcemaps.init())
-        .pipe(tsProject());
+gulp.task('compile', function () {
+  const tsResult = gulp.src('src/**/*.ts')
+    .pipe(sourcemaps.init())
+    .pipe(tsProject());
 
-    return merge([
-        tsResult.dts.pipe(gulp.dest('dist/dts')),
-        tsResult.js
-          .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
-          .pipe(gulp.dest('dist/src'))
-    ]);
+  return merge([
+    tsResult.dts.pipe(gulp.dest('dist/dts')),
+    tsResult.js
+      .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+      .pipe(gulp.dest('dist/src'))
+  ]);
 });
 
 
@@ -97,7 +98,7 @@ gulp.task('compile:test', ['default'], function () {
 
 
 gulp.task('test', ['set-env', 'compile:test'], function () {
-  gulp.src('./dist/test/**/*.spec.js', {read: false})
+  gulp.src('./dist/test/**/*.spec.js', { read: false })
     .pipe(mocha({
       reporter: 'spec'
     }));
@@ -110,6 +111,15 @@ gulp.task('publish', ['test'], function (cb) {
   const forceSwitch = (force ? '-f' : '');
 
   execCommand('npm publish ' + forceSwitch, '.', null, cb);
+});
+
+gulp.task('doc', () => {
+  return gulp.src('src/**/*.ts')
+    .pipe(compodoc({
+      output: 'documentation',
+      tsconfig: 'src/tsconfig.json',
+      serve: false
+    }))
 });
 
 

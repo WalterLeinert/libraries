@@ -4,7 +4,7 @@ import { CommandStoreMetadata } from './command-store-metadata';
 import { CommandStoreStorage } from './command-store-storage';
 
 /**
- * Table-Decorator für Redux-Commandstores
+ * Decorator für Redux-Commandstores
  *
  * @export
  * @returns

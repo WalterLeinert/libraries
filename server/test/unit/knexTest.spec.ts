@@ -15,8 +15,9 @@ import {
 import { Activator, fromEnvironment, Funktion, ICtor, IToString } from '@fluxgate/core';
 import { JsonReader } from '@fluxgate/platform';
 
-import { KnexService, MetadataService } from '../../src/ts-express-decorators-flx/services';
 import { IBaseService, IBaseServiceRaw } from '../../src/ts-express-decorators-flx/services/baseService.interface';
+import { KnexService } from '../../src/ts-express-decorators-flx/services/knex.service';
+import { MetadataService } from '../../src/ts-express-decorators-flx/services/metadata.service';
 
 
 export interface IKnexGeneratorConfig<TId> {

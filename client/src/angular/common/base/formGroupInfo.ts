@@ -6,7 +6,7 @@ import { Clone } from '@fluxgate/core';
 
 export interface IMessageDict {
   [key: string]: string;
-};
+}
 
 
 /**

@@ -36,11 +36,11 @@ const rootDir = path.join(process.cwd());
 
   rootDir: rootDir,
   mount: {
-    '/rest': `${rootDir}/controllers/**/**.js`
+    '/rest': `${rootDir}/controllers/**/*.js`
   },
   componentsScan: [
-    `${rootDir}/services/**/**.js`,
-    `${rootDir}/middlewares/**/**.js`
+    `${rootDir}/services/**/*.js`,
+    `${rootDir}/middlewares/**/*.js`
   ],
   acceptMimes: ['application/json']  // add your custom configuration here
 })

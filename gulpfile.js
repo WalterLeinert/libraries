@@ -1,7 +1,7 @@
 /**
  * Master Gulp Buildfile
  */
-'user strict';
+'use strict';
 
 var gulp = require('gulp');
 const gulpSequence = require('gulp-sequence');
@@ -16,6 +16,7 @@ require('./build/gulpfile.platform');
 require('./build/gulpfile.common');
 require('./build/gulpfile.server');
 require('./build/gulpfile.client');
+require('./build/gulpfile.components');
 
 
 gulp.task('info', function () {
@@ -32,6 +33,7 @@ gulp.task('npm-install', [
   'install:platform',
   'install:common',
   'install:client',
+  'install:components',
   'install:server'
 ])
 
@@ -39,6 +41,7 @@ gulp.task('update-fluxgate', [
   'update-fluxgate:platform',
   'update-fluxgate:common',
   'update-fluxgate:client',
+  'update-fluxgate:components',
   'update-fluxgate:server'
 ])
 
@@ -47,6 +50,7 @@ gulp.task('really-clean', [
   'really-clean:platform',
   'really-clean:common',
   'really-clean:client',
+  'really-clean:components',
   'really-clean:server'
 ], function (cb) {
   return del('node_modules');
@@ -57,7 +61,8 @@ gulp.task('clean', [
   'clean:platform',
   'clean:common',
   'clean:server',
-  'clean:client'
+  'clean:client',
+  'clean:components'
 ])
 
 gulp.task('tslint', [
@@ -65,6 +70,7 @@ gulp.task('tslint', [
   'tslint:platform',
   'tslint:common',
   'tslint:client',
+  'tslint:components',
   'tslint:server'
 ])
 
@@ -73,6 +79,7 @@ gulp.task('test', [
   'test:platform',
   'test:common',
   'test:client',
+  'test:components',
   'test:server'
 ])
 
@@ -81,15 +88,30 @@ gulp.task('publish', [
   'publish:platform',
   'publish:common',
   'publish:client',
+  'publish:components',
   'publish:server'
 ])
+
+gulp.task('doc', [
+  'doc:core',
+  'doc:platform',
+  'doc:common',
+  'doc:client',
+  'doc:components',
+  'doc:server'
+])
+
+gulp.task('build-all:client-components',
+  gulpSequence('build-all:client', 'build-all:components')
+);
+
 
 gulp.task('build-all',
   gulpSequence(
     'build-all:core',
     'build-all:platform',
     'build-all:common',
-    ['build-all:server', 'build-all:client']
+    ['build-all:server', 'build-all:client-components']
   )
 )
 

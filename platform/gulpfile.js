@@ -3,6 +3,7 @@
  */
 
 const gulp = require('gulp');
+const compodoc = require('@compodoc/gulp-compodoc');
 const env = require('gulp-env');
 const del = require('del');
 const gulpSequence = require('gulp-sequence');
@@ -59,7 +60,7 @@ gulp.task('really-clean', ['clean'], function (cb) {
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-  return del(['dist', 'build', 'lib', 'dts']);
+  return del(['dist', 'build', 'lib', 'dts', 'documentation']);
 })
 
 
@@ -99,25 +100,29 @@ gulp.task('compile:node', function() {
     ]);
 });
 
-
-/**
- * build an run tests
- */
-gulp.task('test', ['set-env'], function () {
-  //find test code - note use of 'base'
-  return gulp.src('./test/**/*.spec.ts', { base: '.' })
-    /*transpile*/
-    .pipe(tsc(tscConfig.compilerOptions))
-    /*flush to disk*/
-    .pipe(gulp.dest('dist/node'))
-    /*execute tests*/
-    .pipe(mocha({
-      reporter: 'spec'
-    }));
+gulp.task('test', ['set-env', 'compile:test'], function () {
+  console.warn('*** echte Tests aktivieren, sobald Tests existieren');
+  // TODO: echte Tests aktivieren, sobald Tests existieren
 });
 
+// /**
+//  * build an run tests
+//  */
+// gulp.task('test', ['set-env'], function () {
+//   //find test code - note use of 'base'
+//   return gulp.src('./test/**/*.spec.ts', { base: '.' })
+//     /*transpile*/
+//     .pipe(tsc(tscConfig.compilerOptions))
+//     /*flush to disk*/
+//     .pipe(gulp.dest('dist/node'))
+//     /*execute tests*/
+//     .pipe(mocha({
+//       reporter: 'spec'
+//     }));
+// });
 
-gulp.task('compile:test', gulpSequence('default', 'test'));
+
+gulp.task('compile:test', gulpSequence('default'));
 
 gulp.task('publish', ['compile:test'], function (cb) {
   const force = argv.f ? argv.f : '';
@@ -130,6 +135,15 @@ gulp.task('update-fluxgate', function (cb) {
   execCommand('npm uninstall --save @fluxgate/core && npm install --save @fluxgate/core', '.', null, cb);
 })
 
+
+gulp.task('doc', () => {
+  return gulp.src('src/**/*.ts')
+    .pipe(compodoc({
+      output: 'documentation',
+      tsconfig: 'src/tsconfig.json',
+      serve: false
+    }))
+});
 
 gulp.task('set-env', function () {
   env({

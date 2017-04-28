@@ -4,21 +4,19 @@
 'use strict';
 
 const gulp = require('gulp');
-const ngc = require('gulp-ngc');
-const gulp_tslint = require('gulp-tslint');
+const compodoc = require('@compodoc/gulp-compodoc');
+const env = require('gulp-env');
 const del = require('del');
 const gulpSequence = require('gulp-sequence');
 const argv = require('yargs').argv;
 const exec = require('child_process').exec;
-const tslint = require("gulp-tslint");
+const gulp_tslint = require('gulp-tslint');
 const tsc = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
 const mocha = require('gulp-mocha');
-// const tscConfig = require('./src/tsconfig.app.json');
+const tscConfig = require('./tsconfig.json');
 const tsProject = tsc.createProject('tsconfig.json');
-
-const bufferSize = 4096 * 1024;
 
 /**
     * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
@@ -48,10 +46,13 @@ function execCommand(command, cwd, maxBuffer, cb) {
 }
 
 
-gulp.task('update-fluxgate', function (cb) {
-  execCommand('npm uninstall --save @fluxgate/core @fluxgate/common @fluxgate/platform && ' +
-    'npm install --save @fluxgate/core @fluxgate/common @fluxgate/platform', '.', null, cb);
-})
+// var jsdoc = require("gulp-jsdoc");
+
+// Tests
+// gulp.task('doc', function (cb) {
+//     gulp.src("./lib/**/*.js")
+//         .pipe(jsdoc('./documentation-output'))
+// })
 
 gulp.task('really-clean', ['clean'], function (cb) {
   return del('node_modules');
@@ -59,13 +60,14 @@ gulp.task('really-clean', ['clean'], function (cb) {
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-  return del(['dist', 'build', 'aot', 'lib', 'dts', '**/*.ngfactory.ts', '**/*.ngsummary.json']);
+  return del(['dist', 'build', 'lib', 'dts', 'documentation']);
 })
+
 
 gulp.task('tslint', () => {
   return gulp.src(['**/*.ts', '!**/*.d.ts', '!node_modules/**'])
-    .pipe(tslint())
-    .pipe(tslint.report());
+    .pipe(gulp_tslint())
+    .pipe(gulp_tslint.report());
 });
 
 gulp.task('compile', function() {
@@ -81,56 +83,70 @@ gulp.task('compile', function() {
     ]);
 });
 
-gulp.task('compile:test', function() {
-    const tsResult = gulp.src('test/**/*.ts')
-      .pipe(sourcemaps.init())
-      .pipe(tsProject());
 
-    return tsResult.js
-      .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
-      .pipe(gulp.dest('dist/test'));
+
+
+gulp.task('compile:test', ['default'], function () {
+  //find test code - note use of 'base'
+  return gulp.src('./test/**/*.ts', { base: '.' })
+    .pipe(sourcemaps.init())
+    /*transpile*/
+    .pipe(tsc(tscConfig.compilerOptions))
+    /*flush to disk*/
+    .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+    .pipe(gulp.dest('dist'));
 });
 
 
-
-gulp.task('ngc', () => {
-  return ngc('src/tsconfig.app.json');
+gulp.task('test', ['set-env', 'compile:test'], function () {
+  console.warn('*** echte Tests aktivieren, sobald Tests existieren');
+  // TODO: echte Tests aktivieren, sobald Tests existieren
 });
 
-//optional - use a tsconfig file
-gulp.task('test', function (cb) {
+// gulp.task('test', ['set-env', 'compile:test'], function () {
+//   gulp.src('./dist/test/**/*.spec.js', {read: false})
+//     .pipe(mocha({
+//       reporter: 'spec'
+//     }));
+// });
 
-  // TODO:
-  execCommand('ng test --single-run', '.', bufferSize, cb);
-
-  // //find test code - note use of 'base'
-  // return gulp.src('./test/**/*.spec.ts', { base: '.' })
-  //   /*transpile*/
-  //   .pipe(typescript(tscConfig.compilerOptions))
-  //   /*flush to disk*/
-  //   .pipe(gulp.dest('build'))
-  //   /*execute tests*/
-  //   .pipe(mocha({
-  //     reporter: 'spec'
-  //   }));
-});
-
-
-
-gulp.task('build-test', gulpSequence('default'/*, 'test'*/));
-
-gulp.task('publish', ['build-test'], function (cb) {
-  const force = argv.f ? argv.f : '';
-  const forceSwitch = (force ? '-f' : '');
-
-  execCommand('npm publish ' + forceSwitch, '.', bufferSize, cb);
-});
-
-
-gulp.task('bundle', function (cb) {
-  execCommand('webpack', '.', bufferSize, cb);
+gulp.task('update-fluxgate', function (cb) {
+  execCommand('npm uninstall --save @fluxgate/core @fluxgate/platform @fluxgate/common && ' +
+    'npm install --save @fluxgate/core @fluxgate/platform @fluxgate/common', '.', null, cb);
 })
 
 
-/* single command to hook into VS Code */
-gulp.task('default', gulpSequence('clean', 'compile'));
+
+gulp.task('publish', ['test'], function (cb) {
+  const force = argv.f ? argv.f : '';
+  const forceSwitch = (force ? '-f' : '');
+
+  execCommand('npm publish ' + forceSwitch, '.', null, cb);
+});
+
+gulp.task('doc', () => {
+  return gulp.src('src/**/*.ts')
+    .pipe(compodoc({
+      output: 'documentation',
+      tsconfig: 'src/tsconfig.json',
+      serve: false
+    }))
+});
+
+
+
+// Hinweis: kein bundeling mehr für leichters Debuggen
+// gulp.task('bundle', ['compile'], function (cb) {
+//   execCommand('webpack', '.', null, cb);
+// });
+
+gulp.task('set-env', function () {
+  env({
+    vars: {
+      NODE_ENV: 'debug'
+    }
+  })
+});
+
+
+gulp.task('default', gulpSequence('set-env', 'clean', 'compile'));

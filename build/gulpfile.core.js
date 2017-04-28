@@ -77,6 +77,10 @@ gulp.task('publish:core', function (cb) {
   execCommand('gulp publish -f', 'core', bufferSize, cb);
 })
 
+gulp.task('doc:core', function (cb) {
+  execCommand('gulp doc', 'core', bufferSize, cb);
+})
+
 gulp.task('build-all:core', gulpSequence('clean:core', 'build:core', 'test:core', 'publish:core'))
 //-----------------------------------------------------------------------
 // End: core

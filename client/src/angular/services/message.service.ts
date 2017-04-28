@@ -1,24 +1,28 @@
-// tslint:disable:max-classes-per-file
-
-// Angular
-import { Injectable, NgModule } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-
 import { CustomSubject, IMessage, MessageSeverity, NotSupportedException, PublisherSubscriber } from '@fluxgate/core';
 
 
+/**
+ * abstrakte Basisklasse für den MessageService
+ * (der eigentliche Service @see{MessageService} muss wegen aot in fluxgate/components liegen)
+ *
+ * @export
+ * @abstract
+ * @class MessageServiceBase
+ */
 @Injectable()
 export class MessageService {
   protected static readonly logger = getLogger(MessageService);
 
   private static readonly TOPIC = 'messages';
 
-  private pubSub = new PublisherSubscriber();
+  protected pubSub = new PublisherSubscriber();
 
 
   public addMessage(message: IMessage) {
@@ -65,10 +69,3 @@ export class MessageService {
     return this.pubSub.subscribe<IMessage>(MessageService.TOPIC);
   }
 }
-
-
-// tslint:disable-next-line:max-classes-per-file
-@NgModule({
-  providers: [MessageService]
-})
-export class MessageServiceModule { }

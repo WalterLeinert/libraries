@@ -9,7 +9,8 @@ import { IEnumTableOptions } from './enumTableOptions.interface';
 const logger = getLogger(EnumTable);
 
 /**
- * Table-Decorator für Modellklassen
+ * Decorator: definiert eine Modellklasse, die eine DB-Tabelle simuliert und eine Werteliste für Enums direkt
+ * bereit stellt.
  *
  * @export
  * @param {TableOptions} [options]

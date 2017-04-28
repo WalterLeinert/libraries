@@ -13,4 +13,4 @@ export interface ICtor<T> {
    *  @param {any[]} [args] - Argumente
    */
   new (...args: any[]): T;
-};
+}

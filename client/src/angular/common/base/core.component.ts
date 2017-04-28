@@ -5,6 +5,9 @@ import 'rxjs/add/observable/from';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+// PrimeNG
+import { Confirmation, ConfirmationService } from 'primeng/components/common/api';
+
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -18,17 +21,16 @@ import {
 } from '@fluxgate/core';
 
 import {
-  CompoundValidator, IEntity, IServiceState, IUser,
-  PatternValidator, RangeValidator, RequiredValidator,
-  ServiceCommand, SetCurrentItemCommand, Store, TableMetadata
+  CompoundValidator, CurrentUserStore, ICurrentItemServiceState, IEntity, IServiceState,
+  IUser, PatternValidator, RangeValidator,
+  RequiredValidator, ServiceCommand, SetCurrentItemCommand, Store, TableMetadata
 } from '@fluxgate/common';
 
 
 import { IControlDisplayInfo } from '../../../base/displayConfiguration/controlDisplayInfo.interface';
 import { DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';
-import { AppStore } from '../../../redux/app-store';
-import { UserStore } from '../../modules/authentication/redux/user-store';
+import { APP_STORE } from '../../redux/app-store';
 import { AppInjector } from '../../services/appInjector.service';
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
@@ -68,15 +70,17 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   private subscriptions: Subscription[] = [];
 
   private store: Store;
+  private _confirmationService: ConfirmationService;
 
   protected currentUserChanged: EventEmitter<IUser> = new EventEmitter();
 
   protected constructor(private _messageService: MessageService) {
     super();
 
-    this.store = AppInjector.instance.getInstance<Store>(AppStore);
+    this.store = AppInjector.instance.getInstance<Store>(APP_STORE);
+    this._confirmationService = AppInjector.instance.getInstance<ConfirmationService>(ConfirmationService);
 
-    this.subscribeToStore(UserStore.ID);
+    this.subscribeToStore(CurrentUserStore.ID);
     this.updateUserState();
   }
 
@@ -546,6 +550,12 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     return this._messageService;
   }
 
+  /**
+   * Liefert den PrimeNG Service für Aktionsbestätigungen @see{ConfirmationService}
+   */
+  protected get confirmationService(): ConfirmationService {
+    return this._confirmationService;
+  }
 
   /**
    * Registriert den Store @param{storeId} für Statusänderungen.
@@ -582,14 +592,14 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     Assert.notNull(command);
 
     using(new XLog(CoreComponent.logger, levels.INFO, 'onStoreUpdated', `class: ${this.constructor.name}`), (log) => {
-      log.log(`command = ${command.constructor.name}: ${JSON.stringify(command)}`);
+      log.log(`command = ${command.constructor.name}: ${command.toString()}`);
 
       const state = this.getStoreState(command.storeId);
       if (state.error) {
         log.error(`${state.error}`);
       }
 
-      if (command.storeId === UserStore.ID && command instanceof SetCurrentItemCommand) {
+      if (command.storeId === CurrentUserStore.ID && command instanceof SetCurrentItemCommand) {
         this.updateUserState(command);
       }
     });
@@ -608,8 +618,12 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    *
    * @memberOf CoreComponent
    */
-  protected getStoreState<T extends IEntity<TId>, TId>(storeId: string): IServiceState<T, TId> {
-    return this.store.getState<IServiceState<T, TId>>(storeId);
+  protected getStoreState<TState extends IServiceState>(storeId: string): TState {
+    return this.store.getState(storeId) as TState;
+  }
+
+  protected resetStore() {
+    return this.store.reset();
   }
 
 
@@ -622,7 +636,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf CoreComponent
    */
   protected getCurrentUser(): IUser {
-    const state = this.getStoreState<IUser, number>(UserStore.ID);
+    const state = this.getStoreState<ICurrentItemServiceState<IUser, number>>(CurrentUserStore.ID);
     return state.currentItem;
   }
 

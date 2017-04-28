@@ -15,12 +15,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { IService, IServiceBase, ServiceResult } from '@fluxgate/common';
-import { Assert, InstanceAccessor, InstanceSetter, NotSupportedException, Utility } from '@fluxgate/core';
+import { Assert, Deprecated, InstanceAccessor, InstanceSetter, NotSupportedException, Utility } from '@fluxgate/core';
 
 import { IRefreshHelper, IRouterNavigationAction } from '../../common/routing';
-import { IAutoformConfig, IAutoformNavigation } from '../../modules/autoform/autoformConfig.interface';
-import { AutoformConstants } from '../../modules/autoform/autoformConstants';
 import { MessageService } from '../../services/message.service';
+import { IAutoformConfig, IAutoformNavigation } from './autoformConfig.interface';
+import { AutoformConstants } from './autoformConstants';
 import { ExtendedCoreComponent } from './extended-core.component';
 import { FormGroupInfo } from './formGroupInfo';
 
@@ -39,6 +39,7 @@ import { FormGroupInfo } from './formGroupInfo';
   templateUrl: './base.component.html',
   styleUrls: ['./base.component.css']
 })*/
+@Deprecated('durch ServiceRequestsComponent ersetzen')
 export abstract class BaseComponent<TService extends IServiceBase<any, any>> extends ExtendedCoreComponent {
   protected static readonly logger = getLogger(BaseComponent);
 
@@ -274,6 +275,7 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
    * @type {TService}
    * @memberOf BaseComponent
    */
+
   protected get service(): TService {
     return this._service;
   }
@@ -286,6 +288,5 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
   protected formatGenericId(item: any): string {
     return `${this.service.getModelClassName() + '-' + this.service.getEntityId(item)}`;
   }
-
 
 }

@@ -4,6 +4,7 @@ import dashdash = require('dashdash');
 import { format } from 'util';
 
 import { NotSupportedException } from '../exceptions';
+import { Types } from '../types/types';
 
 export enum OptionType {
   /**
@@ -79,7 +80,7 @@ export class Option<T> implements IOption {
         throw new NotSupportedException(format('no dashdash type for optionType "%s"', type));
       }
       this.type = stringType;
-    } else if (typeof type === 'string') {
+    } else if (Types.isString(type)) {
       this.type = type;
     }
 

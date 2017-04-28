@@ -9,7 +9,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // fluxgate
-import { Exception } from '@fluxgate/core';
+import { Exception, Types } from '@fluxgate/core';
 
 @MiddlewareError()
 export class GlobalErrorHandler implements IMiddlewareError {
@@ -42,7 +42,7 @@ export class GlobalErrorHandler implements IMiddlewareError {
         return next();
       }
 
-      if (typeof error === 'string') {
+      if (Types.isString(error)) {
         response.status(404).send(toHTML(error));
         return next();
       }

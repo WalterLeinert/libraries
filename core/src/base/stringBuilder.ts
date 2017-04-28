@@ -1,3 +1,4 @@
+import { Utility } from '../util/utility';
 import { Constants } from './constants';
 
 /**
@@ -58,7 +59,10 @@ export class StringBuilder {
    * @memberOf StringBuilder
    */
   public appendLine(text?: string) {
-    this.append(text + Constants.EOL);
+    if (!Utility.isNullOrEmpty(text)) {
+      this.append(text);
+    }
+    this.append(Constants.EOL);
   }
 
   /**

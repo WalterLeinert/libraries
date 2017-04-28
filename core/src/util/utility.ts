@@ -27,13 +27,13 @@ export class Utility {
       hash |= 0; // Convert to 32bit integer
     }
     return hash;
-  };
+  }
 
 
   /**
    * Liefert true, falls @param {value} null oder leer ist.
    */
-  public static isNullOrEmpty<T extends { length: number}>(value: T) {
+  public static isNullOrEmpty<T extends { length: number }>(value: T) {
     return (!value || value == null || value.length <= 0);
   }
 

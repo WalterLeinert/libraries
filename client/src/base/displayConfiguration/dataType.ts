@@ -2,7 +2,7 @@
 import { ColumnType, ColumnTypes } from '@fluxgate/common';
 import { NotSupportedException } from '@fluxgate/core';
 
-import { ControlType } from '../../angular/modules/common/controlType';
+import { ControlType } from '../../angular/common/base/controlType';
 
 export type DataType = 'string' | 'number' | 'date' | 'time' | 'enum';
 
