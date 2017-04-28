@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/common",
-  "version": "2.1.1",
+  "version": "2.1.2-beta.0",
   "description": "Fluxgate Library client/server übergreifend",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -55,7 +55,7 @@
     "lib": "lib"
   },
   "peerDependencies": {
-    "@fluxgate/core": ">=2.1.1",
-    "@fluxgate/platform": ">=2.1.1"
+    "@fluxgate/core": ">=2.1.2-beta.0",
+    "@fluxgate/platform": ">=2.1.2-beta.0"
   }
 }
