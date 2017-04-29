@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/core",
-  "version": "2.1.2-beta.1",
+  "version": "2.1.2-beta.2",
   "description": "Fluxgate Library Core",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
