@@ -19,10 +19,8 @@ import { ServiceCommand } from './service-command';
  */
 export class ErrorCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
-  constructor(serviceRequests: IServiceRequests, private error: IException,
-    resolve?: (value?: IServiceState | PromiseLike<IServiceState>) => void,
-    reject?: (reason?: any) => void) {
-    super(serviceRequests, resolve, reject);
+  constructor(serviceRequests: IServiceRequests, private error: IException) {
+    super(serviceRequests);
   }
 
 

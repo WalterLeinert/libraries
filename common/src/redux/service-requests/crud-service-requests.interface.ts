@@ -1,4 +1,7 @@
+import { Observable } from 'rxjs/Observable';
+
 import { IToString } from '@fluxgate/core';
+
 import { IEntity } from '../../model/entity.interface';
 import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { IServiceRequests } from './service-requests.interface';
@@ -22,7 +25,7 @@ export interface ICrudServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ICrudServiceRequests
    */
-  create(item: T): Promise<ICrudServiceState<T, TId>>;
+  create(item: T): Observable<T>;
 
   /**
    * Führt die find-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
@@ -30,7 +33,7 @@ export interface ICrudServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ICrudServiceRequests
    */
-  find(useCache?: boolean): void;
+  find(useCache?: boolean): Observable<T[]>;
 
 
   /**
@@ -40,7 +43,7 @@ export interface ICrudServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ICrudServiceRequests
    */
-  findById(id: TId): void;
+  findById(id: TId): Observable<T>;
 
 
   /**
@@ -50,7 +53,7 @@ export interface ICrudServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ICrudServiceRequests
    */
-  update(item: T): void;
+  update(item: T): Observable<T>;
 
 
   /**
@@ -60,7 +63,9 @@ export interface ICrudServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ICrudServiceRequests
    */
-  delete(id: TId): void;
+  delete(id: TId): Observable<TId>;
+
+
 
   /**
    * Liefert den Status für die @param{storeId}

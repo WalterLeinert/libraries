@@ -34,28 +34,28 @@ class UpdateTest extends ReduxBaseTest<IUser, number, any> {
     itemExpected.username = item.username;
     itemExpected.__version++;
 
-    this.crudServiceRequests.update(item);
+    this.crudServiceRequests.update(item).subscribe((it) => {
+      expect(this.commands.length).to.equal(2);
+      expect(this.commands[0]).to.be.instanceOf(UpdatingItemCommand);
 
-    expect(this.commands.length).to.equal(2);
-    expect(this.commands[0]).to.be.instanceOf(UpdatingItemCommand);
+      const state0 = this.getCrudStateAt(0);
+      expect(state0).to.deep.equal({
+        ...CrudServiceRequests.INITIAL_STATE,
+        state: ServiceRequestStates.RUNNING
+      });
 
-    const state0 = this.getCrudStateAt(0);
-    expect(state0).to.deep.equal({
-      ...CrudServiceRequests.INITIAL_STATE,
-      state: ServiceRequestStates.RUNNING
+      expect(this.commands[1]).to.be.instanceOf(ItemUpdatedCommand);
+
+      const state1 = this.getCrudStateAt(1);
+
+      const expectedState: ICrudServiceState<IUser, number> = {
+        ...CrudServiceRequests.INITIAL_STATE,
+        item: itemExpected,
+        state: ServiceRequestStates.DONE
+      };
+
+      expect(state1).to.deep.equal(expectedState);
     });
-
-    expect(this.commands[1]).to.be.instanceOf(ItemUpdatedCommand);
-
-    const state1 = this.getCrudStateAt(1);
-
-    const expectedState: ICrudServiceState<IUser, number> = {
-      ...CrudServiceRequests.INITIAL_STATE,
-      item: itemExpected,
-      state: ServiceRequestStates.DONE
-    };
-
-    return expect(state1).to.deep.equal(expectedState);
   }
 
 
@@ -68,6 +68,5 @@ class UpdateTest extends ReduxBaseTest<IUser, number, any> {
         done(error);
       });
     });
-
   }
 }

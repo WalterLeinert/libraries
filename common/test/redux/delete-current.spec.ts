@@ -91,25 +91,24 @@ class DeleteCurrentTest extends ReduxBaseTest<IUser, number, any> {
       //
       // before-Status erzeugen
       //
-      this.crudServiceRequests.find();
+      this.crudServiceRequests.find().subscribe((items) => {
+        const state = this.getCrudState();
 
-      const state = this.getCrudState();
+        this.itemToDelete = state.items.filter((item) => item.id === DeleteCurrentTest.DELETE_ID)[0];
 
-      this.itemToDelete = state.items.filter((item) => item.id === DeleteCurrentTest.DELETE_ID)[0];
+        // currentItem setzen -> nach update prüfen
+        this.currentItemServiceRequests.setCurrent(this.itemToDelete).subscribe((item) => {
+          // snapshot vom Status
+          this.beforeState = this.getStoreState();
 
-      // currentItem setzen -> nach update prüfen
-      this.currentItemServiceRequests.setCurrent(this.itemToDelete);
+          this.reset();
 
-      // snapshot vom Status
-      this.beforeState = this.getStoreState();
-
-      this.reset();
-
-      // Test: Item löschen
-      this.crudServiceRequests.delete(DeleteCurrentTest.DELETE_ID);
-
-      done();
+          // Test: Item löschen
+          this.crudServiceRequests.delete(DeleteCurrentTest.DELETE_ID).subscribe((id) => {
+            done();
+          });
+        });
+      });
     });
   }
-
 }

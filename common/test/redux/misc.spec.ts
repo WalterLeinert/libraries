@@ -21,14 +21,14 @@ class MiscTest extends ReduxBaseTest<IUser, number, any> {
   }
 
   @test 'should test getModelClassName, getEntityId'() {
-    this.crudServiceRequests.findById(1);
+    this.crudServiceRequests.findById(1).subscribe((item) => {
 
-    expect(this.commands.length).to.equal(2);
-    expect(this.commands[1]).to.be.instanceOf(ItemFoundByIdCommand);
-    const state1 = this.getCrudStateAt(1);
+      expect(this.commands.length).to.equal(2);
+      expect(this.commands[1]).to.be.instanceOf(ItemFoundByIdCommand);
+      const state1 = this.getCrudStateAt(1);
 
-    expect(this.crudServiceRequests.getModelClassName()).equals(this.serviceFake.getModelClassName());
-    expect(this.crudServiceRequests.getEntityId(state1.item)).equals(state1.item.id);
+      expect(this.crudServiceRequests.getModelClassName()).equals(this.serviceFake.getModelClassName());
+      expect(this.crudServiceRequests.getEntityId(state1.item)).equals(state1.item.id);
+    });
   }
-
 }

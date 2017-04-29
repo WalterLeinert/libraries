@@ -27,29 +27,50 @@ class CurrentUserStoreTest extends ReduxBaseTest<IUser, number, any> {
 
 
   @test 'should dispatch commands: SetCurrentItemCommand'() {
-    this.currentItemServiceRequests.setCurrent(this.user);
+    this.currentItemServiceRequests.setCurrent(this.user).subscribe((item) => {
+      expect(this.commands.length).to.equal(1);
+      expect(this.commands[0]).to.be.instanceOf(SetCurrentItemCommand);
 
-    expect(this.commands.length).to.equal(1);
-    expect(this.commands[0]).to.be.instanceOf(SetCurrentItemCommand);
-
-    const state0 = this.getCurrentItemStateAt(0);
-    expect(state0).to.deep.equal({
-      ...CurrentItemServiceRequests.INITIAL_STATE,
-      currentItem: this.user
+      const state0 = this.getCurrentItemStateAt(0);
+      expect(state0).to.deep.equal({
+        ...CurrentItemServiceRequests.INITIAL_STATE,
+        currentItem: this.user
+      });
     });
   }
 
 
   @test 'should throw exception for commands excluding SetCurrentItemCommand'() {
-    this.crudServiceRequests.create(this.user).catch((err) => {
+
+    this.crudServiceRequests.create(this.user).subscribe((item) => {
+      // ok
+    }, (err) => {
+      expect(err).to.be.instanceof(NotSupportedException);
+    });
+
+    this.crudServiceRequests.find().subscribe((items) => {
+      // ok
+    }, (err) => {
+      expect(err).to.be.instanceof(NotSupportedException);
+    });
+
+    this.crudServiceRequests.findById(1).subscribe((item) => {
+      // ok
+    }, (err) => {
       expect(err).to.be.instanceOf(NotSupportedException);
     });
 
-    // expect(() => this.crudServiceRequests.create(this.user)).to.Throw(NotSupportedException);
-    expect(() => this.crudServiceRequests.find()).to.Throw(NotSupportedException);
-    expect(() => this.crudServiceRequests.findById(1)).to.Throw(NotSupportedException);
-    expect(() => this.crudServiceRequests.update(this.user)).to.Throw(NotSupportedException);
-    expect(() => this.crudServiceRequests.delete(1)).to.Throw(NotSupportedException);
+    this.crudServiceRequests.update(this.user).subscribe((item) => {
+      // ok
+    }, (err) => {
+      expect(err).to.be.instanceOf(NotSupportedException);
+    });
+
+    this.crudServiceRequests.delete(1).subscribe((id) => {
+      // ok
+    }, (err) => {
+      expect(err).to.be.instanceOf(NotSupportedException);
+    });
   }
 
 }

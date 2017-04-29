@@ -3,7 +3,9 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, Clone, CustomSubject, Dictionary, PublisherSubscriber, Types, UniqueIdentifiable } from '@fluxgate/core';
+import {
+  Assert, Clone, CustomSubject, Dictionary, PublisherSubscriber, Types, UniqueIdentifiable
+} from '@fluxgate/core';
 
 import { ICommand } from '../command/command.interface';
 import { IServiceState } from '../state/service-state.interface';

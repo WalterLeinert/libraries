@@ -1,4 +1,8 @@
+import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs/Subscriber';
+
 import { IToString } from '@fluxgate/core';
+
 import { IEntity } from '../../model/entity.interface';
 import { SetCurrentItemCommand } from '../command/set-current-item-command';
 import { Store } from '../store';
@@ -36,8 +40,15 @@ export class CurrentItemServiceRequests<T extends IEntity<TId>, TId extends IToS
    *
    * @memberOf ServiceRequests
    */
-  public setCurrent(item: T): void {
-    this.dispatch(new SetCurrentItemCommand(this, item));
+  public setCurrent(item: T): Observable<T> {
+    return Observable.create((observer: Subscriber<T>) => {
+      try {
+        this.dispatch(new SetCurrentItemCommand(this, item));
+        observer.next(item);
+      } catch (exc) {
+        observer.error(exc);
+      }
+    });
   }
 
   public getCurrentItemState(storeId: string): ICurrentItemServiceState<T, TId> {

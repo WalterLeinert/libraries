@@ -28,26 +28,25 @@ class FindTest extends ReduxBaseTest<IUser, number, any> {
   }
 
   @test 'should dispatch commands: FindingItemsCommand, ItemsFoundCommand'() {
-    this.crudServiceRequests.find();
+    this.crudServiceRequests.find().subscribe((items) => {
 
-    expect(this.commands.length).to.equal(2);
-    expect(this.commands[0]).to.be.instanceOf(FindingItemsCommand);
+      expect(this.commands.length).to.equal(2);
+      expect(this.commands[0]).to.be.instanceOf(FindingItemsCommand);
 
-    const state0 = this.getCrudStateAt(0);
-    expect(state0).to.deep.equal({
-      ...CrudServiceRequests.INITIAL_STATE,
-      state: ServiceRequestStates.RUNNING
+      const state0 = this.getCrudStateAt(0);
+      expect(state0).to.deep.equal({
+        ...CrudServiceRequests.INITIAL_STATE,
+        state: ServiceRequestStates.RUNNING
+      });
+
+      expect(this.commands[1]).to.be.instanceOf(ItemsFoundCommand);
+
+      const state1 = this.getCrudStateAt(1);
+      expect(state1).to.deep.equal({
+        ...CrudServiceRequests.INITIAL_STATE,
+        items: state1.items,
+        state: ServiceRequestStates.DONE
+      });
     });
-
-    expect(this.commands[1]).to.be.instanceOf(ItemsFoundCommand);
-
-    const state1 = this.getCrudStateAt(1);
-    expect(state1).to.deep.equal({
-      ...CrudServiceRequests.INITIAL_STATE,
-      items: state1.items,
-      state: ServiceRequestStates.DONE
-    });
-
   }
-
 }

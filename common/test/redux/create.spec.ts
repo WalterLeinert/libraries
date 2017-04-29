@@ -2,7 +2,7 @@
 // tslint:disable:member-access
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { Clone } from '@fluxgate/core';
 
@@ -68,19 +68,19 @@ class CreateTest extends ReduxBaseTest<IUser, number, any> {
       //
       // before-Status erzeugen
       //
-      this.crudServiceRequests.find();
-      this.beforeState = this.getCrudState();
-      this.reset();
+      this.crudServiceRequests.find().subscribe((items) => {
+        this.beforeState = this.getCrudState();
+        this.reset();
 
-      // Test: neues Item erzeugen
-      this.itemCloned = Clone.clone(this.beforeState.items[0]);
-      this.itemCloned.id = undefined;
 
-      this.crudServiceRequests.create(this.itemCloned).then((state) => {
+        // Test: neues Item erzeugen
+        this.itemCloned = Clone.clone(this.beforeState.items[0]);
+        this.itemCloned.id = undefined;
 
+        this.crudServiceRequests.create(this.itemCloned).subscribe((item) => {
+          done();
+        });
       });
-
-      done();
     });
   }
 }

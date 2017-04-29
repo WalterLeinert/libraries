@@ -80,9 +80,9 @@ class ParentStoreTest extends ReduxBaseTest<IUser, number, any> {
       this.beforeState = this.getStoreState();
       this.reset();
 
-      this.crudServiceRequests.findById(1);
-
-      done();
+      this.crudServiceRequests.findById(1).subscribe((item) => {
+        done();
+      });
     });
   }
 }

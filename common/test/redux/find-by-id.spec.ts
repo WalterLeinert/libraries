@@ -23,26 +23,26 @@ class FindByIdTest extends ReduxBaseTest<IUser, number, any> {
   }
 
   @test 'should dispatch commands: FindingItemByIdCommand, ItemFoundCommand'() {
-    this.crudServiceRequests.findById(1);
+    this.crudServiceRequests.findById(1).subscribe((item) => {
+      expect(this.commands.length).to.equal(2);
+      expect(this.commands[0]).to.be.instanceOf(FindingItemByIdCommand);
 
-    expect(this.commands.length).to.equal(2);
-    expect(this.commands[0]).to.be.instanceOf(FindingItemByIdCommand);
+      const state0 = this.getCrudStateAt(0);
+      expect(state0).to.deep.equal({
+        ...CrudServiceRequests.INITIAL_STATE,
+        state: ServiceRequestStates.RUNNING
+      });
 
-    const state0 = this.getCrudStateAt(0);
-    expect(state0).to.deep.equal({
-      ...CrudServiceRequests.INITIAL_STATE,
-      state: ServiceRequestStates.RUNNING
+      expect(this.commands[1]).to.be.instanceOf(ItemFoundByIdCommand);
+
+      const state1 = this.getCrudStateAt(1);
+      expect(state1).to.deep.equal({
+        ...CrudServiceRequests.INITIAL_STATE,
+        item: state1.item,
+        state: ServiceRequestStates.DONE
+      });
+
     });
-
-    expect(this.commands[1]).to.be.instanceOf(ItemFoundByIdCommand);
-
-    const state1 = this.getCrudStateAt(1);
-    expect(state1).to.deep.equal({
-      ...CrudServiceRequests.INITIAL_STATE,
-      item: state1.item,
-      state: ServiceRequestStates.DONE
-    });
-
   }
 
 }

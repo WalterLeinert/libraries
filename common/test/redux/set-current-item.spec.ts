@@ -47,12 +47,10 @@ class SetCurrentTest extends ReduxBaseTest<IUser, number, any> {
       this.beforeState = this.getCurrentItemState();
       this.reset();
 
-
       // Test: user als current setzen
-      this.currentItemServiceRequests.setCurrent(this.user);
-
-      done();
+      this.currentItemServiceRequests.setCurrent(this.user).subscribe((item) => {
+        done();
+      });
     });
   }
-
 }

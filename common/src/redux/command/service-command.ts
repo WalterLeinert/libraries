@@ -1,5 +1,3 @@
-import { Types } from '@fluxgate/core';
-
 import { IEntity } from '../../model/entity.interface';
 import { IServiceState } from '../state/service-state.interface';
 import { ServiceRequests } from './../service-requests/service-requests';
@@ -19,9 +17,7 @@ import { ICommand } from './command.interface';
  */
 export abstract class ServiceCommand<T extends IEntity<TId>, TId> implements ICommand<IServiceState> {
 
-  protected constructor(private _serviceRequests: IServiceRequests,
-    private resolve?: (value?: IServiceState | PromiseLike<IServiceState>) => void,
-    private reject?: (reason?: any) => void) {
+  protected constructor(private _serviceRequests: IServiceRequests) {
   }
 
   /**
@@ -34,7 +30,6 @@ export abstract class ServiceCommand<T extends IEntity<TId>, TId> implements ICo
   public get storeId(): string {
     return this._serviceRequests.storeId;
   }
-
 
   public hasModifiedItems(): boolean {
     return false;
@@ -55,26 +50,10 @@ export abstract class ServiceCommand<T extends IEntity<TId>, TId> implements ICo
     //
     const commandState = this.updateState(state);
 
-
-
     //
     // ... und dann ggf. noch update über konrkete ServiceRequests (z.B. currentItem anpassen)
     //
-    const stateUpdated = this._serviceRequests.updateState(this, commandState);
-
-
-    if (this.resolve) {
-      if (!Types.isPresent(stateUpdated.error)) {
-        this.resolve(stateUpdated);
-      }
-    }
-    if (this.reject) {
-      if (Types.isPresent(stateUpdated.error)) {
-        this.reject(stateUpdated.error);
-      }
-    }
-
-    return stateUpdated;
+    return this._serviceRequests.updateState(this, commandState);
   }
 
 

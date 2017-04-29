@@ -67,14 +67,15 @@ class DeleteTest extends ReduxBaseTest<IUser, number, any> {
       //
       // before-Status erzeugen
       //
-      this.crudServiceRequests.find();
-      this.beforeState = this.getCrudState();
-      this.reset();
+      this.crudServiceRequests.find().subscribe((items) => {
+        this.beforeState = this.getCrudState();
+        this.reset();
 
-      // Test: Item löschen
-      this.crudServiceRequests.delete(DeleteTest.DELETE_ID);
-
-      done();
+        // Test: Item löschen
+        this.crudServiceRequests.delete(DeleteTest.DELETE_ID).subscribe((id) => {
+          done();
+        });
+      });
     });
   }
 

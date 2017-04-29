@@ -1,4 +1,7 @@
-import { Assert, IException, IToString } from '@fluxgate/core';
+import { IException, IToString } from '@fluxgate/core';
+
+import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs/Subscriber';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -11,7 +14,7 @@ import {
   CreatingItemCommand, DeletingItemCommand, ErrorCommand,
   FindingItemByIdCommand, FindingItemsCommand,
   ItemCreatedCommand, ItemDeletedCommand, ItemFoundByIdCommand, ItemsFoundCommand,
-  ItemUpdatedCommand, ServiceCommand, UpdatingItemCommand
+  ItemUpdatedCommand, UpdatingItemCommand
 } from '../command';
 import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
@@ -57,73 +60,100 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
    *
    * @memberOf ServiceRequests
    */
-  public create(item: T): Promise<ICrudServiceState<T, TId>> {
-    const rval = new Promise<ICrudServiceState<T, TId>>((resolve, reject) => {
+  public create(item: T): Observable<T> {
+    return Observable.create((observer: Subscriber<T>) => {
+      try {
+        this.dispatch(new CreatingItemCommand(this, item));
 
-      this.subject(this.storeId).subscribe((command) => {
-        this.onStoreUpdated(command);
-      });
-
-      this.dispatch(new CreatingItemCommand(this, item));
-
-      this.service.create(item).subscribe(
-        (elem) => {
-          this.dispatch(new ItemCreatedCommand(this, elem, resolve, reject));
-        },
-        (exc: IException) => {
-          this.dispatch(new ErrorCommand(this, exc, resolve, reject));
-        });
-
+        this.service.create(item).subscribe(
+          (elem) => {
+            this.dispatch(new ItemCreatedCommand(this, elem));
+            observer.next(elem);
+          },
+          (exc: IException) => {
+            this.dispatch(new ErrorCommand(this, exc));
+            throw exc;
+          });
+      } catch (exc) {
+        observer.error(exc);
+      }
     });
-
-    return rval;
   }
 
 
   /**
    * Führt die find-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
+   *
    * @param {boolean} useCache - falls true, werden nur die Daten aus dem State übernommen; sonst Servercall
    * @memberOf ServiceRequests
    */
-  public find(useCache: boolean = false): void {
-    const state = this.getCrudState(this.storeId);
+  public find(useCache: boolean = false): Observable<T[]> {
+    return Observable.create((observer: Subscriber<T[]>) => {
+      const state = this.getCrudState(this.storeId);
 
-    this.dispatch(new FindingItemsCommand(this));
+      try {
+        this.dispatch(new FindingItemsCommand(this));
 
-    const finder = () => {
-      this.service.find().subscribe(
-        (items) => {
-          this.dispatch(new ItemsFoundCommand(this, items));
-        },
-        (exc: IException) => {
-          this.dispatch(new ErrorCommand(this, exc));
-        });
-    };
+        const finder = () => {
+          this.service.find().subscribe(
+            (items) => {
+              this.dispatch(new ItemsFoundCommand(this, items));
+              observer.next(items);
+            },
+            (exc: IException) => {
+              this.dispatch(new ErrorCommand(this, exc));
+              throw exc;
+            });
+        };
 
-    if (useCache) {
-      if (state.state === ServiceRequestStates.UNDEFINED) {
-        finder();
+        if (useCache) {
+          if (state.state === ServiceRequestStates.UNDEFINED) {
+            finder();
 
-      } else {
-        // items aus dem State liefern
-        this.dispatch(new ItemsFoundCommand(this, [...state.items]));
+          } else {
+            // items aus dem State liefern
+            this.dispatch(new ItemsFoundCommand(this, [...state.items]));
+            observer.next([...state.items]);
+          }
+        } else {
+          finder();
+        }
+
+      } catch (exc) {
+        observer.error(exc);
       }
-    } else {
-      finder();
-    }
+    });
   }
 
 
-  public findById(id: TId): void {
-    this.dispatch(new FindingItemByIdCommand(this, id));
 
-    this.service.findById(id).subscribe(
-      (elem) => {
-        this.dispatch(new ItemFoundByIdCommand(this, elem));
-      },
-      (exc: IException) => {
-        this.dispatch(new ErrorCommand(this, exc));
-      });
+  /**
+   * Find the entity with the given id and return {Promise<T>}
+   *
+   * @param {TId} id
+   * @returns {Promise<T>}
+   *
+   * @memberOf CrudServiceRequests
+   */
+  public findById(id: TId): Observable<T> {
+    return Observable.create((observer: Subscriber<T>) => {
+      try {
+        this.dispatch(new FindingItemByIdCommand(this, id));
+
+        this.service.findById(id).subscribe(
+          (elem) => {
+            this.dispatch(new ItemFoundByIdCommand(this, elem));
+            observer.next(elem);
+          },
+          (exc: IException) => {
+            this.dispatch(new ErrorCommand(this, exc));
+            throw exc;
+          });
+
+      } catch (exc) {
+        observer.error(exc);
+      }
+    });
   }
 
 
@@ -134,16 +164,25 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
    *
    * @memberOf ServiceRequests
    */
-  public update(item: T): void {
-    this.dispatch(new UpdatingItemCommand(this, item));
+  public update(item: T): Observable<T> {
+    return Observable.create((observer: Subscriber<T>) => {
+      try {
+        this.dispatch(new UpdatingItemCommand(this, item));
 
-    this.service.update(item).subscribe(
-      (elem) => {
-        this.dispatch(new ItemUpdatedCommand(this, elem));
-      },
-      (exc: IException) => {
-        this.dispatch(new ErrorCommand(this, exc));
-      });
+        this.service.update(item).subscribe(
+          (elem) => {
+            this.dispatch(new ItemUpdatedCommand(this, elem));
+            observer.next(elem);
+          },
+          (exc: IException) => {
+            this.dispatch(new ErrorCommand(this, exc));
+            throw exc;
+          });
+
+      } catch (exc) {
+        observer.error(exc);
+      }
+    });
   }
 
 
@@ -154,16 +193,25 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
    *
    * @memberOf ServiceRequests
    */
-  public delete(id: TId): void {
-    this.dispatch(new DeletingItemCommand(this, id));
+  public delete(id: TId): Observable<TId> {
+    return Observable.create((observer: Subscriber<TId>) => {
+      try {
+        this.dispatch(new DeletingItemCommand(this, id));
 
-    this.service.delete(id).subscribe(
-      (result) => {
-        this.dispatch(new ItemDeletedCommand(this, result.id));
-      },
-      (exc: IException) => {
-        this.dispatch(new ErrorCommand(this, exc));
-      });
+        this.service.delete(id).subscribe(
+          (result) => {
+            this.dispatch(new ItemDeletedCommand(this, result.id));
+            observer.next(result.id);
+          },
+          (exc: IException) => {
+            this.dispatch(new ErrorCommand(this, exc));
+            throw exc;
+          });
+
+      } catch (exc) {
+        observer.error(exc);
+      }
+    });
   }
 
 
@@ -182,21 +230,4 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
   protected get service(): TService {
     return this._service;
   }
-
-
-  protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
-    Assert.notNull(command);
-
-    using(new XLog(CrudServiceRequests.logger, levels.INFO, 'onStoreUpdated', `class: ${this.constructor.name}`),
-      (log) => {
-        log.log(`command = ${command.constructor.name}: ${command.toString()}`);
-
-        const state = this.getStoreState(command.storeId);
-        if (state.error) {
-          log.error(`${state.error}`);
-        }
-
-      });
-  }
-
 }

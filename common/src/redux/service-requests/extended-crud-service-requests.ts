@@ -1,8 +1,12 @@
+import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs/Subscriber';
+
 import { IToString } from '@fluxgate/core';
+
 import { IEntity } from '../../model/entity.interface';
 import { IService } from '../../model/service/service.interface';
-import { Store } from '../store/store';
 import { CommandStore } from '../store/command-store';
+import { Store } from '../store/store';
 import { ICommand, ItemDeletedCommand, ItemUpdatedCommand, SetCurrentItemCommand } from './../command/';
 import { ICurrentItemServiceState } from './../state/current-item-service-state.interface';
 import { IExtendedCrudServiceState } from './../state/extended-crud-service-state.interface';
@@ -34,8 +38,15 @@ export abstract class ExtendedCrudServiceRequests<T extends IEntity<TId>, TId ex
 
   }
 
-  public setCurrent(item: T): void {
-    this.dispatch(new SetCurrentItemCommand(this, item));
+  public setCurrent(item: T): Observable<T> {
+    return Observable.create((observer: Subscriber<T>) => {
+      try {
+        this.dispatch(new SetCurrentItemCommand(this, item));
+        observer.next(item);
+      } catch (exc) {
+        observer.error(exc);
+      }
+    });
   }
 
   public getCurrentItemState(storeId: string): ICurrentItemServiceState<T, TId> {

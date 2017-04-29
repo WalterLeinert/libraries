@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Observable';
+
 import { IToString } from '@fluxgate/core';
 import { IEntity } from '../../model/entity.interface';
 import { ICurrentItemServiceState } from '../state/current-item-service-state.interface';
@@ -21,7 +23,7 @@ export interface ICurrentItemServiceRequests<T extends IEntity<TId>, TId extends
    *
    * @memberOf ServiceRequests
    */
-  setCurrent(item: T): void;
+  setCurrent(item: T): Observable<T>;
 
   getCurrentItemState(storeId: string): ICurrentItemServiceState<T, TId>;
 
