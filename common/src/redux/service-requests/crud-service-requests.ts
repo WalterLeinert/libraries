@@ -1,11 +1,17 @@
-import { IException, IToString } from '@fluxgate/core';
+import { Assert, IException, IToString } from '@fluxgate/core';
+
+// -------------------------------------- logging --------------------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
+
 import { IEntity } from '../../model/entity.interface';
 import { IService } from '../../model/service/service.interface';
 import {
   CreatingItemCommand, DeletingItemCommand, ErrorCommand,
   FindingItemByIdCommand, FindingItemsCommand,
   ItemCreatedCommand, ItemDeletedCommand, ItemFoundByIdCommand, ItemsFoundCommand,
-  ItemUpdatedCommand, UpdatingItemCommand
+  ItemUpdatedCommand, ServiceCommand, UpdatingItemCommand
 } from '../command';
 import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
@@ -27,6 +33,8 @@ import { ServiceRequests } from './service-requests';
  */
 export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
   TService extends IService<T, TId>> extends ServiceRequests implements ICrudServiceRequests<T, TId> {
+  protected static readonly logger = getLogger(CrudServiceRequests);
+
 
   public static readonly INITIAL_STATE: ICrudServiceState<any, any> = {
     ...ServiceRequests.INITIAL_STATE,
@@ -49,16 +57,26 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
    *
    * @memberOf ServiceRequests
    */
-  public create(item: T): void {
-    this.dispatch(new CreatingItemCommand(this, item));
+  public create(item: T): Promise<ICrudServiceState<T, TId>> {
+    const rval = new Promise<ICrudServiceState<T, TId>>((resolve, reject) => {
 
-    this.service.create(item).subscribe(
-      (elem) => {
-        this.dispatch(new ItemCreatedCommand(this, elem));
-      },
-      (exc: IException) => {
-        this.dispatch(new ErrorCommand(this, exc));
+      this.subject(this.storeId).subscribe((command) => {
+        this.onStoreUpdated(command);
       });
+
+      this.dispatch(new CreatingItemCommand(this, item));
+
+      this.service.create(item).subscribe(
+        (elem) => {
+          this.dispatch(new ItemCreatedCommand(this, elem, resolve, reject));
+        },
+        (exc: IException) => {
+          this.dispatch(new ErrorCommand(this, exc, resolve, reject));
+        });
+
+    });
+
+    return rval;
   }
 
 
@@ -163,6 +181,22 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
 
   protected get service(): TService {
     return this._service;
+  }
+
+
+  protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
+    Assert.notNull(command);
+
+    using(new XLog(CrudServiceRequests.logger, levels.INFO, 'onStoreUpdated', `class: ${this.constructor.name}`),
+      (log) => {
+        log.log(`command = ${command.constructor.name}: ${command.toString()}`);
+
+        const state = this.getStoreState(command.storeId);
+        if (state.error) {
+          log.error(`${state.error}`);
+        }
+
+      });
   }
 
 }

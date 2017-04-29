@@ -41,7 +41,11 @@ class CurrentUserStoreTest extends ReduxBaseTest<IUser, number, any> {
 
 
   @test 'should throw exception for commands excluding SetCurrentItemCommand'() {
-    expect(() => this.crudServiceRequests.create(this.user)).to.Throw(NotSupportedException);
+    this.crudServiceRequests.create(this.user).catch((err) => {
+      expect(err).to.be.instanceOf(NotSupportedException);
+    });
+
+    // expect(() => this.crudServiceRequests.create(this.user)).to.Throw(NotSupportedException);
     expect(() => this.crudServiceRequests.find()).to.Throw(NotSupportedException);
     expect(() => this.crudServiceRequests.findById(1)).to.Throw(NotSupportedException);
     expect(() => this.crudServiceRequests.update(this.user)).to.Throw(NotSupportedException);

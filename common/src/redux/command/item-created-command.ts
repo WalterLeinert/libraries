@@ -2,6 +2,7 @@ import { IEntity } from '../../model/entity.interface';
 
 import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
+import { IServiceState } from '../state/service-state.interface';
 import { IServiceRequests } from './../service-requests';
 import { ServiceCommand } from './service-command';
 
@@ -19,8 +20,10 @@ import { ServiceCommand } from './service-command';
  */
 export class ItemCreatedCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
-  constructor(serviceRequests: IServiceRequests, private item: T) {
-    super(serviceRequests);
+  constructor(serviceRequests: IServiceRequests, private item: T,
+    resolve: (value?: IServiceState | PromiseLike<IServiceState>) => void,
+    reject: (reason?: any) => void) {
+    super(serviceRequests, resolve, reject);
   }
 
 

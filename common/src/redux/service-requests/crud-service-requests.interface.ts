@@ -22,7 +22,7 @@ export interface ICrudServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ICrudServiceRequests
    */
-  create(item: T): void;
+  create(item: T): Promise<ICrudServiceState<T, TId>>;
 
   /**
    * Führt die find-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.

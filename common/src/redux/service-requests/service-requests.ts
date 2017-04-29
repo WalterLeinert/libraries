@@ -1,10 +1,12 @@
-import { Assert, Types } from '@fluxgate/core';
+import { Assert, CustomSubject, Types } from '@fluxgate/core';
+
 import { ServiceRequestStates } from '../state/service-request-state';
 import { IServiceState } from '../state/service-state.interface';
 import { CommandStore } from '../store/command-store';
 import { Store } from '../store/store';
 import { ICommand } from './../command/command.interface';
 import { IServiceRequests } from './service-requests.interface';
+
 
 /**
  * abstrakte Basisklasse für Servicerequests.
@@ -46,7 +48,6 @@ export abstract class ServiceRequests implements IServiceRequests {
     }
   }
 
-
   public get storeId(): string {
     return this._storeId;
   }
@@ -69,10 +70,22 @@ export abstract class ServiceRequests implements IServiceRequests {
    * @param {IServiceState} [state=ServiceRequests.INITIAL_STATE]
    * @returns {IServiceState}
    *
-   * @memberOf ServiceCommand
+   * @memberOf ServiceRequests
    */
   public updateState(command: ICommand<IServiceState>, state: IServiceState): IServiceState {
     return state;
+  }
+
+  /**
+   * Liefert das Subject für die Id @param{storeId} für eine anschliessende Subscription.
+   *
+   * @param {string} storeId
+   * @returns {CustomSubject<any>}
+   *
+   * @memberOf ServiceRequests
+   */
+  protected subject(storeId: string): CustomSubject<any> {
+    return this._store.subject(storeId);
   }
 
 }
