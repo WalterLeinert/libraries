@@ -38,10 +38,10 @@ export class SchemaExtractor {
             .where('TABLE_SCHEMA', '=', 'griso')
             .then()
 
-        ]).then((res) => {
+        ]).then((res: any[]) => {
           this.knex.destroy();
 
-          const columnsSchema = res[0];
+          const columnsSchema = res[0] as any as any[];
           // tslint:disable-next-line:no-unused-variable
           const constraintsSchema = res[1];    // TODO: unused
 
