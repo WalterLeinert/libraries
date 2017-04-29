@@ -7,7 +7,7 @@ import { suite, test } from 'mocha-typescript';
 import { Tuple, Tuple3, Tuple4 } from '../../src/types';
 
 
-@suite('Tuple')
+@suite('core.types.Tuple')
 class TupleTest {
 
   @test 'should test Tuple'() {

@@ -36,7 +36,7 @@ const innerExceptionTestCases = [
 ];
 
 
-@suite('Exceptions: simple exceptions')
+@suite('core.exceptions: simple exceptions')
 class SimpleExceptionTests {
 
   @test 'should encode/decode simple exception'() {
@@ -60,7 +60,7 @@ class SimpleExceptionTests {
 }
 
 
-@suite('Exceptions: inner exceptions')
+@suite('core.exceptions: inner exceptions')
 class InnerExceptionTest {
 
   @test 'should encode/decode exceptions with inner exceptions'() {

@@ -80,7 +80,7 @@ class TestUser implements IUser {
 
 
 
-@suite('Types')
+@suite('core.types.Types')
 class TypesTest {
 
   @test 'should test various types'() {

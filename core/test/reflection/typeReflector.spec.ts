@@ -23,7 +23,7 @@ class DerivedClass extends BaseClass {
 }
 
 
-@suite('ReflectionTypeReflector')
+@suite('core.reflection.TypeReflector')
 class ReflectionTest {
 
   @test 'should create instance of TypeReflector'() {

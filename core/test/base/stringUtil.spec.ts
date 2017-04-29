@@ -8,7 +8,7 @@ import { StringUtil } from '../../src/base/stringUtil';
 import { AssertionException } from '../../src/exceptions/assertionException';
 
 
-@suite('StringUtil')
+@suite('core.base.StringUtil')
 class StringUtilTest {
 
 

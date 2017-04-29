@@ -26,7 +26,7 @@ const expectedDict = [
 ];
 
 
-@suite('Types.Dictionary<string, string>')
+@suite('core.types.Dictionary<string, string>')
 class DictionaryStringStringTest<TKey, TValue> {
   @test 'should create instance of Dictionary'() {
     return expect(new Dictionary<string, string>()).to.be.not.null;
@@ -90,7 +90,7 @@ class DictionaryStringStringTest<TKey, TValue> {
 }
 
 
-@suite('Types.Dictionary')
+@suite('core.types.Dictionary')
 class DictionaryTest {
 
   @test 'validate keys vs values'() {
@@ -244,7 +244,7 @@ class NotSupportedKey {
   public id: number;
 }
 
-@suite('Types.Dictionary: not supported Keys')
+@suite('core.types.Dictionary: not supported Keys')
 class DictionaryNotSupportedTest {
 
   @test 'should create instance of Dictionary'() {

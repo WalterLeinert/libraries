@@ -8,7 +8,7 @@ import { Platform } from '../../src/base/platform';
 
 
 
-@suite('Platform')
+@suite('core.base.Platform')
 class PlatformTest {
 
   @test 'should run on node'() {

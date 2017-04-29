@@ -29,7 +29,7 @@ class Test3 {
 
 
 
-@suite('core.decorator.deprecated')
+@suite('core.decorator.Deprecated')
 class DeprecatedTest {
   config: IConfig = {
     appenders: [

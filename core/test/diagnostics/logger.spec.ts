@@ -59,7 +59,7 @@ class Test3 {
 
 
 
-@suite('Logger')
+@suite('core.diagnostics.Logger')
 class LoggerTest {
 
   @test 'should create logger'() {
@@ -93,7 +93,7 @@ class LoggerTest {
   }
 }
 
-@suite('Logger config')
+@suite('core.diagnostics.Logger config')
 class LoggerConfigTest {
 
   config: IConfig = {

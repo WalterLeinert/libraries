@@ -13,7 +13,7 @@ import { suite, test } from 'mocha-typescript';
 import { Reflection } from '../../src/util';
 
 
-@suite('util.Reflection')
+@suite('core.util.Reflection')
 class ReflectionTest {
 
   @test 'should test copyProperties'() {

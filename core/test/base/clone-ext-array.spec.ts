@@ -40,7 +40,7 @@ class Tree extends UniqueIdentifiable {
 }
 
 
-@suite('Clone: array with external class references')
+@suite('core.base.Clone: array with external class references')
 class CloneExtArrayTest {
 
   @test 'should check Tree properties'() {

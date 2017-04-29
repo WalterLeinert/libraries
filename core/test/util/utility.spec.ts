@@ -12,11 +12,11 @@ class Test {
   id: number;
 }
 
-const testData = [ new Test() ];
+const testData = [new Test()];
 const numberData: number[] = [1, 2, 3];
 const stringData: string[] = ['a', 'b', 'c'];
 
-@suite('util.utility')
+@suite('core.util.utility')
 class UtilityTest {
 
 

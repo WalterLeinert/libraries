@@ -218,7 +218,7 @@ class DictionaryTester<TKey, TValue> {
 }
 
 
-@suite('Types.Dictionary-generic')
+@suite('core.types.Dictionary-generic')
 class DictionaryGenericTest {
 
   @test 'should perform tests on Dictionary<string, string>'() {

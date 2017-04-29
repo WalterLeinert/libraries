@@ -18,7 +18,7 @@ class Test2 {
     }
 }
 
-@suite('Activator')
+@suite('core.base.Activator')
 class ActivatorTest {
 
     @test 'should create instance of class Test'() {

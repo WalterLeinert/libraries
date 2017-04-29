@@ -30,7 +30,7 @@ class Test extends Disposable {
 
 
 
-@suite('Disposable')
+@suite('core.base.Disposable')
 class DisposableTest {
 
   @test 'should create instance of class Test'() {

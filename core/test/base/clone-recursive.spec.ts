@@ -32,7 +32,7 @@ class TreeNode extends UniqueIdentifiable {
 
 
 
-@suite('Clone: cyclic graphs')
+@suite('core.base.Clone: cyclic graphs')
 class CloneRecursiveTest {
 
   @test 'should check graph without cycle'() {

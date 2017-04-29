@@ -74,7 +74,7 @@ const primitiveTests = [
 ];
 
 
-@suite('Clone primitives')
+@suite('core.base.Clone primitives')
 class ClonePrimitivesTest {
 
   @test 'should clone all primitives'() {
@@ -93,7 +93,7 @@ class ClonePrimitivesTest {
 }
 
 
-@suite('Clone')
+@suite('core.base.Clone')
 class CloneTest {
 
   @test 'should check TestDerived properties'() {
@@ -169,7 +169,7 @@ class TestWithClone {
 }
 
 
-@suite('Clone by clone()')
+@suite('core.base.Clone by clone()')
 class CloneByCloneTest {
 
   @test 'should clone'() {

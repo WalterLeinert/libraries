@@ -27,7 +27,7 @@ const expedtedTimes = [
 ];
 
 
-@suite('Time (HH:mm:ss)')
+@suite('core.types.Time (HH:mm:ss)')
 class TimeTest {
 
   @test 'should create instance of class Time'() {
@@ -99,7 +99,7 @@ function timeToSecond(time: Time): number {
 }
 
 
-@suite('Time (add, subtract)')
+@suite('core.types.Time (add, subtract)')
 class TimeOperationsTest {
 
   @test 'should get seconds from hour'() {

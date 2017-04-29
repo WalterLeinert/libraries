@@ -29,7 +29,7 @@ const expedtedTimes = [
 ];
 
 
-@suite('ShortTime (HH:mm)')
+@suite('core.types.ShortTime (HH:mm)')
 class ShortTimeTest {
 
   @test 'should create instance of class ShortTime (default ctor)'() {
@@ -106,7 +106,7 @@ function timeToMinute(time: ShortTime): number {
 }
 
 
-@suite('ShortTime (add, subtract)')
+@suite('core.types.ShortTime (add, subtract)')
 class ShortTimeOperationsTest {
 
   @test 'should get minutes from hour'() {
