@@ -42,11 +42,12 @@ export class LogoffComponent extends BaseComponent<PassportService> {
         .subscribe(() => {
           log.log('done');
 
-          this.serviceRequests.setCurrent(null);
+          this.serviceRequests.setCurrent(null).subscribe((user) => {
+            if (Types.isPresent(this.authenticationNavigation.logoutRedirectUrl)) {
+              this.navigate([this.authenticationNavigation.logoutRedirectUrl]);
+            }
+          });
 
-          if (Types.isPresent(this.authenticationNavigation.logoutRedirectUrl)) {
-            this.navigate([this.authenticationNavigation.logoutRedirectUrl]);
-          }
         },
         (error: Error) => {
           this.handleError(error);

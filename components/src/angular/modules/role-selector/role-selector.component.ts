@@ -105,11 +105,11 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
     using(new XLog(RoleSelectorComponent.logger, levels.DEBUG, 'onValueChange'), (log) => {
       super.onValueChange(value);
 
-      if (log.isDebugEnabled()) {
-        log.log(`class: ${this.constructor.name}: value = ${JSON.stringify(value)}`);
-      }
-
-      this.serviceRequests.setCurrent(value);
+      this.serviceRequests.setCurrent(value).subscribe((user) => {
+        if (log.isDebugEnabled()) {
+          log.log(`class: ${this.constructor.name}: user = ${JSON.stringify(user)}`);
+        }
+      });
     });
   }
 }

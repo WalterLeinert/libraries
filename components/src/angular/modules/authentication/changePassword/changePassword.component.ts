@@ -100,11 +100,12 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
         .subscribe((user) => {
           log.info(`user = ${user}`);
 
-          this.serviceRequests.setCurrent(user);
+          this.serviceRequests.setCurrent(user).subscribe((u) => {
+            if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
+              this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);
+            }
+          });
 
-          if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
-            this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);
-          }
         },
         (error: Error) => {
           this.handleError(error);

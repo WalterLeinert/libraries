@@ -108,11 +108,12 @@ export class LoginComponent extends BaseComponent<PassportService> {
         .subscribe((result) => {
           log.log(JSON.stringify(result));
 
-          this.serviceRequests.setCurrent(result);
+          this.serviceRequests.setCurrent(result).subscribe((user) => {
+            this.navigate([
+              this.authenticationNavigation.loginRedirectUrl
+            ]);
+          });
 
-          this.navigate([
-            this.authenticationNavigation.loginRedirectUrl
-          ]);
         },
         (error: Error) => {
           this.handleError(error);

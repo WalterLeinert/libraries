@@ -120,15 +120,16 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
         .subscribe((result) => {
           log.log(JSON.stringify(result));
 
-          this.serviceRequests.setCurrent(result);
+          this.serviceRequests.setCurrent(result).subscribe((user) => {
+            this.resetForm();
 
-          this.resetForm();
+            if (Types.isPresent(this.authenticationNavigation.registerRedirectUrl)) {
+              this.navigate([
+                this.authenticationNavigation.registerRedirectUrl
+              ]);
+            }
+          });
 
-          if (Types.isPresent(this.authenticationNavigation.registerRedirectUrl)) {
-            this.navigate([
-              this.authenticationNavigation.registerRedirectUrl
-            ]);
-          }
         },
         (error: Error) => {
           this.handleError(error);
