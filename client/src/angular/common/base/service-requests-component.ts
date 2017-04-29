@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 
 
 // -------------------------------------- logging --------------------------------------------
@@ -52,8 +53,8 @@ export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TSer
   }
 
 
-  public createItem(item: T) {
-    this._serviceRequests.create(item);
+  public createItem(item: T): Observable<T> {
+    return this._serviceRequests.create(item);
   }
 
   /**
@@ -61,25 +62,25 @@ export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TSer
    *
    * @param {boolean} useCache - falls true, werden nur die Daten aus dem State übernommen; sonst Servercall
    */
-  public findItems(useCache: boolean = false): void {
-    this._serviceRequests.find(useCache);
+  public findItems(useCache: boolean = false): Observable<T[]> {
+    return this._serviceRequests.find(useCache);
   }
 
-  public findItemById(id: TId) {
-    this._serviceRequests.findById(id);
+  public findItemById(id: TId): Observable<T> {
+    return this._serviceRequests.findById(id);
   }
 
 
-  public updateItem(item: T) {
-    this._serviceRequests.update(item);
+  public updateItem(item: T): Observable<T> {
+    return this._serviceRequests.update(item);
   }
 
-  public deleteItem(id: TId) {
-    this._serviceRequests.delete(id);
+  public deleteItem(id: TId): Observable<TId> {
+    return this._serviceRequests.delete(id);
   }
 
-  public setCurrentItem(item: T) {
-    this._serviceRequests.setCurrent(item);
+  public setCurrentItem(item: T): Observable<T> {
+    return this._serviceRequests.setCurrent(item);
   }
 
 
