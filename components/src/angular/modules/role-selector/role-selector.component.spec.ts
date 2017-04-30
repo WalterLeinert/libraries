@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ConfirmationService } from 'primeng/components/common/api';
 
-import { APP_STORE_PROVIDER, AppInjector, ConfigService, MetadataService } from '@fluxgate/client';
+import { APP_STORE_PROVIDER, AppInjector, CurrentUserService } from '@fluxgate/client';
 
 import { RoleServiceFake } from '../../../testing/role-service-fake';
 import { RoleSelectorServiceRequestsModule } from '../../redux/role-selector-service-requests';
@@ -36,6 +36,7 @@ describe('RoleSelectorComponent', () => {
       providers: [
         APP_STORE_PROVIDER,
         AppInjector,
+        CurrentUserService,
         ConfirmationService,
         { provide: RoleService, useClass: RoleServiceFake }
       ]

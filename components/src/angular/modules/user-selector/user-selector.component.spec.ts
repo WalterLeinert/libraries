@@ -6,7 +6,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ConfirmationService } from 'primeng/components/common/api';
 
-import { APP_STORE_PROVIDER, AppInjector, ConfigService, MessageService, MetadataService } from '@fluxgate/client';
+import {
+  APP_STORE_PROVIDER, AppInjector, ConfigService, CurrentUserService, MessageService, MetadataService
+} from '@fluxgate/client';
 
 import { UserServiceFake } from '../../../testing/user-service-fake';
 import { UserSelectorServiceRequestsModule } from '../../redux/user-selector-service-requests';
@@ -45,6 +47,7 @@ describe('UserSelectorComponent', () => {
         ConfirmationService,
         APP_STORE_PROVIDER,
         AppInjector,
+        CurrentUserService,
         ConfigService,
         MessageService,
         MetadataService,

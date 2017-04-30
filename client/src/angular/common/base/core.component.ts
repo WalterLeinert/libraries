@@ -21,9 +21,9 @@ import {
 } from '@fluxgate/core';
 
 import {
-  CompoundValidator, CurrentItemSetCommand, CurrentUserStore, ICurrentItemServiceState, IEntity, IServiceState,
+  CompoundValidator, CurrentUserStore, ICurrentItemServiceState, IEntity, IServiceState,
   IUser, PatternValidator, RangeValidator,
-  RequiredValidator, ServiceCommand, SettingCurrentItemCommand, Store, TableMetadata
+  RequiredValidator, ServiceCommand, Store, TableMetadata
 } from '@fluxgate/common';
 
 
@@ -32,6 +32,7 @@ import { DataTypes } from '../../../base/displayConfiguration/dataType';
 import { MetadataDisplayInfoConfiguration } from '../../../base/displayConfiguration/metadataDisplayInfoConfiguration';
 import { APP_STORE } from '../../redux/app-store';
 import { AppInjector } from '../../services/appInjector.service';
+import { CurrentUserService } from '../../services/current-user.service';
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
 import { FormGroupInfo, IMessageDict } from './formGroupInfo';
@@ -71,6 +72,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   private store: Store;
   private _confirmationService: ConfirmationService;
+  private _currentUserService: CurrentUserService;
 
   protected currentUserChanged: EventEmitter<IUser> = new EventEmitter();
 
@@ -79,9 +81,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
     this.store = AppInjector.instance.getInstance<Store>(APP_STORE);
     this._confirmationService = AppInjector.instance.getInstance<ConfirmationService>(ConfirmationService);
-
-    this.subscribeToStore(CurrentUserStore.ID);
-    this.updateUserState();
+    this._currentUserService = AppInjector.instance.getInstance<CurrentUserService>(CurrentUserService);
   }
 
 
@@ -557,6 +557,17 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     return this._confirmationService;
   }
 
+
+
+  protected subscribeToCurrentUser(): Subscription {
+    const subscription = this._currentUserService.getSubject().subscribe((user) => {
+      this.currentUserChanged.emit(user);
+    });
+    this.currentUserChanged.emit(this.getCurrentUser());
+    return subscription;
+  }
+
+
   /**
    * Registriert den Store @param{storeId} für Statusänderungen.
    *
@@ -598,10 +609,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
       if (state.error) {
         log.error(`${state.error}`);
       }
-
-      if (command.storeId === CurrentUserStore.ID) {
-        this.updateUserState(command);
-      }
     });
   }
 
@@ -638,27 +645,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   protected getCurrentUser(): IUser {
     const state = this.getStoreState<ICurrentItemServiceState<IUser, number>>(CurrentUserStore.ID);
     return state.currentItem;
-  }
-
-
-  /**
-   * Feuert den currentUserChanged-Event, immer wenn sich der aktuelle/angemeldete User ändert.
-   *
-   * @private
-   *
-   * @memberOf CoreComponent
-   */
-  private updateUserState(command?: ServiceCommand<IUser, number>) {
-    if (command instanceof SettingCurrentItemCommand) {
-      //
-      // Store bei User-Wechsel immer zurücksetzen, damit neuer User nicht Daten des vorherigen Users sehen kann
-      //
-      this.store.reset();
-    }
-
-    if (command instanceof CurrentItemSetCommand) {
-      this.currentUserChanged.emit(this.getCurrentUser());
-    }
   }
 
 

@@ -96,7 +96,7 @@ gulp.task('tslint', () => {
 //     execCommand('ng build', '.', bufferSize, cb);
 // });
 
-gulp.task('compile:test', function() {
+gulp.task('compile:test', ['default'], function() {
     const tsResult = gulp.src('test/**/*.ts')
       .pipe(sourcemaps.init())
       .pipe(tsProject());
