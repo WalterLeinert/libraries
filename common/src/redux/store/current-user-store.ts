@@ -3,7 +3,8 @@ import { NotSupportedException } from '@fluxgate/core';
 
 import { IUser } from '../../model/user.interface';
 import { ICommand } from '../command/command.interface';
-import { SetCurrentItemCommand } from '../command/set-current-item-command';
+import { CurrentItemSetCommand } from '../command/current-item-set-command';
+import { SettingCurrentItemCommand } from '../command/setting-current-item-command';
 import { ReduxStore } from '../decorators/redux-store.decorator';
 import { CurrentItemServiceRequests } from '../service-requests/current-item-service-requests';
 import { ICurrentItemServiceState } from '../state/current-item-service-state.interface';
@@ -27,7 +28,7 @@ export class CurrentUserStore extends CommandStore<ICurrentItemServiceState<IUse
   }
 
   public dispatch(command: ICommand<ICurrentItemServiceState<IUser, number>>) {
-    if (!(command instanceof SetCurrentItemCommand)) {
+    if (!(command instanceof SettingCurrentItemCommand || command instanceof CurrentItemSetCommand)) {
       throw new NotSupportedException(`storeId ${command.storeId}: command not supported ${command.toString()}`);
     }
 

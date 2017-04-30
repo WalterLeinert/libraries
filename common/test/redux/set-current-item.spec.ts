@@ -6,8 +6,8 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { IUser, User } from '../../src/model';
-import { CurrentUserStore, ICurrentItemServiceState } from '../../src/redux';
-import { SetCurrentItemCommand } from '../../src/redux';
+import { CurrentUserStore, ICurrentItemServiceState, ServiceRequestStates } from '../../src/redux';
+import { CurrentItemSetCommand, SettingCurrentItemCommand } from '../../src/redux';
 
 import { CurrentUserServiceRequestsFake } from '../../src/testing/current-user-service-requests-fake';
 import { UserServiceFake } from '../../src/testing/user-service-fake';
@@ -25,13 +25,21 @@ class SetCurrentTest extends ReduxBaseTest<IUser, number, any> {
 
 
   @test 'should dispatch commands: SetCurrentItemCommand'() {
-    expect(this.commands.length).to.equal(1);
-    expect(this.commands[0]).to.be.instanceOf(SetCurrentItemCommand);
+    expect(this.commands.length).to.equal(2);
+    expect(this.commands[0]).to.be.instanceOf(SettingCurrentItemCommand);
+    expect(this.commands[1]).to.be.instanceOf(CurrentItemSetCommand);
 
     const state0 = this.getCurrentItemStateAt(0);
     expect(state0).to.deep.equal({
+      ...this.beforeState, ...this.beforeState,
+      state: ServiceRequestStates.RUNNING
+    });
+
+    const state1 = this.getCurrentItemStateAt(1);
+    expect(state1).to.deep.equal({
       ...this.beforeState,
-      currentItem: this.user
+      currentItem: this.user,
+      state: ServiceRequestStates.DONE
     });
   }
 

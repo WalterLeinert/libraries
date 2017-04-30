@@ -1,6 +1,7 @@
 import { IEntity } from '../../model/entity.interface';
 
 import { ICurrentItemServiceState } from '../state/current-item-service-state.interface';
+import { ServiceRequestStates } from '../state/service-request-state';
 import { IServiceRequests } from './../service-requests';
 import { ServiceCommand } from './service-command';
 
@@ -16,7 +17,7 @@ import { ServiceCommand } from './service-command';
  * @template T
  * @template TId
  */
-export class SetCurrentItemCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
+export class CurrentItemSetCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
 
   constructor(serviceRequests: IServiceRequests, private item: T) {
     super(serviceRequests);
@@ -35,6 +36,7 @@ export class SetCurrentItemCommand<T extends IEntity<TId>, TId> extends ServiceC
     return {
       ...state,
       currentItem: item,
+      state: ServiceRequestStates.DONE,
       error: undefined
     };
   }

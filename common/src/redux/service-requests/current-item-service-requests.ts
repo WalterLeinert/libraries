@@ -4,7 +4,8 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { IToString } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
-import { SetCurrentItemCommand } from '../command/set-current-item-command';
+import { CurrentItemSetCommand } from '../command/current-item-set-command';
+import { SettingCurrentItemCommand } from '../command/setting-current-item-command';
 import { Store } from '../store';
 import { ICurrentItemServiceState } from './../state/current-item-service-state.interface';
 import { ICurrentItemServiceRequests } from './current-item-service-requests.interface';
@@ -43,7 +44,9 @@ export class CurrentItemServiceRequests<T extends IEntity<TId>, TId extends IToS
   public setCurrent(item: T): Observable<T> {
     return Observable.create((observer: Subscriber<T>) => {
       try {
-        this.dispatch(new SetCurrentItemCommand(this, item));
+        this.dispatch(new SettingCurrentItemCommand(this, item));
+
+        this.dispatch(new CurrentItemSetCommand(this, item));
         observer.next(item);
       } catch (exc) {
         observer.error(exc);

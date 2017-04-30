@@ -9,7 +9,8 @@ import { NotSupportedException } from '@fluxgate/core';
 import { IUser, User } from '../../src/model';
 
 import {
-  CurrentItemServiceRequests, CurrentUserStore, SetCurrentItemCommand
+  CurrentItemServiceRequests, CurrentItemSetCommand, CurrentUserStore,
+  ServiceRequestStates, SettingCurrentItemCommand
 } from '../../src/redux';
 
 import { ExtendedUserServiceRequestsFake } from '../../src/testing';
@@ -28,13 +29,21 @@ class CurrentUserStoreTest extends ReduxBaseTest<IUser, number, any> {
 
   @test 'should dispatch commands: SetCurrentItemCommand'() {
     this.currentItemServiceRequests.setCurrent(this.user).subscribe((item) => {
-      expect(this.commands.length).to.equal(1);
-      expect(this.commands[0]).to.be.instanceOf(SetCurrentItemCommand);
+      expect(this.commands.length).to.equal(2);
+      expect(this.commands[0]).to.be.instanceOf(SettingCurrentItemCommand);
+      expect(this.commands[1]).to.be.instanceOf(CurrentItemSetCommand);
 
       const state0 = this.getCurrentItemStateAt(0);
       expect(state0).to.deep.equal({
         ...CurrentItemServiceRequests.INITIAL_STATE,
-        currentItem: this.user
+        state: ServiceRequestStates.RUNNING
+      });
+
+      const state1 = this.getCurrentItemStateAt(1);
+      expect(state1).to.deep.equal({
+        ...CurrentItemServiceRequests.INITIAL_STATE,
+        currentItem: this.user,
+        state: ServiceRequestStates.DONE
       });
     });
   }

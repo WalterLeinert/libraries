@@ -7,7 +7,9 @@ import { IEntity } from '../../model/entity.interface';
 import { IService } from '../../model/service/service.interface';
 import { CommandStore } from '../store/command-store';
 import { Store } from '../store/store';
-import { ICommand, ItemDeletedCommand, ItemUpdatedCommand, SetCurrentItemCommand } from './../command/';
+import {
+  CurrentItemSetCommand, ICommand, ItemDeletedCommand, ItemUpdatedCommand, SettingCurrentItemCommand
+} from './../command/';
 import { ICurrentItemServiceState } from './../state/current-item-service-state.interface';
 import { IExtendedCrudServiceState } from './../state/extended-crud-service-state.interface';
 import { IServiceState } from './../state/service-state.interface';
@@ -35,13 +37,14 @@ export abstract class ExtendedCrudServiceRequests<T extends IEntity<TId>, TId ex
 
   protected constructor(storeId: string | CommandStore<any>, service: TService, store: Store, parentStoreId?: string) {
     super(storeId, service, store, parentStoreId);
-
   }
 
   public setCurrent(item: T): Observable<T> {
     return Observable.create((observer: Subscriber<T>) => {
       try {
-        this.dispatch(new SetCurrentItemCommand(this, item));
+        this.dispatch(new SettingCurrentItemCommand(this, item));
+
+        this.dispatch(new CurrentItemSetCommand(this, item));
         observer.next(item);
       } catch (exc) {
         observer.error(exc);

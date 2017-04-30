@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 // PrimeNG
-import { Confirmation, ConfirmationService } from 'primeng/components/common/api';
+import { ConfirmationService } from 'primeng/components/common/api';
 
 
 // -------------------------------------- logging --------------------------------------------
@@ -21,9 +21,9 @@ import {
 } from '@fluxgate/core';
 
 import {
-  CompoundValidator, CurrentUserStore, ICurrentItemServiceState, IEntity, IServiceState,
+  CompoundValidator, CurrentItemSetCommand, CurrentUserStore, ICurrentItemServiceState, IEntity, IServiceState,
   IUser, PatternValidator, RangeValidator,
-  RequiredValidator, ServiceCommand, SetCurrentItemCommand, Store, TableMetadata
+  RequiredValidator, ServiceCommand, SettingCurrentItemCommand, Store, TableMetadata
 } from '@fluxgate/common';
 
 
@@ -599,7 +599,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
         log.error(`${state.error}`);
       }
 
-      if (command.storeId === CurrentUserStore.ID && command instanceof SetCurrentItemCommand) {
+      if (command.storeId === CurrentUserStore.ID) {
         this.updateUserState(command);
       }
     });
@@ -649,7 +649,14 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf CoreComponent
    */
   private updateUserState(command?: ServiceCommand<IUser, number>) {
-    if (command instanceof SetCurrentItemCommand) {
+    if (command instanceof SettingCurrentItemCommand) {
+      //
+      // Store bei User-Wechsel immer zurücksetzen, damit neuer User nicht Daten des vorherigen Users sehen kann
+      //
+      this.store.reset();
+    }
+
+    if (command instanceof CurrentItemSetCommand) {
       this.currentUserChanged.emit(this.getCurrentUser());
     }
   }
