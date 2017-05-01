@@ -7,6 +7,7 @@ export * from './flx-entity';
 export * from './flx-entity.interface';
 export * from './generator';
 export * from './mandant';
+export * from './mapping';
 export * from './metadata';
 export * from './passwordChange';
 export * from './query';
