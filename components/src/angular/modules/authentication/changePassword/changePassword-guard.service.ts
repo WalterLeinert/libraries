@@ -20,7 +20,7 @@ export class ChangePasswordGuardService extends CoreComponent implements CanActi
   }
 
   public canActivate(route: ActivatedRouteSnapshot): boolean {
-    if (this.currentUser) {
+    if (this.currentStoreUser) {
       return true;
     }
     return false;

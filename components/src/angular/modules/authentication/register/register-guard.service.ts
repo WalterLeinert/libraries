@@ -20,7 +20,7 @@ export class RegisterGuardService extends CoreComponent implements CanActivate {
   }
 
   public canActivate(route: ActivatedRouteSnapshot): boolean {
-    if (this.currentUser && this.currentUser.isAdmin) {
+    if (this.currentStoreUser && this.currentStoreUser.isAdmin) {
       return true;
     }
     return false;

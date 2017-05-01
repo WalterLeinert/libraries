@@ -566,8 +566,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    */
   protected getCurrentUser(): Observable<IUser> {
     this.subscribeToStore(CurrentUserStore.ID);
-    const subject = this._currentUserService.getSubject();
-    return subject;
+    return this._currentUserService.getSubject().asObservable();
   }
 
 
@@ -643,14 +642,14 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
 
   /**
-   * Liefert den aktuell angemeldeten User.
+   * Liefert den aktuell angemeldeten User über den @CurrentUserStore
    *
    * @protected
    * @returns {IUser}
    *
    * @memberOf CoreComponent
    */
-  protected get currentUser(): IUser {
+  protected get currentStoreUser(): IUser {
     const state = this.getStoreState<ICurrentItemServiceState<IUser, number>>(CurrentUserStore.ID);
     return state.currentItem;
   }
