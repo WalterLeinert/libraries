@@ -96,62 +96,60 @@ export class MetadataStorage {
         }
 
 
-        if (!colMetadata) {
-          return;
-        }
+        if (colMetadata) {
 
-        colMetadata.forEach((item) => {
+          colMetadata.forEach((item) => {
 
-          // ggf. Enum-Metadaten setzen
-          const enmMeta = propNameToEnum.get(item.propertyName);
-          if (enmMeta) {
-            item.setEnum(enmMeta);
-          }
-
-          //
-          // Validierung ermitteln und attachen
-          //
-          const validationMetadatas = propNameToValidator[item.propertyName];
-
-
-          if (validationMetadatas) {
-            let validator: Validator;
-
-            //
-            // falls mehrere Validation-Decorators an Modelproperty sind,
-            // werden die Validatoren in einen CompoundValidator gekapselt.
-            //
-            if (validationMetadatas.length > 1) {
-              for (const vm of validationMetadatas) {
-                vm.validator.attachColumnMetadata(item);
-              }
-              const validators = validationMetadatas.map((v) => v.validator);
-              validator = new CompoundValidator(validators);
-            } else {
-              validator = validationMetadatas[0].validator;
+            // ggf. Enum-Metadaten setzen
+            const enmMeta = propNameToEnum.get(item.propertyName);
+            if (enmMeta) {
+              item.setEnum(enmMeta);
             }
-            item.setValidation(validator);
+
+            //
+            // Validierung ermitteln und attachen
+            //
+            const validationMetadatas = propNameToValidator[item.propertyName];
+
+
+            if (validationMetadatas) {
+              let validator: Validator;
+
+              //
+              // falls mehrere Validation-Decorators an Modelproperty sind,
+              // werden die Validatoren in einen CompoundValidator gekapselt.
+              //
+              if (validationMetadatas.length > 1) {
+                for (const vm of validationMetadatas) {
+                  vm.validator.attachColumnMetadata(item);
+                }
+                const validators = validationMetadatas.map((v) => v.validator);
+                validator = new CompoundValidator(validators);
+              } else {
+                validator = validationMetadatas[0].validator;
+              }
+              item.setValidation(validator);
+            }
+
+            metadata.add(item);
+          });
+
+          if (!metadata.primaryKeyColumn) {
+            log.info(`Table ${metadata.options.name}: no primary key column`);
           }
 
-          metadata.add(item);
-        });
 
-        if (!metadata.primaryKeyColumn) {
-          log.info(`Table ${metadata.options.name}: no primary key column`);
-        }
+          /**
+           * nun alle speziellen Columns übernehmen
+           */
+          if (this.tableSpecialColumnDict.containsKey(targetName)) {
+            const dict = this.tableSpecialColumnDict.get(targetName);
 
-
-        /**
-         * nun alle speziellen Columns übernehmen
-         */
-        if (this.tableSpecialColumnDict.containsKey(targetName)) {
-          const dict = this.tableSpecialColumnDict.get(targetName);
-
-          for (const propertyName of dict.keys) {
-            metadata.setSpecialColumn(propertyName, dict.get(propertyName));
+            for (const propertyName of dict.keys) {
+              metadata.setSpecialColumn(propertyName, dict.get(propertyName));
+            }
           }
         }
-
 
 
         //
