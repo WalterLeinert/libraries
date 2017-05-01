@@ -3,7 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, Dictionary, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
+import { Assert, Clone, Dictionary, Funktion, InvalidOperationException, Types, Utility } from '@fluxgate/core';
 
 import { CompoundValidator } from './../validation/compoundValidator';
 import { Validator } from './../validation/validator';
@@ -152,9 +152,44 @@ export class MetadataStorage {
           }
         }
 
+
+
+        //
+        // abgeleitete Modelklasse?
+        //
+        const baseClazz = Types.getBaseClass(metadata.target);
+
+        if (baseClazz && this.tableDict.containsKey(baseClazz.name)) {
+
+          // Metadaten der Basisklasse ermitteln
+          const baseTableMetadata = this.tableDict.get(baseClazz.name);
+
+          baseTableMetadata.columnMetadata.forEach((baseCol) => {
+            //
+            // bei gleichen DB-Spaltennamen müssen die Propertynamen gleich sein!
+            //
+            const dbCol = metadata.getColumnMetadataByDbCol(baseCol.options.name);
+            if (dbCol) {
+              Assert.that(dbCol.propertyName === baseCol.propertyName,
+                `${metadata.className}/${baseTableMetadata.className}: ` +
+                `${dbCol.propertyName}/${baseCol.propertyName} properties must have same name`);
+            }
+
+            //
+            // bei gleichen Propertynamen bleiben die Properties der abgeleiteten Klasse erhalten;
+            // sonst werden die Properties der Basisklasse übernommen
+            //
+            const col = metadata.getColumnMetadataByProperty(baseCol.propertyName);
+            if (!col) {
+              metadata.add(Clone.clone(baseCol));
+            }
+
+          });
+        }
+
+
         this.tableDict.set(targetName, metadata);
         this.dbTableDict.set(metadata.options.name, metadata);
-
       });
   }
 
