@@ -5,63 +5,47 @@
 require('reflect-metadata');
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { Column, ColumnTypes, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
+import { ArtikelDerived } from './table-derived.spec';
 
 
-@Table({ name: ArtikelDerived.TABLE_NAME })
-export class ArtikelDerived {
-  public static readonly TABLE_NAME: string = 'artikel';
-
-  @Column({ name: 'artikel_id', primary: true, generated: true })
-  public id: number;
-
-  @Column({ name: 'artikel_name', displayName: 'Name' })
-  public name: string;
-}
-
-
-@Table({ name: ArtikelDerivedDerived.TABLE_NAME })
-class ArtikelDerivedDerived extends ArtikelDerived {
+@Table({ name: ArtikelDerivedDerived3.TABLE_NAME })
+class ArtikelDerivedDerived3 extends ArtikelDerived {
   public static readonly TABLE_NAME: string = 'artikelderived';
-
-  @Column({ name: 'artikelderived_id', primary: true, generated: true })
-  public id: number;
 
   @Column({ name: 'artikelderived_name', displayName: 'Name-Derived' })
   public name: string;
 }
 
 
-@suite('model.decorator.Table: derived')
-class TableDerivedTest {
+@suite('model.decorator.Table: derived (only overridden name column)')
+class TableDerived2Test {
   private derivedTableMetadata: TableMetadata;
 
   @test 'should exist tableMetadata'() {
     expect(MetadataStorage.instance.findTableMetadata(ArtikelDerived)).to.be.not.null;
-    expect(MetadataStorage.instance.findTableMetadata(ArtikelDerivedDerived)).to.be.not.null;
+    expect(MetadataStorage.instance.findTableMetadata(ArtikelDerivedDerived3)).to.be.not.null;
   }
 
   @test 'should have table options'() {
-    expect(this.derivedTableMetadata.className).to.equal(ArtikelDerivedDerived.name);
-    expect(this.derivedTableMetadata.options.name).to.equal(ArtikelDerivedDerived.TABLE_NAME);
-    expect(this.derivedTableMetadata.options.isView).to.be.false;
+    expect(this.derivedTableMetadata.options.name).to.equal(ArtikelDerivedDerived3.TABLE_NAME);
   }
 
-  @test 'should exist columnMetadata for id'() {
+  @test 'should exist columnMetadata for id (from base class)'() {
     const propertyName = 'id';
     const colMetaData = this.derivedTableMetadata.getColumnMetadataByProperty(propertyName);
     expect(colMetaData).to.be.not.null;
     expect(colMetaData.propertyName).to.equal(propertyName);
     expect(colMetaData.propertyType).to.equal(ColumnTypes.NUMBER);
-    expect(colMetaData.options.name).to.equal('artikelderived_id');
+    expect(colMetaData.options.name).to.equal('artikel_id');
     expect(colMetaData.options.primary).to.be.true;
     expect(colMetaData.options.generated).to.be.true;
   }
 
 
-  @test 'should exist columnMetadata for name'() {
+  @test 'should exist columnMetadata for name (overidden by derived class)'() {
     const propertyName = 'name';
     const colMetaData = this.derivedTableMetadata.getColumnMetadataByProperty(propertyName);
     expect(colMetaData).to.be.not.null;
@@ -75,7 +59,7 @@ class TableDerivedTest {
 
 
   protected before() {
-    this.derivedTableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelDerivedDerived);
+    this.derivedTableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelDerivedDerived3);
   }
 
 }
