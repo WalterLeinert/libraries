@@ -1,4 +1,4 @@
-import { ObjectType } from '../base/objectType';
+import { Funktion, ObjectType } from '../base/objectType';
 import { Assert } from '../util/assert';
 import { Utility } from '../util/utility';
 
@@ -107,7 +107,7 @@ export class Types {
    *
    * @memberof Types
    */
-  public static getBaseClass(clazz: any): any {
+  public static getBaseClass(clazz: any): Funktion {
     const prototype = Object.getPrototypeOf(clazz);
 
     if (prototype) {
