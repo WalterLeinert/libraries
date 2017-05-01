@@ -3,8 +3,6 @@ import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 
 // fluxgate
 import { CoreComponent, MessageService } from '@fluxgate/client';
-import { IUser } from '@fluxgate/common';
-
 
 /**
  * Guard-Service, der die PasswordChange-Route nur zulässt,
@@ -16,16 +14,13 @@ import { IUser } from '@fluxgate/common';
  */
 @Injectable()
 export class ChangePasswordGuardService extends CoreComponent implements CanActivate {
-  private user: IUser;
 
   constructor(private _router: Router, messageService: MessageService) {
     super(messageService);
-
-    this.user = this.getCurrentUser();
   }
 
   public canActivate(route: ActivatedRouteSnapshot): boolean {
-    if (this.user) {
+    if (this.currentUser) {
       return true;
     }
     return false;

@@ -95,7 +95,7 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
         return;
       }
 
-      this.registerSubscription(this.service.changePassword(this.getCurrentUser().username,
+      this.registerSubscription(this.service.changePassword(this.currentUser.username,
         this.password, this.passwordNew)
         .subscribe((user) => {
           log.info(`user = ${user}`);
