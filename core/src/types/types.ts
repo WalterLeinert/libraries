@@ -1,5 +1,6 @@
 import { ObjectType } from '../base/objectType';
 import { Assert } from '../util/assert';
+import { Utility } from '../util/utility';
 
 export type byte = number;
 
@@ -73,6 +74,51 @@ export class Types {
     Assert.notNullOrEmpty(propertyName);
     return !Types.isUndefined(obj[propertyName]);
   }
+
+
+
+  /**
+   * Liefert true, falls @see{clazz} über den Operator new eine Instanz erzeugen kann.
+   *
+   * @static
+   * @param {*} clazz
+   * @returns {boolean}
+   *
+   * @memberof Types
+   */
+  public static hasConstructor(clazz: any): boolean {
+    Assert.notNull(clazz);
+    try {
+      // tslint:disable-next-line:no-unused-new
+      new clazz();
+      return true;
+    } catch (exc) {
+      return false;
+    }
+  }
+
+
+  /**
+   * Liefert die Basisklasse von @see{class} (als Prototype von clazz)
+   *
+   * @static
+   * @param {*} clazz
+   * @returns {*}
+   *
+   * @memberof Types
+   */
+  public static getBaseClass(clazz: any): any {
+    const prototype = Object.getPrototypeOf(clazz);
+
+    if (prototype) {
+      if (!Utility.isNullOrEmpty(prototype.name)) {
+        return prototype;
+      }
+      return undefined;
+    }
+    return undefined;
+  }
+
 
   /**
    * Erzeugt eine neue Instanz für die "Klasse" @param{clazz} über die "constructor" function

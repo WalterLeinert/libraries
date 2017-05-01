@@ -79,9 +79,24 @@ class TestUser implements IUser {
 }
 
 
+class TestUserDerived extends TestUser {
+}
+
 
 @suite('core.types.Types')
 class TypesTest {
+
+
+  @test 'should test derived classes'() {
+    expect(Types.hasConstructor(TestUser)).to.be.true;
+    expect(Types.hasConstructor(TestUserDerived)).to.be.true;
+
+    expect(Types.getBaseClass(TestUser)).to.be.undefined;
+    expect(Types.getBaseClass(TestUserDerived)).not.be.undefined;
+
+    expect(Types.getBaseClass(TestUserDerived)).to.be.equal(TestUser);
+  }
+
 
   @test 'should test various types'() {
     expect(Types.isArray([1, 2])).to.be.true;
