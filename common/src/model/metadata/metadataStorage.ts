@@ -92,6 +92,10 @@ export class MetadataStorage {
           }
 
 
+          if (!colMetadata) {
+            return;
+          }
+
           colMetadata.forEach((item) => {
 
             // ggf. Enum-Metadaten setzen
