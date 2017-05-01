@@ -74,8 +74,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   private _confirmationService: ConfirmationService;
   private _currentUserService: CurrentUserService;
 
-  protected currentUserChanged: EventEmitter<IUser> = new EventEmitter();
-
   protected constructor(private _messageService: MessageService) {
     super();
 
@@ -558,13 +556,18 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   }
 
 
-
-  protected subscribeToCurrentUser(): Subscription {
-    const subscription = this._currentUserService.getSubject().subscribe((user) => {
-      this.currentUserChanged.emit(user);
-    });
-    this.currentUserChanged.emit(this.getCurrentUser());
-    return subscription;
+  /**
+   * Liefert ein Observable<IUser> für die Überwachung der Änderungen des aktuellen Users
+   *
+   * @protected
+   * @returns {Observable<IUser>}
+   *
+   * @memberof CoreComponent
+   */
+  protected getCurrentUser(): Observable<IUser> {
+    this.subscribeToStore(CurrentUserStore.ID);
+    const subject = this._currentUserService.getSubject();
+    return subject;
   }
 
 
@@ -629,6 +632,11 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     return this.store.getState(storeId) as TState;
   }
 
+
+  /**
+   * Setzt den Store und damit alle CommandStores auf den Intitialzustand zurück
+   * (z.B. nach Änderung des aktuellen Users)
+   */
   protected resetStore() {
     return this.store.reset();
   }
@@ -642,7 +650,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    *
    * @memberOf CoreComponent
    */
-  protected getCurrentUser(): IUser {
+  protected get currentUser(): IUser {
     const state = this.getStoreState<ICurrentItemServiceState<IUser, number>>(CurrentUserStore.ID);
     return state.currentItem;
   }

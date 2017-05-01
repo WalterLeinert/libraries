@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 
 // -------------------------------------- logging --------------------------------------------
@@ -27,7 +28,7 @@ import { AppInjector } from './appInjector.service';
 export class CurrentUserService {
   protected static readonly logger = getLogger(CurrentUserService);
 
-  private _subject: Subject<IUser> = new Subject();
+  private _subject: Subject<IUser> = new BehaviorSubject(null);
   private _store: Store;
 
   constructor() {
