@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { ChangePasswordGuardService } from './changePassword/changePassword-guard.service';
-import { RegisterGuardService } from './register/register-guard.service';
+import { CurrentUserAdminGuardService } from '../../services/current-user-admin-guard.service';
+import { CurrentUserGuardService } from '../../services/current-user-guard.service';
 
 import { ChangePasswordComponent } from './changePassword/changePassword.component';
 import { LoginComponent } from './login/login.component';
@@ -11,22 +11,26 @@ import { RegisterComponent } from './register/register.component';
 
 
 const routes: Routes = [
-    { path: 'login', component: LoginComponent },
-    {
-        path: 'register',
-        canActivate: [RegisterGuardService],
-        component: RegisterComponent
-    },
-    {
-        path: 'changePassword',
-        canActivate: [ChangePasswordGuardService],
-        component: ChangePasswordComponent
-    },
-    { path: 'logout', component: LogoffComponent }
+  { path: 'login', component: LoginComponent },
+  {
+    path: 'register',
+    canActivate: [CurrentUserAdminGuardService],
+    component: RegisterComponent
+  },
+  {
+    path: 'changePassword',
+    canActivate: [CurrentUserGuardService],
+    component: ChangePasswordComponent
+  },
+  { path: 'logout', component: LogoffComponent }
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+  providers: [
+    CurrentUserAdminGuardService,
+    CurrentUserGuardService
+  ]
 })
 export class AuthenticationRoutingModule { }

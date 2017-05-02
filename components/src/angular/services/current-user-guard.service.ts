@@ -1,21 +1,20 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 
 // fluxgate
 import { CoreComponent, MessageService } from '@fluxgate/client';
 
 /**
- * Guard-Service, der die PasswordChange-Route nur zulässt,
- * falls ein User angemeldet.
+ * Guard-Service, der sicher stellt, dass ein aktueller User existiert.
  *
  * @export
- * @class PasswordChangeGuardService
+ * @class CurrentUserGuardService
  * @implements {CanActivate}
  */
 @Injectable()
-export class ChangePasswordGuardService extends CoreComponent implements CanActivate {
+export class CurrentUserGuardService extends CoreComponent implements CanActivate {
 
-  constructor(private _router: Router, messageService: MessageService) {
+  constructor(messageService: MessageService) {
     super(messageService);
   }
 

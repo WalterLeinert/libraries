@@ -17,9 +17,7 @@ import { BaseComponent, MessageService } from '@fluxgate/client';
 // commands
 import { CurrentUserServiceRequests } from '../../../redux/current-user-service-requests';
 import { AuthenticationNavigation, AuthenticationNavigationToken } from '../authenticationNavigation';
-import { ChangePasswordGuardService } from '../changePassword/changePassword-guard.service';
 import { PassportService } from '../passport.service';
-import { RegisterGuardService } from '../register/register-guard.service';
 
 @Component({
   selector: 'flx-login',
@@ -80,16 +78,13 @@ export class LoginComponent extends BaseComponent<PassportService> {
    * @param {Router} router
    * @param {NavigationService} navigationService
    * @param {PassportService} service
-   * @param {ChangePasswordGuardService} changePasswordGuardService
-   * @param {RegisterGuardService} registerGuardService
    *
    * @memberOf LoginComponent
    */
   constructor(private serviceRequests: CurrentUserServiceRequests,
     private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
     @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation,
-    service: PassportService, changePasswordGuardService: ChangePasswordGuardService,
-    registerGuardService: RegisterGuardService) {
+    service: PassportService) {
     super(router, route, messageService, service);
 
     using(new XLog(LoginComponent.logger, levels.INFO, 'ctor'), (log) => {

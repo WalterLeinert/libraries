@@ -1,8 +1,9 @@
 export { ClientServicesModule } from './angular/modules';
 
 export {
-  AuthenticationModule, AuthenticationNavigation, AuthenticationNavigationToken, ChangePasswordComponent,
-  LoginComponent, LogoffComponent, PassportService, RegisterComponent, RegisterGuardService,
+  AuthenticationModule, AuthenticationNavigation, AuthenticationNavigationToken, AuthenticationRoutingModule,
+  ChangePasswordComponent,
+  LoginComponent, LogoffComponent, PassportService, RegisterComponent,
   RoleService, UserService
 } from './angular/modules/authentication';
 
@@ -45,6 +46,7 @@ export {
 export {
   ComponentGuardModule, ComponentGuardService,
   ComponentServices, ComponentServicesModule,
+  CurrentUserAdminGuardService, CurrentUserGuardService,
   MessageServiceModule
 } from './angular/services';
 

@@ -15,13 +15,11 @@ import { RoleServiceRequestsModule } from '../../redux/role-service-requests';
 import { AutofocusModule } from '../directives/autofocus.directive';
 import { HighlightModule } from '../directives/highlight.directive';
 import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
-import { ChangePasswordGuardService } from './changePassword/changePassword-guard.service';
-import { ChangePasswordComponent } from './changePassword/changePassword.component';
 // import { AuthenticationRoutingModule } from './authentication-routing.module';
+import { ChangePasswordComponent } from './changePassword/changePassword.component';
 import { LoginComponent } from './login/login.component';
 import { LogoffComponent } from './logoff/logoff.component';
 import { PassportService } from './passport.service';
-import { RegisterGuardService } from './register/register-guard.service';
 import { RegisterComponent } from './register/register.component';
 import { RoleService } from './role.service';
 
@@ -59,9 +57,7 @@ import { RoleService } from './role.service';
     MessageService,
     MetadataService,
     PassportService,
-    RoleService,
-    RegisterGuardService,
-    ChangePasswordGuardService
+    RoleService
   ]
 })
 export class AuthenticationModule { }
