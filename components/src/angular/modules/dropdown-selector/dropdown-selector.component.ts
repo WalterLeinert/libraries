@@ -1,5 +1,5 @@
 // Angular
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -44,7 +44,12 @@ import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
   <p>selectedIndex: {{selectedIndex}}, value: {{value | json}}</p>
 </div>
 `,
-  styles: [],
+  encapsulation: ViewEncapsulation.None,
+  styles: [`
+.ui-dropdown	{
+  width:100% !important;
+}
+`],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

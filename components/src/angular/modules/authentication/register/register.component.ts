@@ -68,7 +68,7 @@ import { RoleService } from '../role.service';
       <div class="col-sm-5">
         <flx-role-selector styleClass="form-control" required [textField]="'description'" [valueField]="'id'" [(ngModel)]="user.role" formControlName="role"
           (valueChange)="onSelectedRoleChanged($event)"
-          [debug]="false" [style]="{'width':'200px'}" [debug]="false" id="role">
+          [debug]="false" [debug]="false" id="role">
         </flx-role-selector>
       </div>
     </div>
