@@ -31,8 +31,7 @@ import { ExtendedCoreComponent } from './extended-core.component';
  * @implements {OnInit}
  * @template TService - der konkrete Service
  */
-export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TServiceRequests
-  extends IExtendedCrudServiceRequests<T, TId>> extends ExtendedCoreComponent {
+export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId> extends ExtendedCoreComponent {
   protected static readonly logger = getLogger(ServiceRequestsComponent);
 
 
@@ -46,7 +45,7 @@ export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TSer
    * @memberOf ServiceRequestComponent
    */
   protected constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
-    private _serviceRequests: TServiceRequests) {
+    private _serviceRequests: IExtendedCrudServiceRequests<T, TId>) {
     super(router, route, messageService);
 
     this.subscribeToStore(this._serviceRequests.storeId);
