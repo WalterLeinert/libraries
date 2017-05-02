@@ -30,7 +30,7 @@ import { PassportService } from '../passport.service';
       <label class="col-form-label col-sm-2" for="username">Name</label>
       <div class="col-sm-5">
         <input flxAutofocus type="text" class="form-control" formControlName="username" id="username" required
-          [(ngModel)]="username" name="username" placeholder="Username">
+          [(ngModel)]="username" placeholder="Username">
       </div>
     </div>
 
@@ -38,7 +38,7 @@ import { PassportService } from '../passport.service';
       <label class="col-form-label col-sm-2" for="password">Password:</label>
       <div class="col-sm-5">
         <input type="password" class="form-control" formControlName="password" id="password" required
-          [(ngModel)]="password" name="password" placeholder="Password">
+          [(ngModel)]="password" placeholder="Password">
       </div>
     </div>
 

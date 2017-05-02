@@ -143,7 +143,7 @@ export type selectionMode = 'single' | 'multiple' | '';
             <template let-col let-data="rowData" pTemplate="editor">
               <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService"
                 [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
-                [ngModel]="data[col.field]"
+                [(ngModel)]="data[col.field]"
                 [style]="{'width':'100%'}" [style.color]="getColor(data, info)"
                 name="flxDropdownSelector" [debug]="false">
               </flx-dropdown-selector>
