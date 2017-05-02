@@ -12,6 +12,9 @@ import { Confirmation } from 'primeng/components/common/api';
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
+
+import { IUser } from '@fluxgate/common';
 
 import { IRouterNavigationAction, NavigationAction } from '../../common/routing';
 import { MessageService } from '../../services/message.service';
@@ -30,6 +33,11 @@ import { CoreComponent } from './core.component';
 export abstract class ExtendedCoreComponent extends CoreComponent {
 
   /**
+   * Liefer den aktuell angemeldeten User
+   */
+  public currentUser: IUser;
+
+  /**
    * Creates an instance of BaseComponent.
    *
    * @param {Router} _router - der zugehörige Router
@@ -38,6 +46,10 @@ export abstract class ExtendedCoreComponent extends CoreComponent {
    */
   protected constructor(private _router: Router, private _route: ActivatedRoute, messageService: MessageService) {
     super(messageService);
+
+    this.getCurrentUser().subscribe((user) => {
+      this.currentUser = user;
+    });
   }
 
 
