@@ -3,7 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, Clone, Dictionary, Funktion, InvalidOperationException, Types, Utility } from '@fluxgate/core';
+import { Assert, Clone, Dictionary, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
 
 import { CompoundValidator } from './../validation/compoundValidator';
 import { Validator } from './../validation/validator';

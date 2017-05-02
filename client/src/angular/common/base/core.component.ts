@@ -1,4 +1,4 @@
-import { EventEmitter, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 import 'rxjs/add/observable/from';

@@ -5,7 +5,7 @@
 require('reflect-metadata');
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { Column, ColumnTypes, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
 
