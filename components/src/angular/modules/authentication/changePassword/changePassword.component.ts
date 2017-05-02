@@ -99,6 +99,7 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
         this.password, this.passwordNew)
         .subscribe((user) => {
           log.info(`user = ${user}`);
+          this.addSuccessMessage('Password changed.');
 
           this.serviceRequests.setCurrent(user).subscribe((u) => {
             if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {

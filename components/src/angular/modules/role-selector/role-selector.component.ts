@@ -8,10 +8,10 @@ import { Router } from '@angular/router';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { MessageService, MetadataService } from '@fluxgate/client';
+import { DisplayInfo, MessageService, MetadataService } from '@fluxgate/client';
 import { IEntity, IRole } from '@fluxgate/common';
-import { IExtendedCrudServiceState, ItemsFoundCommand, ServiceCommand } from '@fluxgate/common';
-import { Utility } from '@fluxgate/core';
+import { CurrentItemSetCommand, IExtendedCrudServiceState, ItemsFoundCommand, ServiceCommand } from '@fluxgate/common';
+import { Assert, Utility, Types } from '@fluxgate/core';
 
 import { RoleSelectorServiceRequests } from '../../redux/role-selector-service-requests';
 import { SelectorBaseComponent } from '../common/selectorBase.component';
@@ -64,12 +64,26 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
     changeDetectorRef: ChangeDetectorRef) {
     super(router, metadataService, messageService, changeDetectorRef);
 
-    this.subscribeToStore(this.serviceRequests.storeId);
-    this.serviceRequests.find();
+    using(new XLog(RoleSelectorComponent.logger, levels.DEBUG, 'ctor'), (log) => {
 
-    this.style = {
-      width: '200px'
-    };
+      this.subscribeToStore(this.serviceRequests.storeId);
+      this.serviceRequests.find().subscribe((roles) => {
+        // ok: subscribe muss aufgerufen werden, damit der Call ausgeführt wird und die Roles geholt werden!
+
+        // default: erste Rolle selektiert
+        const role = Utility.isNullOrEmpty(roles) ? null : roles[0];
+
+        this.serviceRequests.setCurrent(role).subscribe((r) => {
+          if (log.isDebugEnabled()) {
+            log.log(`class: ${this.constructor.name}: role = ${JSON.stringify(r)}`);
+          }
+        });
+      });
+
+      this.style = {
+        width: '200px'
+      };
+    });
   }
 
   public validate(control: FormControl): { [key: string]: any } {
@@ -90,12 +104,11 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
     const state = this.getStoreState<IExtendedCrudServiceState<IRole, number>>(this.serviceRequests.storeId);
 
     if (command.storeId === this.serviceRequests.storeId) {
-      if (command instanceof ItemsFoundCommand) {
-        this.value = Utility.isNullOrEmpty(state.items) ? null : state.items[0];
-        this.roles = state.items;
+      if (command instanceof CurrentItemSetCommand) {
+        this.value = this.getValueForItem(state.currentItem);
       }
+
       if (command instanceof ItemsFoundCommand) {
-        this.value = Utility.isNullOrEmpty(state.items) ? null : state.items[0];
         this.roles = state.items;
       }
     }
@@ -105,11 +118,49 @@ export class RoleSelectorComponent extends SelectorBaseComponent<IRole> {
     using(new XLog(RoleSelectorComponent.logger, levels.DEBUG, 'onValueChange'), (log) => {
       super.onValueChange(value);
 
-      this.serviceRequests.setCurrent(value).subscribe((user) => {
+      this.serviceRequests.setCurrent(this.getItemForValue(value)).subscribe((item) => {
         if (log.isDebugEnabled()) {
-          log.log(`class: ${this.constructor.name}: user = ${JSON.stringify(user)}`);
+          log.log(`class: ${this.constructor.name}: item = ${JSON.stringify(item)}`);
         }
       });
     });
+  }
+
+
+  /**
+   *
+   * @param item TODO: in Basisklasse (ggf. abstrakt) verschieben
+   */
+  protected getValueForItem(item: IRole): any {
+    let rval: any;
+
+    if (!Types.isPresent(item)) {
+      return item;
+    }
+
+    if (this.valueField === DisplayInfo.CURRENT_ITEM) {
+      rval = item;
+    } else {
+      rval = item[this.valueField];
+    }
+
+    return rval;
+  }
+
+  protected getItemForValue(value: any): IRole {
+    let rval: any;
+
+    if (!Types.isPresent(value)) {
+      return value;
+    }
+
+    if (this.valueField === DisplayInfo.CURRENT_ITEM) {
+      rval = value;
+    } else {
+      rval = this.roles.find((elem) => elem[this.valueField] === value);
+      Assert.notNull(rval);
+    }
+
+    return rval;
   }
 }

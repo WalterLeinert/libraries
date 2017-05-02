@@ -66,10 +66,10 @@ import { RoleService } from '../role.service';
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="role">Role</label>
       <div class="col-sm-5">
-        <flx-dropdown-selector [dataService]="service2" [textField]="'description'" [valueField]="'id'" [(ngModel)]="user.role" formControlName="role"
+        <flx-role-selector styleClass="form-control" required [textField]="'description'" [valueField]="'id'" [(ngModel)]="user.role" formControlName="role"
           (valueChange)="onSelectedRoleChanged($event)"
-          [style]="{'width':'200px'}" [debug]="false" id="role">
-        </flx-dropdown-selector>
+          [debug]="false" [style]="{'width':'200px'}" [debug]="false" id="role">
+        </flx-role-selector>
       </div>
     </div>
     <div class="form-group row">
@@ -119,6 +119,7 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
       this.registerSubscription(this.service.signup(this.user)
         .subscribe((result) => {
           log.log(JSON.stringify(result));
+          this.addSuccessMessage('User created.');
 
           this.serviceRequests.setCurrent(result).subscribe((user) => {
             this.resetForm();

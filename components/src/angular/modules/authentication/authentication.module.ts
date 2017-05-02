@@ -14,7 +14,7 @@ import { CurrentUserServiceRequestsModule } from '../../redux/current-user-servi
 import { RoleServiceRequestsModule } from '../../redux/role-service-requests';
 import { AutofocusModule } from '../directives/autofocus.directive';
 import { HighlightModule } from '../directives/highlight.directive';
-import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
+import { RoleSelectorModule } from '../role-selector/role-selector.module';
 // import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { ChangePasswordComponent } from './changePassword/changePassword.component';
 import { LoginComponent } from './login/login.component';
@@ -34,7 +34,7 @@ import { RoleService } from './role.service';
     ConfirmDialogModule,
     HighlightModule,
     AutofocusModule,
-    DropdownSelectorModule,
+    RoleSelectorModule,
     CurrentUserServiceRequestsModule,
     RoleServiceRequestsModule
     // AuthenticationRoutingModule
