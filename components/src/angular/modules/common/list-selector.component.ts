@@ -255,6 +255,15 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    * @memberOf DataTableSelectorComponent
    */
   protected preselectData() {
+    const trueValue = true;
+
+    // TODO: als workaround deaktivieren wegen:
+    // "...ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.""
+    if (trueValue) {
+      return;
+    }
+
+
     if (!this.isPreselecting) {
       this.isPreselecting = true;
 
