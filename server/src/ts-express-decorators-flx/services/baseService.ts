@@ -292,11 +292,8 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
 
             log.debug(`query prepared for updating version in table ${this.tableName}`);
 
-            // query zum Inkrement der Version
-            entityversionQuery = this.knexService.knex.table('entityversion')
-              .where('entityversion_id', '=', this.tableName)
-              .increment('entityversion_version', 1)
-              .transacting(trx);
+            // query zum Inkrement der Version in Tabelle entityversion
+            entityversionQuery = this.createEntityVersionIncrement(trx);
 
             log.debug(`query prepared for updating version in entityversion for table ${this.tableName}`);
           }
@@ -324,11 +321,6 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                       log.error(exc);
                       reject(exc);
                     } else {
-
-                      this.knexService.knex
-                        .update({ entitversion_version: dbSubject[this.metadata.versionColumn.options.name] })
-                        .transacting(trx)
-                        .where('entitversion_id', '=', this.tableName);
 
                       subject = this.createModelInstance(dbSubject);
 
@@ -609,6 +601,23 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
     return this.metadata.options.name;
   }
 
+
+  /**
+   * Liefert eine Query, die für die aktuelle Transaktion @param{trx} und Tabelle die
+   * Version in der Tabelle 'entityversion' um eins erhöht.
+   *
+   * @private
+   * @param {Knex.Transaction} trx
+   * @returns {Knex.QueryBuilder}
+   *
+   * @memberof BaseService
+   */
+  private createEntityVersionIncrement(trx: Knex.Transaction): Knex.QueryBuilder {
+    return this.knexService.knex.table('entityversion')
+      .where('entityversion_id', '=', this.tableName)
+      .increment('entityversion_version', 1)
+      .transacting(trx);
+  }
 
 
   /**
