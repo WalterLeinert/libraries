@@ -7,6 +7,7 @@ export * from './enumTableOptions.interface';
 export * from './table';
 export * from './tableOptions.interface';
 export * from './table-service';
+export * from './table-service-requests';
 export * from './test';
 export * from './validation';
 export * from './version';
