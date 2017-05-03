@@ -1,7 +1,9 @@
-import { Assert, Dictionary, Funktion } from '@fluxgate/core';
+import { Assert, Dictionary, Funktion, IToString } from '@fluxgate/core';
 
+import { ICrudServiceRequests } from '../../redux/service-requests/crud-service-requests.interface';
 import { EnumTableOptions } from '../decorator/model/enumTableOptions';
 import { TableOptions } from '../decorator/model/tableOptions.interface';
+import { IEntity } from '../entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { EnumTableService } from '../service/enumTableService';
 import { IServiceCrud } from '../service/serviceCrud.interface';
@@ -224,12 +226,17 @@ export abstract class TableMetadata {
    *
    * @memberOf TableMetadata
    */
-  public getServiceInstance(injector: any): IServiceCrud<any, any> {
+  public getServiceInstance<T, TId>(injector: any): IServiceCrud<T, TId> {
     if (this.options instanceof EnumTableOptions) {
       return new EnumTableService(this, this.options.enumValues);
     } else {
       return injector.get(this.serviceClazz);
     }
+  }
+
+  public getServiceRequestsInstance<T extends IEntity<TId>, TId extends IToString>(injector: any):
+    ICrudServiceRequests<T, TId> {
+    return injector.get(this.serviceRequestsClazz);
   }
 
 
@@ -256,5 +263,16 @@ export abstract class TableMetadata {
    * Registriert die zugehörigen Serviceklasse (Class/Constructor Function)
    */
   protected abstract registerServiceClazz(serviceClazz: Funktion);
+
+
+  /**
+   * Liefert die zugehörige ServiceRequests-Klasse (oder undefined)
+   */
+  protected abstract get serviceRequestsClazz(): Funktion;
+
+  /**
+   * Registriert die zugehörigen ServiceRequests-Klasse (Class/Constructor Function)
+   */
+  protected abstract registerServiceRequestsClazz(serviceRequestsClazz: Funktion);
 
 }

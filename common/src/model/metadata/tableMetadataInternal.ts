@@ -13,6 +13,7 @@ import { TableMetadata } from './tableMetadata';
  */
 export class TableMetadataInternal extends TableMetadata {
   private _serviceClazz: Funktion;
+  private _serviceRequestsClazz: Funktion;
 
   constructor(target: Funktion, options: TableOptions | EnumTableOptions) {
     super(target, options);
@@ -25,11 +26,23 @@ export class TableMetadataInternal extends TableMetadata {
     return this._serviceClazz;
   }
 
+
+  /**
+   * Liefert die zugehörige ServiceRequests-Klasse (oder undefined)
+   */
+  public get serviceRequestsClazz(): Funktion {
+    return this._serviceRequestsClazz;
+  }
+
   /**
    * Registriert die zugehörigen Serviceklasse (Class/Constructor Function)
    */
   public registerServiceClazz(serviceClazz: Funktion) {
     this._serviceClazz = serviceClazz;
+  }
+
+  public registerServiceRequestsClazz(serviceRequestsClazz: Funktion) {
+    this._serviceRequestsClazz = serviceRequestsClazz;
   }
 
 }
