@@ -57,7 +57,6 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
     this._tableMetadata = this.metadataService.findTableMetadata(model);
     Assert.notNull(this._tableMetadata);
 
-    this._tableMetadata.registerService(this.constructor);
     this.serializer = new Serializer<T>(this.tableMetadata);
   }
 
