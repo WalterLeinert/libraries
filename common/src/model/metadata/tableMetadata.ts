@@ -13,13 +13,13 @@ import { SpecialColumns } from './specialColumns';
  * @export
  * @class TableMetadata
  */
-export class TableMetadata {
+export abstract class TableMetadata {
   private _columnMetadata: ColumnMetadata[] = [];
   private propertyMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   // private _primaryKeyColumn: ColumnMetadata;
   private _specialColMap: Dictionary<SpecialColumns, ColumnMetadata> = new Dictionary<SpecialColumns, ColumnMetadata>();
-  private _service: Funktion;
+
 
 
   /**
@@ -31,7 +31,7 @@ export class TableMetadata {
    *
    * @memberOf TableMetadata
    */
-  constructor(public target: Funktion, public options: TableOptions | EnumTableOptions) {
+  protected constructor(public target: Funktion, public options: TableOptions | EnumTableOptions) {
   }
 
   /**
@@ -212,13 +212,6 @@ export class TableMetadata {
   }
 
 
-  /**
-   * Registriert den zugehörigen Service (Class/Constructor Function)
-   */
-  public registerService(service: Funktion) {
-    this._service = service;
-  }
-
 
   /**
    * Liefert eine zugehörige Serviceinstanz.
@@ -235,7 +228,7 @@ export class TableMetadata {
     if (this.options instanceof EnumTableOptions) {
       return new EnumTableService(this, this.options.enumValues);
     } else {
-      return injector.get(this._service);
+      return injector.get(this.serviceClazz);
     }
   }
 
@@ -252,5 +245,16 @@ export class TableMetadata {
     this.columnMetadata.forEach((column) => map[column.propertyName] = column.propertyName);
     return map;
   }
+
+
+  /**
+   * Liefert die zugehörige Serviceklasse (oder undefined)
+   */
+  protected abstract get serviceClazz(): Funktion;
+
+  /**
+   * Registriert die zugehörigen Serviceklasse (Class/Constructor Function)
+   */
+  protected abstract registerServiceClazz(serviceClazz: Funktion);
 
 }

@@ -1,7 +1,7 @@
 import { Funktion } from '@fluxgate/core';
 
 import { MetadataStorage } from '../../metadata/metadataStorage';
-import { TableMetadata } from '../../metadata/tableMetadata';
+import { TableMetadataInternal } from '../../metadata/tableMetadataInternal';
 
 import { TableOptions } from './tableOptions.interface';
 
@@ -26,6 +26,6 @@ export function Table(options?: TableOptions) {
       options.isView = false;
     }
 
-    MetadataStorage.instance.addTableMetadata(new TableMetadata(target, options));
+    MetadataStorage.instance.addTableMetadata(new TableMetadataInternal(target, options));
   };
 }
