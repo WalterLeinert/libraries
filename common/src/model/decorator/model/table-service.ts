@@ -18,7 +18,7 @@ export function TableService(modelClazz: Funktion) {
     Assert.notNull(modelClazz);
 
     const tableMetadata = MetadataStorage.instance.findTableMetadata(modelClazz) as TableMetadataInternal;
-    Assert.notNull(tableMetadata, `Modelclass ${modelClazz.name} not found. No @Table decorator?`);
+    Assert.notNull(tableMetadata, `Modelclass ${modelClazz.name} not found. @Table decorator missing?`);
     tableMetadata.registerServiceClazz(target);
   };
 }
