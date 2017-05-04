@@ -26,7 +26,7 @@ import { ReduxBaseTest } from './redux-base-test.spec';
  */
 @ReduxParentStore(() => UserStore)
 export class UserSelectorStore extends CommandStore<IExtendedCrudServiceState<IUser, number>> {
-  public static ID = 'userSelectorStore';
+  public static ID = 'userSelector';
 
   constructor(parent?: CommandStore<IExtendedCrudServiceState<IUser, number>>) {
     super(UserSelectorStore.ID, ExtendedCrudServiceRequests.INITIAL_STATE, parent);

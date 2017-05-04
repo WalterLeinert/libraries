@@ -6,7 +6,7 @@ import { CrudServiceRequests } from './../service-requests/crud-service-requests
 
 @ReduxStore()
 export class RoleStore extends CommandStore<ICrudServiceState<IRole, number>> {
-  public static ID = 'roleStore';
+  public static ID = 'role';
 
   constructor() {
     super(RoleStore.ID, CrudServiceRequests.INITIAL_STATE);

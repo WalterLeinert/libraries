@@ -21,7 +21,7 @@ import { CommandStore } from '../store';
  */
 @ReduxStore()
 export class CurrentUserStore extends CommandStore<ICurrentItemServiceState<IUser, number>> {
-  public static ID = 'currentUserStore';
+  public static ID = 'currentUser';
 
   constructor() {
     super(CurrentUserStore.ID, CurrentItemServiceRequests.INITIAL_STATE);

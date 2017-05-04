@@ -16,7 +16,7 @@ import { ReduxBaseTest } from './redux-base-test.spec';
 
 @ReduxParentStore(() => RoleStore)
 export class RoleSelectorStore1 extends CommandStore<IServiceState> {
-  public static ID = 'roleSelectorStore1';
+  public static ID = 'roleSelector1';
 
   constructor(parent?: CommandStore<IServiceState>) {
     super(RoleSelectorStore1.ID, ServiceRequests.INITIAL_STATE, parent);
@@ -25,7 +25,7 @@ export class RoleSelectorStore1 extends CommandStore<IServiceState> {
 
 @ReduxParentStore(() => RoleStore)
 export class RoleSelectorStore2 extends CommandStore<IServiceState> {
-  public static ID = 'roleSelectorStore2';
+  public static ID = 'roleSelector2';
 
   constructor(parent?: CommandStore<IServiceState>) {
     super(RoleSelectorStore2.ID, ServiceRequests.INITIAL_STATE, parent);
