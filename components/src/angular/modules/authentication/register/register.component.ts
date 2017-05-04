@@ -12,15 +12,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // fluxgate
-import { Base2Component, MessageService, MetadataService } from '@fluxgate/client';
-import { IRole, User } from '@fluxgate/common';
+import { BaseComponent, MessageService, MetadataService } from '@fluxgate/client';
+import { IRole, User, UserRoleId } from '@fluxgate/common';
 import { Assert, Types } from '@fluxgate/core';
-
-import { CurrentUserServiceRequests } from '../../../redux/current-user-service-requests';
 import { AuthenticationNavigation, AuthenticationNavigationToken } from '../authenticationNavigation';
 import { PassportService } from '../passport.service';
-import { RoleService } from '../role.service';
-
 
 @Component({
   selector: 'flx-register',
@@ -92,23 +88,23 @@ import { RoleService } from '../role.service';
 }
 `]
 })
-export class RegisterComponent extends Base2Component<PassportService, RoleService> {
+export class RegisterComponent extends BaseComponent<PassportService> {
   protected static logger = getLogger(RegisterComponent);
 
   public user: User;
-  public selectedRole: IRole;
 
-  constructor(private serviceRequests: CurrentUserServiceRequests,
+  constructor(
     private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
     @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation, service: PassportService,
-    roleService: RoleService, metadataService: MetadataService, injector: Injector) {
+    metadataService: MetadataService, injector: Injector) {
 
-    super(router, route, messageService, service, roleService);
+    super(router, route, messageService, service);
 
     const userTableMetadata = metadataService.findTableMetadata(User);
-    Assert.notNull(userTableMetadata, `Metadaten f�r Tabelle ${User.name}`);
+    Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name}`);
 
     this.user = userTableMetadata.createEntity<User>();
+    this.user.role = UserRoleId.User;
 
     const displayInfos = this.createDisplayInfos(this.user, User, metadataService, injector);
     this.buildForm(this.fb, this.user, displayInfos, userTableMetadata);
@@ -121,16 +117,12 @@ export class RegisterComponent extends Base2Component<PassportService, RoleServi
           log.log(JSON.stringify(result));
           this.addSuccessMessage('User created.');
 
-          this.serviceRequests.setCurrent(result).subscribe((user) => {
-            this.resetForm();
-
-            if (Types.isPresent(this.authenticationNavigation.registerRedirectUrl)) {
-              this.navigate([
-                this.authenticationNavigation.registerRedirectUrl
-              ]);
-            }
-          });
-
+          this.resetForm();
+          if (Types.isPresent(this.authenticationNavigation.registerRedirectUrl)) {
+            this.navigate([
+              this.authenticationNavigation.registerRedirectUrl
+            ]);
+          }
         },
         (error: Error) => {
           this.handleError(error);
