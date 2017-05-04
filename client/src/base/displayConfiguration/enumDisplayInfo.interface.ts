@@ -1,14 +1,14 @@
-import { IServiceCrud } from '@fluxgate/common';
+import { ICrudServiceRequests, IServiceCrud } from '@fluxgate/common';
 import { IDisplayInfo } from './displayInfo.interface';
 
 export interface IEnumDisplayInfo extends IDisplayInfo {
 
   /**
-   * Liefert die zugehörige Service-Instanz, falls der @see{controlType} den
+   * Liefert die zugehörige ServiceRequests-Instanz, falls der @see{controlType} den
    * Wert @see{ControlType.DropdownSelector} hat.
    *
    * @type {*}
    * @memberOf IControlDisplayInfo
    */
-  selectorDataService?: IServiceCrud<any, any>;
+  selectorDataServiceRequests?: ICrudServiceRequests<any, any>;
 }

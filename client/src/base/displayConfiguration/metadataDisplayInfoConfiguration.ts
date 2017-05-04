@@ -75,7 +75,7 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
 
           const enumTableMetadata = this.metadataService.findTableMetadata(colMetaData.enumMetadata.dataSource);
           displayInfo.enumInfo = {
-            selectorDataService: enumTableMetadata.getServiceInstance(this.injector),
+            selectorDataServiceRequests: enumTableMetadata.getServiceRequestsInstance(this.injector),
             textField: colMetaData.enumMetadata.textField,
             valueField: colMetaData.enumMetadata.valueField
           };
@@ -107,7 +107,7 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
 
           const enumTableMetadata = this.metadataService.findTableMetadata(metaData.enumMetadata.dataSource);
           enumInfo = {
-            selectorDataService: enumTableMetadata.getServiceInstance(this.injector),
+            selectorDataServiceRequests: enumTableMetadata.getServiceRequestsInstance(this.injector),
             textField: metaData.enumMetadata.textField,
             valueField: metaData.enumMetadata.valueField
           };
