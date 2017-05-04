@@ -2,6 +2,7 @@
 // tslint:disable:max-line-length
 
 // Angular
+import { Location } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -71,7 +72,8 @@ import { PassportService } from '../passport.service';
     <div class="form-group row">
       <div class="col-sm-5">
         <!-- disabled Steuerung nach Umbau von flx-dropdown auf getForm().invalid umbauen -->
-        <button type="submit" class="btn btn-primary" [disabled]="isRegisterDisabled()" (click)='signup()'>Register</button>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid" (click)='signup()'>Register</button>
+        <button type="submit" class="btn" (click)='cancel()'>Abbrechen</button>
       </div>
     </div>
 
@@ -94,7 +96,7 @@ export class RegisterComponent extends BaseComponent<PassportService> {
   public user: User;
 
   constructor(
-    private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
+    private fb: FormBuilder, router: Router, route: ActivatedRoute, private location: Location, messageService: MessageService,
     @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation, service: PassportService,
     metadataService: MetadataService) {
 
@@ -140,5 +142,13 @@ export class RegisterComponent extends BaseComponent<PassportService> {
       this.isFormControlInvalid('password') ||
       this.isFormControlInvalid('email')
     );
+  }
+
+  public cancel() {
+    if (Types.isPresent(this.authenticationNavigation.registerRedirectUrl)) {
+      this.navigate([this.authenticationNavigation.registerRedirectUrl]);
+    } else {
+      this.location.back();
+    }
   }
 }
