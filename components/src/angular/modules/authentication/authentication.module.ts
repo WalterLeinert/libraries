@@ -11,6 +11,7 @@ import { MessagesModule } from 'primeng/components/messages/messages';
 import { ConfigService, CurrentUserService, MessageService, MetadataService } from '@fluxgate/client';
 
 import { CurrentUserServiceRequestsModule } from '../../redux/current-user-service-requests';
+import { RoleServiceRequestsModule } from '../../redux/role-service-requests';
 import { AutofocusModule } from '../directives/autofocus.directive';
 import { HighlightModule } from '../directives/highlight.directive';
 import { RoleSelectorModule } from '../role-selector/role-selector.module';
@@ -32,6 +33,7 @@ import { RegisterComponent } from './register/register.component';
     ConfirmDialogModule,
     HighlightModule,
     AutofocusModule,
+    RoleServiceRequestsModule,
     RoleSelectorModule,
     CurrentUserServiceRequestsModule
     // AuthenticationRoutingModule

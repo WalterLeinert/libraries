@@ -2,7 +2,7 @@
 // tslint:disable:max-line-length
 
 // Angular
-import { Component, Inject, Injector } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -96,7 +96,7 @@ export class RegisterComponent extends BaseComponent<PassportService> {
   constructor(
     private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
     @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation, service: PassportService,
-    metadataService: MetadataService, injector: Injector) {
+    metadataService: MetadataService) {
 
     super(router, route, messageService, service);
 
@@ -106,7 +106,7 @@ export class RegisterComponent extends BaseComponent<PassportService> {
     this.user = userTableMetadata.createEntity<User>();
     this.user.role = UserRoleId.User;
 
-    const displayInfos = this.createDisplayInfos(this.user, User, metadataService, injector);
+    const displayInfos = this.createDisplayInfos(this.user, User, metadataService);
     this.buildForm(this.fb, this.user, displayInfos, userTableMetadata);
   }
 
