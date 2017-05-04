@@ -6,7 +6,7 @@ import {
 
 
 /**
- * CommandStore für einen User-Selector: hat zusätzlich zum RoleStore noch currentItem
+ * CommandStore für einen User-Selector: hat zusätzlich zum UserStore noch currentItem
  *
  * @export
  * @class UserSelectorStore
@@ -16,7 +16,7 @@ import {
 export class UserSelectorStore extends CommandStore<IExtendedCrudServiceState<IUser, number>> {
   public static ID = 'userSelectorStore';
 
-  constructor() {
-    super(UserSelectorStore.ID, ExtendedCrudServiceRequests.INITIAL_STATE);
+  constructor(parent?: CommandStore<IExtendedCrudServiceState<IUser, number>>) {
+    super(UserSelectorStore.ID, ExtendedCrudServiceRequests.INITIAL_STATE, parent);
   }
 }

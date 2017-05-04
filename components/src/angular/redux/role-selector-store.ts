@@ -16,7 +16,7 @@ import {
 export class RoleSelectorStore extends CommandStore<IExtendedCrudServiceState<IRole, number>> {
   public static ID = 'roleSelectorStore';
 
-  constructor() {
-    super(RoleSelectorStore.ID, ExtendedCrudServiceRequests.INITIAL_STATE);
+  constructor(parent?: CommandStore<IExtendedCrudServiceState<IRole, number>>) {
+    super(RoleSelectorStore.ID, ExtendedCrudServiceRequests.INITIAL_STATE, parent);
   }
 }
