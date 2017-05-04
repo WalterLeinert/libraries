@@ -3,7 +3,7 @@ import { Http } from '@angular/http';
 
 // Fluxgate
 import { ConfigService, MetadataService, Service } from '@fluxgate/client';
-import { Role } from '@fluxgate/common';
+import { Role, TableService } from '@fluxgate/common';
 
 
 /**
@@ -14,6 +14,7 @@ import { Role } from '@fluxgate/common';
  * @extends {Service<Role>}
  */
 @Injectable()
+@TableService(Role)
 export class RoleService extends Service<Role, number> {
 
   constructor(metadataService: MetadataService, http: Http, configService: ConfigService) {

@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
 
 // Fluxgate
 import { ConfigService, MetadataService, Service } from '@fluxgate/client';
-import { User } from '@fluxgate/common';
+import { TableService, User } from '@fluxgate/common';
 
 
 /**
@@ -19,6 +19,7 @@ import { User } from '@fluxgate/common';
  * @extends {Service<User>}
  */
 @Injectable()
+@TableService(User)
 export class UserService extends Service<User, number> {
 
   constructor(metadataService: MetadataService, http: Http, configService: ConfigService) {
