@@ -17,11 +17,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import {
   Assert, CustomSubject, Dictionary, Funktion, IMessage,
-  MessageSeverity, ServerBusinessException, UniqueIdentifiable, Utility
+  MessageSeverity, ServerBusinessException, Types, UniqueIdentifiable, Utility
 } from '@fluxgate/core';
 
 import {
-  CompoundValidator, CurrentUserStore, ICurrentItemServiceState, IEntity, IServiceState,
+  CompoundValidator, CurrentItemSetCommand, CurrentUserStore, ICurrentItemServiceState, IEntity, IServiceState,
   IUser, PatternValidator, RangeValidator,
   RequiredValidator, ServiceCommand, Store, TableMetadata
 } from '@fluxgate/common';
@@ -626,6 +626,16 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
       const state = this.getStoreState(command.storeId);
       if (state.error) {
         log.error(`${state.error}`);
+      }
+
+      if (command.storeId === CurrentUserStore.ID && command instanceof CurrentItemSetCommand) {
+        const userState = state as ICurrentItemServiceState<IUser, number>;
+
+        // beim Logoff wird der Store zurückgesetzt, damit wir nicht beim nächsten Userlogin
+        // falsche oder eigentlich nicht verfügbare (Security) Daten übernehmen
+        if (!Types.isPresent(userState.currentItem)) {
+          this.resetStore();
+        }
       }
     });
   }
