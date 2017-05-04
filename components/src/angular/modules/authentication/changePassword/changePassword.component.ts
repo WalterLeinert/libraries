@@ -1,6 +1,7 @@
 /* tslint:disable:use-life-cycle-interface -> BaseComponent */
 
 // import 'reflect-metadata';
+import { Location } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -82,7 +83,7 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   public passwordNewRepeated: string;
 
   constructor(private fb: FormBuilder, private serviceRequests: CurrentUserServiceRequests,
-    router: Router, route: ActivatedRoute, messageService: MessageService,
+    router: Router, route: ActivatedRoute, private location: Location, messageService: MessageService,
     @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation,
     service: PassportService) {
     super(router, route, messageService, service);
@@ -112,6 +113,8 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
           this.serviceRequests.setCurrent(user).subscribe((u) => {
             if (Types.isPresent(this.authenticationNavigation.changePasswordRedirectUrl)) {
               this.navigate([this.authenticationNavigation.changePasswordRedirectUrl]);
+            } else {
+              this.location.back();
             }
           });
 
@@ -126,6 +129,8 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   public cancel() {
     if (Types.isPresent(this.authenticationNavigation.changePasswordRedirectUrl)) {
       this.navigate([this.authenticationNavigation.changePasswordRedirectUrl]);
+    } else {
+      this.location.back();
     }
   }
 }
