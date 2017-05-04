@@ -15,6 +15,6 @@ export const AuthenticationNavigationToken = new InjectionToken<AuthenticationNa
 export class AuthenticationNavigation {
   public loginRedirectUrl: string;
   public registerRedirectUrl?: string;
-  public logoutRedirectUrl: string;
+  public logoutRedirectUrl?: string;
   public changePasswordRedirectUrl?: string;
 }
