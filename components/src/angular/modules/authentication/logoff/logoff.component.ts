@@ -45,6 +45,8 @@ export class LogoffComponent extends BaseComponent<PassportService> {
           this.serviceRequests.setCurrent(null).subscribe((user) => {
             if (Types.isPresent(this.authenticationNavigation.logoutRedirectUrl)) {
               this.navigate([this.authenticationNavigation.logoutRedirectUrl]);
+            } else {
+              this.navigate(['/']);
             }
           });
 
