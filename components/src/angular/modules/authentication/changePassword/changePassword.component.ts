@@ -57,7 +57,8 @@ import { PassportService } from '../passport.service';
 
     <div class="form-group row">
       <div class="btn-group">
-        <button type="submit" class="btn btn-primary" (click)='changePassword()'>Ändern</button>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid"
+          (click)='changePassword()'>Ändern</button>
         <button type="submit" class="btn" (click)='cancel()'>Abbrechen</button>
       </div>
     </div>
@@ -101,10 +102,12 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
     using(new XLog(ChangePasswordComponent.logger, levels.INFO, 'changePassword'), (log) => {
       if (this.password === this.passwordNew) {
         super.addInfoMessage(`Altes und neues Kennwort müssen unterschiedlich sein.`);
+        this.resetForm();
         return;
       }
       if (this.passwordNew !== this.passwordNewRepeated) {
         super.addInfoMessage(`Die Kennworte stimmen nicht überein.`);
+        this.resetForm();
         return;
       }
 
