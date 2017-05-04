@@ -93,7 +93,7 @@ export class PassportLocalService {
       .use('changePassword', new Strategy({
         // by default, local strategy uses username and password, we will override with email
         usernameField: 'username',
-        passwordField: 'password',
+        passwordField: 'passwordNew',
         passReqToCallback: true // allows us to pass back the entire request to the callback
       },
         (req, username, password, done) => {
