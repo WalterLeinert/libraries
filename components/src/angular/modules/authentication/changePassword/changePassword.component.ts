@@ -99,6 +99,10 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
 
   public changePassword() {
     using(new XLog(ChangePasswordComponent.logger, levels.INFO, 'changePassword'), (log) => {
+      if (this.password === this.passwordNew) {
+        super.addInfoMessage(`Altes und neues Kennwort müssen unterschiedlich sein.`);
+        return;
+      }
       if (this.passwordNew !== this.passwordNewRepeated) {
         super.addInfoMessage(`Die Kennworte stimmen nicht überein.`);
         return;
