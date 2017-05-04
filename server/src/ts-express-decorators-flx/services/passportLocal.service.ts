@@ -93,7 +93,7 @@ export class PassportLocalService {
       .use('changePassword', new Strategy({
         // by default, local strategy uses username and password, we will override with email
         usernameField: 'username',
-        passwordField: 'passwordNew',
+        passwordField: 'password',
         passReqToCallback: true // allows us to pass back the entire request to the callback
       },
         (req, username, password, done) => {
@@ -181,16 +181,28 @@ export class PassportLocalService {
               return done(Messages.USER_DOES_NOT_EXIST(username), false);
             }
 
-            // neues Passwort übernehmen
-            user.password = password;
+            // aktuelle credentials prüfen
+            this.userService.findByCredentialUsername(username, password)
+              .then((usr) => {
+                if (!usr) {
+                  return done(null, false);
+                }
 
-            // Create new User
-            this.userService.changePassword(user)
-              .then((changedUser) => {
-                changedUser.resetCredentials();
+                // neues Passwort übernehmen
+                user.password = req.body.passwordNew;
 
-                log.log(`user updated: ${changedUser}`);
-                done(null, changedUser);
+                // Create new User
+                this.userService.changePassword(user)
+                  .then((changedUser) => {
+                    changedUser.resetCredentials();
+
+                    log.log(`user updated: ${changedUser}`);
+                    done(null, changedUser);
+                  });
+              })
+              .catch((err) => {
+                log.error(err);
+                done(err, false);
               });
 
           });
