@@ -24,7 +24,7 @@ import { PassportService } from '../passport.service';
 <div class="container">
   <h1>Register</h1>
 
-  <form [formGroup]="getForm()">
+  <form [formGroup]="form">
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="username">Username</label>
       <div class="col-sm-5">
