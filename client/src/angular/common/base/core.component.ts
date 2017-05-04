@@ -1,4 +1,4 @@
-import { Injector, OnDestroy, OnInit } from '@angular/core';
+import { OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 import 'rxjs/add/observable/from';
@@ -274,15 +274,15 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   }
 
 
-  protected createDisplayInfos(item: any, model: Funktion, metadataService: MetadataService, injector: Injector):
+  protected createDisplayInfos(item: any, model: Funktion, metadataService: MetadataService):
     IControlDisplayInfo[] {
     Assert.notNull(item);
     Assert.notNull(model);
     Assert.notNull(metadataService);
-    Assert.notNull(injector);
 
     const tableMetadata = metadataService.findTableMetadata(model);
-    const configurator = new MetadataDisplayInfoConfiguration(tableMetadata, metadataService, injector);
+    const configurator = new MetadataDisplayInfoConfiguration(tableMetadata, metadataService,
+      AppInjector.instance.getInjector());
     return configurator.createConfig(item);
   }
 
@@ -296,19 +296,18 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @param {FormBuilder} formBuilder
    * @param {Funktion} model
    * @param {MetadataService} metadataService
-   * @param {Injector} injector
    * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
    * @returns {T}
    *
    * @memberOf CoreComponent
    */
   protected buildFormFromModel<T>(formBuilder: FormBuilder, clazz: Funktion, metadataService: MetadataService,
-    injector: Injector, groupName: string = FormGroupInfo.DEFAULT_NAME): T {
+    groupName: string = FormGroupInfo.DEFAULT_NAME): T {
     const tableMetadata = metadataService.findTableMetadata(clazz);
     Assert.notNull(tableMetadata, `Metadaten für Tabelle ${clazz.name}`);
 
     const obj = tableMetadata.createEntity<T>();
-    const displayInfos = this.createDisplayInfos(obj, clazz, metadataService, injector);
+    const displayInfos = this.createDisplayInfos(obj, clazz, metadataService);
     this.buildForm(formBuilder, obj, displayInfos, tableMetadata, groupName);
 
     return obj;
