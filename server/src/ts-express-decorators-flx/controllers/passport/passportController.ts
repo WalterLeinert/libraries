@@ -168,14 +168,7 @@ export class PassportController {
                 return reject(err);
               }
 
-              request.logIn(changedUser, (loginErr) => {
-                if (loginErr) {
-                  return reject(this.createBusinessException(loginErr));
-                }
-
-                changedUser.resetCredentials();
-                resolve(changedUser);
-              });
+              resolve(changedUser);
 
             })(request, response, next);
         } catch (err) {
