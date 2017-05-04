@@ -219,7 +219,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
 
   protected setupConfig(items: any[], tableMetadata: TableMetadata) {
     using(new XLog(DropdownSelectorComponent.logger, levels.DEBUG, 'setupConfig'), (log) => {
-      if (log.isDebugEnabled) {
+      if (log.isDebugEnabled()) {
         log.log(`no of items = ${items ? items.length : 'undefined'},` +
           ` tableMetadata = ${tableMetadata ? tableMetadata.className : 'undefined'}`);
       }
@@ -300,7 +300,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
         this.configInternal.allowNoSelectionText = this.allowNoSelectionText;
       }
 
-      if (log.isDebugEnabled) {
+      if (log.isDebugEnabled()) {
         log.log(`configInternal : ${JSON.stringify(this.configInternal)}`);
       }
     });
