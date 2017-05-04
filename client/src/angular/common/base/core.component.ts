@@ -508,6 +508,23 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     return null;
   }
 
+  /**
+   * Fügt die @see{FormGroup} für den Namen @param{groupName} hinzu.
+   *
+   * @protected
+   * @param {FormGroup} formGroup neue FormGroup
+   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
+   * @returns {FormGroup}
+   *
+   * @memberOf CoreComponent
+   */
+  protected addForm(formGroup: FormGroup, groupName: string = FormGroupInfo.DEFAULT_NAME) {
+    Assert.notNull(formGroup);
+
+    const formInfo = new FormGroupInfo(formGroup);
+    this.formInfos.set(groupName, formInfo);
+  }
+
 
   /**
    * Liefert die default FormGroup

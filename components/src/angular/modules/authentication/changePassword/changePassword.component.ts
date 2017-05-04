@@ -2,6 +2,7 @@
 
 // import 'reflect-metadata';
 import { Component, Inject } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // -------------------------- logging -------------------------------
@@ -76,16 +77,23 @@ import { PassportService } from '../passport.service';
 export class ChangePasswordComponent extends BaseComponent<PassportService> {
   protected static logger = getLogger(ChangePasswordComponent);
 
-  public username: string;
   public password: string;
   public passwordNew: string;
   public passwordNewRepeated: string;
 
-  constructor(private serviceRequests: CurrentUserServiceRequests,
+  constructor(private fb: FormBuilder, private serviceRequests: CurrentUserServiceRequests,
     router: Router, route: ActivatedRoute, messageService: MessageService,
     @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation,
     service: PassportService) {
     super(router, route, messageService, service);
+
+    const form = fb.group({
+      password: [undefined, Validators.required],
+      passwordNew: [undefined, Validators.required],
+      passwordNewRepeated: [undefined, Validators.required],
+    });
+
+    this.addForm(form);
   }
 
   public changePassword() {
@@ -102,8 +110,8 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
           this.addSuccessMessage('Password changed.');
 
           this.serviceRequests.setCurrent(user).subscribe((u) => {
-            if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
-              this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);
+            if (Types.isPresent(this.authenticationNavigation.changePasswordRedirectUrl)) {
+              this.navigate([this.authenticationNavigation.changePasswordRedirectUrl]);
             }
           });
 
@@ -116,8 +124,8 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
 
 
   public cancel() {
-    if (Types.isPresent(this.authenticationNavigation.changeUserRedirectUrl)) {
-      this.navigate([this.authenticationNavigation.changeUserRedirectUrl]);
+    if (Types.isPresent(this.authenticationNavigation.changePasswordRedirectUrl)) {
+      this.navigate([this.authenticationNavigation.changePasswordRedirectUrl]);
     }
   }
 }

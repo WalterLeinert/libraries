@@ -1,7 +1,7 @@
 import { FormGroup } from '@angular/forms';
 
 // Fluxgate
-import { Clone } from '@fluxgate/core';
+import { Assert, Clone } from '@fluxgate/core';
 
 
 export interface IMessageDict {
@@ -24,6 +24,18 @@ export class FormGroupInfo {
   private errors: IMessageDict = {};
   private validationMessages: { [key: string]: IMessageDict } = {};
 
+  public constructor(form?: FormGroup) {
+    if (form) {
+      this.setFormGroup(form);
+    }
+  }
+
+  public setFormGroup(formGroup: FormGroup) {
+    this._form = formGroup;
+    this._form.valueChanges.subscribe((data) => this.onValueChanged(data));
+    this.onValueChanged();
+  }
+
   public hasChanges(): boolean {
     return this._form && this._form.dirty;
   }
@@ -45,13 +57,6 @@ export class FormGroupInfo {
     this.validationMessages[valueField] = messages;
     this.errors[valueField] = '';
   }
-
-  public setFormGroup(formGroup: FormGroup) {
-    this._form = formGroup;
-    this._form.valueChanges.subscribe((data) => this.onValueChanged(data));
-    this.onValueChanged();
-  }
-
 
   public updateFormErrors() {
     if (!this._form) {
@@ -95,6 +100,7 @@ export class FormGroupInfo {
   public getFormErrors(controlName: string): string {
     return this.errors[controlName];
   }
+
 
   private onValueChanged(dataa?: any) {
     this.updateFormErrors();
