@@ -28,7 +28,7 @@ import { PassportService } from '../passport.service';
 
   <p-messages [value]="messages"></p-messages>
 
-  <form>
+  <form [formGroup]="form">
     <div class="form-group row">
       <label class="col-form-label col-sm-2" for="password">Aktuelles Kennwort</label>
       <div class="col-sm-5">
