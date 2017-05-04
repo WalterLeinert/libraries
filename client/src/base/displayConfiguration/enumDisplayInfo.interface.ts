@@ -1,4 +1,4 @@
-import { ICrudServiceRequests, IServiceCrud } from '@fluxgate/common';
+import { ICrudServiceRequests } from '@fluxgate/common';
 import { IDisplayInfo } from './displayInfo.interface';
 
 export interface IEnumDisplayInfo extends IDisplayInfo {
