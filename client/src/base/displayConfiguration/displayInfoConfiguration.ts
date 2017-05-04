@@ -68,7 +68,7 @@ export abstract class DisplayInfoConfiguration implements IDisplayInfoConfigurat
    */
   private setupConfig(displayInfos?: IControlDisplayInfo[], item?: any): IControlDisplayInfo[] {
     return using(new XLog(DisplayInfoConfiguration.logger, levels.DEBUG, 'setupConfig'), (log) => {
-      if (log.isDebugEnabled) {
+      if (log.isDebugEnabled()) {
         log.log(`item = ${item ? JSON.stringify(item) : 'undefined'}`);
       }
 
@@ -84,7 +84,7 @@ export abstract class DisplayInfoConfiguration implements IDisplayInfoConfigurat
         displayInfos = this.createDisplayInfos(item);
       }
 
-      if (log.isDebugEnabled) {
+      if (log.isDebugEnabled()) {
         log.log(`displayInfos : ${JSON.stringify(displayInfos)}`);
       }
 
