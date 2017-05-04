@@ -2,7 +2,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 // Fluxgate
-import { IService } from '@fluxgate/common';
+import { ICrudServiceRequests, IEntity } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -33,7 +33,15 @@ import { CoreComponent, DisplayInfo, MessageService } from '@fluxgate/client';
 export class EnumValueComponent extends CoreComponent {
   protected static logger = getLogger(EnumValueComponent);
 
-  private _dataService: IService<any, any>;
+  /**
+   * die ServiceRequests zum Bereitstellen der Daten
+   *
+   * Hinweis: data und dataServiceRequests dürfen nicht gleichzeitig gesetzt sein!
+   *
+   * @type {ICrudServiceRequests}
+   * @memberOf DataTableSelectorComponent
+   */
+  private _dataServiceRequests: ICrudServiceRequests<IEntity<any>, any>;
 
 
   /**
@@ -91,8 +99,8 @@ export class EnumValueComponent extends CoreComponent {
   public ngOnInit() {
     super.ngOnInit();
 
-    if (this.dataService) {
-      this.registerSubscription(this.dataService.find().subscribe((items: any[]) => {
+    if (this.dataServiceRequests) {
+      this.registerSubscription(this.dataServiceRequests.find().subscribe((items: any[]) => {
         this.items = items;
 
         this.updateItem();
@@ -135,15 +143,15 @@ export class EnumValueComponent extends CoreComponent {
 
 
   // -------------------------------------------------------------------------------------
-  // Property dataService
+  // Property dataServiceRequests
   // -------------------------------------------------------------------------------------
-  public get dataService(): IService<any, any> {
-    return this._dataService;
+  public get dataServiceRequests(): ICrudServiceRequests<IEntity<any>, any> {
+    return this._dataServiceRequests;
   }
 
-  @Input() public set dataService(value: IService<any, any>) {
-    if (this._dataService !== value) {
-      this._dataService = value;
+  @Input() public set dataServiceRequests(value: ICrudServiceRequests<IEntity<any>, any>) {
+    if (this._dataServiceRequests !== value) {
+      this._dataServiceRequests = value;
     }
   }
 

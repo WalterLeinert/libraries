@@ -104,7 +104,7 @@ import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/
               <div class="col-sm-10">
                 <flx-dropdown-selector inputStyleClass="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
                   [required]="info.required" [readonly]="isReadonly(info)"
-                  [dataService]="info.enumInfo.selectorDataService"
+                  [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                   [style]="{'width':'100%'}"
                   [style.color]="getColor(dataItem, info)"

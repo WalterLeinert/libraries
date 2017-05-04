@@ -7,8 +7,8 @@ import 'rxjs/add/observable/throw';
 
 // Fluxgate
 import { MessageService, MetadataService } from '@fluxgate/client';
-import { IService, TableMetadata } from '@fluxgate/common';
-import { Assert, Funktion, Types } from '@fluxgate/core';
+import { ICrudServiceRequests, IEntity, IService, TableMetadata } from '@fluxgate/common';
+import { Assert, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
 
 import { SelectorBaseComponent } from './selectorBase.component';
 
@@ -23,7 +23,7 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
   /**
    * angebundene Objektliste statt Liste von Entities aus DB.
    *
-   * Hinweis: data und dataService dürfen nicht gleichzeitig gesetzt sein!
+   * Hinweis: data und dataServiceRequests dürfen nicht gleichzeitig gesetzt sein!
    *
    * @type {any[]}
    * @memberOf DataTableSelectorComponent
@@ -39,20 +39,21 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    */
   @Output() public dataChange = new EventEmitter<T[]>();
 
-  /**
-   * der Service zum Bereitstellen der Daten
-   *
-   * Hinweis: data und dataService dürfen nicht gleichzeitig gesetzt sein!
-   *
-   * @type {IService}
-   * @memberOf DataTableSelectorComponent
-   */
-  private _dataService: IService<T, any>;
 
   /**
-   * die Service-Methode zum Bereitstellen der Daten. Muss eine Methode von @see{dataService} sein.
+   * die ServiceRequests zum Bereitstellen der Daten
    *
-   * Hinweis: data und dataService dürfen nicht gleichzeitig gesetzt sein!
+   * Hinweis: data und dataServiceRequests dürfen nicht gleichzeitig gesetzt sein!
+   *
+   * @type {ICrudServiceRequests}
+   * @memberOf DataTableSelectorComponent
+   */
+  private _dataServiceRequests: ICrudServiceRequests<IEntity<any>, any>;
+
+  /**
+   * die Service-Methode zum Bereitstellen der Daten. Muss eine Methode von @see{dataServiceRequests} sein.
+   *
+   * Hinweis: data und dataServiceRequests dürfen nicht gleichzeitig gesetzt sein!
    *
    * @type {IService}
    * @memberOf DataTableSelectorComponent
@@ -96,22 +97,27 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
       this.initBoundData(this.data, this.getMetadataForValues(this.data));
     } else {
 
-      // Hinweis: dataService und dataServiceFunction dürfen während der Initialisierung auch undefiniert sein!
-      if (!this.dataService && !this.dataServiceFunction) {
+      // Hinweis: dataServiceRequests und dataServiceFunction dürfen während der
+      // Initialisierung auch undefiniert sein!
+      if (!this.dataServiceRequests && !this.dataServiceFunction) {
         return;
       }
 
       let serviceFunction: Funktion;
+      let tableMetadata: TableMetadata;
+      let service: any;
 
       if (this.dataServiceFunction) {
         serviceFunction = this.dataServiceFunction;
+      } else if (this.dataServiceRequests) {
+        service = this.dataServiceRequests;
+        serviceFunction = this.dataServiceRequests.find;
+        tableMetadata = this.metadataService.findTableMetadata(this.dataServiceRequests.getModelClassName());
       } else {
-        serviceFunction = this.dataService.find;
+        throw new InvalidOperationException(`no serviceFunction or serviceRequests set.`);
       }
 
-      const tableMetadata = this.metadataService.findTableMetadata(this.dataService.getModelClassName());
-
-      this.registerSubscription(serviceFunction.call(this.dataService)
+      this.registerSubscription(serviceFunction.call(service)
         .subscribe((items: any[]) => {
           this.initBoundData(items, tableMetadata);
         },
@@ -135,8 +141,8 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    */
   protected initBoundData(items: any[], tableMetadata: TableMetadata) {
     if (this.data) {
-      Assert.that(!this.dataService,
-        `Wenn Property data gesetzt ist, darf dataService nicht gleichzeitig gesetzt sein.`);
+      Assert.that(!this.dataServiceRequests,
+        `Wenn Property data gesetzt ist, darf dataServiceRequests nicht gleichzeitig gesetzt sein.`);
     } else {
       // zulässig, falls DataBinding noch nicht abgeschlossen: weder data noch dataService ist gesetzt
       // Assert.that(this.dataService !== undefined,
@@ -146,9 +152,9 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
     this.setupConfig(items, tableMetadata);
 
     // ggf. den Service mit dem CacheService wrappen
-    if (Types.isPresent(this.dataService)) {
-      this.dataService = this.createDataService(this.dataService);
-    }
+    // if (Types.isPresent(this.dataService)) {
+    //   this.dataService = this.createDataService(this.dataService);
+    // }
 
     this.setupData(items);
     this.preselectData();
@@ -364,15 +370,15 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
 
 
   // -------------------------------------------------------------------------------------
-  // Property dataService
+  // Property dataServiceRequests
   // -------------------------------------------------------------------------------------
-  public get dataService(): IService<T, any> {
-    return this._dataService;
+  public get dataServiceRequests(): ICrudServiceRequests<IEntity<any>, any> {
+    return this._dataServiceRequests;
   }
 
-  @Input() public set dataService(value: IService<T, any>) {
-    if (this._dataService !== value) {
-      this._dataService = value;
+  @Input() public set dataServiceRequests(value: ICrudServiceRequests<IEntity<any>, any>) {
+    if (this._dataServiceRequests !== value) {
+      this._dataServiceRequests = value;
     }
   }
 

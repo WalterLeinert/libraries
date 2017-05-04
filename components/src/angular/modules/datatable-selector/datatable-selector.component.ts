@@ -131,7 +131,7 @@ export type selectionMode = 'single' | 'multiple' | '';
 
             <div [style.text-align]="info.textAlignment">
               <template let-col let-data="rowData" pTemplate="body">
-                <flx-enum-value [dataService]="info.enumInfo.selectorDataService"
+                <flx-enum-value [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                   [itemSelector]="data[col.field]"
                   [style]="{'width':'100%'}" [style.color]="getColor(data, info)"
@@ -141,7 +141,7 @@ export type selectionMode = 'single' | 'multiple' | '';
             </div>
 
             <template let-col let-data="rowData" pTemplate="editor">
-              <flx-dropdown-selector [dataService]="info.enumInfo.selectorDataService"
+              <flx-dropdown-selector [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
                 [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                 [(ngModel)]="data[col.field]"
                 [style]="{'width':'100%'}" [style.color]="getColor(data, info)"
