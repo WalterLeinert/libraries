@@ -96,11 +96,14 @@ export abstract class ServiceRequestsSelectorComponent<T extends IEntity<TId>, T
     using(new XLog(ServiceRequestsSelectorComponent.logger, levels.DEBUG, 'onValueChange'), (log) => {
       super.onValueChange(value);
 
-      this.serviceRequests.setCurrent(this.getItemForValue(value)).subscribe((item) => {
-        if (log.isDebugEnabled()) {
-          log.log(`class: ${this.constructor.name}: item = ${JSON.stringify(item)}`);
-        }
-      });
+      if (this.items) {
+        this.serviceRequests.setCurrent(this.getItemForValue(value)).subscribe((item) => {
+          if (log.isDebugEnabled()) {
+            log.log(`class: ${this.constructor.name}: item = ${JSON.stringify(item)}`);
+          }
+        });
+      }
+
     });
   }
 
@@ -135,6 +138,7 @@ export abstract class ServiceRequestsSelectorComponent<T extends IEntity<TId>, T
     if (this.valueField === DisplayInfo.CURRENT_ITEM) {
       rval = value;
     } else {
+      Assert.notNullOrEmpty(this.items);
       rval = this.items.find((elem) => elem[this.valueField] === value);
       Assert.notNull(rval);
     }
