@@ -10,7 +10,7 @@ import { APP_STORE_PROVIDER, AppInjector, CurrentUserService } from '@fluxgate/c
 
 import { RoleServiceFake } from '../../../testing/role-service-fake';
 import { RoleSelectorServiceRequestsModule } from '../../redux/role-selector-service-requests';
-import { RoleService } from '../authentication/role.service';
+import { RoleService } from '../../redux/role.service';
 import { DropdownSelectorModule } from '../dropdown-selector';
 import { RoleSelectorComponent } from './role-selector.component';
 

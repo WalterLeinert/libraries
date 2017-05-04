@@ -6,7 +6,7 @@ import {
   CurrentItemServiceRequests, CurrentUserStore, IUser, Store
 } from '@fluxgate/common';
 
-import { UserService } from '../modules/authentication/user.service';
+import { UserService } from './user.service';
 
 
 @Injectable()

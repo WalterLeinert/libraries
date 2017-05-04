@@ -4,8 +4,8 @@ import { Inject, Injectable, NgModule } from '@angular/core';
 import { APP_STORE } from '@fluxgate/client';
 import { IUser, Store, TableServiceRequests, User, UserStore } from '@fluxgate/common';
 
-import { UserService } from '../modules/authentication/user.service';
 import { EnhancedServiceRequests } from './enhanced-service-requests';
+import { UserService } from './user.service';
 
 @Injectable()
 @TableServiceRequests(User)

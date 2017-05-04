@@ -3,8 +3,7 @@ export { ClientServicesModule } from './angular/modules';
 export {
   AuthenticationModule, AuthenticationNavigation, AuthenticationNavigationToken, AuthenticationRoutingModule,
   ChangePasswordComponent,
-  LoginComponent, LogoffComponent, PassportService, RegisterComponent,
-  RoleService, UserService
+  LoginComponent, LogoffComponent, PassportService, RegisterComponent
 } from './angular/modules/authentication';
 
 export { AutoformComponent, AutoformModule } from './angular/modules/autoform';

@@ -11,7 +11,6 @@ import { MessagesModule } from 'primeng/components/messages/messages';
 import { ConfigService, CurrentUserService, MessageService, MetadataService } from '@fluxgate/client';
 
 import { CurrentUserServiceRequestsModule } from '../../redux/current-user-service-requests';
-import { RoleServiceRequestsModule } from '../../redux/role-service-requests';
 import { AutofocusModule } from '../directives/autofocus.directive';
 import { HighlightModule } from '../directives/highlight.directive';
 import { RoleSelectorModule } from '../role-selector/role-selector.module';
@@ -21,7 +20,6 @@ import { LoginComponent } from './login/login.component';
 import { LogoffComponent } from './logoff/logoff.component';
 import { PassportService } from './passport.service';
 import { RegisterComponent } from './register/register.component';
-import { RoleService } from './role.service';
 
 @NgModule({
   imports: [
@@ -35,8 +33,7 @@ import { RoleService } from './role.service';
     HighlightModule,
     AutofocusModule,
     RoleSelectorModule,
-    CurrentUserServiceRequestsModule,
-    RoleServiceRequestsModule
+    CurrentUserServiceRequestsModule
     // AuthenticationRoutingModule
   ],
   declarations: [
@@ -56,8 +53,7 @@ import { RoleService } from './role.service';
     ConfigService,
     MessageService,
     MetadataService,
-    PassportService,
-    RoleService
+    PassportService
   ]
 })
 export class AuthenticationModule { }

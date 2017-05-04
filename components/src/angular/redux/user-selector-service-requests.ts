@@ -4,7 +4,7 @@ import { Inject, Injectable, NgModule } from '@angular/core';
 import { APP_STORE } from '@fluxgate/client';
 import { CommandStore, ExtendedCrudServiceRequests, GenericStore, IUser, Store, UserStore } from '@fluxgate/common';
 
-import { UserService } from '../modules/authentication/user.service';
+import { UserService } from './user.service';
 
 @Injectable()
 export class UserSelectorServiceRequests extends ExtendedCrudServiceRequests<IUser, number, UserService> {

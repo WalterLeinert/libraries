@@ -12,7 +12,7 @@ import {
 
 import { UserServiceFake } from '../../../testing/user-service-fake';
 import { UserSelectorServiceRequestsModule } from '../../redux/user-selector-service-requests';
-import { UserService } from '../authentication/user.service';
+import { UserService } from '../../redux/user.service';
 import { DropdownSelectorModule } from '../dropdown-selector';
 import { UserSelectorComponent } from './user-selector.component';
 
