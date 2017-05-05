@@ -5,7 +5,7 @@
 require('reflect-metadata');
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import {
   AndTerm, BinaryTerm, Indenter, IVisitor, NotTerm, OrTerm, StringBuilder,
@@ -30,6 +30,10 @@ class TermVisitor implements IVisitor<VisitableNode> {
     }
   }
 
+
+  public toString(): string {
+    return this.sb.toString();
+  }
 
   private visitBinaryTerm(term: BinaryTerm) {
     if (term instanceof AndTerm) {
@@ -91,10 +95,11 @@ class TermVisitor implements IVisitor<VisitableNode> {
   private indentLine(text: string) {
     this.indent(text);
   }
+
 }
 
 
-@suite('model.query') @only
+@suite('model.query')
 class QueryTreeTest {
 
   @test 'should create query tree and visit'() {
@@ -114,9 +119,13 @@ class QueryTreeTest {
     const visitor = new TermVisitor(sb);
     term.accept(visitor);
 
-    console.log(sb.toString());
+    // console.log(sb.toString());
 
+    const exprString = `{"_left":{"_selector":{"name":"firstname","operator":"=","value":"hugo"}},` +
+      `"_right":{"_left":{"_selector":{"name":"age","operator":">","value":20}},` +
+      `"_right":{"_left":{"_selector":{"name":"age","operator":"<=","value":6}},` +
+      `"_right":{"_left":{"_selector":{"name":"gender","operator":"=","value":"male"}}}}}}`;
 
-    expect(term).to.be.not.null;
+    expect(JSON.stringify(term)).to.equal(exprString);
   }
 }
