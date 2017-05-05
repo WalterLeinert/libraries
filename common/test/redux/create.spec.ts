@@ -16,7 +16,7 @@ import { UserServiceRequestsFake } from '../../src/testing/user-service-requests
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('redux: create')
+@suite('common.redux: create')
 class CreateTest extends ReduxBaseTest<IUser, number, any> {
   private beforeState: ICrudServiceState<IUser, number>;
   private itemCloned: IUser;

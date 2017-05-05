@@ -34,7 +34,7 @@ export class UserSelectorStore extends CommandStore<IExtendedCrudServiceState<IU
 }
 
 
-@suite('redux: parentStore')
+@suite('common.redux: parentStore')
 class ParentStoreTest extends ReduxBaseTest<IUser, number, any> {
   private beforeState: IServiceState;
 

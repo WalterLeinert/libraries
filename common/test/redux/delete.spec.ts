@@ -15,7 +15,7 @@ import { UserServiceRequestsFake } from '../../src/testing/user-service-requests
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('redux: delete')
+@suite('common.redux: delete')
 class DeleteTest extends ReduxBaseTest<IUser, number, any> {
   private static readonly DELETE_ID = 1;
   private beforeState: ICrudServiceState<IUser, number>;

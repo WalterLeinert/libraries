@@ -16,7 +16,7 @@ import { UserServiceFake } from '../../src/testing/user-service-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('redux: update (current)')
+@suite('common.redux: update (current)')
 class UpdateCurrentTest extends ReduxBaseTest<IUser, number, any> {
   private static readonly UPDATE_ID = 1;
   private beforeState: IServiceState;

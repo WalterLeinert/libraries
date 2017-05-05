@@ -15,7 +15,7 @@ import { UserServiceRequestsFake } from '../../src/testing/user-service-requests
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('redux: find')
+@suite('common.redux: find')
 class FindTest extends ReduxBaseTest<IUser, number, any> {
 
   constructor() {

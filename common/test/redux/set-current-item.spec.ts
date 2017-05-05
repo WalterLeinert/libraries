@@ -14,7 +14,7 @@ import { UserServiceFake } from '../../src/testing/user-service-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('redux: set current item')
+@suite('common.redux: set current item')
 class SetCurrentTest extends ReduxBaseTest<IUser, number, any> {
   private beforeState: ICurrentItemServiceState<IUser, number>;
   private user: IUser = new User(1, 'walter');

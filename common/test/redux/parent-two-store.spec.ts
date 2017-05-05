@@ -40,7 +40,7 @@ export class MyRoleServiceRequestsFake extends ServiceRequests {
 }
 
 
-@suite('redux: 2 child stores')
+@suite('common.redux: 2 child stores')
 class ChildStoreTest extends ReduxBaseTest<IRole, number, any> {
 
   constructor() {

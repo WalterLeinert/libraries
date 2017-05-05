@@ -15,7 +15,7 @@ import { UserServiceRequestsFake } from '../../src/testing/user-service-requests
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('redux: findById')
+@suite('common.redux: findById')
 class FindByIdTest extends ReduxBaseTest<IUser, number, any> {
 
   constructor() {

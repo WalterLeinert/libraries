@@ -32,7 +32,7 @@ export class UserSelectorStore extends CommandStore<IExtendedCrudServiceState<IU
 }
 
 
-@suite('redux: delete (current)')
+@suite('common.redux: delete (current)')
 class DeleteCurrentTest extends ReduxBaseTest<IUser, number, any> {
   private static readonly DELETE_ID = 1;
   private beforeState: IServiceState;

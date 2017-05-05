@@ -18,7 +18,7 @@ import { UserServiceFake } from '../../src/testing/user-service-fake';
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('redux: CurrentUserStore')
+@suite('common.redux: CurrentUserStore')
 class CurrentUserStoreTest extends ReduxBaseTest<IUser, number, any> {
   private user: IUser = new User(1, 'walter', 1, 'Leinert');
 

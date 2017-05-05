@@ -16,7 +16,7 @@ import { UserServiceRequestsFake } from '../../src/testing/user-service-requests
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('redux: update')
+@suite('common.redux: update')
 class UpdateTest extends ReduxBaseTest<IUser, number, any> {
   private static readonly UPDATE_ID = 1;
   private item: IUser;

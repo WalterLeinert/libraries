@@ -13,7 +13,7 @@ import { UserServiceRequestsFake } from '../../src/testing/user-service-requests
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('redux: misc')
+@suite('common.redux: misc')
 class MiscTest extends ReduxBaseTest<IUser, number, any> {
 
   constructor() {
