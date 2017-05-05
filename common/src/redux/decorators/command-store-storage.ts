@@ -25,15 +25,18 @@ export class CommandStoreStorage {
       });
   }
 
-  public findTableMetadata(target: Funktion | string): CommandStoreMetadata {
+  public removeStoreMetadata(target: Funktion | string): void {
     Assert.notNull(target);
     if (Types.isString(target)) {
-      return this.metadataDict.get(target as string);
+      Assert.that(this.metadataDict.containsKey(target as string));
+      this.metadataDict.remove(target as string);
+    } else {
+      Assert.that(Types.isFunction(target));
+      Assert.that(this.metadataDict.containsKey((target as Funktion).name));
+      this.metadataDict.remove((target as Funktion).name);
     }
-    Assert.that(Types.isFunction(target));
-
-    return this.metadataDict.get((target as Funktion).name);
   }
+
 
   /**
    * Registriert neue CommandStore-Instanzen beim @param{store}, für die Metadaten vorliegen.
