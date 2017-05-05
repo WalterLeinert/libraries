@@ -2,14 +2,14 @@
 // tslint:disable:max-classes-per-file
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { using } from '../../src/diagnostics/';
 import { CountingSuspendable, Suspender } from '../../src/suspendable/';
 
 
 
-@suite('core.suspendable.CountingSuspendable') @only
+@suite('core.suspendable.CountingSuspendable')
 class SuspedableTest {
   private suspendable: CountingSuspendable = new CountingSuspendable();
 
