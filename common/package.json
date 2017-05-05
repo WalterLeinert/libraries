@@ -43,7 +43,7 @@
     "yargs": "^7.0.2"
   },
   "dependencies": {
-    "@fluxgate/core": "^2.1.2-beta.4",
+    "@fluxgate/core": "^2.1.2-beta.8",
     "@fluxgate/platform": "^2.1.2-beta.3",
     "moment": "^2.17.1",
     "object.entries": "^1.0.4",
