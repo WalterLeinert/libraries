@@ -5,5 +5,6 @@ export * from './decorator';
 export * from './diagnostics';
 export * from './exceptions';
 export * from './reflection';
+export * from './suspendable';
 export * from './types';
 export * from './util';
