@@ -1,5 +1,5 @@
 import { IEntity } from '../../model/entity.interface';
-import { IServiceState } from './service-state.interface';
+import { ISimpleServiceState } from './simple-service-state.interface';
 
 /**
  * Interface für den Service-Status von CRUD Servicerequests
@@ -9,7 +9,7 @@ import { IServiceState } from './service-state.interface';
  * @template T
  * @template TId
  */
-export interface ICrudServiceState<T extends IEntity<TId>, TId> extends IServiceState {
+export interface ICrudServiceState<T extends IEntity<TId>, TId> extends ISimpleServiceState<T> {
 
   /**
    * aktuelle Item-Liste (z.B. für Anzeige im Grid)

@@ -1,40 +1,49 @@
 import { IEntity } from '../../model/entity.interface';
 
-import { ICrudServiceState } from '../state/crud-service-state.interface';
+import { ISimpleServiceState } from '../state/simple-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
 import { IServiceRequests } from './../service-requests';
 import { ServiceCommand } from './service-command';
 
+
 /**
- * async Kommando zum Finden eines Items über die Id über einen Rest-Service.
+ * Kommando zum Finden/Liefern von Items über einen Rest-Service.
  *
- * Das eigentliche Finden wird im zugehörigen ServiceRequest ausgeführt,
+ * Das eigentliche Finden von Items wird im zugehörigen ServiceRequest ausgeführt,
  * wo ein dispatch dieses Kommandos erfolgt.
  *
  * @export
- * @class FindingItemByIdCommand
+ * @class FindItemsCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class FindingItemByIdCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T> {
+export class SimpleItemsFoundCommand<T> extends ServiceCommand<T> {
 
-  constructor(serviceRequests: IServiceRequests, private id: TId) {
+  constructor(serviceRequests: IServiceRequests, private items: T[]) {
     super(serviceRequests);
   }
+
+  public hasModifiedItems(): boolean {
+    return true;
+  }
+
 
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
    *
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
+   *
+   * @memberOf FindItemsCommand
    */
-  protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
+  protected updateState(state: ISimpleServiceState<T>): ISimpleServiceState<T> {
     return {
       ...state,
-      items: [...state.items],
-      state: ServiceRequestStates.RUNNING,
+      items: [...this.items],
+      state: ServiceRequestStates.DONE,
       error: undefined
     };
   }
+
 }

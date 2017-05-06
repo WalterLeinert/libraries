@@ -17,7 +17,7 @@ import { ServiceCommand } from './service-command';
  * @template T
  * @template TId
  */
-export class ErrorCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
+export class ErrorCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T> {
 
   constructor(serviceRequests: IServiceRequests, private error: IException) {
     super(serviceRequests);

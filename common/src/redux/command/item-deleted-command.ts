@@ -17,7 +17,7 @@ import { ServiceCommand } from './service-command';
  * @template T
  * @template TId
  */
-export class ItemDeletedCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
+export class ItemDeletedCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T> {
 
   constructor(serviceRequests: IServiceRequests, public id: TId) {
     super(serviceRequests);

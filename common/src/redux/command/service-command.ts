@@ -15,7 +15,7 @@ import { ICommand } from './command.interface';
  * @implements {ICommand<IServiceState<T>>}
  * @template T
  */
-export abstract class ServiceCommand<T extends IEntity<TId>, TId> implements ICommand<IServiceState> {
+export abstract class ServiceCommand<T> implements ICommand<IServiceState> {
 
   protected constructor(private _serviceRequests: IServiceRequests) {
   }

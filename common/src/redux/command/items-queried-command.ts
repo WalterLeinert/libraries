@@ -5,36 +5,45 @@ import { ServiceRequestStates } from '../state/service-request-state';
 import { IServiceRequests } from './../service-requests';
 import { ServiceCommand } from './service-command';
 
+
 /**
- * async Kommando zum Finden eines Items über die Id über einen Rest-Service.
+ * Kommando nach erfolgreicher Suche von Items (mittes Query) über einen Rest-Service.
  *
- * Das eigentliche Finden wird im zugehörigen ServiceRequest ausgeführt,
+ * Die eigentliche Query wurde im zugehörigen ServiceRequest ausgeführt,
  * wo ein dispatch dieses Kommandos erfolgt.
  *
  * @export
- * @class FindingItemByIdCommand
+ * @class ItemsQueriedCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class FindingItemByIdCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T> {
+export class ItemsQueriedCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T> {
 
-  constructor(serviceRequests: IServiceRequests, private id: TId) {
+  constructor(serviceRequests: IServiceRequests, private items: T[]) {
     super(serviceRequests);
   }
+
+  public hasModifiedItems(): boolean {
+    return true;
+  }
+
 
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
    *
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
+   *
+   * @memberOf FindItemsCommand
    */
   protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
-      items: [...state.items],
-      state: ServiceRequestStates.RUNNING,
+      items: [...this.items],           // TODO ggf. itemsQueried?
+      state: ServiceRequestStates.DONE,
       error: undefined
     };
   }
+
 }

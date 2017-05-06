@@ -1,4 +1,4 @@
-import { IAttributeSelector } from './attributeSelector.interface';
+import { BooleanTerm } from '@fluxgate/core';
 
 /**
  * Interface für Knex-Queries
@@ -6,10 +6,10 @@ import { IAttributeSelector } from './attributeSelector.interface';
 export interface IQuery {
 
   /**
-   * Liste von Attributselektoren: diese werden z.Zt. als UND-verknüpft interpretiert!
+   * Query-Term/Tree
    *
-   * @type {IAttributeSelector[]}
+   * @type {BooleanTerm}
    * @memberOf IQuery
    */
-  selectors: IAttributeSelector[];
+  term: BooleanTerm;
 }

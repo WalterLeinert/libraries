@@ -18,7 +18,7 @@ import { ServiceCommand } from './service-command';
  * @template T
  * @template TId
  */
-export class ItemUpdatedCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T, TId> {
+export class ItemUpdatedCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T> {
 
   constructor(serviceRequests: IServiceRequests, public item: T) {
     super(serviceRequests);

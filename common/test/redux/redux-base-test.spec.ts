@@ -31,7 +31,7 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
   private _serviceFake: TService;
   private _serviceRequests: IServiceRequests;
   private subscriptions: Subscription[] = [];
-  private _commands: Array<ServiceCommand<T, TId>> = [];
+  private _commands: Array<ServiceCommand<T>> = [];
   private _states: IServiceState[] = [];
 
   protected constructor(private storeId: string,
@@ -61,7 +61,7 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
     return subscription;
   }
 
-  protected onStoreUpdated(command: ServiceCommand<T, TId>): void {
+  protected onStoreUpdated(command: ServiceCommand<T>): void {
     Assert.notNull(command);
 
     using(new XLog(ReduxBaseTest.logger, levels.INFO, 'onStoreUpdated', `class: ${this.constructor.name}`), (log) => {
@@ -109,7 +109,7 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
     return this._serviceFake;
   }
 
-  protected get commands(): Array<ServiceCommand<T, TId>> {
+  protected get commands(): Array<ServiceCommand<T>> {
     return this._commands;
   }
 

@@ -4,22 +4,24 @@ import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
 import { IServiceRequests } from './../service-requests';
 import { ServiceCommand } from './service-command';
+import { IQuery } from '../../model/query/query.interface';
+
 
 /**
- * async Kommando zum Finden eines Items über die Id über einen Rest-Service.
+ * async Kommando zur Suche nach Items (mittels Query) über einen Rest-Service.
  *
- * Das eigentliche Finden wird im zugehörigen ServiceRequest ausgeführt,
+ * Die eigentliche Query wird im zugehörigen ServiceRequest ausgeführt,
  * wo ein dispatch dieses Kommandos erfolgt.
  *
  * @export
- * @class FindingItemByIdCommand
+ * @class QueryingItemsCommand
  * @extends {ServiceCommand<T, TId>}
  * @template T
  * @template TId
  */
-export class FindingItemByIdCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T> {
+export class QueryingItemsCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T> {
 
-  constructor(serviceRequests: IServiceRequests, private id: TId) {
+  constructor(serviceRequests: IServiceRequests, private query: IQuery) {
     super(serviceRequests);
   }
 
@@ -28,6 +30,8 @@ export class FindingItemByIdCommand<T extends IEntity<TId>, TId> extends Service
    *
    * @param {IServiceState<T, TId>} state
    * @returns {IServiceState<T, TId>}
+   *
+   * @memberOf FindItemsCommand
    */
   protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
