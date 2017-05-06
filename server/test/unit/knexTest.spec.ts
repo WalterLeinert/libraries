@@ -236,7 +236,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
     return Activator.createInstance<T>(model, KnexTest.knexService, KnexTest.metadataService);
   }
 
-  private static get knexService(): KnexService {
+  protected static get knexService(): KnexService {
     return KnexTest._knexService;
   }
 

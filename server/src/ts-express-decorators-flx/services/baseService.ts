@@ -10,7 +10,7 @@ import {
   Assert, Clone, /*EntityExistsException,*/
   EntityNotFoundException, Funktion,
   IException, InvalidOperationException,
-  IToString, OptimisticLockException, Types
+  IToString, NotImplementedException, OptimisticLockException, Types
 } from '@fluxgate/core';
 
 import { ColumnMetadata, ExceptionWrapper, IQuery, IUser, ServiceResult, TableMetadata } from '@fluxgate/common';
@@ -479,12 +479,14 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
     return using(new XLog(BaseService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
       let knexQuery = this.fromTable();
 
-      query.selectors.forEach((selector) => {
-        const dbColumnName = this.metadata.getDbColumnName(selector.name);
-        knexQuery = knexQuery.andWhere(dbColumnName, selector.operator, selector.value);
-      });
+      throw new NotImplementedException('Umbauen auf Queryterms / BooleanTerm');
 
-      return this.queryKnex(knexQuery);
+      // query.selectors.forEach((selector) => {
+      //   const dbColumnName = this.metadata.getDbColumnName(selector.name);
+      //   knexQuery = knexQuery.andWhere(dbColumnName, selector.operator, selector.value);
+      // });
+
+      // return this.queryKnex(knexQuery);
     });
   }
 
