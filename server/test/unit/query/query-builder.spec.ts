@@ -23,80 +23,19 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import { NumberIdGenerator, Role, SelectorTerm } from '@fluxgate/common';
-import {
-  AndTerm, BinaryTerm, IVisitor, NotSupportedException, NotTerm, OrTerm, Stack, UnaryTerm, VisitableNode
-} from '@fluxgate/core';
+import { AndTerm, NotTerm, OrTerm } from '@fluxgate/core';
 
+import { KnexQueryVisitor } from '../../../src/ts-express-decorators-flx/services/knex-query-visitor';
 import { RoleService } from '../../../src/ts-express-decorators-flx/services/role.service';
 import { KnexTest } from '../knexTest.spec';
-
-type PartialQuery = (qb: Knex.QueryBuilder) => Knex.QueryBuilder;
-
-class KnexVisitor implements IVisitor<VisitableNode> {
-  private queryStack: Stack<PartialQuery> = new Stack<PartialQuery>();
-
-  constructor(private queryBuilder: Knex.QueryBuilder) {
-  }
-
-  public visit(term: BinaryTerm | UnaryTerm) {
-    if (term instanceof BinaryTerm) {
-      this.visitBinaryTerm(term);
-    } else {
-      this.visitUnaryTerm(term);
-    }
-  }
-
-  public get query(): PartialQuery {
-    return this.queryStack.pop();
-  }
-
-  private visitBinaryTerm(term: BinaryTerm) {
-    if (term instanceof AndTerm) {
-      this.handleBinaryTerm('AND', term);
-    } else if (term instanceof OrTerm) {
-      this.handleBinaryTerm('OR', term);
-    }
-  }
-
-  private handleBinaryTerm(op: string, term) {
-
-    term.leftTerm.accept(this);
-    this.queryBuilder.where(this.queryStack.pop());
-
-    term.rightTerm.accept(this);
-
-    switch (op) {
-      case 'AND':
-        this.queryStack.push((qb) => qb.andWhere(this.queryStack.pop()));
-        break;
-
-      case 'OR':
-        this.queryStack.push((qb) => qb.orWhere(this.queryStack.pop()));
-        break;
-
-      default:
-        throw new NotSupportedException(`operator = ${op}`);
-    }
-  }
-
-
-  private visitUnaryTerm(term: UnaryTerm) {
-    if (term instanceof NotTerm) {
-      term.term.accept(this);
-
-      this.queryStack.push((qb) => qb.andWhereNot(this.queryStack.pop()));
-
-    } else if (term instanceof SelectorTerm) {
-      this.queryStack.push((qb) => qb.where(term.selector.name, term.selector.operator, term.selector.value));
-    }
-  }
-}
 
 
 
 @suite('erste Role Tests') @only
 class QueryBuilderTest extends KnexTest<Role, number> {
   protected static readonly logger = getLogger(QueryBuilderTest);
+
+  private tableMetadata = KnexTest.metadataService.findTableMetadata(Role);
 
   public static before(done: () => void) {
     using(new XLog(QueryBuilderTest.logger, levels.INFO, 'static.before'), (log) => {
@@ -112,9 +51,9 @@ class QueryBuilderTest extends KnexTest<Role, number> {
   @test 'should query admin role'() {
     const queryBuilder = KnexTest.knexService.knex.from('role');
 
-    const term = new SelectorTerm({ name: 'role_name', operator: '=', value: 'admin' });
+    const term = new SelectorTerm({ name: 'name', operator: '=', value: 'admin' });
 
-    const visitor = new KnexVisitor(queryBuilder);
+    const visitor = new KnexQueryVisitor(queryBuilder, this.tableMetadata);
     term.accept(visitor);
 
     visitor.query(queryBuilder).then((roles: Role[]) => {
@@ -128,11 +67,11 @@ class QueryBuilderTest extends KnexTest<Role, number> {
     const queryBuilder = KnexTest.knexService.knex.from('role');
 
     const term = new OrTerm(
-      new SelectorTerm({ name: 'role_name', operator: '=', value: 'admin' }),
-      new SelectorTerm({ name: 'role_id', operator: '>', value: 2 })
+      new SelectorTerm({ name: 'name', operator: '=', value: 'admin' }),
+      new SelectorTerm({ name: 'id', operator: '>', value: 2 })
     );
 
-    const visitor = new KnexVisitor(queryBuilder);
+    const visitor = new KnexQueryVisitor(queryBuilder, this.tableMetadata);
     term.accept(visitor);
 
     visitor.query(queryBuilder).then((roles: Role[]) => {
@@ -146,11 +85,11 @@ class QueryBuilderTest extends KnexTest<Role, number> {
     const queryBuilder = KnexTest.knexService.knex.from('role');
 
     const term = new AndTerm(
-      new SelectorTerm({ name: 'role_name', operator: '=', value: 'admin' }),
-      new SelectorTerm({ name: 'role_id', operator: '=', value: 1 })
+      new SelectorTerm({ name: 'name', operator: '=', value: 'admin' }),
+      new SelectorTerm({ name: 'id', operator: '=', value: 1 })
     );
 
-    const visitor = new KnexVisitor(queryBuilder);
+    const visitor = new KnexQueryVisitor(queryBuilder, this.tableMetadata);
     term.accept(visitor);
 
     visitor.query(queryBuilder).then((roles: Role[]) => {
