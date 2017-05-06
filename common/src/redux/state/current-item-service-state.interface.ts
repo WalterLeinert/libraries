@@ -1,4 +1,4 @@
-import { IEntity } from '../../model/entity.interface';
+
 import { IServiceState } from './service-state.interface';
 
 /**
@@ -9,7 +9,7 @@ import { IServiceState } from './service-state.interface';
  * @template T
  * @template TId
  */
-export interface ICurrentItemServiceState<T extends IEntity<TId>, TId> extends IServiceState {
+export interface ICurrentItemServiceState<T> extends IServiceState {
 
   /**
    * aktuelles Item (z.B. nach Selektion im Grid)

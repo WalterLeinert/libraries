@@ -25,6 +25,6 @@ export interface ICurrentItemServiceRequests<T extends IEntity<TId>, TId extends
    */
   setCurrent(item: T): Observable<T>;
 
-  getCurrentItemState(storeId: string): ICurrentItemServiceState<T, TId>;
+  getCurrentItemState(storeId: string): ICurrentItemServiceState<T>;
 
 }

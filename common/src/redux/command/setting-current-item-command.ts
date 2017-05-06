@@ -26,12 +26,12 @@ export class SettingCurrentItemCommand<T extends IEntity<TId>, TId> extends Serv
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
    *
-   * @param {IServiceState<T, TId>} state
-   * @returns {IServiceState<T, TId>}
+   * @param {IServiceState} state
+   * @returns {IServiceState}
    *
    * @memberOf SetCurrentItemCommand
    */
-  protected updateState(state: ICurrentItemServiceState<T, TId>): ICurrentItemServiceState<T, TId> {
+  protected updateState(state: ICurrentItemServiceState<T>): ICurrentItemServiceState<T> {
     return {
       ...state,
       state: ServiceRequestStates.RUNNING,

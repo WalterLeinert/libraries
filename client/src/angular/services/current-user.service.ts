@@ -55,7 +55,7 @@ export class CurrentUserService {
    * @memberOf CoreComponent
    */
   public getCurrentUser(): IUser {
-    const state = this.getStoreState<ICurrentItemServiceState<IUser, number>>(CurrentUserStore.ID);
+    const state = this.getStoreState<ICurrentItemServiceState<IUser>>(CurrentUserStore.ID);
     return state.currentItem;
   }
 
@@ -96,7 +96,7 @@ export class CurrentUserService {
    * @template T
    * @template TId
    * @param {string} storeId
-   * @returns {IServiceState<T, TId>}
+   * @returns {IServiceState}
    *
    * @memberOf CoreComponent
    */

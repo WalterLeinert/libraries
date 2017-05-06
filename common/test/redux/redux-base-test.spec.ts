@@ -92,7 +92,7 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
     return this.crudServiceRequests.getCrudState(this.storeId);
   }
 
-  protected getCurrentItemState(): ICurrentItemServiceState<T, TId> {
+  protected getCurrentItemState(): ICurrentItemServiceState<T> {
     return this.currentItemServiceRequests.getCurrentItemState(this.storeId);
   }
 
@@ -121,8 +121,8 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
     return this._states[index] as ICrudServiceState<T, TId>;
   }
 
-  protected getCurrentItemStateAt(index: number): ICurrentItemServiceState<T, TId> {
-    return this._states[index] as ICurrentItemServiceState<T, TId>;
+  protected getCurrentItemStateAt(index: number): ICurrentItemServiceState<T> {
+    return this._states[index] as ICurrentItemServiceState<T>;
   }
 
   protected get store(): Store {

@@ -24,7 +24,7 @@ import { ServiceRequests } from './service-requests';
 export class CurrentItemServiceRequests<T extends IEntity<TId>, TId extends IToString>
   extends ServiceRequests implements ICurrentItemServiceRequests<T, TId> {
 
-  public static readonly INITIAL_STATE: ICurrentItemServiceState<any, any> = {
+  public static readonly INITIAL_STATE: ICurrentItemServiceState<any> = {
     ...ServiceRequests.INITIAL_STATE,
     currentItem: null
   };
@@ -54,8 +54,8 @@ export class CurrentItemServiceRequests<T extends IEntity<TId>, TId extends IToS
     });
   }
 
-  public getCurrentItemState(storeId: string): ICurrentItemServiceState<T, TId> {
-    return super.getStoreState(storeId) as ICurrentItemServiceState<T, TId>;
+  public getCurrentItemState(storeId: string): ICurrentItemServiceState<T> {
+    return super.getStoreState(storeId) as ICurrentItemServiceState<T>;
   }
 
 }

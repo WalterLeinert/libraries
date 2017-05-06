@@ -26,7 +26,7 @@ import { ExtendedCoreComponent } from './extended-core.component';
  * @implements {OnInit}
  * @template TService - der konkrete Service
  */
-export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TServiceRequests extends IServiceRequests>
+export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServiceRequests>
   extends ExtendedCoreComponent {
   protected static readonly logger = getLogger(ServiceRequestsComponent);
 
@@ -48,7 +48,7 @@ export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TSer
   }
 
 
-  protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T>): void {
+  protected onStoreUpdated<T>(command: ServiceCommand<T>): void {
     super.onStoreUpdated(command);
 
     using(new XLog(ServiceRequestsComponent.logger, levels.INFO, 'onStoreUpdated',

@@ -20,14 +20,14 @@ import { CommandStore } from '../store';
  * @extends {CommandStore<IServiceState<IUser, number>>}
  */
 @ReduxStore()
-export class CurrentUserStore extends CommandStore<ICurrentItemServiceState<IUser, number>> {
+export class CurrentUserStore extends CommandStore<ICurrentItemServiceState<IUser>> {
   public static ID = 'currentUser';
 
   constructor() {
     super(CurrentUserStore.ID, CurrentItemServiceRequests.INITIAL_STATE);
   }
 
-  public dispatch(command: ICommand<ICurrentItemServiceState<IUser, number>>) {
+  public dispatch(command: ICommand<ICurrentItemServiceState<IUser>>) {
     if (!(command instanceof SettingCurrentItemCommand || command instanceof CurrentItemSetCommand)) {
       throw new NotSupportedException(`storeId ${command.storeId}: command not supported ${command.toString()}`);
     }

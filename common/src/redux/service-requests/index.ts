@@ -6,3 +6,4 @@ export * from './extended-crud-service-requests.interface';
 export * from './extended-crud-service-requests';
 export * from './service-requests.interface';
 export * from './service-requests';
+export * from './simple-service-requests';

@@ -11,5 +11,5 @@ import { ICurrentItemServiceState } from './current-item-service-state.interface
  * @template TId
  */
 export interface IExtendedCrudServiceState<T extends IEntity<TId>, TId>
-  extends ICrudServiceState<T, TId>, ICurrentItemServiceState<T, TId> {
+  extends ICrudServiceState<T, TId>, ICurrentItemServiceState<T> {
 }

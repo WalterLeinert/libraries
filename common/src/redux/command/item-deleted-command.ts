@@ -30,8 +30,8 @@ export class ItemDeletedCommand<T extends IEntity<TId>, TId> extends ServiceComm
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
    *
-   * @param {IServiceState<T, TId>} state
-   * @returns {IServiceState<T, TId>}
+   * @param {IServiceState} state
+   * @returns {IServiceState}
    *
    * @memberOf DeleteItemCommand
    */

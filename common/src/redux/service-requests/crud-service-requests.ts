@@ -47,7 +47,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
   };
 
 
-  public constructor(storeId: string | CommandStore<any>, private _service: TService,
+  public constructor(storeId: string | CommandStore<ICrudServiceState<T, TId>>, private _service: TService,
     store: Store, parentStoreId?: string) {
     super(storeId, store, parentStoreId);
   }

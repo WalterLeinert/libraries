@@ -35,7 +35,8 @@ export abstract class ExtendedCrudServiceRequests<T extends IEntity<TId>, TId ex
     currentItem: null
   };
 
-  protected constructor(storeId: string | CommandStore<any>, service: TService, store: Store, parentStoreId?: string) {
+  protected constructor(storeId: string | CommandStore<IExtendedCrudServiceState<T, TId>>,
+    service: TService, store: Store, parentStoreId?: string) {
     super(storeId, service, store, parentStoreId);
   }
 
@@ -52,8 +53,8 @@ export abstract class ExtendedCrudServiceRequests<T extends IEntity<TId>, TId ex
     });
   }
 
-  public getCurrentItemState(storeId: string): ICurrentItemServiceState<T, TId> {
-    return super.getStoreState(storeId) as ICurrentItemServiceState<T, TId>;
+  public getCurrentItemState(storeId: string): ICurrentItemServiceState<T> {
+    return super.getStoreState(storeId) as ICurrentItemServiceState<T>;
   }
 
 

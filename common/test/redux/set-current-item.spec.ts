@@ -16,7 +16,7 @@ import { ReduxBaseTest } from './redux-base-test.spec';
 
 @suite('common.redux: set current item')
 class SetCurrentTest extends ReduxBaseTest<IUser, number, any> {
-  private beforeState: ICurrentItemServiceState<IUser, number>;
+  private beforeState: ICurrentItemServiceState<IUser>;
   private user: IUser = new User(1, 'walter');
 
   constructor() {

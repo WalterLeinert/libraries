@@ -26,8 +26,8 @@ export class FindingItemByIdCommand<T extends IEntity<TId>, TId> extends Service
   /**
    * Liefert einen neuen Status für die aktuelle Operation und den aktuellen Status
    *
-   * @param {IServiceState<T, TId>} state
-   * @returns {IServiceState<T, TId>}
+   * @param {IServiceState} state
+   * @returns {IServiceState}
    */
   protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {

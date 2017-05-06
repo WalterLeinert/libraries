@@ -6,8 +6,6 @@ import { IServiceState } from '../state/service-state.interface';
  *
  * @export
  * @interface IServiceRequests
- * @template T
- * @template TId
  */
 export interface IServiceRequests {
 

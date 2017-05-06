@@ -629,7 +629,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
       }
 
       if (command.storeId === CurrentUserStore.ID && command instanceof CurrentItemSetCommand) {
-        const userState = state as ICurrentItemServiceState<IUser, number>;
+        const userState = state as ICurrentItemServiceState<IUser>;
 
         // beim Logoff wird der Store zurückgesetzt, damit wir nicht beim nächsten Userlogin
         // falsche oder eigentlich nicht verfügbare (Security) Daten übernehmen
@@ -649,7 +649,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @template T
    * @template TId
    * @param {string} storeId
-   * @returns {IServiceState<T, TId>}
+   * @returns {IServiceState}
    *
    * @memberOf CoreComponent
    */
@@ -676,7 +676,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf CoreComponent
    */
   protected get currentStoreUser(): IUser {
-    const state = this.getStoreState<ICurrentItemServiceState<IUser, number>>(CurrentUserStore.ID);
+    const state = this.getStoreState<ICurrentItemServiceState<IUser>>(CurrentUserStore.ID);
     return state.currentItem;
   }
 
