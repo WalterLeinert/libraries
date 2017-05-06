@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Observable';
+
 // fluxgate
 import { ExtendedCrudServiceRequests, IEntity, Store } from '@fluxgate/common';
 import { InvalidOperationException, IToString, Types } from '@fluxgate/core';
@@ -30,11 +32,11 @@ export abstract class EnhancedServiceRequests<T extends IEntity<TId>, TId extend
    *
    * @memberOf EnhancedServiceRequests
    */
-  public setDeleted(item: T): void {
+  public setDeleted(item: T): Observable<T> {
     if (!Types.hasProperty(item, 'deleted')) {
       throw new InvalidOperationException(`item ${JSON.stringify(item)} hat keine deleted-Property`);
     }
     (item as any).deleted = true;
-    this.update(item);
+    return this.update(item);
   }
 }

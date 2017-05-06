@@ -73,7 +73,7 @@ export abstract class ServiceRequestsSelectorComponent<T extends IEntity<TId>, T
     this.changeDetectorRef.markForCheck();
   }
 
-  protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
+  protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T>): void {
     super.onStoreUpdated(command);
 
     const state = this.getStoreState<IExtendedCrudServiceState<T, TId>>(this.serviceRequests.storeId);

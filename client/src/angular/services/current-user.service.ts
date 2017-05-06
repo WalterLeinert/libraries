@@ -70,7 +70,7 @@ export class CurrentUserService {
    *
    * @memberOf CoreComponent
    */
-  private onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
+  private onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T>): void {
     Assert.notNull(command);
 
     using(new XLog(CurrentUserService.logger, levels.INFO, 'onStoreUpdated', `class: ${this.constructor.name}`),
@@ -112,7 +112,7 @@ export class CurrentUserService {
    *
    * @memberOf CoreComponent
    */
-  private updateUserState(command?: ServiceCommand<IUser, number>) {
+  private updateUserState(command?: ServiceCommand<IUser>) {
     if (command instanceof SettingCurrentItemCommand) {
       //
       // Store bei User-Wechsel immer zurücksetzen, damit neuer User nicht Daten des vorherigen Users sehen kann

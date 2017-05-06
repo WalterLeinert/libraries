@@ -617,7 +617,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    *
    * @memberOf CoreComponent
    */
-  protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
+  protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T>): void {
     Assert.notNull(command);
 
     using(new XLog(CoreComponent.logger, levels.INFO, 'onStoreUpdated', `class: ${this.constructor.name}`), (log) => {

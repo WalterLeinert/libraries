@@ -1,11 +1,6 @@
 // import { Injector, ReflectiveInjector } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
-
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -15,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  IEntity, IExtendedCrudServiceRequests, IExtendedCrudServiceState, ItemCreatedCommand,
+  IEntity, IServiceRequests, IServiceState, ItemCreatedCommand,
   ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
 import { MessageService } from '../../services/message.service';
@@ -31,7 +26,8 @@ import { ExtendedCoreComponent } from './extended-core.component';
  * @implements {OnInit}
  * @template TService - der konkrete Service
  */
-export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId> extends ExtendedCoreComponent {
+export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId, TServiceRequests extends IServiceRequests>
+  extends ExtendedCoreComponent {
   protected static readonly logger = getLogger(ServiceRequestsComponent);
 
 
@@ -45,46 +41,14 @@ export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId> exte
    * @memberOf ServiceRequestComponent
    */
   protected constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
-    private _serviceRequests: IExtendedCrudServiceRequests<T, TId>) {
+    private _serviceRequests: TServiceRequests) {
     super(router, route, messageService);
 
     this.subscribeToStore(this._serviceRequests.storeId);
   }
 
 
-  public createItem(item: T): Observable<T> {
-    return this._serviceRequests.create(item);
-  }
-
-  /**
-   * Führt die find-Methode der ServiceRequests async aus.
-   *
-   * @param {boolean} useCache - falls true, werden nur die Daten aus dem State übernommen; sonst Servercall
-   */
-  public findItems(useCache: boolean = false): Observable<T[]> {
-    return this._serviceRequests.find(useCache);
-  }
-
-  public findItemById(id: TId): Observable<T> {
-    return this._serviceRequests.findById(id);
-  }
-
-
-  public updateItem(item: T): Observable<T> {
-    return this._serviceRequests.update(item);
-  }
-
-  public deleteItem(id: TId): Observable<TId> {
-    return this._serviceRequests.delete(id);
-  }
-
-  public setCurrentItem(item: T): Observable<T> {
-    return this._serviceRequests.setCurrent(item);
-  }
-
-
-
-  protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T, TId>): void {
+  protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T>): void {
     super.onStoreUpdated(command);
 
     using(new XLog(ServiceRequestsComponent.logger, levels.INFO, 'onStoreUpdated',
@@ -108,15 +72,15 @@ export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId> exte
   /**
    * Liefert den Store-State für den @see{CommandStore} der serviceRequests.
    */
-  protected getState(): IExtendedCrudServiceState<T, TId> {
-    return this.getStoreState(this.storeId);
+  protected getState<TState extends IServiceState>(): TState {
+    return this.getStoreState<TState>(this.storeId);
   }
 
   /**
    * Liefert den Store-State für den die angegebene @param{storeId}.
    */
-  protected getStoreState(storeId: string): IExtendedCrudServiceState<T, TId> {
-    return super.getStoreState<IExtendedCrudServiceState<T, TId>>(storeId);
+  protected getStoreState<TState extends IServiceState>(storeId: string): TState {
+    return super.getStoreState<TState>(storeId);
   }
 
   /**
@@ -133,24 +97,15 @@ export abstract class ServiceRequestsComponent<T extends IEntity<TId>, TId> exte
 
 
   /**
-   * Liefert den zugehörigen Service
+   * Liefert die zugehörigen ServiceRequests
    *
    * @readonly
    * @protected
    * @type {TService}
-   * @memberOf ServiceRequestComponent
+   * @memberOf ServiceRequestsComponent
    */
-  // protected get serviceRequests(): TServiceRequests {
-  //   return this._serviceRequests;
-  // }
-
-
-  /**
-   * Liefert die Entity-Id für den Navigationspfad.
-   * Format: <Entity-Classname>-<Item-Id>
-   */
-  protected formatGenericId(item: any): string {
-    return `${this._serviceRequests.getModelClassName() + '-' + this._serviceRequests.getEntityId(item)}`;
+  protected get serviceRequests(): TServiceRequests {
+    return this._serviceRequests;
   }
 
 }
