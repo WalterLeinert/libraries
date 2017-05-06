@@ -62,7 +62,7 @@ class TermVisitor implements IVisitor<VisitableNode> {
       this.indent('(');
 
       using(new Suspender([this.indenter]), () => {
-        this.indent('NOT ');
+        this.indent('NOT');
 
         term.term.accept(this);
       });
@@ -102,6 +102,22 @@ class TermVisitor implements IVisitor<VisitableNode> {
 @suite('model.query')
 class QueryTreeTest {
 
+  @test 'should create simple query'() {
+    const term = new SelectorTerm({ name: 'firstname', operator: '=', value: 'hugo' });
+
+    const sb = new StringBuilder();
+
+    const visitor = new TermVisitor(sb);
+    term.accept(visitor);
+
+    expect(JSON.stringify(term)).to.equal(
+      `{"_selector":{"name":"firstname","operator":"=","value":"hugo"}}`);
+
+    expect(visitor.toString()).to.equal(`
+{ name: 'firstname', operator: '=', value: 'hugo' }`);
+  }
+
+
   @test 'should create query tree and visit'() {
     const term = new AndTerm(
       new SelectorTerm({ name: 'firstname', operator: '=', value: 'hugo' }),
@@ -127,5 +143,23 @@ class QueryTreeTest {
       `"_right":{"_left":{"_selector":{"name":"gender","operator":"=","value":"male"}}}}}}`;
 
     expect(JSON.stringify(term)).to.equal(exprString);
+
+    expect(visitor.toString()).to.equal(`
+(
+  { name: 'firstname', operator: '=', value: 'hugo' }
+  AND
+  (
+    { name: 'age', operator: '>', value: '20' }
+    OR
+    (
+      { name: 'age', operator: '<=', value: '6' }
+      AND
+      (
+        NOT
+        { name: 'gender', operator: '=', value: 'male' }
+      )
+    )
+  )
+)`);
   }
 }
