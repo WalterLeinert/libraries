@@ -189,10 +189,10 @@ class SerializerTest {
     const formatter = new JsonFormatter();
 
     const valueSerialized = formatter.serialize(value);
-    console.log(JSON.stringify(valueSerialized));
+    // console.log(JSON.stringify(valueSerialized));
 
     const valueDeserialized = formatter.deserialize(valueSerialized, clazz);
-    console.log(JSON.stringify(valueDeserialized));
+    // console.log(JSON.stringify(valueDeserialized));
 
     expect(valueDeserialized).to.deep.equal(value);
   }
