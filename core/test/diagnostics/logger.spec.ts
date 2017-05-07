@@ -98,7 +98,6 @@ class LoggerConfigTest {
 
   config: IConfig = {
     appenders: [
-
     ],
 
     levels: {

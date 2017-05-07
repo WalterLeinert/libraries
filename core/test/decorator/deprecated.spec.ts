@@ -7,25 +7,30 @@ import { suite, test } from 'mocha-typescript';
 import { Deprecated } from '../../src/decorator/';
 import { configure, IConfig } from '../../src/diagnostics/';
 
-@Deprecated()
-class Test {
-  @Deprecated('logger nicht mehr verwenden')
-  public static readonly logger;
+const tester = (doTest: (test: any, test2: any, test3: any) => void) => {
+  @Deprecated()
+  class Test {
+    @Deprecated('logger nicht mehr verwenden')
+    public static readonly logger;
 
 
-  @Deprecated('', false)
-  public getLogLevel(): number {
-    return 0;
+    @Deprecated('', false)
+    public getLogLevel(): number {
+      return 0;
+    }
   }
-}
 
 
-@Deprecated('durch Test3 ersetzen', false)
-class Test2 {
-}
+  @Deprecated('durch Test3 ersetzen', false)
+  class Test2 {
+  }
 
-class Test3 {
-}
+  class Test3 {
+  }
+
+  doTest(Test, Test2, Test3);
+};
+
 
 
 
@@ -33,21 +38,24 @@ class Test3 {
 class DeprecatedTest {
   config: IConfig = {
     appenders: [
-
     ],
 
     levels: {
-      '[all]': 'WARN'
+      Deprecated: 'ERROR'     // auf WARN setzen, um Output zu bekommen
     }
   };
 
   @test 'should initiate deprecated warnings by diagnostics logging'() {
-    const test = new Test();
-    const level = test.getLogLevel();
-    expect(level).to.equal(0);
 
-    const test2 = new Test2();
-    expect(test2).to.exist;
+    tester((test, test2, test3) => {
+      const t = new test();
+      const level = t.getLogLevel();
+      expect(level).to.equal(0);
+
+      const t2 = new test2();
+      expect(t2).to.exist;
+    });
+
   }
 
 

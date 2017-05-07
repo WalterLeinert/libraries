@@ -6,6 +6,7 @@ export * from './disposable.interface';
 export * from './disposable';
 export * from './enumHelper';
 export * from './message';
+export * from './metadata';
 export * from './node';
 export * from './objectType';
 export * from './platform';
