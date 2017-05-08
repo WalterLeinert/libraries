@@ -34,14 +34,26 @@ const tests = [
     successful: {
       to: [
         {
+          value: 0,
+          expectedValue: '0'
+        },
+        {
           value: 123,
           expectedValue: '123'
         },
       ],
       from: [
         {
+          value: '0',
+          expectedValue: 0
+        },
+        {
           value: '123',
           expectedValue: 123
+        },
+        {
+          value: '-4711',
+          expectedValue: -4711
         },
       ]
     }
@@ -91,8 +103,8 @@ const tests = [
       ],
       from: [
         {
-          value: '2017-05-07T22:00:00.000Z',
-          expectedValue: new Date(2017, 4, 8, 0, 0, 0)
+          value: '2017-04-01T22:00:00.000Z',
+          expectedValue: new Date(2017, 3, 2, 0, 0, 0)
         },
       ]
     }
@@ -113,7 +125,7 @@ class ConverterTest {
   }
 
 
-  @test 'should test converters'() {
+  @test 'should convert from'() {
 
     tests.forEach((test) => {
       const converter = ConverterRegistry.get(test.converter);
@@ -121,11 +133,18 @@ class ConverterTest {
       for (let data of test.successful.from) {
         expect(converter.from.convert(data.value)).to.eql(data.expectedValue);
       }
+    });
+  }
+
+
+  @test 'should convert to'() {
+
+    tests.forEach((test) => {
+      const converter = ConverterRegistry.get(test.converter);
 
       for (let data of test.successful.to) {
         expect(converter.to.convert(data.value)).to.eql(data.expectedValue);
       }
-
     });
 
   }
