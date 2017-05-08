@@ -2,6 +2,7 @@ import { Funktion, ObjectType } from '../base/objectType';
 import { Assert } from '../util/assert';
 import { Utility } from '../util/utility';
 
+
 export type byte = number;
 
 export class Types {
@@ -111,7 +112,7 @@ export class Types {
     const prototype = Object.getPrototypeOf(clazz);
 
     if (prototype) {
-      if (!Utility.isNullOrEmpty(prototype.name)) {
+      if (!Types.isNullOrEmpty(prototype.name)) {
         return prototype;
       }
       return undefined;
@@ -134,4 +135,13 @@ export class Types {
   public static construct<T>(clazz: ObjectType<T>): T {
     return new ((clazz as any).constructor)() as T;
   }
+
+
+  /**
+   * Liefert true, falls @param {value} null oder leer ist.
+   */
+  public static isNullOrEmpty<T extends { length: number }>(value: T) {
+    return Utility.isNullOrEmpty(value);
+  }
+
 }

@@ -4,7 +4,9 @@
 import { expect } from 'chai';
 import { only, suite, test } from 'mocha-typescript';
 
+
 import { BOOLEAN_CONVERTER, Converter, ConverterRegistry, DATE_CONVERTER, NUMBER_CONVERTER } from '../../src/converter';
+import { InvalidOperationException } from '../../src/exceptions';
 
 
 
@@ -31,7 +33,7 @@ const nullUndefinedTests = [
 const tests = [
   {
     converter: NUMBER_CONVERTER,
-    successful: {
+    success: {
       to: [
         {
           value: 0,
@@ -56,11 +58,29 @@ const tests = [
           expectedValue: -4711
         },
       ]
+    },
+    failure: {
+      to: [
+      ],
+      from: [
+        {
+          value: 'Hallo',
+          expectedException: InvalidOperationException
+        },
+        {
+          value: '',
+          expectedException: InvalidOperationException
+        },
+        {
+          value: '!5',
+          expectedException: InvalidOperationException
+        },
+      ]
     }
   },
   {
     converter: BOOLEAN_CONVERTER,
-    successful: {
+    success: {
       to: [
         {
           value: true,
@@ -88,13 +108,41 @@ const tests = [
           value: 'FALSE',
           expectedValue: false
         },
+
+        {
+          value: '1',
+          expectedValue: true
+        },
+
+        {
+          value: '0',
+          expectedValue: false
+        },
+      ]
+    },
+    failure: {
+      to: [
+      ],
+      from: [
+        {
+          value: 'Hallo',
+          expectedException: InvalidOperationException
+        },
+        {
+          value: '#',
+          expectedException: InvalidOperationException
+        },
+        {
+          value: 'tr-ue',
+          expectedException: InvalidOperationException
+        },
       ]
     }
   },
 
   {
     converter: DATE_CONVERTER,
-    successful: {
+    success: {
       to: [
         {
           value: new Date(2017, 4, 8, 0, 0, 0),
@@ -106,6 +154,12 @@ const tests = [
           value: '2017-04-01T22:00:00.000Z',
           expectedValue: new Date(2017, 3, 2, 0, 0, 0)
         },
+      ]
+    },
+    failure: {
+      to: [
+      ],
+      from: [
       ]
     }
   }
@@ -130,7 +184,7 @@ class ConverterTest {
     tests.forEach((test) => {
       const converter = ConverterRegistry.get(test.converter);
 
-      for (let data of test.successful.from) {
+      for (let data of test.success.from) {
         expect(converter.from.convert(data.value)).to.eql(data.expectedValue);
       }
     });
@@ -142,10 +196,29 @@ class ConverterTest {
     tests.forEach((test) => {
       const converter = ConverterRegistry.get(test.converter);
 
-      for (let data of test.successful.to) {
+      for (let data of test.success.to) {
         expect(converter.to.convert(data.value)).to.eql(data.expectedValue);
       }
     });
 
   }
+}
+
+
+
+@suite('core.converter (expected exceptions)') @only
+class ConverterFailureTest {
+
+
+  @test 'should convert from and throw exceptions'() {
+
+    tests.forEach((test) => {
+      const converter = ConverterRegistry.get(test.converter);
+
+      for (let data of test.failure.from) {
+        expect(() => converter.from.convert(data.value)).to.throw(data.expectedException);
+      }
+    });
+  }
+
 }

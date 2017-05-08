@@ -12,9 +12,14 @@ export class NumberFromStringConverter implements IConverter<string, number> {
     if (!Types.isPresent(value)) {
       return value as any as number;
     }
+
+    if (Types.isNullOrEmpty(value)) {
+      throw new InvalidOperationException(`no valid number: '${value}'`);
+    }
+
     const val = +value;
     if (Number.isNaN(val)) {
-      throw new InvalidOperationException(`no valid number: ${value}`);
+      throw new InvalidOperationException(`no valid number: '${value}'`);
     }
     return val;
   }
