@@ -4,6 +4,7 @@ export * from './dictionary.interface';
 export * from './hour';
 export * from './instanceAccessor';
 export * from './mathUtil';
+export * from './nullable';
 export * from './shortTime';
 export * from './stack';
 export * from './time';
