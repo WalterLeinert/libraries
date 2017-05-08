@@ -11,7 +11,7 @@ import { IValidation } from '../../validation/validation.interface';
 export function Validation(validators: IValidation[]) {
   // tslint:disable-next-line:only-arrow-functions
   return function (target: any, propertyName: string) {
-    MetadataStorage.instance.addValidationMetadata(new ValidationMetadata(target.constructor, propertyName,
+    MetadataStorage.instance.addValidationMetadata(new ValidationMetadata(target, propertyName,
       new CompoundValidator(validators)));
   };
 }

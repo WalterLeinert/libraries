@@ -1,4 +1,4 @@
-import { Assert, Funktion, InstanceAccessor } from '@fluxgate/core';
+import { Assert, Funktion, InstanceAccessor, PropertyMetadata } from '@fluxgate/core';
 
 import { MetadataStorage } from './metadataStorage';
 
@@ -15,7 +15,7 @@ export type RelationTypeInFunction = ((type?: any) => Funktion) | Funktion;
  * @export
  * @class EnumMetadata
  */
-export class EnumMetadata<T, TText, TId> {
+export class EnumMetadata<T, TText, TId> extends PropertyMetadata {
   private _textField: string;
   private _valueField: string;
 
@@ -29,11 +29,12 @@ export class EnumMetadata<T, TText, TId> {
    *
    * @memberOf EnumMetadata
    */
-  constructor(public target: Funktion, public propertyName: string,
+  constructor(target: Object, public propertyName: string,
     private _dataSource: RelationTypeInFunction,
     private _foreignText: InstanceAccessor<T, TText>,
     private _foreignId: InstanceAccessor<T, TId>,
     private _cacheable: boolean) {
+    super(target, propertyName);
   }
 
   /**

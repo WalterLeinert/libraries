@@ -1,4 +1,4 @@
-import { Assert, Dictionary, Funktion, IToString } from '@fluxgate/core';
+import { Assert, ClassMetadata, Dictionary, Funktion, IToString } from '@fluxgate/core';
 
 import { ICrudServiceRequests } from '../../redux/service-requests/crud-service-requests.interface';
 import { EnumTableOptions } from '../decorator/model/enumTableOptions';
@@ -15,7 +15,7 @@ import { SpecialColumns } from './specialColumns';
  * @export
  * @class TableMetadata
  */
-export abstract class TableMetadata {
+export abstract class TableMetadata extends ClassMetadata {
   private _columnMetadata: ColumnMetadata[] = [];
   private propertyMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
@@ -33,7 +33,8 @@ export abstract class TableMetadata {
    *
    * @memberOf TableMetadata
    */
-  protected constructor(public target: Funktion, public options: TableOptions | EnumTableOptions) {
+  protected constructor(target: Funktion, public options: TableOptions | EnumTableOptions) {
+    super(target, target.name);
   }
 
   /**
@@ -244,7 +245,7 @@ export abstract class TableMetadata {
    * Liefert den Klassennamen des zugehörigen Modells (z.B. 'Artikel')
    */
   public get className(): string {
-    return this.target.name;
+    return this.targetName;
   }
 
   public createPropertiesMap(): { [name: string]: string | any } {

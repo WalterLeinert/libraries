@@ -86,7 +86,7 @@ export function Column(options?: ColumnOptions) {
       type = options.propertyType;
     }
 
-    MetadataStorage.instance.addColumnMetadata(new ColumnMetadata(target.constructor, propertyName,
+    MetadataStorage.instance.addColumnMetadata(new ColumnMetadata(target, propertyName,
       type, options));
   };
 }

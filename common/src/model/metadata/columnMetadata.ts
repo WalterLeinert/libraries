@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 
-import { Assert, Funktion, InvalidOperationException, ShortTime, Time, Types } from '@fluxgate/core';
+import { Assert, Funktion, InvalidOperationException, PropertyMetadata, ShortTime, Time, Types } from '@fluxgate/core';
 
 import { ColumnOptions } from '../decorator/model/columnOptions';
 import { IValidation } from './../validation/validation.interface';
@@ -15,7 +15,7 @@ import { EnumMetadata } from '.';
  * @export
  * @class ColumnMetadata
  */
-export class ColumnMetadata {
+export class ColumnMetadata extends PropertyMetadata {
   private _validator: IValidation;
   private _enumMetadata: EnumMetadata<any, any, any>;
 
@@ -25,8 +25,9 @@ export class ColumnMetadata {
    * @param {ColumnType} propertyType - Typ der Modelproperty
    * @param {ColumnOptions} options - weitere Propertyeigenschaften
    */
-  constructor(public target: Funktion, public propertyName: string, public propertyType: ColumnType,
+  constructor(target: Object, public propertyName: string, public propertyType: ColumnType,
     public options: ColumnOptions) {
+    super(target, propertyName);
   }
 
 

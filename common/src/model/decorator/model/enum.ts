@@ -26,6 +26,6 @@ export function Enum<T, TText, TId>(
   return function (target: any, propertyName: string) {
     Assert.notNull(dataSource);
     MetadataStorage.instance.addEnumMetadata(
-      new EnumMetadata(target.constructor, propertyName, dataSource, foreignText, foreignId, cacheable));
+      new EnumMetadata(target, propertyName, dataSource, foreignText, foreignId, cacheable));
   };
 }

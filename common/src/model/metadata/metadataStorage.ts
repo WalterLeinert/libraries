@@ -202,7 +202,7 @@ export class MetadataStorage {
   public addColumnMetadata(metadata: ColumnMetadata) {
     Assert.notNull(metadata);
 
-    const targetName = metadata.target.name;
+    const targetName = metadata.targetName;
     let colMetadata: ColumnMetadata[] = this.tableColumnDict.get(targetName);
     if (!colMetadata) {
       colMetadata = [];
@@ -212,14 +212,15 @@ export class MetadataStorage {
   }
 
 
-  public setSpecialColumn(target: Funktion, propertyName: string, key: SpecialColumn) {
+  public setSpecialColumn(target: Object, propertyName: string, key: SpecialColumn) {
     let dict: Dictionary<string, SpecialColumn>;
 
-    if (!this.tableSpecialColumnDict.containsKey(target.name)) {
+    const targetName = Types.getClassName(target);
+    if (!this.tableSpecialColumnDict.containsKey(targetName)) {
       dict = new Dictionary<string, SpecialColumn>();
-      this.tableSpecialColumnDict.set(target.name, dict);
+      this.tableSpecialColumnDict.set(targetName, dict);
     } else {
-      dict = this.tableSpecialColumnDict.get(target.name);
+      dict = this.tableSpecialColumnDict.get(targetName);
     }
 
     dict.set(propertyName, key);
@@ -236,7 +237,7 @@ export class MetadataStorage {
   public addValidationMetadata(metadata: ValidationMetadata) {
     Assert.notNull(metadata);
 
-    const targetName = metadata.target.name;
+    const targetName = metadata.targetName;
     let valMetadata: ValidationMetadata[] = this.tableValidationDict.get(targetName);
     if (!valMetadata) {
       valMetadata = [];
@@ -248,7 +249,7 @@ export class MetadataStorage {
   public addEnumMetadata<T, TText, TId>(metadata: EnumMetadata<T, TText, TId>) {
     Assert.notNull(metadata);
 
-    const targetName = metadata.target.name;
+    const targetName = metadata.targetName;
     let enumMetadata: Array<EnumMetadata<any, any, any>> = this.tableEnumDict.get(targetName);
     if (!enumMetadata) {
       enumMetadata = [];

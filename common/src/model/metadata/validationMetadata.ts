@@ -1,4 +1,4 @@
-import { Funktion } from '@fluxgate/core';
+import { Funktion, PropertyMetadata } from '@fluxgate/core';
 
 import { Validator } from '../validation/validator';
 
@@ -8,7 +8,8 @@ import { Validator } from '../validation/validator';
  * @export
  * @class ValidationMetadata
  */
-export class ValidationMetadata {
-  constructor(public target: Funktion, public propertyName: string, public validator: Validator) {
+export class ValidationMetadata extends PropertyMetadata {
+  constructor(target: Funktion, public propertyName: string, public validator: Validator) {
+    super(target, propertyName);
   }
 }
