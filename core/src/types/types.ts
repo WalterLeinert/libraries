@@ -77,6 +77,38 @@ export class Types {
   }
 
 
+  /**
+   * Liefert die Constructor-Methode für @param{obj}.
+   * Obj muss ein Object sein.
+   *
+   * @static
+   * @param {*} obj
+   * @returns {Funktion}
+   *
+   * @memberof Types
+   */
+  public static getConstructor(obj: any): Funktion {
+    Assert.notNull(obj);
+    Assert.that(Types.isObject(obj));
+    return obj.constructor;
+  }
+
+
+  /**
+   * Liefert den Klassennamen von @param{obj}
+   * Obj muss ein Object sein.
+   *
+   * @static
+   * @param {*} obj
+   * @returns {string}
+   *
+   * @memberof Types
+   */
+  public static getClassName(obj: any): string {
+    return Types.getConstructor(obj).name;
+  }
+
+
 
   /**
    * Liefert true, falls @see{clazz} über den Operator new eine Instanz erzeugen kann.

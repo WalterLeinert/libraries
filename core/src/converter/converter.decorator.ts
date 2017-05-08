@@ -9,6 +9,17 @@ import { ClassConverterMetadata } from './metadata/class-converter-metadata';
 import { ConverterMetadataStorage } from './metadata/converter-metadata-storage';
 import { PropertyConverterMetadata } from './metadata/property-converter-metadata';
 
+
+/**
+ * Definiert die Konvertierung von Klassen oder Properties.
+ *
+ * @export
+ * @template TFrom Quelltype
+ * @template TTo Zieltyp
+ * @param {ConverterKey} key - Key, für den Zugriff auf das entsprechende Converter-Tuple
+ * @param {IConverterTuple<TFrom, TTo>} [converterTuple] - Convertertuple mit from- und to-Converter
+ * @returns
+ */
 export function Converter<TFrom, TTo>(key: ConverterKey, converterTuple?: IConverterTuple<TFrom, TTo>) {
   // tslint:disable-next-line:only-arrow-functions
   return function (target: any, propertyName?: string, descriptor?: PropertyDescriptor) {

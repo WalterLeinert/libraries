@@ -1,8 +1,10 @@
 import leftPad = require('left-pad');
+import { Converter } from '../converter/converter.decorator';
 import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
 import { Hour } from './hour';
 import { MathUtil } from './mathUtil';
+import { SHORTTIME_CONVERTER, SHORTTIME_CONVERTER_TUPLE } from './shortTime.converter';
 import { Types } from './types';
 
 
@@ -12,6 +14,7 @@ import { Types } from './types';
  * @export
  * @class ShortTime
  */
+@Converter(SHORTTIME_CONVERTER, SHORTTIME_CONVERTER_TUPLE)
 export class ShortTime {
 
   /**

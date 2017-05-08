@@ -2,7 +2,7 @@
 // tslint:disable:max-classes-per-file
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 
 import {
@@ -34,7 +34,7 @@ class Test {
 }
 
 
-@suite('core.converter (metadata)') @only
+@suite('core.converter (metadata)')
 class ConverterMetadataTest {
 
   @test 'should find metadata'() {
@@ -56,6 +56,7 @@ class ConverterMetadataTest {
     expect(createdMetadata.key).to.eql(DATE_CONVERTER);
   }
 
+
   @test 'should find metadata for ShortInt property'() {
     const classMetadata = ConverterMetadataStorage.instance.findClassConverterMetadata(Test);
 
@@ -66,7 +67,7 @@ class ConverterMetadataTest {
     expect(Types.isObject(test.sint)).to.be.true;
     // expect(Types.hasConstructor(test.sint)).to.be.true;
 
-    const typeName = test.sint.constructor.name;
+    const typeName = Types.getClassName(test.sint);
 
     const shortIntMetadata = ConverterMetadataStorage.instance.findClassConverterMetadata(typeName);
     expect(shortIntMetadata).to.exist;
@@ -75,9 +76,7 @@ class ConverterMetadataTest {
   }
 
 
-
   @test 'should test class converter'() {
-
     const classMetadata = ConverterMetadataStorage.instance.findClassConverterMetadata(ShortInt);
     expect(classMetadata).to.exist;
 
