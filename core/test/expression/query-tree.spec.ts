@@ -5,15 +5,13 @@
 require('reflect-metadata');
 
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
+import { skip, suite, test } from 'mocha-typescript';
 
-import {
-  AndTerm, BinaryTerm, Indenter, IVisitor, NotTerm, OrTerm, StringBuilder,
-  Suspender, UnaryTerm, using, VisitableNode
-} from '@fluxgate/core';
-
-import { SelectorTerm } from '../../../src/model/query/selector-term';
-
+import { StringBuilder } from '../../src/base/stringBuilder';
+import { using } from '../../src/diagnostics';
+import { AndTerm, BinaryTerm, NotTerm, OrTerm, SelectorTerm, UnaryTerm } from '../../src/expression';
+import { IVisitor, VisitableNode } from '../../src/pattern/visitor';
+import { Indenter, Suspender } from '../../src/suspendable';
 
 
 class TermVisitor implements IVisitor<VisitableNode> {
@@ -99,7 +97,7 @@ class TermVisitor implements IVisitor<VisitableNode> {
 }
 
 
-@suite('model.query')
+@suite('core.expresssion')
 class QueryTreeTest {
 
   @test 'should create simple query'() {
@@ -162,4 +160,5 @@ class QueryTreeTest {
   )
 )`);
   }
+
 }
