@@ -27,6 +27,13 @@ export class ClassConverterMetadata extends Metadata<Funktion> {
     return this._propertyMetadata;
   }
 
+  public get key(): ConverterKey {
+    return this._key;
+  }
+
+  public setConverterKey(key: ConverterKey) {
+    this._key = key;
+  }
 
   public getConverterTuple<TFrom, TTo>(): IConverterTuple<TFrom, TTo> {
     return ConverterRegistry.get<TFrom, TTo>(this._key);

@@ -1,3 +1,5 @@
+// tslint:disable:max-classes-per-file
+
 import { Converter } from '../../src/converter';
 import { ConverterKey } from '../../src/converter/converter-key';
 import { IConverterOptions } from '../../src/converter/converter-options.interface';
@@ -13,25 +15,7 @@ export type ShortInts = 1 | 2 | 3;
 export const SHORT_INT_CONVERTER = ConverterKey.create(String.name, 'ShortInt');
 
 
-@Converter(SHORT_INT_CONVERTER)
-export class ShortInt {
-  public static NAME = ShortInt.name;
 
-  constructor(private _value: ShortInts) {
-  }
-
-  public get value(): ShortInts {
-    return this._value;
-  }
-
-  public toString() {
-    return this._value.toString();
-  }
-}
-
-
-
-// tslint:disable-next-line:max-classes-per-file
 export class ShortIntFromStringConverter implements IConverter<string, ShortInt> {
   public convert(value: string, options?: IConverterOptions): Nullable<ShortInt> {
     if (!Types.isPresent(value)) {
@@ -50,12 +34,32 @@ export class ShortIntFromStringConverter implements IConverter<string, ShortInt>
   }
 }
 
-// tslint:disable-next-line:max-classes-per-file
 export class StringFromShortIntConverter implements IConverter<ShortInt, string> {
   public convert(value: ShortInt, options?: IConverterOptions): Nullable<string> {
     if (!Types.isPresent(value)) {
       return value as any as string;
     }
     return value.toString();
+  }
+}
+
+
+
+@Converter(SHORT_INT_CONVERTER, {
+  from: new ShortIntFromStringConverter(),
+  to: new StringFromShortIntConverter()
+})
+export class ShortInt {
+  public static NAME = ShortInt.name;
+
+  constructor(private _value: ShortInts) {
+  }
+
+  public get value(): ShortInts {
+    return this._value;
+  }
+
+  public toString() {
+    return this._value.toString();
   }
 }

@@ -21,8 +21,8 @@ export class ConverterMetadataStorage {
   private static _instance = new ConverterMetadataStorage();
 
   private classDict: Dictionary<string, ClassConverterMetadata> = new Dictionary<string, ClassConverterMetadata>();
-  private classPropertyDict: Dictionary<string, PropertyConverterMetadata[]> =
-  new Dictionary<string, PropertyConverterMetadata[]>();
+  // private classPropertyDict: Dictionary<string, PropertyConverterMetadata[]> =
+  // new Dictionary<string, PropertyConverterMetadata[]>();
 
   public static get instance(): ConverterMetadataStorage {
     return ConverterMetadataStorage._instance;
@@ -34,28 +34,22 @@ export class ConverterMetadataStorage {
     using(new XLog(ConverterMetadataStorage.logger, levels.INFO, 'addClassMetadata'), (log) => {
       log.info(`metadata = ${metadata.name}`);
 
+      //
+      // falls bereits PropertyConverter registriert wurden, existieren an dieser Stelle bereits
+      // ClassConverter-Metadaten
+      //
+      let classConverterMetadata: ClassConverterMetadata = metadata;
       if (this.classDict.containsKey(metadata.name)) {
-        throw new InvalidOperationException(`Class ${metadata.name} already registered.`);
+        classConverterMetadata = this.classDict.get(metadata.name);
+        classConverterMetadata.setConverterKey(metadata.key);
+      } else {
+
+        //
+        // falls noch kein ClassConverter registriert ist, existiert nur ein Class-Decorator und
+        // keine Property-Decorators
+        //
+        this.classDict.set(metadata.name, metadata);
       }
-
-      const propertyMetadata: PropertyConverterMetadata[] = this.classPropertyDict.get(metadata.name);
-
-      if (propertyMetadata) {
-
-        propertyMetadata.forEach((item) => {
-          metadata.add(item);
-        });
-      }
-
-
-      const targetProperties = Reflect.ownKeys(metadata.target);
-      targetProperties.forEach((prop) => {
-        const pd = Reflect.getOwnPropertyDescriptor(metadata.target, prop);
-      });
-
-      // TODO: alle weiteren nicht dekorierten Properties hinzufügen
-
-      this.classDict.set(metadata.name, metadata);
     });
   }
 
@@ -68,18 +62,20 @@ export class ConverterMetadataStorage {
       log.info(`propertyMetadata: target.constructor = ${propertyMetadata.target.constructor.name}, ` +
         `propertyName = ${propertyMetadata.name}`);
 
-      const className = propertyMetadata.target.constructor.name;
-      let metadata: PropertyConverterMetadata[] = this.classPropertyDict.get(className);
-      if (!metadata) {
-        metadata = [];
-        this.classPropertyDict.set(className, metadata);
+      let classConverterMetadata: ClassConverterMetadata;
+      if (!this.classDict.containsKey(propertyMetadata.target.constructor.name)) {
+        classConverterMetadata = new ClassConverterMetadata(propertyMetadata.target.constructor, undefined);
+        this.addClassConverterMetadata(classConverterMetadata);
+      } else {
+        classConverterMetadata = this.classDict.get(propertyMetadata.target.constructor.name);
       }
-      metadata.push(propertyMetadata);
+
+      classConverterMetadata.add(propertyMetadata);
     });
   }
 
 
-  public findClassMetadata(target: Funktion | string): ClassConverterMetadata {
+  public findClassConverterMetadata(target: Funktion | string): ClassConverterMetadata {
     Assert.notNull(target);
     if (Types.isString(target)) {
       return this.classDict.get(target as string);

@@ -2,26 +2,12 @@
 // tslint:disable:max-classes-per-file
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 
-import { BOOLEAN_CONVERTER, Converter, ConverterRegistry, DATE_CONVERTER, NUMBER_CONVERTER } from '../../src/converter';
+import { BOOLEAN_CONVERTER, ConverterRegistry, DATE_CONVERTER, NUMBER_CONVERTER } from '../../src/converter';
 import { InvalidOperationException } from '../../src/exceptions';
 
-
-
-class Test {
-  @Converter(NUMBER_CONVERTER)
-  public id: number;
-
-  public name: string;
-
-  @Converter(BOOLEAN_CONVERTER)
-  public persisted: boolean;
-
-  @Converter(DATE_CONVERTER)
-  public created: Date;
-}
 
 const nullUndefinedTests = [
   NUMBER_CONVERTER,
@@ -167,7 +153,7 @@ const tests = [
 
 
 
-@suite('core.converter') @only
+@suite('core.converter')
 class ConverterTest {
 
   @test 'should convert null/undefined'() {
@@ -206,9 +192,8 @@ class ConverterTest {
 
 
 
-@suite('core.converter (expected exceptions)') @only
+@suite('core.converter (expected exceptions)')
 class ConverterFailureTest {
-
 
   @test 'should convert from and throw exceptions'() {
 
