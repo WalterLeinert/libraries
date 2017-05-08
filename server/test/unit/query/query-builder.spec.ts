@@ -15,15 +15,14 @@ import { only, suite, test } from 'mocha-typescript';
 chai.use(chaiAsPromised);
 chai.should();
 
-import * as Knex from 'knex';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { NumberIdGenerator, Role, SelectorTerm } from '@fluxgate/common';
-import { AndTerm, NotTerm, OrTerm } from '@fluxgate/core';
+import { NumberIdGenerator, Role, } from '@fluxgate/common';
+import { AndTerm, OrTerm, SelectorTerm } from '@fluxgate/core';
 
 import { KnexQueryVisitor } from '../../../src/ts-express-decorators-flx/services/knex-query-visitor';
 import { RoleService } from '../../../src/ts-express-decorators-flx/services/role.service';

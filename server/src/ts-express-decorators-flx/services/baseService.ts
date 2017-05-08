@@ -10,13 +10,14 @@ import {
   Assert, Clone, /*EntityExistsException,*/
   EntityNotFoundException, Funktion,
   IException, InvalidOperationException,
-  IToString, NotImplementedException, OptimisticLockException, Types
+  IToString, OptimisticLockException, Types
 } from '@fluxgate/core';
 
 import { ColumnMetadata, ExceptionWrapper, IQuery, IUser, ServiceResult, TableMetadata } from '@fluxgate/common';
 
 
 import { IBaseService } from './baseService.interface';
+import { KnexQueryVisitor } from './knex-query-visitor';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
 
@@ -479,14 +480,10 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
     return using(new XLog(BaseService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
       let knexQuery = this.fromTable();
 
-      throw new NotImplementedException('Umbauen auf Queryterms / BooleanTerm');
+      const visitor = new KnexQueryVisitor(knexQuery, this.metadata);
+      query.term.accept(visitor);
 
-      // query.selectors.forEach((selector) => {
-      //   const dbColumnName = this.metadata.getDbColumnName(selector.name);
-      //   knexQuery = knexQuery.andWhere(dbColumnName, selector.operator, selector.value);
-      // });
-
-      // return this.queryKnex(knexQuery);
+      return this.queryKnex(visitor.query(knexQuery));
     });
   }
 

@@ -7,8 +7,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { AppRegistry, IQuery, IUser, Role, SelectorTerm, User } from '@fluxgate/common';
-import { Assert, Encryption, Funktion } from '@fluxgate/core';
+import { AppRegistry, IQuery, IUser, Role, User } from '@fluxgate/common';
+import { Assert, Encryption, Funktion, SelectorTerm } from '@fluxgate/core';
 
 import { Messages } from '../../resources/messages';
 import { BaseService } from './baseService';
@@ -313,10 +313,10 @@ export class UserService extends BaseService<IUser, number> {
     return using(new XLog(UserService.logger, levels.INFO, 'findByCredentialEmail', `email = ${email}`), (log) => {
       const query: IQuery = {
         term: new SelectorTerm({
-            name: 'email',
-            operator: '=',
-            value: email
-          })
+          name: 'email',
+          operator: '=',
+          value: email
+        })
       };
 
       const message = Messages.WRONG_CREDENTIALS('Email');

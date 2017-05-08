@@ -5,9 +5,10 @@ import * as Knex from 'knex';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { SelectorTerm, TableMetadata } from '@fluxgate/common';
+import { TableMetadata } from '@fluxgate/common';
 import {
-  AndTerm, Assert, BinaryTerm, IVisitor, NotSupportedException, NotTerm, OrTerm, Stack, UnaryTerm, VisitableNode
+  AndTerm, Assert, BinaryTerm, IVisitor, NotSupportedException, NotTerm, OrTerm, SelectorTerm,
+  Stack, UnaryTerm, VisitableNode
 } from '@fluxgate/core';
 
 
