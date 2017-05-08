@@ -109,7 +109,7 @@ class Test5 {
 
 
 
-@suite('core.decorator.Serialization')
+@suite('core.serialization.decorator')
 class SerializerTest {
 
 

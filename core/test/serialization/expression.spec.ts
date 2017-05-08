@@ -1,19 +1,16 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
 
-// tslint:disable-next-line:no-var-requires
-require('reflect-metadata');
-
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import {
-  AndTerm, BinaryTerm, SelectorTerm, NotTerm, OrTerm, UnaryTerm
+  AndTerm, NotTerm, OrTerm, SelectorTerm
 } from '../../src/expression';
 import { JsonFormatter } from '../../src/serialization';
 
 
-@suite('model.query') @only
+@suite('core.serialization')
 class ExpressionTest {
   private formatter: JsonFormatter;
 
@@ -22,7 +19,19 @@ class ExpressionTest {
 
     const termSerialized = this.formatter.serialize(term);
     const termDeserialized = this.formatter.deserialize(termSerialized);
-    expect(termSerialized).to.eql(termDeserialized);
+    expect(term).to.eql(termDeserialized);
+  }
+
+  @test 'should serialize/deserialize simple tree'() {
+    const term =
+      new AndTerm(
+        new SelectorTerm({ name: 'age', operator: '<=', value: 6 }),
+        new NotTerm(new SelectorTerm({ name: 'gender', operator: '=', value: 'male' }))
+      );
+
+    const termSerialized = this.formatter.serialize(term);
+    const termDeserialized = this.formatter.deserialize(termSerialized);
+    expect(term).to.eql(termDeserialized);
   }
 
 
@@ -40,7 +49,7 @@ class ExpressionTest {
 
     const termSerialized = this.formatter.serialize(term);
     const termDeserialized = this.formatter.deserialize(termSerialized);
-    expect(termSerialized).to.eql(termDeserialized);
+    expect(term).to.eql(termDeserialized);
   }
 
 

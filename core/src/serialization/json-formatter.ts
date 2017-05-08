@@ -1,7 +1,15 @@
 // tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
 
+import { using } from '../base/disposable';
+import { levels } from '../diagnostics/level';
+// tslint:disable-next-line:no-unused-variable
+import { ILogger } from '../diagnostics/logger.interface';
+import { getLogger } from '../diagnostics/logging-core';
+import { XLog } from '../diagnostics/xlog';
+
 import { Funktion } from '../base/objectType';
+import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Types } from '../types/types';
 import { Assert } from '../util/assert';
@@ -20,6 +28,7 @@ export interface IJsonSerialization {
  * @class JsonFormatter
  */
 export class JsonFormatter {
+  protected static readonly logger = getLogger(JsonFormatter);
 
   public static readonly TYPE_PROPERTY = '__type__';
 
@@ -36,59 +45,61 @@ export class JsonFormatter {
    * @memberof JsonFormatter
    */
   public serialize<T>(obj: T): any {
-    if (!Types.isPresent(obj)) {
-      return obj;
-    }
+    return using(new XLog(JsonFormatter.logger, levels.INFO, 'serialize'), (log) => {
 
-    let json: any;
+      if (!Types.isPresent(obj)) {
+        return obj;
+      }
+
+      let json: any;
 
 
-    if (Types.isArray(obj)) {
-      /**
-       * alle Elemente einzeln serialisieren
-       */
+      if (Types.isArray(obj)) {
+        /**
+         * alle Elemente einzeln serialisieren
+         */
 
-      const ar = obj as any as any[];
+        const ar = obj as any as any[];
 
-      json = [];
+        json = [];
 
-      ar.forEach((a) => {
-        json.push(this.serialize(a));
-      });
-
-    } else if (Types.isObject(obj)) {
-
-      /**
-       * Falls Metadaten vorhanden, über Metadaten serialisieren; sonst über Reflection
-       */
-
-      json = {};
-
-      const clazz = (obj as Object).constructor;
-
-      const clazzMetadata = SerializerMetadataStorage.instance.findClassMetadata(clazz);
-
-      // JsonClass?
-      if (clazzMetadata) {
-        clazzMetadata.propertyMetadata.forEach((prop) => {
-          json[prop.name] = this.serialize(obj[prop.name]);
+        ar.forEach((a) => {
+          json.push(this.serialize(a));
         });
-      } else {
+
+      } else if (Types.isObject(obj)) {
+
+        /**
+         * Falls Metadaten vorhanden, über Metadaten serialisieren; sonst über Reflection
+         */
+
+        json = {};
+
+        const clazz = (obj as Object).constructor;
+
+        const clazzMetadata = SerializerMetadataStorage.instance.findClassMetadata(clazz);
+
+        // JsonClass?
+        if (clazzMetadata) {
+          json[JsonFormatter.TYPE_PROPERTY] = clazzMetadata.name;   // Typ für Deserialiserung hinterlegen
+          log.debug(`setting type = ${clazzMetadata.name}: obj = ${JSON.stringify(obj)}`);
+        }
+
         const props = Reflect.ownKeys(obj as any);
 
         // ... und dann die Werte der Zielentity zuweisen
         for (const prop of props) {
           json[prop.toString()] = this.serialize(obj[prop.toString()]);
         }
+
+      } else if (Types.isPrimitive(obj)) {
+        json = obj;
+      } else {
+        throw new NotSupportedException(`Unsupported object: ${JSON.stringify(obj)}`);
       }
 
-    } else if (Types.isPrimitive(obj)) {
-      json = obj;
-    } else {
-      throw new NotSupportedException(`Unsupported object: ${JSON.stringify(obj)}`);
-    }
-
-    return json;
+      return json;
+    });
   }
 
 
@@ -105,73 +116,75 @@ export class JsonFormatter {
    * @memberof JsonFormatter
    */
   public deserialize<T>(json: any, clazz?: Funktion): T {
-    if (!Types.isPresent(json)) {
-      return json;
-    }
+    return using(new XLog(JsonFormatter.logger, levels.INFO, 'deserialize'), (log) => {
+      if (!Types.isPresent(json)) {
+        return json;
+      }
 
-    let rval: T;
+      let rval: T;
 
-    if (Types.isArray(json)) {
-      const ar = json as any[];
+      if (Types.isArray(json)) {
+        const ar = json as any[];
 
-      const arr = [];
-      ar.forEach((a) => {
-        arr.push(this.deserialize(a, clazz));
-      });
-
-      rval = arr as any as T;
-
-    } else if (Types.isObject(json)) {
-
-      if (clazz) {
-        const clazzMetadata = SerializerMetadataStorage.instance.findClassMetadata(clazz);
-        Assert.notNull(clazzMetadata, `No metadata found for type: ${clazz.name}`);
-
-        const instance = clazzMetadata.createInstance();
-
-        clazzMetadata.propertyMetadata.forEach((prop) => {
-
-          //
-          // wir prüfen, ob der Propertytyp ein serialisierbares Objekt ist
-          //
-          let propClazz = prop.type;
-
-          let propClazzMetadata;
-          if (propClazz) {
-            propClazzMetadata = SerializerMetadataStorage.instance.findClassMetadata(propClazz);
-            if (!propClazzMetadata) {
-              propClazz = undefined;  // nicht durch JsonFormatter deserialisierbar
-            }
-          }
-
-          instance[prop.name] = this.deserialize(json[prop.name], propClazz);
+        const arr = [];
+        ar.forEach((a) => {
+          arr.push(this.deserialize(a, clazz));
         });
 
-        rval = instance as T;
-      } else {
-        const jsonClazz = (json as Object).constructor;
+        rval = arr as any as T;
 
-        const jsonClazzMetadata = SerializerMetadataStorage.instance.findClassMetadata(jsonClazz);
-        if (jsonClazzMetadata) {
-          const instance = jsonClazzMetadata.createInstance();
+      } else if (Types.isObject(json)) {
 
-          jsonClazzMetadata.propertyMetadata.forEach((prop) => {
-            instance[prop.name] = this.serialize(json[prop.name]);
-          });
+        let clazzMetadata;
 
-          rval = instance as T;
-        } else {
+        //
+        // liegt im Json-Object Typinformation vor?
+        //
+        if (Types.hasProperty(json, JsonFormatter.TYPE_PROPERTY)) {
+          const type = json[JsonFormatter.TYPE_PROPERTY];
 
-          rval = json as T;
+          log.debug(`serializer type = ${type}: json = ${JSON.stringify(json)}`);
+
+          clazzMetadata = SerializerMetadataStorage.instance.findClassMetadata(type);
         }
 
-      }
-    } else if (Types.isPrimitive(json)) {
-      rval = json as T;
-    } else {
-      throw new NotSupportedException(`Unsupported json: ${JSON.stringify(json)}`);
-    }
+        //
+        // falls eine Zielklasse angegeben ist, muss diese mit dem internen Typ übereinstimmen
+        //
+        if (clazz) {
+          const clazzMeta = SerializerMetadataStorage.instance.findClassMetadata(clazz);
+          Assert.notNull(clazzMeta, `No metadata found for type: ${clazz.name}`);
 
-    return rval;
+          if (clazzMetadata) {
+            if (clazzMeta !== clazzMetadata) {
+              throw new InvalidOperationException(`Type infos do not match: ${clazzMetadata.name} - ${clazzMeta.name}`);
+            }
+          } else {
+            clazzMetadata = clazzMeta;
+          }
+        }
+
+        //
+        // falls wir Metadaten haben, können wir eine konkrete Instanz erzeugen, sonst ein native Json-Object
+        //
+        let instance = (clazzMetadata ? clazzMetadata.createInstance() : {});
+
+        // ... und dann die Werte der Zielentity zuweisen
+        const props = Reflect.ownKeys(json);
+        for (const prop of props) {
+          if (prop.toString() !== JsonFormatter.TYPE_PROPERTY) {
+            instance[prop.toString()] = this.deserialize(json[prop.toString()]);
+          }
+        }
+
+        rval = instance as any as T;
+      } else if (Types.isPrimitive(json)) {
+        rval = json as T;
+      } else {
+        throw new NotSupportedException(`Unsupported json: ${JSON.stringify(json)}`);
+      }
+
+      return rval;
+    });
   }
 }

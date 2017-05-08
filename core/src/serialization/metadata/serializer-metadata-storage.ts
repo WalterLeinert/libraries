@@ -59,7 +59,7 @@ export class SerializerMetadataStorage {
       targetProperties.forEach((prop) => {
         const pd = Reflect.getOwnPropertyDescriptor(prototype, prop);
 
-        log.warn(`prop = ${prop}, pd = ${JSON.stringify(pd)}`);
+        log.debug(`prop = ${prop}, pd = ${JSON.stringify(pd)}`);
 
         if (!propertyDict.containsKey(prop.toString())) {
           metadata.add(new PropertySerializerMetadata(metadata.target, prop.toString(), 'any'));
