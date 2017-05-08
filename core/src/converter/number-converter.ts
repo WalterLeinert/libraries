@@ -5,7 +5,7 @@ import { ConverterKey } from './converter-key';
 import { IConverterOptions } from './converter-options.interface';
 import { IConverter } from './converter.interface';
 
-export const NUMBER_CONVERTER = new ConverterKey(String.name, Number.name);
+export const NUMBER_CONVERTER = ConverterKey.create(Number.name);
 
 export class NumberFromStringConverter implements IConverter<string, number> {
   public convert(value: string, options?: IConverterOptions): Nullable<number> {

@@ -1,13 +1,11 @@
+import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Dictionary } from '../types/dictionary';
-import { Tuple } from '../types/tuple';
-import { ConverterKey } from './converter-key';
 import { BOOLEAN_CONVERTER, BooleanFromStringConverter, StringFromBooleanConverter } from './boolean-converter';
+import { ConverterKey } from './converter-key';
 import { IConverter } from './converter.interface';
 import { DATE_CONVERTER, DateFromStringConverter, StringFromDateConverter } from './date-converter';
 import { NUMBER_CONVERTER, NumberFromStringConverter, StringFromNumberConverter } from './number-converter';
-
-
 
 
 /**
@@ -45,22 +43,29 @@ export class ConverterRegistry {
   // tslint:disable-next-line:no-unused-variable
   private static initialized = (() => {
 
-    ConverterRegistry.converterDict.set(DATE_CONVERTER, {
+    ConverterRegistry.register(DATE_CONVERTER, {
       from: new DateFromStringConverter(),
       to: new StringFromDateConverter()
     });
 
-    ConverterRegistry.converterDict.set(NUMBER_CONVERTER, {
+    ConverterRegistry.register(NUMBER_CONVERTER, {
       from: new NumberFromStringConverter(),
       to: new StringFromNumberConverter()
     });
 
-    ConverterRegistry.converterDict.set(BOOLEAN_CONVERTER, {
+    ConverterRegistry.register(BOOLEAN_CONVERTER, {
       from: new BooleanFromStringConverter(),
       to: new StringFromBooleanConverter()
     });
   })();
 
+
+  public static register<TFrom, TTo>(key: ConverterKey, converterTuple: IConverterTuple<TFrom, TTo>) {
+    if (ConverterRegistry.converterDict.containsKey(key)) {
+      throw new InvalidOperationException(`Converters already registered for key: ${key}`);
+    }
+    ConverterRegistry.converterDict.set(key, converterTuple);
+  }
 
   /**
    * Liefert eine @see{IConverterTuple}-Instanz für die Konvertierung zwischen Typ @type{TFrom} und @type{TTo}.
@@ -75,8 +80,12 @@ export class ConverterRegistry {
    */
   public static get<TFrom, TTo>(key: ConverterKey): IConverterTuple<TFrom, TTo> {
     if (!ConverterRegistry.converterDict.containsKey(key)) {
-      throw new NotSupportedException(`Converter between types (${key.item1}, ${key.item2}) not supported.`);
+      throw new NotSupportedException(`Converter between types ${key.toString()} not supported.`);
     }
     return ConverterRegistry.converterDict.get(key) as IConverterTuple<TFrom, TTo>;
+  }
+
+  public static contains<TFrom, TTo>(key: ConverterKey): boolean {
+    return ConverterRegistry.converterDict.containsKey(key);
   }
 }

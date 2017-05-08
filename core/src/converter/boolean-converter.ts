@@ -5,7 +5,7 @@ import { ConverterKey } from './converter-key';
 import { IConverterOptions } from './converter-options.interface';
 import { IConverter } from './converter.interface';
 
-export const BOOLEAN_CONVERTER = new ConverterKey(String.name, Boolean.name);
+export const BOOLEAN_CONVERTER = ConverterKey.create(Boolean.name);
 
 export class BooleanFromStringConverter implements IConverter<string, boolean> {
   public convert(value: string, options?: IConverterOptions): Nullable<boolean> {

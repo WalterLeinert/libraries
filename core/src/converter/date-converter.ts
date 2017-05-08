@@ -4,7 +4,7 @@ import { ConverterKey } from './converter-key';
 import { IConverterOptions } from './converter-options.interface';
 import { IConverter } from './converter.interface';
 
-export const DATE_CONVERTER = new ConverterKey(String.name, Date.name);
+export const DATE_CONVERTER = ConverterKey.create(Date.name);
 
 export class DateFromStringConverter implements IConverter<string, Date> {
   public convert(value: string, options?: IConverterOptions): Nullable<Date> {

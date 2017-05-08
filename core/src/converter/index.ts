@@ -5,4 +5,5 @@ export * from './converter-key';
 export * from './converter-options.interface';
 export * from './converter-registry';
 export * from './date-converter';
+export * from './metadata/';
 export * from './number-converter';
