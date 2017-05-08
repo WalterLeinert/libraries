@@ -40,20 +40,32 @@ export class SerializerMetadataStorage {
 
       const propertyMetadata: PropertySerializerMetadata[] = this.classPropertyDict.get(metadata.name);
 
+      const propertyDict: Dictionary<string, PropertySerializerMetadata> =
+        new Dictionary<string, PropertySerializerMetadata>();
+
       if (propertyMetadata) {
 
         propertyMetadata.forEach((item) => {
           metadata.add(item);
+          propertyDict.set(item.name, item);
         });
       }
 
 
       // TODO: ggf. alle weiteren nicht dekorierten Properties hinzufügen
-      // const targetProperties = Reflect.ownKeys(metadata.target);
-      // targetProperties.forEach((prop) => {
-      //   const pd = Reflect.getOwnPropertyDescriptor(metadata.target, prop);
-      // });
+      const prototype = (metadata.target as any).prototype;
 
+      const targetProperties = Reflect.ownKeys(prototype);
+      targetProperties.forEach((prop) => {
+        const pd = Reflect.getOwnPropertyDescriptor(prototype, prop);
+
+        log.warn(`prop = ${prop}, pd = ${JSON.stringify(pd)}`);
+
+        if (!propertyDict.containsKey(prop.toString())) {
+          metadata.add(new PropertySerializerMetadata(metadata.target, prop.toString(), 'any'));
+        }
+
+      });
 
       this.classDict.set(metadata.name, metadata);
     });
