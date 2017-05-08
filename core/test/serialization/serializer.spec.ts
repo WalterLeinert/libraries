@@ -5,7 +5,6 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Funktion } from '../../src/base/objectType';
-import { configure, IConfig } from '../../src/diagnostics/';
 import { JsonClass, JsonFormatter, JsonProperty } from '../../src/serialization';
 
 const tester = () => {

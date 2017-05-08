@@ -11,8 +11,8 @@ import { InvalidOperationException } from '../../exceptions/invalidOperationExce
 import { Dictionary } from '../../types/dictionary';
 import { Types } from '../../types/types';
 import { Assert } from '../../util/assert';
-import { ClassMetadata } from './class-metadata';
-import { PropertyMetadata } from './property-metadata';
+import { ClassSerializerMetadata } from './class-serializer-metadata';
+import { PropertySerializerMetadata } from './property-serializer-metadata';
 
 
 export class SerializerMetadataStorage {
@@ -20,14 +20,15 @@ export class SerializerMetadataStorage {
 
   private static _instance = new SerializerMetadataStorage();
 
-  private classDict: Dictionary<string, ClassMetadata> = new Dictionary<string, ClassMetadata>();
-  private classPropertyDict: Dictionary<string, PropertyMetadata[]> = new Dictionary<string, PropertyMetadata[]>();
+  private classDict: Dictionary<string, ClassSerializerMetadata> = new Dictionary<string, ClassSerializerMetadata>();
+  private classPropertyDict: Dictionary<string, PropertySerializerMetadata[]> =
+  new Dictionary<string, PropertySerializerMetadata[]>();
 
   public static get instance(): SerializerMetadataStorage {
     return SerializerMetadataStorage._instance;
   }
 
-  public addClassMetadata(metadata: ClassMetadata) {
+  public addClassMetadata(metadata: ClassSerializerMetadata) {
     Assert.notNull(metadata);
 
     using(new XLog(SerializerMetadataStorage.logger, levels.INFO, 'addClassMetadata'), (log) => {
@@ -37,7 +38,7 @@ export class SerializerMetadataStorage {
         throw new InvalidOperationException(`Class ${metadata.name} already registered.`);
       }
 
-      const propertyMetadata: PropertyMetadata[] = this.classPropertyDict.get(metadata.name);
+      const propertyMetadata: PropertySerializerMetadata[] = this.classPropertyDict.get(metadata.name);
 
       if (propertyMetadata) {
 
@@ -47,12 +48,12 @@ export class SerializerMetadataStorage {
       }
 
 
-      const targetProperties = Reflect.ownKeys(metadata.target);
-      targetProperties.forEach((prop) => {
-        const pd = Reflect.getOwnPropertyDescriptor(metadata.target, prop);
-      });
+      // TODO: ggf. alle weiteren nicht dekorierten Properties hinzufügen
+      // const targetProperties = Reflect.ownKeys(metadata.target);
+      // targetProperties.forEach((prop) => {
+      //   const pd = Reflect.getOwnPropertyDescriptor(metadata.target, prop);
+      // });
 
-      // TODO: alle weiteren nicht dekorierten Properties hinzufügen
 
       this.classDict.set(metadata.name, metadata);
     });
@@ -60,7 +61,7 @@ export class SerializerMetadataStorage {
 
 
 
-  public addPropertyMetadata(propertyMetadata: PropertyMetadata) {
+  public addPropertyMetadata(propertyMetadata: PropertySerializerMetadata) {
     Assert.notNull(propertyMetadata);
 
     using(new XLog(SerializerMetadataStorage.logger, levels.INFO, 'addPropertyMetadata'), (log) => {
@@ -68,7 +69,7 @@ export class SerializerMetadataStorage {
         `propertyName = ${propertyMetadata.name}`);
 
       const className = propertyMetadata.target.constructor.name;
-      let metadata: PropertyMetadata[] = this.classPropertyDict.get(className);
+      let metadata: PropertySerializerMetadata[] = this.classPropertyDict.get(className);
       if (!metadata) {
         metadata = [];
         this.classPropertyDict.set(className, metadata);
@@ -78,7 +79,7 @@ export class SerializerMetadataStorage {
   }
 
 
-  public findClassMetadata(target: Funktion | string): ClassMetadata {
+  public findClassMetadata(target: Funktion | string): ClassSerializerMetadata {
     Assert.notNull(target);
     if (Types.isString(target)) {
       return this.classDict.get(target as string);

@@ -1,7 +1,7 @@
-import { Metadata } from '../../base/metadata';
+import { PropertyMetadata } from '../../metadata/property-metadata';
 import { ConverterKey } from '../converter-key';
 
-export class PropertyConverterMetadata extends Metadata<Object> {
+export class PropertyConverterMetadata extends PropertyMetadata {
 
   constructor(target: Object, name: string, private _type: any, private _key: ConverterKey) {
     super(target, name);

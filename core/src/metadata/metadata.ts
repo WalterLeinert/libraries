@@ -33,5 +33,7 @@ export abstract class Metadata<T> {
   public get target(): T {
     return this._target;
   }
+
+  public abstract get targetName(): string;
 }
 

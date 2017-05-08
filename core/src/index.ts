@@ -6,6 +6,7 @@ export * from './decorator';
 export * from './diagnostics';
 export * from './exceptions';
 export * from './expression';
+export * from './metadata';
 export * from './pattern';
 export * from './reflection';
 export * from './suspendable';

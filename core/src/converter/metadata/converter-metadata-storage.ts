@@ -7,7 +7,6 @@ import { XLog } from '../../diagnostics/xlog';
 
 
 import { Funktion } from '../../base/objectType';
-import { InvalidOperationException } from '../../exceptions/invalidOperationException';
 import { Dictionary } from '../../types/dictionary';
 import { Types } from '../../types/types';
 import { Assert } from '../../util/assert';

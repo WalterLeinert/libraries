@@ -1,11 +1,11 @@
-import { Metadata } from '../../base/metadata';
 import { Funktion } from '../../base/objectType';
+import { ClassMetadata } from '../../metadata/class-metadata';
 import { Dictionary } from '../../types/dictionary';
 import { ConverterKey } from '../converter-key';
 import { ConverterRegistry, IConverterTuple } from '../converter-registry';
 import { PropertyConverterMetadata } from './property-converter-metadata';
 
-export class ClassConverterMetadata extends Metadata<Funktion> {
+export class ClassConverterMetadata extends ClassMetadata {
   private _propertyMetadata: PropertyConverterMetadata[] = [];
   private _propertyMap: Dictionary<string, PropertyConverterMetadata> =
   new Dictionary<string, PropertyConverterMetadata>();
