@@ -3,6 +3,9 @@
 // tslint:disable-next-line:no-var-requires
 const entries = require('object.entries');
 
+// tslint:disable-next-line:no-unused-variable
+import { ILogger } from '../diagnostics/logger.interface';
+import { getLogger } from '../diagnostics/logging-core';
 
 import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { Dictionary } from '../types/dictionary';
@@ -255,6 +258,75 @@ class Verifier<T> extends ClonerBase<T> {
 }
 
 
+
+class Differ<T> extends ClonerBase<T> {
+  protected static readonly logger = getLogger(Differ);
+
+  /**
+   * Verifiziert, dass @param{clonedValue} wirklich ein deep clone von @param{value} ist.
+   */
+  public diff<T>(value: T, clonedValue: T, attrName?: string) {
+    if (value === clonedValue) {
+      // undefined und null werden wie reguläre Primitive behandelt
+      if (value === undefined || value == null) {
+        return;
+      }
+      if (!Types.isPrimitive(value)) {
+        Differ.logger.error(`value identical to clonedValue: attrName = ${attrName}`);
+      }
+    }
+
+    // primitive Typen sind ok
+    if (Types.isPrimitive(value)) {
+      if (value !== clonedValue) {
+        Differ.logger.error(
+          `values different for attrName ${attrName}: value (${value}), clonedValue (${clonedValue}) `);
+      }
+      return;
+    }
+
+    // geklonte vordefinierte Typen sind ok
+    const predefCloner = ClonerBase.getPredefinedClonerFor(value.constructor.name);
+    if (predefCloner !== undefined) {
+      return;
+    }
+
+    if (this.checkCycles) {
+      // clone bereits erzeugt und registriert?
+      const clone = super.getCloneFor(value);
+      if (clone) {
+        return;
+      }
+
+
+      // für Objekte clone registrieren
+      super.registerClonFor(value, clonedValue);
+    }
+
+
+    super.iterateOnEntries(value, clonedValue, (entryName, entryValue, clonedEntryName, clonedEntryValue) => {
+      if (entryName !== clonedEntryName) {
+        Differ.logger.error(`entryName (${entryName}) !== clonedEntryName (${clonedEntryName})`);
+      }
+
+      Assert.that(typeof entryValue === typeof clonedEntryValue);
+
+      if (Types.isObject(entryValue)) {
+        if (entryValue === clonedEntryValue) {
+          Differ.logger.error(`value[${entryName}] identical to clonedValue[${clonedEntryName}]`);
+          return;
+        }
+
+        this.diff(entryValue, clonedEntryValue, entryName);   // Rekursion
+      }
+    });
+
+  }
+}
+
+
+
+
 export class Clone {
 
   /**
@@ -282,5 +354,10 @@ export class Clone {
   public static verifyClone<T>(value: T, clonedValue: T, checkCycles: boolean = false) {
     const verifier = new Verifier<T>(checkCycles);
     verifier.verifyClone<T>(value, clonedValue);
+  }
+
+  public static diff<T>(value: T, clonedValue: T, checkCycles: boolean = false) {
+    const verifier = new Differ<T>(checkCycles);
+    verifier.diff<T>(value, clonedValue);
   }
 }
