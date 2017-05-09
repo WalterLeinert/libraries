@@ -7,6 +7,7 @@ import { XLog } from '../../diagnostics/xlog';
 
 
 import { Funktion } from '../../base/objectType';
+import { ExceptionFactory } from '../../exceptions/exceptionFactory';
 import { InvalidOperationException } from '../../exceptions/invalidOperationException';
 import { Dictionary } from '../../types/dictionary';
 import { Types } from '../../types/types';
@@ -26,6 +27,15 @@ export class SerializerMetadataStorage {
 
   public static get instance(): SerializerMetadataStorage {
     return SerializerMetadataStorage._instance;
+  }
+
+
+  constructor() {
+    for (let exc of ExceptionFactory.exceptions) {
+      this.addClassMetadata(new ClassSerializerMetadata(exc));
+    }
+
+    this.addClassMetadata(new ClassSerializerMetadata(Error));
   }
 
   public addClassMetadata(metadata: ClassSerializerMetadata) {

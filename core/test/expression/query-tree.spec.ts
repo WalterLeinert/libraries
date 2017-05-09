@@ -5,7 +5,7 @@
 require('reflect-metadata');
 
 import { expect } from 'chai';
-import { skip, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { StringBuilder } from '../../src/base/stringBuilder';
 import { using } from '../../src/diagnostics';

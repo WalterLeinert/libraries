@@ -3,7 +3,7 @@ import { IException } from './exception.interface';
 
 
 export class ExceptionFactory {
-  private static exceptionDict: { [key: string]: ICtor<IException> } = {};
+  private static exceptionDict: { [key: string]: ICtor<IException>; } = {};
 
   public static register(kind: string, exc: ICtor<IException>) {
     ExceptionFactory.exceptionDict[kind] = exc;
@@ -17,5 +17,15 @@ export class ExceptionFactory {
     }
 
     return new excClass(message, innerException);
+  }
+
+  public static get exceptions(): Array<ICtor<IException>> {
+    const excs = [];
+    for (let key in ExceptionFactory.exceptionDict) {
+      if (key) {
+        excs.push(ExceptionFactory.exceptionDict[key]);
+      }
+    }
+    return excs;
   }
 }

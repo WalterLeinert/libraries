@@ -4,9 +4,8 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Funktion } from '../../src/base/objectType';
 import { Serializable } from '../../src/serialization';
-import { ShortTime, Hour, Types } from '../../src/types';
+import { Hour, ShortTime, Types } from '../../src/types';
 import { SerializerBaseTest } from './serializer-base-test';
 
 
@@ -19,6 +18,8 @@ class TestConverter {
   @Serializable()
   public name: string;
 
+  public now: ShortTime;
+
   constructor(id?: number) {
     this._id = id;
     this.name = `Test2-${id}`;
@@ -27,8 +28,6 @@ class TestConverter {
       this.now = new ShortTime(id as Hour, 0);
     }
   }
-
-  public now: ShortTime;
 }
 
 

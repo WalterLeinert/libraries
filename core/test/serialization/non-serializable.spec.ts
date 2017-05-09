@@ -4,7 +4,6 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Funktion } from '../../src/base/objectType';
 import { Serializable } from '../../src/serialization';
 import { SerializerBaseTest } from './serializer-base-test';
 

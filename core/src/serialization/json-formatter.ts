@@ -8,9 +8,8 @@ import { ILogger } from '../diagnostics/logger.interface';
 import { getLogger } from '../diagnostics/logging-core';
 import { XLog } from '../diagnostics/xlog';
 
-import { ConverterMetadataStorage } from '../converter/metadata/converter-metadata-storage';
-import { ConverterRegistry } from '../converter/converter-registry';
 import { Funktion } from '../base/objectType';
+import { ConverterMetadataStorage } from '../converter/metadata/converter-metadata-storage';
 import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Types } from '../types/types';
@@ -112,7 +111,9 @@ export class JsonFormatter {
           if (Types.isObject(propertyValue)) {
             const propertyClassName = Types.getClassName(propertyValue);
 
-            const classConverterMetadata = ConverterMetadataStorage.instance.findClassConverterMetadata(propertyClassName);
+            const classConverterMetadata = ConverterMetadataStorage.instance
+              .findClassConverterMetadata(propertyClassName);
+
             if (classConverterMetadata) {
               //
               // Property-Converter ermitteln und Wert konvertieren und in Json-Hilfsobjekt mit Typinfo einpacken
@@ -229,7 +230,9 @@ export class JsonFormatter {
                 const propertyType = propertyValue[JsonFormatter.CONVERTER_TYPE_PROPERTY];
                 const value = propertyValue[JsonFormatter.VALUE_PROPERTY];
 
-                const classConverterMetadata = ConverterMetadataStorage.instance.findClassConverterMetadata(propertyType);
+                const classConverterMetadata = ConverterMetadataStorage.instance
+                  .findClassConverterMetadata(propertyType);
+
                 if (classConverterMetadata) {
                   // Property-Converter ermitteln und Wert konvertieren
                   const propertyConverterTuple = classConverterMetadata.getConverterTuple();
