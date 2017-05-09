@@ -14,7 +14,7 @@ import { getLogger, ILogger } from '@fluxgate/platform';
 
 
 import { IQuery, IService, ServiceResult, TableMetadata } from '@fluxgate/common';
-import { Assert, Funktion, InvalidOperationException, IToString } from '@fluxgate/core';
+import { Assert, Funktion, InvalidOperationException, IToString, JsonFormatter } from '@fluxgate/core';
 
 
 import { Serializer } from '../../../base/serializer';
@@ -36,7 +36,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
   private _tableMetadata: TableMetadata;
   private serializer: Serializer<T>;
-
+  private formatter: JsonFormatter;
 
   /**
    * Creates an instance of Service.
@@ -58,6 +58,8 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
     Assert.notNull(this._tableMetadata);
 
     this.serializer = new Serializer<T>(this.tableMetadata);
+
+    this.formatter = new JsonFormatter();
   }
 
 
@@ -166,7 +168,10 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
     const headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
     const options = new RequestOptions({ headers: headers });           // Create a request option
 
-    return this.http.post(`${this.getUrl()}/query`, query, options)
+
+    const serializedQuery = this.serializeJson(query);
+
+    return this.http.post(`${this.getUrl()}/query`, serializedQuery, options)
       .map((response: Response) => this.deserializeArray(response.json()))
       .do((data) => Service.logger.info(`Service.query [${this.getModelClassName()}]: ` +
         `query = ${JSON.stringify(query)} -> ${JSON.stringify(data)}`))
@@ -210,6 +215,16 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
       throw new InvalidOperationException(`Table ${this._tableMetadata.options.name}: no primary key column`);
     }
     item[this._tableMetadata.primaryKeyColumn.propertyName] = id;
+  }
+
+
+
+  protected serializeJson<TSource>(value: TSource): any {
+    return this.formatter.serialize<TSource>(value);
+  }
+
+  protected deserializeJson<TDest>(json: any): TDest {
+    return this.formatter.deserialize<TDest>(json);
   }
 
 

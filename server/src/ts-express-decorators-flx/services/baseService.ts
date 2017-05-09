@@ -9,8 +9,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import {
   Assert, Clone, /*EntityExistsException,*/
   EntityNotFoundException, Funktion,
-  IException, InvalidOperationException,
-  IToString, OptimisticLockException, Types
+  IException,
+  InvalidOperationException, IToString,
+  JsonFormatter, OptimisticLockException, Types
 } from '@fluxgate/core';
 
 import { ColumnMetadata, ExceptionWrapper, IQuery, IUser, ServiceResult, TableMetadata } from '@fluxgate/common';
@@ -36,6 +37,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
 
   private primaryKeyColumn: ColumnMetadata = null;
   private metadata: TableMetadata;
+  private formatter: JsonFormatter;
 
   /**
    * Creates an instance of ServiceBase.
@@ -54,6 +56,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
       BaseService.logger.warn(`Table ${this.metadata.options.name}: no primary key column`);
     }
     this.primaryKeyColumn = cols[0];
+    this.formatter = new JsonFormatter();
   }
 
 
@@ -478,10 +481,12 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
     query: IQuery
   ): Promise<T[]> {
     return using(new XLog(BaseService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
+      const deserializedQuery = this.deserializeJson<IQuery>(query);
+
       let knexQuery = this.fromTable();
 
       const visitor = new KnexQueryVisitor(knexQuery, this.metadata);
-      query.term.accept(visitor);
+      deserializedQuery.term.accept(visitor);
 
       return this.queryKnex(visitor.query(knexQuery));
     });
@@ -596,8 +601,17 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
    * @type {string}
    * @memberOf ServiceBase
    */
-  protected get tableName(): string {
+  public get tableName(): string {
     return this.metadata.options.name;
+  }
+
+
+  protected serializeJson<TSource>(value: TSource): any {
+    return this.formatter.serialize<TSource>(value);
+  }
+
+  protected deserializeJson<TDest>(json: any): TDest {
+    return this.formatter.deserialize<TDest>(json);
   }
 
 
@@ -659,5 +673,6 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
     // Die Properties im Json-Objekt haben dieselben Namen wie die Modellinstanz -> mapColumns = false
     return this.metadata.createModelInstance<T>(json, false);
   }
+
 
 }

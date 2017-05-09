@@ -30,7 +30,7 @@ import { KnexTest } from '../knexTest.spec';
 
 
 
-@suite('erste Role Tests')
+@suite('server.query')
 class QueryBuilderTest extends KnexTest<Role, number> {
   protected static readonly logger = getLogger(QueryBuilderTest);
 
