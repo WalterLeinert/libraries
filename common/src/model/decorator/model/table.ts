@@ -1,4 +1,4 @@
-import { Funktion } from '@fluxgate/core';
+import { ClassSerializerMetadata, Funktion, SerializerMetadataStorage } from '@fluxgate/core';
 
 import { MetadataStorage } from '../../metadata/metadataStorage';
 import { TableMetadataInternal } from '../../metadata/tableMetadataInternal';
@@ -27,5 +27,10 @@ export function Table(options?: TableOptions) {
     }
 
     MetadataStorage.instance.addTableMetadata(new TableMetadataInternal(target, options));
+
+    //
+    // alle Modelklassen sind serialisierbar
+    //
+    SerializerMetadataStorage.instance.addClassMetadata(new ClassSerializerMetadata(target));
   };
 }
