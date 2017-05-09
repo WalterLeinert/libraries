@@ -9,6 +9,7 @@ export * from './expression';
 export * from './metadata';
 export * from './pattern';
 export * from './reflection';
+export * from './serialization';
 export * from './suspendable';
 export * from './types';
 export * from './util';
