@@ -8,6 +8,8 @@ import { ILogger } from '../diagnostics/logger.interface';
 import { getLogger } from '../diagnostics/logging-core';
 import { XLog } from '../diagnostics/xlog';
 
+import { ConverterMetadataStorage } from '../converter/metadata/converter-metadata-storage';
+import { ConverterRegistry } from '../converter/converter-registry';
 import { Funktion } from '../base/objectType';
 import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { NotSupportedException } from '../exceptions/notSupportedException';
@@ -17,6 +19,11 @@ import { SerializerMetadataStorage } from './metadata/serializer-metadata-storag
 
 export interface IJsonSerialization {
   __type__: string;
+}
+
+export interface IJsonConverterSerialization {
+  __conv_type__: string;
+  __value__: any;
 }
 
 
@@ -31,6 +38,8 @@ export class JsonFormatter {
   protected static readonly logger = getLogger(JsonFormatter);
 
   public static readonly TYPE_PROPERTY = '__type__';
+  public static readonly CONVERTER_TYPE_PROPERTY = '__conv_type__';
+  public static readonly VALUE_PROPERTY = '__value__';
 
 
   /**
@@ -72,12 +81,10 @@ export class JsonFormatter {
         /**
          * Falls Metadaten vorhanden, über Metadaten serialisieren; sonst über Reflection
          */
-
         json = {};
 
-        const clazz = (obj as Object).constructor;
-
-        const clazzMetadata = SerializerMetadataStorage.instance.findClassMetadata(clazz);
+        const clazzName = Types.getClassName(obj);
+        const clazzMetadata = SerializerMetadataStorage.instance.findClassMetadata(clazzName);
 
         // JsonClass?
         if (clazzMetadata) {
@@ -85,11 +92,37 @@ export class JsonFormatter {
           log.debug(`setting type = ${clazzMetadata.name}: obj = ${JSON.stringify(obj)}`);
         }
 
-        const props = Reflect.ownKeys(obj as any);
+        const propertyKeys = Reflect.ownKeys(obj as any);
 
         // ... und dann die Werte der Zielentity zuweisen
-        for (const prop of props) {
-          json[prop.toString()] = this.serialize(obj[prop.toString()]);
+        for (const propertyKey of propertyKeys) {
+          let propertyValue = obj[propertyKey.toString()];
+
+          //
+          // falls für den Propertytyp ein Converter existiert, verwenden wir diesen
+          //
+
+          if (Types.isObject(propertyValue)) {
+            const propertyClassName = Types.getClassName(propertyValue);
+
+            const classConverterMetadata = ConverterMetadataStorage.instance.findClassConverterMetadata(propertyClassName);
+            if (classConverterMetadata) {
+              //
+              // Property-Converter ermitteln und Wert konvertieren und in Json-Hilfsobjekt mit Typinfo einpacken
+              //
+              const propertyConverterTuple = classConverterMetadata.getConverterTuple();
+              if (propertyConverterTuple) {
+                const val: IJsonConverterSerialization = {
+                  __conv_type__: propertyClassName,
+                  __value__: propertyConverterTuple.to.convert(propertyValue)
+                };
+
+                propertyValue = val;
+              }
+            }
+          }
+
+          json[propertyKey.toString()] = this.serialize(propertyValue);
         }
 
       } else if (Types.isPrimitive(obj)) {
@@ -101,6 +134,7 @@ export class JsonFormatter {
       return json;
     });
   }
+
 
 
   /**
@@ -170,10 +204,41 @@ export class JsonFormatter {
         let instance = (clazzMetadata ? clazzMetadata.createInstance() : {});
 
         // ... und dann die Werte der Zielentity zuweisen
-        const props = Reflect.ownKeys(json);
-        for (const prop of props) {
-          if (prop.toString() !== JsonFormatter.TYPE_PROPERTY) {
-            instance[prop.toString()] = this.deserialize(json[prop.toString()]);
+        const propertyKeys = Reflect.ownKeys(json);
+        for (const propertyKey of propertyKeys) {
+          let propertyValue = json[propertyKey.toString()];
+
+
+          // interne Typinfo nicht übernehmen
+          if (propertyKey.toString() !== JsonFormatter.TYPE_PROPERTY) {
+
+            //
+            // falls für den Propertytyp ein Converter existiert, verwenden wir diesen
+            //
+            let converted = false;
+
+            if (Types.isObject(propertyValue)) {
+              if (Types.hasProperty(propertyValue, JsonFormatter.CONVERTER_TYPE_PROPERTY)) {
+                const propertyType = propertyValue[JsonFormatter.CONVERTER_TYPE_PROPERTY];
+                const value = propertyValue[JsonFormatter.VALUE_PROPERTY];
+
+                const classConverterMetadata = ConverterMetadataStorage.instance.findClassConverterMetadata(propertyType);
+                if (classConverterMetadata) {
+                  // Property-Converter ermitteln und Wert konvertieren
+                  const propertyConverterTuple = classConverterMetadata.getConverterTuple();
+                  if (propertyConverterTuple) {
+                    propertyValue = propertyConverterTuple.from.convert(value);
+                    converted = true;
+                  }
+                }
+              }
+            }
+
+            if (converted) {
+              instance[propertyKey.toString()] = propertyValue;     // bereits "deserialisiert"
+            } else {
+              instance[propertyKey.toString()] = this.deserialize(propertyValue);
+            }
           }
         }
 
