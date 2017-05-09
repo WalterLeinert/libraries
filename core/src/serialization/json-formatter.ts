@@ -98,6 +98,13 @@ export class JsonFormatter {
         for (const propertyKey of propertyKeys) {
           let propertyValue = obj[propertyKey.toString()];
 
+          if (clazzMetadata) {
+            const propertyMetadata = clazzMetadata.getPropertyMetadata(propertyKey.toString());
+            if (propertyMetadata && !propertyMetadata.serializable) {
+              continue;
+            }
+          }
+
           //
           // falls für den Propertytyp ein Converter existiert, verwenden wir diesen
           //

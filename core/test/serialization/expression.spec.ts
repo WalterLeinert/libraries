@@ -4,15 +4,12 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import {
-  AndTerm, NotTerm, OrTerm, SelectorTerm
-} from '../../src/expression';
-import { JsonFormatter } from '../../src/serialization';
+import { AndTerm, NotTerm, OrTerm, SelectorTerm } from '../../src/expression';
+import { SerializerBaseTest } from './serializer-base-test';
 
 
 @suite('core.serialization')
-class ExpressionTest {
-  private formatter: JsonFormatter;
+class ExpressionTest extends SerializerBaseTest {
 
   @test 'should serialize/deserialize simple query'() {
     const term = new SelectorTerm({ name: 'firstname', operator: '=', value: 'hugo' });
@@ -52,8 +49,4 @@ class ExpressionTest {
     expect(term).to.eql(termDeserialized);
   }
 
-
-  before() {
-    this.formatter = new JsonFormatter();
-  }
 }

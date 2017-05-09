@@ -5,7 +5,8 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Funktion } from '../../src/base/objectType';
-import { Serializable, JsonFormatter } from '../../src/serialization';
+import { Serializable } from '../../src/serialization';
+import { SerializerBaseTest } from './serializer-base-test';
 
 const tester = () => {
 
@@ -110,7 +111,7 @@ class Test5 {
 
 
 @suite('core.serialization.decorator')
-class SerializerTest {
+class SerializerTest extends SerializerBaseTest {
 
 
   @test 'should register serializable class'() {
@@ -185,12 +186,10 @@ class SerializerTest {
 
 
   private doTest<T>(value: T, clazz?: Funktion) {
-    const formatter = new JsonFormatter();
-
-    const valueSerialized = formatter.serialize(value);
+    const valueSerialized = this.formatter.serialize(value);
     // console.log(JSON.stringify(valueSerialized));
 
-    const valueDeserialized = formatter.deserialize(valueSerialized, clazz);
+    const valueDeserialized = this.formatter.deserialize(valueSerialized, clazz);
     // console.log(JSON.stringify(valueDeserialized));
 
     expect(valueDeserialized).to.deep.equal(value);

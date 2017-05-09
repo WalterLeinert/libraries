@@ -5,8 +5,9 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Funktion } from '../../src/base/objectType';
-import { JsonFormatter, Serializable } from '../../src/serialization';
+import { Serializable } from '../../src/serialization';
 import { ShortTime, Hour, Types } from '../../src/types';
+import { SerializerBaseTest } from './serializer-base-test';
 
 
 @Serializable()
@@ -33,8 +34,7 @@ class TestConverter {
 
 
 @suite('core.serialization (with converter)')
-class SerializerConverterTest {
-  private formatter: JsonFormatter;
+class SerializerConverterTest extends SerializerBaseTest {
 
   @test 'should serialize null/undefined'() {
     const test = new TestConverter(11);
@@ -44,8 +44,4 @@ class SerializerConverterTest {
     expect(test).to.eql(testDeserialized);
   }
 
-
-  before() {
-    this.formatter = new JsonFormatter();
-  }
 }
