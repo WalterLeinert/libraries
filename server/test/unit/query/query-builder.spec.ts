@@ -7,7 +7,7 @@ require('reflect-metadata');
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 
 
@@ -30,7 +30,7 @@ import { KnexTest } from '../knexTest.spec';
 
 
 
-@suite('erste Role Tests') @only
+@suite('erste Role Tests')
 class QueryBuilderTest extends KnexTest<Role, number> {
   protected static readonly logger = getLogger(QueryBuilderTest);
 
