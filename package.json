@@ -13,9 +13,9 @@
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
   "devDependencies": {
+    "@compodoc/compodoc": "^1.0.0-beta.8",
     "@compodoc/gulp-compodoc": "0.0.4",
     "codelyzer": "^2.1.1",
-    "compodoc": "0.0.41",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-sequence": "^0.4.6",
