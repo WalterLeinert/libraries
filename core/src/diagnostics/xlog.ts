@@ -212,6 +212,10 @@ export class XLog extends Disposable implements ILogger {
    * @param {any[]} ...args - additional log arguments
    */
   private logInternal(kind: EnterExit, level: ILevel, message?: string, ...args: any[]): void {
+    if (!this.logger.isLevelEnabled(level)) {
+      return;
+    }
+
     const indent = XLog.indentationLevels[XLog.indentation];
     let prefix = indent + XLog.EnterExitStrings[kind] + this.functionName;
     const prefixedMessage = new StringBuilder();
