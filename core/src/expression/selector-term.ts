@@ -1,8 +1,8 @@
-import { JsonClass } from '../serialization/decorator';
+import { Serializable } from '../serialization/serializable.decorator';
 import { IAttributeSelector } from './attributeSelector.interface';
 import { UnaryTerm } from './unary-term';
 
-@JsonClass()
+@Serializable()
 export class SelectorTerm extends UnaryTerm {
   constructor(private _selector: IAttributeSelector) {
     super();

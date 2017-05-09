@@ -1,7 +1,7 @@
 import { VisitableNode } from '../pattern/visitor/visitable-node';
-import { JsonClass } from '../serialization/decorator';
+import { Serializable } from '../serialization/serializable.decorator';
 
-@JsonClass()
+@Serializable()
 export class BooleanTerm extends VisitableNode {
 
   constructor(left: BooleanTerm, right: BooleanTerm) {

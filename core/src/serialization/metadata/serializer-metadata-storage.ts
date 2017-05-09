@@ -51,8 +51,9 @@ export class SerializerMetadataStorage {
         });
       }
 
-
-      // TODO: ggf. alle weiteren nicht dekorierten Properties hinzufügen
+      //
+      // default: alle weiteren nicht dekorierten Properties hinzufügen
+      //
       const prototype = (metadata.target as any).prototype;
 
       const targetProperties = Reflect.ownKeys(prototype);
@@ -62,9 +63,8 @@ export class SerializerMetadataStorage {
         log.debug(`prop = ${prop}, pd = ${JSON.stringify(pd)}`);
 
         if (!propertyDict.containsKey(prop.toString())) {
-          metadata.add(new PropertySerializerMetadata(metadata.target, prop.toString(), 'any'));
+          metadata.add(new PropertySerializerMetadata(metadata.target, prop.toString(), 'any', true));
         }
-
       });
 
       this.classDict.set(metadata.name, metadata);

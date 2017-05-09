@@ -5,27 +5,27 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Funktion } from '../../src/base/objectType';
-import { JsonClass, JsonFormatter, JsonProperty } from '../../src/serialization';
+import { Serializable, JsonFormatter } from '../../src/serialization';
 
 const tester = () => {
 
-  @JsonClass()
+  @Serializable()
   class Test {
-    @JsonProperty()
+    @Serializable()
     public static readonly logger;
 
-    @JsonProperty()
+    @Serializable()
     private _id: number;
 
-    @JsonProperty()
+    @Serializable()
     public name: string;
 
-    @JsonProperty()
+    @Serializable()
     public doNothingMethod(): void {
       // ok
     }
 
-    @JsonProperty()
+    @Serializable()
     public get idProperty(): number {
       return this._id;
     }
@@ -36,13 +36,13 @@ const tester = () => {
 
 
 
-@JsonClass()
+@Serializable()
 class Test2 {
 
-  @JsonProperty()
+  @Serializable()
   private _id: number;
 
-  @JsonProperty()
+  @Serializable()
   public name: string;
 
   constructor(id: number) {
@@ -60,16 +60,16 @@ class Test2 {
 }
 
 
-@JsonClass()
+@Serializable()
 class Test3 {
 
-  @JsonProperty()
+  @Serializable()
   private _test2: Test2;
 
-  @JsonProperty()
+  @Serializable()
   private _test4: Test4;
 
-  @JsonProperty()
+  @Serializable()
   public name: string;
 
   constructor(test2: Test2, test4?: Test4) {

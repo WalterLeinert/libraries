@@ -5,17 +5,17 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Funktion } from '../../src/base/objectType';
-import { JsonClass, JsonFormatter, JsonProperty } from '../../src/serialization';
+import { JsonFormatter, Serializable } from '../../src/serialization';
 import { ShortTime, Hour, Types } from '../../src/types';
 
 
-@JsonClass()
+@Serializable()
 class TestConverter {
 
-  @JsonProperty()
+  @Serializable()
   private _id: number;
 
-  @JsonProperty()
+  @Serializable()
   public name: string;
 
   constructor(id?: number) {

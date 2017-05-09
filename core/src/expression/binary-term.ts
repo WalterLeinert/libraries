@@ -1,7 +1,7 @@
-import { JsonClass } from '../serialization/decorator';
+import { Serializable } from '../serialization/serializable.decorator';
 import { BooleanTerm } from './boolean-term';
 
-@JsonClass()
+@Serializable()
 export class BinaryTerm extends BooleanTerm {
   constructor(left: BooleanTerm, right: BooleanTerm) {
     super(left, right);
