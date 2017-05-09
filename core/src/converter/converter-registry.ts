@@ -5,6 +5,7 @@ import { BOOLEAN_CONVERTER, BooleanFromStringConverter, StringFromBooleanConvert
 import { ConverterKey } from './converter-key';
 import { IConverter } from './converter.interface';
 import { DATE_CONVERTER, DateFromStringConverter, StringFromDateConverter } from './date-converter';
+import { ERROR_CONVERTER, ErrorFromStringConverter, StringFromErrorConverter } from './error-converter';
 import { NUMBER_CONVERTER, NumberFromStringConverter, StringFromNumberConverter } from './number-converter';
 
 
@@ -39,7 +40,6 @@ export class ConverterRegistry {
   private static converterDict: Dictionary<ConverterKey, IConverterTuple<any, any>> =
   new Dictionary<ConverterKey, IConverterTuple<any, any>>();
 
-
   // tslint:disable-next-line:no-unused-variable
   private static initialized = (() => {
 
@@ -56,6 +56,11 @@ export class ConverterRegistry {
     ConverterRegistry.register(BOOLEAN_CONVERTER, {
       from: new BooleanFromStringConverter(),
       to: new StringFromBooleanConverter()
+    });
+
+    ConverterRegistry.register(ERROR_CONVERTER, {
+      from: new ErrorFromStringConverter(),
+      to: new StringFromErrorConverter()
     });
   })();
 
