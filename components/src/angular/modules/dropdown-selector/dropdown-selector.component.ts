@@ -291,18 +291,21 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
         }
       }
 
-      if (Types.isPresent(this.allowNoSelection)) {
-        Assert.that(Types.isBoolean(this.allowNoSelection));
-        this.configInternal.allowNoSelection = this.allowNoSelection;
+      if (this.configInternal) {
+        if (Types.isPresent(this.allowNoSelection)) {
+          Assert.that(Types.isBoolean(this.allowNoSelection));
+          this.configInternal.allowNoSelection = this.allowNoSelection;
+        }
+
+        if (Types.isPresent(this.allowNoSelectionText)) {
+          this.configInternal.allowNoSelectionText = this.allowNoSelectionText;
+        }
+
+        if (log.isDebugEnabled()) {
+          log.log(`configInternal : ${JSON.stringify(this.configInternal)}`);
+        }
       }
 
-      if (Types.isPresent(this.allowNoSelectionText)) {
-        this.configInternal.allowNoSelectionText = this.allowNoSelectionText;
-      }
-
-      if (log.isDebugEnabled()) {
-        log.log(`configInternal : ${JSON.stringify(this.configInternal)}`);
-      }
     });
   }
 
