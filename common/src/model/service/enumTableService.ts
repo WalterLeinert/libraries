@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { Assert, NotSupportedException } from '@fluxgate/core';
 
+import { IQuery } from '../query/query.interface';
 import { TableMetadata } from '../metadata/tableMetadata';
 import { IService } from './service.interface';
 
@@ -34,6 +35,10 @@ export class EnumTableService implements IService<any, any> {
 
   public getModelClassName(): string {
     return this._tableMetadata.className;
+  }
+
+  public query(query: IQuery): Observable<any[]> {
+    throw new NotSupportedException();
   }
 
 

@@ -8,13 +8,16 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
+import { NotSupportedException, Types } from '@fluxgate/core';
+
 import { IEntity } from '../../model/entity.interface';
+import { IQuery } from '../../model/query/query.interface';
 import { IService } from '../../model/service/service.interface';
 import {
   CreatingItemCommand, DeletingItemCommand, ErrorCommand,
   FindingItemByIdCommand, FindingItemsCommand,
-  ItemCreatedCommand, ItemDeletedCommand, ItemFoundByIdCommand, ItemsFoundCommand,
-  ItemUpdatedCommand, UpdatingItemCommand
+  ItemCreatedCommand, ItemDeletedCommand, ItemFoundByIdCommand, ItemsFoundCommand, ItemsQueriedCommand,
+  ItemUpdatedCommand, QueryingItemsCommand, UpdatingItemCommand
 } from '../command';
 import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
@@ -79,6 +82,35 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
       }
     });
   }
+
+
+  /**
+   * Führt die query-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
+   *
+   * @param {boolean} useCache - falls true, werden nur die Daten aus dem State übernommen; sonst Servercall
+   * @memberOf ServiceRequests
+   */
+  public query(query: IQuery): Observable<T[]> {
+    return Observable.create((observer: Subscriber<T[]>) => {
+      try {
+        this.dispatch(new QueryingItemsCommand(this, query));
+
+        this.service.query(query).subscribe(
+          (items) => {
+            this.dispatch(new ItemsQueriedCommand(this, items));
+            observer.next(items);
+          },
+          (exc: IException) => {
+            this.dispatch(new ErrorCommand(this, exc));
+            throw exc;
+          });
+
+      } catch (exc) {
+        observer.error(exc);
+      }
+    });
+  }
+
 
 
   /**

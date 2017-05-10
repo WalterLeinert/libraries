@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs/Observable';
+import { IQuery } from '../query/query.interface';
 import { ServiceResult } from './serviceResult';
 
 /**
@@ -17,6 +18,15 @@ export interface IServiceCrud<T, TId> {
    *
    */
   create(item: T): Observable<T>;
+
+  /**
+   * Queries all entities of type T with given @param{query} and return {Observable<T[]>}.
+   *
+   * @param {IQuery} query
+   * @returns {Observable<T[]>}
+   *
+   */
+  query(query: IQuery): Observable<T[]>;
 
   /**
    * Find all entities of type T and return {Observable<T[]>}.

@@ -1,8 +1,9 @@
 import { Observable } from 'rxjs/Observable';
 
-import { IToString } from '@fluxgate/core';
+import {  IToString } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
+import { IQuery } from '../../model/query/query.interface';
 import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { IServiceRequests } from './service-requests.interface';
 
@@ -26,6 +27,14 @@ export interface ICrudServiceRequests<T extends IEntity<TId>, TId extends IToStr
    * @memberOf ICrudServiceRequests
    */
   create(item: T): Observable<T>;
+
+  /**
+   * Führt die query-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
+   *
+   * @param {IQuery} query
+   * @memberOf ICrudServiceRequests
+   */
+  query(query: IQuery): Observable<T[]>;
 
   /**
    * Führt die find-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
