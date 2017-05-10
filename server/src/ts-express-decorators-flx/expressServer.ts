@@ -12,7 +12,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { AppConfig, IAppConfig } from '@fluxgate/common';
 import { JsonReader } from '@fluxgate/platform';
 
-import { GlobalErrorHandler } from './middlewares/globalErrorHandler';
+import { GlobalErrorHandler } from './middlewares/global-error-handler';
+import { GlobalSerializationHandler } from './middlewares/global-serialization-handler';
 import { ServerBase } from './serverBase';
 import { IServerConfiguration } from './serverBase';
 
@@ -53,6 +54,7 @@ export class ExpressServer extends ServerBase {
 
   public $afterRoutesInit() {
     this.use(GlobalErrorHandler);
+    this.use(GlobalSerializationHandler);
   }
 
 
