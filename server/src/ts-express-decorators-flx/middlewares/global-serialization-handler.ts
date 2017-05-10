@@ -54,12 +54,12 @@ export class GlobalSerializationResponsetHandler implements IMiddleware {
 
 
       if (data === undefined) {
-        response.send("");
-      } else if (data === null || ["number", "boolean", "string"].indexOf(type) > -1) {
+        response.send('');
+      } else if (data === null || ['number', 'boolean', 'string'].indexOf(type) > -1) {
         response.send(data);
       } else {
 
-        response.setHeader("Content-Type", "text/json");
+        response.setHeader('Content-Type', 'text/json');
         response.json(data);
       }
     });

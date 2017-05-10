@@ -1,7 +1,6 @@
-import { IEntity } from '../../model/entity.interface';
 
-import { ISimpleServiceState } from '../state/simple-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
+import { ISimpleServiceState } from '../state/simple-service-state.interface';
 import { IServiceRequests } from './../service-requests';
 import { ServiceCommand } from './service-command';
 

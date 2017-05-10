@@ -3,8 +3,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { Assert, NotSupportedException } from '@fluxgate/core';
 
-import { IQuery } from '../query/query.interface';
 import { TableMetadata } from '../metadata/tableMetadata';
+import { IQuery } from '../query/query.interface';
 import { IService } from './service.interface';
 
 

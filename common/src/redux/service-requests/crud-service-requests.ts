@@ -6,9 +6,6 @@ import { Subscriber } from 'rxjs/Subscriber';
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
-// -------------------------------------- logging --------------------------------------------
-
-import { NotSupportedException, Types } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
 import { IQuery } from '../../model/query/query.interface';

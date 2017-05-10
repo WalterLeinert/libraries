@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 
-import { Assert, Funktion, InvalidOperationException, PropertyMetadata, ShortTime, Time, Types } from '@fluxgate/core';
+import { Assert, InvalidOperationException, PropertyMetadata, ShortTime, Time, Types } from '@fluxgate/core';
 
 import { ColumnOptions } from '../decorator/model/columnOptions';
 import { IValidation } from './../validation/validation.interface';

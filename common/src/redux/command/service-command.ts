@@ -1,4 +1,3 @@
-import { IEntity } from '../../model/entity.interface';
 import { IServiceState } from '../state/service-state.interface';
 import { ServiceRequests } from './../service-requests/service-requests';
 import { IServiceRequests } from './../service-requests/service-requests.interface';

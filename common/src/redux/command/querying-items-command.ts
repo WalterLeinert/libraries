@@ -1,10 +1,10 @@
 import { IEntity } from '../../model/entity.interface';
 
+import { IQuery } from '../../model/query/query.interface';
 import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
 import { IServiceRequests } from './../service-requests';
 import { ServiceCommand } from './service-command';
-import { IQuery } from '../../model/query/query.interface';
 
 
 /**

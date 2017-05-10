@@ -13,9 +13,9 @@ import { AppConfig, IAppConfig } from '@fluxgate/common';
 import { JsonReader } from '@fluxgate/platform';
 
 import { GlobalErrorHandler } from './middlewares/global-error-handler';
-import {
-  GlobalSerializationRequestHandler, GlobalSerializationResponsetHandler
-} from './middlewares/global-serialization-handler';
+// import {
+//   GlobalSerializationRequestHandler, GlobalSerializationResponsetHandler
+// } from './middlewares/global-serialization-handler';
 import { ServerBase } from './serverBase';
 import { IServerConfiguration } from './serverBase';
 
@@ -100,7 +100,7 @@ export class ExpressServer extends ServerBase {
 
       // this
       //   .use(GlobalSerializationRequestHandler);
-        // .use(GlobalSerializationResponsetHandler);
+      // .use(GlobalSerializationResponsetHandler);
 
       return null;
     });
