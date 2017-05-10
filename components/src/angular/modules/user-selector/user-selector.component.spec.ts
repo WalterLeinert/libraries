@@ -10,9 +10,8 @@ import {
   APP_STORE_PROVIDER, AppInjector, ConfigService, CurrentUserService, MessageService, MetadataService
 } from '@fluxgate/client';
 
-import { UserServiceFake } from '../../../testing/user-service-fake';
+import { USER_SERVICE_FAKE_PROVIDER } from '../../../testing/user-service-fake';
 import { UserSelectorServiceRequestsModule } from '../../redux/user-selector-service-requests';
-import { UserService } from '../../redux/user.service';
 import { DropdownSelectorModule } from '../dropdown-selector';
 import { UserSelectorComponent } from './user-selector.component';
 
@@ -51,7 +50,7 @@ describe('UserSelectorComponent', () => {
         ConfigService,
         MessageService,
         MetadataService,
-        { provide: UserService, useClass: UserServiceFake }
+        USER_SERVICE_FAKE_PROVIDER
       ]
     }).compileComponents();
 

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { MetadataService } from '@fluxgate/client';
 import { IRole, Role, ServiceFake } from '@fluxgate/common';
 import { ConstantValueGenerator, EntityGenerator, NumberIdGenerator } from '@fluxgate/common';
+import { RoleService } from '../angular/redux/role.service';
 
 
 /**
@@ -32,5 +33,6 @@ export class RoleServiceFake extends ServiceFake<IRole, number> {
       })
     );
   }
-
 }
+
+export const ROLE_SERVICE_FAKE_PROVIDER = { provide: RoleService, useClass: RoleServiceFake };

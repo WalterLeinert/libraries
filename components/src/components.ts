@@ -49,4 +49,4 @@ export {
   MessageServiceModule
 } from './angular/services';
 
-export { RoleServiceFake, UserServiceFake } from './testing';
+export { ROLE_SERVICE_FAKE_PROVIDER, RoleServiceFake, USER_SERVICE_FAKE_PROVIDER, UserServiceFake } from './testing';

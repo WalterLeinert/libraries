@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MetadataService } from '@fluxgate/client';
 import { IUser, ServiceFake, User } from '@fluxgate/common';
 import { ConstantValueGenerator, EntityGenerator, NumberIdGenerator } from '@fluxgate/common';
-
+import { UserService } from '../angular/redux/user.service';
 
 /**
  * Simuliert den User-Service
@@ -33,5 +33,6 @@ export class UserServiceFake extends ServiceFake<IUser, number> {
       })
     );
   }
-
 }
+
+export const USER_SERVICE_FAKE_PROVIDER = { provide: UserService, useClass: UserServiceFake };
