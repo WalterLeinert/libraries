@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 // Fluxgate
-import { IService } from '@fluxgate/common';
+import { IQuery, IService } from '@fluxgate/common';
 
 import { Service } from '../common/base/service';
 
@@ -27,6 +27,10 @@ export class ProxyService implements IService<any, any> {
 
   public create(item: any): any {
     return this.service.create(item);
+  }
+
+  public query(query: IQuery): any {
+    return this.service.query(query);
   }
 
   public find(): any {
