@@ -13,7 +13,9 @@ import { AppConfig, IAppConfig } from '@fluxgate/common';
 import { JsonReader } from '@fluxgate/platform';
 
 import { GlobalErrorHandler } from './middlewares/global-error-handler';
-import { GlobalSerializationHandler } from './middlewares/global-serialization-handler';
+import {
+  GlobalSerializationRequestHandler, GlobalSerializationResponsetHandler
+} from './middlewares/global-serialization-handler';
 import { ServerBase } from './serverBase';
 import { IServerConfiguration } from './serverBase';
 
@@ -54,7 +56,6 @@ export class ExpressServer extends ServerBase {
 
   public $afterRoutesInit() {
     this.use(GlobalErrorHandler);
-    this.use(GlobalSerializationHandler);
   }
 
 
@@ -96,6 +97,10 @@ export class ExpressServer extends ServerBase {
       this
         .use(passport.initialize())
         .use(passport.session());
+
+      // this
+      //   .use(GlobalSerializationRequestHandler);
+        // .use(GlobalSerializationResponsetHandler);
 
       return null;
     });
