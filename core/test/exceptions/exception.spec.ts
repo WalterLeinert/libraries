@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { ExceptionFactory } from '../../src/exceptions';
-import { JsonFormatter } from '../../src/serialization/json-formatter';
+import { JsonSerializer } from '../../src/serialization/json-serializer';
 
 
 const errorText = 'user not found';
@@ -37,9 +37,23 @@ const innerExceptionTestCases = [
 
 @suite('core.exceptions: simple exceptions')
 class SimpleExceptionTests {
-  private serializer = new JsonFormatter();
+  private serializer = new JsonSerializer();
 
   @test 'should create, serialize and deserialize simple exception'() {
+
+    ExceptionFactory.exceptions.forEach((exception) => {
+      const exc = new exception(errorText);
+      const excSerialized = this.serializer.serialize(exc);
+      const excDeserialized = this.serializer.deserialize(excSerialized);
+
+      expect(excSerialized).to.exist;
+      expect(excDeserialized).to.exist;
+      expect(exc).to.deep.equal(excDeserialized);
+    });
+  }
+
+
+  @test 'should create, serialize and deserialize simple exception (factory)'() {
 
     exceptionTypes.forEach((type) => {
       const exc = ExceptionFactory.create(type, errorText);
@@ -52,6 +66,7 @@ class SimpleExceptionTests {
       expect(exc).to.deep.equal(excDeserialized);
     });
   }
+
 
 
   @test 'should create, serialize and deserialize exception with inner exception'() {

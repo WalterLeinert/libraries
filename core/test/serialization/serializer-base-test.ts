@@ -4,13 +4,13 @@ import { expect } from 'chai';
 let jsondiff = require('json-diff-patch');
 
 import { Clone } from '../../src/base/clone';
-import { JsonFormatter } from '../../src/serialization';
+import { JsonSerializer } from '../../src/serialization';
 
 export abstract class SerializerBaseTest {
-  protected formatter: JsonFormatter;
+  protected formatter: JsonSerializer;
 
   public before() {
-    this.formatter = new JsonFormatter();
+    this.formatter = new JsonSerializer();
   }
 
   protected checkSerialization(value: any) {

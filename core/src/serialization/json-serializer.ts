@@ -16,10 +16,23 @@ import { Types } from '../types/types';
 import { Assert } from '../util/assert';
 import { SerializerMetadataStorage } from './metadata/serializer-metadata-storage';
 
+
+/**
+ * Interface für den Type-Marker
+ *
+ * @export
+ * @interface IJsonSerialization
+ */
 export interface IJsonSerialization {
   __type__: string;
 }
 
+/**
+ * Interface für den Converter Type-Marker
+ *
+ * @export
+ * @interface IJsonConverterSerialization
+ */
 export interface IJsonConverterSerialization {
   __conv_type__: string;
   __value__: any;
@@ -27,14 +40,14 @@ export interface IJsonConverterSerialization {
 
 
 /**
- * Formatter zum Serialisieren/Deserialisieren von Typescript Klassen, die mit Decoratoren (JsonClass, JsonProperty)
+ * Formatter zum Serialisieren/Deserialisieren von Typescript Klassen, die mit dem Decorator (Serializable)
  * versehen sind.
  *
  * @export
- * @class JsonFormatter
+ * @class JsonSerializer
  */
-export class JsonFormatter {
-  protected static readonly logger = getLogger(JsonFormatter);
+export class JsonSerializer {
+  protected static readonly logger = getLogger(JsonSerializer);
 
   public static readonly TYPE_PROPERTY = '__type__';
   public static readonly CONVERTER_TYPE_PROPERTY = '__conv_type__';
@@ -53,7 +66,7 @@ export class JsonFormatter {
    * @memberof JsonFormatter
    */
   public serialize<T>(obj: T): any {
-    return using(new XLog(JsonFormatter.logger, levels.INFO, 'serialize'), (log) => {
+    return using(new XLog(JsonSerializer.logger, levels.INFO, 'serialize'), (log) => {
 
       if (!Types.isPresent(obj)) {
         return obj;
@@ -87,7 +100,7 @@ export class JsonFormatter {
 
         // JsonClass?
         if (clazzMetadata) {
-          json[JsonFormatter.TYPE_PROPERTY] = clazzMetadata.name;   // Typ für Deserialiserung hinterlegen
+          JsonSerializer.addSerializedType(json, clazzMetadata.name);   // Typ für Deserialiserung hinterlegen
           log.debug(`setting type = ${clazzMetadata.name}: obj = ${JSON.stringify(obj)}`);
         }
 
@@ -111,6 +124,9 @@ export class JsonFormatter {
           if (Types.isObject(propertyValue)) {
             const propertyType = Types.getClassName(propertyValue);
 
+            //
+            // Property-Converter ermitteln ...
+            //
             const propertyConverter = ConverterRegistry.get(propertyType);
 
             if (propertyConverter) {
@@ -121,15 +137,10 @@ export class JsonFormatter {
               }
 
               //
-              // Property-Converter ermitteln und Wert konvertieren und in Json-Hilfsobjekt mit Typinfo einpacken
+              // ... und Wert konvertieren und in Json-Hilfsobjekt mit Typinfo einpacken
               //
-
-              const val: IJsonConverterSerialization = {
-                __conv_type__: propertyType,
-                __value__: propertyConverter.convert(propertyValue)
-              };
-
-              propertyValue = val;
+              propertyValue = JsonSerializer.createSerializeProperty(
+                propertyType, propertyConverter.convert(propertyValue));
             }
           }
 
@@ -161,7 +172,7 @@ export class JsonFormatter {
    * @memberof JsonFormatter
    */
   public deserialize<T>(json: any, clazz?: Funktion): T {
-    return using(new XLog(JsonFormatter.logger, levels.INFO, 'deserialize'), (log) => {
+    return using(new XLog(JsonSerializer.logger, levels.INFO, 'deserialize'), (log) => {
       if (!Types.isPresent(json)) {
         return json;
       }
@@ -185,8 +196,8 @@ export class JsonFormatter {
         //
         // liegt im Json-Object Typinformation vor?
         //
-        if (Types.hasProperty(json, JsonFormatter.TYPE_PROPERTY)) {
-          const type = json[JsonFormatter.TYPE_PROPERTY];
+        if (JsonSerializer.isSerialized(json)) {
+          const type = JsonSerializer.getSerializedType(json);
 
           log.debug(`serializer type = ${type}: json = ${JSON.stringify(json)}`);
 
@@ -221,7 +232,7 @@ export class JsonFormatter {
 
 
           // interne Typinfo nicht übernehmen
-          if (propertyKey.toString() !== JsonFormatter.TYPE_PROPERTY) {
+          if (propertyKey.toString() !== JsonSerializer.TYPE_PROPERTY) {
 
             //
             // falls für den Propertytyp ein Converter existiert, verwenden wir diesen
@@ -229,10 +240,13 @@ export class JsonFormatter {
             let converted = false;
 
             if (Types.isObject(propertyValue)) {
-              if (Types.hasProperty(propertyValue, JsonFormatter.CONVERTER_TYPE_PROPERTY)) {
-                const propertyType = propertyValue[JsonFormatter.CONVERTER_TYPE_PROPERTY];
-                const value = propertyValue[JsonFormatter.VALUE_PROPERTY];
+              if (JsonSerializer.isSerializedProperty(propertyValue)) {
+                const propertyType = JsonSerializer.getSerializedPropertyType(propertyValue);
+                const value = JsonSerializer.getSerializedPropertyValue(propertyValue);
 
+                //
+                // Property-Converter ermitteln ...
+                //
                 const propertyConverter = ConverterRegistry.get(propertyType);
 
                 if (propertyConverter) {
@@ -242,6 +256,9 @@ export class JsonFormatter {
                       `value = ${JSON.stringify(propertyValue)}`);
                   }
 
+                  //
+                  // ... und Wert zurück konvertieren
+                  //
                   propertyValue = propertyConverter.convertBack(value);
                   converted = true;
                 }
@@ -265,5 +282,41 @@ export class JsonFormatter {
 
       return rval;
     });
+  }
+
+
+  public static isSerialized(json: any): boolean {
+    return Types.hasProperty(json, JsonSerializer.TYPE_PROPERTY);
+  }
+
+  public static isSerializedProperty(json: any): boolean {
+    return Types.hasProperty(json, JsonSerializer.CONVERTER_TYPE_PROPERTY);
+  }
+
+
+
+  private static getSerializedType(json: any): string {
+    return json[JsonSerializer.TYPE_PROPERTY] as string;
+  }
+
+  private static addSerializedType(json: any, type: string) {
+    json[JsonSerializer.TYPE_PROPERTY] = type;
+  }
+
+  private static getSerializedPropertyType(json: any): string {
+    return json[JsonSerializer.CONVERTER_TYPE_PROPERTY] as string;
+  }
+
+  private static getSerializedPropertyValue(json: any): any {
+    return json[JsonSerializer.VALUE_PROPERTY];
+  }
+
+  private static createSerializeProperty(type: string, value: any): IJsonConverterSerialization {
+    const val: IJsonConverterSerialization = {
+      __conv_type__: type,
+      __value__: value
+    };
+
+    return val;
   }
 }
