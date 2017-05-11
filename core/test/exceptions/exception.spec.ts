@@ -4,7 +4,7 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Exception, ExceptionFactory } from '../../src/exceptions';
+import { ExceptionFactory } from '../../src/exceptions';
 import { JsonFormatter } from '../../src/serialization/json-formatter';
 
 
