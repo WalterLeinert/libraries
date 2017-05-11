@@ -2,7 +2,7 @@
 // tslint:disable:member-access
 
 
-import { skip, only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 
 import { configure, IConfig } from '../../src/diagnostics';
@@ -22,7 +22,7 @@ class ExceptionTest extends SerializerBaseTest {
 
     levels: {
       '[all]': 'WARN',
-      'JsonFormatter': 'DEBUG'
+      'JsonFormatter': 'WARN'
     }
   };
 

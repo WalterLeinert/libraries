@@ -18,7 +18,14 @@ export class ErrorConverter extends ConverterBase implements IConverter<Error, S
       return value as any as string;
     }
 
-    return this.doConvert(value, () => JSON.stringify(value));
+    return this.doConvert(value, () => {
+      let rval = {};
+      const propertyKeys = Reflect.ownKeys(value);
+      for (const propertyKey of propertyKeys) {
+        rval[propertyKey.toString()] = value[propertyKey.toString()];
+      }
+      return JSON.stringify(rval);
+    });
   }
 
 
@@ -29,10 +36,19 @@ export class ErrorConverter extends ConverterBase implements IConverter<Error, S
 
     return this.doConvertBack(value, () => {
       const err = JSON.parse(value);
-      const rval = new Error(err.message);
-      rval.name = err.name;
-      rval.stack = err.stack;
+      const rval = new Error();
 
+      const propertyKeys = Reflect.ownKeys(err);
+      for (const propertyKey of propertyKeys) {
+        const propertyName = propertyKey.toString();
+        Object.defineProperty(rval, propertyName, {
+          enumerable: false,
+          configurable: false,
+          writable: true,
+          value: 'static'
+        });
+        rval[propertyName] = err[propertyName];
+      }
       return rval;
     });
   }

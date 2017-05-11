@@ -1,26 +1,34 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
 
+// tslint:disable-next-line:no-var-requires
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
-
+import { suite, test } from 'mocha-typescript';
 
 import { ConverterRegistry } from '../../src/converter';
 
-@only
+
 @suite('core.converter (Error converter)')
 class ErrorConverterTest {
 
-  @test 'should test Error instance'() {
+  @test 'should test empty instance'() {
+    const test = new Error();
+    this.testConversion(test, Error);
+  }
+
+  @test 'should test instance'() {
     const test = new Error('error message');
-    test.name = 'error-name';
-    const converter = ConverterRegistry.get<Error, String>(Error);
+    this.testConversion(test, Error);
+  }
+
+  private testConversion<T1, T2>(value: T1, type: Function) {
+    const converter = ConverterRegistry.get<T1, T2>(type);
     expect(converter).to.exist;
 
-    const testConverted = converter.convert(test);
-    const testConvertedBack = converter.convertBack(testConverted);
+    const valueConverted = converter.convert(value);
+    const valueConvertedBack = converter.convertBack(valueConverted);
 
-    expect(testConvertedBack).to.deep.equal(test);
+    expect(valueConvertedBack).to.deep.equal(value);
   }
 
 }
