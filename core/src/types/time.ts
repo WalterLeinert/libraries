@@ -1,9 +1,9 @@
 import leftPad = require('left-pad');
-import { ConverterBase } from '../../src/converter/converter-base';
-import { IConverterOptions } from '../../src/converter/converter-options.interface';
-import { Converter } from '../../src/converter/converter.decorator';
-import { IConverter } from '../../src/converter/converter.interface';
-import { Nullable } from '../../src/types/nullable';
+import { ConverterBase } from '../converter/converter-base';
+import { IConverterOptions } from '../converter/converter-options.interface';
+import { Converter } from '../converter/converter.decorator';
+import { IConverter } from '../converter/converter.interface';
+import { Nullable } from '../types/nullable';
 import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
 import { Hour } from './hour';

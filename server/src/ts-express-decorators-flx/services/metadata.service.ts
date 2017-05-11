@@ -3,9 +3,9 @@ import { Service } from 'ts-express-decorators';
 // fluxgate
 import { MetadataStorage, TableMetadata } from '@fluxgate/common';
 import {
-  ClassConverterMetadata, ClassSerializerMetadata, ConverterKey,
-  ConverterMetadataStorage, ConverterRegistry, Funktion,
-  IConverterTuple, SerializerMetadataStorage
+  ClassSerializerMetadata, ConverterRegistry,
+  Funktion, IConverter,
+  SerializerMetadataStorage
 } from '@fluxgate/core';
 
 /**
@@ -41,30 +41,16 @@ export class MetadataService {
 
 
   /**
-   * Liefert @see{ClassConverterMetadata} für die angegebene Modellklasse @param{model} (z.B. Artikel)
-   * für Konvertierungssupport
+   * Liefert einen @see{IConverter} für den angegebenen Typ @param{type} oder undefined.
    *
-   * @param {(Funktion | string)} model
-   * @returns {ClassConverterMetadata}
-   *
-   * @memberof MetadataService
-   */
-  public findClassConverterMetadata(model: Funktion | string): ClassConverterMetadata {
-    return ConverterMetadataStorage.instance.findClassConverterMetadata(model);
-  }
-
-  /**
-   * Liefert ein @see{IConverterTuple} für den angegebenen Key @param{key}.
-   *
-   * @template TFrom
-   * @template TTo
-   * @param {ConverterKey} key
-   * @returns {IConverterTuple<TFrom, TTo>}
+   * @template T1
+   * @template T2
+   * @param {string | Funktion} type
+   * @returns {IConverter<T1, T2>}
    *
    * @memberof MetadataService
    */
-  public findConverterTuple<TFrom, TTo>(key: ConverterKey): IConverterTuple<TFrom, TTo> {
-    return ConverterRegistry.get<TFrom, TTo>(key);
+  public findConverter<T1, T2>(type: string | Funktion): IConverter<T1, T2> {
+    return ConverterRegistry.get<T1, T2>(type);
   }
-
 }
