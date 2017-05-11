@@ -1,1 +1,1 @@
-export * from './deprecated';
+export * from './deprecated.decorator';

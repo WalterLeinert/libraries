@@ -4,9 +4,8 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import {
-  Exception, ExceptionFactory
-} from '../../src/exceptions';
+import { Exception, ExceptionFactory } from '../../src/exceptions';
+import { JsonFormatter } from '../../src/serialization/json-formatter';
 
 
 const errorText = 'user not found';
@@ -38,54 +37,35 @@ const innerExceptionTestCases = [
 
 @suite('core.exceptions: simple exceptions')
 class SimpleExceptionTests {
+  private serializer = new JsonFormatter();
 
-  @test 'should encode/decode simple exception'() {
+  @test 'should create, serialize and deserialize simple exception'() {
 
     exceptionTypes.forEach((type) => {
-      const encoded = `{exc:${type}::${errorText}::}`;
-      const expected = ExceptionFactory.create(type, errorText);
+      const exc = ExceptionFactory.create(type, errorText);
 
-      const actual = Exception.decodeException(encoded);
+      const excSerialized = this.serializer.serialize(exc);
+      const excDeserialized = this.serializer.deserialize(excSerialized);
 
-      expect(actual).to.exist;
-      expect(actual.message).to.equal(errorText);
-      expect(actual.innerException).not.to.exist;
-      expect(actual.kind).to.equal(type);
-
-      expect(actual.kind).to.equal(expected.kind);
-      expect(actual.message).to.equal(expected.message);
+      expect(excSerialized).to.exist;
+      expect(excDeserialized).to.exist;
+      expect(exc).to.deep.equal(excDeserialized);
     });
   }
 
-}
 
-
-@suite('core.exceptions: inner exceptions')
-class InnerExceptionTest {
-
-  @test 'should encode/decode exceptions with inner exceptions'() {
+  @test 'should create, serialize and deserialize exception with inner exception'() {
 
     innerExceptionTestCases.forEach((test) => {
-      const encoded = `{exc:${test.type}::${errorText}::{exc:${test.innerType}::${innerErrorText}::}}`;
-      const expected = ExceptionFactory.create(test.type, errorText);
-      const expectedInner = ExceptionFactory.create(test.innerType, innerErrorText);
+      const excInner = ExceptionFactory.create(test.innerType, innerErrorText);
+      const exc = ExceptionFactory.create(test.type, errorText, excInner);
 
-      const actual = Exception.decodeException(encoded);
+      const excSerialized = this.serializer.serialize(exc);
+      const excDeserialized = this.serializer.deserialize(excSerialized);
 
-      expect(actual).to.exist;
-      expect(actual.message).to.equal(errorText);
-      expect(actual.innerException).to.exist;
-      expect(actual.kind).to.equal(test.type);
-
-      expect(actual.kind).to.equal(expected.kind);
-      expect(actual.message).to.equal(expected.message);
-
-      // inner
-      expect(actual.innerException.kind).to.equal(test.innerType);
-      expect(actual.innerException.message).to.equal(innerErrorText);
-
-      expect(actual.innerException.kind).to.equal(expectedInner.kind);
-      expect(actual.innerException.message).to.equal(expectedInner.message);
+      expect(excSerialized).to.exist;
+      expect(excDeserialized).to.exist;
+      expect(exc).to.deep.equal(excDeserialized);
     });
   }
 

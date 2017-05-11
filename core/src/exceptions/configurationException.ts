@@ -1,5 +1,5 @@
 import { Exception } from './exception';
-import { FlxException } from './flxException';
+import { FlxException } from './flxException.decorator';
 
 @FlxException()
 export class ConfigurationException extends Exception {

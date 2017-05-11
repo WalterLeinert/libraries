@@ -1,5 +1,5 @@
 import { Exception } from './exception';
-import { FlxException } from './flxException';
+import { FlxException } from './flxException.decorator';
 import { ServerException } from './serverException';
 
 

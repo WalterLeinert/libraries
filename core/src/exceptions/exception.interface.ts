@@ -9,6 +9,4 @@ export declare interface IException {
   stack: string;
   kind: string;
   innerException: IException;
-
-  encodeException(): string;
 }

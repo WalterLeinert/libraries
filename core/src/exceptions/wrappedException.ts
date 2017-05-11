@@ -23,10 +23,6 @@ export class WrappedException implements IException {
     return this._kind;
   }
 
-  public encodeException(): string {
-    return 'TODO';
-  }
-
   public get innerException(): IException {
     return null;
   }
