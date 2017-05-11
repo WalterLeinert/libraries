@@ -9,12 +9,13 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // fluxgate
-import { Exception, Types } from '@fluxgate/core';
+import { Exception, JsonSerializer, Types } from '@fluxgate/core';
 
 @MiddlewareError()
 export class GlobalErrorHandler implements IMiddlewareError {
   protected static readonly logger = getLogger(GlobalErrorHandler);
 
+  private static serializer = new JsonSerializer();
 
   public use(
     @Err() error: any,
@@ -32,7 +33,10 @@ export class GlobalErrorHandler implements IMiddlewareError {
 
       if (error instanceof Exception) {
         log.error(`Error: ${error}`);
-        response.status(500).send(toHTML(error.encodeException()));
+
+        const serializedError = GlobalErrorHandler.serializer.serialize(error);
+
+        response.status(500).send(serializedError);
         return next();
       }
 

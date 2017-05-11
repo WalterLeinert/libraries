@@ -14,10 +14,8 @@ import { getLogger, ILogger } from '@fluxgate/platform';
 
 
 import { IQuery, IService, ServiceResult, TableMetadata } from '@fluxgate/common';
-import { Assert, Funktion, InvalidOperationException, IToString, JsonFormatter } from '@fluxgate/core';
+import { Assert, Funktion, InvalidOperationException, IToString } from '@fluxgate/core';
 
-
-import { Serializer } from '../../../base/serializer';
 import { ConfigService } from '../../services/config.service';
 import { MetadataService } from '../../services/metadata.service';
 import { ServiceBase } from './serviceBase';
@@ -35,8 +33,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
   protected static logger = getLogger(Service);
 
   private _tableMetadata: TableMetadata;
-  private serializer: Serializer<T>;
-  private formatter: JsonFormatter;
+
 
   /**
    * Creates an instance of Service.
@@ -56,12 +53,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
     // Metadaten zur Entity ermitteln
     this._tableMetadata = this.metadataService.findTableMetadata(model);
     Assert.notNull(this._tableMetadata);
-
-    this.serializer = new Serializer<T>(this.tableMetadata);
-
-    this.formatter = new JsonFormatter();
   }
-
 
 
   /**
@@ -92,8 +84,9 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    */
   public find(): Observable<T[]> {
     return this.http.get(this.getUrl())
-      .map((response: Response) => this.deserializeArray(response.json()))
-      .do((data) => Service.logger.info(`Service.find [${this.getModelClassName()}]: -> ${data.length} item(s)`))
+      .map((response: Response) => this.deserialize(response.json()))
+      .do((data) => Service.logger.info(
+        `Service.find [${this.getModelClassName()}]: -> ${(data as any).length} item(s)`))
       .catch(this.handleError);
   }
 
@@ -169,10 +162,10 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
     const options = new RequestOptions({ headers: headers });           // Create a request option
 
 
-    const serializedQuery = this.serializeJson(query);
+    const serializedQuery = this.serialize(query);
 
     return this.http.post(`${this.getUrl()}/query`, serializedQuery, options)
-      .map((response: Response) => this.deserializeArray(response.json()))
+      .map((response: Response) => this.deserialize(response.json()))
       .do((data) => Service.logger.info(`Service.query [${this.getModelClassName()}]: ` +
         `query = ${JSON.stringify(query)} -> ${JSON.stringify(data)}`))
       .catch(this.handleError);
@@ -216,53 +209,6 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
     }
     item[this._tableMetadata.primaryKeyColumn.propertyName] = id;
   }
-
-
-
-  protected serializeJson<TSource>(value: TSource): any {
-    return this.formatter.serialize<TSource>(value);
-  }
-
-  protected deserializeJson<TDest>(json: any): TDest {
-    return this.formatter.deserialize<TDest>(json);
-  }
-
-
-  /**
-   * Serialisiert das @param{item} für die Übertragung zum Server über das REST-Api.
-   *
-   * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
-   *
-   * @param {T} item - Entity-Instanz
-   * @returns {any}
-   */
-  protected serialize(item: T): any {
-    return this.serializer.serialize(item);
-  }
-
-
-  /**
-   * Deserialisiert das Json-Objekt, welches über das REST-Api vom Server zum Client übertragen wurde
-   *
-   * @param {any} json - Json-Objekt vom Server
-   * @returns {T}
-   *
-   * @memberOf Service
-   */
-  protected deserialize(json: any): T {
-    return this.serializer.deserialize(json);
-  }
-
-  /**
-   * Deserialisiert ein Array von Json-Objekten, welches über das REST-Api vom Server zum Client übertragen wurde
-   *
-   * @param {any} json - Array von Json-Objekten vom Server
-   * @returns {T[]}
-   */
-  protected deserializeArray(jsonArray: any): T[] {
-    return this.serializer.deserializeArray(jsonArray);
-  }
-
 
 
   /**

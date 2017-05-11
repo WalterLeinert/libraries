@@ -11,7 +11,7 @@ import {
   EntityNotFoundException, Funktion,
   IException,
   InvalidOperationException, IToString,
-  JsonFormatter, OptimisticLockException, Types
+  JsonSerializer, OptimisticLockException, Types
 } from '@fluxgate/core';
 
 import { ColumnMetadata, ExceptionWrapper, IQuery, IUser, ServiceResult, TableMetadata } from '@fluxgate/common';
@@ -37,7 +37,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
 
   private primaryKeyColumn: ColumnMetadata = null;
   private metadata: TableMetadata;
-  private formatter: JsonFormatter;
+  private static serializer: JsonSerializer = new JsonSerializer();
 
   /**
    * Creates an instance of ServiceBase.
@@ -55,8 +55,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
     if (cols.length <= 0) {
       BaseService.logger.warn(`Table ${this.metadata.options.name}: no primary key column`);
     }
-    this.primaryKeyColumn = cols[0];
-    this.formatter = new JsonFormatter();
+    this.primaryKeyColumn = cols[0];   ;
   }
 
 
@@ -607,11 +606,11 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
 
 
   protected serializeJson<TSource>(value: TSource): any {
-    return this.formatter.serialize<TSource>(value);
+    return BaseService.serializer.serialize<TSource>(value);
   }
 
   protected deserializeJson<TDest>(json: any): TDest {
-    return this.formatter.deserialize<TDest>(json);
+    return BaseService.serializer.deserialize<TDest>(json);
   }
 
 

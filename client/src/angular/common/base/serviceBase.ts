@@ -10,7 +10,7 @@ import * as HttpStatusCodes from 'http-status-codes';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, Constants, Exception, IException, ServerSystemException, StringBuilder } from '@fluxgate/core';
+import { Assert, Constants, IException, JsonSerializer, ServerSystemException, StringBuilder } from '@fluxgate/core';
 
 
 /**
@@ -24,7 +24,9 @@ import { Assert, Constants, Exception, IException, ServerSystemException, String
 export abstract class ServiceBase {
   protected static logger = getLogger(ServiceBase);
 
+  private static serializer: JsonSerializer = new JsonSerializer();;
   private _url: string;
+
 
 
   /**
@@ -112,8 +114,8 @@ export abstract class ServiceBase {
 
       log.error(`errorMessage = ${errorMessage}: [ ${ServiceBase.formatResponseStatus(response)} ]`);
 
-      if (Exception.isEncodedException(errorMessage)) {
-        return Exception.decodeException(errorMessage);
+      if (JsonSerializer.isSerialized(response.json())) {
+        return ServiceBase.serializer.deserialize<IException>(response.json());
       }
 
       return new ServerSystemException(errorMessage);
@@ -138,6 +140,16 @@ export abstract class ServiceBase {
   protected handleError(response: Response): ErrorObservable {
     return ServiceBase.handleServerError(response);
   }
+
+
+  protected serialize<TSource>(value: TSource): any {
+    return ServiceBase.serializer.serialize<TSource>(value);
+  }
+
+  protected deserialize<TDest>(json: any): TDest {
+    return ServiceBase.serializer.deserialize<TDest>(json);
+  }
+
 
   private static formatResponseStatus(response: Response): string {
     const sb = new StringBuilder();
