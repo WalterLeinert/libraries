@@ -1,31 +1,39 @@
 import { Nullable } from '../types/nullable';
 import { Types } from '../types/types';
-import { ConverterKey } from './converter-key';
+import { ConverterBase } from './converter-base';
 import { IConverterOptions } from './converter-options.interface';
 import { IConverter } from './converter.interface';
 
-export const ERROR_CONVERTER = ConverterKey.create(Error.name);
 
-export class ErrorFromStringConverter implements IConverter<string, Error> {
-  public convert(value: string, options?: IConverterOptions): Nullable<Error> {
-    if (!Types.isPresent(value)) {
-      return value as any as Error;
-    }
+// @Converter(Error)
+export class ErrorConverter extends ConverterBase implements IConverter<Error, String> {
 
-    if (Types.isNullOrEmpty(value)) {
-      throw new Error(`no valid Error: '${value}'`);
-    }
-
-    return JSON.parse(value) as Error;
+  constructor() {
+    super(Error);
   }
-}
 
-// tslint:disable-next-line:max-classes-per-file
-export class StringFromErrorConverter implements IConverter<Error, string> {
+
   public convert(value: Error, options?: IConverterOptions): Nullable<string> {
     if (!Types.isPresent(value)) {
       return value as any as string;
     }
-    return JSON.stringify(value);
+
+    return this.doConvert(value, () => JSON.stringify(value));
+  }
+
+
+  public convertBack(value: string, options?: IConverterOptions): Nullable<Error> {
+    if (!Types.isPresent(value)) {
+      return value as any as Error;
+    }
+
+    return this.doConvertBack(value, () => {
+      const err = JSON.parse(value);
+      const rval = new Error(err.message);
+      rval.name = err.name;
+      rval.stack = err.stack;
+
+      return rval;
+    });
   }
 }

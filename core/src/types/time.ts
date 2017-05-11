@@ -1,10 +1,13 @@
 import leftPad = require('left-pad');
-import { Converter } from '../converter/converter.decorator';
+import { ConverterBase } from '../../src/converter/converter-base';
+import { IConverterOptions } from '../../src/converter/converter-options.interface';
+import { Converter } from '../../src/converter/converter.decorator';
+import { IConverter } from '../../src/converter/converter.interface';
+import { Nullable } from '../../src/types/nullable';
 import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
 import { Hour } from './hour';
 import { ShortTime } from './shortTime';
-import { TIME_CONVERTER, TIME_CONVERTER_TUPLE } from './time.converter';
 import { Types } from './types';
 
 /**
@@ -13,7 +16,6 @@ import { Types } from './types';
  * @export
  * @class Time
  */
-@Converter(TIME_CONVERTER, TIME_CONVERTER_TUPLE)
 export class Time extends ShortTime {
 
   /**
@@ -152,4 +154,33 @@ export class Time extends ShortTime {
     Assert.that(timeInSeconds >= 0);
     return Time.createFromSeconds(timeInSeconds);
   }
+}
+
+
+
+// tslint:disable-next-line:max-classes-per-file
+@Converter(Time)
+export class TimeConverter extends ConverterBase implements IConverter<Time, String> {
+
+  constructor() {
+    super(Time);
+  }
+
+
+  public convert(value: Time, options?: IConverterOptions): Nullable<string> {
+    if (!Types.isPresent(value)) {
+      return value as any as string;
+    }
+
+    return this.doConvert(value, () => value.toString());
+  }
+
+  public convertBack(value: string, options?: IConverterOptions): Nullable<Time> {
+    if (!Types.isPresent(value)) {
+      return value as any as Time;
+    }
+
+    return this.doConvertBack(value, () => Time.parse(value));
+  }
+
 }

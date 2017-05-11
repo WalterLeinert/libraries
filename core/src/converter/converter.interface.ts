@@ -2,25 +2,37 @@ import { Nullable } from '../types/nullable';
 import { IConverterOptions } from './converter-options.interface';
 
 /**
- * Interface für Converter, die eine Instanz des Typs TFrom in eine Instant des Typs TTo wandeln.
+ * Interface für Converter, die eine Instanz des Typs T1 in eine Instanz des Typs T2 und umgekehrt wandeln.
  *
  * Optional können Konvertierungsoptionen angegeben werden.
  *
  * @export
  * @interface IConverter
- * @template TFrom
- * @template TTo
+ * @template TSource
+ * @template TDest
  */
-export interface IConverter<TFrom, TTo> {
+export interface IConverter<T1, T2> {
 
   /**
+   * Konvertiert eine Instanz vom Typ @see{T1} in eine Instanz vom Typ @see{T2}
    *
-   *
-   * @param {TFrom} value - zu wandelndes Quellobjekt
+   * @param {T1} value - zu wandelndes Quellobjekt
    * @param {IConverterOptions} [options] - Konvertierungsoptionen
-   * @returns {TTo} - Instanz vom Zieltyp.
+   * @returns {T2} - Instanz vom Zieltyp.
    *
-   * @memberof IConverter
+   * @memberof IValueConverter
    */
-  convert(value: TFrom, options?: IConverterOptions): Nullable<TTo>;
+  convert(value: T1, options?: IConverterOptions): Nullable<T2>;
+
+
+  /**
+   * Konvertiert eine Instanz vom Typ @see{T2} in eine Instanz vom Typ @see{T2}
+   *
+   * @param {T2} value - zu wandelndes Quellobjekt
+   * @param {IConverterOptions} [options] - Konvertierungsoptionen
+   * @returns {T1} - Instanz vom Zieltyp.
+   *
+   * @memberof IValueConverter
+   */
+  convertBack(value: T2, options?: IConverterOptions): Nullable<T1>;
 }

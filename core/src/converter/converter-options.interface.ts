@@ -1,10 +1,7 @@
 /**
- * Interface für Coverter, die eine Instanz des Typs TFrom in eine Instant des Typs TTo wandeln.
+ * Interface für Coverter-Optionen, die die Konvertierung steuern können.
  *
- * @export
- * @interface IConverter
- * @template TFrom
- * @template TTo
+ * (z.Zt. noch nicht verwendet; z.B. für culture, Formate)
  */
 export interface IConverterOptions {
 }

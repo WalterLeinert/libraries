@@ -9,7 +9,7 @@ import { getLogger } from '../diagnostics/logging-core';
 import { XLog } from '../diagnostics/xlog';
 
 import { Funktion } from '../base/objectType';
-import { ConverterMetadataStorage } from '../converter/metadata/converter-metadata-storage';
+import { ConverterRegistry } from '../converter/converter-registry';
 import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Types } from '../types/types';
@@ -109,24 +109,27 @@ export class JsonFormatter {
           //
 
           if (Types.isObject(propertyValue)) {
-            const propertyClassName = Types.getClassName(propertyValue);
+            const propertyType = Types.getClassName(propertyValue);
 
-            const classConverterMetadata = ConverterMetadataStorage.instance
-              .findClassConverterMetadata(propertyClassName);
+            const propertyConverter = ConverterRegistry.get(propertyType);
 
-            if (classConverterMetadata) {
+            if (propertyConverter) {
+
+              if (log.isDebugEnabled()) {
+                log.debug(`converting property ${propertyKey.toString()}: type = ${propertyType}, ` +
+                  `value = ${JSON.stringify(propertyValue)}`);
+              }
+
               //
               // Property-Converter ermitteln und Wert konvertieren und in Json-Hilfsobjekt mit Typinfo einpacken
               //
-              const propertyConverterTuple = classConverterMetadata.getConverterTuple();
-              if (propertyConverterTuple) {
-                const val: IJsonConverterSerialization = {
-                  __conv_type__: propertyClassName,
-                  __value__: propertyConverterTuple.to.convert(propertyValue)
-                };
 
-                propertyValue = val;
-              }
+              const val: IJsonConverterSerialization = {
+                __conv_type__: propertyType,
+                __value__: propertyConverter.convert(propertyValue)
+              };
+
+              propertyValue = val;
             }
           }
 
@@ -230,16 +233,17 @@ export class JsonFormatter {
                 const propertyType = propertyValue[JsonFormatter.CONVERTER_TYPE_PROPERTY];
                 const value = propertyValue[JsonFormatter.VALUE_PROPERTY];
 
-                const classConverterMetadata = ConverterMetadataStorage.instance
-                  .findClassConverterMetadata(propertyType);
+                const propertyConverter = ConverterRegistry.get(propertyType);
 
-                if (classConverterMetadata) {
-                  // Property-Converter ermitteln und Wert konvertieren
-                  const propertyConverterTuple = classConverterMetadata.getConverterTuple();
-                  if (propertyConverterTuple) {
-                    propertyValue = propertyConverterTuple.from.convert(value);
-                    converted = true;
+                if (propertyConverter) {
+
+                  if (log.isDebugEnabled()) {
+                    log.debug(`converting property ${propertyKey.toString()}: type = ${propertyType}, ` +
+                      `value = ${JSON.stringify(propertyValue)}`);
                   }
+
+                  propertyValue = propertyConverter.convertBack(value);
+                  converted = true;
                 }
               }
             }

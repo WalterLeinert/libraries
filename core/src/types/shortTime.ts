@@ -1,10 +1,13 @@
 import leftPad = require('left-pad');
-import { Converter } from '../converter/converter.decorator';
+import { ConverterBase } from '../../src/converter/converter-base';
+import { IConverterOptions } from '../../src/converter/converter-options.interface';
+import { Converter } from '../../src/converter/converter.decorator';
+import { IConverter } from '../../src/converter/converter.interface';
+import { Nullable } from '../../src/types/nullable';
 import { StringBuilder } from './../base/stringBuilder';
 import { Assert } from './../util/assert';
 import { Hour } from './hour';
 import { MathUtil } from './mathUtil';
-import { SHORTTIME_CONVERTER, SHORTTIME_CONVERTER_TUPLE } from './shortTime.converter';
 import { Types } from './types';
 
 
@@ -14,7 +17,6 @@ import { Types } from './types';
  * @export
  * @class ShortTime
  */
-@Converter(SHORTTIME_CONVERTER, SHORTTIME_CONVERTER_TUPLE)
 export class ShortTime {
 
   /**
@@ -174,4 +176,32 @@ export class ShortTime {
     Assert.that(timeInMinutes >= 0);
     return ShortTime.createFromMinutes(timeInMinutes);
   }
+}
+
+// tslint:disable-next-line:max-classes-per-file
+@Converter(ShortTime)
+export class ShortTimeConverter extends ConverterBase implements IConverter<ShortTime, String> {
+
+  constructor() {
+    super(ShortTime);
+  }
+
+
+  public convert(value: ShortTime, options?: IConverterOptions): Nullable<string> {
+    if (!Types.isPresent(value)) {
+      return value as any as string;
+    }
+
+    return this.doConvert(value, () => value.toString());
+  }
+
+
+  public convertBack(value: string, options?: IConverterOptions): Nullable<ShortTime> {
+    if (!Types.isPresent(value)) {
+      return value as any as ShortTime;
+    }
+
+    return this.doConvertBack(value, () => ShortTime.parse(value));
+  }
+
 }

@@ -2,7 +2,7 @@
 // tslint:disable:member-access
 
 
-import { skip, suite, test } from 'mocha-typescript';
+import { skip, only, suite, test } from 'mocha-typescript';
 
 
 import { configure, IConfig } from '../../src/diagnostics';
@@ -22,12 +22,11 @@ class ExceptionTest extends SerializerBaseTest {
 
     levels: {
       '[all]': 'WARN',
-      'JsonFormatter': 'WARN'
+      'JsonFormatter': 'DEBUG'
     }
   };
 
-  @skip
-  @test 'should serialize/deserialize simple query'() {
+  @test 'should serialize/deserialize exception'() {
     const value = new OptimisticLockException('test');
 
     this.checkSerialization(value);

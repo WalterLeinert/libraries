@@ -5,150 +5,92 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 
-import { BOOLEAN_CONVERTER, ConverterRegistry, DATE_CONVERTER, NUMBER_CONVERTER } from '../../src/converter';
+import { ConverterRegistry } from '../../src/converter';
 import { InvalidOperationException } from '../../src/exceptions';
-
+import { ShortTime } from '../../src/types/shortTime';
+import { Time } from '../../src/types/time';
 
 const nullUndefinedTests = [
-  NUMBER_CONVERTER,
-  BOOLEAN_CONVERTER,
-  DATE_CONVERTER
+  Date
 ];
 
 
 const tests = [
   {
-    converter: NUMBER_CONVERTER,
-    success: {
-      to: [
-        {
-          value: 0,
-          expectedValue: '0'
-        },
-        {
-          value: 123,
-          expectedValue: '123'
-        },
-      ],
-      from: [
-        {
-          value: '0',
-          expectedValue: 0
-        },
-        {
-          value: '123',
-          expectedValue: 123
-        },
-        {
-          value: '-4711',
-          expectedValue: -4711
-        },
-      ]
-    },
-    failure: {
-      to: [
-      ],
-      from: [
-        {
-          value: 'Hallo',
-          expectedException: InvalidOperationException
-        },
-        {
-          value: '',
-          expectedException: InvalidOperationException
-        },
-        {
-          value: '!5',
-          expectedException: InvalidOperationException
-        },
-      ]
-    }
-  },
-  {
-    converter: BOOLEAN_CONVERTER,
-    success: {
-      to: [
-        {
-          value: true,
-          expectedValue: 'true'
-        },
-        {
-          value: false,
-          expectedValue: 'false'
-        },
-      ],
-      from: [
-        {
-          value: 'true',
-          expectedValue: true
-        },
-        {
-          value: 'True',
-          expectedValue: true
-        },
-        {
-          value: 'false',
-          expectedValue: false
-        },
-        {
-          value: 'FALSE',
-          expectedValue: false
-        },
+    type: Date,
+    success: [
+      {
+        value: new Date(2017, 4, 8, 0, 0, 0),
+        expectedValue: '2017-05-07T22:00:00.000Z'
+      },
+      {
+        value: new Date(2017, 3, 2, 0, 0, 0),
+        expectedValue: '2017-04-01T22:00:00.000Z'
+      }
+    ],
+    failure: [
+      {
+        back: false,
+        value: 'invalid-date',
+        expectedException: InvalidOperationException
+      },
 
-        {
-          value: '1',
-          expectedValue: true
-        },
-
-        {
-          value: '0',
-          expectedValue: false
-        },
-      ]
-    },
-    failure: {
-      to: [
-      ],
-      from: [
-        {
-          value: 'Hallo',
-          expectedException: InvalidOperationException
-        },
-        {
-          value: '#',
-          expectedException: InvalidOperationException
-        },
-        {
-          value: 'tr-ue',
-          expectedException: InvalidOperationException
-        },
-      ]
-    }
+      {
+        back: true,
+        value: '2017-04-01YY22:00:00.000Z',
+        expectedException: InvalidOperationException
+      },
+    ]
   },
 
   {
-    converter: DATE_CONVERTER,
-    success: {
-      to: [
-        {
-          value: new Date(2017, 4, 8, 0, 0, 0),
-          expectedValue: '2017-05-07T22:00:00.000Z'
-        },
-      ],
-      from: [
-        {
-          value: '2017-04-01T22:00:00.000Z',
-          expectedValue: new Date(2017, 3, 2, 0, 0, 0)
-        },
-      ]
-    },
-    failure: {
-      to: [
-      ],
-      from: [
-      ]
-    }
+    type: ShortTime,
+    success: [
+      {
+        value: new ShortTime(19, 15),
+        expectedValue: '19:15'
+      }
+    ],
+    failure: [
+      {
+        back: false,
+        value: 4711,
+        expectedException: InvalidOperationException
+      },
+
+      {
+        back: true,
+        value: '31:99',
+        expectedException: InvalidOperationException
+      },
+    ]
+  },
+
+
+  {
+    type: Time,
+    success: [
+      {
+        value: new Time(12, 13, 0),
+        expectedValue: '12:13:00'
+      }
+    ],
+    failure: [
+      {
+        back: false,
+        value: true,
+        expectedException: InvalidOperationException
+      },
+
+      {
+        back: true,
+        value: '100',
+        expectedException: InvalidOperationException
+      },
+    ]
   }
+
+
 ];
 
 
@@ -157,51 +99,41 @@ const tests = [
 class ConverterTest {
 
   @test 'should convert null/undefined'() {
-    nullUndefinedTests.forEach((convKey) => {
-      const converter = ConverterRegistry.get(convKey);
-      expect(converter.from.convert(null)).to.equal(null);
-      expect(converter.to.convert(undefined)).to.equal(undefined);
+    nullUndefinedTests.forEach((type) => {
+      const converter = ConverterRegistry.get(type);
+      expect(converter.convert(null)).to.equal(null);
+      expect(converter.convertBack(undefined)).to.equal(undefined);
     });
   }
 
 
   @test 'should convert from'() {
-
     tests.forEach((test) => {
-      const converter = ConverterRegistry.get(test.converter);
+      const converter = ConverterRegistry.get(test.type);
 
-      for (let data of test.success.from) {
-        expect(converter.from.convert(data.value)).to.eql(data.expectedValue);
+      for (let data of test.success) {
+        expect(converter.convert(data.value)).to.eql(data.expectedValue);
+        expect(converter.convertBack(data.expectedValue)).to.eql(data.value);
       }
     });
-  }
-
-
-  @test 'should convert to'() {
-
-    tests.forEach((test) => {
-      const converter = ConverterRegistry.get(test.converter);
-
-      for (let data of test.success.to) {
-        expect(converter.to.convert(data.value)).to.eql(data.expectedValue);
-      }
-    });
-
   }
 }
-
 
 
 @suite('core.converter (expected exceptions)')
 class ConverterFailureTest {
 
-  @test 'should convert from and throw exceptions'() {
+  @test 'should convert and throw exceptions'() {
 
     tests.forEach((test) => {
-      const converter = ConverterRegistry.get(test.converter);
+      const converter = ConverterRegistry.get(test.type);
 
-      for (let data of test.failure.from) {
-        expect(() => converter.from.convert(data.value)).to.throw(data.expectedException);
+      for (let data of test.failure) {
+        if (data.back && data.back === true) {
+          expect(() => converter.convertBack(data.value)).to.throw(data.expectedException);
+        } else {
+          expect(() => converter.convert(data.value)).to.throw(data.expectedException);
+        }
       }
     });
   }

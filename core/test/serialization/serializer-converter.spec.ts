@@ -20,6 +20,8 @@ class TestConverter {
 
   public now: ShortTime;
 
+  public created: Date;
+
   constructor(id?: number) {
     this._id = id;
     this.name = `Test2-${id}`;
@@ -27,6 +29,7 @@ class TestConverter {
     if (Types.isPresent(id)) {
       this.now = new ShortTime(id as Hour, 0);
     }
+    this.created = new Date();
   }
 }
 
