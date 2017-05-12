@@ -5,7 +5,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { ServiceResult } from '@fluxgate/common';
+import { IQuery, ServiceResult } from '@fluxgate/common';
 import { IToString, JsonSerializer } from '@fluxgate/core';
 
 import { BaseService } from '../services/baseService';
@@ -43,9 +43,8 @@ export abstract class ControllerBase<T, TId extends IToString> {
   protected createInternal(
     subject: T
   ): Promise<T> {
-    const deserializedSubject = this.serializer.deserialize<T>(subject);
-
     return new Promise<T>((resolve, reject) => {
+      const deserializedSubject = this.serializer.deserialize<T>(subject);
       this.service.create(deserializedSubject).then((item) => {
         resolve(this.serializer.serialize<T>(item));
       });
@@ -92,6 +91,28 @@ export abstract class ControllerBase<T, TId extends IToString> {
 
 
   /**
+   * Liefert alle Entities vom Typ {T} über die Query @param{query}.
+   *
+   * @protected
+   * @param {IQuery} query
+   * @returns {Promise<T[]>}
+   *
+   * @memberof ControllerBase
+   */
+  protected queryInternal(
+    query: IQuery
+  ): Promise<T[]> {
+    return new Promise<T[]>((resolve, reject) => {
+      const deserializedQuery = this.serializer.deserialize<IQuery>(query);
+
+      this.service.query(deserializedQuery).then((result) => {
+        resolve(this.serializer.serialize<T[]>(result));
+      });
+    });
+  }
+
+
+  /**
    * Aktualisiert die Entity vom Typ {T}.
    *
    * @param {T} subject
@@ -103,7 +124,8 @@ export abstract class ControllerBase<T, TId extends IToString> {
     subject: T
   ): Promise<T> {
     return new Promise<T>((resolve, reject) => {
-      this.service.update(subject).then((item) => {
+      const deserializedSubject = this.serializer.deserialize<T>(subject);
+      this.service.update(deserializedSubject).then((item) => {
         resolve(this.serializer.serialize<T>(item));
       });
     });
