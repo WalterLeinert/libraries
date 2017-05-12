@@ -442,7 +442,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                 const result = this.createModelInstances(rows);
 
                 if (log.isDebugEnabled) {
-                  const logResult = this.createModelInstances(Clone.clone(rows));
+                  const logResult = Clone.clone(result);
                   //
                   // falls wir User-Objekte gefunden haben, wird für das Logging
                   // die Passwort-Info zurückgesetzt
