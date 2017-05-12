@@ -4,6 +4,7 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { IToString } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
+import { EntityVersion } from '../../model/entityVersion';
 import { IService } from '../../model/service/service.interface';
 import { CommandStore } from '../store/command-store';
 import { Store } from '../store/store';
@@ -36,8 +37,8 @@ export abstract class ExtendedCrudServiceRequests<T extends IEntity<TId>, TId ex
   };
 
   protected constructor(storeId: string | CommandStore<IExtendedCrudServiceState<T, TId>>,
-    service: TService, store: Store, parentStoreId?: string) {
-    super(storeId, service, store, parentStoreId);
+    service: TService, store: Store, entityVersionService: IService<EntityVersion, string>, parentStoreId?: string) {
+    super(storeId, service, store, entityVersionService, parentStoreId);
   }
 
   public setCurrent(item: T): Observable<T> {

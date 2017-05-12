@@ -12,6 +12,7 @@ export * from './extended-core.component';
 export * from './form-action';
 export * from './formGroupInfo';
 export * from './resolver-base';
+export * from './readonly-service';
 export * from './service';
 export * from './serviceBase';
 export * from './service-requests-component';

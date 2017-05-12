@@ -2,7 +2,10 @@ import { Inject, Injectable, NgModule } from '@angular/core';
 
 // fluxgate
 import { APP_STORE } from '@fluxgate/client';
-import { CommandStore, ExtendedCrudServiceRequests, GenericStore, IRole, RoleStore, Store } from '@fluxgate/common';
+import {
+  CommandStore, ENTITY_VERSION_SERVICE, EntityVersion, ExtendedCrudServiceRequests, GenericStore,
+  IRole, IService, RoleStore, Store
+} from '@fluxgate/common';
 
 import { RoleService } from './role.service';
 
@@ -10,8 +13,9 @@ import { RoleService } from './role.service';
 @Injectable()
 export class RoleSelectorServiceRequests extends ExtendedCrudServiceRequests<IRole, number, RoleService> {
 
-  constructor(service: RoleService, @Inject(APP_STORE) store: Store) {
-    super(new GenericStore<IRole, number>(CommandStore.NoId), service, store, RoleStore.ID);
+  constructor(service: RoleService, @Inject(APP_STORE) store: Store,
+    @Inject(ENTITY_VERSION_SERVICE) entityVersionService?: IService<EntityVersion, string>) {
+    super(new GenericStore<IRole, number>(CommandStore.NoId), service, store, entityVersionService, RoleStore.ID);
   }
 }
 

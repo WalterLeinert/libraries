@@ -8,6 +8,7 @@ import { ConfirmationService } from 'primeng/components/common/api';
 
 import { APP_STORE_PROVIDER, AppInjector, CurrentUserService } from '@fluxgate/client';
 
+import { ENTITY_VERSION_SERVICE_FAKE_PROVIDER } from '../../../testing/entity-version-service-fake';
 import { ROLE_SERVICE_FAKE_PROVIDER } from '../../../testing/role-service-fake';
 import { RoleSelectorServiceRequestsModule } from '../../redux/role-selector-service-requests';
 import { DropdownSelectorModule } from '../dropdown-selector';
@@ -37,7 +38,8 @@ describe('RoleSelectorComponent', () => {
         AppInjector,
         CurrentUserService,
         ConfirmationService,
-        ROLE_SERVICE_FAKE_PROVIDER
+        ROLE_SERVICE_FAKE_PROVIDER,
+        ENTITY_VERSION_SERVICE_FAKE_PROVIDER
       ]
     }).compileComponents();
 

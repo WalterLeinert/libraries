@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 
 // fluxgate
-import { ExtendedCrudServiceRequests, IEntity, Store } from '@fluxgate/common';
+import { EntityVersion, ExtendedCrudServiceRequests, IEntity, IService, Store } from '@fluxgate/common';
 import { InvalidOperationException, IToString, Types } from '@fluxgate/core';
 
 import { Service } from '@fluxgate/client';
@@ -20,8 +20,9 @@ export abstract class EnhancedServiceRequests<T extends IEntity<TId>, TId extend
   TService extends Service<T, TId>>
   extends ExtendedCrudServiceRequests<T, TId, TService> {
 
-  constructor(storeId: string, service: TService, store: Store) {
-    super(storeId, service, store);
+  constructor(storeId: string, service: TService, store: Store,
+    entityVersionService?: IService<EntityVersion, string>) {
+    super(storeId, service, store, entityVersionService);
   }
 
 

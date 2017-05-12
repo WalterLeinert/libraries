@@ -1,0 +1,1 @@
+export const ENTITY_VERSION_SERVICE = 'token/fluxgate.common.entity-version-service';

@@ -8,6 +8,7 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { IEntity } from '../../model/entity.interface';
+import { EntityVersion } from '../../model/entityVersion';
 import { IQuery } from '../../model/query/query.interface';
 import { IService } from '../../model/service/service.interface';
 import {
@@ -17,7 +18,6 @@ import {
   ItemUpdatedCommand, QueryingItemsCommand, UpdatingItemCommand
 } from '../command';
 import { ICrudServiceState } from '../state/crud-service-state.interface';
-import { ServiceRequestStates } from '../state/service-request-state';
 import { Store } from '../store';
 import { CommandStore } from '../store/command-store';
 import { ICrudServiceRequests } from './crud-service-requests.interface';
@@ -48,7 +48,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
 
 
   public constructor(storeId: string | CommandStore<ICrudServiceState<T, TId>>, private _service: TService,
-    store: Store, parentStoreId?: string) {
+    store: Store, private _entityVersionService: IService<EntityVersion, string>, parentStoreId?: string) {
     super(storeId, store, parentStoreId);
   }
 
@@ -118,40 +118,23 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
   /**
    * Führt die find-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
    *
-   * @param {boolean} useCache - falls true, werden nur die Daten aus dem State übernommen; sonst Servercall
    * @memberOf ServiceRequests
    */
-  public find(useCache: boolean = false): Observable<T[]> {
+  public find(): Observable<T[]> {
     return Observable.create((observer: Subscriber<T[]>) => {
-      const state = this.getCrudState(this.storeId);
 
       try {
         this.dispatch(new FindingItemsCommand(this));
 
-        const finder = () => {
-          this.service.find().subscribe(
-            (items) => {
-              this.dispatch(new ItemsFoundCommand(this, items));
-              observer.next(items);
-            },
-            (exc: IException) => {
-              this.dispatch(new ErrorCommand(this, exc));
-              throw exc;
-            });
-        };
-
-        if (useCache) {
-          if (state.state === ServiceRequestStates.UNDEFINED) {
-            finder();
-
-          } else {
-            // items aus dem State liefern
-            this.dispatch(new ItemsFoundCommand(this, [...state.items]));
-            observer.next([...state.items]);
-          }
-        } else {
-          finder();
-        }
+        this.service.find().subscribe(
+          (items) => {
+            this.dispatch(new ItemsFoundCommand(this, items));
+            observer.next(items);
+          },
+          (exc: IException) => {
+            this.dispatch(new ErrorCommand(this, exc));
+            throw exc;
+          });
 
       } catch (exc) {
         observer.error(exc);
