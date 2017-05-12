@@ -20,7 +20,7 @@ export abstract class SerializerBaseTest {
     const diff = jsondiff.diff(value, valueDeserialized);
 
     // tslint:disable-next-line:no-console
-    console.log(JSON.stringify(diff));
+    // console.log(JSON.stringify(diff));
     Clone.diff(value, valueDeserialized);
 
     expect(value).to.eql(valueDeserialized);
