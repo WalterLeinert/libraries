@@ -109,6 +109,29 @@ export class Types {
   }
 
 
+  /**
+   * Liefert den Typnamen des Objekts @param{obj}.
+   *
+   * @static
+   * @param {*} obj
+   * @returns {string}
+   *
+   * @memberof Types
+   */
+  public static getTypeName(obj: any): string {
+    if (Types.isNull(obj)) {
+      return '-null-';
+    } else if (Types.isUndefined(obj)) {
+      return '-undefined-';
+    } else if (Types.isPrimitive(obj)) {
+      return typeof obj;
+    } else if (Types.isObject(obj)) {
+      return Types.getClassName(obj);
+    } else {
+      return '-unknown-';
+    }
+  }
+
 
   /**
    * Liefert true, falls @see{clazz} über den Operator new eine Instanz erzeugen kann.

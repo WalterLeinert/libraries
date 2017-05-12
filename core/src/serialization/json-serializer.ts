@@ -16,6 +16,11 @@ import { Types } from '../types/types';
 import { Assert } from '../util/assert';
 import { SerializerMetadataStorage } from './metadata/serializer-metadata-storage';
 
+/**
+ * Definiert eine serialisierte Instanz.
+ */
+export type Serialized<T extends IJsonSerialization> = T;
+
 
 /**
  * Interface für den Type-Marker
@@ -63,98 +68,109 @@ export class JsonSerializer {
    * @param {T} obj
    * @returns {*}
    *
-   * @memberof JsonFormatter
+   * @memberof JsonSerializer
    */
   public serialize<T>(obj: T): any {
-    return using(new XLog(JsonSerializer.logger, levels.INFO, 'serialize'), (log) => {
+    return using(new XLog(JsonSerializer.logger, levels.INFO, 'serialize',
+      `type = ${Types.getTypeName(obj)}`), (log) => {
 
-      if (!Types.isPresent(obj)) {
-        return obj;
-      }
-
-      let json: any;
-
-
-      if (Types.isArray(obj)) {
-        /**
-         * alle Elemente einzeln serialisieren
-         */
-
-        const ar = obj as any as any[];
-
-        json = [];
-
-        ar.forEach((a) => {
-          json.push(this.serialize(a));
-        });
-
-      } else if (Types.isObject(obj)) {
-
-        /**
-         * Falls Metadaten vorhanden, über Metadaten serialisieren; sonst über Reflection
-         */
-        json = {};
-
-        const clazzName = Types.getClassName(obj);
-        const clazzMetadata = SerializerMetadataStorage.instance.findClassMetadata(clazzName);
-
-        // JsonClass?
-        if (clazzMetadata) {
-          JsonSerializer.addSerializedType(json, clazzMetadata.name);   // Typ für Deserialiserung hinterlegen
-          log.debug(`setting type = ${clazzMetadata.name}: obj = ${JSON.stringify(obj)}`);
+        if (!Types.isPresent(obj)) {
+          return obj;
         }
 
-        const propertyKeys = Reflect.ownKeys(obj as any);
+        let json: any;
 
-        // ... und dann die Werte der Zielentity zuweisen
-        for (const propertyKey of propertyKeys) {
-          let propertyValue = obj[propertyKey.toString()];
 
+        if (Types.isArray(obj)) {
+          /**
+           * alle Elemente einzeln serialisieren
+           */
+
+          const ar = obj as any as any[];
+
+          json = [];
+
+          ar.forEach((a) => {
+            json.push(this.serialize(a));
+          });
+
+        } else if (Types.isObject(obj)) {
+
+          /**
+           * Falls Metadaten vorhanden, über Metadaten serialisieren; sonst über Reflection
+           */
+          json = {};
+
+          const clazzName = Types.getClassName(obj);
+          const clazzMetadata = SerializerMetadataStorage.instance.findClassMetadata(clazzName);
+
+          // JsonClass?
           if (clazzMetadata) {
-            const propertyMetadata = clazzMetadata.getPropertyMetadata(propertyKey.toString());
-            if (propertyMetadata && !propertyMetadata.serializable) {
-              continue;
+            JsonSerializer.addSerializedType(json, clazzMetadata.name);   // Typ für Deserialiserung hinterlegen
+            if (log.isDebugEnabled()) {
+              log.log(`setting type = ${clazzMetadata.name}: obj = ${JSON.stringify(obj)}`);
             }
           }
 
-          //
-          // falls für den Propertytyp ein Converter existiert, verwenden wir diesen
-          //
+          const propertyKeys = Reflect.ownKeys(obj as any);
 
-          if (Types.isPresent(propertyValue) && Types.isObject(propertyValue)) {
-            const propertyType = Types.getClassName(propertyValue);
+          // ... und dann die Werte der Zielentity zuweisen
+          for (const propertyKey of propertyKeys) {
+            let propertyValue = obj[propertyKey.toString()];
 
-            //
-            // Property-Converter ermitteln ...
-            //
-            const propertyConverter = ConverterRegistry.get(propertyType);
-
-            if (propertyConverter) {
-
-              if (log.isDebugEnabled()) {
-                log.debug(`converting property ${propertyKey.toString()}: type = ${propertyType}, ` +
-                  `value = ${JSON.stringify(propertyValue)}`);
+            if (clazzMetadata) {
+              const propertyMetadata = clazzMetadata.getPropertyMetadata(propertyKey.toString());
+              if (propertyMetadata && !propertyMetadata.serializable) {
+                continue;
               }
+            }
+
+            //
+            // falls für den Propertytyp ein Converter existiert, verwenden wir diesen
+            //
+
+            let converted = false;
+
+            if (Types.isPresent(propertyValue) && Types.isObject(propertyValue)) {
+              const propertyType = Types.getClassName(propertyValue);
 
               //
-              // ... und Wert konvertieren und in Json-Hilfsobjekt mit Typinfo einpacken
+              // Property-Converter ermitteln ...
               //
-              propertyValue = JsonSerializer.createSerializeProperty(
-                propertyType, propertyConverter.convert(propertyValue));
+              const propertyConverter = ConverterRegistry.get(propertyType);
+
+              if (propertyConverter) {
+
+                if (log.isDebugEnabled()) {
+                  log.log(`converting property ${propertyKey.toString()}: type = ${propertyType}, ` +
+                    `value = ${JSON.stringify(propertyValue)}`);
+                }
+
+                //
+                // ... und Wert konvertieren und in Json-Hilfsobjekt mit Typinfo einpacken
+                //
+                propertyValue = JsonSerializer.createSerializedProperty(
+                  propertyType, propertyConverter.convert(propertyValue));
+
+                converted = true;
+              }
+            }
+
+            if (converted) {
+              json[propertyKey.toString()] = propertyValue;
+            } else {
+              json[propertyKey.toString()] = this.serialize(propertyValue);
             }
           }
 
-          json[propertyKey.toString()] = this.serialize(propertyValue);
+        } else if (Types.isPrimitive(obj)) {
+          json = obj;
+        } else {
+          throw new NotSupportedException(`Unsupported object: ${JSON.stringify(obj)}`);
         }
 
-      } else if (Types.isPrimitive(obj)) {
-        json = obj;
-      } else {
-        throw new NotSupportedException(`Unsupported object: ${JSON.stringify(obj)}`);
-      }
-
-      return json;
-    });
+        return json;
+      });
   }
 
 
@@ -169,7 +185,7 @@ export class JsonSerializer {
    * @param {Funktion} [clazz]
    * @returns {T}
    *
-   * @memberof JsonFormatter
+   * @memberof JsonSerializer
    */
   public deserialize<T>(json: any, clazz?: Funktion): T {
     return using(new XLog(JsonSerializer.logger, levels.INFO, 'deserialize'), (log) => {
@@ -199,7 +215,13 @@ export class JsonSerializer {
         if (JsonSerializer.isSerialized(json)) {
           const type = JsonSerializer.getSerializedType(json);
 
-          log.debug(`serializer type = ${type}: json = ${JSON.stringify(json)}`);
+          if (log.isInfoEnabled()) {
+            if (log.isDebugEnabled()) {
+              log.log(`type = ${type}, json = ${JSON.stringify(json)}`);
+            } else {
+              log.log(`type = ${type}`);
+            }
+          }
 
           clazzMetadata = SerializerMetadataStorage.instance.findClassMetadata(type);
         }
@@ -252,7 +274,7 @@ export class JsonSerializer {
                 if (propertyConverter) {
 
                   if (log.isDebugEnabled()) {
-                    log.debug(`converting property ${propertyKey.toString()}: type = ${propertyType}, ` +
+                    log.log(`converting property ${propertyKey.toString()}: type = ${propertyType}, ` +
                       `value = ${JSON.stringify(propertyValue)}`);
                   }
 
@@ -311,7 +333,7 @@ export class JsonSerializer {
     return json[JsonSerializer.VALUE_PROPERTY];
   }
 
-  private static createSerializeProperty(type: string, value: any): IJsonConverterSerialization {
+  private static createSerializedProperty(type: string, value: any): IJsonConverterSerialization {
     const val: IJsonConverterSerialization = {
       __conv_type__: type,
       __value__: value

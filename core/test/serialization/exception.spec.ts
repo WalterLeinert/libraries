@@ -22,7 +22,7 @@ class ExceptionTest extends SerializerBaseTest {
 
     levels: {
       '[all]': 'WARN',
-      'JsonFormatter': 'WARN'
+      'JsonSerializer': 'WARN'
     }
   };
 
