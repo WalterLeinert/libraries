@@ -46,6 +46,10 @@ class Test2 {
   @Serializable()
   public name: string;
 
+  public nullValue = null;
+
+  public undefinedValue;
+
   constructor(id: number) {
     this._id = id;
     this.name = `Test2-${id}`;

@@ -121,7 +121,7 @@ export class JsonSerializer {
           // falls für den Propertytyp ein Converter existiert, verwenden wir diesen
           //
 
-          if (Types.isObject(propertyValue)) {
+          if (Types.isPresent(propertyValue) && Types.isObject(propertyValue)) {
             const propertyType = Types.getClassName(propertyValue);
 
             //
@@ -239,7 +239,7 @@ export class JsonSerializer {
             //
             let converted = false;
 
-            if (Types.isObject(propertyValue)) {
+            if (Types.isPresent(propertyValue) && Types.isObject(propertyValue)) {
               if (JsonSerializer.isSerializedProperty(propertyValue)) {
                 const propertyType = JsonSerializer.getSerializedPropertyType(propertyValue);
                 const value = JsonSerializer.getSerializedPropertyValue(propertyValue);
