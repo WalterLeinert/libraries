@@ -108,7 +108,7 @@ export class JsonSerializer {
           if (clazzMetadata) {
             JsonSerializer.addSerializedType(json, clazzMetadata.name);   // Typ für Deserialiserung hinterlegen
             if (log.isDebugEnabled()) {
-              log.log(`setting type = ${clazzMetadata.name}: obj = ${JSON.stringify(obj)}`);
+              log.debug(`setting type = ${clazzMetadata.name}: obj = ${JSON.stringify(obj)}`);
             }
           }
 
@@ -142,7 +142,7 @@ export class JsonSerializer {
               if (propertyConverter) {
 
                 if (log.isDebugEnabled()) {
-                  log.log(`converting property ${propertyKey.toString()}: type = ${propertyType}, ` +
+                  log.debug(`converting property ${propertyKey.toString()}: type = ${propertyType}, ` +
                     `value = ${JSON.stringify(propertyValue)}`);
                 }
 
@@ -217,9 +217,9 @@ export class JsonSerializer {
 
           if (log.isInfoEnabled()) {
             if (log.isDebugEnabled()) {
-              log.log(`type = ${type}, json = ${JSON.stringify(json)}`);
+              log.debug(`type = ${type}, json = ${JSON.stringify(json)}`);
             } else {
-              log.log(`type = ${type}`);
+              log.info(`type = ${type}`);
             }
           }
 
@@ -274,7 +274,7 @@ export class JsonSerializer {
                 if (propertyConverter) {
 
                   if (log.isDebugEnabled()) {
-                    log.log(`converting property ${propertyKey.toString()}: type = ${propertyType}, ` +
+                    log.debug(`converting property ${propertyKey.toString()}: type = ${propertyType}, ` +
                       `value = ${JSON.stringify(propertyValue)}`);
                   }
 
