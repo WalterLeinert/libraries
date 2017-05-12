@@ -34,10 +34,11 @@ import { MetadataService } from './metadata.service';
  */
 export abstract class BaseService<T, TId extends IToString> implements IBaseService<T, TId>  {
   protected static logger = getLogger(BaseService);
+  private serializer: JsonSerializer = new JsonSerializer();
 
   private primaryKeyColumn: ColumnMetadata = null;
   private metadata: TableMetadata;
-  private static serializer: JsonSerializer = new JsonSerializer();
+
 
   /**
    * Creates an instance of ServiceBase.
@@ -55,7 +56,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
     if (cols.length <= 0) {
       BaseService.logger.warn(`Table ${this.metadata.options.name}: no primary key column`);
     }
-    this.primaryKeyColumn = cols[0];   ;
+    this.primaryKeyColumn = cols[0];;
   }
 
 
@@ -75,9 +76,6 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
       if (log.isDebugEnabled) {
         log.debug('subject: ', subject);
       }
-
-      subject = this.deserialize(subject);
-
 
       const dbSubject = this.createDatabaseInstance(subject);
 
@@ -109,7 +107,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                 subject = this.createModelInstance(dbSubject);
 
                 trx.commit();
-                resolve(this.serialize(subject));
+                resolve(subject);
               }
             })
             .catch((err) => {
@@ -166,7 +164,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                 }
 
                 trx.commit();
-                resolve(this.deserialize(result));
+                resolve(result);
               }
             })
             .catch((err) => {
@@ -221,7 +219,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                 }
 
                 trx.commit();
-                resolve(this.serializeArray(result));
+                resolve(result);
               }
             })
             .catch((err) => {
@@ -250,8 +248,6 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
 
     return using(new XLog(BaseService.logger, levels.INFO, 'update', `[${this.tableName}]`), (log) => {
       log.debug('subject: ', subject);
-
-      subject = this.deserialize(subject);
 
       const dbSubject = this.createDatabaseInstance(subject);
 
@@ -330,7 +326,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                       trx.commit();
 
                       log.debug('subject after commit: ', subject);
-                      resolve(this.serialize(subject));
+                      resolve(subject);
                     }
                   } else {
                     if (affectedRows <= 0) {
@@ -347,7 +343,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                       trx.commit();
 
                       log.debug('subject after commit: ', subject);
-                      resolve(this.serialize(subject));
+                      resolve(subject);
                     }
                   }
                 })
@@ -460,7 +456,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                 }
 
                 trx.commit();
-                resolve(this.serializeArray(result));
+                resolve(result);
               }
             })
             .catch((err) => {
@@ -480,12 +476,10 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
     query: IQuery
   ): Promise<T[]> {
     return using(new XLog(BaseService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
-      const deserializedQuery = this.deserializeJson<IQuery>(query);
-
       let knexQuery = this.fromTable();
 
       const visitor = new KnexQueryVisitor(knexQuery, this.metadata);
-      deserializedQuery.term.accept(visitor);
+      query.term.accept(visitor);
 
       return this.queryKnex(visitor.query(knexQuery));
     });
@@ -594,6 +588,31 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
 
 
   /**
+   * Serialisiert das @param{item} für die Übertragung zum Client über das REST-Api.
+   *
+   * @param {any} item
+   * @returns {any}
+   */
+  protected serialize<TSerialize>(item: TSerialize): any {
+    Assert.notNull(item);
+    return this.serializer.serialize(item);
+  }
+
+
+  /**
+   * Deserialisiert das Json-Objekt, welches über das REST-Api vom Client zum Server übertragen wurde
+   *
+   * @param {any} json - Json-Objekt vom Client
+   * @returns {any}
+   *
+   */
+  protected deserialize<TSerialize>(json: any): TSerialize {
+    Assert.notNull(json);
+    return this.serializer.deserialize<TSerialize>(json);
+  }
+
+
+  /**
    * Liefert den DB-Tabellennamen
    *
    * @readonly
@@ -602,15 +621,6 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
    */
   public get tableName(): string {
     return this.metadata.options.name;
-  }
-
-
-  protected serializeJson<TSource>(value: TSource): any {
-    return BaseService.serializer.serialize<TSource>(value);
-  }
-
-  protected deserializeJson<TDest>(json: any): TDest {
-    return BaseService.serializer.deserialize<TDest>(json);
   }
 
 
@@ -629,48 +639,6 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
       .where('entityversion_id', '=', this.tableName)
       .increment('entityversion_version', 1)
       .transacting(trx);
-  }
-
-
-  /**
-   * Serialisiert das @param{item} für die Übertragung zum Client über das REST-Api.
-   *
-   * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
-   *
-   * @param {T} item - Entity-Instanz
-   * @returns {any}
-   */
-  private serialize(item: T): any {
-    Assert.notNull(item);
-    return item;
-  }
-
-  /**
-   * Serialisiert das @param{items}-Array für die Übertragung zum Client über das REST-Api.
-   *
-   * TODO: ggf. die Serialisierung von speziellen Attributtypen (wie Date) implementieren
-   *
-   * @param {T} items - Array von Entity-Instanzen
-   * @returns {any}
-   */
-  private serializeArray(items: T[]): any {
-    Assert.notNull(items);
-    return items;
-  }
-
-  /**
-   * Deserialisiert das Json-Objekt, welches über das REST-Api vom Client zum Server übertragen wurde
-   *
-   * TODO: ggf. die Deserialisierung von speziellen Attributtypen (wie Date) implementieren
-   *
-   * @param {any} json - Json-Objekt vom Client
-   * @returns {T}
-   *
-   */
-  private deserialize(json: any): T {
-    Assert.notNull(json);
-    // Die Properties im Json-Objekt haben dieselben Namen wie die Modellinstanz -> mapColumns = false
-    return this.metadata.createModelInstance<T>(json, false);
   }
 
 

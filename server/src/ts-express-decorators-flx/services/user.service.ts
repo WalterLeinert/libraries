@@ -157,12 +157,10 @@ export class UserService extends BaseService<IUser, number> {
           })
         };
 
-        const serializedQuery = this.serializeJson(query);
-
         const message = Messages.WRONG_CREDENTIALS('Benutzername');
 
         return new Promise<IUser>((resolve, reject) => {
-          this.query(serializedQuery)
+          this.query(query)
             .then((users) => {
 
               try {
@@ -238,10 +236,8 @@ export class UserService extends BaseService<IUser, number> {
         })
       };
 
-      const serializedQuery = this.serializeJson(query);
-
       return new Promise<IUser>((resolve, reject) => {
-        this.query(serializedQuery)
+        this.query(query)
           .then((users) => {
             if (!users || users.length <= 0) {
               log.log('no user found');
@@ -281,10 +277,8 @@ export class UserService extends BaseService<IUser, number> {
         })
       };
 
-      const serializedQuery = this.serializeJson(query);
-
       return new Promise<IUser>((resolve, reject) => {
-        this.query(serializedQuery)
+        this.query(query)
           .then((users) => {
             if (!users || users.length <= 0) {
               log.log('no user found');
@@ -325,12 +319,10 @@ export class UserService extends BaseService<IUser, number> {
         })
       };
 
-      const serializedQuery = this.serializeJson(query);
-
       const message = Messages.WRONG_CREDENTIALS('Email');
 
       return new Promise<IUser>((resolve, reject) => {
-        this.query(serializedQuery)
+        this.query(query)
           .then((users) => {
             if (!users || users.length <= 0) {
               log.log(message);

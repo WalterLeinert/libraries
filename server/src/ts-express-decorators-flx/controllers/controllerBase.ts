@@ -6,7 +6,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { ServiceResult } from '@fluxgate/common';
-import { IToString } from '@fluxgate/core';
+import { IToString, JsonSerializer } from '@fluxgate/core';
 
 import { BaseService } from '../services/baseService';
 
@@ -25,6 +25,8 @@ import { BaseService } from '../services/baseService';
 export abstract class ControllerBase<T, TId extends IToString> {
   protected static logger = getLogger(ControllerBase);
 
+  private serializer: JsonSerializer = new JsonSerializer();
+
   constructor(private service: BaseService<T, TId>, private _tableName: string, private _idName: string) {
     this.service.idColumnName = this._idName;
   }
@@ -41,7 +43,13 @@ export abstract class ControllerBase<T, TId extends IToString> {
   protected createInternal(
     subject: T
   ): Promise<T> {
-    return this.service.create(subject);
+    const deserializedSubject = this.serializer.deserialize<T>(subject);
+
+    return new Promise<T>((resolve, reject) => {
+      this.service.create(deserializedSubject).then((item) => {
+        resolve(this.serializer.serialize<T>(item));
+      });
+    });
   }
 
 
@@ -56,7 +64,12 @@ export abstract class ControllerBase<T, TId extends IToString> {
   protected findByIdInternal(
     id: TId
   ): Promise<T> {
-    return this.service.findById(id);
+
+    return new Promise<T>((resolve, reject) => {
+      this.service.findById(id).then((item) => {
+        resolve(this.serializer.serialize<T>(item));
+      });
+    });
   }
 
 
@@ -69,7 +82,12 @@ export abstract class ControllerBase<T, TId extends IToString> {
    */
   protected findInternal(
   ): Promise<T[]> {
-    return this.service.find();
+
+    return new Promise<T[]>((resolve, reject) => {
+      this.service.find().then((items) => {
+        resolve(this.serializer.serialize<T[]>(items));
+      });
+    });
   }
 
 
@@ -84,7 +102,11 @@ export abstract class ControllerBase<T, TId extends IToString> {
   protected updateInternal(
     subject: T
   ): Promise<T> {
-    return this.service.update(subject);
+    return new Promise<T>((resolve, reject) => {
+      this.service.update(subject).then((item) => {
+        resolve(this.serializer.serialize<T>(item));
+      });
+    });
   }
 
 
@@ -99,7 +121,11 @@ export abstract class ControllerBase<T, TId extends IToString> {
   protected deleteInternal(
     id: TId
   ): Promise<ServiceResult<TId>> {
-    return this.service.delete(id);
+    return new Promise<ServiceResult<TId>>((resolve, reject) => {
+      this.service.delete(id).then((result) => {
+        resolve(this.serializer.serialize<ServiceResult<TId>>(result));
+      });
+    });
   }
 
 
