@@ -24,20 +24,28 @@ class SetCurrentTest extends ReduxBaseTest<IUser, number, any> {
   }
 
 
-  @test 'should dispatch commands: SetCurrentItemCommand'() {
+  @test 'should dispatch command: SettingCurrentItemCommand'() {
     expect(this.commands.length).to.equal(2);
     expect(this.commands[0]).to.be.instanceOf(SettingCurrentItemCommand);
+
+    const state0 = this.getCurrentItemStateAt(0);
+
+    expect(state0).to.deep.equal({
+      ...this.beforeState,
+      state: ServiceRequestStates.RUNNING
+    });
+  }
+
+
+  @test 'should dispatch command: CurrentItemSetCommand'() {
+    expect(this.commands.length).to.equal(2);
     expect(this.commands[1]).to.be.instanceOf(CurrentItemSetCommand);
 
     const state0 = this.getCurrentItemStateAt(0);
-    expect(state0).to.deep.equal({
-      ...this.beforeState, ...this.beforeState,
-      state: ServiceRequestStates.RUNNING
-    });
-
     const state1 = this.getCurrentItemStateAt(1);
+
     expect(state1).to.deep.equal({
-      ...this.beforeState,
+      ...state0,
       currentItem: this.user,
       state: ServiceRequestStates.DONE
     });

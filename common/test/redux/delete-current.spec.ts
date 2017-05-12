@@ -8,7 +8,7 @@ import { suite, test } from 'mocha-typescript';
 import { IUser } from '../../src/model';
 import {
   CommandStore, DeletingItemCommand, ExtendedCrudServiceRequests, IExtendedCrudServiceState, IServiceState,
-  ItemDeletedCommand, ReduxParentStore,
+  ItemDeletedCommand, ItemsFoundCommand, ReduxParentStore,
   ServiceRequestStates, UserStore
 } from '../../src/redux';
 import { ExtendedUserServiceRequestsFake } from '../../src/testing';
@@ -43,45 +43,21 @@ class DeleteCurrentTest extends ReduxBaseTest<IUser, number, any> {
   }
 
 
-  @test 'should dispatch commands: DeletingItemCommand'() {
-    expect(this.commands.length).to.equal(2);
-    expect(this.commands[0]).to.be.instanceOf(DeletingItemCommand);
-
-    const state0 = this.getCrudStateAt(0);
-    expect(state0).to.deep.equal({
-      ...this.beforeState,
-      state: ServiceRequestStates.RUNNING
-    });
-  }
-
-  @test 'should dispatch commands: ItemDeletedCommand'() {
-    expect(this.commands.length).to.equal(2);
+  @test 'should dispatch command: ItemDeletedCommand'() {
+    expect(this.commands.length).to.equal(3);
     expect(this.commands[1]).to.be.instanceOf(ItemDeletedCommand);
 
+
+    const state0 = this.getCrudStateAt(0);
+
+    // state nach ItemDeleted
     const state1 = this.getCrudStateAt(1);
 
-    const beforeItems = (this.beforeState as IExtendedCrudServiceState<IUser, number>).items;
-
     expect(state1).to.deep.equal({
-      ...this.beforeState,
-      items: beforeItems.filter((item) => item.id !== DeleteCurrentTest.DELETE_ID),
-      currentItem: null,
+      ...state0,
+      currentItem: null,            // current wurde gelöscht
       deletedId: DeleteCurrentTest.DELETE_ID,
       state: ServiceRequestStates.DONE
-    });
-  }
-
-
-  @test 'should exist one item less'(done: (err?: any) => void) {
-    this.serviceFake.find().subscribe((items) => {
-      const beforeItems = (this.beforeState as IExtendedCrudServiceState<IUser, number>).items;
-
-      if (items.length !== beforeItems.length - 1) {
-        done(new Error(`items.length (${items.length}) !== this.beforeState.items.length - 1` +
-          ` (${beforeItems.length - 1})`));
-      } else {
-        done();
-      }
     });
   }
 

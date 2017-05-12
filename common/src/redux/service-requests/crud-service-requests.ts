@@ -68,6 +68,11 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
         this.service.create(item).subscribe(
           (elem) => {
             this.dispatch(new ItemCreatedCommand(this, elem));
+
+            // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
+            // Update der Itemliste nach create
+            this.dispatch(new ItemsFoundCommand(this, [...this.getCrudState(this.storeId).items, elem]));
+
             observer.next(elem);
           },
           (exc: IException) => {
@@ -201,6 +206,12 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
         this.service.update(item).subscribe(
           (elem) => {
             this.dispatch(new ItemUpdatedCommand(this, elem));
+
+            // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
+            // Update der Itemliste nach update
+            this.dispatch(new ItemsFoundCommand(this,
+              this.getCrudState(this.storeId).items.map((it) => it.id !== item.id ? it : elem)));
+
             observer.next(elem);
           },
           (exc: IException) => {
@@ -230,6 +241,12 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
         this.service.delete(id).subscribe(
           (result) => {
             this.dispatch(new ItemDeletedCommand(this, result.id));
+
+            // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
+            // Update der Itemliste nach delete
+            this.dispatch(new ItemsFoundCommand(this,
+              this.getCrudState(this.storeId).items.filter((item) => item.id !== result.id)));
+
             observer.next(result.id);
           },
           (exc: IException) => {

@@ -7,8 +7,8 @@ import { suite, test } from 'mocha-typescript';
 import { Clone } from '@fluxgate/core';
 
 import { IUser } from '../../src/model';
-import { IServiceState, ServiceRequestStates } from '../../src/redux';
-import { ItemUpdatedCommand, UpdatingItemCommand } from '../../src/redux';
+import { ICrudServiceState, IExtendedCrudServiceState, IServiceState, ServiceRequestStates } from '../../src/redux';
+import { ItemsFoundCommand, ItemUpdatedCommand, UpdatingItemCommand } from '../../src/redux';
 import { UserStore } from '../../src/redux/store';
 
 import { ExtendedUserServiceRequestsFake } from '../../src/testing';
@@ -21,59 +21,84 @@ class UpdateCurrentTest extends ReduxBaseTest<IUser, number, any> {
   private static readonly UPDATE_ID = 1;
   private beforeState: IServiceState;
   private item: IUser;
+  private itemExpected: IUser;
 
   constructor() {
     super(UserStore.ID, ExtendedUserServiceRequestsFake, UserServiceFake);
   }
 
 
-  @test 'should update currentItem after dispatch commands: UpdatingItemCommand, ItemUpdatedCommand'() {
-    const itemExpected = Clone.clone(this.item);
-    const item = Clone.clone(this.item);
-    item.username = item.username + '-updated';
+  @test 'should update currentItem after dispatch command: UpdatingItemCommand'() {
+    expect(this.commands.length).to.equal(3);
+    expect(this.commands[0]).to.be.instanceOf(UpdatingItemCommand);
 
-    itemExpected.username = item.username;
-    itemExpected.__version++;
+    const state0 = this.getCrudStateAt(0);
+    expect(state0).to.deep.equal({
+      ...this.beforeState,
+      state: ServiceRequestStates.RUNNING
+    });
+  }
 
-    this.crudServiceRequests.update(item).subscribe((it) => {
-      expect(this.commands.length).to.equal(2);
-      expect(this.commands[0]).to.be.instanceOf(UpdatingItemCommand);
 
-      const state0 = this.getCrudStateAt(0);
-      expect(state0).to.deep.equal({
-        ...this.beforeState,
-        state: ServiceRequestStates.RUNNING
-      });
+  @test 'should update currentItem after dispatch commands: ItemUpdated'() {
+    expect(this.commands.length).to.equal(3);
+    expect(this.commands[1]).to.be.instanceOf(ItemUpdatedCommand);
 
-      expect(this.commands[1]).to.be.instanceOf(ItemUpdatedCommand);
+    const state0 = this.getCrudStateAt(0);
+    const state1 = this.getCrudStateAt(1);
 
-      const state1 = this.getCrudStateAt(1);
+    expect(state1).to.deep.equal({
+      ...state0,
+      item: this.itemExpected,
+      currentItem: this.itemExpected,
+      state: ServiceRequestStates.DONE
+    });
+  }
 
-      const expectedState: IServiceState = {
-        ...this.beforeState,
-        item: itemExpected,
-        currentItem: itemExpected,
-        state: ServiceRequestStates.DONE
-      };
 
-      expect(state1).to.deep.equal(expectedState);
+  @test 'should update currentItem after dispatch commands: ItemsFound'() {
+    expect(this.commands.length).to.equal(3);
+    expect(this.commands[2]).to.be.instanceOf(ItemsFoundCommand);
+
+    const state1 = this.getCrudStateAt(1);
+    const state2 = this.getCrudStateAt(2);
+
+    expect(state2).to.deep.equal({
+      ...state1,
+      items: state1.items.map((elem) => elem.id !== this.itemExpected.id ? elem : this.itemExpected)
     });
   }
 
 
   protected before(done: (err?: any) => void) {
     super.before(() => {
-      this.serviceFake.findById(UpdateCurrentTest.UPDATE_ID).subscribe((item) => {
-        this.item = item;
 
-        // currentItem setzen -> nach update prüfen
-        this.currentItemServiceRequests.setCurrent(item).subscribe((it) => {
-          // snapshot vom Status
-          this.beforeState = this.getStoreState();
+      // state.items erzeugen
+      this.crudServiceRequests.find().subscribe((items) => {
 
-          this.reset();
+        this.serviceFake.findById(UpdateCurrentTest.UPDATE_ID).subscribe((item) => {
+          this.item = item;
 
-          done();
+          // currentItem setzen -> nach update prüfen
+          this.currentItemServiceRequests.setCurrent(item).subscribe((it) => {
+            // snapshot vom Status
+            this.beforeState = this.getStoreState();
+
+            this.reset();
+
+            this.itemExpected = Clone.clone(this.item);
+            const itemToUpdate = Clone.clone(this.item);
+            itemToUpdate.username = item.username + '-updated';
+
+            this.itemExpected.username = itemToUpdate.username;
+            this.itemExpected.__version++;
+
+            // Test: update item
+            this.crudServiceRequests.update(itemToUpdate).subscribe(() => {
+              done();
+            });
+
+          });
         });
 
       }, (error) => {

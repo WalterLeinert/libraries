@@ -38,7 +38,7 @@ export class ItemDeletedCommand<T extends IEntity<TId>, TId> extends ServiceComm
   protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
-      items: state.items.filter((item) => item.id !== this.id),
+      // items: state.items.filter((item) => item.id !== this.id),
       deletedId: this.id,
       item: (state.item && state.item.id === this.id) ? null : state.item,
       state: ServiceRequestStates.DONE,

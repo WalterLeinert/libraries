@@ -8,7 +8,7 @@ import { Clone } from '@fluxgate/core';
 
 import { IUser } from '../../src/model';
 import { ICrudServiceState, ServiceRequestStates } from '../../src/redux';
-import { CreatingItemCommand, ItemCreatedCommand } from '../../src/redux';
+import { CreatingItemCommand, ItemCreatedCommand, ItemsFoundCommand } from '../../src/redux';
 import { UserStore } from '../../src/redux/store';
 
 import { UserServiceFake } from '../../src/testing/user-service-fake';
@@ -27,7 +27,7 @@ class CreateTest extends ReduxBaseTest<IUser, number, any> {
 
 
   @test 'should dispatch commands: CreatingItemCommand'() {
-    expect(this.commands.length).to.equal(2);
+    expect(this.commands.length).to.equal(3);
     expect(this.commands[0]).to.be.instanceOf(CreatingItemCommand);
 
     const state0 = this.getCrudStateAt(0);
@@ -38,15 +38,27 @@ class CreateTest extends ReduxBaseTest<IUser, number, any> {
   }
 
   @test 'should dispatch commands: ItemCreatedCommand'() {
-    expect(this.commands.length).to.equal(2);
+    expect(this.commands.length).to.equal(3);
     expect(this.commands[1]).to.be.instanceOf(ItemCreatedCommand);
 
+    const state0 = this.getCrudStateAt(0);
     const state1 = this.getCrudStateAt(1);
     expect(state1).to.deep.equal({
-      ...this.beforeState,
-      items: [...this.beforeState.items, state1.item],
+      ...state0,
       item: state1.item,
       state: ServiceRequestStates.DONE
+    });
+  }
+
+  @test 'should dispatch commands: ItemsFoundCommand'() {
+    expect(this.commands.length).to.equal(3);
+    expect(this.commands[2]).to.be.instanceOf(ItemsFoundCommand);
+
+    const state1 = this.getCrudStateAt(1);
+    const state2 = this.getCrudStateAt(2);
+    expect(state2).to.deep.equal({
+      ...state1,
+      items: [...state1.items, state1.item],
     });
   }
 

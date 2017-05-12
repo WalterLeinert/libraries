@@ -38,7 +38,7 @@ export class ItemCreatedCommand<T extends IEntity<TId>, TId> extends ServiceComm
   protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
     return {
       ...state,
-      items: [...state.items, this.item],
+      // items: [...state.items, this.item],
       item: this.item,
       state: ServiceRequestStates.DONE,
       error: undefined

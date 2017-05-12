@@ -7,7 +7,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { IUser } from '../../src/model';
 import { ICrudServiceState, ServiceRequestStates } from '../../src/redux';
-import { DeletingItemCommand, ItemDeletedCommand } from '../../src/redux';
+import { DeletingItemCommand, ItemDeletedCommand, ItemsFoundCommand } from '../../src/redux';
 import { UserStore } from '../../src/redux/store';
 
 import { UserServiceFake } from '../../src/testing/user-service-fake';
@@ -25,8 +25,8 @@ class DeleteTest extends ReduxBaseTest<IUser, number, any> {
   }
 
 
-  @test 'should dispatch commands: DeletingItemCommand'() {
-    expect(this.commands.length).to.equal(2);
+  @test 'should dispatch command: DeletingItemCommand'() {
+    expect(this.commands.length).to.equal(3);
     expect(this.commands[0]).to.be.instanceOf(DeletingItemCommand);
 
     const state0 = this.getCrudStateAt(0);
@@ -36,19 +36,30 @@ class DeleteTest extends ReduxBaseTest<IUser, number, any> {
     });
   }
 
-  @test 'should dispatch commands: ItemDeletedCommand'() {
-    expect(this.commands.length).to.equal(2);
+  @test 'should dispatch command: ItemDeletedCommand'() {
+    expect(this.commands.length).to.equal(3);
     expect(this.commands[1]).to.be.instanceOf(ItemDeletedCommand);
 
+    const state0 = this.getCrudStateAt(0);
     const state1 = this.getCrudStateAt(1);
     expect(state1).to.deep.equal({
-      ...this.beforeState,
-      items: this.beforeState.items.filter((item) => item.id !== DeleteTest.DELETE_ID),
+      ...state0,
       deletedId: 1,
       state: ServiceRequestStates.DONE
     });
   }
 
+  @test 'should dispatch command: ItemsFoundCommand'() {
+    expect(this.commands.length).to.equal(3);
+    expect(this.commands[2]).to.be.instanceOf(ItemsFoundCommand);
+
+    const state1 = this.getCrudStateAt(1);
+    const state2 = this.getCrudStateAt(2);
+    expect(state2).to.deep.equal({
+      ...state1,
+      items: this.beforeState.items.filter((item) => item.id !== DeleteTest.DELETE_ID)
+    });
+  }
 
   @test 'should exist one item less'(done: (err?: any) => void) {
     this.serviceFake.find().subscribe((items) => {
