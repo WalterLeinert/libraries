@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 // tslint:disable-next-line:no-var-requires
-let jsondiff = require('json-diff-patch');
+// let jsondiff = require('json-diff-patch');
 
 import { Clone } from '../../src/base/clone';
 import { JsonSerializer } from '../../src/serialization';
@@ -17,7 +17,7 @@ export abstract class SerializerBaseTest {
     const valueSerialized = this.formatter.serialize(value);
     const valueDeserialized = this.formatter.deserialize(valueSerialized);
 
-    const diff = jsondiff.diff(value, valueDeserialized);
+    // const diff = jsondiff.diff(value, valueDeserialized);
 
     // tslint:disable-next-line:no-console
     // console.log(JSON.stringify(diff));

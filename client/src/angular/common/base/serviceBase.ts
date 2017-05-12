@@ -24,7 +24,7 @@ import { Assert, Constants, IException, JsonSerializer, ServerSystemException, S
 export abstract class ServiceBase {
   protected static logger = getLogger(ServiceBase);
 
-  private static serializer: JsonSerializer = new JsonSerializer();;
+  private static serializer: JsonSerializer = new JsonSerializer();
   private _url: string;
 
 

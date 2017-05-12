@@ -56,7 +56,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
     if (cols.length <= 0) {
       BaseService.logger.warn(`Table ${this.metadata.options.name}: no primary key column`);
     }
-    this.primaryKeyColumn = cols[0];;
+    this.primaryKeyColumn = cols[0];
   }
 
 

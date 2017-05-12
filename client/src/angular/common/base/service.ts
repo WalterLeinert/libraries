@@ -160,17 +160,18 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    */
   public delete(id: TId): Observable<ServiceResult<TId>> {
     Assert.notNull(id, 'id');
-    return using(new XLog(Service.logger, levels.INFO, 'delete', `[${this.getModelClassName()}]: id = ${id}`), (log) => {
+    return using(new XLog(Service.logger, levels.INFO, 'delete', `[${this.getModelClassName()}]: id = ${id}`),
+      (log) => {
 
-      return this.http.delete(`${this.getUrl()}/${id}`)
-        .map((response: Response) => response.json())
-        .do((serviceResult) => {
-          if (log.isInfoEnabled()) {
-            log.log(`Service.delete [${this.getModelClassName()}]: ${JSON.stringify(serviceResult)}`);
-          }
-        })
-        .catch(this.handleError);
-    });
+        return this.http.delete(`${this.getUrl()}/${id}`)
+          .map((response: Response) => response.json())
+          .do((serviceResult) => {
+            if (log.isInfoEnabled()) {
+              log.log(`Service.delete [${this.getModelClassName()}]: ${JSON.stringify(serviceResult)}`);
+            }
+          })
+          .catch(this.handleError);
+      });
   }
 
 
