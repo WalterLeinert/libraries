@@ -45,7 +45,7 @@ class ModelSerializationTest {
 
     levels: {
       '[all]': 'WARN',
-      'JsonFormatter': 'WARN'
+      'JsonSerializer': 'WARN'
     }
   };
 
