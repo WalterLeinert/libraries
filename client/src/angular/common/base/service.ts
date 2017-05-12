@@ -6,11 +6,10 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 
-
-// -------------------------- logging -------------------------------
+// -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger } from '@fluxgate/platform';
-// -------------------------- logging -------------------------------
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
 
 
 import { IQuery, IService, ServiceResult, TableMetadata } from '@fluxgate/common';
@@ -66,11 +65,17 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    */
   public create(item: T): Observable<T> {
     Assert.notNull(item, 'item');
+    return using(new XLog(Service.logger, levels.INFO, 'create', `[${this.getModelClassName()}]`), (log) => {
 
-    return this.http.post(this.getUrl(), this.serialize(item))
-      .map((response: Response) => this.deserialize(response.json()))
-      .do((data) => Service.logger.info(`Service.create: ${JSON.stringify(data)}`))
-      .catch(this.handleError);
+      return this.http.post(this.getUrl(), this.serialize(item))
+        .map((response: Response) => this.deserialize(response.json()))
+        .do((data) => {
+          if (log.isInfoEnabled()) {
+            log.log(`Service.create: ${JSON.stringify(data)}`);
+          }
+        })
+        .catch(this.handleError);
+    });
   }
 
 
@@ -83,11 +88,17 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    * @memberOf Service
    */
   public find(): Observable<T[]> {
-    return this.http.get(this.getUrl())
-      .map((response: Response) => this.deserialize(response.json()))
-      .do((data) => Service.logger.info(
-        `Service.find [${this.getModelClassName()}]: -> ${(data as any).length} item(s)`))
-      .catch(this.handleError);
+    return using(new XLog(Service.logger, levels.INFO, 'find', `[${this.getModelClassName()}]`), (log) => {
+
+      return this.http.get(this.getUrl())
+        .map((response: Response) => this.deserialize(response.json()))
+        .do((data) => {
+          if (log.isInfoEnabled()) {
+            log.log(`Service.find [${this.getModelClassName()}]: -> ${(data as any).length} item(s)`);
+          }
+        })
+        .catch(this.handleError);
+    });
   }
 
 
@@ -101,12 +112,17 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    */
   public findById(id: TId): Observable<T> {
     Assert.notNull(id, 'id');
+    return using(new XLog(Service.logger, levels.INFO, 'findById', `[${this.getModelClassName()}]`), (log) => {
 
-    return this.http.get(`${this.getUrl()}/${id}`)
-      .map((response: Response) => this.deserialize(response.json()))
-      .do((data) => Service.logger.info(`Service.findById [${this.getModelClassName()}]: ` +
-        `id = ${id} -> ${JSON.stringify(data)}`))
-      .catch(this.handleError);
+      return this.http.get(`${this.getUrl()}/${id}`)
+        .map((response: Response) => this.deserialize(response.json()))
+        .do((data) => {
+          if (log.isInfoEnabled()) {
+            log.log(`Service.findById [${this.getModelClassName()}]: id = ${id} -> ${JSON.stringify(data)}`);
+          }
+        })
+        .catch(this.handleError);
+    });
   }
 
 
@@ -120,11 +136,17 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    */
   public update(item: T): Observable<T> {
     Assert.notNull(item, 'item');
+    return using(new XLog(Service.logger, levels.INFO, 'update', `[${this.getModelClassName()}]`), (log) => {
 
-    return this.http.put(`${this.getUrl()}`, this.serialize(item))
-      .map((response: Response) => this.deserialize(response.json()))
-      .do((data) => Service.logger.info(`Service.update [${this.getModelClassName()}]: ${JSON.stringify(data)}`))
-      .catch(this.handleError);
+      return this.http.put(`${this.getUrl()}`, this.serialize(item))
+        .map((response: Response) => this.deserialize(response.json()))
+        .do((data) => {
+          if (log.isInfoEnabled()) {
+            log.log(`Service.update [${this.getModelClassName()}]: ${JSON.stringify(data)}`);
+          }
+        })
+        .catch(this.handleError);
+    });
   }
 
 
@@ -138,12 +160,17 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    */
   public delete(id: TId): Observable<ServiceResult<TId>> {
     Assert.notNull(id, 'id');
+    return using(new XLog(Service.logger, levels.INFO, 'delete', `[${this.getModelClassName()}]: id = ${id}`), (log) => {
 
-    return this.http.delete(`${this.getUrl()}/${id}`)
-      .map((response: Response) => response.json())
-      .do((serviceResult) => Service.logger.info(`Service.delete [${this.getModelClassName()}]: ` +
-        `${JSON.stringify(serviceResult)}`))
-      .catch(this.handleError);
+      return this.http.delete(`${this.getUrl()}/${id}`)
+        .map((response: Response) => response.json())
+        .do((serviceResult) => {
+          if (log.isInfoEnabled()) {
+            log.log(`Service.delete [${this.getModelClassName()}]: ${JSON.stringify(serviceResult)}`);
+          }
+        })
+        .catch(this.handleError);
+    });
   }
 
 
@@ -157,18 +184,27 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    */
   public query(query: IQuery): Observable<T[]> {
     Assert.notNull(query, 'query');
+    return using(new XLog(Service.logger, levels.INFO, 'query', `[${this.getModelClassName()}]`), (log) => {
 
-    const headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-    const options = new RequestOptions({ headers: headers });           // Create a request option
+      const headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+      const options = new RequestOptions({ headers: headers });           // Create a request option
 
 
-    const serializedQuery = this.serialize(query);
+      const serializedQuery = this.serialize(query);
 
-    return this.http.post(`${this.getUrl()}/query`, serializedQuery, options)
-      .map((response: Response) => this.deserialize(response.json()))
-      .do((data) => Service.logger.info(`Service.query [${this.getModelClassName()}]: ` +
-        `query = ${JSON.stringify(query)} -> ${JSON.stringify(data)}`))
-      .catch(this.handleError);
+      return this.http.post(`${this.getUrl()}/query`, serializedQuery, options)
+        .map((response: Response) => this.deserialize(response.json()))
+        .do((data) => {
+          if (log.isInfoEnabled()) {
+            log.log(`result: ${(data as any).length} item(s)`);
+
+            if (log.isDebugEnabled()) {
+              log.debug(`query = ${JSON.stringify(query)} -> ${JSON.stringify(data)}`);
+            }
+          }
+        })
+        .catch(this.handleError);
+    });
   }
 
 
