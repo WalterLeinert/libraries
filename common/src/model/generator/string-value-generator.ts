@@ -8,6 +8,6 @@ export class StringValueGenerator extends ValueGenerator<string> {
 
 
   protected formatValue(index: number): string {
-    return `${this.template}-${index}`;
+    return `${this.template}-${index + 1}`;
   }
 }

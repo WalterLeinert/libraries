@@ -144,7 +144,7 @@ class EntityGeneratorTest {
   @test 'should have expected column values'() {
     for (let i = 0; i < EntityGeneratorTest.ITEMS; i++) {
       const item = this.items[i];
-      expect(item.name).to.equal(`name-${i}`);
+      expect(item.name).to.equal(`name-${i + 1}`);
       expect(item.dateProperty).to.deep.equal(this.addDays(DateValueGenerator.INITIAL_VALUE, i));
       expect(item.datetimeProperty).to.deep.equal(this.addMinutes(DatetimeValueGenerator.INITIAL_VALUE, i));
 
