@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { MetadataService } from '@fluxgate/client';
-import { ENTITY_VERSION_SERVICE, EntityVersion, ServiceFake, User } from '@fluxgate/common';
+import { ENTITY_VERSION_SERVICE, EntityVersion, ServiceFake } from '@fluxgate/common';
 import { EntityGenerator, NumberIdGenerator } from '@fluxgate/common';
 // import { EntityVersionService } from '../angular/redux/entity-version.service';
 
@@ -18,11 +18,11 @@ export class EntityVersionServiceFake extends ServiceFake<EntityVersion, string>
   public static readonly MAX_ITEMS = 100;
 
   constructor(metadataService: MetadataService) {
-    super(metadataService.findTableMetadata(User),
+    super(metadataService.findTableMetadata(EntityVersion),
       new EntityGenerator<EntityVersion, string>({
         count: EntityVersionServiceFake.ITEMS,
         maxCount: EntityVersionServiceFake.MAX_ITEMS,
-        tableMetadata: metadataService.findTableMetadata(User),
+        tableMetadata: metadataService.findTableMetadata(EntityVersion),
         idGenerator: new NumberIdGenerator(EntityVersionServiceFake.MAX_ITEMS),
         columns: {
         }

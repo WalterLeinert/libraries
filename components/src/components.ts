@@ -37,6 +37,7 @@ export { YearSelectorComponent, YearSelectorModule } from './angular/modules/yea
 
 export {
   CurrentUserServiceRequests, CurrentUserServiceRequestsModule, EnhancedServiceRequests,
+  ENTITY_VERSION_SERVICE_PROVIDER, EntityVersionService,
   RoleSelectorServiceRequests, RoleSelectorServiceRequestsModule, RoleSelectorStore,
   RoleServiceRequests, RoleServiceRequestsModule, UserSelectorServiceRequests,
   UserSelectorServiceRequestsModule, UserSelectorStore, UserServiceRequests, UserServiceRequestsModule
@@ -46,6 +47,7 @@ export {
   ComponentGuardModule, ComponentGuardService,
   ComponentServices, ComponentServicesModule,
   CurrentUserAdminGuardService, CurrentUserGuardService,
+
   MessageServiceModule
 } from './angular/services';
 
