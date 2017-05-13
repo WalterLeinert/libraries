@@ -33,6 +33,11 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
     Assert.notNull(_entityGenerator);
 
     this._items = this._entityGenerator.generate();
+
+    // entityVersion aktualisieren
+    this._items.forEach((item) => {
+      this.incrementEntityVersion();
+    });
   }
 
 
@@ -213,6 +218,8 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
   }
 
   private incrementEntityVersion() {
-    this._entityVersionServiceFake.items.find((ev) => ev.id === this.getTableName()).__version++;
+    if (this._entityVersionServiceFake) {
+      this._entityVersionServiceFake.items.find((ev) => ev.id === this.getTableName()).__version++;
+    }
   }
 }

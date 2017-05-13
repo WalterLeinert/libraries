@@ -21,6 +21,7 @@ import {
   ICrudServiceRequests, ICrudServiceState, ICurrentItemServiceRequests, ICurrentItemServiceState,
   IServiceRequests, IServiceState, ServiceCommand, ServiceRequests, Store
 } from '../../src/redux';
+import { EntityVersionCache } from '../../src/redux/cache/entity-version-cache';
 import { EntityVersionServiceFake } from '../../src/testing/entity-version-service-fake';
 import { CommonTest } from '../common.spec';
 
@@ -84,6 +85,7 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
 
 
   protected reset() {
+    EntityVersionCache.instance.reset();
     this._commands = [];
     this._states = [];
   }

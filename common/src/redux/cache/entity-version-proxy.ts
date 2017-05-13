@@ -7,7 +7,7 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { IQuery } from '@fluxgate/core';
+import { IQuery, Types } from '@fluxgate/core';
 
 import { EntityVersion } from '../../model/entityVersion';
 import { ServiceProxy } from '../../model/service/service-proxy';
@@ -34,9 +34,28 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
 
   public create<T>(item: T): Observable<T> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'create'), (log) => {
-      return super.create(item);
+
+      return Observable.create((observer: Subscriber<T>) => {
+        //
+        // findById immer durchführen, aber danach items und entityVersion aktualisieren
+        //
+        super.create(item).subscribe((it) => {
+          this.entityVersionService.findById(this.getTableName()).subscribe((entityVersion) => {
+            const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
+
+            if (cacheEntry) {
+              let items = [...cacheEntry.items, it];
+              EntityVersionCache.instance.set(this.getTableName(),
+                new EntityVersionCacheEntry<T>(entityVersion, items));
+            }
+
+            observer.next(it);
+          });
+        });
+      });
     });
   }
+
 
   public query<T>(query: IQuery): Observable<T[]> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'query'), (log) => {
@@ -54,13 +73,13 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
         this.entityVersionService.findById(this.getTableName()).subscribe((entityVersion) => {
           const cacheEntry = EntityVersionCache.instance.get(this.getTableName());
 
-          const updater = (ev, items, message) => {
-            if (log.isDebugEnabled()) {
-              log.debug(message);
+          const updater = (lg, ev, items, message) => {
+            if (lg.isDebugEnabled()) {
+              lg.debug(message);
             }
 
             const updatedCacheEnty = new EntityVersionCacheEntry<T>(ev, items);
-            EntityVersionCache.instance.add(this.getTableName(), updatedCacheEnty);
+            EntityVersionCache.instance.set(this.getTableName(), updatedCacheEnty);
             observer.next(items);
           };
 
@@ -69,7 +88,7 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
           //
           if (!cacheEntry) {
             super.find().subscribe((items) => {
-              updater(entityVersion, items, 'items never cached');
+              updater(log, entityVersion, items, 'items never cached');
             });
 
           } else {
@@ -77,15 +96,15 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
             //
             // Version veraltet? -> service call
             //
-            if (cacheEntry.entityVersion.__version < entityVersion.__version) {
+            if (cacheEntry.version < entityVersion.__version) {
               super.find().subscribe((items) => {
-                updater(entityVersion, items, `replacing cached items (versions: ${cacheEntry.entityVersion.__version}, ` +
-                  `${entityVersion.__version}`);
+                updater(log, entityVersion, items, `replacing cached items ` +
+                  `(versions: ${cacheEntry.version}, ${entityVersion.__version}`);
               });
             } else {
               // ... sonst Items aus cache
-              updater(entityVersion, cacheEntry.items, `items already cached (versions: ${cacheEntry.entityVersion.__version}, ` +
-                `${entityVersion.__version}`);
+              updater(log, entityVersion, cacheEntry.items, `items already cached ` +
+                `(versions: ${cacheEntry.version}, ${entityVersion.__version}`);
             }
           }
 
@@ -94,21 +113,90 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
     });
   }
 
+
+
   public findById<T, TId>(id: TId): Observable<T> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'findById'), (log) => {
-      return super.findById(id);
+
+      return Observable.create((observer: Subscriber<T>) => {
+        //
+        // findById immer durchführen, aber danach items und entityVersion aktualisieren
+        //
+        super.findById(id).subscribe((it) => {
+          this.entityVersionService.findById(this.getTableName()).subscribe((entityVersion) => {
+            const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
+
+            if (cacheEntry) {
+              let items;
+              if (Types.hasProperty(it, 'id')) {
+                items = cacheEntry.items.map((e) => (e as any).id === it.id ? it : e);
+              } else {
+                items = [...cacheEntry.items];
+              }
+              EntityVersionCache.instance.set(this.getTableName(),
+                new EntityVersionCacheEntry<T>(entityVersion, items));
+            }
+
+            observer.next(it);
+          });
+        });
+      });
     });
   }
 
-  public delete<TId>(id: TId): Observable<ServiceResult<TId>> {
+
+  public delete<T, TId>(id: TId): Observable<ServiceResult<TId>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'delete'), (log) => {
-      return super.delete(id);
+
+      return Observable.create((observer: Subscriber<ServiceResult<TId>>) => {
+        //
+        // delete immer durchführen, aber danach items und entityVersion aktualisieren
+        //
+        super.delete(id).subscribe((result) => {
+          this.entityVersionService.findById(this.getTableName()).subscribe((entityVersion) => {
+            const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
+
+            if (cacheEntry) {
+              // entity muss id Property haben
+              const items = cacheEntry.items.filter((e) => (e as any).id === result.id);
+              EntityVersionCache.instance.set(this.getTableName(),
+                new EntityVersionCacheEntry<T>(entityVersion, items));
+            }
+
+            observer.next(result);
+          });
+        });
+      });
     });
   }
+
 
   public update<T>(item: T): Observable<T> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'update'), (log) => {
-      return super.update(item);
+
+      return Observable.create((observer: Subscriber<T>) => {
+        //
+        // update immer durchführen, aber danach items und entityVersion aktualisieren
+        //
+        super.update(item).subscribe((it) => {
+          this.entityVersionService.findById(this.getTableName()).subscribe((entityVersion) => {
+            const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
+
+            if (cacheEntry) {
+              let items;
+              if (Types.hasProperty(it, 'id')) {
+                items = cacheEntry.items.map((e) => (e as any).id === it.id ? it : e);
+              } else {
+                items = [...cacheEntry.items];
+              }
+              EntityVersionCache.instance.set(this.getTableName(),
+                new EntityVersionCacheEntry<T>(entityVersion, items));
+            }
+
+            observer.next(it);
+          });
+        });
+      });
     });
   }
 }

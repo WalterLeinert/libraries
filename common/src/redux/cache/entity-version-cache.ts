@@ -8,7 +8,7 @@ export class EntityVersionCache {
   private entityDict: Dictionary<string, EntityVersionCacheEntry<any>> =
   new Dictionary<string, EntityVersionCacheEntry<any>>();
 
-  public add<T>(entity: string, cacheEntry: EntityVersionCacheEntry<T>) {
+  public set<T>(entity: string, cacheEntry: EntityVersionCacheEntry<T>) {
     Assert.notNullOrEmpty(entity);
     Assert.notNull(cacheEntry);
 
@@ -20,17 +20,26 @@ export class EntityVersionCache {
 
     return this.entityDict.get(entity);
   }
+
+
+  public reset() {
+    this.entityDict.clear();
+  }
 }
 
 
 // tslint:disable-next-line:max-classes-per-file
 export class EntityVersionCacheEntry<T> {
+  private _version: number;
+  private _items: T[];
 
-  constructor(private _entityVersion: EntityVersion, private _items: T[]) {
+  constructor(entityVersion: EntityVersion, items: T[]) {
+    this._version = entityVersion.__version;
+    this._items = [...items];
   }
 
-  public get entityVersion(): EntityVersion {
-    return this._entityVersion;
+  public get version(): number {
+    return this._version;
   }
 
   public get items(): T[] {
