@@ -29,6 +29,18 @@ export class MetadataService {
 
 
   /**
+   * Liefert alle TableMetadatas
+   *
+   * @readonly
+   * @type {TableMetadata[]}
+   * @memberof MetadataStorage
+   */
+  public get tableMetadata(): TableMetadata[] {
+    return MetadataStorage.instance.tableMetadata;
+  }
+
+
+  /**
    * Liefert @see{ClassSerializerMetadata} für die angegebene Modellklasse @param{model} (z.B. Artikel)
    * für Serialisierungssupport
    *

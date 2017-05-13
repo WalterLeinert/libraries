@@ -292,6 +292,18 @@ export class MetadataStorage {
   }
 
 
+  /**
+   * Liefert alle TableMetadatas
+   *
+   * @readonly
+   * @type {TableMetadata[]}
+   * @memberof MetadataStorage
+   */
+  public get tableMetadata(): TableMetadata[] {
+    return [...this.tableDict.values];
+  }
+
+
   public dump() {
     using(new XLog(MetadataStorage.logger, levels.INFO, 'dump'), (log) => {
       for (const name in this.tableDict.keys) {
