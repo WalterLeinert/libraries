@@ -248,6 +248,13 @@ export abstract class TableMetadata extends ClassMetadata {
     return this.targetName;
   }
 
+  /**
+   * Liefert den Tabellennamen des zugehörigen Modells (z.B. 'artikel')
+   */
+  public get tableName(): string {
+    return this.options.name;
+  }
+
   public createPropertiesMap(): { [name: string]: string | any } {
     const map: { [name: string]: string | any } = {};
     this.columnMetadata.forEach((column) => map[column.propertyName] = column.propertyName);

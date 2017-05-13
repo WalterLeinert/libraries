@@ -54,7 +54,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
 
     const cols = this.metadata.columnMetadata.filter((item: ColumnMetadata) => item.options.primary);
     if (cols.length <= 0) {
-      BaseService.logger.warn(`Table ${this.metadata.options.name}: no primary key column`);
+      BaseService.logger.warn(`Table ${this.metadata.tableName}: no primary key column`);
     }
     this.primaryKeyColumn = cols[0];
   }
@@ -620,7 +620,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
    * @memberOf ServiceBase
    */
   public get tableName(): string {
-    return this.metadata.options.name;
+    return this.metadata.tableName;
   }
 
 

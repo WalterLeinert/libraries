@@ -13,6 +13,13 @@ export interface IServiceBase<T, TId> extends IRestUri {
   getModelClassName(): string;
 
   /**
+   * Liefert den zugehörigen Tabellennnamen
+   *
+   * @type {string}
+   */
+  getTableName(): string;
+
+  /**
    * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
    * Sonst wird ein Error geworfen.
    *

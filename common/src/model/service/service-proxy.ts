@@ -85,6 +85,11 @@ export class ServiceProxy<T, TId> implements IService<T, TId> {
     return this.service.getModelClassName();
   }
 
+  public getTableName(): string {
+    return this.service.getTableName();
+  }
+
+
   /**
    * der eigentliche Service
    */

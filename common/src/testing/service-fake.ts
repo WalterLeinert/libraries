@@ -9,7 +9,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { Assert, InvalidOperationException, IQuery, IToString, NotSupportedException } from '@fluxgate/core';
 
-import { EntityGenerator, IFlxEntity, IService, ServiceResult, Status, TableMetadata } from '../model';
+import { EntityGenerator, EntityVersion, IFlxEntity, IService, ServiceResult, Status, TableMetadata } from '../model';
 
 
 /**
@@ -27,7 +27,8 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
 
   private _items: T[];
 
-  protected constructor(private _tableMetadata: TableMetadata, private _entityGenerator: EntityGenerator<T, TId>) {
+  protected constructor(private _tableMetadata: TableMetadata, private _entityGenerator: EntityGenerator<T, TId>,
+    private _entityVersionServiceFake?: ServiceFake<EntityVersion, string>) {
     Assert.notNull(_tableMetadata);
     Assert.notNull(_entityGenerator);
 
@@ -46,6 +47,9 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
   public create(item: T): Observable<T> {
     Assert.notNull(item, 'item');
     item.id = this._entityGenerator.nextId();
+
+    this.incrementEntityVersion();
+
     this._items.push(item);
     return Observable.of(item);
   }
@@ -92,6 +96,8 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
     Assert.notNull(item, 'item');
 
     item.__version++;
+    this.incrementEntityVersion();
+
     return Observable.of(item);
   }
 
@@ -110,6 +116,8 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
     const index = this._items.findIndex((item) => item.id === id);
     Assert.that(index >= 0 && index < this._items.length);
     this._items.splice(index, 1);
+
+    this.incrementEntityVersion();
 
     return Observable.of(new ServiceResult(id, Status.Ok));
   }
@@ -140,6 +148,10 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
    */
   public getModelClassName(): string {
     return this._tableMetadata.className;
+  }
+
+  public getTableName(): string {
+    return this._tableMetadata.tableName;
   }
 
   /**
@@ -183,6 +195,10 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
     throw new NotSupportedException();
   }
 
+  public get items(): T[] {
+    return [...this._items];
+  }
+
 
   /**
    * Liefert die zugehörige @see{TableMetadata}
@@ -194,5 +210,9 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
    */
   protected get tableMetadata(): TableMetadata {
     return this._tableMetadata;
+  }
+
+  private incrementEntityVersion() {
+    this._entityVersionServiceFake.items.find((ev) => ev.id === this.getTableName()).__version++;
   }
 }

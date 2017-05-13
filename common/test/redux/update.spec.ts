@@ -2,9 +2,10 @@
 // tslint:disable:member-access
 
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
+import { only, suite, test } from 'mocha-typescript';
 
 import { Clone } from '@fluxgate/core';
+import { configure, IConfig } from '@fluxgate/core';
 
 import { IUser } from '../../src/model';
 import { ServiceRequestStates } from '../../src/redux';
@@ -16,18 +17,31 @@ import { UserServiceRequestsFake } from '../../src/testing/user-service-requests
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('common.redux: update')
+const config: IConfig = {
+  appenders: [
+
+  ],
+
+  levels: {
+    '[all]': 'WARN',
+    'ServiceProxy': 'DEBUG',
+    'EntityVersionProxy': 'DEBUG'
+  }
+};
+
+
+
+@suite('common.redux: update') @only
 class UpdateTest extends ReduxBaseTest<IUser, number, any> {
   private static readonly UPDATE_ID = 1;
   private beforeState: IServiceState;
   private item: IUser;
   private itemExpected: IUser;
 
+
   constructor() {
     super(UserStore.ID, UserServiceRequestsFake, UserServiceFake);
   }
-
-
 
   @test 'should dispatch command: UpdatingItemCommand'() {
     expect(this.commands.length).to.equal(3);
@@ -70,6 +84,10 @@ class UpdateTest extends ReduxBaseTest<IUser, number, any> {
     });
   }
 
+
+  protected static before() {
+    configure(config);
+  }
 
   protected before(done: (err?: any) => void) {
     super.before(() => {

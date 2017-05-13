@@ -2,7 +2,7 @@
 // tslint:disable:member-access
 
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
+import { only, suite, test } from 'mocha-typescript';
 
 import { Clone } from '@fluxgate/core';
 
@@ -16,7 +16,7 @@ import { UserServiceRequestsFake } from '../../src/testing/user-service-requests
 import { ReduxBaseTest } from './redux-base-test.spec';
 
 
-@suite('common.redux: create')
+@suite('common.redux: create') @only
 class CreateTest extends ReduxBaseTest<IUser, number, any> {
   private beforeState: ICrudServiceState<IUser, number>;
   private itemCloned: IUser;

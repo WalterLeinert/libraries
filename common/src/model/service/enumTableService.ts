@@ -36,6 +36,10 @@ export class EnumTableService implements IService<any, any> {
     return this._tableMetadata.className;
   }
 
+  public getTableName(): string {
+    return this._tableMetadata.tableName;
+  }
+
   public query(query: IQuery): Observable<any[]> {
     throw new NotSupportedException();
   }

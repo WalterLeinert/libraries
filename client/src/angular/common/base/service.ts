@@ -218,6 +218,10 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
     return this._tableMetadata.className;
   }
 
+  public getTableName(): string {
+    return this._tableMetadata.tableName;
+  }
+
   /**
    * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
    * Sonst wird ein Error geworfen.

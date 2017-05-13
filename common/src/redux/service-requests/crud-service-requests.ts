@@ -56,7 +56,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
     super(storeId, store, parentStoreId);
 
     // TODO: Strategy über Konfiguration
-    this._service = ProxyFactory.createProxy(Strategies.NOP, service, entityVersionService);
+    this._service = ProxyFactory.createProxy(Strategies.SERVICE, service, entityVersionService);
   }
 
 

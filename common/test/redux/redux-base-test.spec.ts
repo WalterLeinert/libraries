@@ -21,6 +21,7 @@ import {
   ICrudServiceRequests, ICrudServiceState, ICurrentItemServiceRequests, ICurrentItemServiceState,
   IServiceRequests, IServiceState, ServiceCommand, ServiceRequests, Store
 } from '../../src/redux';
+import { EntityVersionServiceFake } from '../../src/testing/entity-version-service-fake';
 import { CommonTest } from '../common.spec';
 
 
@@ -33,6 +34,7 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
   private subscriptions: Subscription[] = [];
   private _commands: Array<ServiceCommand<T>> = [];
   private _states: IServiceState[] = [];
+  private _entityVersionServiceFake: EntityVersionServiceFake;
 
   protected constructor(private storeId: string,
     private serviceRequestClazz: ICtor<ServiceRequests>,
@@ -43,8 +45,10 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IServic
 
   protected before(done: (err?: any) => void) {
     this._store = new Store();
-    this._serviceFake = new this.serviceClazz();
-    this._serviceRequests = new this.serviceRequestClazz(this.storeId, this._serviceFake, this._store);
+    this._entityVersionServiceFake = new EntityVersionServiceFake();
+    this._serviceFake = new this.serviceClazz(this._entityVersionServiceFake);
+    this._serviceRequests = new this.serviceRequestClazz(this.storeId, this._serviceFake, this._store,
+      this._entityVersionServiceFake);
 
     this.subscribeToStore(this.storeId);
     this.reset();

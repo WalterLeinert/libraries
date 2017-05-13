@@ -2,7 +2,7 @@
 import { IUser, User } from '../model';
 import { ConstantValueGenerator, EntityGenerator, NumberIdGenerator } from '../model/generator';
 import { MetadataStorage } from '../model/metadata';
-
+import { EntityVersionServiceFake } from './entity-version-service-fake';
 import { ServiceFake } from './service-fake';
 
 
@@ -17,7 +17,7 @@ export class UserServiceFake extends ServiceFake<IUser, number> {
   public static readonly ITEMS = 10;
   public static readonly MAX_ITEMS = 100;
 
-  constructor() {
+  constructor(entityVersionServiceFake: EntityVersionServiceFake) {
     super(MetadataStorage.instance.findTableMetadata(User),
       new EntityGenerator<User, number>({
         count: UserServiceFake.ITEMS,
@@ -30,7 +30,7 @@ export class UserServiceFake extends ServiceFake<IUser, number> {
           deleted: new ConstantValueGenerator(false),
           __version: new ConstantValueGenerator(0),
         }
-      })
+      }), entityVersionServiceFake
     );
   }
 
