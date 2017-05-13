@@ -13,9 +13,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import {
   AutoformConfiguration, BaseComponent, ControlType, FormAction, FormActions,
-  IAutoformConfig, IControlDisplayInfo, IDataFormAction, MessageService, MetadataService, ProxyService
+  IAutoformConfig, IControlDisplayInfo, IDataFormAction, MessageService, MetadataService
 } from '@fluxgate/client';
-import { TableMetadata } from '@fluxgate/common';
+import { IService, ServiceProxy, TableMetadata } from '@fluxgate/common';
 import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/core';
 
 
@@ -144,7 +144,7 @@ import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/
 }
 `]
 })
-export class AutoformComponent extends BaseComponent<ProxyService> {
+export class AutoformComponent extends BaseComponent<ServiceProxy<any, any>> {
   protected static readonly logger = getLogger(AutoformComponent);
 
   public static DETAILS = 'Details';
@@ -223,9 +223,9 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
   private action: FormAction;
 
 
-  constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService, service: ProxyService, private injector: Injector,
+  constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService, private injector: Injector,
     private metadataService: MetadataService) {
-    super(router, route, messageService, service);
+    super(router, route, messageService, null);
 
     using(new XLog(AutoformComponent.logger, levels.INFO, 'ctor'), (log) => {
       this.route.params.subscribe((p) => {
@@ -457,7 +457,7 @@ export class AutoformComponent extends BaseComponent<ProxyService> {
       log.log(`table = ${tableMetadata.options.name}`);
 
       const service = tableMetadata.getServiceInstance(this.injector);
-      this.service.proxyService(service);
+      this.setService(new ServiceProxy(service as IService<any, any>));
     });
   }
 

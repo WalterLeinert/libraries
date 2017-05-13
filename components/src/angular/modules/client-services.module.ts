@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { ConfirmationService } from 'primeng/components/common/api';
 
 import {
-  ConfigService, MessageService, MetadataService, PipeService, PrintService, ProxyService
+  ConfigService, MessageService, MetadataService, PipeService, PrintService
 } from '@fluxgate/client';
 
 
@@ -27,8 +27,7 @@ import {
     MessageService,
     MetadataService,
     PipeService,
-    PrintService,
-    ProxyService
+    PrintService
   ]
 })
 export class ClientServicesModule { }

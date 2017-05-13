@@ -11,7 +11,7 @@ import { RoleService } from './role.service';
 
 
 @Injectable()
-export class RoleSelectorServiceRequests extends ExtendedCrudServiceRequests<IRole, number, RoleService> {
+export class RoleSelectorServiceRequests extends ExtendedCrudServiceRequests<IRole, number> {
 
   constructor(service: RoleService, @Inject(APP_STORE) store: Store,
     @Inject(ENTITY_VERSION_SERVICE) entityVersionService?: IService<EntityVersion, string>) {

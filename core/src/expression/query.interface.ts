@@ -1,7 +1,7 @@
-import { BooleanTerm } from '@fluxgate/core';
+import { BooleanTerm } from './boolean-term';
 
 /**
- * Interface für Knex-Queries
+ * Interface für Queries
  */
 export interface IQuery {
 

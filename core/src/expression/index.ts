@@ -4,5 +4,7 @@ export * from './binary-term';
 export * from './boolean-term';
 export * from './not-term';
 export * from './or-term';
+export * from './query';
+export * from './query.interface';
 export * from './selector-term';
 export * from './unary-term';

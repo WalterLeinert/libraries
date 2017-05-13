@@ -1,5 +1,7 @@
 import { Observable } from 'rxjs/Observable';
-import { IQuery } from '../query/query.interface';
+
+import { IQuery } from '@fluxgate/core';
+
 import { ServiceResult } from './serviceResult';
 
 /**

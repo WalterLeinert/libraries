@@ -9,12 +9,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import {
   Assert, Clone, /*EntityExistsException,*/
   EntityNotFoundException, Funktion,
-  IException,
-  InvalidOperationException, IToString,
+  IException, InvalidOperationException,
+  IQuery, IToString,
   JsonSerializer, OptimisticLockException, Types
 } from '@fluxgate/core';
 
-import { ColumnMetadata, ExceptionWrapper, IQuery, IUser, ServiceResult, TableMetadata } from '@fluxgate/common';
+import { ColumnMetadata, ExceptionWrapper, IUser, ServiceResult, TableMetadata } from '@fluxgate/common';
 
 
 import { IBaseService } from './baseService.interface';

@@ -7,7 +7,7 @@ import { suite, test } from 'mocha-typescript';
 import { Clone } from '@fluxgate/core';
 
 import { IUser } from '../../src/model';
-import { CrudServiceRequests, ICrudServiceState, ServiceRequestStates } from '../../src/redux';
+import { ServiceRequestStates } from '../../src/redux';
 import { IServiceState, ItemsFoundCommand, ItemUpdatedCommand, UpdatingItemCommand } from '../../src/redux';
 import { UserStore } from '../../src/redux/store';
 

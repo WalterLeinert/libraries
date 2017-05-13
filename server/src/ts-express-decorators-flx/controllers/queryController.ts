@@ -2,8 +2,7 @@ import { Authenticated, Controller, Post, Request } from 'ts-express-decorators'
 
 
 // Fluxgate
-import { IQuery } from '@fluxgate/common';
-import { JsonSerializer } from '@fluxgate/core';
+import { IQuery, JsonSerializer } from '@fluxgate/core';
 
 import { BaseService } from '../services/baseService';
 

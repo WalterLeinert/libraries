@@ -7,9 +7,9 @@ import { Observable } from 'rxjs/Observable';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { Assert, InvalidOperationException, IToString, NotSupportedException } from '@fluxgate/core';
+import { Assert, InvalidOperationException, IQuery, IToString, NotSupportedException } from '@fluxgate/core';
 
-import { EntityGenerator, IFlxEntity, IQuery, IService, ServiceResult, Status, TableMetadata } from '../model';
+import { EntityGenerator, IFlxEntity, IService, ServiceResult, Status, TableMetadata } from '../model';
 
 
 /**
@@ -26,7 +26,6 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
   protected static readonly logger = getLogger(ServiceFake);
 
   private _items: T[];
-
 
   protected constructor(private _tableMetadata: TableMetadata, private _entityGenerator: EntityGenerator<T, TId>) {
     Assert.notNull(_tableMetadata);

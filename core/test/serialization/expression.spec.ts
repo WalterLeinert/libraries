@@ -6,7 +6,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { configure, IConfig } from '../../src/diagnostics';
 
-import { AndTerm, NotTerm, OrTerm, SelectorTerm } from '../../src/expression';
+import { AndTerm, NotTerm, OrTerm, Query, SelectorTerm } from '../../src/expression';
 import { SerializerBaseTest } from './serializer-base-test';
 
 
@@ -63,6 +63,27 @@ class ExpressionTest extends SerializerBaseTest {
     const termDeserialized = this.formatter.deserialize(termSerialized);
     expect(term).to.eql(termDeserialized);
   }
+
+  @test 'should serialize/deserialize query tree (Query)'() {
+
+    const query = new Query(
+      new AndTerm(
+        new SelectorTerm({ name: 'firstname', operator: '=', value: 'hugo' }),
+        new OrTerm(
+          new SelectorTerm({ name: 'age', operator: '>', value: 20 }),
+          new AndTerm(
+            new SelectorTerm({ name: 'age', operator: '<=', value: 6 }),
+            new NotTerm(new SelectorTerm({ name: 'gender', operator: '=', value: 'male' }))
+          )
+        )
+      )
+    );
+
+    const querySerialized = this.formatter.serialize(query);
+    const queryDeserialized = this.formatter.deserialize(querySerialized);
+    expect(query).to.eql(queryDeserialized);
+  }
+
 
   public before() {
     super.before();

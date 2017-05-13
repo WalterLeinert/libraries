@@ -15,7 +15,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  CacheService, DataTypes, DisplayInfo, MessageService, MetadataService
+  DataTypes, DisplayInfo, MessageService, MetadataService
 } from '@fluxgate/client';
 import { IService, TableMetadata } from '@fluxgate/common';
 import { Assert, Clone, Types, Utility } from '@fluxgate/core';
@@ -409,9 +409,6 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
 
 
   protected createDataService(service: IService<any, any>) {
-    if (this.configInternal && this.configInternal.valuesCacheable) {
-      return new CacheService(service);
-    }
     return service;
   }
 

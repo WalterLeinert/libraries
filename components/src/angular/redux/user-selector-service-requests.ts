@@ -10,7 +10,7 @@ import {
 import { UserService } from './user.service';
 
 @Injectable()
-export class UserSelectorServiceRequests extends ExtendedCrudServiceRequests<IUser, number, UserService> {
+export class UserSelectorServiceRequests extends ExtendedCrudServiceRequests<IUser, number> {
 
   constructor(service: UserService, @Inject(APP_STORE) store: Store,
     @Inject(ENTITY_VERSION_SERVICE) entityVersionService?: IService<EntityVersion, string>) {

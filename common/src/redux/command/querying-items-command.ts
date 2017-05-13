@@ -1,6 +1,6 @@
-import { IEntity } from '../../model/entity.interface';
+import { IQuery } from '@fluxgate/core';
 
-import { IQuery } from '../../model/query/query.interface';
+import { IEntity } from '../../model/entity.interface';
 import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
 import { IServiceRequests } from './../service-requests';

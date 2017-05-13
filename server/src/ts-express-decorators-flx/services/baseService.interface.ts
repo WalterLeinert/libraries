@@ -1,8 +1,8 @@
 import * as Knex from 'knex';
 
 // Fluxgate
-import { IQuery, ServiceResult } from '@fluxgate/common';
-import { IToString } from '@fluxgate/core';
+import { ServiceResult } from '@fluxgate/common';
+import { IQuery, IToString } from '@fluxgate/core';
 
 
 /**

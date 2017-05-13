@@ -7,8 +7,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { AppRegistry, IQuery, IUser, Role, User } from '@fluxgate/common';
-import { Assert, Encryption, Funktion, SelectorTerm } from '@fluxgate/core';
+import { AppRegistry, IUser, Role, User } from '@fluxgate/common';
+import { Assert, Encryption, Funktion, IQuery, SelectorTerm } from '@fluxgate/core';
 
 import { Messages } from '../../resources/messages';
 import { BaseService } from './baseService';

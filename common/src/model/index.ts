@@ -10,7 +10,6 @@ export * from './mandant';
 export * from './mapping';
 export * from './metadata';
 export * from './passwordChange';
-export * from './query';
 export * from './role';
 export * from './role.interface';
 export * from './service';

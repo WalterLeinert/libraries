@@ -27,8 +27,8 @@ import { IExtendedCrudServiceRequests } from './extended-crud-service-requests.i
  * @template TId
  * @template TService
  */
-export abstract class ExtendedCrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
-  TService extends IService<T, TId>> extends CrudServiceRequests<T, TId, TService>
+export abstract class ExtendedCrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
+  extends CrudServiceRequests<T, TId>
   implements IExtendedCrudServiceRequests<T, TId> {
 
   public static readonly INITIAL_STATE: IExtendedCrudServiceState<any, any> = {
@@ -37,7 +37,8 @@ export abstract class ExtendedCrudServiceRequests<T extends IEntity<TId>, TId ex
   };
 
   protected constructor(storeId: string | CommandStore<IExtendedCrudServiceState<T, TId>>,
-    service: TService, store: Store, entityVersionService: IService<EntityVersion, string>, parentStoreId?: string) {
+    service: IService<T, TId>, store: Store,
+    entityVersionService: IService<EntityVersion, string>, parentStoreId?: string) {
     super(storeId, service, store, entityVersionService, parentStoreId);
   }
 

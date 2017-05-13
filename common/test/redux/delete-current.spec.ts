@@ -7,8 +7,8 @@ import { suite, test } from 'mocha-typescript';
 
 import { IUser } from '../../src/model';
 import {
-  CommandStore, DeletingItemCommand, ExtendedCrudServiceRequests, IExtendedCrudServiceState, IServiceState,
-  ItemDeletedCommand, ItemsFoundCommand, ReduxParentStore,
+  CommandStore, ExtendedCrudServiceRequests, IExtendedCrudServiceState, IServiceState,
+  ItemDeletedCommand, ReduxParentStore,
   ServiceRequestStates, UserStore
 } from '../../src/redux';
 import { ExtendedUserServiceRequestsFake } from '../../src/testing';

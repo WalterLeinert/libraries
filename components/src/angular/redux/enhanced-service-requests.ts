@@ -18,7 +18,7 @@ import { Service } from '@fluxgate/client';
  */
 export abstract class EnhancedServiceRequests<T extends IEntity<TId>, TId extends IToString,
   TService extends Service<T, TId>>
-  extends ExtendedCrudServiceRequests<T, TId, TService> {
+  extends ExtendedCrudServiceRequests<T, TId> {
 
   constructor(storeId: string, service: TService, store: Store,
     entityVersionService?: IService<EntityVersion, string>) {

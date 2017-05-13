@@ -12,8 +12,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { IQuery, IService, ServiceResult, TableMetadata } from '@fluxgate/common';
-import { Assert, Funktion, InvalidOperationException, IToString } from '@fluxgate/core';
+import { IService, ServiceResult, TableMetadata } from '@fluxgate/common';
+import { Assert, Funktion, InvalidOperationException, IQuery, IToString } from '@fluxgate/core';
 
 import { ConfigService } from '../../services/config.service';
 import { MetadataService } from '../../services/metadata.service';

@@ -1,9 +1,8 @@
 import { Observable } from 'rxjs/Observable';
 
-import {  IToString } from '@fluxgate/core';
+import { IQuery, IToString } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
-import { IQuery } from '../../model/query/query.interface';
 import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { IServiceRequests } from './service-requests.interface';
 

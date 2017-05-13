@@ -282,6 +282,20 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
 
 
   /**
+   * Setzt den Service (wird aktuell nur für AutoformComponent benötigt)
+   *
+   * @protected
+   * @param {TService} service
+   * @returns
+   *
+   * @memberof BaseComponent
+   */
+  protected setService(service: TService) {
+    return this._service = service;
+  }
+
+
+  /**
    * Liefert die Entity-Id für den Navigationspfad.
    * Format: <Entity-Classname>-<Item-Id>
    */

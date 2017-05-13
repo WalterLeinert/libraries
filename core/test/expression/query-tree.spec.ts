@@ -9,7 +9,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { StringBuilder } from '../../src/base/stringBuilder';
 import { using } from '../../src/diagnostics';
-import { AndTerm, BinaryTerm, NotTerm, OrTerm, SelectorTerm, UnaryTerm } from '../../src/expression';
+import { AndTerm, BinaryTerm, NotTerm, OrTerm, Query, SelectorTerm, UnaryTerm } from '../../src/expression';
 import { IVisitor, VisitableNode } from '../../src/pattern/visitor';
 import { Indenter, Suspender } from '../../src/suspendable';
 
@@ -141,6 +141,54 @@ class QueryTreeTest {
       `"_right":{"_left":{"_selector":{"name":"gender","operator":"=","value":"male"}}}}}}`;
 
     expect(JSON.stringify(term)).to.equal(exprString);
+
+    expect(visitor.toString()).to.equal(`
+(
+  { name: 'firstname', operator: '=', value: 'hugo' }
+  AND
+  (
+    { name: 'age', operator: '>', value: '20' }
+    OR
+    (
+      { name: 'age', operator: '<=', value: '6' }
+      AND
+      (
+        NOT
+        { name: 'gender', operator: '=', value: 'male' }
+      )
+    )
+  )
+)`);
+  }
+
+
+  @test 'should create query tree and visit (Query)'() {
+    const query = new Query(
+      new AndTerm(
+        new SelectorTerm({ name: 'firstname', operator: '=', value: 'hugo' }),
+        new OrTerm(
+          new SelectorTerm({ name: 'age', operator: '>', value: 20 }),
+          new AndTerm(
+            new SelectorTerm({ name: 'age', operator: '<=', value: 6 }),
+            new NotTerm(new SelectorTerm({ name: 'gender', operator: '=', value: 'male' }))
+          )
+        )
+      )
+    );
+
+    const sb = new StringBuilder();
+
+    const visitor = new TermVisitor(sb);
+    query.accept(visitor);
+
+    // console.log(sb.toString());
+
+    const exprString = `{"_left":{"_selector":{"name":"firstname","operator":"=","value":"hugo"}},` +
+      `"_right":{"_left":{"_selector":{"name":"age","operator":">","value":20}},` +
+      `"_right":{"_left":{"_selector":{"name":"age","operator":"<=","value":6}},` +
+      `"_right":{"_left":{"_selector":{"name":"gender","operator":"=","value":"male"}}}}}}`;
+
+    expect(JSON.stringify(query.term)).to.equal(exprString);
 
     expect(visitor.toString()).to.equal(`
 (

@@ -6,11 +6,15 @@ import { Subscriber } from 'rxjs/Subscriber';
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
+
+import { IQuery } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
-import { IQuery } from '../../model/query/query.interface';
 import { IService } from '../../model/service/service.interface';
+import { ProxyFactory } from '../cache/proxy-strategy';
+import { Strategies } from '../cache/strategy';
 import {
   CreatingItemCommand, DeletingItemCommand, ErrorCommand,
   FindingItemByIdCommand, FindingItemsCommand,
@@ -18,8 +22,8 @@ import {
   ItemUpdatedCommand, QueryingItemsCommand, UpdatingItemCommand
 } from '../command';
 import { ICrudServiceState } from '../state/crud-service-state.interface';
-import { Store } from '../store';
 import { CommandStore } from '../store/command-store';
+import { Store } from '../store/store';
 import { ICrudServiceRequests } from './crud-service-requests.interface';
 import { ServiceRequests } from './service-requests';
 
@@ -34,10 +38,9 @@ import { ServiceRequests } from './service-requests';
  * @template TId
  * @template TService
  */
-export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
-  TService extends IService<T, TId>> extends ServiceRequests implements ICrudServiceRequests<T, TId> {
+export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
+  extends ServiceRequests implements ICrudServiceRequests<T, TId> {
   protected static readonly logger = getLogger(CrudServiceRequests);
-
 
   public static readonly INITIAL_STATE: ICrudServiceState<any, any> = {
     ...ServiceRequests.INITIAL_STATE,
@@ -46,10 +49,14 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
     deletedId: null
   };
 
+  private _service: IService<T, TId>;
 
-  public constructor(storeId: string | CommandStore<ICrudServiceState<T, TId>>, private _service: TService,
-    store: Store, private _entityVersionService: IService<EntityVersion, string>, parentStoreId?: string) {
+  public constructor(storeId: string | CommandStore<ICrudServiceState<T, TId>>, service: IService<T, TId>,
+    store: Store, entityVersionService: IService<EntityVersion, string>, parentStoreId?: string) {
     super(storeId, store, parentStoreId);
+
+    // TODO: Strategy über Konfiguration
+    this._service = ProxyFactory.createProxy(Strategies.NOP, service, entityVersionService);
   }
 
 
@@ -256,7 +263,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString,
     return this._service.getModelClassName();
   }
 
-  protected get service(): TService {
+  protected get service(): IService<T, TId> {
     return this._service;
   }
 }
