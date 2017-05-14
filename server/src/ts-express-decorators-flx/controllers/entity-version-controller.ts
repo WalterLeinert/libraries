@@ -8,7 +8,7 @@ import {
 import { EntityVersion, ServiceResult } from '@fluxgate/common';
 
 import { EntityVersionService } from '../services/entityVersion.service';
-import { ControllerBase } from './controllerBase';
+import { ControllerBase } from './base/controllerBase';
 
 
 @Controller('/' + EntityVersion.TABLE_NAME)

@@ -143,7 +143,7 @@ export abstract class ServerBase extends ServerLoader {
         log.info(`cwd = ${cwd}`);
 
         // interne Controller (wie UserController)
-        const serverControllers = path.join(cwd, '../../node_modules/@fluxgate/server/dist/src/**/*Controller.js');
+        const serverControllers = path.join(cwd, '../../node_modules/@fluxgate/server/dist/src/**/controllers/*.js');
 
         const errorLogger = (message: string): void => {
           log.error(message);

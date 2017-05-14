@@ -7,8 +7,8 @@ import {
 // Fluxgate
 import { IUser, ServiceResult, User } from '@fluxgate/common';
 
-import { UserService } from '../../services/user.service';
-import { ControllerBase } from '../controllerBase';
+import { UserService } from '../services/user.service';
+import { ControllerBase } from './base/controllerBase';
 
 
 @Controller('/user')

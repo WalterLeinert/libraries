@@ -11,8 +11,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { ExceptionWrapper, IUser, User } from '@fluxgate/common';
 import { IException } from '@fluxgate/core';
 
-import { Messages } from '../../../resources/messages';
-import { PassportLocalService } from '../../services/passportLocal.service';
+import { Messages } from '../../resources/messages';
+import { PassportLocalService } from '../services/passportLocal.service';
 
 /**
  * Controller zur Authentifizierung über Passport.js

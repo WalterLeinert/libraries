@@ -8,7 +8,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { ServiceResult } from '@fluxgate/common';
 import { IQuery, IToString, JsonSerializer } from '@fluxgate/core';
 
-import { BaseService } from '../services/baseService';
+import { BaseService } from '../../services/baseService';
 
 
 /**

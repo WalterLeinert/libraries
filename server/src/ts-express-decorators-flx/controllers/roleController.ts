@@ -7,8 +7,8 @@ import {
 // Fluxgate
 import { Role, ServiceResult } from '@fluxgate/common';
 
-import { RoleService } from '../../services/role.service';
-import { ControllerBase } from '../controllerBase';
+import { RoleService } from '../services/role.service';
+import { ControllerBase } from './base/controllerBase';
 
 
 @Controller('/role')

@@ -2,11 +2,11 @@ import { Authenticated, Controller, Post, Request } from 'ts-express-decorators'
 
 
 // Fluxgate
-import { IQuery, JsonSerializer } from '@fluxgate/core';
+import { Deprecated, IQuery, JsonSerializer } from '@fluxgate/core';
 
-import { BaseService } from '../services/baseService';
+import { BaseService } from '../../services/baseService';
 
-
+@Deprecated('noch benötigt?')
 @Controller('/query')
 export class QueryController<T, TId> {
   private serializer: JsonSerializer = new JsonSerializer();
