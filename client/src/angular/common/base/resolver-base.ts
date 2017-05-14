@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { ICrudServiceRequests, IEntity } from '@fluxgate/common';
-import { IToString } from '@fluxgate/core';
+import { Assert, IToString, ConverterRegistry } from '@fluxgate/core';
 
 
 /**
@@ -29,7 +29,8 @@ export abstract class ResolverBase<T extends IEntity<TId>, TId extends IToString
 
 
   protected constructor(private serviceRequests: ICrudServiceRequests<T, TId>,
-    private router: Router) {
+    private router: Router, private idType: string | Function) {
+    Assert.notNull(idType);
   }
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<T> {
@@ -37,13 +38,16 @@ export abstract class ResolverBase<T extends IEntity<TId>, TId extends IToString
       // tslint:disable-next-line:no-string-literal
       const id = route.params['id'];
 
+      const idConverter = ConverterRegistry.get<TId, string>(this.idType);
+      const idConverted = idConverter.convertBack(id);
+
 
       /**
        * Hinweis: first() ist wichtig!
        * "Currently the router waits for the observable to close.
        * You can ensure it gets closed after the first value is emitted, by using the first() operator."
        */
-      return this.serviceRequests.findById(id)
+      return this.serviceRequests.findById(idConverted)
         .first()
         .catch((error: Error) => {
           log.error(`error = ${error}`);
