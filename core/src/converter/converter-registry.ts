@@ -5,6 +5,7 @@ import { Assert } from '../util/assert';
 import { IConverter } from './converter.interface';
 import { DateConverter } from './date-converter';
 import { ErrorConverter } from './error-converter';
+import { NumberConverter } from './number-converter';
 
 /**
  * Registry für alle bekannten Converter.
@@ -21,6 +22,8 @@ export class ConverterRegistry {
   private static initialized = (() => {
     ConverterRegistry.register(Date, new DateConverter());
     ConverterRegistry.register(Error, new ErrorConverter());
+    // ConverterRegistry.register('number', new NumberConverter());
+    ConverterRegistry.register(Number, new NumberConverter());
   })();
 
   public static register<T1, T2>(type: string | Funktion, converter: IConverter<T1, T2>) {
