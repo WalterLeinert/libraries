@@ -210,7 +210,7 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
                 const item = cacheEntry.items.find((e) => e.id === id);
 
                 if (log.isDebugEnabled()) {
-                  log.debug(`items already cached`);
+                  log.debug(`item already cached`);
                 }
                 observer.next(item);
               }
