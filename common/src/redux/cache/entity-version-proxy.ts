@@ -7,8 +7,9 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { IQuery, Types } from '@fluxgate/core';
+import { IQuery, IToString } from '@fluxgate/core';
 
+import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
 import { ServiceProxy } from '../../model/service/service-proxy';
 import { IService } from '../../model/service/service.interface';
@@ -17,7 +18,8 @@ import { EntityVersionCache, EntityVersionCacheEntry } from './entity-version-ca
 
 /**
  * ServiceProxy, der mit Hilfe des EntityVersionServices prüft, ob ein Servicecall
- * erforderlich ist.
+ * erforderlich ist. Es wird ein Cache gepflegt, die letzte EntityVersion und die Item-Liste vom letzten find() enthält.
+ * Die Servicecalls aktualisieren den Cache und pflegen die Item-Liste im Cache.
  *
  * @export
  * @class EntityVersionProxy
@@ -32,14 +34,23 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
   }
 
 
-  public create<T>(item: T): Observable<T> {
+  /**
+   * Erzeugt eine neue Entity und aktualisiert den Cache
+   *
+   * @template T
+   * @param {T} item
+   * @returns {Observable<T>}
+   *
+   * @memberof EntityVersionProxy
+   */
+  public create<T extends IEntity<TId>, TId extends IToString>(item: T): Observable<T> {
     return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'create', `[${this.getTableName()}]`), (log) => {
 
       return Observable.create((observer: Subscriber<T>) => {
         //
         // findById immer durchführen, aber danach items und entityVersion aktualisieren
         //
-        super.create(item).subscribe((it) => {
+        super.create(item).subscribe((itemCreated) => {
           this.entityVersionService.findById(this.getTableName()).subscribe((entityVersion) => {
             const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
@@ -52,12 +63,13 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
                 log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
               }
 
-              let items = [...cacheEntry.items, it];
-              EntityVersionCache.instance.set(this.getTableName(),
-                new EntityVersionCacheEntry<T>(entityVersion, items));
+              this.updateCache(log, entityVersion, [...cacheEntry.items, itemCreated], 'add item to cache');
+
+            } else {
+              this.updateCache(log, entityVersion, [itemCreated], 'no cache yet');
             }
 
-            observer.next(it);
+            observer.next(itemCreated);
           });
         });
       });
@@ -65,59 +77,80 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
   }
 
 
+  /**
+   * Sucht nach Entities
+   *
+   * TODO: ggf. query cache pflegen und query result aus Cache liefert, falls EntityVersionen gleich
+   *
+   * @template T
+   * @param {IQuery} query
+   * @returns {Observable<T[]>}
+   *
+   * @memberof EntityVersionProxy
+   */
   public query<T>(query: IQuery): Observable<T[]> {
     return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'query', `[${this.getTableName()}]`), (log) => {
       return super.query(query);
     });
   }
 
+
+  /**
+   * Liefert alle Entities, ggf. aus dem Cache und aktualisiert den Cache
+   *
+   * @template T
+   * @returns {Observable<T[]>}
+   *
+   * @memberof EntityVersionProxy
+   */
   public find<T>(): Observable<T[]> {
     return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'find', `[${this.getTableName()}]`), (log) => {
 
       return Observable.create((observer: Subscriber<T[]>) => {
+
+        const finder = (lg: XLog, ev: EntityVersion, message: string) => {
+          super.find().subscribe((itemsFound) => {
+            this.updateCache(lg, ev, itemsFound, message);
+            observer.next(itemsFound);
+          });
+        };
+
+
         //
         // aktuelle entityVersion ermitteln
         //
         this.entityVersionService.findById(this.getTableName()).subscribe((entityVersion) => {
-          const cacheEntry = EntityVersionCache.instance.get(this.getTableName());
+          const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
           if (log.isDebugEnabled()) {
             log.debug(`entityVersion = ${entityVersion.__version}`);
           }
 
-          const updater = (lg, ev, items, message) => {
-            if (lg.isDebugEnabled()) {
-              lg.debug(message);
-            }
-
-            const updatedCacheEnty = new EntityVersionCacheEntry<T>(ev, items);
-            EntityVersionCache.instance.set(this.getTableName(), updatedCacheEnty);
-            observer.next(items);
-          };
 
           //
           // noch nichts im Cache? -> immer service call
           //
-          if (!cacheEntry) {
-            super.find().subscribe((items) => {
-              updater(log, entityVersion, items, 'items not cached');
-            });
-
-          } else {
+          if (cacheEntry) {
 
             //
             // Version veraltet? -> service call
             //
-            if (cacheEntry.version < entityVersion.__version) {
-              super.find().subscribe((items) => {
-                updater(log, entityVersion, items, `updating cached items [` +
-                  `cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}]`);
-              });
-            } else {
-              // ... sonst Items aus cache
-              updater(log, entityVersion, cacheEntry.items, `items already cached [` +
+            if (this.isNewer(entityVersion, cacheEntry)) {
+              finder(log, entityVersion, `updating cached items [` +
                 `cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}]`);
+
+            } else {
+
+              // ... sonst Items aus cache
+              if (log.isDebugEnabled()) {
+                log.debug(`items already cached [` +
+                  `cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}]`);
+              }
+
+              observer.next(cacheEntry.items);
             }
+          } else {
+            finder(log, entityVersion, 'no cache yet');
           }
 
         });
@@ -127,14 +160,33 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
 
 
 
-  public findById<T, TId>(id: TId): Observable<T> {
-    return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'findById', `[${this.getTableName()}]`), (log) => {
+  /**
+   * Liefert die Entity für die Id @param{id} und aktualisiert den Cache.
+   *
+   * @template T
+   * @template TId
+   * @param {TId} id
+   * @returns {Observable<T>}
+   *
+   * @memberof EntityVersionProxy
+   */
+  public findById<T extends IEntity<TId>, TId extends IToString>(id: TId): Observable<T> {
+    return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'findById', `[${this.getTableName()}]: id = ${id}`),
+      (log) => {
 
-      return Observable.create((observer: Subscriber<T>) => {
-        //
-        // findById immer durchführen, aber danach items und entityVersion aktualisieren
-        //
-        super.findById(id).subscribe((it) => {
+        return Observable.create((observer: Subscriber<T>) => {
+
+          const finder = (lg: XLog, ev: EntityVersion, findId: TId, items: T[], message: string) => {
+            super.findById(findId).subscribe((itemFound: T) => {
+              const itemsFiltered = items.map((e) => e.id === itemFound.id ? itemFound : e);
+              this.updateCache(lg, ev, itemsFiltered, message);
+              observer.next(itemFound);
+            });
+          };
+
+          //
+          // findById nur durchführen, falls die entityVersion neuer ist -> sonst Entity aus Cache-Items
+          //
           this.entityVersionService.findById(this.getTableName()).subscribe((entityVersion) => {
             const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
@@ -147,92 +199,144 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
                 log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
               }
 
-              let items;
-              if (Types.hasProperty(it, 'id')) {
-                items = cacheEntry.items.map((e) => (e as any).id === it.id ? it : e);
+              //
+              // falls EntityVersion neuer -> findById + update cache
+              //
+              if (this.isNewer(entityVersion, cacheEntry)) {
+                finder(log, entityVersion, id, cacheEntry.items, 'findById + update cache');
+
               } else {
-                items = [...cacheEntry.items];
-              }
-              EntityVersionCache.instance.set(this.getTableName(),
-                new EntityVersionCacheEntry<T>(entityVersion, items));
-            }
+                // Item aus Cache
+                const item = cacheEntry.items.find((e) => e.id === id);
 
-            observer.next(it);
+                if (log.isDebugEnabled()) {
+                  log.debug(`items already cached`);
+                }
+                observer.next(item);
+              }
+            } else {
+              // noch nie gecached -> findById + update cache
+              finder(log, entityVersion, id, [], 'no cache yet');
+            }
           });
         });
       });
-    });
   }
 
 
-  public delete<T, TId>(id: TId): Observable<ServiceResult<TId>> {
-    return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'delete', `[${this.getTableName()}]`), (log) => {
+  /**
+   * Löscht die Entity mit Id @param{id} und aktualisiert den Cache
+   *
+   * @template T
+   * @template TId
+   * @param {TId} id
+   * @returns {Observable<ServiceResult<TId>>}
+   *
+   * @memberof EntityVersionProxy
+   */
+  public delete<T extends IEntity<TId>, TId extends IToString>(id: TId): Observable<ServiceResult<TId>> {
+    return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'delete', `[${this.getTableName()}]: id = ${id}`),
+      (log) => {
 
-      return Observable.create((observer: Subscriber<ServiceResult<TId>>) => {
-        //
-        // delete immer durchführen, aber danach items und entityVersion aktualisieren
-        //
-        super.delete(id).subscribe((result) => {
-          this.entityVersionService.findById(this.getTableName()).subscribe((entityVersion) => {
-            const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
+        return Observable.create((observer: Subscriber<ServiceResult<TId>>) => {
 
-            if (log.isDebugEnabled()) {
-              log.debug(`entityVersion = ${entityVersion.__version}`);
-            }
+          //
+          // delete immer durchführen, aber danach items und entityVersion aktualisieren
+          //
+          super.delete(id).subscribe((resultDeleted) => {
+            this.entityVersionService.findById(this.getTableName()).subscribe((entityVersion) => {
+              const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
-            if (cacheEntry) {
               if (log.isDebugEnabled()) {
-                log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
+                log.debug(`entityVersion = ${entityVersion.__version}`);
               }
 
-              // entity muss id Property haben
-              const items = cacheEntry.items.filter((e) => (e as any).id === result.id);
-              EntityVersionCache.instance.set(this.getTableName(),
-                new EntityVersionCacheEntry<T>(entityVersion, items));
-            }
+              if (cacheEntry) {
+                if (log.isDebugEnabled()) {
+                  log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
+                }
 
-            observer.next(result);
-          });
-        });
-      });
-    });
-  }
-
-
-  public update<T>(item: T): Observable<T> {
-    return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'update', `[${this.getTableName()}]`), (log) => {
-
-      return Observable.create((observer: Subscriber<T>) => {
-        //
-        // update immer durchführen, aber danach items und entityVersion aktualisieren
-        //
-        super.update(item).subscribe((it) => {
-          this.entityVersionService.findById(this.getTableName()).subscribe((entityVersion) => {
-            const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
-
-            if (log.isDebugEnabled()) {
-              log.debug(`entityVersion = ${entityVersion.__version}`);
-            }
-
-            if (cacheEntry) {
-              if (log.isDebugEnabled()) {
-                log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
-              }
-
-              let items;
-              if (Types.hasProperty(it, 'id')) {
-                items = cacheEntry.items.map((e) => (e as any).id === it.id ? it : e);
+                // Item entfernen
+                const itemsFiltered = cacheEntry.items.filter((e) => e.id !== resultDeleted.id);
+                this.updateCache(log, entityVersion, itemsFiltered, 'delete item from cache');
+                observer.next(resultDeleted);
               } else {
-                items = [...cacheEntry.items];
+                this.updateCache(log, entityVersion, [], 'no cache yet');
+                observer.next(resultDeleted);
               }
-              EntityVersionCache.instance.set(this.getTableName(),
-                new EntityVersionCacheEntry<T>(entityVersion, items));
-            }
+            });
+          });
 
-            observer.next(it);
+        });
+      });
+  }
+
+
+  /**
+   * Aktualisiert die Entity item und aktualisiert den Cache.
+   *
+   * @template T
+   * @param {T} item
+   * @returns {Observable<T>}
+   *
+   * @memberof EntityVersionProxy
+   */
+  public update<T extends IEntity<TId>, TId extends IToString>(item: T): Observable<T> {
+    return using(new XLog(EntityVersionProxy.logger, levels.INFO,
+      'update', `[${this.getTableName()}]: id = ${item.id}`), (log) => {
+
+        return Observable.create((observer: Subscriber<T>) => {
+
+          //
+          // update immer durchführen, aber danach items und entityVersion aktualisieren
+          //
+          super.update(item).subscribe((itemUpdated: T) => {
+            this.entityVersionService.findById(this.getTableName()).subscribe((entityVersion) => {
+              const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
+
+              if (log.isDebugEnabled()) {
+                log.debug(`entityVersion = ${entityVersion.__version}`);
+              }
+
+              if (cacheEntry) {
+                if (log.isDebugEnabled()) {
+                  log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
+                }
+
+                // Item ersetzen
+                const itemsFiltered = cacheEntry.items.map((e) => e.id === itemUpdated.id ? itemUpdated : e);
+                this.updateCache(log, entityVersion, itemsFiltered, 'update item in cache');
+                observer.next(itemUpdated);
+
+              } else {
+                this.updateCache(log, entityVersion, [], 'no cache yet');
+                observer.next(itemUpdated);
+              }
+            });
           });
         });
       });
-    });
   }
+
+
+  /**
+   * Liefert true, falls die aktuelle EntityVersion neuer als die im Cache ist -> update des Caches.
+   */
+  private isNewer<T>(version: EntityVersion, chachedVersion: EntityVersionCacheEntry<T>): boolean {
+    return version.__version > chachedVersion.version;
+  }
+
+
+  /**
+   * aktualisiert den Cache und gibt eine Logmeldung aus.
+   */
+  private updateCache<T>(log: XLog, entityVersion: EntityVersion, items: T[], message: string) {
+    if (log.isDebugEnabled()) {
+      log.debug(message);
+    }
+
+    const updatedCacheEnty = new EntityVersionCacheEntry<T>(entityVersion, items);
+    EntityVersionCache.instance.set(this.getTableName(), updatedCacheEnty);
+  };
+
 }
