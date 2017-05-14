@@ -6,6 +6,7 @@ import { getLogger, ILogger } from '@fluxgate/platform';
 import { IConfig } from '@fluxgate/platform';
 
 import { AppRegistry } from '../base';
+import { ProxyMode } from '../redux/cache/proxy-mode';
 
 
 /**
@@ -67,6 +68,15 @@ export interface IAppConfig {
    * @memberOf IAppConfig
    */
   mode: SystemMode;
+
+
+  /**
+   * Legt fest, wie die ServiceRequests auf den Server zugreifen
+   *
+   * @type {ProxyMode}
+   * @memberof IAppConfig
+   */
+  proxyMode?: ProxyMode;
 
   /**
    * zum Testen mit SystemMode == 'development': ist @see{userCredentials} gesetzt,

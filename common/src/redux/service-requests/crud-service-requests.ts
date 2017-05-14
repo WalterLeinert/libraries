@@ -13,8 +13,8 @@ import { IQuery } from '@fluxgate/core';
 import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
 import { IService } from '../../model/service/service.interface';
-import { ProxyFactory } from '../cache/proxy-strategy';
-import { Strategies } from '../cache/strategy';
+import { ProxyFactory } from '../cache/proxy-factory';
+import { ProxyModes } from '../cache/proxy-mode';
 import {
   CreatingItemCommand, DeletingItemCommand, ErrorCommand,
   FindingItemByIdCommand, FindingItemsCommand,
@@ -55,8 +55,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
     store: Store, entityVersionService: IService<EntityVersion, string>, parentStoreId?: string) {
     super(storeId, store, parentStoreId);
 
-    // TODO: Strategy über Konfiguration
-    this._service = ProxyFactory.createProxy(Strategies.SERVICE, service, entityVersionService);
+    this._service = ProxyFactory.createProxy(service, entityVersionService);
   }
 
 

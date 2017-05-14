@@ -1,4 +1,4 @@
-export type Strategy =
+export type ProxyMode =
 
   /**
    * Servicecalls werden direkt an den Service weitergeleitet
@@ -15,8 +15,8 @@ export type Strategy =
    */
   'service';
 
-export class Strategies {
-  public static NOP: Strategy = 'nop';
-  public static CACHE: Strategy = 'cache';
-  public static SERVICE: Strategy = 'service';
+export class ProxyModes {
+  public static NOP: ProxyMode = 'nop';
+  public static CACHE: ProxyMode = 'cache';
+  public static SERVICE: ProxyMode = 'service';
 }
