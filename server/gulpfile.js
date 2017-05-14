@@ -89,7 +89,7 @@ gulp.task('compile', function() {
 
 
 
-gulp.task('compile:test', function () {
+gulp.task('compile:test', ['default'], function () {
   //find test code - note use of 'base'
   return gulp.src('./test/**/*.ts', { base: '.' })
     .pipe(sourcemaps.init())
