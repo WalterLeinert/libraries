@@ -4,7 +4,10 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { ConfigService, MetadataService } from '@fluxgate/client';
 
-import { UserServiceFake } from '../../testing/user-service-fake';
+import {
+  ENTITY_VERSION_SERVICE_FAKE_PROVIDER, EntityVersionServiceFakeService
+} from '../../testing/entity-version-service-fake.service';
+import { USER_SERVICE_FAKE_PROVIDER, UserServiceFakeService } from '../../testing/user-service-fake.service';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
@@ -13,7 +16,9 @@ describe('UserService', () => {
       providers: [
         ConfigService,
         MetadataService,
-        { provide: UserService, useClass: UserServiceFake }
+        EntityVersionServiceFakeService,
+        ENTITY_VERSION_SERVICE_FAKE_PROVIDER,
+        USER_SERVICE_FAKE_PROVIDER
       ]
     });
   });
@@ -23,10 +28,9 @@ describe('UserService', () => {
   }));
 
 
-
   it('should contain items', inject([UserService], (service: UserService) => {
     service.find().subscribe((items) => {
-      expect(items.length).toEqual(UserServiceFake.ITEMS);
+      expect(items.length).toEqual(UserServiceFakeService.ITEMS);
     });
 
   }));

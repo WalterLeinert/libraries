@@ -202,6 +202,10 @@ export class PassportService extends CoreComponent implements IServiceBase<any, 
     throw new NotSupportedException();
   }
 
+  public getTableName(): string {
+    throw new NotSupportedException();
+  }
+
 
   public getEntityId(item: any): any {
     throw new NotSupportedException();

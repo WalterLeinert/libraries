@@ -2,7 +2,7 @@
 // tslint:disable:member-access
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { Clone } from '@fluxgate/core';
 import { configure, IConfig } from '@fluxgate/core';
@@ -31,7 +31,7 @@ const config: IConfig = {
 
 
 
-@suite('common.redux: update') @only
+@suite('common.redux: update')
 class UpdateTest extends ReduxBaseTest<IUser, number, any> {
   private static readonly UPDATE_ID = 1;
   private beforeState: IServiceState;

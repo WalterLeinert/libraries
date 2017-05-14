@@ -4,7 +4,10 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { ConfigService, MetadataService } from '@fluxgate/client';
 
-import { RoleServiceFake } from '../../testing/role-service-fake';
+import {
+  ENTITY_VERSION_SERVICE_FAKE_PROVIDER, EntityVersionServiceFakeService
+} from '../../testing/entity-version-service-fake.service';
+import { ROLE_SERVICE_FAKE_PROVIDER, RoleServiceFakeService } from '../../testing/role-service-fake.service';
 import { RoleService } from './role.service';
 
 describe('RoleService', () => {
@@ -13,7 +16,9 @@ describe('RoleService', () => {
       providers: [
         ConfigService,
         MetadataService,
-        { provide: RoleService, useClass: RoleServiceFake }
+        EntityVersionServiceFakeService,
+        ENTITY_VERSION_SERVICE_FAKE_PROVIDER,
+        ROLE_SERVICE_FAKE_PROVIDER
       ]
     });
   });
@@ -25,7 +30,7 @@ describe('RoleService', () => {
 
   it('should contain items', inject([RoleService], (service: RoleService) => {
     service.find().subscribe((items) => {
-      expect(items.length).toEqual(RoleServiceFake.ITEMS);
+      expect(items.length).toEqual(RoleServiceFakeService.ITEMS);
     });
 
   }));

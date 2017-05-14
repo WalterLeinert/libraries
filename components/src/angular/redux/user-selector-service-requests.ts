@@ -29,7 +29,7 @@ export class UserSelectorServiceRequests extends ExtendedCrudServiceRequests<IUs
   ],
   providers: [
     UserSelectorServiceRequests,
-    UserSelectorServiceRequests
+    UserService
   ]
 })
 export class UserSelectorServiceRequestsModule { }
