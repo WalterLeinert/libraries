@@ -14,7 +14,7 @@ import {
 } from '@fluxgate/core';
 
 import {
-  ColumnMetadata, ExceptionWrapper, FindByIdResult, FindResult,
+  ColumnMetadata, EntityVersion, ExceptionWrapper, FindByIdResult, FindResult,
   IUser,
   QueryResult, TableMetadata
 } from '@fluxgate/common';
@@ -41,6 +41,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
 
   private primaryKeyColumn: ColumnMetadata = null;
   private _metadata: TableMetadata;
+  private _entityVersionMetadata: TableMetadata;
 
 
   /**
@@ -58,6 +59,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
     Assert.notNull(metadataService);
 
     this._metadata = metadataService.findTableMetadata(table);
+    this._entityVersionMetadata = metadataService.findTableMetadata(EntityVersion);
 
     const cols = this.metadata.columnMetadata.filter((item: ColumnMetadata) => item.options.primary);
     if (cols.length <= 0) {
@@ -397,6 +399,10 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
 
   protected get metadata(): TableMetadata {
     return this._metadata;
+  }
+
+  protected get entityVersionMetadata(): TableMetadata {
+    return this._entityVersionMetadata;
   }
 
 }
