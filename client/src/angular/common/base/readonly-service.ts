@@ -13,8 +13,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 import {
-  CreateServiceResult, DeleteServiceResult, FindByIdServiceResult, FindServiceResult,
-  QueryServiceResult, UpdateServiceResult
+  CreateResult, DeleteResult, FindByIdResult, FindResult,
+  QueryResult, UpdateResult
 } from '@fluxgate/common';
 import { Assert, Funktion, IQuery, IToString, NotSupportedException } from '@fluxgate/core';
 
@@ -40,33 +40,33 @@ export abstract class ReadonlyService<T, TId extends IToString> extends Service<
     super(model, metadataService, http, configService, topic);
   }
 
-  public find(): Observable<FindServiceResult<T>> {
+  public find(): Observable<FindResult<T>> {
     return super.find();
   }
 
 
-  public findById(id: TId): Observable<FindByIdServiceResult<T, TId>> {
+  public findById(id: TId): Observable<FindByIdResult<T, TId>> {
     return super.findById(id);
   }
 
 
-  public query(query: IQuery): Observable<QueryServiceResult<T>> {
+  public query(query: IQuery): Observable<QueryResult<T>> {
     return super.query(query);
   }
 
 
-  public create(item: T): Observable<CreateServiceResult<T>> {
+  public create(item: T): Observable<CreateResult<T>> {
     Assert.notNull(item, 'item');
     return Observable.throw(new NotSupportedException('readonly: create not supported'));
   }
 
 
-  public update(item: T): Observable<UpdateServiceResult<T>> {
+  public update(item: T): Observable<UpdateResult<T>> {
     return Observable.throw(new NotSupportedException('readonly: update not supported'));
   }
 
 
-  public delete(id: TId): Observable<DeleteServiceResult<TId>> {
+  public delete(id: TId): Observable<DeleteResult<TId>> {
     return Observable.throw(new NotSupportedException('readonly: delete not supported'));
   }
 

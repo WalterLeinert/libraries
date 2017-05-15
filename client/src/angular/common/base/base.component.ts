@@ -15,8 +15,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  CreateServiceResult, DeleteServiceResult, IService,
-  IServiceBase, UpdateServiceResult
+  CreateResult, DeleteResult, IService,
+  IServiceBase, UpdateResult
 } from '@fluxgate/common';
 import { Assert, Deprecated, InstanceAccessor, InstanceSetter, NotSupportedException, Utility } from '@fluxgate/core';
 
@@ -225,12 +225,12 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       service = this.service as any as IService<T, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.create(item)
-      .do((result: CreateServiceResult<T>) => {
+      .do((result: CreateResult<T>) => {
         idSetter(result.item, idAccessor(result.item));
         this.addSuccessMessage('Record created.');
         this.resetFormGroup(result.item, groupName);
       })
-      .map((result: CreateServiceResult<T>) => {
+      .map((result: CreateResult<T>) => {
         return result.item;
       })
       .catch((err: any, caught: Observable<T>) => {
@@ -245,11 +245,11 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       service = this.service as any as IService<T, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.update(item)
-      .do((result: UpdateServiceResult<T>) => {
+      .do((result: UpdateResult<T>) => {
         this.addSuccessMessage('Record updated.');
         this.resetFormGroup(result.item, groupName);
       })
-      .map((result: UpdateServiceResult<T>) => {
+      .map((result: UpdateResult<T>) => {
         return result.item;
       })
       .catch((err: any, caught: Observable<T>) => {
@@ -263,11 +263,11 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       service = this.service as any as IService<any, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.delete(id)
-      .do((result: DeleteServiceResult<TId>) => {
+      .do((result: DeleteResult<TId>) => {
         this.addSuccessMessage('Record deleted.');
         this.resetForm();
       })
-      .map((result: DeleteServiceResult<TId>) => {
+      .map((result: DeleteResult<TId>) => {
         return result.id;
       })
       .catch((err: any, caught: Observable<TId>) => {

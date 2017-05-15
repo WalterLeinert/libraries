@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { ICrudServiceRequests, IEntity } from '@fluxgate/common';
-import { Assert, IToString, ConverterRegistry } from '@fluxgate/core';
+import { Assert, ConverterRegistry, IToString } from '@fluxgate/core';
 
 
 /**

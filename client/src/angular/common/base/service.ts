@@ -13,8 +13,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 import {
-  CreateServiceResult, DeleteServiceResult, FindByIdServiceResult, FindServiceResult, IService,
-  QueryServiceResult, TableMetadata, UpdateServiceResult
+  CreateResult, DeleteResult, FindByIdResult, FindResult, IService,
+  QueryResult, TableMetadata, UpdateResult
 } from '@fluxgate/common';
 
 import { Assert, Funktion, InvalidOperationException, IQuery, IToString } from '@fluxgate/core';
@@ -60,20 +60,20 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
 
   /**
-   * Create the entity {item} and return {Observable<T>}
+   * Create the entity {item}.
    *
    * @param {T} item
-   * @returns {Observable<T>}
+   * @returns {Observable<CreateResult<T>>}
    *
    * @memberOf Service
    */
-  public create(item: T): Observable<CreateServiceResult<T>> {
+  public create(item: T): Observable<CreateResult<T>> {
     Assert.notNull(item, 'item');
     return using(new XLog(Service.logger, levels.INFO, 'create', `[${this.getModelClassName()}]`), (log) => {
 
       return this.http.post(this.getUrl(), this.serialize(item))
         .map((response: Response) => this.deserialize(response.json()))
-        .do((result: CreateServiceResult<T>) => {
+        .do((result: CreateResult<T>) => {
           if (log.isInfoEnabled()) {
             log.log(`Service.create: ${JSON.stringify(result)}`);
           }
@@ -85,18 +85,18 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
 
   /**
-   * Find all entities of type T and return {Observable<T[]>}.
+   * Find all entities of type T.
    *
-   * @returns {Observable<T[]>}
+   * @returns {Observable<FindResult<T>>}
    *
    * @memberOf Service
    */
-  public find(): Observable<FindServiceResult<T>> {
+  public find(): Observable<FindResult<T>> {
     return using(new XLog(Service.logger, levels.INFO, 'find', `[${this.getModelClassName()}]`), (log) => {
 
       return this.http.get(this.getUrl())
         .map((response: Response) => this.deserialize(response.json()))
-        .do((result: FindServiceResult<T>) => {
+        .do((result: FindResult<T>) => {
           if (log.isInfoEnabled()) {
             log.log(`Service.find [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
           }
@@ -107,20 +107,20 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
 
   /**
-   * Find the entity with the given id and return {Observable<T>}
+   * Find the entity with the given id.
    *
    * @param {TId} id -- entity id.
-   * @returns {Observable<T>}
+   * @returns {Observable<FindByIdResult<T, TId>>}
    *
    * @memberOf Service
    */
-  public findById(id: TId): Observable<FindByIdServiceResult<T, TId>> {
+  public findById(id: TId): Observable<FindByIdResult<T, TId>> {
     Assert.notNull(id, 'id');
     return using(new XLog(Service.logger, levels.INFO, 'findById', `[${this.getModelClassName()}]`), (log) => {
 
       return this.http.get(`${this.getUrl()}/${id}`)
         .map((response: Response) => this.deserialize(response.json()))
-        .do((result: FindByIdServiceResult<T, TId>) => {
+        .do((result: FindByIdResult<T, TId>) => {
           if (log.isInfoEnabled()) {
             log.log(`Service.findById [${this.getModelClassName()}]: id = ${id} -> ${JSON.stringify(result)}`);
           }
@@ -131,20 +131,20 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
 
   /**
-   * Update the entity {item} with the given id and return {Observable<T>}
+   * Update the entity {item} with the given id.
    *
    * @param {T} item
-   * @returns {Observable<T>}
+   * @returns {Observable<UpdateResult<T>>}
    *
    * @memberOf Service
    */
-  public update(item: T): Observable<UpdateServiceResult<T>> {
+  public update(item: T): Observable<UpdateResult<T>> {
     Assert.notNull(item, 'item');
     return using(new XLog(Service.logger, levels.INFO, 'update', `[${this.getModelClassName()}]`), (log) => {
 
       return this.http.put(`${this.getUrl()}`, this.serialize(item))
         .map((response: Response) => this.deserialize(response.json()))
-        .do((result: UpdateServiceResult<T>) => {
+        .do((result: UpdateResult<T>) => {
           if (log.isInfoEnabled()) {
             log.log(`Service.update [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
           }
@@ -155,21 +155,21 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
 
   /**
-   * Delete the entity with the given id and return {Observable<T>}
+   * Delete the entity with the given id.
    *
    * @param {TId} id
-   * @returns {Observable<ServiceResult<TId>>}
+   * @returns {Observable<DeleteResult<TId>>}
    *
    * @memberOf Service
    */
-  public delete(id: TId): Observable<DeleteServiceResult<TId>> {
+  public delete(id: TId): Observable<DeleteResult<TId>> {
     Assert.notNull(id, 'id');
     return using(new XLog(Service.logger, levels.INFO, 'delete', `[${this.getModelClassName()}]: id = ${id}`),
       (log) => {
 
         return this.http.delete(`${this.getUrl()}/${id}`)
           .map((response: Response) => response.json())
-          .do((result: DeleteServiceResult<TId>) => {
+          .do((result: DeleteResult<TId>) => {
             if (log.isInfoEnabled()) {
               log.log(`Service.delete [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
             }
@@ -183,11 +183,11 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    * Finds all entities for the given query @param{query}
    *
    * @param {IQuery} query
-   * @returns {Observable<T[]>}
+   * @returns {Observable<QueryResult<T>>}
    *
    * @memberOf Service
    */
-  public query(query: IQuery): Observable<QueryServiceResult<T>> {
+  public query(query: IQuery): Observable<QueryResult<T>> {
     Assert.notNull(query, 'query');
     return using(new XLog(Service.logger, levels.INFO, 'query', `[${this.getModelClassName()}]`), (log) => {
 
@@ -199,7 +199,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
       return this.http.post(`${this.getUrl()}/query`, serializedQuery, options)
         .map((response: Response) => this.deserialize(response.json()))
-        .do((result: QueryServiceResult<T>) => {
+        .do((result: QueryResult<T>) => {
           if (log.isInfoEnabled()) {
             log.log(`result: ${result.items.length} item(s)`);
 
