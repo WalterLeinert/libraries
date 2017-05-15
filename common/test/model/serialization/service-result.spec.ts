@@ -5,7 +5,7 @@
 require('reflect-metadata');
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { configure, IConfig, JsonSerializer, ShortTime } from '@fluxgate/core';
 
@@ -35,7 +35,7 @@ class ArtikelFindByIdResultSerialization implements IEntity<number> {
 }
 
 
-@suite('model.decorator (serialization)') @only
+@suite('model.decorator (serialization)')
 class ModelSerializationTest {
   private formatter = new JsonSerializer();
 

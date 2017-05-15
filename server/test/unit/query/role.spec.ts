@@ -6,7 +6,7 @@ require('reflect-metadata');
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { suite, test } from 'mocha-typescript';
+import { only, suite, test } from 'mocha-typescript';
 
 
 // Chai mit Promises verwenden (... to.become() ... etc.)
