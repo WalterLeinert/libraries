@@ -199,4 +199,19 @@ export class Types {
     return Utility.isNullOrEmpty(value);
   }
 
+
+  /**
+   * Liefert das Objekt @param{obj} als Instanz vom Typ T
+   *
+   * @static
+   * @template T
+   * @param {*} obj
+   * @returns {T}
+   *
+   * @memberof Types
+   */
+  public static cast<T>(obj: any): T {
+    return (obj as any) as T;
+  }
+
 }
