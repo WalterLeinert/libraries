@@ -8,8 +8,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  AppRegistry, IUser, Role, User, CreateResult, FindByIdResult, FindResult,
-  DeleteResult, UpdateResult, QueryResult
+  AppRegistry, CreateResult, FindByIdResult, FindResult, IUser,
+  Role, UpdateResult, User
 } from '@fluxgate/common';
 import { Assert, Encryption, Funktion, IQuery, SelectorTerm, Types } from '@fluxgate/core';
 

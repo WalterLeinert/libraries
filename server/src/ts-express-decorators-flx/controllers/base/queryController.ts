@@ -2,8 +2,8 @@ import { Authenticated, Controller, Post, Request } from 'ts-express-decorators'
 
 
 // Fluxgate
-import { Deprecated, IQuery, JsonSerializer } from '@fluxgate/core';
 import { QueryResult } from '@fluxgate/common';
+import { Deprecated, IQuery, JsonSerializer } from '@fluxgate/core';
 
 import { BaseService } from '../../services/baseService';
 
@@ -19,7 +19,7 @@ export class QueryController<T, TId> {
   @Post('/')
   public query(
     @Request() request: Express.Request
-  ): Promise<QueryResult<T>> {
+    ): Promise<QueryResult<T>> {
     const query = (request as any).body as IQuery;
     const deserializedQuery = this.serializer.deserialize<IQuery>(query);
 

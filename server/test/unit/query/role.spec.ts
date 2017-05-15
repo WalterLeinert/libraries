@@ -6,7 +6,7 @@ require('reflect-metadata');
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 
 // Chai mit Promises verwenden (... to.become() ... etc.)
@@ -19,8 +19,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  CreateResult, DeleteResult, FindByIdResult, UpdateResult, IRole, NumberIdGenerator,
-  Role, ServiceResultBase
+  CreateResult, DeleteResult, FindByIdResult, IRole, NumberIdGenerator, Role,
+  ServiceResult, UpdateResult
 } from '@fluxgate/common';
 import { Clone, ICtor } from '@fluxgate/core';
 
@@ -154,7 +154,7 @@ class RoleTest extends KnexTest<Role, number> {
     return role;
   }
 
-  private createExpectedRole<T extends ServiceResultBase>(id: number, resultCtor: ICtor<T>): T {
+  private createExpectedRole<T extends ServiceResult>(id: number, resultCtor: ICtor<T>): T {
     const role: IRole = this.createRole(id);
     role.id = id;
     return new resultCtor(role, -1);
