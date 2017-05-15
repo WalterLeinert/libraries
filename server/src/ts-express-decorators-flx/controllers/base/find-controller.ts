@@ -48,7 +48,7 @@ export abstract class FindController<T, TId extends IToString> {
     id: TId
   ): Promise<FindByIdResult<T, TId>> {
     return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {
-      this.service.findById(id).then((item) => {
+      this._service.findById(id).then((item) => {
         resolve(this.serialize(item));
       });
     });
@@ -65,7 +65,7 @@ export abstract class FindController<T, TId extends IToString> {
   protected findInternal(
   ): Promise<FindResult<T>> {
     return new Promise<FindResult<T>>((resolve, reject) => {
-      this.service.find().then((items) => {
+      this._service.find().then((items) => {
         resolve(this.serialize(items));
       });
     });
@@ -87,7 +87,7 @@ export abstract class FindController<T, TId extends IToString> {
     return new Promise<QueryResult<T>>((resolve, reject) => {
       const deserializedQuery = this.serializer.deserialize<IQuery>(query);
 
-      this.service.query(deserializedQuery).then((result) => {
+      this._service.query(deserializedQuery).then((result) => {
         resolve(this.serialize(result));
       });
     });
@@ -143,7 +143,7 @@ export abstract class FindController<T, TId extends IToString> {
     return this._idName;
   }
 
-  protected get service(): IFindService<T, TId> {
+  protected getService(): IFindService<T, TId> {
     return this._service;
   }
 }

@@ -91,6 +91,6 @@ export abstract class ControllerBase<T, TId extends IToString> extends FindContr
   }
 
   protected get service(): IBaseService<T, TId> {
-    return this.service as IBaseService<T, TId>;
+    return super.getService() as IBaseService<T, TId>;
   }
 }
