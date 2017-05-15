@@ -5,7 +5,7 @@ import { ServiceResult } from './service-result';
  *
  * @export
  * @class UpdateResult
- * @extends {ServiceResultBase}
+ * @extends {ServiceResult}
  * @template TId
  */
 export class UpdateResult<T> extends ServiceResult {

@@ -14,7 +14,7 @@ export abstract class ServiceResult {
    *
    * @param {number} _entityVersion - die aktuelle EntityVersion.
    *
-   * @memberOf ServiceResultBase
+   * @memberOf ServiceResult
    */
   protected constructor(private _entityVersion: number) {
   }

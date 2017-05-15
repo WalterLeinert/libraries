@@ -7,7 +7,7 @@ import { ServiceResult } from './service-result';
  *
  * @export
  * @class DeleteResult
- * @extends {ServiceResultBase}
+ * @extends {ServiceResult}
  * @template TId
  */
 export class DeleteResult<TId extends IToString> extends ServiceResult {
