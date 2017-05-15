@@ -19,55 +19,55 @@ import { UpdateServiceResult } from './update-service-result';
 export interface IServiceCrud<T, TId> {
 
   /**
-   * Create the entity {item} and return {Observable<T>}
+   * Create the entity {item}.
    *
    * @param {T} item
-   * @returns {Observable<T>}
+   * @returns {Observable<CreateServiceResult<T>>}
    *
    */
   create(item: T): Observable<CreateServiceResult<T>>;
 
   /**
-   * Queries all entities of type T with given @param{query} and return {Observable<T[]>}.
+   * Queries all entities of type T with given @param{query}.
    *
    * @param {IQuery} query
-   * @returns {Observable<T[]>}
+   * @returns {Observable<QueryServiceResult<T>>}
    *
    */
   query(query: IQuery): Observable<QueryServiceResult<T>>;
 
   /**
-   * Find all entities of type T and return {Observable<T[]>}.
+   * Find all entities of type T.
    *
-   * @returns {Observable<T[]>}
+   * @returns {Observable<FindServiceResult<T>>}
    *
    */
   find(): Observable<FindServiceResult<T>>;
 
   /**
-   * Find the entity with the given id and return {Observable<T>}
+   * Find the entity with the given id.
    *
    * @param {TId} id -- entity id.
-   * @returns {Observable<T>}
+   * @returns {Observable<FindByIdServiceResult<T, TId>>}
    *
    */
   findById(id: TId): Observable<FindByIdServiceResult<T, TId>>;
 
   /**
-   * Update the entity {item} with the given id and return {Observable<T>}
+   * Update the entity {item} with the given id.
    *
    * @param {T} item
-   * @returns {Observable<T>}
+   * @returns {Observable<UpdateServiceResult<T>>}
    *
    */
   update(item: T): Observable<UpdateServiceResult<T>>;
 
 
   /**
-   * Delete the entity with the given id and return {Observable<T>}
+   * Delete the entity with the given id.
    *
    * @param {TId} id
-   * @returns {Observable<ServiceResult<TId>>}
+   * @returns {Observable<DeleteServiceResult<TId>>}
    *
    */
   delete(id: TId): Observable<DeleteServiceResult<TId>>;

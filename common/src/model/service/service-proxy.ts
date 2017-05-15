@@ -7,12 +7,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { Assert, IQuery } from '@fluxgate/core';
 
-import { IService } from './service.interface';
 import { CreateServiceResult } from './create-service-result';
 import { DeleteServiceResult } from './delete-service-result';
 import { FindByIdServiceResult } from './find-by-id-service-result';
 import { FindServiceResult } from './find-service-result';
 import { QueryServiceResult } from './query-service-result';
+import { IService } from './service.interface';
 import { UpdateServiceResult } from './update-service-result';
 
 /**

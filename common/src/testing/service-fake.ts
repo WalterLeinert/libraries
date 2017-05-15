@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { Assert, Clone, InvalidOperationException, IQuery, IToString, NotSupportedException } from '@fluxgate/core';
 
 import { EntityGenerator, EntityVersion, IFlxEntity, IService, TableMetadata } from '../model';
-import { CreateServiceResult } from '../model/service/create-service-result'
+import { CreateServiceResult } from '../model/service/create-service-result';
 import { DeleteServiceResult } from '../model/service/delete-service-result';
 import { FindByIdServiceResult } from '../model/service/find-by-id-service-result';
 import { FindServiceResult } from '../model/service/find-service-result';
@@ -89,7 +89,7 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
   public findById(id: TId): Observable<FindByIdServiceResult<T, TId>> {
     Assert.notNull(id, 'id');
 
-    const item = this._items.find((elem) => elem.id === id)
+    const item = this._items.find((elem) => elem.id === id);
     return Observable.of(new FindByIdServiceResult<T, TId>(item, this.getEntityVersion()));
   }
 
@@ -118,7 +118,7 @@ export abstract class ServiceFake<T extends IFlxEntity<TId>, TId extends IToStri
    * Delete the entity with the given id and return {Observable<T>}
    *
    * @param {TId} id
-   * @returns {Observable<ServiceResult<TId>>}
+   * @returns {Observable<DeleteServiceResult<TId>>}
    *
    * @memberOf Service
    */

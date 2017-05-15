@@ -233,7 +233,7 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
    * @template T
    * @template TId
    * @param {TId} id
-   * @returns {Observable<ServiceResult<DeleteServiceResult>>}
+   * @returns {Observable<DeleteServiceResult<TId>>}
    *
    * @memberof EntityVersionProxy
    */
