@@ -5,14 +5,15 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { ServiceResult } from '@fluxgate/common';
-import { IQuery, IToString, JsonSerializer } from '@fluxgate/core';
+import { CreateServiceResult, DeleteServiceResult, UpdateServiceResult } from '@fluxgate/common';
+import { IToString } from '@fluxgate/core';
 
-import { BaseService } from '../../services/baseService';
+import { IBaseService } from '../../services/baseService.interface';
+import { FindController } from './find-controller';
 
 
 /**
- * Abstrakte Basisklasse für alle REST-Controller.
+ * Abstrakte Basisklasse für alle REST-Controller, die neben nur lesenden auch schreibende Zugriffe durchführen
  *
  * Delegiert alle Controller-Calls an den zugehörigen Service @see{TId}.
  *
@@ -22,13 +23,12 @@ import { BaseService } from '../../services/baseService';
  * @template T      - Entity-Typ
  * @template TId    - Type der Id-Spalte
  */
-export abstract class ControllerBase<T, TId extends IToString> {
+export abstract class ControllerBase<T, TId extends IToString> extends FindController<T, TId> {
   protected static logger = getLogger(ControllerBase);
 
-  private serializer: JsonSerializer = new JsonSerializer();
 
-  constructor(private service: BaseService<T, TId>, private _tableName: string, private _idName: string) {
-    this.service.idColumnName = this._idName;
+  constructor(service: IBaseService<T, TId>, tableName: string, idName: string) {
+    super(service, tableName, idName);
   }
 
 
@@ -42,71 +42,11 @@ export abstract class ControllerBase<T, TId extends IToString> {
    */
   protected createInternal(
     subject: T
-  ): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
-      const deserializedSubject = this.serializer.deserialize<T>(subject);
+  ): Promise<CreateServiceResult<T>> {
+    return new Promise<CreateServiceResult<T>>((resolve, reject) => {
+      const deserializedSubject = this.deserialize<T>(subject);
       this.service.create(deserializedSubject).then((item) => {
-        resolve(this.serializer.serialize<T>(item));
-      });
-    });
-  }
-
-
-  /**
-   * Liefert eine Entity vom Typ {T} für die angegebene id.
-   *
-   * @param {TId} id
-   * @returns {Promise<T>}
-   *
-   * @memberOf ControllerBase
-   */
-  protected findByIdInternal(
-    id: TId
-  ): Promise<T> {
-
-    return new Promise<T>((resolve, reject) => {
-      this.service.findById(id).then((item) => {
-        resolve(this.serializer.serialize<T>(item));
-      });
-    });
-  }
-
-
-  /**
-   * Liefert alle Entities vom Typ {T}.
-   *
-   * @returns {Promise<T[]>}
-   *
-   * @memberOf ControllerBase
-   */
-  protected findInternal(
-  ): Promise<T[]> {
-
-    return new Promise<T[]>((resolve, reject) => {
-      this.service.find().then((items) => {
-        resolve(this.serializer.serialize<T[]>(items));
-      });
-    });
-  }
-
-
-  /**
-   * Liefert alle Entities vom Typ {T} über die Query @param{query}.
-   *
-   * @protected
-   * @param {IQuery} query
-   * @returns {Promise<T[]>}
-   *
-   * @memberof ControllerBase
-   */
-  protected queryInternal(
-    query: IQuery
-  ): Promise<T[]> {
-    return new Promise<T[]>((resolve, reject) => {
-      const deserializedQuery = this.serializer.deserialize<IQuery>(query);
-
-      this.service.query(deserializedQuery).then((result) => {
-        resolve(this.serializer.serialize<T[]>(result));
+        resolve(this.serialize(item));
       });
     });
   }
@@ -122,11 +62,11 @@ export abstract class ControllerBase<T, TId extends IToString> {
    */
   protected updateInternal(
     subject: T
-  ): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
-      const deserializedSubject = this.serializer.deserialize<T>(subject);
+  ): Promise<UpdateServiceResult<T>> {
+    return new Promise<UpdateServiceResult<T>>((resolve, reject) => {
+      const deserializedSubject = this.deserialize<T>(subject);
       this.service.update(deserializedSubject).then((item) => {
-        resolve(this.serializer.serialize<T>(item));
+        resolve(this.serialize(item));
       });
     });
   }
@@ -142,37 +82,15 @@ export abstract class ControllerBase<T, TId extends IToString> {
    */
   protected deleteInternal(
     id: TId
-  ): Promise<ServiceResult<TId>> {
-    return new Promise<ServiceResult<TId>>((resolve, reject) => {
+  ): Promise<DeleteServiceResult<TId>> {
+    return new Promise<DeleteServiceResult<TId>>((resolve, reject) => {
       this.service.delete(id).then((result) => {
-        resolve(this.serializer.serialize<ServiceResult<TId>>(result));
+        resolve(this.serialize(result));
       });
     });
   }
 
-
-  /**
-   * Liefert den zugehörigen Tabellennamen
-   *
-   * @readonly
-   * @protected
-   * @type {string}
-   * @memberOf ControllerBase
-   */
-  protected get tableName(): string {
-    return this._tableName;
+  protected get service(): IBaseService<T, TId> {
+    return this.service as IBaseService<T, TId>;
   }
-
-  /**
-   * Liefert den zugehörigen PrimaryKey-Tabellenspaltennamen.
-   *
-   * @readonly
-   * @protected
-   * @type {string}
-   * @memberOf ControllerBase
-   */
-  protected get idName(): string {
-    return this._idName;
-  }
-
 }

@@ -158,11 +158,11 @@ export class PassportLocalService {
 
           // Create new User
           this.userService.create(req.body as IUser)
-            .then((newUser) => {
-              newUser.resetCredentials();
+            .then((result) => {
+              result.item.resetCredentials();
 
-              log.log(`user created: ${newUser}`);
-              done(null, newUser);
+              log.log(`user created: ${result}`);
+              done(null, result);
             });
 
         });
@@ -193,11 +193,11 @@ export class PassportLocalService {
 
                 // Create new User
                 this.userService.changePassword(user)
-                  .then((changedUser) => {
-                    changedUser.resetCredentials();
+                  .then((result) => {
+                    result.item.resetCredentials();
 
-                    log.log(`user updated: ${changedUser}`);
-                    done(null, changedUser);
+                    log.log(`user updated: ${result}`);
+                    done(null, result);
                   });
               })
               .catch((err) => {

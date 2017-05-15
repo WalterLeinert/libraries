@@ -6,7 +6,7 @@ require('reflect-metadata');
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { suite, test } from 'mocha-typescript';
+import { only, suite, test } from 'mocha-typescript';
 
 
 // Chai mit Promises verwenden (... to.become() ... etc.)
@@ -18,8 +18,11 @@ chai.should();
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { IRole, NumberIdGenerator, Role, ServiceResult, Status } from '@fluxgate/common';
-import { Clone } from '@fluxgate/core';
+import {
+  CreateServiceResult, DeleteServiceResult, FindByIdServiceResult, UpdateServiceResult, IRole, NumberIdGenerator,
+  Role, ServiceResultBase
+} from '@fluxgate/common';
+import { Clone, ICtor } from '@fluxgate/core';
 
 import { RoleService } from '../../../src/ts-express-decorators-flx/services/role.service';
 
@@ -44,7 +47,7 @@ class RoleTest extends KnexTest<Role, number> {
 
   @test 'should find 3 roles'() {
     return expect(this.service.find()
-      .then((roles) => roles.length))
+      .then((result) => result.items.length))
       .to.become(3);
   }
 
@@ -52,46 +55,46 @@ class RoleTest extends KnexTest<Role, number> {
     const id = this.firstTestId + 1;
 
     const role = this.createRole(id);
-    const expectedRole = this.createExpectedRole(id);
+    const expectedRole = this.createExpectedRole(id, CreateServiceResult);
     return expect(this.service.create(role)).to.become(expectedRole);
   }
 
   @test 'should now find 4 roles'() {
     return expect(this.service.find()
-      .then((roles) => roles.length))
+      .then((result) => result.items.length))
       .to.become(4);
   }
 
   @test 'should find new role'() {
-    const expectedRole = this.createExpectedRole(this.firstTestId + 1);
-    return expect(this.service.findById(expectedRole.id))
+    const expectedRole = this.createExpectedRole(this.firstTestId + 1, FindByIdServiceResult);
+    return expect(this.service.findById(expectedRole.item.id))
       .to.become(expectedRole);
   }
 
   @test 'should update new role'() {
     const id = this.firstTestId + 1;
 
-    const role = this.createExpectedRole(id);
-    role.name = role.name + '-updated';
-    role.description = role.description + '-updated';
+    const roleResult = this.createExpectedRole(id, UpdateServiceResult);
+    roleResult.item.name = roleResult.item.name + '-updated';
+    roleResult.item.description = roleResult.item.description + '-updated';
 
-    const expectedRole = Clone.clone(role);
-    expectedRole.__version = role.__version + 1;
+    const expectedRoleResult = Clone.clone(roleResult);
+    expectedRoleResult.item.__version = roleResult.item.__version + 1;
 
-    return expect(this.service.update(role))
-      .to.become(expectedRole);
+    return expect(this.service.update(roleResult.item))
+      .to.become(expectedRoleResult);
   }
 
   @test 'should create new role (2)'() {
     const id = this.firstTestId + 2;
     const role = this.createRole(id);
-    const expectedRole = this.createExpectedRole(id);
+    const expectedRole = this.createExpectedRole(id, CreateServiceResult);
     return expect(this.service.create(role)).to.become(expectedRole);
   }
 
   @test 'should now find 5 roles'() {
     return expect(this.service.find()
-      .then((roles) => roles.length))
+      .then((result) => result.items.length))
       .to.become(5);
   }
 
@@ -100,7 +103,7 @@ class RoleTest extends KnexTest<Role, number> {
     return expect(this.service.queryKnex(
       this.service.fromTable()
         .where(this.service.idColumnName, '>=', id))
-      .then((roles) => roles.length))
+      .then((result) => result.items.length))
       .to.become(2);
   }
 
@@ -109,7 +112,7 @@ class RoleTest extends KnexTest<Role, number> {
     return expect(this.service.queryKnex(
       this.service.fromTable()
         .where('role_name', '=', 'admin'))
-      .then((roles) => roles.length))
+      .then((result) => result.items.length))
       .to.become(1);
   }
 
@@ -117,7 +120,7 @@ class RoleTest extends KnexTest<Role, number> {
     return expect(this.service.queryKnex(
       this.service.fromTable()
         .where('role_name', '=', 'admin'))
-      .then((roles) => roles[0].id))
+      .then((result) => result.items[0].id))
       .to.become(1);
   }
 
@@ -125,7 +128,7 @@ class RoleTest extends KnexTest<Role, number> {
 
   @test 'should delete test role'() {
     const roleIdToDelete = this.firstTestId + 1;
-    const expected = new ServiceResult(roleIdToDelete, Status.Ok);
+    const expected = new DeleteServiceResult(roleIdToDelete, -1);
 
     return expect(this.service.delete(roleIdToDelete))
       .to.become(expected);
@@ -133,7 +136,7 @@ class RoleTest extends KnexTest<Role, number> {
 
   @test 'should now find 4 roles again'() {
     return expect(this.service.find()
-      .then((roles) => roles.length))
+      .then((result) => result.items.length))
       .to.become(4);
   }
 
@@ -151,10 +154,10 @@ class RoleTest extends KnexTest<Role, number> {
     return role;
   }
 
-  private createExpectedRole(id: number): IRole {
+  private createExpectedRole<T extends ServiceResultBase>(id: number, resultCtor: ICtor<T>): T {
     const role: IRole = this.createRole(id);
     role.id = id;
-    return role;
+    return new resultCtor(role, -1);
   }
 
 }

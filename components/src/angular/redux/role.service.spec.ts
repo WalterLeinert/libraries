@@ -29,8 +29,8 @@ describe('RoleService', () => {
 
 
   it('should contain items', inject([RoleService], (service: RoleService) => {
-    service.find().subscribe((items) => {
-      expect(items.length).toEqual(RoleServiceFakeService.ITEMS);
+    service.find().subscribe((result) => {
+      expect(result.items.length).toEqual(RoleServiceFakeService.ITEMS);
     });
 
   }));

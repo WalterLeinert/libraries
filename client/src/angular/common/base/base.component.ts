@@ -14,8 +14,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { IService, IServiceBase, ServiceResult } from '@fluxgate/common';
+import {
+  CreateServiceResult, DeleteServiceResult, IService,
+  IServiceBase, UpdateServiceResult
+} from '@fluxgate/common';
 import { Assert, Deprecated, InstanceAccessor, InstanceSetter, NotSupportedException, Utility } from '@fluxgate/core';
+
 
 import { IRefreshHelper, IRouterNavigationAction } from '../../common/routing';
 import { MessageService } from '../../services/message.service';
@@ -177,24 +181,24 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
     }
 
     return service.find().
-      do((items: T[]) => {
+      do((findResult) => {
 
         if (idToSelect !== undefined) {
-          selectedItem = items.find((item) => {
+          selectedItem = findResult.items.find((item) => {
             return (idAccessor(item) === idToSelect);
           });
         } else {
-          if (!Utility.isNullOrEmpty(items)) {
-            selectedItem = items[0];
+          if (!Utility.isNullOrEmpty(findResult.items)) {
+            selectedItem = findResult.items[0];
           } else {
             selectedItem = undefined;
           }
         }
 
       }).
-      map((items: T[]) => {
+      map((res) => {
         const result: IRefreshHelper<T> = {
-          items: items, selectedItem: selectedItem
+          items: res.items, selectedItem: selectedItem
         };
         return result;
       });
@@ -221,11 +225,14 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       service = this.service as any as IService<T, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.create(item)
-      .do((elem: T) => {
-        idSetter(item, idAccessor(elem));
+      .do((result: CreateServiceResult<T>) => {
+        idSetter(result.item, idAccessor(result.item));
         this.addSuccessMessage('Record created.');
-        this.resetFormGroup(item, groupName);
-      })   // Id setzen
+        this.resetFormGroup(result.item, groupName);
+      })
+      .map((result: CreateServiceResult<T>) => {
+        return result.item;
+      })
       .catch((err: any, caught: Observable<T>) => {
         this.handleError(err);
         throw err;
@@ -238,9 +245,12 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       service = this.service as any as IService<T, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.update(item)
-      .do((elem: T) => {
+      .do((result: UpdateServiceResult<T>) => {
         this.addSuccessMessage('Record updated.');
-        this.resetFormGroup(item, groupName);
+        this.resetFormGroup(result.item, groupName);
+      })
+      .map((result: UpdateServiceResult<T>) => {
+        return result.item;
       })
       .catch((err: any, caught: Observable<T>) => {
         this.handleError(err);
@@ -253,11 +263,11 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       service = this.service as any as IService<any, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.delete(id)
-      .do((elemId: ServiceResult<TId>) => {
+      .do((result: DeleteServiceResult<TId>) => {
         this.addSuccessMessage('Record deleted.');
         this.resetForm();
       })
-      .map((result: ServiceResult<TId>) => {
+      .map((result: DeleteServiceResult<TId>) => {
         return result.id;
       })
       .catch((err: any, caught: Observable<TId>) => {

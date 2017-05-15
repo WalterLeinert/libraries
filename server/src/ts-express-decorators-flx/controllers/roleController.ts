@@ -5,7 +5,11 @@ import {
 } from 'ts-express-decorators';
 
 // Fluxgate
-import { Role, ServiceResult } from '@fluxgate/common';
+import {
+  CreateServiceResult, DeleteServiceResult, FindByIdServiceResult, FindServiceResult, QueryServiceResult,
+  Role, UpdateServiceResult
+} from '@fluxgate/common';
+import { IQuery } from '@fluxgate/core';
 
 import { RoleService } from '../services/role.service';
 import { ControllerBase } from './base/controllerBase';
@@ -21,14 +25,14 @@ export class RoleController extends ControllerBase<Role, number> {
   @Post('/')
   public create(
     @Request() request: Express.Request
-    ): Promise<Role> {
+    ): Promise<CreateServiceResult<Role>> {
     return super.createInternal((request as any).body as Role);
   }
 
   // @Authenticated()
   @Get('/')
   public find(
-    ): Promise<Role[]> {
+    ): Promise<FindServiceResult<Role>> {
     return super.findInternal();
   }
 
@@ -36,15 +40,24 @@ export class RoleController extends ControllerBase<Role, number> {
   @Get('/:id')
   public findById(
     @PathParams('id') id: number
-    ): Promise<Role> {
+    ): Promise<FindByIdServiceResult<Role, number>> {
     return super.findByIdInternal(id);
+  }
+
+
+  @Authenticated({ role: 'admin' })
+  @Post('/')
+  public query(
+    @Request() request: Express.Request
+    ): Promise<QueryServiceResult<Role>> {
+    return super.queryInternal((request as any).body as IQuery);
   }
 
   @Authenticated({ role: 'admin' })
   @Put('/')
   public update(
     @Request() request: Express.Request
-    ): Promise<Role> {
+    ): Promise<UpdateServiceResult<Role>> {
     return super.updateInternal((request as any).body as Role);
   }
 
@@ -52,7 +65,7 @@ export class RoleController extends ControllerBase<Role, number> {
   @Delete('/:id')
   public delete(
     @PathParams('id') id: number
-    ): Promise<ServiceResult<number>> {
+    ): Promise<DeleteServiceResult<number>> {
     return super.deleteInternal(id);
   }
 }

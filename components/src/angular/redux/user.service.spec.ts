@@ -29,8 +29,8 @@ describe('UserService', () => {
 
 
   it('should contain items', inject([UserService], (service: UserService) => {
-    service.find().subscribe((items) => {
-      expect(items.length).toEqual(UserServiceFakeService.ITEMS);
+    service.find().subscribe((result) => {
+      expect(result.items.length).toEqual(UserServiceFakeService.ITEMS);
     });
 
   }));

@@ -5,14 +5,18 @@ import {
 } from 'ts-express-decorators';
 
 // Fluxgate
-import { IUser, ServiceResult, User } from '@fluxgate/common';
+import {
+  CreateServiceResult, DeleteServiceResult, FindByIdServiceResult, FindServiceResult, QueryServiceResult,
+  UpdateServiceResult, User
+} from '@fluxgate/common';
+import { IQuery } from '@fluxgate/core';
 
 import { UserService } from '../services/user.service';
 import { ControllerBase } from './base/controllerBase';
 
 
 @Controller('/user')
-export class UserController extends ControllerBase<IUser, number> {
+export class UserController extends ControllerBase<User, number> {
   constructor(service: UserService) {
     super(service, 'user', 'user_id');
   }
@@ -21,7 +25,7 @@ export class UserController extends ControllerBase<IUser, number> {
   @Post('/')
   public create(
     @Request() request: Express.Request
-    ): Promise<User> {
+    ): Promise<CreateServiceResult<User>> {
     return super.createInternal((request as any).body as User);
   }
 
@@ -29,7 +33,7 @@ export class UserController extends ControllerBase<IUser, number> {
   // @Authenticated()
   @Get('/')
   public find(
-    ): Promise<User[]> {
+    ): Promise<FindServiceResult<User>> {
     return super.findInternal();
   }
 
@@ -37,15 +41,25 @@ export class UserController extends ControllerBase<IUser, number> {
   @Get('/:id')
   public findById(
     @PathParams('id') id: number
-    ): Promise<User> {
+    ): Promise<FindByIdServiceResult<User, number>> {
     return super.findByIdInternal(id);
   }
+
+
+  @Authenticated({ role: 'admin' })
+  @Post('/')
+  public query(
+    @Request() request: Express.Request
+    ): Promise<QueryServiceResult<User>> {
+    return super.queryInternal((request as any).body as IQuery);
+  }
+
 
   @Authenticated({ role: 'admin' })
   @Put('/')
   public update(
     @Request() request: Express.Request
-    ): Promise<User> {
+    ): Promise<UpdateServiceResult<User>> {
     return super.updateInternal((request as any).body as User);
   }
 
@@ -53,7 +67,7 @@ export class UserController extends ControllerBase<IUser, number> {
   @Delete('/:id')
   public delete(
     @PathParams('id') id: number
-    ): Promise<ServiceResult<number>> {
+    ): Promise<DeleteServiceResult<number>> {
     return super.deleteInternal(id);
   }
 }

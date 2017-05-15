@@ -12,7 +12,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { IService, ServiceResult, TableMetadata } from '@fluxgate/common';
+import {
+  CreateServiceResult, DeleteServiceResult, FindByIdServiceResult, FindServiceResult, IService,
+  QueryServiceResult, TableMetadata, UpdateServiceResult
+} from '@fluxgate/common';
+
 import { Assert, Funktion, InvalidOperationException, IQuery, IToString } from '@fluxgate/core';
 
 import { ConfigService } from '../../services/config.service';
@@ -63,15 +67,15 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    *
    * @memberOf Service
    */
-  public create(item: T): Observable<T> {
+  public create(item: T): Observable<CreateServiceResult<T>> {
     Assert.notNull(item, 'item');
     return using(new XLog(Service.logger, levels.INFO, 'create', `[${this.getModelClassName()}]`), (log) => {
 
       return this.http.post(this.getUrl(), this.serialize(item))
         .map((response: Response) => this.deserialize(response.json()))
-        .do((data) => {
+        .do((result: CreateServiceResult<T>) => {
           if (log.isInfoEnabled()) {
-            log.log(`Service.create: ${JSON.stringify(data)}`);
+            log.log(`Service.create: ${JSON.stringify(result)}`);
           }
         })
         .catch(this.handleError);
@@ -87,14 +91,14 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    *
    * @memberOf Service
    */
-  public find(): Observable<T[]> {
+  public find(): Observable<FindServiceResult<T>> {
     return using(new XLog(Service.logger, levels.INFO, 'find', `[${this.getModelClassName()}]`), (log) => {
 
       return this.http.get(this.getUrl())
         .map((response: Response) => this.deserialize(response.json()))
-        .do((data) => {
+        .do((result: FindServiceResult<T>) => {
           if (log.isInfoEnabled()) {
-            log.log(`Service.find [${this.getModelClassName()}]: -> ${(data as any).length} item(s)`);
+            log.log(`Service.find [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
           }
         })
         .catch(this.handleError);
@@ -110,15 +114,15 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    *
    * @memberOf Service
    */
-  public findById(id: TId): Observable<T> {
+  public findById(id: TId): Observable<FindByIdServiceResult<T, TId>> {
     Assert.notNull(id, 'id');
     return using(new XLog(Service.logger, levels.INFO, 'findById', `[${this.getModelClassName()}]`), (log) => {
 
       return this.http.get(`${this.getUrl()}/${id}`)
         .map((response: Response) => this.deserialize(response.json()))
-        .do((data) => {
+        .do((result: FindByIdServiceResult<T, TId>) => {
           if (log.isInfoEnabled()) {
-            log.log(`Service.findById [${this.getModelClassName()}]: id = ${id} -> ${JSON.stringify(data)}`);
+            log.log(`Service.findById [${this.getModelClassName()}]: id = ${id} -> ${JSON.stringify(result)}`);
           }
         })
         .catch(this.handleError);
@@ -134,15 +138,15 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    *
    * @memberOf Service
    */
-  public update(item: T): Observable<T> {
+  public update(item: T): Observable<UpdateServiceResult<T>> {
     Assert.notNull(item, 'item');
     return using(new XLog(Service.logger, levels.INFO, 'update', `[${this.getModelClassName()}]`), (log) => {
 
       return this.http.put(`${this.getUrl()}`, this.serialize(item))
         .map((response: Response) => this.deserialize(response.json()))
-        .do((data) => {
+        .do((result: UpdateServiceResult<T>) => {
           if (log.isInfoEnabled()) {
-            log.log(`Service.update [${this.getModelClassName()}]: ${JSON.stringify(data)}`);
+            log.log(`Service.update [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
           }
         })
         .catch(this.handleError);
@@ -158,16 +162,16 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    *
    * @memberOf Service
    */
-  public delete(id: TId): Observable<ServiceResult<TId>> {
+  public delete(id: TId): Observable<DeleteServiceResult<TId>> {
     Assert.notNull(id, 'id');
     return using(new XLog(Service.logger, levels.INFO, 'delete', `[${this.getModelClassName()}]: id = ${id}`),
       (log) => {
 
         return this.http.delete(`${this.getUrl()}/${id}`)
           .map((response: Response) => response.json())
-          .do((serviceResult) => {
+          .do((result: DeleteServiceResult<TId>) => {
             if (log.isInfoEnabled()) {
-              log.log(`Service.delete [${this.getModelClassName()}]: ${JSON.stringify(serviceResult)}`);
+              log.log(`Service.delete [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
             }
           })
           .catch(this.handleError);
@@ -183,7 +187,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    *
    * @memberOf Service
    */
-  public query(query: IQuery): Observable<T[]> {
+  public query(query: IQuery): Observable<QueryServiceResult<T>> {
     Assert.notNull(query, 'query');
     return using(new XLog(Service.logger, levels.INFO, 'query', `[${this.getModelClassName()}]`), (log) => {
 
@@ -195,12 +199,12 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
       return this.http.post(`${this.getUrl()}/query`, serializedQuery, options)
         .map((response: Response) => this.deserialize(response.json()))
-        .do((data) => {
+        .do((result: QueryServiceResult<T>) => {
           if (log.isInfoEnabled()) {
-            log.log(`result: ${(data as any).length} item(s)`);
+            log.log(`result: ${result.items.length} item(s)`);
 
             if (log.isDebugEnabled()) {
-              log.debug(`query = ${JSON.stringify(query)} -> ${JSON.stringify(data)}`);
+              log.debug(`query = ${JSON.stringify(query)} -> ${JSON.stringify(result)}`);
             }
           }
         })

@@ -9,7 +9,7 @@ import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import 'mocha';
 // tslint:disable-next-line:no-unused-variable
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 
 // Chai mit Promises verwenden (... to.become() ... etc.)
@@ -69,32 +69,32 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
   @test 'should create new record -> version == 0'() {
     const item1 = this.createItem();
 
-    return expect(this.service.create(item1).then((it) => it.__version)).to.eventually.equal(0);
+    return expect(this.service.create(item1).then((result) => result.item.__version)).to.eventually.equal(0);
   }
 
 
   @test 'should increment entity version && entityVersion.version (1st update)'(done: (err?: any) => void) {
-    this.service.find().then((items) => {
-      const item = items[items.length - 1];   // new record
+    this.service.find().then((findResult) => {
+      const item = findResult.items[findResult.items.length - 1];   // new record
 
       item.name = item.name + '-updated';
 
-      this.entityVersionService.findById('querytest').then((version) => {
-        const versionPrev = version.__version;
+      this.entityVersionService.findById('querytest').then((entityVersionResult) => {
+        const versionPrev = entityVersionResult.item.__version;
 
-        this.service.update(item).then((it) => {
+        this.service.update(item).then((updateResult) => {
           const expectedVersion = 1;
-          if (it.__version !== expectedVersion) {
-            done(`entity: version (${it.__version}) not ${expectedVersion} after first update`);
+          if (updateResult.item.__version !== expectedVersion) {
+            done(`entity: version (${updateResult.item.__version}) not ${expectedVersion} after first update`);
           }
 
-          if (it.__version !== item.__version + 1) {
-            done(`entity: versions different: ${it.__version} !== ${item.__version}`);
+          if (updateResult.item.__version !== item.__version + 1) {
+            done(`entity: versions different: ${updateResult.item.__version} !== ${item.__version}`);
           }
 
-          this.entityVersionService.findById('querytest').then((ev) => {
-            if (ev.__version !== versionPrev + 1) {
-              done(`entityVersion: versions different: ${ev.__version} !== ${versionPrev + 1}`);
+          this.entityVersionService.findById('querytest').then((evResult) => {
+            if (evResult.item.__version !== versionPrev + 1) {
+              done(`entityVersion: versions different: ${evResult.item.__version} !== ${versionPrev + 1}`);
             }
 
             done();
@@ -105,28 +105,28 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
   }
 
   @test 'should increment entity version && entityVersion.version (2nd update)'(done: (err?: any) => void) {
-    this.service.find().then((items) => {
-      const item = items[items.length - 1];   // new record
+    this.service.find().then((findResult) => {
+      const item = findResult.items[findResult.items.length - 1];   // new record
 
       item.name = item.name + '-updated';
 
-      this.entityVersionService.findById('querytest').then((version) => {
-        const versionPrev = version.__version;
+      this.entityVersionService.findById('querytest').then((entityVersionResult) => {
+        const versionPrev = entityVersionResult.item.__version;
 
-        this.service.update(item).then((it) => {
+        this.service.update(item).then((updateResult) => {
           const expectedVersion = 2;
-          if (it.__version !== expectedVersion) {
-            done(`entity: version (${it.__version}) not ${expectedVersion} after first update`);
+          if (updateResult.item.__version !== expectedVersion) {
+            done(`entity: version (${updateResult.item.__version}) not ${expectedVersion} after first update`);
           }
 
 
-          if (it.__version !== item.__version + 1) {
-            done(`item versions different: ${it.__version} !== ${item.__version}`);
+          if (updateResult.item.__version !== item.__version + 1) {
+            done(`item versions different: ${updateResult.item.__version} !== ${item.__version}`);
           }
 
-          this.entityVersionService.findById('querytest').then((ev) => {
-            if (ev.__version !== versionPrev + 1) {
-              done(`entityVersion versions different: ${ev.__version} !== ${versionPrev + 1}`);
+          this.entityVersionService.findById('querytest').then((evResult) => {
+            if (evResult.item.__version !== versionPrev + 1) {
+              done(`entityVersion versions different: ${evResult.item.__version} !== ${versionPrev + 1}`);
             }
 
             done();

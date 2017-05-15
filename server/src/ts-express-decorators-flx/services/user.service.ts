@@ -7,8 +7,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { AppRegistry, IUser, Role, User } from '@fluxgate/common';
-import { Assert, Encryption, Funktion, IQuery, SelectorTerm } from '@fluxgate/core';
+import {
+  AppRegistry, IUser, Role, User, CreateServiceResult, FindByIdServiceResult, FindServiceResult,
+  DeleteServiceResult, UpdateServiceResult, QueryServiceResult
+} from '@fluxgate/common';
+import { Assert, Encryption, Funktion, IQuery, SelectorTerm, Types } from '@fluxgate/core';
 
 import { Messages } from '../../resources/messages';
 import { BaseService } from './baseService';
@@ -27,12 +30,12 @@ export class UserService extends BaseService<IUser, number> {
   // ----------------------------------------------------------------
   // überschriebene Methoden (Passwort-Info zurücksetzen bzw. User anlegen)
   // ----------------------------------------------------------------
-  public findById(id: number): Promise<IUser> {
-    return new Promise<IUser>((resolve, reject) => {
+  public findById(id: number): Promise<FindByIdServiceResult<IUser, number>> {
+    return new Promise<FindByIdServiceResult<IUser, number>>((resolve, reject) => {
       super.findById(id)
-        .then((user) => {
-          user.resetCredentials();
-          resolve(user);
+        .then((result) => {
+          result.item.resetCredentials();
+          resolve(result);
         })
         .catch((err) => {
           reject(this.createSystemException(err));
@@ -40,14 +43,14 @@ export class UserService extends BaseService<IUser, number> {
     });
   }
 
-  public find(): Promise<IUser[]> {
-    return new Promise<IUser[]>((resolve, reject) => {
+  public find(): Promise<FindServiceResult<IUser>> {
+    return new Promise<FindServiceResult<IUser>>((resolve, reject) => {
       super.find()
-        .then((users) => {
-          users.forEach((user) => {
+        .then((result) => {
+          result.items.forEach((user) => {
             user.resetCredentials();
           });
-          resolve(users);
+          resolve(result);
         })
         .catch((err) => {
           reject(this.createSystemException(err));
@@ -55,15 +58,15 @@ export class UserService extends BaseService<IUser, number> {
     });
   }
 
-  public update(user: IUser): Promise<IUser> {
+  public update(user: IUser): Promise<UpdateServiceResult<IUser>> {
     if (user.role) {
       Assert.that(Role.isValidRole(user.role));
     }
-    return new Promise<IUser>((resolve, reject) => {
+    return new Promise<UpdateServiceResult<IUser>>((resolve, reject) => {
       super.update(user)
-        .then((u) => {
-          u.resetCredentials();
-          resolve(u);
+        .then((result) => {
+          result.item.resetCredentials();
+          resolve(result);
         })
         .catch((err) => {
           reject(this.createSystemException(err));
@@ -81,12 +84,12 @@ export class UserService extends BaseService<IUser, number> {
    *
    * @memberOf UserService
    */
-  public create(user: IUser): Promise<IUser> {
+  public create(user: IUser): Promise<CreateServiceResult<IUser>> {
     Assert.that(Role.isValidRole(user.role));
 
     user.password_salt = shortid.gen();
 
-    return new Promise<IUser>((resolve, reject) => {
+    return new Promise<CreateServiceResult<IUser>>((resolve, reject) => {
       Encryption.hashPassword(user.password, user.password_salt, (err, encryptedPassword) => {
         if (err) {
           reject(this.createSystemException(err));
@@ -94,9 +97,9 @@ export class UserService extends BaseService<IUser, number> {
 
         user.password = encryptedPassword;
 
-        super.create(user).then((u) => {
-          u.resetCredentials();
-          resolve(u);
+        super.create(user).then((result) => {
+          result.item.resetCredentials();
+          resolve(result);
         });
       });
     });
@@ -111,12 +114,12 @@ export class UserService extends BaseService<IUser, number> {
    *
    * @memberOf UserService
    */
-  public changePassword(user: IUser): Promise<IUser> {
+  public changePassword(user: IUser): Promise<UpdateServiceResult<IUser>> {
     Assert.that(Role.isValidRole(user.role));
 
     user.password_salt = shortid.gen();
 
-    return new Promise<IUser>((resolve, reject) => {
+    return new Promise<UpdateServiceResult<IUser>>((resolve, reject) => {
       Encryption.hashPassword(user.password, user.password_salt, (err, encryptedPassword) => {
         if (err) {
           reject(this.createSystemException(err));
@@ -124,9 +127,9 @@ export class UserService extends BaseService<IUser, number> {
 
         user.password = encryptedPassword;
 
-        super.update(user).then((u) => {
-          u.resetCredentials();
-          resolve(u);
+        super.update(user).then((result) => {
+          result.item.resetCredentials();
+          resolve(result);
         });
       });
     });
@@ -161,7 +164,7 @@ export class UserService extends BaseService<IUser, number> {
 
         return new Promise<IUser>((resolve, reject) => {
           this.query(query)
-            .then((users) => {
+            .then((result) => {
 
               try {
 
@@ -171,21 +174,21 @@ export class UserService extends BaseService<IUser, number> {
                 let user: IUser = null;
 
 
-                if (!users) {
+                if (Types.isNull(result.items)) {
                   log.log(message);
                   reject(this.createBusinessException(message));
                 } else {
-                  if (!Array.isArray(users)) {
+                  if (!Array.isArray(result.items)) {
                     reject(this.createSystemException('internal error: array expected'));
                   }
                 }
 
                 // no user found?
-                if (users.length <= 0 || users.length > 1) {
+                if (result.items.length <= 0 || result.items.length > 1) {
                   log.log(message);
                   reject(this.createBusinessException(message));
                 } else {
-                  user = users[0];
+                  user = result.items[0];
 
                   Encryption.hashPassword(password, user.password_salt, (err, encryptedPassword) => {
                     if (err) {
@@ -238,12 +241,12 @@ export class UserService extends BaseService<IUser, number> {
 
       return new Promise<IUser>((resolve, reject) => {
         this.query(query)
-          .then((users) => {
-            if (!users || users.length <= 0) {
+          .then((result) => {
+            if (Types.isNullOrEmpty(result.items)) {
               log.log('no user found');
               resolve(undefined);
             } else {
-              const user = users[0];
+              const user = result.items[0];
               user.resetCredentials();
               log.log('user: ', user);
               resolve(user);
@@ -279,12 +282,12 @@ export class UserService extends BaseService<IUser, number> {
 
       return new Promise<IUser>((resolve, reject) => {
         this.query(query)
-          .then((users) => {
-            if (!users || users.length <= 0) {
+          .then((result) => {
+            if (Types.isNullOrEmpty(result.items)) {
               log.log('no user found');
               resolve(undefined);
             } else {
-              const user = users[0];
+              const user = result[0];
               user.resetCredentials();
               log.log('user: ', user);
               resolve(user);
@@ -323,13 +326,13 @@ export class UserService extends BaseService<IUser, number> {
 
       return new Promise<IUser>((resolve, reject) => {
         this.query(query)
-          .then((users) => {
-            if (!users || users.length <= 0) {
+          .then((result) => {
+            if (Types.isNullOrEmpty(result.items)) {
               log.log(message);
               reject(this.createBusinessException(message));
             }
 
-            const user = users[0];
+            const user = result.items[0];
 
             Encryption.hashPassword(password, user.password_salt, (err, encryptedPassword) => {
               if (err) {

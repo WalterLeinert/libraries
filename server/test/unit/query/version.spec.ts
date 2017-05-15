@@ -63,20 +63,20 @@ class VersionTest extends KnexTest<QueryTest, number> {
 
   @test 'should create new record -> version == 0'() {
     const item1 = this.createItem();
-    expect(this.service.create(item1).then((it) => it.__version)).to.become(0);
+    expect(this.service.create(item1).then((result) => result.item.__version)).to.become(0);
   }
 
 
   @test 'should update record -> version == 1'(done: (err?: any) => void) {
-    this.service.find().then((items) => {
+    this.service.find().then((findResult) => {
 
-      const itemsSorted = items.sort((it1, it2) => it1.id - it2.id);
+      const itemsSorted = findResult.items.sort((it1, it2) => it1.id - it2.id);
       const item = itemsSorted[itemsSorted.length - 1];
 
       item.name = item.name + '-updated';
-      this.service.update(item).then((it) => {
-        if (it.__version !== item.__version + 1) {
-          done(`entity: versions different: ${it.__version} !== ${item.__version}`);
+      this.service.update(item).then((updateResult) => {
+        if (updateResult.item.__version !== item.__version + 1) {
+          done(`entity: versions different: ${updateResult.item.__version} !== ${item.__version}`);
         } else {
           done();
         }
@@ -86,15 +86,15 @@ class VersionTest extends KnexTest<QueryTest, number> {
 
 
   @test 'should update record -> version == 2'(done: (err?: any) => void) {
-    this.service.find().then((items) => {
+    this.service.find().then((findResult) => {
 
-      const itemsSorted = items.sort((it1, it2) => it1.id - it2.id);
+      const itemsSorted = findResult.items.sort((it1, it2) => it1.id - it2.id);
       const item = itemsSorted[itemsSorted.length - 1];
 
       item.name = item.name + '-updated2';
-      this.service.update(item).then((it) => {
-        if (it.__version !== item.__version + 1) {
-          done(`entity: versions different: ${it.__version} !== ${item.__version}`);
+      this.service.update(item).then((updateResult) => {
+        if (updateResult.item.__version !== item.__version + 1) {
+          done(`entity: versions different: ${updateResult.item.__version} !== ${item.__version}`);
         } else {
           done();
         }

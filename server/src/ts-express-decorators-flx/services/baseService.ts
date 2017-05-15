@@ -7,18 +7,16 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  Assert, Clone, /*EntityExistsException,*/
-  EntityNotFoundException, Funktion,
-  IException, InvalidOperationException,
-  IQuery, IToString,
-  JsonSerializer, OptimisticLockException, Types
+  EntityNotFoundException, Funktion, IToString, OptimisticLockException
 } from '@fluxgate/core';
 
-import { ColumnMetadata, ExceptionWrapper, IUser, ServiceResult, TableMetadata } from '@fluxgate/common';
+import {
+  CreateServiceResult, DeleteServiceResult, UpdateServiceResult
+} from '@fluxgate/common';
 
 
 import { IBaseService } from './baseService.interface';
-import { KnexQueryVisitor } from './knex-query-visitor';
+import { FindService } from './find-service';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
 
@@ -32,13 +30,9 @@ import { MetadataService } from './metadata.service';
  * @template T
  * @template TId
  */
-export abstract class BaseService<T, TId extends IToString> implements IBaseService<T, TId>  {
+export abstract class BaseService<T, TId extends IToString> extends FindService<T, TId>
+  implements IBaseService<T, TId>  {
   protected static logger = getLogger(BaseService);
-  private serializer: JsonSerializer = new JsonSerializer();
-
-  private primaryKeyColumn: ColumnMetadata = null;
-  private metadata: TableMetadata;
-
 
   /**
    * Creates an instance of ServiceBase.
@@ -49,14 +43,8 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
    *
    * @memberOf ServiceBase
    */
-  constructor(table: Funktion, private knexService: KnexService, private metadataService: MetadataService) {
-    this.metadata = this.metadataService.findTableMetadata(table);
-
-    const cols = this.metadata.columnMetadata.filter((item: ColumnMetadata) => item.options.primary);
-    if (cols.length <= 0) {
-      BaseService.logger.warn(`Table ${this.metadata.tableName}: no primary key column`);
-    }
-    this.primaryKeyColumn = cols[0];
+  constructor(table: Funktion, knexService: KnexService, metadataService: MetadataService) {
+    super(table, knexService, metadataService);
   }
 
 
@@ -70,7 +58,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
    */
   public create(
     subject: T
-  ): Promise<T> {
+  ): Promise<CreateServiceResult<T>> {
 
     return using(new XLog(BaseService.logger, levels.INFO, 'create', `[${this.tableName}]`), (log) => {
       if (log.isDebugEnabled) {
@@ -83,7 +71,7 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
         log.debug('dbSubject: ', dbSubject);
       }
 
-      return new Promise<T>((resolve, reject) => {
+      return new Promise<CreateServiceResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
           this.fromTable()
@@ -106,8 +94,10 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
 
                 subject = this.createModelInstance(dbSubject);
 
+                const entityVersion = -1;     // TODO
+
                 trx.commit();
-                resolve(subject);
+                resolve(new CreateServiceResult(subject, entityVersion));
               }
             })
             .catch((err) => {
@@ -121,117 +111,6 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
     });
   }
 
-
-  /**
-   * Liefert eine Entity-Instanz vom Typ {T} aus der DB als @see{Promise}
-   *
-   * @param {TId} id
-   * @returns {Promise<T>}
-   *
-   * @memberOf ServiceBase
-   */
-  public findById(
-    id: TId
-  ): Promise<T> {
-
-    return using(new XLog(BaseService.logger, levels.INFO, 'findById', `[${this.tableName}] id = ${id}`), (log) => {
-
-      return new Promise<T>((resolve, reject) => {
-        this.knexService.knex.transaction((trx) => {
-
-          this.fromTable()
-            .where(this.idColumnName, id.toString())
-            .transacting(trx)
-
-            .then((rows: any[]) => {
-              if (rows.length <= 0) {
-                log.info('result: no item found');
-                reject(this.createBusinessException(`table ${this.tableName}: item with id ${id} not found.`));
-              } else {
-                const result = this.createModelInstance(rows[0]);
-
-                if (log.isDebugEnabled) {
-                  //
-                  // falls wir ein User-Objekt gefunden haben, wird für das Logging
-                  // die Passwort-Info zurückgesetzt
-                  //
-                  const logResult = this.createModelInstance(Clone.clone(rows[0]));
-                  if (Types.hasMethod(logResult, 'resetCredentials')) {
-                    (logResult as any as IUser).resetCredentials();
-                  }
-
-                  log.debug('result = ', logResult);
-                }
-
-                trx.commit();
-                resolve(result);
-              }
-            })
-            .catch((err) => {
-              log.error(err);
-
-              trx.rollback();
-              reject(this.createSystemException(err));
-            });
-
-        });     // transaction
-      });     // promise
-    });
-  }
-
-
-  /**
-   * Liefert alle Entity-Instanzen vom Typ {T} als @see{Promise}
-   *
-   * @returns {Promise<T[]>}
-   *
-   * @memberOf ServiceBase
-   */
-  public find(
-  ): Promise<T[]> {
-    return using(new XLog(BaseService.logger, levels.INFO, 'find', `[${this.tableName}]`), (log) => {
-
-      return new Promise<T[]>((resolve, reject) => {
-        this.knexService.knex.transaction((trx) => {
-
-          this.fromTable()
-            .transacting(trx)
-
-            .then((rows) => {
-              if (rows.length <= 0) {
-                log.debug('result: no items');
-                resolve(new Array<T>());
-              } else {
-                const result = this.createModelInstances(rows);
-
-                if (log.isDebugEnabled) {
-                  const logResult = this.createModelInstances(Clone.clone(rows));
-                  //
-                  // falls wir User-Objekte gefunden haben, wird für das Logging
-                  // die Passwort-Info zurückgesetzt
-                  //
-                  if (logResult.length > 0) {
-                    if (Types.hasMethod(logResult[0], 'resetCredentials')) {
-                      logResult.forEach((item) => (item as any as IUser).resetCredentials());
-                    }
-                  }
-                  log.debug('result = ', logResult);
-                }
-
-                trx.commit();
-                resolve(result);
-              }
-            })
-            .catch((err) => {
-              log.error(err);
-
-              trx.rollback();
-              reject(this.createSystemException(err));
-            });
-        });     // transaction
-      });     // promise
-    });
-  }
 
 
   /**
@@ -244,14 +123,14 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
    */
   public update(
     subject: T
-  ): Promise<T> {
+  ): Promise<UpdateServiceResult<T>> {
 
     return using(new XLog(BaseService.logger, levels.INFO, 'update', `[${this.tableName}]`), (log) => {
       log.debug('subject: ', subject);
 
       const dbSubject = this.createDatabaseInstance(subject);
 
-      return new Promise<T>((resolve, reject) => {
+      return new Promise<UpdateServiceResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
           let delayMillisecs = 0;
@@ -323,10 +202,12 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
 
                       subject = this.createModelInstance(dbSubject);
 
+                      const entityVersion = -1;     // TODO
+
                       trx.commit();
 
                       log.debug('subject after commit: ', subject);
-                      resolve(subject);
+                      resolve(new UpdateServiceResult(subject, entityVersion));
                     }
                   } else {
                     if (affectedRows <= 0) {
@@ -340,10 +221,12 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
                     } else {
                       subject = this.createModelInstance(dbSubject);
 
+                      const entityVersion = -1;     // TODO
+
                       trx.commit();
 
                       log.debug('subject after commit: ', subject);
-                      resolve(subject);
+                      resolve(new UpdateServiceResult(subject, entityVersion));
                     }
                   }
                 })
@@ -372,10 +255,10 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
    */
   public delete(
     id: TId
-  ): Promise<ServiceResult<TId>> {
+  ): Promise<DeleteServiceResult<TId>> {
 
     return using(new XLog(BaseService.logger, levels.INFO, 'delete', `[${this.tableName}] id = ${id}`), (log) => {
-      return new Promise<ServiceResult<TId>>((resolve, reject) => {
+      return new Promise<DeleteServiceResult<TId>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
           this.fromTable()
@@ -386,16 +269,15 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
             .then((affectedRows: number) => {
               log.debug(`deleted from ${this.tableName} with id: ${id} (affectedRows: ${affectedRows})`);
 
-              const res = new ServiceResult<TId>(id);
-
               if (affectedRows <= 0) {
                 trx.rollback();
                 reject(this.createSystemException(
                   new EntityNotFoundException(`table: ${this.tableName}, id: ${id}`)));
               } else {
-                // TODO: serialize z.Zt. nicht kompatibel
+                const entityVersion = -1;     // TODO
+
                 trx.commit();
-                resolve(res);
+                resolve(new DeleteServiceResult(id, entityVersion));
               }
 
             })
@@ -411,134 +293,6 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
     });
   }
 
-
-  /**
-   * Führt die Query {query} aus und liefert ein Array von Entity-Instanzen vom Typ {T} als @see{Promise}
-   *
-   * @param {Knex.QueryBuilder} query
-   * @returns {Promise<T[]>}
-   *
-   * @memberOf ServiceBase
-   */
-  public queryKnex(
-    query: Knex.QueryBuilder
-  ): Promise<T[]> {
-
-    return using(new XLog(BaseService.logger, levels.INFO, 'queryKnex', `[${this.tableName}]`), (log) => {
-
-      return new Promise<T[]>((resolve, reject) => {
-        this.knexService.knex.transaction((trx) => {
-
-          query
-            .transacting(trx)
-
-            .then((rows) => {
-              if (rows.length <= 0) {
-                log.debug('result: no item found');
-
-                trx.commit();
-                resolve(new Array<T>());
-              } else {
-                const result = this.createModelInstances(rows);
-
-                if (log.isDebugEnabled) {
-                  const logResult = Clone.clone(result);
-                  //
-                  // falls wir User-Objekte gefunden haben, wird für das Logging
-                  // die Passwort-Info zurückgesetzt
-                  //
-                  if (logResult.length > 0) {
-                    if (Types.hasMethod(logResult[0], 'resetCredentials')) {
-                      logResult.forEach((item) => (item as any as IUser).resetCredentials());
-                    }
-                  }
-                  log.debug('result = ', logResult);
-                }
-
-                trx.commit();
-                resolve(result);
-              }
-            })
-            .catch((err) => {
-              log.error(err);
-
-              trx.rollback();
-              reject(this.createSystemException(err));
-            });
-
-        });     // transaction
-      });     // promise
-    });
-  }
-
-
-  public query(
-    query: IQuery
-  ): Promise<T[]> {
-    return using(new XLog(BaseService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
-      let knexQuery = this.fromTable();
-
-      const visitor = new KnexQueryVisitor(knexQuery, this.metadata);
-      query.term.accept(visitor);
-
-      return this.queryKnex(visitor.query(knexQuery));
-    });
-  }
-
-
-  /**
-   * Liefert die from(<table>) Clause für den aktuellen Tabellennamen
-   *
-   * @readonly
-   * @protected
-   * @type {Knex.QueryBuilder}
-   * @memberOf ServiceBase
-   */
-  public fromTable(): Knex.QueryBuilder {
-    return this.knexService.knex(this.tableName);
-  }
-
-
-  /**
-   * Liefert den DB-Id-Spaltennamen (primary key column)
-   *
-   * @readonly
-   * @type {string}
-   * @memberOf ServiceBase
-   */
-  public get idColumnName(): string {
-    if (!this.primaryKeyColumn) {
-      throw new InvalidOperationException(`Table ${this.tableName}: no primary key column`);
-    }
-    return this.primaryKeyColumn.options.name;
-  }
-
-
-  /**
-   * Setzt die "primary key" Spalte von "aussen". Diese wird als PK-Spalte verwendet, falls über die Metadaten
-   * keine primaryKeyColumn definiert ist (kommt aus dem Controller).
-   *
-   * @param {string} name
-   *
-   * @memberOf BaseService
-   */
-  public set idColumnName(name: string) {
-    Assert.notNullOrEmpty(name);
-
-    using(new XLog(BaseService.logger, levels.INFO, 'setIdColumn', `name = ${name}`), (log) => {
-      if (!this.primaryKeyColumn) {
-        const colMetadata = this.metadata.getColumnMetadataByProperty(name);
-        if (!colMetadata) {
-          const message = `Table ${this.tableName}: no (model) column with name: ${name}`;
-          BaseService.logger.error(`message`);
-          throw new InvalidOperationException(message);
-        }
-
-        log.warn(`Table ${this.tableName}: no primary key column: setting ${name} as primary key column`);
-        this.primaryKeyColumn = colMetadata;
-      }
-    });
-  }
 
 
 
@@ -546,82 +300,6 @@ export abstract class BaseService<T, TId extends IToString> implements IBaseServ
     return this.metadata.createDatabaseInstance<T>(entity);
   }
 
-  /**
-   * Erzeugt aus der DB-Row @param{row} (JSON) eine Modellinstanz vom Typ @see{T}
-   *
-   * @protected
-   * @param {*} row
-   * @returns {T}
-   *
-   * @memberOf BaseService
-   */
-  protected createModelInstance(row: any): T {
-    return this.metadata.createModelInstance<T>(row);
-  }
-
-  /**
-   * Erzeugt aus dem Array von DB-Rows @param{rows} (JSON) ein Array von Modellinstanzen vom Typ @see{T}
-   *
-   * @protected
-   * @param {any[]} rows
-   * @returns {T[]}
-   *
-   * @memberOf BaseService
-   */
-  protected createModelInstances(rows: any[]): T[] {
-    const result = new Array<T>();
-    for (const row of rows) {
-      result.push(this.metadata.createModelInstance<T>(row));
-    }
-    return result;
-  }
-
-
-  protected createBusinessException(error: string | IException | Error): IException {
-    return ExceptionWrapper.createBusinessException(error);
-  }
-
-  protected createSystemException(error: string | IException | Error): IException {
-    return ExceptionWrapper.createSystemException(error);
-  }
-
-
-
-  /**
-   * Serialisiert das @param{item} für die Übertragung zum Client über das REST-Api.
-   *
-   * @param {any} item
-   * @returns {any}
-   */
-  protected serialize<TSerialize>(item: TSerialize): any {
-    Assert.notNull(item);
-    return this.serializer.serialize(item);
-  }
-
-
-  /**
-   * Deserialisiert das Json-Objekt, welches über das REST-Api vom Client zum Server übertragen wurde
-   *
-   * @param {any} json - Json-Objekt vom Client
-   * @returns {any}
-   *
-   */
-  protected deserialize<TSerialize>(json: any): TSerialize {
-    Assert.notNull(json);
-    return this.serializer.deserialize<TSerialize>(json);
-  }
-
-
-  /**
-   * Liefert den DB-Tabellennamen
-   *
-   * @readonly
-   * @type {string}
-   * @memberOf ServiceBase
-   */
-  public get tableName(): string {
-    return this.metadata.tableName;
-  }
 
 
   /**

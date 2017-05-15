@@ -106,13 +106,13 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
        * ab der wir alle Test-Items löschen können
        */
       const item = eg.createItem();
-      KnexTest._service.create(item).then((it) => {
-        log.log(`created temp. entity: id = ${it.id}`);
+      KnexTest._service.create(item).then((result) => {
+        log.log(`created temp. entity: id = ${result.item.id}`);
 
-        KnexTest._firstTestId = it.id;
+        KnexTest._firstTestId = result.item.id;
 
         KnexTest._service.delete(KnexTest._firstTestId).then((rowsAffected) => {
-          log.log(`deleted temp. entity: id = ${it.id}`);
+          log.log(`deleted temp. entity: id = ${result.item.id}`);
 
           done();
         });
