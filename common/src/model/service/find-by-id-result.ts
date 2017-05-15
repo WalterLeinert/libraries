@@ -1,16 +1,16 @@
 import { IToString } from '@fluxgate/core';
 
-import { ServiceResultBase } from './service-result-base';
+import { ServiceResult } from './service-result';
 
 /**
  * Hilfsklasse für das Ergebnis des findById-Calls
  *
  * @export
- * @class FindByIdServiceResult
+ * @class FindByIdResult
  * @extends {ServiceResultBase}
  * @template TId
  */
-export class FindByIdServiceResult<T, TId extends IToString> extends ServiceResultBase {
+export class FindByIdResult<T, TId extends IToString> extends ServiceResult {
 
   constructor(private _item: T, entityVersion: number) {
     super(entityVersion);

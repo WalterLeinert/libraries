@@ -5,7 +5,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { FindByIdServiceResult, FindServiceResult, QueryServiceResult } from '@fluxgate/common';
+import { FindByIdResult, FindResult, QueryResult } from '@fluxgate/common';
 import { Assert, IQuery, IToString, JsonSerializer } from '@fluxgate/core';
 
 import { IFindService } from '../../services/find-service.interface';
@@ -46,8 +46,8 @@ export abstract class FindController<T, TId extends IToString> {
    */
   protected findByIdInternal(
     id: TId
-  ): Promise<FindByIdServiceResult<T, TId>> {
-    return new Promise<FindByIdServiceResult<T, TId>>((resolve, reject) => {
+  ): Promise<FindByIdResult<T, TId>> {
+    return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {
       this.service.findById(id).then((item) => {
         resolve(this.serialize(item));
       });
@@ -63,8 +63,8 @@ export abstract class FindController<T, TId extends IToString> {
    * @memberOf ControllerBase
    */
   protected findInternal(
-  ): Promise<FindServiceResult<T>> {
-    return new Promise<FindServiceResult<T>>((resolve, reject) => {
+  ): Promise<FindResult<T>> {
+    return new Promise<FindResult<T>>((resolve, reject) => {
       this.service.find().then((items) => {
         resolve(this.serialize(items));
       });
@@ -83,8 +83,8 @@ export abstract class FindController<T, TId extends IToString> {
    */
   protected queryInternal(
     query: IQuery
-  ): Promise<QueryServiceResult<T>> {
-    return new Promise<QueryServiceResult<T>>((resolve, reject) => {
+  ): Promise<QueryResult<T>> {
+    return new Promise<QueryResult<T>>((resolve, reject) => {
       const deserializedQuery = this.serializer.deserialize<IQuery>(query);
 
       this.service.query(deserializedQuery).then((result) => {

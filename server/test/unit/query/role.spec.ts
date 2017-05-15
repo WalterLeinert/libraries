@@ -19,7 +19,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  CreateServiceResult, DeleteServiceResult, FindByIdServiceResult, UpdateServiceResult, IRole, NumberIdGenerator,
+  CreateResult, DeleteResult, FindByIdResult, UpdateResult, IRole, NumberIdGenerator,
   Role, ServiceResultBase
 } from '@fluxgate/common';
 import { Clone, ICtor } from '@fluxgate/core';
@@ -55,7 +55,7 @@ class RoleTest extends KnexTest<Role, number> {
     const id = this.firstTestId + 1;
 
     const role = this.createRole(id);
-    const expectedRole = this.createExpectedRole(id, CreateServiceResult);
+    const expectedRole = this.createExpectedRole(id, CreateResult);
     return expect(this.service.create(role)).to.become(expectedRole);
   }
 
@@ -66,7 +66,7 @@ class RoleTest extends KnexTest<Role, number> {
   }
 
   @test 'should find new role'() {
-    const expectedRole = this.createExpectedRole(this.firstTestId + 1, FindByIdServiceResult);
+    const expectedRole = this.createExpectedRole(this.firstTestId + 1, FindByIdResult);
     return expect(this.service.findById(expectedRole.item.id))
       .to.become(expectedRole);
   }
@@ -74,7 +74,7 @@ class RoleTest extends KnexTest<Role, number> {
   @test 'should update new role'() {
     const id = this.firstTestId + 1;
 
-    const roleResult = this.createExpectedRole(id, UpdateServiceResult);
+    const roleResult = this.createExpectedRole(id, UpdateResult);
     roleResult.item.name = roleResult.item.name + '-updated';
     roleResult.item.description = roleResult.item.description + '-updated';
 
@@ -88,7 +88,7 @@ class RoleTest extends KnexTest<Role, number> {
   @test 'should create new role (2)'() {
     const id = this.firstTestId + 2;
     const role = this.createRole(id);
-    const expectedRole = this.createExpectedRole(id, CreateServiceResult);
+    const expectedRole = this.createExpectedRole(id, CreateResult);
     return expect(this.service.create(role)).to.become(expectedRole);
   }
 
@@ -128,7 +128,7 @@ class RoleTest extends KnexTest<Role, number> {
 
   @test 'should delete test role'() {
     const roleIdToDelete = this.firstTestId + 1;
-    const expected = new DeleteServiceResult(roleIdToDelete, -1);
+    const expected = new DeleteResult(roleIdToDelete, -1);
 
     return expect(this.service.delete(roleIdToDelete))
       .to.become(expected);

@@ -1,7 +1,7 @@
 import {  Controller, Get, PathParams } from 'ts-express-decorators';
 
 // Fluxgate
-import { EntityVersion, FindByIdServiceResult, FindServiceResult } from '@fluxgate/common';
+import { EntityVersion, FindByIdResult, FindResult } from '@fluxgate/common';
 
 import { EntityVersionService } from '../services/entityVersion.service';
 import { FindController } from './base/find-controller';
@@ -17,7 +17,7 @@ export class EntityVersionController extends FindController<EntityVersion, strin
   // @Authenticated()
   @Get('/')
   public find(
-    ): Promise<FindServiceResult<EntityVersion>> {
+    ): Promise<FindResult<EntityVersion>> {
     return super.findInternal();
   }
 
@@ -25,7 +25,7 @@ export class EntityVersionController extends FindController<EntityVersion, strin
   @Get('/:id')
   public findById(
     @PathParams('id') id: string
-    ): Promise<FindByIdServiceResult<EntityVersion, string>> {
+    ): Promise<FindByIdResult<EntityVersion, string>> {
     return super.findByIdInternal(id);
   }
 

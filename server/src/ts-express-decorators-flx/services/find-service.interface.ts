@@ -1,7 +1,7 @@
 import * as Knex from 'knex';
 
 // Fluxgate
-import { FindByIdServiceResult, FindServiceResult, QueryServiceResult } from '@fluxgate/common';
+import { FindByIdResult, FindResult, QueryResult } from '@fluxgate/common';
 import { IQuery, IToString } from '@fluxgate/core';
 
 
@@ -35,7 +35,7 @@ export interface IFindService<T, TId extends IToString> {
    */
   findById(
     id: TId
-  ): Promise<FindByIdServiceResult<T, TId>>;
+  ): Promise<FindByIdResult<T, TId>>;
 
 
   /**
@@ -46,7 +46,7 @@ export interface IFindService<T, TId extends IToString> {
    * @memberOf ServiceBase
    */
   find(
-  ): Promise<FindServiceResult<T>>;
+  ): Promise<FindResult<T>>;
 
 
   /**
@@ -59,12 +59,12 @@ export interface IFindService<T, TId extends IToString> {
    */
   queryKnex(
     query: Knex.QueryBuilder
-  ): Promise<QueryServiceResult<T>>;
+  ): Promise<QueryResult<T>>;
 
 
   query(
     query: IQuery
-  ): Promise<QueryServiceResult<T>>;
+  ): Promise<QueryResult<T>>;
 
 
   /**

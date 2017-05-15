@@ -1,14 +1,14 @@
-import { ServiceResultBase } from './service-result-base';
+import { ServiceResult } from './service-result';
 
 /**
  * Hilfsklasse für das Ergebnis des create-Calls
  *
  * @export
- * @class CreateServiceResult
+ * @class CreateResult
  * @extends {ServiceResultBase}
  * @template TId
  */
-export class CreateServiceResult<T> extends ServiceResultBase {
+export class CreateResult<T> extends ServiceResult {
 
   constructor(private _item: T, entityVersion: number) {
     super(entityVersion);

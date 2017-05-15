@@ -6,8 +6,8 @@ import {
 
 // Fluxgate
 import {
-  CreateServiceResult, DeleteServiceResult, FindByIdServiceResult, FindServiceResult, QueryServiceResult,
-  Role, UpdateServiceResult
+  CreateResult, DeleteResult, FindByIdResult, FindResult, QueryResult,
+  Role, UpdateResult
 } from '@fluxgate/common';
 import { IQuery } from '@fluxgate/core';
 
@@ -25,14 +25,14 @@ export class RoleController extends ControllerBase<Role, number> {
   @Post('/')
   public create(
     @Request() request: Express.Request
-    ): Promise<CreateServiceResult<Role>> {
+    ): Promise<CreateResult<Role>> {
     return super.createInternal((request as any).body as Role);
   }
 
   // @Authenticated()
   @Get('/')
   public find(
-    ): Promise<FindServiceResult<Role>> {
+    ): Promise<FindResult<Role>> {
     return super.findInternal();
   }
 
@@ -40,7 +40,7 @@ export class RoleController extends ControllerBase<Role, number> {
   @Get('/:id')
   public findById(
     @PathParams('id') id: number
-    ): Promise<FindByIdServiceResult<Role, number>> {
+    ): Promise<FindByIdResult<Role, number>> {
     return super.findByIdInternal(id);
   }
 
@@ -49,7 +49,7 @@ export class RoleController extends ControllerBase<Role, number> {
   @Post('/')
   public query(
     @Request() request: Express.Request
-    ): Promise<QueryServiceResult<Role>> {
+    ): Promise<QueryResult<Role>> {
     return super.queryInternal((request as any).body as IQuery);
   }
 
@@ -57,7 +57,7 @@ export class RoleController extends ControllerBase<Role, number> {
   @Put('/')
   public update(
     @Request() request: Express.Request
-    ): Promise<UpdateServiceResult<Role>> {
+    ): Promise<UpdateResult<Role>> {
     return super.updateInternal((request as any).body as Role);
   }
 
@@ -65,7 +65,7 @@ export class RoleController extends ControllerBase<Role, number> {
   @Delete('/:id')
   public delete(
     @PathParams('id') id: number
-    ): Promise<DeleteServiceResult<number>> {
+    ): Promise<DeleteResult<number>> {
     return super.deleteInternal(id);
   }
 }

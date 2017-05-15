@@ -1,16 +1,16 @@
 import { IToString } from '@fluxgate/core';
 
-import { ServiceResultBase } from './service-result-base';
+import { ServiceResult } from './service-result';
 
 /**
  * Hilfsklasse für das Ergebnis des delete-Calls
  *
  * @export
- * @class DeleteServiceResult
+ * @class DeleteResult
  * @extends {ServiceResultBase}
  * @template TId
  */
-export class DeleteServiceResult<TId extends IToString> extends ServiceResultBase {
+export class DeleteResult<TId extends IToString> extends ServiceResult {
 
   constructor(private _id: TId, entityVersion: number) {
     super(entityVersion);

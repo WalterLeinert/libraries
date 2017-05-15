@@ -11,7 +11,7 @@ import {
 } from '@fluxgate/core';
 
 import {
-  CreateServiceResult, DeleteServiceResult, UpdateServiceResult
+  CreateResult, DeleteResult, UpdateResult
 } from '@fluxgate/common';
 
 
@@ -58,7 +58,7 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
    */
   public create(
     subject: T
-  ): Promise<CreateServiceResult<T>> {
+  ): Promise<CreateResult<T>> {
 
     return using(new XLog(BaseService.logger, levels.INFO, 'create', `[${this.tableName}]`), (log) => {
       if (log.isDebugEnabled) {
@@ -71,7 +71,7 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
         log.debug('dbSubject: ', dbSubject);
       }
 
-      return new Promise<CreateServiceResult<T>>((resolve, reject) => {
+      return new Promise<CreateResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
           this.fromTable()
@@ -97,7 +97,7 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
                 const entityVersion = -1;     // TODO
 
                 trx.commit();
-                resolve(new CreateServiceResult(subject, entityVersion));
+                resolve(new CreateResult(subject, entityVersion));
               }
             })
             .catch((err) => {
@@ -123,14 +123,14 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
    */
   public update(
     subject: T
-  ): Promise<UpdateServiceResult<T>> {
+  ): Promise<UpdateResult<T>> {
 
     return using(new XLog(BaseService.logger, levels.INFO, 'update', `[${this.tableName}]`), (log) => {
       log.debug('subject: ', subject);
 
       const dbSubject = this.createDatabaseInstance(subject);
 
-      return new Promise<UpdateServiceResult<T>>((resolve, reject) => {
+      return new Promise<UpdateResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
           let delayMillisecs = 0;
@@ -207,7 +207,7 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
                       trx.commit();
 
                       log.debug('subject after commit: ', subject);
-                      resolve(new UpdateServiceResult(subject, entityVersion));
+                      resolve(new UpdateResult(subject, entityVersion));
                     }
                   } else {
                     if (affectedRows <= 0) {
@@ -226,7 +226,7 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
                       trx.commit();
 
                       log.debug('subject after commit: ', subject);
-                      resolve(new UpdateServiceResult(subject, entityVersion));
+                      resolve(new UpdateResult(subject, entityVersion));
                     }
                   }
                 })
@@ -255,10 +255,10 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
    */
   public delete(
     id: TId
-  ): Promise<DeleteServiceResult<TId>> {
+  ): Promise<DeleteResult<TId>> {
 
     return using(new XLog(BaseService.logger, levels.INFO, 'delete', `[${this.tableName}] id = ${id}`), (log) => {
-      return new Promise<DeleteServiceResult<TId>>((resolve, reject) => {
+      return new Promise<DeleteResult<TId>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
           this.fromTable()
@@ -277,7 +277,7 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
                 const entityVersion = -1;     // TODO
 
                 trx.commit();
-                resolve(new DeleteServiceResult(id, entityVersion));
+                resolve(new DeleteResult(id, entityVersion));
               }
 
             })

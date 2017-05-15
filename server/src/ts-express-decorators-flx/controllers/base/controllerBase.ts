@@ -5,7 +5,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { CreateServiceResult, DeleteServiceResult, UpdateServiceResult } from '@fluxgate/common';
+import { CreateResult, DeleteResult, UpdateResult } from '@fluxgate/common';
 import { IToString } from '@fluxgate/core';
 
 import { IBaseService } from '../../services/baseService.interface';
@@ -42,8 +42,8 @@ export abstract class ControllerBase<T, TId extends IToString> extends FindContr
    */
   protected createInternal(
     subject: T
-  ): Promise<CreateServiceResult<T>> {
-    return new Promise<CreateServiceResult<T>>((resolve, reject) => {
+  ): Promise<CreateResult<T>> {
+    return new Promise<CreateResult<T>>((resolve, reject) => {
       const deserializedSubject = this.deserialize<T>(subject);
       this.service.create(deserializedSubject).then((item) => {
         resolve(this.serialize(item));
@@ -62,8 +62,8 @@ export abstract class ControllerBase<T, TId extends IToString> extends FindContr
    */
   protected updateInternal(
     subject: T
-  ): Promise<UpdateServiceResult<T>> {
-    return new Promise<UpdateServiceResult<T>>((resolve, reject) => {
+  ): Promise<UpdateResult<T>> {
+    return new Promise<UpdateResult<T>>((resolve, reject) => {
       const deserializedSubject = this.deserialize<T>(subject);
       this.service.update(deserializedSubject).then((item) => {
         resolve(this.serialize(item));
@@ -82,8 +82,8 @@ export abstract class ControllerBase<T, TId extends IToString> extends FindContr
    */
   protected deleteInternal(
     id: TId
-  ): Promise<DeleteServiceResult<TId>> {
-    return new Promise<DeleteServiceResult<TId>>((resolve, reject) => {
+  ): Promise<DeleteResult<TId>> {
+    return new Promise<DeleteResult<TId>>((resolve, reject) => {
       this.service.delete(id).then((result) => {
         resolve(this.serialize(result));
       });

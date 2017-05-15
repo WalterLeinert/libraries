@@ -14,9 +14,9 @@ import {
 } from '@fluxgate/core';
 
 import {
-  ColumnMetadata, ExceptionWrapper, FindByIdServiceResult, FindServiceResult,
+  ColumnMetadata, ExceptionWrapper, FindByIdResult, FindResult,
   IUser,
-  QueryServiceResult, TableMetadata
+  QueryResult, TableMetadata
 } from '@fluxgate/common';
 
 
@@ -77,11 +77,11 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
    */
   public findById(
     id: TId
-  ): Promise<FindByIdServiceResult<T, TId>> {
+  ): Promise<FindByIdResult<T, TId>> {
 
     return using(new XLog(FindService.logger, levels.INFO, 'findById', `[${this.tableName}] id = ${id}`), (log) => {
 
-      return new Promise<FindByIdServiceResult<T, TId>>((resolve, reject) => {
+      return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
           this.fromTable()
@@ -111,7 +111,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
                 const entityVersion = -1;     // TODO
 
                 trx.commit();
-                resolve(new FindByIdServiceResult(result, entityVersion));
+                resolve(new FindByIdResult(result, entityVersion));
               }
             })
             .catch((err) => {
@@ -135,10 +135,10 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
    * @memberOf ServiceBase
    */
   public find(
-  ): Promise<FindServiceResult<T>> {
+  ): Promise<FindResult<T>> {
     return using(new XLog(FindService.logger, levels.INFO, 'find', `[${this.tableName}]`), (log) => {
 
-      return new Promise<FindServiceResult<T>>((resolve, reject) => {
+      return new Promise<FindResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
           this.fromTable()
@@ -147,7 +147,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
             .then((rows) => {
               if (rows.length <= 0) {
                 log.debug('result: no items');
-                resolve(new FindServiceResult([], undefined));
+                resolve(new FindResult([], undefined));
               } else {
                 const result = this.createModelInstances(rows);
 
@@ -168,7 +168,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
                 const entityVersion = -1;     // TODO
 
                 trx.commit();
-                resolve(new FindServiceResult(result, entityVersion));
+                resolve(new FindResult(result, entityVersion));
               }
             })
             .catch((err) => {
@@ -193,11 +193,11 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
    */
   public queryKnex(
     query: Knex.QueryBuilder
-  ): Promise<QueryServiceResult<T>> {
+  ): Promise<QueryResult<T>> {
 
     return using(new XLog(FindService.logger, levels.INFO, 'queryKnex', `[${this.tableName}]`), (log) => {
 
-      return new Promise<QueryServiceResult<T>>((resolve, reject) => {
+      return new Promise<QueryResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
           query
@@ -208,7 +208,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
                 log.debug('result: no item found');
 
                 trx.commit();
-                resolve(new QueryServiceResult([], undefined));
+                resolve(new QueryResult([], undefined));
               } else {
                 const result = this.createModelInstances(rows);
 
@@ -229,7 +229,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
                 const entityVersion = -1;     // TODO
 
                 trx.commit();
-                resolve(new QueryServiceResult(result, entityVersion));
+                resolve(new QueryResult(result, entityVersion));
               }
             })
             .catch((err) => {
@@ -247,7 +247,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
 
   public query(
     query: IQuery
-  ): Promise<QueryServiceResult<T>> {
+  ): Promise<QueryResult<T>> {
     return using(new XLog(FindService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
       let knexQuery = this.fromTable();
 

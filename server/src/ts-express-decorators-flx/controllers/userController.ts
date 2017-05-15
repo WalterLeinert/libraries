@@ -6,8 +6,8 @@ import {
 
 // Fluxgate
 import {
-  CreateServiceResult, DeleteServiceResult, FindByIdServiceResult, FindServiceResult, QueryServiceResult,
-  UpdateServiceResult, User
+  CreateResult, DeleteResult, FindByIdResult, FindResult, QueryResult,
+  UpdateResult, User
 } from '@fluxgate/common';
 import { IQuery } from '@fluxgate/core';
 
@@ -25,7 +25,7 @@ export class UserController extends ControllerBase<User, number> {
   @Post('/')
   public create(
     @Request() request: Express.Request
-    ): Promise<CreateServiceResult<User>> {
+    ): Promise<CreateResult<User>> {
     return super.createInternal((request as any).body as User);
   }
 
@@ -33,7 +33,7 @@ export class UserController extends ControllerBase<User, number> {
   // @Authenticated()
   @Get('/')
   public find(
-    ): Promise<FindServiceResult<User>> {
+    ): Promise<FindResult<User>> {
     return super.findInternal();
   }
 
@@ -41,7 +41,7 @@ export class UserController extends ControllerBase<User, number> {
   @Get('/:id')
   public findById(
     @PathParams('id') id: number
-    ): Promise<FindByIdServiceResult<User, number>> {
+    ): Promise<FindByIdResult<User, number>> {
     return super.findByIdInternal(id);
   }
 
@@ -50,7 +50,7 @@ export class UserController extends ControllerBase<User, number> {
   @Post('/')
   public query(
     @Request() request: Express.Request
-    ): Promise<QueryServiceResult<User>> {
+    ): Promise<QueryResult<User>> {
     return super.queryInternal((request as any).body as IQuery);
   }
 
@@ -59,7 +59,7 @@ export class UserController extends ControllerBase<User, number> {
   @Put('/')
   public update(
     @Request() request: Express.Request
-    ): Promise<UpdateServiceResult<User>> {
+    ): Promise<UpdateResult<User>> {
     return super.updateInternal((request as any).body as User);
   }
 
@@ -67,7 +67,7 @@ export class UserController extends ControllerBase<User, number> {
   @Delete('/:id')
   public delete(
     @PathParams('id') id: number
-    ): Promise<DeleteServiceResult<number>> {
+    ): Promise<DeleteResult<number>> {
     return super.deleteInternal(id);
   }
 }

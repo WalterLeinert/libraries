@@ -7,13 +7,13 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { Assert, IQuery } from '@fluxgate/core';
 
-import { CreateServiceResult } from './create-service-result';
-import { DeleteServiceResult } from './delete-service-result';
-import { FindByIdServiceResult } from './find-by-id-service-result';
-import { FindServiceResult } from './find-service-result';
-import { QueryServiceResult } from './query-service-result';
+import { CreateResult } from './create-result';
+import { DeleteResult } from './delete-result';
+import { FindByIdResult } from './find-by-id-result';
+import { FindResult } from './find-result';
+import { QueryResult } from './query-result';
 import { IService } from './service.interface';
-import { UpdateServiceResult } from './update-service-result';
+import { UpdateResult } from './update-result';
 
 /**
  * Proxy für REST-Api Services.
@@ -30,37 +30,37 @@ export class ServiceProxy<T, TId> implements IService<T, TId> {
     Assert.notNull(_service);
   }
 
-  public create(item: T): Observable<CreateServiceResult<T>> {
+  public create(item: T): Observable<CreateResult<T>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'create'), (log) => {
       return this.service.create(item);
     });
   }
 
-  public query(query: IQuery): Observable<QueryServiceResult<T>> {
+  public query(query: IQuery): Observable<QueryResult<T>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'query'), (log) => {
       return this.service.query(query);
     });
   }
 
-  public find(): Observable<FindServiceResult<T>> {
+  public find(): Observable<FindResult<T>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'find'), (log) => {
       return this.service.find();
     });
   }
 
-  public findById(id: TId): Observable<FindByIdServiceResult<T, TId>> {
+  public findById(id: TId): Observable<FindByIdResult<T, TId>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'findById'), (log) => {
       return this.service.findById(id);
     });
   }
 
-  public delete(id: TId): Observable<DeleteServiceResult<TId>> {
+  public delete(id: TId): Observable<DeleteResult<TId>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'delete'), (log) => {
       return this.service.delete(id);
     });
   }
 
-  public update(item: T): Observable<UpdateServiceResult<T>> {
+  public update(item: T): Observable<UpdateResult<T>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'update'), (log) => {
       return this.service.update(item);
     });

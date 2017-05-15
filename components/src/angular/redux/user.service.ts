@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
 
 // Fluxgate
 import { ConfigService, MetadataService, Service } from '@fluxgate/client';
-import { TableService, UpdateServiceResult, User } from '@fluxgate/common';
+import { TableService, UpdateResult, User } from '@fluxgate/common';
 
 
 /**
@@ -32,7 +32,7 @@ export class UserService extends Service<User, number> {
    *
    * @param user
    */
-  public setDeleted(user: User): Observable<UpdateServiceResult<User>> {
+  public setDeleted(user: User): Observable<UpdateResult<User>> {
     user.deleted = true;
     return super.update(user);
   }

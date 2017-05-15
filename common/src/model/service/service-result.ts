@@ -1,19 +1,13 @@
-export enum Status {
-  Ok,
-  Error
-}
-
-
 /**
  * Hilfsklasse für das Ergebnis der Rest-API-Calls
  * Bei jedem Call wird auch der aktuelle Stand der EntityVersion für die Entity geliefert, damit wir in
  * EntityVersionProxy über den letzten Stand der EntityVersion Optimierungen bei den Serice-calls durchführen können.
  *
  * @export
- * @interface IServiceResult
+ * @class ServiceResult
  * @template TId
  */
-export abstract class ServiceResultBase {
+export abstract class ServiceResult {
 
   /**
    * Creates an instance of ServiceResult.

@@ -8,8 +8,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  AppRegistry, IUser, Role, User, CreateServiceResult, FindByIdServiceResult, FindServiceResult,
-  DeleteServiceResult, UpdateServiceResult, QueryServiceResult
+  AppRegistry, IUser, Role, User, CreateResult, FindByIdResult, FindResult,
+  DeleteResult, UpdateResult, QueryResult
 } from '@fluxgate/common';
 import { Assert, Encryption, Funktion, IQuery, SelectorTerm, Types } from '@fluxgate/core';
 
@@ -30,8 +30,8 @@ export class UserService extends BaseService<IUser, number> {
   // ----------------------------------------------------------------
   // überschriebene Methoden (Passwort-Info zurücksetzen bzw. User anlegen)
   // ----------------------------------------------------------------
-  public findById(id: number): Promise<FindByIdServiceResult<IUser, number>> {
-    return new Promise<FindByIdServiceResult<IUser, number>>((resolve, reject) => {
+  public findById(id: number): Promise<FindByIdResult<IUser, number>> {
+    return new Promise<FindByIdResult<IUser, number>>((resolve, reject) => {
       super.findById(id)
         .then((result) => {
           result.item.resetCredentials();
@@ -43,8 +43,8 @@ export class UserService extends BaseService<IUser, number> {
     });
   }
 
-  public find(): Promise<FindServiceResult<IUser>> {
-    return new Promise<FindServiceResult<IUser>>((resolve, reject) => {
+  public find(): Promise<FindResult<IUser>> {
+    return new Promise<FindResult<IUser>>((resolve, reject) => {
       super.find()
         .then((result) => {
           result.items.forEach((user) => {
@@ -58,11 +58,11 @@ export class UserService extends BaseService<IUser, number> {
     });
   }
 
-  public update(user: IUser): Promise<UpdateServiceResult<IUser>> {
+  public update(user: IUser): Promise<UpdateResult<IUser>> {
     if (user.role) {
       Assert.that(Role.isValidRole(user.role));
     }
-    return new Promise<UpdateServiceResult<IUser>>((resolve, reject) => {
+    return new Promise<UpdateResult<IUser>>((resolve, reject) => {
       super.update(user)
         .then((result) => {
           result.item.resetCredentials();
@@ -84,12 +84,12 @@ export class UserService extends BaseService<IUser, number> {
    *
    * @memberOf UserService
    */
-  public create(user: IUser): Promise<CreateServiceResult<IUser>> {
+  public create(user: IUser): Promise<CreateResult<IUser>> {
     Assert.that(Role.isValidRole(user.role));
 
     user.password_salt = shortid.gen();
 
-    return new Promise<CreateServiceResult<IUser>>((resolve, reject) => {
+    return new Promise<CreateResult<IUser>>((resolve, reject) => {
       Encryption.hashPassword(user.password, user.password_salt, (err, encryptedPassword) => {
         if (err) {
           reject(this.createSystemException(err));
@@ -114,12 +114,12 @@ export class UserService extends BaseService<IUser, number> {
    *
    * @memberOf UserService
    */
-  public changePassword(user: IUser): Promise<UpdateServiceResult<IUser>> {
+  public changePassword(user: IUser): Promise<UpdateResult<IUser>> {
     Assert.that(Role.isValidRole(user.role));
 
     user.password_salt = shortid.gen();
 
-    return new Promise<UpdateServiceResult<IUser>>((resolve, reject) => {
+    return new Promise<UpdateResult<IUser>>((resolve, reject) => {
       Encryption.hashPassword(user.password, user.password_salt, (err, encryptedPassword) => {
         if (err) {
           reject(this.createSystemException(err));

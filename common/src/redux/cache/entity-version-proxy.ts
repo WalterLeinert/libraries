@@ -11,14 +11,14 @@ import { IQuery, IToString } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
-import { CreateServiceResult } from '../../model/service/create-service-result';
-import { DeleteServiceResult } from '../../model/service/delete-service-result';
-import { FindByIdServiceResult } from '../../model/service/find-by-id-service-result';
-import { FindServiceResult } from '../../model/service/find-service-result';
-import { QueryServiceResult } from '../../model/service/query-service-result';
+import { CreateResult } from '../../model/service/create-result';
+import { DeleteResult } from '../../model/service/delete-result';
+import { FindByIdResult } from '../../model/service/find-by-id-result';
+import { FindResult } from '../../model/service/find-result';
+import { QueryResult } from '../../model/service/query-result';
 import { ServiceProxy } from '../../model/service/service-proxy';
 import { IService } from '../../model/service/service.interface';
-import { UpdateServiceResult } from '../../model/service/update-service-result';
+import { UpdateResult } from '../../model/service/update-result';
 import { EntityVersionCache, EntityVersionCacheEntry } from './entity-version-cache';
 
 /**
@@ -44,16 +44,16 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
    *
    * @template T
    * @param {T} item
-   * @returns {Observable<CreateServiceResult<T>>}
+   * @returns {Observable<CreateResult<T>>}
    *
    * @memberof EntityVersionProxy
    */
-  public create<T extends IEntity<TId>, TId extends IToString>(item: T): Observable<CreateServiceResult<T>> {
+  public create<T extends IEntity<TId>, TId extends IToString>(item: T): Observable<CreateResult<T>> {
     return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'create', `[${this.getTableName()}]`), (log) => {
 
-      return Observable.create((observer: Subscriber<CreateServiceResult<T>>) => {
+      return Observable.create((observer: Subscriber<CreateResult<T>>) => {
 
-        super.create(item).subscribe((createResult: CreateServiceResult<T>) => {
+        super.create(item).subscribe((createResult: CreateResult<T>) => {
           const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
           if (log.isDebugEnabled()) {
@@ -87,11 +87,11 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
    *
    * @template T
    * @param {IQuery} query
-   * @returns {Observable<QueryServiceResult<T>>}
+   * @returns {Observable<QueryResult<T>>}
    *
    * @memberof EntityVersionProxy
    */
-  public query<T>(query: IQuery): Observable<QueryServiceResult<T>> {
+  public query<T>(query: IQuery): Observable<QueryResult<T>> {
     return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'query', `[${this.getTableName()}]`), (log) => {
       return super.query(query);
     });
@@ -102,14 +102,14 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
    * Liefert alle Entities, ggf. aus dem Cache und aktualisiert den Cache
    *
    * @template T
-   * @returns {Observable<FindServiceResult<T>>}
+   * @returns {Observable<FindResult<T>>}
    *
    * @memberof EntityVersionProxy
    */
-  public find<T>(): Observable<FindServiceResult<T>> {
+  public find<T>(): Observable<FindResult<T>> {
     return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'find', `[${this.getTableName()}]`), (log) => {
 
-      return Observable.create((observer: Subscriber<FindServiceResult<T>>) => {
+      return Observable.create((observer: Subscriber<FindResult<T>>) => {
 
         const finder = (lg: XLog, ev: EntityVersion, message: string) => {
           super.find().subscribe((findResult) => {
@@ -150,7 +150,7 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
                   `cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}]`);
               }
 
-              observer.next(new FindServiceResult<T>(cacheEntry.items, cacheEntry.version));
+              observer.next(new FindResult<T>(cacheEntry.items, cacheEntry.version));
             }
           } else {
             finder(log, entityVersionResult.item, 'no cache yet');
@@ -169,18 +169,18 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
    * @template T
    * @template TId
    * @param {TId} id
-   * @returns {Observable<FindByIdServiceResult>}
+   * @returns {Observable<FindByIdResult>}
    *
    * @memberof EntityVersionProxy
    */
-  public findById<T extends IEntity<TId>, TId extends IToString>(id: TId): Observable<FindByIdServiceResult<T, TId>> {
+  public findById<T extends IEntity<TId>, TId extends IToString>(id: TId): Observable<FindByIdResult<T, TId>> {
     return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'findById', `[${this.getTableName()}]: id = ${id}`),
       (log) => {
 
-        return Observable.create((observer: Subscriber<FindByIdServiceResult<T, TId>>) => {
+        return Observable.create((observer: Subscriber<FindByIdResult<T, TId>>) => {
 
           const finder = (lg: XLog, ev: EntityVersion, findId: TId, items: T[], message: string) => {
-            super.findById(findId).subscribe((findByIdResult: FindByIdServiceResult<T, TId>) => {
+            super.findById(findId).subscribe((findByIdResult: FindByIdResult<T, TId>) => {
               const itemsFiltered = items.map((e) => e.id === findByIdResult.item.id ? findByIdResult : e);
               this.updateCache(lg, findByIdResult.entityVersion, itemsFiltered, message);
               observer.next(findByIdResult);
@@ -215,7 +215,7 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
                 if (log.isDebugEnabled()) {
                   log.debug(`item already cached`);
                 }
-                observer.next(new FindByIdServiceResult<T, TId>(item, cacheEntry.version));
+                observer.next(new FindByIdResult<T, TId>(item, cacheEntry.version));
               }
             } else {
               // noch nie gecached -> findById + update cache
@@ -233,15 +233,15 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
    * @template T
    * @template TId
    * @param {TId} id
-   * @returns {Observable<DeleteServiceResult<TId>>}
+   * @returns {Observable<DeleteResult<TId>>}
    *
    * @memberof EntityVersionProxy
    */
-  public delete<T extends IEntity<TId>, TId extends IToString>(id: TId): Observable<DeleteServiceResult<TId>> {
+  public delete<T extends IEntity<TId>, TId extends IToString>(id: TId): Observable<DeleteResult<TId>> {
     return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'delete', `[${this.getTableName()}]: id = ${id}`),
       (log) => {
 
-        return Observable.create((observer: Subscriber<DeleteServiceResult<TId>>) => {
+        return Observable.create((observer: Subscriber<DeleteResult<TId>>) => {
 
           super.delete(id).subscribe((deleteResult) => {
             const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
@@ -274,20 +274,20 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
    *
    * @template T
    * @param {T} item
-   * @returns {Observable<UpdateServiceResult<T>>}
+   * @returns {Observable<UpdateResult<T>>}
    *
    * @memberof EntityVersionProxy
    */
-  public update<T extends IEntity<TId>, TId extends IToString>(item: T): Observable<UpdateServiceResult<T>> {
+  public update<T extends IEntity<TId>, TId extends IToString>(item: T): Observable<UpdateResult<T>> {
     return using(new XLog(EntityVersionProxy.logger, levels.INFO,
       'update', `[${this.getTableName()}]: id = ${item.id}`), (log) => {
 
-        return Observable.create((observer: Subscriber<UpdateServiceResult<T>>) => {
+        return Observable.create((observer: Subscriber<UpdateResult<T>>) => {
 
           //
           // update immer durchführen, aber danach items und entityVersion aktualisieren
           //
-          super.update(item).subscribe((updateResult: UpdateServiceResult<T>) => {
+          super.update(item).subscribe((updateResult: UpdateResult<T>) => {
             const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
             if (log.isDebugEnabled()) {

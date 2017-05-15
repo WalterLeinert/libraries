@@ -1,6 +1,6 @@
 // Fluxgate
 import {
-  CreateServiceResult, DeleteServiceResult, UpdateServiceResult
+  CreateResult, DeleteResult, UpdateResult
 } from '@fluxgate/common';
 import { IToString } from '@fluxgate/core';
 
@@ -49,7 +49,7 @@ export interface IBaseService<T, TId extends IToString> extends IFindService<T, 
    */
   create(
     subject: T
-  ): Promise<CreateServiceResult<T>>;
+  ): Promise<CreateResult<T>>;
 
 
   /**
@@ -62,7 +62,7 @@ export interface IBaseService<T, TId extends IToString> extends IFindService<T, 
    */
   update(
     subject: T
-  ): Promise<UpdateServiceResult<T>>;
+  ): Promise<UpdateResult<T>>;
 
 
   /**
@@ -75,6 +75,6 @@ export interface IBaseService<T, TId extends IToString> extends IFindService<T, 
    */
   delete(
     id: TId
-  ): Promise<DeleteServiceResult<TId>>;
+  ): Promise<DeleteResult<TId>>;
 
 }
