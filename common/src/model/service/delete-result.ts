@@ -1,4 +1,4 @@
-import { IToString } from '@fluxgate/core';
+import { IToString, Serializable } from '@fluxgate/core';
 
 import { ServiceResult } from './service-result';
 
@@ -10,6 +10,7 @@ import { ServiceResult } from './service-result';
  * @extends {ServiceResult}
  * @template TId
  */
+@Serializable()
 export class DeleteResult<TId extends IToString> extends ServiceResult {
 
   constructor(private _id: TId, entityVersion: number) {

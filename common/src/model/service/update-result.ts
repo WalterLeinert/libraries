@@ -1,3 +1,5 @@
+import { Serializable } from '@fluxgate/core';
+
 import { ServiceResult } from './service-result';
 
 /**
@@ -8,6 +10,7 @@ import { ServiceResult } from './service-result';
  * @extends {ServiceResult}
  * @template TId
  */
+@Serializable()
 export class UpdateResult<T> extends ServiceResult {
 
   constructor(private _item: T, entityVersion: number) {

@@ -1,3 +1,5 @@
+import { Serializable } from '@fluxgate/core';
+
 /**
  * Hilfsklasse für das Ergebnis der Rest-API-Calls
  * Bei jedem Call wird auch der aktuelle Stand der EntityVersion für die Entity geliefert, damit wir in
@@ -7,6 +9,8 @@
  * @class ServiceResult
  * @template TId
  */
+
+@Serializable()
 export abstract class ServiceResult {
 
   /**
