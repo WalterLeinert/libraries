@@ -23,12 +23,9 @@ export function Serializable(serializable: boolean = true) {
       Assert.that(serializable === true, `serialiable may not be set to false for classes`);
       SerializerMetadataStorage.instance.addClassMetadata(new ClassSerializerMetadata(target));
     } else {
-      let propertyType: any = (Reflect as any).getMetadata('design:type', target, propertyName);
-
-      // const pd = Reflect.getOwnPropertyDescriptor(target, propertyName);
 
       SerializerMetadataStorage.instance.addPropertyMetadata(
-        new PropertySerializerMetadata(target, propertyName, propertyType, serializable));
+        new PropertySerializerMetadata(target, propertyName, serializable));
     }
   };
 }

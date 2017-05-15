@@ -73,7 +73,7 @@ export class SerializerMetadataStorage {
         log.debug(`prop = ${prop}, pd = ${JSON.stringify(pd)}`);
 
         if (!propertyDict.containsKey(prop.toString())) {
-          metadata.add(new PropertySerializerMetadata(metadata.target, prop.toString(), 'any', true));
+          metadata.add(new PropertySerializerMetadata(metadata.target, prop.toString(),  true));
         }
       });
 
