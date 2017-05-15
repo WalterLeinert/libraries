@@ -44,7 +44,7 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
    *
    * @template T
    * @param {T} item
-   * @returns {Observable<T>}
+   * @returns {Observable<CreateServiceResult<T>>}
    *
    * @memberof EntityVersionProxy
    */
@@ -52,32 +52,29 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
     return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'create', `[${this.getTableName()}]`), (log) => {
 
       return Observable.create((observer: Subscriber<CreateServiceResult<T>>) => {
-        //
-        // findById immer durchführen, aber danach items und entityVersion aktualisieren
-        //
+
         super.create(item).subscribe((createResult: CreateServiceResult<T>) => {
-          this.entityVersionService.findById(this.getTableName()).subscribe((entityVersionResult) => {
-            const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
+          const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
+          if (log.isDebugEnabled()) {
+            log.debug(`entityVersion = ${createResult.entityVersion}`);
+          }
+
+          if (cacheEntry) {
             if (log.isDebugEnabled()) {
-              log.debug(`entityVersion = ${entityVersionResult.item.__version}`);
+              log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
             }
 
-            if (cacheEntry) {
-              if (log.isDebugEnabled()) {
-                log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
-              }
+            this.updateCache(log, createResult.entityVersion, [...cacheEntry.items, createResult.item],
+              'add item to cache');
 
-              this.updateCache(log, createResult.entityVersion, [...cacheEntry.items, createResult.item],
-                'add item to cache');
+          } else {
+            this.updateCache(log, createResult.entityVersion, [createResult.item], 'no cache yet');
+          }
 
-            } else {
-              this.updateCache(log, entityVersionResult.entityVersion, [createResult.item], 'no cache yet');
-            }
-
-            observer.next(createResult);
-          });
+          observer.next(createResult);
         });
+
       });
     });
   }
@@ -90,7 +87,7 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
    *
    * @template T
    * @param {IQuery} query
-   * @returns {Observable<T[]>}
+   * @returns {Observable<QueryServiceResult<T>>}
    *
    * @memberof EntityVersionProxy
    */
@@ -105,7 +102,7 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
    * Liefert alle Entities, ggf. aus dem Cache und aktualisiert den Cache
    *
    * @template T
-   * @returns {Observable<T[]>}
+   * @returns {Observable<FindServiceResult<T>>}
    *
    * @memberof EntityVersionProxy
    */
@@ -172,7 +169,7 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
    * @template T
    * @template TId
    * @param {TId} id
-   * @returns {Observable<T>}
+   * @returns {Observable<FindByIdServiceResult>}
    *
    * @memberof EntityVersionProxy
    */
@@ -236,7 +233,7 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
    * @template T
    * @template TId
    * @param {TId} id
-   * @returns {Observable<ServiceResult<TId>>}
+   * @returns {Observable<ServiceResult<DeleteServiceResult>>}
    *
    * @memberof EntityVersionProxy
    */
@@ -246,33 +243,27 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
 
         return Observable.create((observer: Subscriber<DeleteServiceResult<TId>>) => {
 
-          //
-          // delete immer durchführen, aber danach items und entityVersion aktualisieren
-          //
           super.delete(id).subscribe((deleteResult) => {
-            this.entityVersionService.findById(this.getTableName()).subscribe((entityVersionResult) => {
-              const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
+            const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
+            if (log.isDebugEnabled()) {
+              log.debug(`entityVersion = ${deleteResult.entityVersion}`);
+            }
+
+            if (cacheEntry) {
               if (log.isDebugEnabled()) {
-                log.debug(`entityVersion = ${entityVersionResult.item.__version}`);
+                log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
               }
 
-              if (cacheEntry) {
-                if (log.isDebugEnabled()) {
-                  log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
-                }
-
-                // Item entfernen
-                const itemsFiltered = cacheEntry.items.filter((e) => e.id !== deleteResult.id);
-                this.updateCache(log, deleteResult.entityVersion, itemsFiltered, 'delete item from cache');
-                observer.next(deleteResult);
-              } else {
-                this.updateCache(log, entityVersionResult.entityVersion, [], 'no cache yet');
-                observer.next(deleteResult);
-              }
-            });
+              // Item entfernen
+              const itemsFiltered = cacheEntry.items.filter((e) => e.id !== deleteResult.id);
+              this.updateCache(log, deleteResult.entityVersion, itemsFiltered, 'delete item from cache');
+              observer.next(deleteResult);
+            } else {
+              this.updateCache(log, deleteResult.entityVersion, [], 'no cache yet');
+              observer.next(deleteResult);
+            }
           });
-
         });
       });
   }
@@ -283,7 +274,7 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
    *
    * @template T
    * @param {T} item
-   * @returns {Observable<T>}
+   * @returns {Observable<UpdateServiceResult<T>>}
    *
    * @memberof EntityVersionProxy
    */
@@ -297,28 +288,26 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
           // update immer durchführen, aber danach items und entityVersion aktualisieren
           //
           super.update(item).subscribe((updateResult: UpdateServiceResult<T>) => {
-            this.entityVersionService.findById(this.getTableName()).subscribe((entityVersionResult) => {
-              const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
+            const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
+            if (log.isDebugEnabled()) {
+              log.debug(`entityVersion = ${updateResult.entityVersion}`);
+            }
+
+            if (cacheEntry) {
               if (log.isDebugEnabled()) {
-                log.debug(`entityVersion = ${entityVersionResult.item.__version}`);
+                log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
               }
 
-              if (cacheEntry) {
-                if (log.isDebugEnabled()) {
-                  log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
-                }
+              // Item ersetzen
+              const itemsFiltered = cacheEntry.items.map((e) => e.id === updateResult.item.id ? updateResult : e);
+              this.updateCache(log, updateResult.entityVersion, itemsFiltered, 'update item in cache');
+              observer.next(updateResult);
 
-                // Item ersetzen
-                const itemsFiltered = cacheEntry.items.map((e) => e.id === updateResult.item.id ? updateResult : e);
-                this.updateCache(log, updateResult.entityVersion, itemsFiltered, 'update item in cache');
-                observer.next(updateResult);
-
-              } else {
-                this.updateCache(log, entityVersionResult.entityVersion, [], 'no cache yet');
-                observer.next(updateResult);
-              }
-            });
+            } else {
+              this.updateCache(log, updateResult.entityVersion, [], 'no cache yet');
+              observer.next(updateResult);
+            }
           });
         });
       });
