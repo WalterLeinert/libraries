@@ -1,7 +1,5 @@
 import { Assert, Dictionary } from '@fluxgate/core';
 
-import { EntityVersion } from '../../model/entityVersion';
-
 export class EntityVersionCache {
   public static instance = new EntityVersionCache();
 
@@ -33,8 +31,8 @@ export class EntityVersionCacheEntry<T> {
   private _version: number;
   private _items: T[];
 
-  constructor(entityVersion: EntityVersion, items: T[]) {
-    this._version = entityVersion.__version;
+  constructor(version: number, items: T[]) {
+    this._version = version;
     this._items = [...items];
   }
 

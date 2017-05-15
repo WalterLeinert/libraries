@@ -103,8 +103,8 @@ class EnumTableTest {
     expect(serviceInstace).to.be.not.null;
     expect(Types.hasMethod(serviceInstace, 'find')).to.be.true;
 
-    serviceInstace.find().subscribe((items) => {
-      expect(items).to.deep.equal(KollektionEnumTable.ENUM_VALUES);
+    serviceInstace.find().subscribe((findResult) => {
+      expect(findResult.items).to.deep.equal(KollektionEnumTable.ENUM_VALUES);
     });
   }
 

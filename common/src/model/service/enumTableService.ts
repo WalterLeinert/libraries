@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Assert, IQuery, NotSupportedException } from '@fluxgate/core';
 
 import { TableMetadata } from '../metadata/tableMetadata';
+import { FindServiceResult } from './find-service-result';
 import { IService } from './service.interface';
 
 
@@ -28,8 +29,8 @@ export class EnumTableService implements IService<any, any> {
    *
    * @memberOf EnumTableService
    */
-  public find(): Observable<any[]> {
-    return Observable.of(this.enumValues);
+  public find(): Observable<FindServiceResult<any>> {
+    return Observable.of(new FindServiceResult<any>(this.enumValues, -1));
   }
 
   public getModelClassName(): string {
@@ -40,7 +41,7 @@ export class EnumTableService implements IService<any, any> {
     return this._tableMetadata.tableName;
   }
 
-  public query(query: IQuery): Observable<any[]> {
+  public query(query: IQuery): any {
     throw new NotSupportedException();
   }
 

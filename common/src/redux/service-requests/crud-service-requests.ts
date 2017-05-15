@@ -14,7 +14,6 @@ import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
 import { IService } from '../../model/service/service.interface';
 import { ProxyFactory } from '../cache/proxy-factory';
-import { ProxyModes } from '../cache/proxy-mode';
 import {
   CreatingItemCommand, DeletingItemCommand, ErrorCommand,
   FindingItemByIdCommand, FindingItemsCommand,
@@ -72,14 +71,14 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
         this.dispatch(new CreatingItemCommand(this, item));
 
         this.service.create(item).subscribe(
-          (elem) => {
-            this.dispatch(new ItemCreatedCommand(this, elem));
+          (createResult) => {
+            this.dispatch(new ItemCreatedCommand(this, createResult.item));
 
             // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
             // Update der Itemliste nach create
-            this.dispatch(new ItemsFoundCommand(this, [...this.getCrudState(this.storeId).items, elem]));
+            this.dispatch(new ItemsFoundCommand(this, [...this.getCrudState(this.storeId).items, createResult.item]));
 
-            observer.next(elem);
+            observer.next(createResult.item);
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));
@@ -104,9 +103,9 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
         this.dispatch(new QueryingItemsCommand(this, query));
 
         this.service.query(query).subscribe(
-          (items) => {
-            this.dispatch(new ItemsQueriedCommand(this, items));
-            observer.next(items);
+          (queryResult) => {
+            this.dispatch(new ItemsQueriedCommand(this, queryResult.items));
+            observer.next(queryResult.items);
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));
@@ -133,9 +132,9 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
         this.dispatch(new FindingItemsCommand(this));
 
         this.service.find().subscribe(
-          (items) => {
-            this.dispatch(new ItemsFoundCommand(this, items));
-            observer.next(items);
+          (findResult) => {
+            this.dispatch(new ItemsFoundCommand(this, findResult.items));
+            observer.next(findResult.items);
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));
@@ -164,9 +163,9 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
         this.dispatch(new FindingItemByIdCommand(this, id));
 
         this.service.findById(id).subscribe(
-          (elem) => {
-            this.dispatch(new ItemFoundByIdCommand(this, elem));
-            observer.next(elem);
+          (findByIdResult) => {
+            this.dispatch(new ItemFoundByIdCommand(this, findByIdResult.item));
+            observer.next(findByIdResult.item);
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));
@@ -193,15 +192,15 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
         this.dispatch(new UpdatingItemCommand(this, item));
 
         this.service.update(item).subscribe(
-          (elem) => {
-            this.dispatch(new ItemUpdatedCommand(this, elem));
+          (updateResult) => {
+            this.dispatch(new ItemUpdatedCommand(this, updateResult.item));
 
             // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
             // Update der Itemliste nach update
             this.dispatch(new ItemsFoundCommand(this,
-              this.getCrudState(this.storeId).items.map((it) => it.id !== item.id ? it : elem)));
+              this.getCrudState(this.storeId).items.map((it) => it.id !== item.id ? it : updateResult.item)));
 
-            observer.next(elem);
+            observer.next(updateResult.item);
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));
@@ -228,15 +227,15 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
         this.dispatch(new DeletingItemCommand(this, id));
 
         this.service.delete(id).subscribe(
-          (result) => {
-            this.dispatch(new ItemDeletedCommand(this, result.id));
+          (deleteResult) => {
+            this.dispatch(new ItemDeletedCommand(this, deleteResult.id));
 
             // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
             // Update der Itemliste nach delete
             this.dispatch(new ItemsFoundCommand(this,
-              this.getCrudState(this.storeId).items.filter((item) => item.id !== result.id)));
+              this.getCrudState(this.storeId).items.filter((item) => item.id !== deleteResult.id)));
 
-            observer.next(result.id);
+            observer.next(deleteResult.id);
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));

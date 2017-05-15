@@ -8,7 +8,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { Assert, IQuery } from '@fluxgate/core';
 
 import { IService } from './service.interface';
-import { ServiceResult } from './serviceResult';
+import { CreateServiceResult } from './create-service-result';
+import { DeleteServiceResult } from './delete-service-result';
+import { FindByIdServiceResult } from './find-by-id-service-result';
+import { FindServiceResult } from './find-service-result';
+import { QueryServiceResult } from './query-service-result';
+import { UpdateServiceResult } from './update-service-result';
 
 /**
  * Proxy für REST-Api Services.
@@ -25,37 +30,37 @@ export class ServiceProxy<T, TId> implements IService<T, TId> {
     Assert.notNull(_service);
   }
 
-  public create(item: T): Observable<T> {
+  public create(item: T): Observable<CreateServiceResult<T>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'create'), (log) => {
       return this.service.create(item);
     });
   }
 
-  public query(query: IQuery): Observable<T[]> {
+  public query(query: IQuery): Observable<QueryServiceResult<T>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'query'), (log) => {
       return this.service.query(query);
     });
   }
 
-  public find(): Observable<T[]> {
+  public find(): Observable<FindServiceResult<T>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'find'), (log) => {
       return this.service.find();
     });
   }
 
-  public findById(id: TId): Observable<T> {
+  public findById(id: TId): Observable<FindByIdServiceResult<T, TId>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'findById'), (log) => {
       return this.service.findById(id);
     });
   }
 
-  public delete(id: TId): Observable<ServiceResult<TId>> {
+  public delete(id: TId): Observable<DeleteServiceResult<TId>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'delete'), (log) => {
       return this.service.delete(id);
     });
   }
 
-  public update(item: T): Observable<T> {
+  public update(item: T): Observable<UpdateServiceResult<T>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'update'), (log) => {
       return this.service.update(item);
     });

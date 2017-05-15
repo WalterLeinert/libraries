@@ -6,7 +6,7 @@ import { TableOptions } from '../decorator/model/tableOptions.interface';
 import { IEntity } from '../entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { EnumTableService } from '../service/enumTableService';
-import { IServiceCrud } from '../service/serviceCrud.interface';
+import { IServiceCrud } from '../service/service-crud.interface';
 import { SpecialColumns } from './specialColumns';
 
 /**

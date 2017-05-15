@@ -91,8 +91,8 @@ class UpdateTest extends ReduxBaseTest<IUser, number, any> {
 
   protected before(done: (err?: any) => void) {
     super.before(() => {
-      this.serviceFake.findById(UpdateTest.UPDATE_ID).subscribe((item) => {
-        this.item = item;
+      this.serviceFake.findById(UpdateTest.UPDATE_ID).subscribe((findByIdResult) => {
+        this.item = findByIdResult.item;
 
         // snapshot vom Status
         this.beforeState = this.getStoreState();
@@ -101,7 +101,7 @@ class UpdateTest extends ReduxBaseTest<IUser, number, any> {
 
         this.itemExpected = Clone.clone(this.item);
         const itemToUpdate = Clone.clone(this.item);
-        itemToUpdate.username = item.username + '-updated';
+        itemToUpdate.username = findByIdResult.item.username + '-updated';
 
         this.itemExpected.username = itemToUpdate.username;
         this.itemExpected.__version++;

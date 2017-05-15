@@ -64,9 +64,9 @@ class CreateTest extends ReduxBaseTest<IUser, number, any> {
 
 
   @test 'should exist one more item'(done: (err?: any) => void) {
-    this.serviceFake.find().subscribe((items) => {
-      if (items.length !== this.beforeState.items.length + 1) {
-        done(new Error(`items.length (${items.length}) !== this.beforeState.items.length + 1` +
+    this.serviceFake.find().subscribe((findResult) => {
+      if (findResult.items.length !== this.beforeState.items.length + 1) {
+        done(new Error(`items.length (${findResult.items.length}) !== this.beforeState.items.length + 1` +
           ` (${this.beforeState.items.length + 1})`));
       } else {
         done();

@@ -1,5 +1,5 @@
+import { IServiceCrud } from './service-crud.interface';
 import { IServiceBase } from './serviceBase.interface';
-import { IServiceCrud } from './serviceCrud.interface';
 
 /**
  * Interface für alle Services
