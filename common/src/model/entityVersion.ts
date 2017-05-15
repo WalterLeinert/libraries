@@ -1,5 +1,6 @@
 import { Column } from '../model/decorator/model/column';
 import { Table } from '../model/decorator/model/table';
+import { Version } from '../model/decorator/model/version';
 import { IEntity } from './entity.interface';
 import { IVersionedEntity } from './versioned-entity.interface';
 
@@ -13,6 +14,7 @@ export class EntityVersion implements IEntity<string>, IVersionedEntity {
   @Column({ name: 'entityversion_id', primary: true, displayName: 'EntityVersionId' })
   public id: string;
 
+  @Version()
   @Column({ name: 'entityversion_version', displayName: 'Version' })
   public __version: number;
 }
