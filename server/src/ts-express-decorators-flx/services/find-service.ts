@@ -7,7 +7,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  Assert, Clone, Funktion,
+  Assert, Clone, Funktion, ICtor,
   IException, InvalidOperationException,
   IQuery, IToString,
   JsonSerializer, Types
@@ -15,8 +15,8 @@ import {
 
 import {
   ColumnMetadata, EntityVersion, ExceptionWrapper, FindByIdResult, FindResult,
-  IUser,
-  QueryResult, TableMetadata
+  IUser, QueryResult,
+  ServiceResult, TableMetadata
 } from '@fluxgate/common';
 
 
@@ -24,6 +24,31 @@ import { IFindService } from './find-service.interface';
 import { KnexQueryVisitor } from './knex-query-visitor';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
+
+
+
+const entityVersionFinder = (trx: Knex.Transaction, knexService: KnexService, entityVersionMetadata: TableMetadata,
+  tableName: string,
+  resultClazz: ICtor<ServiceResult>,
+  result: any,
+  resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void)) => {
+
+  knexService.knex.table(entityVersionMetadata.tableName)
+    .where(entityVersionMetadata.primaryKeyColumn.options.name, '=', tableName)
+    .transacting(trx)
+    .then((entityVersions) => {
+      Assert.that(entityVersions.length === 1);
+
+      const entityVersionRow = entityVersions[0];
+      const entityVersion = entityVersionRow[entityVersionMetadata.versionColumn.options.name] as number;
+
+      trx.commit();
+
+      resolve(new resultClazz(result, entityVersion));
+    });
+};
+
+
 
 
 /**
@@ -68,7 +93,6 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
     this.primaryKeyColumn = cols[0];
   }
 
-
   /**
    * Liefert eine Entity-Instanz vom Typ {T} aus der DB als @see{Promise}
    *
@@ -110,10 +134,14 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
                   log.debug('result = ', logResult);
                 }
 
-                const entityVersion = -1;     // TODO
-
-                trx.commit();
-                resolve(new FindByIdResult(result, entityVersion));
+                // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
+                if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                  entityVersionFinder(trx, this.knexService, this.entityVersionMetadata,
+                    this.tableName, FindByIdResult, result, resolve);
+                } else {
+                  trx.commit();
+                  resolve(new FindByIdResult(result, -1));
+                }
               }
             })
             .catch((err) => {
@@ -167,10 +195,14 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
                   log.debug('result = ', logResult);
                 }
 
-                const entityVersion = -1;     // TODO
-
-                trx.commit();
-                resolve(new FindResult(result, entityVersion));
+                // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
+                if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                  entityVersionFinder(trx, this.knexService, this.entityVersionMetadata,
+                    this.tableName, FindResult, result, resolve);
+                } else {
+                  trx.commit();
+                  resolve(new FindResult(result, -1));
+                }
               }
             })
             .catch((err) => {
@@ -228,10 +260,14 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
                   log.debug('result = ', logResult);
                 }
 
-                const entityVersion = -1;     // TODO
-
-                trx.commit();
-                resolve(new QueryResult(result, entityVersion));
+                // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
+                if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                  entityVersionFinder(trx, this.knexService, this.entityVersionMetadata,
+                    this.tableName, QueryResult, result, resolve);
+                } else {
+                  trx.commit();
+                  resolve(new QueryResult(result, -1));
+                }
               }
             })
             .catch((err) => {
