@@ -601,8 +601,13 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     const subscription = this.getStoreSubject(storeId).subscribe((command) => {
       this.onStoreUpdated(command);
     });
-    this.subscriptions.push(subscription);
+    this.saveSubscription(subscription);
     return subscription;
+  }
+
+
+  protected saveSubscription(subscription: Subscription) {
+    this.subscriptions.push(subscription);
   }
 
 
@@ -681,7 +686,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   }
 
 
-  private getStoreSubject(storeId: string): CustomSubject<any> {
+  protected getStoreSubject(storeId: string): CustomSubject<any> {
     return this.store.subject(storeId);
   }
 
