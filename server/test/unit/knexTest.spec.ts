@@ -10,9 +10,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  BaseTest, EntityGenerator, IEntity, IEntityGeneratorColumnConfig, ValueGenerator
+  BaseTest, EntityGenerator, EntityVersion, IEntity, IEntityGeneratorColumnConfig, TableMetadata, ValueGenerator
 } from '@fluxgate/common';
-import { Activator, fromEnvironment, Funktion, ICtor, IToString } from '@fluxgate/core';
+import { Activator, Dictionary, fromEnvironment, Funktion, ICtor, IToString } from '@fluxgate/core';
 import { JsonReader } from '@fluxgate/platform';
 
 import { IBaseService, IBaseServiceRaw } from '../../src/ts-express-decorators-flx/services/baseService.interface';
@@ -38,6 +38,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
   private static _knexService: KnexService;
   private static _metadataService: MetadataService;
   private static _service: IBaseServiceRaw;
+  private static _entityVersionMetadata: TableMetadata;
 
   /**
    * Id der ersten Test-Entity (ab dieser werden am Testende alle Entities gelöscht)
@@ -46,6 +47,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
 
   private entityGenerator: EntityGenerator<T, TId>;
   private _generatedItems: T[];
+  private entityVersionDict: Dictionary<string, number> = new Dictionary<string, number>();
 
   /**
    * Creates an instance of KnexTest.
@@ -151,6 +153,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
 
           KnexTest._knexService = new KnexService();
           KnexTest._metadataService = new MetadataService();
+          KnexTest._entityVersionMetadata = KnexTest._metadataService.findTableMetadata(EntityVersion);
 
           done();
         } catch (err) {
@@ -205,7 +208,21 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
   protected before(done: (err?: any) => void) {
     using(new XLog(KnexTest.logger, levels.INFO, 'before'), (log) => {
       super.before(() => {
-        done();
+        this.entityVersionDict.clear();
+
+        KnexTest._knexService.knex.table(KnexTest._entityVersionMetadata.tableName)
+          .then((entityVersions: any[]) => {
+
+            // aktuelle EntityVersions ermitteln und für Tests in Dictionary ablegen
+            entityVersions.forEach((entityVersion) => {
+              const entity = entityVersion[KnexTest._entityVersionMetadata.primaryKeyColumn.options.name] as string;
+              const version = entityVersion[KnexTest._entityVersionMetadata.versionColumn.options.name] as number;
+
+              this.entityVersionDict.set(entity, version);
+            });
+
+            done();
+          });
       });
     });
   }
@@ -250,6 +267,15 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
 
   protected get generatedItems(): T[] {
     return this._generatedItems;
+  }
+
+  protected getEntityVersionFor(model: Funktion): number {
+    const metadata = KnexTest._metadataService.findTableMetadata(model);
+    return this.entityVersionDict.get(metadata.tableName);
+  }
+
+  protected getNextEntityVersionFor(model: Funktion): number {
+    return this.getEntityVersionFor(model) + 1;
   }
 
 }

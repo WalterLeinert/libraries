@@ -6,7 +6,7 @@ require('reflect-metadata');
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 
 // Chai mit Promises verwenden (... to.become() ... etc.)
@@ -55,8 +55,8 @@ class RoleTest extends KnexTest<Role, number> {
     const id = this.firstTestId + 1;
 
     const role = this.createRole(id);
-    const expectedRole = this.createExpectedRole(id, CreateResult);
-    return expect(this.service.create(role)).to.become(expectedRole);
+    const expectedRoleResult = this.createExpectedRoleResult(id, CreateResult, this.getNextEntityVersionFor(Role));
+    return expect(this.service.create(role)).to.become(expectedRoleResult);
   }
 
   @test 'should now find 4 roles'() {
@@ -66,30 +66,32 @@ class RoleTest extends KnexTest<Role, number> {
   }
 
   @test 'should find new role'() {
-    const expectedRole = this.createExpectedRole(this.firstTestId + 1, FindByIdResult);
-    return expect(this.service.findById(expectedRole.item.id))
-      .to.become(expectedRole);
+    const expectedRoleResult = this.createExpectedRoleResult(this.firstTestId + 1, FindByIdResult,
+      this.getEntityVersionFor(Role));
+
+    return expect(this.service.findById(expectedRoleResult.item.id))
+      .to.become(expectedRoleResult);
   }
 
   @test 'should update new role'() {
     const id = this.firstTestId + 1;
 
-    const roleResult = this.createExpectedRole(id, UpdateResult);
-    roleResult.item.name = roleResult.item.name + '-updated';
-    roleResult.item.description = roleResult.item.description + '-updated';
+    const Result = this.createExpectedRoleResult(id, UpdateResult, this.getNextEntityVersionFor(Role));
+    Result.item.name = Result.item.name + '-updated';
+    Result.item.description = Result.item.description + '-updated';
 
-    const expectedRoleResult = Clone.clone(roleResult);
-    expectedRoleResult.item.__version = roleResult.item.__version + 1;
+    const expectedRoleResult = Clone.clone(Result);
+    expectedRoleResult.item.__version = Result.item.__version + 1;
 
-    return expect(this.service.update(roleResult.item))
+    return expect(this.service.update(Result.item))
       .to.become(expectedRoleResult);
   }
 
   @test 'should create new role (2)'() {
     const id = this.firstTestId + 2;
     const role = this.createRole(id);
-    const expectedRole = this.createExpectedRole(id, CreateResult);
-    return expect(this.service.create(role)).to.become(expectedRole);
+    const expectedRoleResult = this.createExpectedRoleResult(id, CreateResult, this.getNextEntityVersionFor(Role));
+    return expect(this.service.create(role)).to.become(expectedRoleResult);
   }
 
   @test 'should now find 5 roles'() {
@@ -128,7 +130,7 @@ class RoleTest extends KnexTest<Role, number> {
 
   @test 'should delete test role'() {
     const roleIdToDelete = this.firstTestId + 1;
-    const expected = new DeleteResult(roleIdToDelete, -1);
+    const expected = new DeleteResult(roleIdToDelete, this.getNextEntityVersionFor(Role));
 
     return expect(this.service.delete(roleIdToDelete))
       .to.become(expected);
@@ -154,10 +156,11 @@ class RoleTest extends KnexTest<Role, number> {
     return role;
   }
 
-  private createExpectedRole<T extends ServiceResult>(id: number, resultCtor: ICtor<T>): T {
+  private createExpectedRoleResult<T extends ServiceResult>(id: number, resultCtor: ICtor<T>,
+    expectedEntityVersion: number): T {
     const role: IRole = this.createRole(id);
     role.id = id;
-    return new resultCtor(role, -1);
+    return new resultCtor(role, expectedEntityVersion);
   }
 
 }

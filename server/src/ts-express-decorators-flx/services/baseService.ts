@@ -107,10 +107,14 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
 
                     subject = this.createModelInstance(dbSubject);
 
-                    const entityVersion = -1;     // TODO
+                    if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                      this.findEntityVersionAndResolve(trx, CreateResult, subject, resolve);
+                    } else {
+                      trx.commit();
 
-                    trx.commit();
-                    resolve(new CreateResult(subject, entityVersion));
+                      log.debug('subject after commit: ', subject);
+                      resolve(new CreateResult(subject, -1));
+                    }
                   }
                 })
                 .catch((err) => {
@@ -180,12 +184,15 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
 
                       subject = this.createModelInstance(dbSubject);
 
-                      const entityVersion = -1;     // TODO
+                      if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                        this.findEntityVersionAndResolve(trx, UpdateResult, subject, resolve);
+                      } else {
 
-                      trx.commit();
+                        trx.commit();
 
-                      log.debug('subject after commit: ', subject);
-                      resolve(new UpdateResult(subject, entityVersion));
+                        log.debug('subject after commit (optimistic lock detection): ', subject);
+                        resolve(new UpdateResult(subject, -1));
+                      }
                     }
                   } else {
                     if (affectedRows <= 0) {
@@ -199,12 +206,16 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
                     } else {
                       subject = this.createModelInstance(dbSubject);
 
-                      const entityVersion = -1;     // TODO
+                      if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                        this.findEntityVersionAndResolve(trx, UpdateResult, subject, resolve);
+                      } else {
 
-                      trx.commit();
+                        trx.commit();
 
-                      log.debug('subject after commit: ', subject);
-                      resolve(new UpdateResult(subject, entityVersion));
+                        log.debug('subject after commit: ', subject);
+                        resolve(new UpdateResult(subject, -1));
+                      }
+
                     }
                   }
                 })
@@ -260,12 +271,17 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
                     reject(this.createSystemException(
                       new EntityNotFoundException(`table: ${this.tableName}, id: ${id}`)));
                   } else {
-                    const entityVersion = -1;     // TODO
 
-                    trx.commit();
-                    resolve(new DeleteResult(id, entityVersion));
+                    if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                      this.findEntityVersionAndResolve(trx, DeleteResult, id, resolve);
+                    } else {
+
+                      trx.commit();
+
+                      log.debug('delete id after commit: ', id);
+                      resolve(new DeleteResult(id, -1));
+                    }
                   }
-
                 })
                 .catch((err) => {
                   log.error(err);

@@ -432,23 +432,27 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
    *
    * @memberof FindService
    */
-  private findEntityVersionAndResolve<TResult>(trx: Knex.Transaction, resultClazz: ICtor<ServiceResult>,
+  protected findEntityVersionAndResolve<TResult>(trx: Knex.Transaction, resultClazz: ICtor<ServiceResult>,
     queryResult: TResult, resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void)) {
 
-    this.knexService.knex.table(this.entityVersionMetadata.tableName)
-      .where(this.entityVersionMetadata.primaryKeyColumn.options.name, '=', this.tableName)
-      .transacting(trx)
-      .then((entityVersions) => {
-        Assert.that(entityVersions.length === 1);
+    using(new XLog(FindService.logger, levels.INFO, 'findEntityVersionAndResolve'), (log) => {
 
-        const entityVersionRow = entityVersions[0];
-        const entityVersion = entityVersionRow[this.entityVersionMetadata.versionColumn.options.name] as number;
+      this.knexService.knex.table(this.entityVersionMetadata.tableName)
+        .where(this.entityVersionMetadata.primaryKeyColumn.options.name, '=', this.tableName)
+        .transacting(trx)
+        .then((entityVersions) => {
+          Assert.that(entityVersions.length === 1);
 
-        trx.commit();
+          const entityVersionRow = entityVersions[0];
+          const entityVersion = entityVersionRow[this.entityVersionMetadata.versionColumn.options.name] as number;
 
-        resolve(new resultClazz(queryResult, entityVersion));
-      });
+          trx.commit();
+
+          log.debug('queryResult after commit: ', queryResult);
+
+          resolve(new resultClazz(queryResult, entityVersion));
+        });
+    });
   };
-
 
 }
