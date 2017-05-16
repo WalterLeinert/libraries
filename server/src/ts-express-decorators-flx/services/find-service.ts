@@ -27,29 +27,6 @@ import { MetadataService } from './metadata.service';
 
 
 
-const entityVersionFinder = (trx: Knex.Transaction, knexService: KnexService, entityVersionMetadata: TableMetadata,
-  tableName: string,
-  resultClazz: ICtor<ServiceResult>,
-  result: any,
-  resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void)) => {
-
-  knexService.knex.table(entityVersionMetadata.tableName)
-    .where(entityVersionMetadata.primaryKeyColumn.options.name, '=', tableName)
-    .transacting(trx)
-    .then((entityVersions) => {
-      Assert.that(entityVersions.length === 1);
-
-      const entityVersionRow = entityVersions[0];
-      const entityVersion = entityVersionRow[entityVersionMetadata.versionColumn.options.name] as number;
-
-      trx.commit();
-
-      resolve(new resultClazz(result, entityVersion));
-    });
-};
-
-
-
 
 /**
  * Abstrakte Basisklasse für CRUD-Operationen auf der DB über knex.
@@ -136,8 +113,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
 
                 // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
                 if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
-                  entityVersionFinder(trx, this.knexService, this.entityVersionMetadata,
-                    this.tableName, FindByIdResult, result, resolve);
+                  this.findEntityVersionAndResolve(trx, FindByIdResult, result, resolve);
                 } else {
                   trx.commit();
                   resolve(new FindByIdResult(result, -1));
@@ -197,8 +173,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
 
                 // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
                 if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
-                  entityVersionFinder(trx, this.knexService, this.entityVersionMetadata,
-                    this.tableName, FindResult, result, resolve);
+                  this.findEntityVersionAndResolve(trx, FindResult, result, resolve);
                 } else {
                   trx.commit();
                   resolve(new FindResult(result, -1));
@@ -262,8 +237,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
 
                 // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
                 if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
-                  entityVersionFinder(trx, this.knexService, this.entityVersionMetadata,
-                    this.tableName, QueryResult, result, resolve);
+                  this.findEntityVersionAndResolve(trx, QueryResult, result, resolve);
                 } else {
                   trx.commit();
                   resolve(new QueryResult(result, -1));
@@ -440,5 +414,41 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
   protected get entityVersionMetadata(): TableMetadata {
     return this._entityVersionMetadata;
   }
+
+
+
+  /**
+   * ermittelt die aktuelle EntityVersion und legt diese zusammen mit dem Query-Ergebnis @param{queryResult}
+   * in einer neuen Instanz vom Typ @see{resultClazz} ab, die im @see{resolve} zurückgeliefert wird.
+   *
+   * Die Operation ist in die Transaktion @param{trx} eingebunden.
+   *
+   * @private
+   * @template TResult
+   * @param {Knex.Transaction} trx
+   * @param {ICtor<ServiceResult>} resultClazz
+   * @param {TResult} queryResult
+   * @param {(((result: ServiceResult | PromiseLike<ServiceResult>) => void))} resolve
+   *
+   * @memberof FindService
+   */
+  private findEntityVersionAndResolve<TResult>(trx: Knex.Transaction, resultClazz: ICtor<ServiceResult>,
+    queryResult: TResult, resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void)) {
+
+    this.knexService.knex.table(this.entityVersionMetadata.tableName)
+      .where(this.entityVersionMetadata.primaryKeyColumn.options.name, '=', this.tableName)
+      .transacting(trx)
+      .then((entityVersions) => {
+        Assert.that(entityVersions.length === 1);
+
+        const entityVersionRow = entityVersions[0];
+        const entityVersion = entityVersionRow[this.entityVersionMetadata.versionColumn.options.name] as number;
+
+        trx.commit();
+
+        resolve(new resultClazz(queryResult, entityVersion));
+      });
+  };
+
 
 }
