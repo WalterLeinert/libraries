@@ -57,16 +57,17 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
           const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
           if (log.isDebugEnabled()) {
-            log.debug(`entityVersion = ${createResult.entityVersion}`);
+            log.debug(`entityVersion[${this.getTableName()}] = ${createResult.entityVersion}`);
           }
 
           if (cacheEntry) {
             if (log.isDebugEnabled()) {
-              log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
+              log.debug(`cached entityVersion[${this.getTableName()}] = ${cacheEntry.version}, ` +
+                `items = ${cacheEntry.items.length}`);
             }
 
             this.updateCache(log, createResult.entityVersion, [...cacheEntry.items, createResult.item],
-              'add item to cache');
+              `add item[${this.getTableName()}] to cache`);
 
           } else {
             this.updateCache(log, createResult.entityVersion, [createResult.item], 'no cache yet');
@@ -126,7 +127,7 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
           const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
           if (log.isDebugEnabled()) {
-            log.debug(`entityVersion = ${entityVersionResult.item.__version}`);
+            log.debug(`entityVersion[${this.getTableName()}] = ${entityVersionResult.item.__version}`);
           }
 
 
@@ -140,14 +141,16 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
             //
             if (this.isNewer(entityVersionResult.item, cacheEntry)) {
               finder(log, entityVersionResult.item, `updating cached items [` +
-                `cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}]`);
+                `cached entityVersion[${this.getTableName()}] = ${cacheEntry.version}, ` +
+                `items = ${cacheEntry.items.length}]`);
 
             } else {
 
               // ... sonst Items aus cache
               if (log.isDebugEnabled()) {
                 log.debug(`items already cached [` +
-                  `cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}]`);
+                  `cached entityVersion[${this.getTableName()}] = ${cacheEntry.version}, ` +
+                  `items = ${cacheEntry.items.length}]`);
               }
 
               observer.next(new FindResult<T>(cacheEntry.items, cacheEntry.version));
@@ -194,12 +197,13 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
             const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
             if (log.isDebugEnabled()) {
-              log.debug(`entityVersion = ${entityVersionResult.item.__version}`);
+              log.debug(`entityVersion[${this.getTableName()}]  = ${entityVersionResult.item.__version}`);
             }
 
             if (cacheEntry) {
               if (log.isDebugEnabled()) {
-                log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
+                log.debug(`cached entityVersion[${this.getTableName()}]  = ${cacheEntry.version}, ` +
+                  `items = ${cacheEntry.items.length}`);
               }
 
               //
@@ -213,7 +217,7 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
                 const item = cacheEntry.items.find((e) => e.id === id);
 
                 if (log.isDebugEnabled()) {
-                  log.debug(`item already cached`);
+                  log.debug(`itementityVersion[${this.getTableName()}] already cached`);
                 }
                 observer.next(new FindByIdResult<T, TId>(item, cacheEntry.version));
               }
@@ -247,17 +251,19 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
             const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
             if (log.isDebugEnabled()) {
-              log.debug(`entityVersion = ${deleteResult.entityVersion}`);
+              log.debug(`entityVersion[${this.getTableName()}] = ${deleteResult.entityVersion}`);
             }
 
             if (cacheEntry) {
               if (log.isDebugEnabled()) {
-                log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
+                log.debug(`cached entityVersion[${this.getTableName()}] = ${cacheEntry.version}, ` +
+                  `items = ${cacheEntry.items.length}`);
               }
 
               // Item entfernen
               const itemsFiltered = cacheEntry.items.filter((e) => e.id !== deleteResult.id);
-              this.updateCache(log, deleteResult.entityVersion, itemsFiltered, 'delete item from cache');
+              this.updateCache(log, deleteResult.entityVersion, itemsFiltered,
+                `delete item[${this.getTableName()}]  from cache`);
               observer.next(deleteResult);
             } else {
               this.updateCache(log, deleteResult.entityVersion, [], 'no cache yet');
@@ -291,17 +297,19 @@ export class EntityVersionProxy extends ServiceProxy<any, any> {
             const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
             if (log.isDebugEnabled()) {
-              log.debug(`entityVersion = ${updateResult.entityVersion}`);
+              log.debug(`entityVersion[${this.getTableName()}]  = ${updateResult.entityVersion}`);
             }
 
             if (cacheEntry) {
               if (log.isDebugEnabled()) {
-                log.debug(`cached entityVersion = ${cacheEntry.version}, items = ${cacheEntry.items.length}`);
+                log.debug(`cached entityVersion[${this.getTableName()}]  = ${cacheEntry.version}, ` +
+                  `items = ${cacheEntry.items.length}`);
               }
 
               // Item ersetzen
               const itemsFiltered = cacheEntry.items.map((e) => e.id === updateResult.item.id ? updateResult : e);
-              this.updateCache(log, updateResult.entityVersion, itemsFiltered, 'update item in cache');
+              this.updateCache(log, updateResult.entityVersion, itemsFiltered,
+                `update item[${this.getTableName()}] in cache`);
               observer.next(updateResult);
 
             } else {
