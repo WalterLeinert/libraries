@@ -1,4 +1,4 @@
-import { Serializable } from '@fluxgate/core';
+import { Serializable, StringUtil } from '@fluxgate/core';
 
 import { ServiceResult } from './service-result';
 
@@ -19,5 +19,14 @@ export class QueryResult<T> extends ServiceResult {
 
   public get items(): T[] {
     return this._items;
+  }
+
+  // public toString(): string {
+  //   return `${super.toString()}, items.lengh: ${this._items.length}`;
+  // }
+
+  public toString(): string {
+    return `${StringUtil.enclose(this, super.toString(),
+      StringUtil.format(`items.length: ${this.items.length}`))}`;
   }
 }

@@ -6,6 +6,7 @@ import { Column } from '../model/decorator/model/column';
 import { Table } from '../model/decorator/model/table';
 import { Validation } from '../model/decorator/model/validation';
 import { Version } from '../model/decorator/model/version';
+import { FlxEntity } from '../model/flx-entity';
 import { Validators } from '../model/validation/validators';
 
 // import { Mandant } from './mandant';
@@ -28,7 +29,7 @@ export enum UserRoleId {
  * Modelliert User Rollen (Defaultimplemetierung)
  */
 @Table({ name: Role.TABLE_NAME })
-export class Role implements IRole {
+export class Role extends FlxEntity<number> implements IRole {
   public static readonly TABLE_NAME = 'role';
 
   /**

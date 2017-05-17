@@ -1,4 +1,4 @@
-import { IToString, Serializable } from '@fluxgate/core';
+import { IToString, Serializable, StringUtil } from '@fluxgate/core';
 
 import { ServiceResult } from './service-result';
 
@@ -20,4 +20,9 @@ export class DeleteResult<TId extends IToString> extends ServiceResult {
   public get id(): TId {
     return this._id;
   }
+
+  public toString(): string {
+    return `${StringUtil.enclose(this, super.toString(), StringUtil.format(`id: ${this._id}`))}`;
+  }
+
 }

@@ -1,8 +1,10 @@
-import { Assert, NotSupportedException, Types } from '@fluxgate/core';
+import { Assert, IToString, NotSupportedException, Types } from '@fluxgate/core';
 
 import { AppConfig, IAppConfig } from '../../base/appConfig';
 import { AppRegistry } from '../../base/appRegistry';
+import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
+import { IReadonlyService } from '../../model/service/readonly-service.interface';
 import { IService } from '../../model/service/service.interface';
 import { CacheProxy } from './cache-proxy';
 import { EntityVersionProxy } from './entity-version-proxy';
@@ -18,7 +20,20 @@ import { ProxyModes } from './proxy-mode';
  */
 export class ProxyFactory {
 
-  public static createProxy<T, TId>(service: IService<T, TId>,
+
+  /**
+   * Erzeugt einen konkreten ServiceProxy.
+   *
+   * @static
+   * @template T
+   * @template TId
+   * @param {IReadonlyService<T, TId>} service
+   * @param {IService<EntityVersion, string>} entityVersionService
+   * @returns {IService<T, TId>}
+   *
+   * @memberof ProxyFactory
+   */
+  public static createProxy<T extends IEntity<TId>, TId extends IToString>(service: IReadonlyService<T, TId>,
     entityVersionService: IService<EntityVersion, string>): IService<T, TId> {
     Assert.notNull(service);
 
@@ -34,16 +49,17 @@ export class ProxyFactory {
 
     switch (proxyMode) {
       case ProxyModes.NOP:
-        return new NopProxy(service);
+        return new NopProxy<T, TId>(service as IService<T, TId>);
 
       case ProxyModes.CACHE:
-        return new CacheProxy(service);
+        return new CacheProxy<T, TId>(service as IService<T, TId>);
 
       case ProxyModes.SERVICE:
-        return new EntityVersionProxy(service, entityVersionService);
+        return new EntityVersionProxy<T, TId>(service as IService<T, TId>, entityVersionService);
 
       default:
         throw new NotSupportedException(`strategy not supported: ${proxyMode}`);
     }
   }
+
 }

@@ -81,7 +81,7 @@ class CreateTest extends ReduxBaseTest<IUser, number, any> {
       // before-Status erzeugen
       //
       this.crudServiceRequests.find().subscribe((items) => {
-        this.beforeState = this.getCrudState();
+        this.beforeState = super.getCrudState();
         this.reset();
 
 

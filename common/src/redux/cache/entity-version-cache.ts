@@ -43,4 +43,8 @@ export class EntityVersionCacheEntry<T> {
   public get items(): T[] {
     return [...this._items];
   }
+
+  public toString(): string {
+    return `{ version: ${this._version}, items.length: ${this.items.length}}`;
+  }
 }

@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, CustomSubject, ICtor } from '@fluxgate/core';
+import { Assert, CustomSubject, ICtor, IToString } from '@fluxgate/core';
 
 import { IEntity } from '../../src/model';
 import { IService } from '../../src/model/service/service.interface';
@@ -26,7 +26,8 @@ import { EntityVersionServiceFake } from '../../src/testing/entity-version-servi
 import { CommonTest } from '../common.spec';
 
 
-export class ReduxBaseTest<T extends IEntity<TId>, TId, TService extends IService<T, TId>> extends CommonTest {
+export class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TService
+  extends IService<T, TId>> extends CommonTest {
   protected static readonly logger = getLogger(ReduxBaseTest);
 
   private _store: Store;

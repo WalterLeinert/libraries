@@ -1,3 +1,6 @@
+import { IToString } from '@fluxgate/core';
+
+import { IEntity } from '../../model/entity.interface';
 import { ServiceProxy } from '../../model/service/service-proxy';
 import { IService } from '../../model/service/service.interface';
 
@@ -7,7 +10,7 @@ import { IService } from '../../model/service/service.interface';
  * @export
  * @class NopProxy
  */
-export class NopProxy extends ServiceProxy<any, any> {
+export class NopProxy<T extends IEntity<TId>, TId extends IToString> extends ServiceProxy<T, TId> {
 
   constructor(service: IService<any, any>) {
     super(service);
