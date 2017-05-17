@@ -22,7 +22,7 @@ export class DeleteResult<TId extends IToString> extends ServiceResult {
   }
 
   public toString(): string {
-    return `${StringUtil.enclose(this, super.toString(), StringUtil.format(`id: ${this._id}`))}`;
+    return StringUtil.enclose(this, `${super.toString()}, id: ${this._id}`);
   }
 
 }

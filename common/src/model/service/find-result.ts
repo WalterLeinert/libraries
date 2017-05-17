@@ -27,7 +27,6 @@ export class FindResult<T> extends ServiceResult {
 
 
   public toString(): string {
-    return `${StringUtil.enclose(this, super.toString(),
-      StringUtil.format(`items.length: ${this.items.length}`))}`;
+    return StringUtil.enclose(this, `${super.toString()}, items.length: ${this.items.length}`);
   }
 }

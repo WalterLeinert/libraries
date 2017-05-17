@@ -64,7 +64,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
 
           if (cacheEntry) {
             this.updateCache(log, createResult.entityVersion, [...cacheEntry.items, createResult.item],
-              `add item[${this.getTableName()}] to cache`);
+              `add item[${this.getObjId(createResult.item)}] to cache`);
 
           } else {
             this.updateCache(log, createResult.entityVersion, [createResult.item], 'no cache yet');
@@ -181,7 +181,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
 
           const finder = (lg: XLog, ev: EntityVersion, findId: TId, items: T[], message: string) => {
             super.findById(findId).subscribe((findByIdResult: FindByIdResult<T, TId>) => {
-              const itemsFiltered = items.map((e) => e.id === findByIdResult.item.id ? findByIdResult : e);
+              const itemsFiltered = items.map((e) => e.id === findByIdResult.item.id ? findByIdResult.item : e);
               this.updateCache(lg, findByIdResult.entityVersion, itemsFiltered, message);
               observer.next(findByIdResult);
             });
@@ -195,7 +195,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               const cacheEntry = EntityVersionCache.instance.get<T>(this.getTableName());
 
               if (log.isDebugEnabled()) {
-                log.debug(`entityVersion[${this.getTableName()}, id: ${id}] = ${entityVersionResult.item.__version}`);
+                log.debug(`entityVersion[${this.getObjId(id)}] = ${entityVersionResult.item.__version}`);
               }
 
               if (cacheEntry) {
@@ -215,7 +215,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
                   const item = cacheEntry.items.find((e) => e.id === id);
 
                   if (log.isDebugEnabled()) {
-                    log.debug(`itementityVersion[${this.getTableName()}] already cached`);
+                    log.debug(`entityVersion[${this.getTableName()}] already cached`);
                   }
                   observer.next(new FindByIdResult<T, TId>(item, cacheEntry.version));
                 }
@@ -299,7 +299,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
             if (cacheEntry) {
 
               // Item ersetzen
-              const itemsFiltered = cacheEntry.items.map((e) => e.id === updateResult.item.id ? updateResult : e);
+              const itemsFiltered = cacheEntry.items.map((e) => e.id === updateResult.item.id ? updateResult.item : e);
               this.updateCache(log, updateResult.entityVersion, itemsFiltered,
                 `update item[${this.getTableName()}] in cache`);
               observer.next(updateResult);
@@ -325,7 +325,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
   /**
    * aktualisiert den Cache und gibt eine Logmeldung aus.
    */
-  private updateCache<T>(log: XLog, entityVersion: number, items: T[], message: string) {
+  private updateCache(log: XLog, entityVersion: number, items: T[], message: string) {
     if (log.isDebugEnabled()) {
       log.debug(message);
     }
@@ -334,12 +334,13 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
     EntityVersionCache.instance.set(this.getTableName(), updatedCacheEnty);
   }
 
-  private logEntityVersion<T, TId>(log: XLog, id: TId = undefined, result: ServiceResult = undefined,
+
+
+  private logEntityVersion(log: XLog, id: TId = undefined, result: ServiceResult = undefined,
     cacheEntry: EntityVersionCacheEntry<T>) {
 
-
     if (log.isDebugEnabled()) {
-      const sb = new StringBuilder(`entityVersion[${this.getTableName()}`);
+      const sb = new StringBuilder(`entityVersion[${this.getObjId(id)}`);
       if (Types.isPresent(id)) {
         sb.append(`, id: ${id}`);
       }
@@ -353,7 +354,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
       log.debug(sb.toString());
 
       if (cacheEntry) {
-        log.debug(`cached entityVersion[${this.getTableName()}, id: ${id}]: cacheEntry = ${cacheEntry.toString()}`);
+        log.debug(`cached entityVersion[${this.getObjId(id)}]: cacheEntry = ${cacheEntry.toString()}`);
       }
     }
   }

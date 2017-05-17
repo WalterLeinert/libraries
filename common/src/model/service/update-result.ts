@@ -27,6 +27,6 @@ export class UpdateResult<T extends IEntity<TId>, TId> extends ServiceResult {
   // }
 
   public toString(): string {
-    return `${StringUtil.enclose(this, super.toString(), StringUtil.format(`item.id: ${this._item.id}`))}`;
+    return StringUtil.enclose(this, `${super.toString()}, item.id: ${this._item.id}`);
   }
 }

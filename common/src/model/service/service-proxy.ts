@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { Assert, IQuery, IToString } from '@fluxgate/core';
+import { Assert, IQuery, IToString, StringBuilder, StringUtil, Types } from '@fluxgate/core';
 
 import { IEntity } from '../entity.interface';
 import { CreateResult } from './create-result';
@@ -101,5 +101,22 @@ export class ServiceProxy<T extends IEntity<TId>, TId extends IToString> impleme
    */
   protected get service(): IService<T, TId> {
     return this._service;
+  }
+
+  protected getObjId(obj: T | TId): string {
+    const sb = new StringBuilder(this.getTableName());
+
+    const item = obj as T;
+    if (item) {
+      sb.append(`, id: ${item.id}`);
+
+      return `${StringUtil.enclose(this.getTableName(), StringUtil.format(`id: ${item.id}`))}`;
+    } else {
+      if (Types.isPresent(obj)) {
+        sb.append(`, id: ${obj}`);
+      }
+
+      return `${StringUtil.enclose(sb.toString())}`;
+    }
   }
 }
