@@ -113,7 +113,7 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
       (log) => {
 
         return this.http.delete(`${this.getUrl()}/${id}`)
-          .map((response: Response) => response.json())
+          .map((response: Response) => this.deserialize(response.json()))
           .do((result: DeleteResult<TId>) => {
             if (log.isInfoEnabled()) {
               log.log(`Service.delete [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
