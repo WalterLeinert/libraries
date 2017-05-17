@@ -41,4 +41,32 @@ export class StringUtil {
     return sb.toString();
   }
 
+
+  /**
+   * Erzeugt einen JSON-ähnlichen String, dem Typnamen von @param{obj} und den Argumenten @param{args}
+   *
+   * @static
+   * @param {Object} obj
+   * @param {...any[]} args
+   * @returns
+   *
+   * @memberof StringUtil
+   */
+  public static enclose(obj: Object, ...args: any[]) {
+    return `{ ${obj.constructor.name}: ${args} }`;
+  }
+
+  /**
+   * Erzeugt einen interpolierten String für die Argumente @param{args}
+   *
+   * @static
+   * @param {...any[]} args
+   * @returns
+   *
+   * @memberof StringUtil
+   */
+  public static format(...args: any[]) {
+    return `${args}`;
+  }
+
 }
