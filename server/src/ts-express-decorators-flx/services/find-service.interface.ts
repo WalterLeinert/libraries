@@ -1,7 +1,7 @@
 import * as Knex from 'knex';
 
 // Fluxgate
-import { FindByIdResult, FindResult, QueryResult } from '@fluxgate/common';
+import { FindByIdResult, FindResult, IEntity, QueryResult } from '@fluxgate/common';
 import { IQuery, IToString } from '@fluxgate/core';
 
 
@@ -33,7 +33,7 @@ export interface IFindService<T, TId extends IToString> {
    *
    * @memberOf ServiceBase
    */
-  findById(
+  findById<T extends IEntity<TId>>(
     id: TId
   ): Promise<FindByIdResult<T, TId>>;
 

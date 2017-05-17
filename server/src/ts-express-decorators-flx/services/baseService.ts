@@ -11,7 +11,7 @@ import {
 } from '@fluxgate/core';
 
 import {
-  CreateResult, DeleteResult, UpdateResult
+  CreateResult, DeleteResult, IEntity, UpdateResult
 } from '@fluxgate/common';
 
 
@@ -30,7 +30,7 @@ import { MetadataService } from './metadata.service';
  * @template T
  * @template TId
  */
-export abstract class BaseService<T, TId extends IToString> extends FindService<T, TId>
+export abstract class BaseService<T extends IEntity<TId>, TId extends IToString> extends FindService<T, TId>
   implements IBaseService<T, TId>  {
   protected static logger = getLogger(BaseService);
 
@@ -58,7 +58,7 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
    */
   public create(
     subject: T
-  ): Promise<CreateResult<T>> {
+  ): Promise<CreateResult<T, TId>> {
 
     return using(new XLog(BaseService.logger, levels.INFO, 'create', `[${this.tableName}]`), (log) => {
       if (log.isDebugEnabled) {
@@ -75,7 +75,7 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
         log.debug('dbSubject: ', dbSubject);
       }
 
-      return new Promise<CreateResult<T>>((resolve, reject) => {
+      return new Promise<CreateResult<T, TId>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
           let query: Knex.QueryBuilder = this.fromTable();
@@ -141,14 +141,14 @@ export abstract class BaseService<T, TId extends IToString> extends FindService<
    */
   public update(
     subject: T
-  ): Promise<UpdateResult<T>> {
+  ): Promise<UpdateResult<T, TId>> {
 
     return using(new XLog(BaseService.logger, levels.INFO, 'update', `[${this.tableName}]`), (log) => {
       log.debug('subject: ', subject);
 
       const dbSubject = this.createDatabaseInstance(subject);
 
-      return new Promise<UpdateResult<T>>((resolve, reject) => {
+      return new Promise<UpdateResult<T, TId>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
           // quer< zur Selektion der Entity und ggf. des Versionsinkrements

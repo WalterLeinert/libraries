@@ -25,7 +25,7 @@ export class UserController extends ControllerBase<User, number> {
   @Post('/')
   public create(
     @Request() request: Express.Request
-    ): Promise<CreateResult<User>> {
+    ): Promise<CreateResult<User, number>> {
     return super.createInternal((request as any).body as User);
   }
 
@@ -59,7 +59,7 @@ export class UserController extends ControllerBase<User, number> {
   @Put('/')
   public update(
     @Request() request: Express.Request
-    ): Promise<UpdateResult<User>> {
+    ): Promise<UpdateResult<User, number>> {
     return super.updateInternal((request as any).body as User);
   }
 

@@ -5,7 +5,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { CreateResult, DeleteResult, UpdateResult } from '@fluxgate/common';
+import { CreateResult, DeleteResult, IEntity, UpdateResult } from '@fluxgate/common';
 import { IToString } from '@fluxgate/core';
 
 import { IBaseService } from '../../services/baseService.interface';
@@ -23,7 +23,7 @@ import { FindController } from './find-controller';
  * @template T      - Entity-Typ
  * @template TId    - Type der Id-Spalte
  */
-export abstract class ControllerBase<T, TId extends IToString> extends FindController<T, TId> {
+export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToString> extends FindController<T, TId> {
   protected static logger = getLogger(ControllerBase);
 
 
@@ -42,8 +42,8 @@ export abstract class ControllerBase<T, TId extends IToString> extends FindContr
    */
   protected createInternal(
     subject: T
-  ): Promise<CreateResult<T>> {
-    return new Promise<CreateResult<T>>((resolve, reject) => {
+  ): Promise<CreateResult<T, TId>> {
+    return new Promise<CreateResult<T, TId>>((resolve, reject) => {
       const deserializedSubject = this.deserialize<T>(subject);
       this.service.create(deserializedSubject).then((item) => {
         resolve(this.serialize(item));
@@ -62,8 +62,8 @@ export abstract class ControllerBase<T, TId extends IToString> extends FindContr
    */
   protected updateInternal(
     subject: T
-  ): Promise<UpdateResult<T>> {
-    return new Promise<UpdateResult<T>>((resolve, reject) => {
+  ): Promise<UpdateResult<T, TId>> {
+    return new Promise<UpdateResult<T, TId>>((resolve, reject) => {
       const deserializedSubject = this.deserialize<T>(subject);
       this.service.update(deserializedSubject).then((item) => {
         resolve(this.serialize(item));

@@ -32,7 +32,7 @@ export class UserService extends Service<User, number> {
    *
    * @param user
    */
-  public setDeleted(user: User): Observable<UpdateResult<User>> {
+  public setDeleted(user: User): Observable<UpdateResult<User, number>> {
     user.deleted = true;
     return super.update(user);
   }

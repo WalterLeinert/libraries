@@ -3,6 +3,9 @@
 // tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
 
+// tslint:disable-next-line:no-var-requires
+// let jsondiff = require('json-diff-patch');
+
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
@@ -56,6 +59,12 @@ class RoleTest extends KnexTest<Role, number> {
 
     const role = this.createRole(id);
     const expectedRoleResult = this.createExpectedRoleResult(id, CreateResult, this.getNextEntityVersionFor(Role));
+
+    // this.service.create(role).then((result) => {
+    //   const diff = jsondiff.diff(result, expectedRoleResult);
+
+    //   Clone.diff(result, expectedRoleResult);
+    // });
     return expect(this.service.create(role)).to.become(expectedRoleResult);
   }
 
@@ -68,6 +77,10 @@ class RoleTest extends KnexTest<Role, number> {
   @test 'should find new role'() {
     const expectedRoleResult = this.createExpectedRoleResult(this.firstTestId + 1, FindByIdResult,
       this.getEntityVersionFor(Role));
+
+    // this.service.findById(expectedRoleResult.item.id).then((result) => {
+    //   Clone.diff(result, expectedRoleResult);
+    // });
 
     return expect(this.service.findById(expectedRoleResult.item.id))
       .to.become(expectedRoleResult);
@@ -144,21 +157,20 @@ class RoleTest extends KnexTest<Role, number> {
 
 
   private createRole(id: number): IRole {
-    const role: IRole = {
-      id: undefined,
-      name: `Test-Rolename-${id}`,
-      description: `Test-Roledescription-${id}`,
-      id_mandant: 1,
-      deleted: false,
-      __version: 0
-    };
+    const role: Role = new Role();
+    role.id = undefined;
+    role.name = `Test-Rolename-${id}`;
+    role.description = `Test-Roledescription-${id}`;
+    role.id_mandant = 1;
+    role.deleted = false;
+    role.__version = 0;
 
     return role;
   }
 
   private createExpectedRoleResult<T extends ServiceResult>(id: number, resultCtor: ICtor<T>,
     expectedEntityVersion: number): T {
-    const role: IRole = this.createRole(id);
+    const role: Role = this.createRole(id);
     role.id = id;
     return new resultCtor(role, expectedEntityVersion);
   }

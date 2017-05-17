@@ -5,7 +5,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { FindByIdResult, FindResult, QueryResult } from '@fluxgate/common';
+import { FindByIdResult, FindResult, IEntity, QueryResult } from '@fluxgate/common';
 import { Assert, IQuery, IToString, JsonSerializer } from '@fluxgate/core';
 
 import { IFindService } from '../../services/find-service.interface';
@@ -44,7 +44,7 @@ export abstract class FindController<T, TId extends IToString> {
    *
    * @memberOf ControllerBase
    */
-  protected findByIdInternal(
+  protected findByIdInternal<T extends IEntity<TId>>(
     id: TId
   ): Promise<FindByIdResult<T, TId>> {
     return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {

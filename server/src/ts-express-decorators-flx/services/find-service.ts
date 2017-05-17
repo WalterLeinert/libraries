@@ -7,17 +7,16 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
+  ColumnMetadata, EntityVersion, ExceptionWrapper, FindByIdResult, FindResult,
+  IEntity, IUser, QueryResult,
+  ServiceResult, TableMetadata
+} from '@fluxgate/common';
+import {
   Assert, Clone, Funktion, ICtor,
   IException, InvalidOperationException,
   IQuery, IToString,
   JsonSerializer, Types
 } from '@fluxgate/core';
-
-import {
-  ColumnMetadata, EntityVersion, ExceptionWrapper, FindByIdResult, FindResult,
-  IUser, QueryResult,
-  ServiceResult, TableMetadata
-} from '@fluxgate/common';
 
 
 import { IFindService } from './find-service.interface';
@@ -78,7 +77,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
    *
    * @memberOf ServiceBase
    */
-  public findById(
+  public findById<T extends IEntity<TId>>(
     id: TId
   ): Promise<FindByIdResult<T, TId>> {
 
@@ -96,7 +95,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
                 log.info('result: no item found');
                 reject(this.createBusinessException(`table ${this.tableName}: item with id ${id} not found.`));
               } else {
-                const result = this.createModelInstance(rows[0]);
+                const result = this.createModelInstance(rows[0]) as any as T;
 
                 if (log.isDebugEnabled) {
                   //
@@ -116,7 +115,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
                   this.findEntityVersionAndResolve(trx, FindByIdResult, result, resolve);
                 } else {
                   trx.commit();
-                  resolve(new FindByIdResult(result, -1));
+                  resolve(new FindByIdResult<T, TId>(result, -1));
                 }
               }
             })
