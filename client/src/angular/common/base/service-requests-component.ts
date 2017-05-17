@@ -13,7 +13,6 @@ import {
   IServiceRequests, IServiceState, ItemCreatedCommand,
   ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
-import { Dictionary } from '@fluxgate/core';
 
 import { MessageService } from '../../services/message.service';
 import { ExtendedCoreComponent } from './extended-core.component';
@@ -53,7 +52,7 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
     if (!ServiceRequestsComponent.serviceRequestsSubscriptions.has(this._serviceRequests.storeId)) {
       ServiceRequestsComponent.serviceRequestsSubscriptions.add(this._serviceRequests.storeId);
 
-      const subscription = this.getStoreSubject(this._serviceRequests.storeId).subscribe((command) => {
+      this.getStoreSubject(this._serviceRequests.storeId).subscribe((command) => {
         this.onStoreUpdatedGlobal(command);
       });
     }
