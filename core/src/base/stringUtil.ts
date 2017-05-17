@@ -1,3 +1,4 @@
+import { Types } from '../types/types';
 import { Assert } from './../util/assert';
 import { StringBuilder } from './stringBuilder';
 
@@ -52,8 +53,18 @@ export class StringUtil {
    *
    * @memberof StringUtil
    */
-  public static enclose(obj: Object, ...args: any[]) {
-    return `{ ${obj.constructor.name}: ${args} }`;
+  public static enclose(obj: Object | string, ...args: any[]) {
+    const sb = new StringBuilder('{ ');
+    if (Types.isString(obj)) {
+      sb.append(obj as string);
+    } else {
+      sb.append(obj.constructor.name);
+    }
+    sb.append(`: `);
+    sb.append(`${args}`);
+    sb.append(' }');
+
+    return sb.toString();
   }
 
   /**
