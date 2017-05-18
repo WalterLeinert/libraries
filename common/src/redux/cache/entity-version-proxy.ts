@@ -341,9 +341,6 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
 
     if (log.isDebugEnabled()) {
       const sb = new StringBuilder(`entityVersion[${this.getObjId(id)}`);
-      if (Types.isPresent(id)) {
-        sb.append(`, id: ${id}`);
-      }
       sb.append(']');
 
       if (Types.isPresent(result)) {
