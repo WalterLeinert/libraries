@@ -16,7 +16,7 @@ import {
 
 
 import { IBaseService } from './baseService.interface';
-import { FindService } from './find-service';
+import { ReadonlyService } from './readonly-service';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
 
@@ -30,7 +30,7 @@ import { MetadataService } from './metadata.service';
  * @template T
  * @template TId
  */
-export abstract class BaseService<T extends IEntity<TId>, TId extends IToString> extends FindService<T, TId>
+export abstract class BaseService<T extends IEntity<TId>, TId extends IToString> extends ReadonlyService<T, TId>
   implements IBaseService<T, TId>  {
   protected static logger = getLogger(BaseService);
 

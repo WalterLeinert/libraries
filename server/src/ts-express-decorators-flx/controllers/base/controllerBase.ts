@@ -9,7 +9,7 @@ import { CreateResult, DeleteResult, IEntity, UpdateResult } from '@fluxgate/com
 import { IToString } from '@fluxgate/core';
 
 import { IBaseService } from '../../services/baseService.interface';
-import { FindController } from './find-controller';
+import { ReadonlyController } from './readonly-controller';
 
 
 /**
@@ -23,7 +23,7 @@ import { FindController } from './find-controller';
  * @template T      - Entity-Typ
  * @template TId    - Type der Id-Spalte
  */
-export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToString> extends FindController<T, TId> {
+export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToString> extends ReadonlyController<T, TId> {
   protected static logger = getLogger(ControllerBase);
 
 

@@ -19,10 +19,10 @@ import {
 } from '@fluxgate/core';
 
 
-import { IFindService } from './find-service.interface';
 import { KnexQueryVisitor } from './knex-query-visitor';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
+import { IReadonlyService } from './readonly-service.interface';
 
 
 
@@ -36,8 +36,8 @@ import { MetadataService } from './metadata.service';
  * @template T
  * @template TId
  */
-export abstract class FindService<T, TId extends IToString> implements IFindService<T, TId>  {
-  protected static logger = getLogger(FindService);
+export abstract class ReadonlyService<T, TId extends IToString> implements IReadonlyService<T, TId>  {
+  protected static logger = getLogger(ReadonlyService);
   private serializer: JsonSerializer = new JsonSerializer();
 
   private primaryKeyColumn: ColumnMetadata = null;
@@ -64,7 +64,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
 
     const cols = this.metadata.columnMetadata.filter((item: ColumnMetadata) => item.options.primary);
     if (cols.length <= 0) {
-      FindService.logger.warn(`Table ${this.metadata.tableName}: no primary key column`);
+      ReadonlyService.logger.warn(`Table ${this.metadata.tableName}: no primary key column`);
     }
     this.primaryKeyColumn = cols[0];
   }
@@ -81,7 +81,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
     id: TId
   ): Promise<FindByIdResult<T, TId>> {
 
-    return using(new XLog(FindService.logger, levels.INFO, 'findById', `[${this.tableName}] id = ${id}`), (log) => {
+    return using(new XLog(ReadonlyService.logger, levels.INFO, 'findById', `[${this.tableName}] id = ${id}`), (log) => {
 
       return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
@@ -141,7 +141,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
    */
   public find(
   ): Promise<FindResult<T>> {
-    return using(new XLog(FindService.logger, levels.INFO, 'find', `[${this.tableName}]`), (log) => {
+    return using(new XLog(ReadonlyService.logger, levels.INFO, 'find', `[${this.tableName}]`), (log) => {
 
       return new Promise<FindResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
@@ -203,7 +203,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
     query: Knex.QueryBuilder
   ): Promise<QueryResult<T>> {
 
-    return using(new XLog(FindService.logger, levels.INFO, 'queryKnex', `[${this.tableName}]`), (log) => {
+    return using(new XLog(ReadonlyService.logger, levels.INFO, 'queryKnex', `[${this.tableName}]`), (log) => {
 
       return new Promise<QueryResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
@@ -259,7 +259,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
   public query(
     query: IQuery
   ): Promise<QueryResult<T>> {
-    return using(new XLog(FindService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
+    return using(new XLog(ReadonlyService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
       let knexQuery = this.fromTable();
 
       const visitor = new KnexQueryVisitor(knexQuery, this.metadata);
@@ -309,7 +309,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
   public set idColumnName(name: string) {
     Assert.notNullOrEmpty(name);
 
-    using(new XLog(FindService.logger, levels.INFO, 'setIdColumn', `name = ${name}`), (log) => {
+    using(new XLog(ReadonlyService.logger, levels.INFO, 'setIdColumn', `name = ${name}`), (log) => {
       if (!this.primaryKeyColumn) {
         const colMetadata = this.metadata.getColumnMetadataByProperty(name);
         if (!colMetadata) {
@@ -434,7 +434,7 @@ export abstract class FindService<T, TId extends IToString> implements IFindServ
   protected findEntityVersionAndResolve<TResult>(trx: Knex.Transaction, resultClazz: ICtor<ServiceResult>,
     queryResult: TResult, resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void)) {
 
-    using(new XLog(FindService.logger, levels.INFO, 'findEntityVersionAndResolve'), (log) => {
+    using(new XLog(ReadonlyService.logger, levels.INFO, 'findEntityVersionAndResolve'), (log) => {
 
       this.knexService.knex.table(this.entityVersionMetadata.tableName)
         .where(this.entityVersionMetadata.primaryKeyColumn.options.name, '=', this.tableName)

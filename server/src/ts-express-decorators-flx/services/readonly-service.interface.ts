@@ -14,7 +14,7 @@ import { IQuery, IToString } from '@fluxgate/core';
  * @template T
  * @template TId
  */
-export interface IFindService<T, TId extends IToString> {
+export interface IReadonlyService<T, TId extends IToString> {
 
   /**
    * Liefert oder setzt den DB-Id-Spaltennamen (primary key column)

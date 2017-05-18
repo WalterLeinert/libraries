@@ -4,7 +4,7 @@ import {
 } from '@fluxgate/common';
 import { IToString } from '@fluxgate/core';
 
-import { IFindService } from './find-service.interface';
+import { IReadonlyService } from './readonly-service.interface';
 
 /**
  * Interface wie IBaseService, allerdings mit any-Typen
@@ -27,7 +27,7 @@ export interface IBaseServiceRaw extends IBaseService<any, any> {
  * @template T
  * @template TId
  */
-export interface IBaseService<T extends IEntity<TId>, TId extends IToString> extends IFindService<T, TId> {
+export interface IBaseService<T extends IEntity<TId>, TId extends IToString> extends IReadonlyService<T, TId> {
 
   /**
    * Liefert oder setzt den DB-Id-Spaltennamen (primary key column)

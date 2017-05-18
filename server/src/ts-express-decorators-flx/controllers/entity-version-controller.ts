@@ -1,14 +1,14 @@
-import {  Controller, Get, PathParams } from 'ts-express-decorators';
+import { Controller, Get, PathParams } from 'ts-express-decorators';
 
 // Fluxgate
 import { EntityVersion, FindByIdResult, FindResult } from '@fluxgate/common';
 
 import { EntityVersionService } from '../services/entityVersion.service';
-import { FindController } from './base/find-controller';
+import { ReadonlyController } from './base/readonly-controller';
 
 
 @Controller('/' + EntityVersion.TABLE_NAME)
-export class EntityVersionController extends FindController<EntityVersion, string> {
+export class EntityVersionController extends ReadonlyController<EntityVersion, string> {
   constructor(service: EntityVersionService) {
     super(service, service.tableName, service.idColumnName);
   }
