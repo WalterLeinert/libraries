@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/components",
-  "version": "2.2.1",
+  "version": "2.2.2-beta.0",
   "description": "Fluxgate Angular Component-Library ",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -77,10 +77,10 @@
     "zone.js": "^0.8.4"
   },
   "peerDependencies": {
-    "@fluxgate/client": ">=2.2.1",
-    "@fluxgate/common": ">=2.2.1",
-    "@fluxgate/core": ">=2.2.1",
-    "@fluxgate/platform": ">=2.2.1"
+    "@fluxgate/client": ">=2.2.2-beta.0",
+    "@fluxgate/common": ">=2.2.2-beta.0",
+    "@fluxgate/core": ">=2.2.2-beta.0",
+    "@fluxgate/platform": ">=2.2.2-beta.0"
   },
   "directories": {
     "lib": "lib"
