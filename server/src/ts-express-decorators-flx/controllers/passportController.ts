@@ -42,43 +42,45 @@ export class PassportController {
   public login(
     @Required() @BodyParams('username') username: string,
     @Required() @BodyParams('password') password: string,
+    @Required() @BodyParams('client') clientId: number,
     @Request() request: Express.Request,
     @Response() response: Express.Response,
     @Next() next: Express.NextFunction
     ): Promise<IUser> {
 
-    return using(new XLog(PassportController.logger, levels.INFO, 'login', `username = ${username}`), (log) => {
-      return new Promise<IUser>((resolve, reject) => {
+    return using(new XLog(PassportController.logger, levels.INFO, 'login',
+      `username = ${username}, clientId = ${clientId}`), (log) => {
+        return new Promise<IUser>((resolve, reject) => {
 
-        try {
-          Passport
-            .authenticate('login', (err, user: IUser) => {
-              if (err) {
-                return reject(err);
-              }
-
-              request.logIn(user, (loginErr) => {
-                if (loginErr) {
-                  return reject(loginErr);
+          try {
+            Passport
+              .authenticate('login', (err, user: IUser) => {
+                if (err) {
+                  return reject(err);
                 }
 
-                user.resetCredentials();
-                resolve(user);
-              });
+                request.logIn(user, (loginErr) => {
+                  if (loginErr) {
+                    return reject(loginErr);
+                  }
 
-            })(request, response, next);
-        } catch (err) {
-          log.error(err);
-          return reject(this.createBusinessException(err));
-        }
-      })
-        .catch((err) => {
-          if (err && err.message === 'Failed to serialize user into session') {
-            return Promise.reject(this.createSystemException('user not found'));
+                  user.resetCredentials();
+                  resolve(user);
+                });
+
+              })(request, response, next);
+          } catch (err) {
+            log.error(err);
+            return reject(this.createBusinessException(err));
           }
-          return Promise.reject(this.createSystemException(err));
-        });
-    });
+        })
+          .catch((err) => {
+            if (err && err.message === 'Failed to serialize user into session') {
+              return Promise.reject(this.createSystemException('user not found'));
+            }
+            return Promise.reject(this.createSystemException(err));
+          });
+      });
   }
 
 

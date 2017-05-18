@@ -81,7 +81,7 @@ export class PassportService extends CoreComponent implements IServiceBase<any, 
    *
    * @memberOf PassportService
    */
-  public login(username: string, password: string): Observable<IUser> {
+  public login(username: string, password: string, clientId?: number): Observable<IUser> {
     Assert.notNullOrEmpty(username, 'username');
     Assert.notNullOrEmpty(password, 'password');
     return using(new XLog(PassportService.logger, levels.INFO, 'login', `username =  ${username}`), (log) => {
@@ -89,9 +89,12 @@ export class PassportService extends CoreComponent implements IServiceBase<any, 
       const userTableMetadata = this.metadataService.findTableMetadata(User.name);
       Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name} nicht gefunden.`);
 
+      clientId = 1;     // TODO
+
       const user = userTableMetadata.createEntity<IUser>();
       user.username = username;
       user.password = password;
+      (user as any).client = clientId;    // TODO
 
       return this.http.post(this.getUrl() + PassportService.LOGIN, user)
         .map((response: Response) => this.deserialize(response.json()))

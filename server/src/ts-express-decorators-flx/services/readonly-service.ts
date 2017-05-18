@@ -19,11 +19,11 @@ import {
 } from '@fluxgate/core';
 
 
+import { ISession } from '../session/session.interface';
 import { KnexQueryVisitor } from './knex-query-visitor';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
 import { IReadonlyService } from './readonly-service.interface';
-
 
 
 
@@ -78,6 +78,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
    * @memberOf ServiceBase
    */
   public findById<T extends IEntity<TId>>(
+    session: ISession = undefined,
     id: TId
   ): Promise<FindByIdResult<T, TId>> {
 
@@ -140,6 +141,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
    * @memberOf ServiceBase
    */
   public find(
+    session: ISession = undefined
   ): Promise<FindResult<T>> {
     return using(new XLog(ReadonlyService.logger, levels.INFO, 'find', `[${this.tableName}]`), (log) => {
 
@@ -200,6 +202,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
    * @memberOf ServiceBase
    */
   public queryKnex(
+    session: ISession = undefined,
     query: Knex.QueryBuilder
   ): Promise<QueryResult<T>> {
 
@@ -207,6 +210,13 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
 
       return new Promise<QueryResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
+
+          if (session) {
+            const userId = session.passport.user;
+            // user aus Usertabelle ermitteln -> clientId -> clientId in query berücksichtigen
+          } else {
+            // client nicht in query berücksichtigen
+          }
 
           query
             .transacting(trx)
@@ -257,6 +267,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
 
 
   public query(
+    session: ISession = undefined,
     query: IQuery
   ): Promise<QueryResult<T>> {
     return using(new XLog(ReadonlyService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
@@ -265,7 +276,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
       const visitor = new KnexQueryVisitor(knexQuery, this.metadata);
       query.term.accept(visitor);
 
-      return this.queryKnex(visitor.query(knexQuery));
+      return this.queryKnex(session, visitor.query(knexQuery));
     });
   }
 

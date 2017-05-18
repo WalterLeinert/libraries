@@ -14,9 +14,12 @@ import {
 import { Assert, Encryption, Funktion, IQuery, SelectorTerm, Types } from '@fluxgate/core';
 
 import { Messages } from '../../resources/messages';
+import { PassportSession } from '../session/passport-session';
+import { ISession } from '../session/session.interface';
 import { BaseService } from './baseService';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
+
 
 @Service()
 export class UserService extends BaseService<IUser, number> {
@@ -30,9 +33,9 @@ export class UserService extends BaseService<IUser, number> {
   // ----------------------------------------------------------------
   // überschriebene Methoden (Passwort-Info zurücksetzen bzw. User anlegen)
   // ----------------------------------------------------------------
-  public findById(id: number): Promise<FindByIdResult<IUser, number>> {
+  public findById(session: ISession, id: number): Promise<FindByIdResult<IUser, number>> {
     return new Promise<FindByIdResult<IUser, number>>((resolve, reject) => {
-      super.findById<IUser>(id)
+      super.findById<IUser>(session, id)
         .then((result) => {
           result.item.resetCredentials();
           resolve(result);
@@ -43,9 +46,9 @@ export class UserService extends BaseService<IUser, number> {
     });
   }
 
-  public find(): Promise<FindResult<IUser>> {
+  public find(session: ISession): Promise<FindResult<IUser>> {
     return new Promise<FindResult<IUser>>((resolve, reject) => {
-      super.find()
+      super.find(session)
         .then((result) => {
           result.items.forEach((user) => {
             user.resetCredentials();
@@ -58,12 +61,12 @@ export class UserService extends BaseService<IUser, number> {
     });
   }
 
-  public update(user: IUser): Promise<UpdateResult<IUser, number>> {
+  public update(session: ISession, user: IUser): Promise<UpdateResult<IUser, number>> {
     if (user.role) {
       Assert.that(Role.isValidRole(user.role));
     }
     return new Promise<UpdateResult<IUser, number>>((resolve, reject) => {
-      super.update(user)
+      super.update(session, user)
         .then((result) => {
           result.item.resetCredentials();
           resolve(result);
@@ -84,7 +87,7 @@ export class UserService extends BaseService<IUser, number> {
    *
    * @memberOf UserService
    */
-  public create(user: IUser): Promise<CreateResult<IUser, number>> {
+  public create(session: ISession, user: IUser): Promise<CreateResult<IUser, number>> {
     Assert.that(Role.isValidRole(user.role));
 
     user.password_salt = shortid.gen();
@@ -97,7 +100,7 @@ export class UserService extends BaseService<IUser, number> {
 
         user.password = encryptedPassword;
 
-        super.create(user).then((result) => {
+        super.create(session, user).then((result) => {
           result.item.resetCredentials();
           resolve(result);
         });
@@ -114,7 +117,7 @@ export class UserService extends BaseService<IUser, number> {
    *
    * @memberOf UserService
    */
-  public changePassword(user: IUser): Promise<UpdateResult<IUser, number>> {
+  public changePassword(session: ISession, user: IUser): Promise<UpdateResult<IUser, number>> {
     Assert.that(Role.isValidRole(user.role));
 
     user.password_salt = shortid.gen();
@@ -127,7 +130,7 @@ export class UserService extends BaseService<IUser, number> {
 
         user.password = encryptedPassword;
 
-        super.update(user).then((result) => {
+        super.update(session, user).then((result) => {
           result.item.resetCredentials();
           resolve(result);
         });
@@ -149,7 +152,7 @@ export class UserService extends BaseService<IUser, number> {
    *
    * @memberOf UserService
    */
-  public findByCredentialUsername(username: string, password: string): Promise<IUser> {
+  public findByCredentialUsername(session: PassportSession, username: string, password: string): Promise<IUser> {
     return using(new XLog(UserService.logger, levels.INFO, 'findByCredentialUsername', `username = ${username}`),
       (log) => {
         const query: IQuery = {
@@ -163,7 +166,7 @@ export class UserService extends BaseService<IUser, number> {
         const message = Messages.WRONG_CREDENTIALS('Benutzername');
 
         return new Promise<IUser>((resolve, reject) => {
-          this.query(query)
+          this.query(session, query)
             .then((result) => {
 
               try {
@@ -229,7 +232,7 @@ export class UserService extends BaseService<IUser, number> {
    *
    * @memberOf UserService
    */
-  public findByUsername(username: string): Promise<IUser> {
+  public findByUsername(session: PassportSession, username: string): Promise<IUser> {
     return using(new XLog(UserService.logger, levels.INFO, 'findByUsername', `username = ${username}`), (log) => {
       const query: IQuery = {
         term: new SelectorTerm({
@@ -240,7 +243,7 @@ export class UserService extends BaseService<IUser, number> {
       };
 
       return new Promise<IUser>((resolve, reject) => {
-        this.query(query)
+        this.query(session, query)
           .then((result) => {
             if (Types.isNullOrEmpty(result.items)) {
               log.log('no user found');
@@ -270,7 +273,7 @@ export class UserService extends BaseService<IUser, number> {
    *
    * @memberOf UserService
    */
-  public findByEmail(email: string): Promise<IUser> {
+  public findByEmail(session: PassportSession, email: string): Promise<IUser> {
     return using(new XLog(UserService.logger, levels.INFO, 'findByEmail', `email = ${email}`), (log) => {
       const query: IQuery = {
         term: new SelectorTerm({
@@ -281,7 +284,7 @@ export class UserService extends BaseService<IUser, number> {
       };
 
       return new Promise<IUser>((resolve, reject) => {
-        this.query(query)
+        this.query(session, query)
           .then((result) => {
             if (Types.isNullOrEmpty(result.items)) {
               log.log('no user found');
@@ -312,7 +315,7 @@ export class UserService extends BaseService<IUser, number> {
    *
    * @memberOf UserService
    */
-  public findByCredentialEmail(email: string, password: string): Promise<IUser> {
+  public findByCredentialEmail(session: PassportSession, email: string, password: string): Promise<IUser> {
     return using(new XLog(UserService.logger, levels.INFO, 'findByCredentialEmail', `email = ${email}`), (log) => {
       const query: IQuery = {
         term: new SelectorTerm({
@@ -325,7 +328,7 @@ export class UserService extends BaseService<IUser, number> {
       const message = Messages.WRONG_CREDENTIALS('Email');
 
       return new Promise<IUser>((resolve, reject) => {
-        this.query(query)
+        this.query(session, query)
           .then((result) => {
             if (Types.isNullOrEmpty(result.items)) {
               log.log(message);

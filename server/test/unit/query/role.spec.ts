@@ -49,7 +49,7 @@ class RoleTest extends KnexTest<Role, number> {
 
 
   @test 'should find 3 roles'() {
-    return expect(this.service.find()
+    return expect(this.service.find(undefined)
       .then((result) => result.items.length))
       .to.become(3);
   }
@@ -65,11 +65,11 @@ class RoleTest extends KnexTest<Role, number> {
 
     //   Clone.diff(result, expectedRoleResult);
     // });
-    return expect(this.service.create(role)).to.become(expectedRoleResult);
+    return expect(this.service.create(undefined, role)).to.become(expectedRoleResult);
   }
 
   @test 'should now find 4 roles'() {
-    return expect(this.service.find()
+    return expect(this.service.find(undefined)
       .then((result) => result.items.length))
       .to.become(4);
   }
@@ -82,7 +82,7 @@ class RoleTest extends KnexTest<Role, number> {
     //   Clone.diff(result, expectedRoleResult);
     // });
 
-    return expect(this.service.findById(expectedRoleResult.item.id))
+    return expect(this.service.findById(undefined, expectedRoleResult.item.id))
       .to.become(expectedRoleResult);
   }
 
@@ -96,7 +96,7 @@ class RoleTest extends KnexTest<Role, number> {
     const expectedRoleResult = Clone.clone(Result);
     expectedRoleResult.item.__version = Result.item.__version + 1;
 
-    return expect(this.service.update(Result.item))
+    return expect(this.service.update(undefined, Result.item))
       .to.become(expectedRoleResult);
   }
 
@@ -104,11 +104,11 @@ class RoleTest extends KnexTest<Role, number> {
     const id = this.firstTestId + 2;
     const role = this.createRole(id);
     const expectedRoleResult = this.createExpectedRoleResult(id, CreateResult, this.getNextEntityVersionFor(Role));
-    return expect(this.service.create(role)).to.become(expectedRoleResult);
+    return expect(this.service.create(undefined, role)).to.become(expectedRoleResult);
   }
 
   @test 'should now find 5 roles'() {
-    return expect(this.service.find()
+    return expect(this.service.find(undefined)
       .then((result) => result.items.length))
       .to.become(5);
   }
@@ -116,6 +116,7 @@ class RoleTest extends KnexTest<Role, number> {
   @test 'should query roles'() {
     const id = this.firstTestId + 1;
     return expect(this.service.queryKnex(
+      undefined,
       this.service.fromTable()
         .where(this.service.idColumnName, '>=', id))
       .then((result) => result.items.length))
@@ -125,6 +126,7 @@ class RoleTest extends KnexTest<Role, number> {
 
   @test 'should query roles by name'() {
     return expect(this.service.queryKnex(
+      undefined,
       this.service.fromTable()
         .where('role_name', '=', 'admin'))
       .then((result) => result.items.length))
@@ -133,6 +135,7 @@ class RoleTest extends KnexTest<Role, number> {
 
   @test 'should query and test role by name'() {
     return expect(this.service.queryKnex(
+      undefined,
       this.service.fromTable()
         .where('role_name', '=', 'admin'))
       .then((result) => result.items[0].id))
@@ -145,12 +148,12 @@ class RoleTest extends KnexTest<Role, number> {
     const roleIdToDelete = this.firstTestId + 1;
     const expected = new DeleteResult(roleIdToDelete, this.getNextEntityVersionFor(Role));
 
-    return expect(this.service.delete(roleIdToDelete))
+    return expect(this.service.delete(undefined, roleIdToDelete))
       .to.become(expected);
   }
 
   @test 'should now find 4 roles again'() {
-    return expect(this.service.find()
+    return expect(this.service.find(undefined)
       .then((result) => result.items.length))
       .to.become(4);
   }

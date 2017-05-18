@@ -9,6 +9,8 @@ import { FindByIdResult, FindResult, IEntity, QueryResult } from '@fluxgate/comm
 import { Assert, IQuery, IToString, JsonSerializer } from '@fluxgate/core';
 
 import { IReadonlyService } from '../../services/readonly-service.interface';
+import { ISession } from '../../session/session.interface';
+
 
 /**
  * Abstrakte Basisklasse für alle REST-Controller, die nur lesende Zugriffe durchführen (find, findById, query)
@@ -45,10 +47,11 @@ export abstract class ReadonlyController<T, TId extends IToString> {
    * @memberOf ControllerBase
    */
   protected findByIdInternal<T extends IEntity<TId>>(
+    session: ISession,
     id: TId
   ): Promise<FindByIdResult<T, TId>> {
     return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {
-      this._service.findById(id).then((item) => {
+      this._service.findById(session, id).then((item) => {
         resolve(this.serialize(item));
       });
     });
@@ -63,9 +66,10 @@ export abstract class ReadonlyController<T, TId extends IToString> {
    * @memberOf ControllerBase
    */
   protected findInternal(
+    session: ISession
   ): Promise<FindResult<T>> {
     return new Promise<FindResult<T>>((resolve, reject) => {
-      this._service.find().then((items) => {
+      this._service.find(session).then((items) => {
         resolve(this.serialize(items));
       });
     });
@@ -82,16 +86,18 @@ export abstract class ReadonlyController<T, TId extends IToString> {
    * @memberof ControllerBase
    */
   protected queryInternal(
+    session: ISession,
     query: IQuery
   ): Promise<QueryResult<T>> {
     return new Promise<QueryResult<T>>((resolve, reject) => {
       const deserializedQuery = this.serializer.deserialize<IQuery>(query);
 
-      this._service.query(deserializedQuery).then((result) => {
+      this._service.query(session, deserializedQuery).then((result) => {
         resolve(this.serialize(result));
       });
     });
   }
+
 
   /**
    * Serialisiert das @param{item} für die Übertragung zum Client über das REST-Api.

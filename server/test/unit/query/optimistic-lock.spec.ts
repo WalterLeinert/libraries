@@ -67,23 +67,25 @@ class OptimisticLockTest extends KnexTest<QueryTest, number> {
       const item1 = this.createItem();
       const item2 = this.createItem();
 
-      return Promise.all([this.service.create(item1), this.service.create(item2)]).then((items) => {
-        // ok
-      });
+      return Promise.all([
+        this.service.create(undefined, item1),
+        this.service.create(undefined, item2)]).then((items) => {
+          // ok
+        });
     });
   }
 
 
   @test 'should generate optimistic lock exception'(done: (err?: any) => void) {
     using(new XLog(OptimisticLockTest.logger, levels.INFO, 'should update 2 records'), (log) => {
-      this.service.find().then((findResult) => {
+      this.service.find(undefined).then((findResult) => {
         const item = findResult.items[findResult.items.length - 1];
         const itemClone = Clone.clone(item);
 
         // update für denselben Record direkt nacheinander -> optimistic lock exception
-        this.service.update(itemClone).then((firstUpdateResult) => {
+        this.service.update(undefined, itemClone).then((firstUpdateResult) => {
           // erster update war erfolgreich -> version = 1
-          this.service.update(item).then((secondUpdateResult) => {
+          this.service.update(undefined, item).then((secondUpdateResult) => {
             //  2. update schlägt fehl
             done(`should not happen`);
           }).catch((err) => {

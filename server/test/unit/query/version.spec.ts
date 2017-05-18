@@ -63,7 +63,7 @@ class VersionTest extends KnexTest<QueryTest, number> {
   @test 'should create new record -> version == 0'(done: (err?: any) => void) {
     const item1 = this.createItem();
     const ev = this.getNextEntityVersionFor(QueryTest);
-    this.service.create(item1).then((result) => {
+    this.service.create(undefined, item1).then((result) => {
       if (result.item.__version !== 0) {
         done(`${result.item.__version} must be 0.`);
       }
@@ -76,13 +76,13 @@ class VersionTest extends KnexTest<QueryTest, number> {
 
 
   @test 'should update record -> version == 1'(done: (err?: any) => void) {
-    this.service.find().then((findResult) => {
+    this.service.find(undefined).then((findResult) => {
 
       const itemsSorted = findResult.items.sort((it1, it2) => it1.id - it2.id);
       const item = itemsSorted[itemsSorted.length - 1];
 
       item.name = item.name + '-updated';
-      this.service.update(item).then((updateResult) => {
+      this.service.update(undefined, item).then((updateResult) => {
         if (updateResult.item.__version !== item.__version + 1) {
           done(`entity: versions different: ${updateResult.item.__version} !== ${item.__version}`);
         } else {
@@ -94,13 +94,13 @@ class VersionTest extends KnexTest<QueryTest, number> {
 
 
   @test 'should update record -> version == 2'(done: (err?: any) => void) {
-    this.service.find().then((findResult) => {
+    this.service.find(undefined).then((findResult) => {
 
       const itemsSorted = findResult.items.sort((it1, it2) => it1.id - it2.id);
       const item = itemsSorted[itemsSorted.length - 1];
 
       item.name = item.name + '-updated2';
-      this.service.update(item).then((updateResult) => {
+      this.service.update(undefined, item).then((updateResult) => {
         if (updateResult.item.__version !== item.__version + 1) {
           done(`entity: versions different: ${updateResult.item.__version} !== ${item.__version}`);
         } else {

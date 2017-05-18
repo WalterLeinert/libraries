@@ -15,6 +15,7 @@ import {
 } from '@fluxgate/common';
 
 
+import { ISession } from '../session/session.interface';
 import { IBaseService } from './baseService.interface';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
@@ -57,6 +58,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    * @memberOf ServiceBase
    */
   public create(
+    session: ISession = undefined,
     subject: T
   ): Promise<CreateResult<T, TId>> {
 
@@ -147,6 +149,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    * @memberOf ServiceBase
    */
   public update(
+    session: ISession = undefined,
     subject: T
   ): Promise<UpdateResult<T, TId>> {
 
@@ -250,6 +253,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    * @memberOf ServiceBase
    */
   public delete(
+    session: ISession = undefined,
     id: TId
   ): Promise<DeleteResult<TId>> {
 

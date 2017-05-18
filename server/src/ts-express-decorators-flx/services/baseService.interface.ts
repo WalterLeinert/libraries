@@ -4,7 +4,9 @@ import {
 } from '@fluxgate/common';
 import { IToString } from '@fluxgate/core';
 
+import { ISession } from '../session/session.interface';
 import { IReadonlyService } from './readonly-service.interface';
+
 
 /**
  * Interface wie IBaseService, allerdings mit any-Typen
@@ -48,6 +50,7 @@ export interface IBaseService<T extends IEntity<TId>, TId extends IToString> ext
    * @memberOf ServiceBase
    */
   create(
+    session: ISession,
     subject: T
   ): Promise<CreateResult<T, TId>>;
 
@@ -61,6 +64,7 @@ export interface IBaseService<T extends IEntity<TId>, TId extends IToString> ext
    * @memberOf ServiceBase
    */
   update(
+    session: ISession,
     subject: T
   ): Promise<UpdateResult<T, TId>>;
 
@@ -74,6 +78,7 @@ export interface IBaseService<T extends IEntity<TId>, TId extends IToString> ext
    * @memberOf ServiceBase
    */
   delete(
+    session: ISession,
     id: TId
   ): Promise<DeleteResult<TId>>;
 
