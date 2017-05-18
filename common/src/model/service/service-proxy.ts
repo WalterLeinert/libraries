@@ -103,11 +103,20 @@ export class ServiceProxy<T extends IEntity<TId>, TId extends IToString> impleme
     return this._service;
   }
 
+  /**
+   * Liefert für @param{obj} eine Objekt-Id bestehend aus Tabellennamen und einer Entity-Id.
+   *
+   * @protected
+   * @param {(T | TId)} obj
+   * @returns {string}
+   *
+   * @memberof ServiceProxy
+   */
   protected getObjId(obj: T | TId): string {
     const sb = new StringBuilder(this.getTableName());
 
-    const item = obj as T;
-    if (item) {
+    if (!Types.isPrimitive(obj)) {
+      const item = obj as T;
       sb.append(`, id: ${item.id}`);
 
       return `${StringUtil.enclose(this.getTableName(), StringUtil.format(`id: ${item.id}`))}`;
