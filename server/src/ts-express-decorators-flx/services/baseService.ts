@@ -16,9 +16,9 @@ import {
 
 
 import { IBaseService } from './baseService.interface';
-import { ReadonlyService } from './readonly-service';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
+import { ReadonlyService } from './readonly-service';
 
 
 /**
