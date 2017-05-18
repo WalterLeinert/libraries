@@ -60,8 +60,12 @@ export class StringUtil {
     } else {
       sb.append(obj.constructor.name);
     }
-    sb.append(`: `);
-    sb.append(`${args}`);
+
+    if (!Types.isNullOrEmpty(args)) {
+      sb.append(`: `);
+      sb.append(`${args}`);
+    }
+
     sb.append(' }');
 
     return sb.toString();
