@@ -271,17 +271,19 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
 
 
   /**
-   * Liefert die from(<table>) Clause für den aktuellen Tabellennamen
+   * Liefert einen QueryBuilder für die angegebene Tabelle @param{tableName}.
+   * Default ist die aktuelle Tabelle des Services.
    *
-   * @readonly
    * @protected
-   * @type {Knex.QueryBuilder}
-   * @memberOf ServiceBase
+   * @param {string} [tableName=this.tableName]
+   * @returns {Knex.QueryBuilder}
+   *
+   * @memberof ReadonlyService
    */
-  public fromTable(): Knex.QueryBuilder {
-    return this.knexService.knex(this.tableName);
+  public fromTable(tableName: string = this.tableName): Knex.QueryBuilder {
+    Assert.notNull(tableName);
+    return this.knexService.knex(tableName);
   }
-
 
   /**
    * Liefert den DB-Id-Spaltennamen (primary key column)
@@ -453,5 +455,61 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
         });
     });
   };
+
+
+  protected addIdSelector(qb: Knex.QueryBuilder, trx: Knex.Transaction, id: any):
+    Knex.QueryBuilder {
+    return this.addColumnSelector(qb, trx, this.idColumnName, id);
+  }
+
+  protected addClientSelector(qb: Knex.QueryBuilder, trx: Knex.Transaction, clientId: any):
+    Knex.QueryBuilder {
+
+    if (!this.metadata.clientColumn) {
+      return qb;
+    } else {
+      return this.addColumnSelector(qb, trx, this.metadata.clientColumn.options.name, clientId);
+    }
+  }
+
+  protected addVersionSelector(qb: Knex.QueryBuilder, trx: Knex.Transaction, version: number):
+    Knex.QueryBuilder {
+
+    if (!this.metadata.versionColumn) {
+      return qb;
+    } else {
+      return this.addColumnSelector(qb, trx, this.metadata.versionColumn.options.name, version);
+    }
+  }
+
+
+  /**
+   * Fügt zum Querybuilder @param{qb} eine Selector-Query hinzu, die Selektion auf der aktuellen Entity auf die Spalte
+   * @param{columnName} und den Wert @param{value} einschränkt.
+   *
+   * @private
+   * @param {Knex.QueryBuilder} qb - der aktuelle Querybuilder
+   * @param {Knex.Transaction} trx - die aktuelle Transaktion
+   * @param {string} columnName - der Spaltenname
+   * @param {any} value - der Spaltenwert
+   * @returns {Knex.QueryBuilder}
+   *
+   * @memberof BaseService
+   */
+  protected addColumnSelector(qb: Knex.QueryBuilder, trx: Knex.Transaction, columnName: string, value: any):
+    Knex.QueryBuilder {
+
+    Assert.notNull(qb);
+    Assert.notNull(trx);
+    Assert.notNullOrEmpty(columnName);
+    Assert.notNull(value);
+
+    return using(new XLog(ReadonlyService.logger, levels.INFO, 'addSelectorQuery',
+      `columnName = ${columnName}, value = ${value}`), (log) => {
+        return qb
+          .andWhere(columnName, value)
+          .transacting(trx);
+      });
+  }
 
 }

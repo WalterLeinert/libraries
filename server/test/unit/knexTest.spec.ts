@@ -89,7 +89,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
    * @memberOf KnexTest
    */
   protected static setup(modelClass: Funktion, serviceClass: ICtor<IBaseServiceRaw>,
-    idGenerator: ValueGenerator<any>, done: () => void) {
+    idGenerator: ValueGenerator<any>, done: (err?: any) => void) {
     using(new XLog(KnexTest.logger, levels.INFO, 'static.setup'), (log) => {
       KnexTest._service = KnexTest.createService(serviceClass);
 
@@ -170,7 +170,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
    * wird einmal nach allen Tests ausgeführt
    * - Knex-Cleanup
    */
-  protected static after(done: () => void) {
+  protected static after(done: (err?: any) => void) {
     using(new XLog(KnexTest.logger, levels.INFO, 'static.after'), (log) => {
 
       try {

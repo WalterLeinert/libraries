@@ -7,7 +7,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  EntityNotFoundException, Funktion, IToString, OptimisticLockException
+  Assert, EntityNotFoundException, Funktion, IToString, OptimisticLockException
 } from '@fluxgate/core';
 
 import {
@@ -63,6 +63,13 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
     return using(new XLog(BaseService.logger, levels.INFO, 'create', `[${this.tableName}]`), (log) => {
       if (log.isDebugEnabled) {
         log.debug('subject: ', subject);
+      }
+
+      log.warn(`Client-Id für aktuellen User ermitteln`);
+      const clientId = 1;     // TODO für aktuellen User ermitteln
+
+      if (this.metadata.clientColumn) {
+        subject[this.metadata.clientColumn.name] = clientId;    // TODO: Konstante
       }
 
       if (this.metadata.versionColumn) {
@@ -152,7 +159,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
         this.knexService.knex.transaction((trx) => {
 
           // quer< zur Selektion der Entity und ggf. des Versionsinkrements
-          let query: Knex.QueryBuilder = this.createUpdateQuery(trx, dbSubject);
+          let query: Knex.QueryBuilder = this.createUpdateQuery(trx, subject.id, dbSubject);
 
           // query für increment der entityversion Tabelle oder nop-query erzeugen
           let entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
@@ -250,7 +257,13 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
       return new Promise<DeleteResult<TId>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
-          let query: Knex.QueryBuilder = this.createSelectorQuery(trx, id);
+          log.warn(`Client-Id für aktuellen User ermitteln`);
+          const clientId = 1;     // TODO für aktuellen User ermitteln
+
+          let query = this.fromTable();
+          query = this.addIdSelector(query, trx, id);
+          query = this.addClientSelector(query, trx, clientId);
+
 
           // query für increment der entityversion Tabelle oder nop-query erzeugen
           let entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
@@ -312,12 +325,18 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    *
    * @memberof BaseService
    */
-  private createUpdateQuery(trx: Knex.Transaction, dbSubject: any): Knex.QueryBuilder {
-    return using(new XLog(BaseService.logger, levels.INFO, 'createSelectorQuery'), (log) => {
+  private createUpdateQuery(trx: Knex.Transaction, id: TId, dbSubject: any): Knex.QueryBuilder {
+    return using(new XLog(BaseService.logger, levels.INFO, 'createUpdateQuery'), (log) => {
 
       // Selektion der Entity
-      let query: Knex.QueryBuilder = this.knexService.knex.table(this.tableName)
-        .where(this.idColumnName, dbSubject[this.idColumnName]);
+
+      log.warn(`Client-Id für aktuellen User ermitteln`);
+      const clientId = 1;     // TODO für aktuellen User ermitteln
+
+      let query = this.fromTable();
+      query = this.addIdSelector(query, trx, id);
+      query = this.addClientSelector(query, trx, clientId);
+
 
       //
       // falls eine Version-Column vorliegt, müssen wir die Version erhöhen
@@ -331,8 +350,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
         const version: number = dbSubject[this.metadata.versionColumn.options.name];
         dbSubject[versionColumnName] = version + 1;
 
-        query = query
-          .andWhere(versionColumnName, '=', version);
+        query = this.addVersionSelector(query, trx, version);
 
         if (log.isDebugEnabled()) {
           log.debug(`query prepared for updating version in table ${this.tableName}`);
@@ -342,27 +360,6 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
       return query;
     });
   }
-
-  /**
-   * Liefert eine Query, die über die id-Column eine Entity selektiert und die Version inkrementiert,
-   * falls dies eine versionierte Entity ist.
-   *
-   * @private
-   * @param {Knex.Transaction} trx
-   * @param {*} dbSubject
-   * @returns {Knex.QueryBuilder}
-   *
-   * @memberof BaseService
-   */
-  private createSelectorQuery(trx: Knex.Transaction, id: any): Knex.QueryBuilder {
-    return using(new XLog(BaseService.logger, levels.INFO, 'createSelectorQuery'), (log) => {
-      let query: Knex.QueryBuilder = this.knexService.knex.table(this.tableName)
-        .where(this.idColumnName, id);
-      return query;
-    });
-  }
-
-
 
 
 
@@ -379,13 +376,13 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    */
   private createEntityVersionIncrement(trx: Knex.Transaction): Knex.QueryBuilder {
     return using(new XLog(BaseService.logger, levels.INFO, 'createEntityVersionIncrement'), (log) => {
-      let rval = this.knexService.knex.table(this.tableName);
+      let rval = this.fromTable();
 
       if (this.entityVersionMetadata) {
 
         // query zum Inkrement der Version in Tabelle entityversion
 
-        rval = this.knexService.knex.table(this.entityVersionMetadata.tableName)
+        rval = this.fromTable(this.entityVersionMetadata.tableName)
           .where(this.entityVersionMetadata.primaryKeyColumn.options.name, '=', this.tableName)
           .increment(this.entityVersionMetadata.versionColumn.options.name, 1)
           .transacting(trx);

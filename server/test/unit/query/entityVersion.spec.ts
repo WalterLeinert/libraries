@@ -54,11 +54,10 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
   }
 
 
-  public static before(done: () => void) {
+  public static before(done: (err?: any) => void) {
     using(new XLog(EntityVersionTest.logger, levels.INFO, 'static.before'), (log) => {
-      super.before(() => {
-
-        super.setup(QueryTest, QueryTestService, new NumberIdGenerator(1), () => {
+      super.before((doneBefore: (err?: any) => void) => {
+        super.setup(QueryTest, QueryTestService, new NumberIdGenerator(1), (doneSetup: (err?: any) => void) => {
           done();
         });
       });
@@ -86,23 +85,27 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
           const expectedVersion = 1;
           if (updateResult.item.__version !== expectedVersion) {
             done(`entity: version (${updateResult.item.__version}) not ${expectedVersion} after first update`);
+            return;
           }
 
           if (updateResult.item.__version !== item.__version + 1) {
             done(`entity: versions different: ${updateResult.item.__version} !== ${item.__version}`);
+            return;
           }
 
           this.entityVersionService.findById<EntityVersion>('querytest').then((evResult) => {
             if (evResult.item.__version !== versionPrev + 1) {
               done(`entityVersion: versions different: ${evResult.item.__version} !== ${versionPrev + 1}`);
+            } else {
+              done();
             }
 
-            done();
           });
         });
       });
     });
   }
+
 
   @test 'should increment entity version && entityVersion.version (2nd update)'(done: (err?: any) => void) {
     this.service.find().then((findResult) => {
@@ -114,22 +117,25 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
         const versionPrev = entityVersionResult.item.__version;
 
         this.service.update(item).then((updateResult) => {
-          const expectedVersion = 2;
-          if (updateResult.item.__version !== expectedVersion) {
-            done(`entity: version (${updateResult.item.__version}) not ${expectedVersion} after first update`);
+          if (updateResult.item.__version !== item.__version + 1) {
+            done(`entity: version (${updateResult.item.__version}) not ${item.__version + 1} after first update`);
+            return;
           }
 
-
-          if (updateResult.item.__version !== item.__version + 1) {
-            done(`item versions different: ${updateResult.item.__version} !== ${item.__version}`);
+          if (updateResult.entityVersion !== versionPrev + 1) {
+            done(`entityVersion: version different to previous version: ` +
+              `${updateResult.entityVersion} !== ${versionPrev + 1}`);
+            return;
           }
 
           this.entityVersionService.findById<EntityVersion>('querytest').then((evResult) => {
-            if (evResult.item.__version !== versionPrev + 1) {
-              done(`entityVersion versions different: ${evResult.item.__version} !== ${versionPrev + 1}`);
+
+            if (updateResult.entityVersion !== evResult.item.__version) {
+              done(`entityVersion: versions different: ${updateResult.entityVersion} !== ${evResult.item.__version}`);
+            } else {
+              done();
             }
 
-            done();
           });
         });
       });
