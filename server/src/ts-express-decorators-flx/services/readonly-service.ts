@@ -9,7 +9,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import {
   ColumnMetadata, EntityVersion, ExceptionWrapper, FindByIdResult, FindResult,
   IEntity, IUser, QueryResult,
-  ServiceResult, TableMetadata
+  ServiceResult, TableMetadata, User
 } from '@fluxgate/common';
 import {
   Assert, Clone, Funktion, ICtor,
@@ -43,6 +43,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
   private primaryKeyColumn: ColumnMetadata = null;
   private _metadata: TableMetadata;
   private _entityVersionMetadata: TableMetadata;
+  private _userMetadata: TableMetadata;             // Mandantenfähigkeit /Clients
 
 
   /**
@@ -61,6 +62,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
 
     this._metadata = metadataService.findTableMetadata(table);
     this._entityVersionMetadata = metadataService.findTableMetadata(EntityVersion);
+    this._userMetadata = metadataService.findTableMetadata(User);
 
     const cols = this.metadata.columnMetadata.filter((item: ColumnMetadata) => item.options.primary);
     if (cols.length <= 0) {
@@ -111,6 +113,10 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
                   log.debug('result = ', logResult);
                 }
 
+                if (session) {
+                  // ggf. id_mandant der Ergebnis-Row mit der clientId des Users querchecken
+                }
+
                 // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
                 if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
                   this.findEntityVersionAndResolve(trx, FindByIdResult, result, resolve);
@@ -148,8 +154,9 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
       return new Promise<FindResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
-          this.fromTable()
-            .transacting(trx)
+          const query = this.createClientSelectorQuery(session, trx);
+
+          query
 
             .then((rows) => {
               if (rows.length <= 0) {
@@ -193,6 +200,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
   }
 
 
+
   /**
    * Führt die Query {query} aus und liefert ein Array von Entity-Instanzen vom Typ {T} als @see{Promise}
    *
@@ -211,12 +219,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
       return new Promise<QueryResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
-          if (session) {
-            const userId = session.passport.user;
-            // user aus Usertabelle ermitteln -> clientId -> clientId in query berücksichtigen
-          } else {
-            // client nicht in query berücksichtigen
-          }
+          query = this.createClientSelectorQuery(session, trx, query);
 
           query
             .transacting(trx)
@@ -291,10 +294,25 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
    *
    * @memberof ReadonlyService
    */
-  public fromTable(tableName: string = this.tableName): Knex.QueryBuilder {
-    Assert.notNull(tableName);
+  public fromTable(table: string | Function = this.tableName): Knex.QueryBuilder {
+    Assert.notNull(table);
+
+    let tableName: string;
+
+    if (!Types.isPresent(table)) {
+      tableName = this.tableName;
+    } else {
+
+      if (Types.isString(table)) {
+        tableName = table as string;
+      } else {
+        tableName = (table as Funktion).name;
+      }
+    }
+
     return this.knexService.knex(tableName);
   }
+
 
   /**
    * Liefert den DB-Id-Spaltennamen (primary key column)
@@ -523,4 +541,44 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
       });
   }
 
+
+
+  /**
+   * Liefert eine Knex-Query, die für die aktuelle Tabelle alle Rows liefert.
+   * Ist @param{session} vorhanden, werden nur die Rows mit der ClientId des Users der Session geliefert
+   *
+   * @protected
+   * @param {ISession} session
+   * @param {Knex.Transaction} trx
+   * @returns {Knex.QueryBuilder}
+   *
+   * @memberof ReadonlyService
+   */
+  protected createClientSelectorQuery(session: ISession, trx: Knex.Transaction,
+    query?: Knex.QueryBuilder): Knex.QueryBuilder {
+
+    // Knex-Beispielcode:
+    // this._knexService.knex
+    //   .from('artikel')
+    //   .innerJoin('user', 'artikel.id_mandant', 'user.id_mandant')
+    //   .andWhere('user.user_id', userId).then((res) => {
+    //    ...
+    //   });
+
+    if (!query) {
+      query = this.fromTable();
+    }
+
+    if (session) {
+      query = query
+        .innerJoin(this._userMetadata.tableName,                                              // .innerJoin('user',
+        `${this.tableName}.${this.metadata.clientColumn.options.name}`,                       //    'artikel.id_mandant',
+        `${this._userMetadata.tableName}.${this._userMetadata.clientColumn.options.name}`)    //    'user.id_mandant')
+        .andWhere(`${this._userMetadata.tableName}.` +                                        // .andWhere('user.user_id',
+        `${this._userMetadata.primaryKeyColumn.options.name}`, session.passport.user);        //      userId)
+    }
+
+    return query
+      .transacting(trx);
+  }
 }
