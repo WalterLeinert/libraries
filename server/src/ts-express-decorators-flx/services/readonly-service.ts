@@ -429,7 +429,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
    * @param {TResult} queryResult
    * @param {(((result: ServiceResult | PromiseLike<ServiceResult>) => void))} resolve
    *
-   * @memberof FindService
+   * @memberof ReadonlyService
    */
   protected findEntityVersionAndResolve<TResult>(trx: Knex.Transaction, resultClazz: ICtor<ServiceResult>,
     queryResult: TResult, resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void)) {
