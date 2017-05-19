@@ -1,3 +1,8 @@
+// -------------------------------------- logging --------------------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
+
 import { Assert, ClassMetadata, Dictionary, Funktion, IToString } from '@fluxgate/core';
 
 import { ICrudServiceRequests } from '../../redux/service-requests/crud-service-requests.interface';
@@ -16,6 +21,9 @@ import { SpecialColumns } from './specialColumns';
  * @class TableMetadata
  */
 export abstract class TableMetadata extends ClassMetadata {
+  protected static readonly logger = getLogger(TableMetadata);
+
+
   private _columnMetadata: ColumnMetadata[] = [];
   private propertyMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
@@ -102,28 +110,37 @@ export abstract class TableMetadata extends ClassMetadata {
    * @memberOf TableMetadata
    */
   public createModelInstance<T>(json: any, mapColumns = true): T {
-    const instance = this.createEntity();
+    return using(new XLog(TableMetadata.logger, levels.DEBUG, 'createModelInstance'), (log) => {
+      const instance = this.createEntity();
 
-    // alle Properties der Row über Reflection ermitteln
-    const props = Reflect.ownKeys(json);
+      // alle Properties der Row über Reflection ermitteln
+      const props = Reflect.ownKeys(json);
 
-    // ... und dann die Werte der Zielentity zuweisen
-    for (const propName of props) {
-      let colMetadata = null;
+      // ... und dann die Werte der Zielentity zuweisen
+      for (const propName of props) {
+        let colMetadata = null;
 
-      if (mapColumns) {
-        colMetadata = this.getColumnMetadataByDbCol(propName.toString());
-      } else {
-        colMetadata = this.getColumnMetadataByProperty(propName.toString());
+        if (mapColumns) {
+          colMetadata = this.getColumnMetadataByDbCol(propName.toString());
+        } else {
+          colMetadata = this.getColumnMetadataByProperty(propName.toString());
+        }
+
+        Assert.notNull(colMetadata);
+        // if (!colMetadata) {
+        //   log.warn(`todo: entity ${this.tableName} has no property ${propName.toString()}`);
+
+        // } else {
+        //   if (colMetadata.options.persisted) {
+        //     instance[colMetadata.propertyName] = colMetadata.convertToProperty(json[propName]);
+        //   }
+        // }
+
+
       }
-      Assert.notNull(colMetadata);
 
-      if (colMetadata.options.persisted) {
-        instance[colMetadata.propertyName] = colMetadata.convertToProperty(json[propName]);
-      }
-    }
-
-    return instance as T;
+      return instance as T;
+    });
   }
 
 
