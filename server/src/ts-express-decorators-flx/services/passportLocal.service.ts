@@ -1,4 +1,3 @@
-import * as Express from 'express';
 import * as Passport from 'passport';
 import { Strategy } from 'passport-local';
 import { Service } from 'ts-express-decorators';
@@ -13,7 +12,8 @@ import { IUser } from '@fluxgate/common';
 
 import { MetadataService, UserService } from '.';
 import { Messages } from '../../resources/messages';
-import { PassportSession } from '../session/passport-session';
+import { ISessionRequest } from '../session/session-request.interface';
+import { IBodyRequest } from '../session/body-request.interface';
 
 @Service()
 export class PassportLocalService {
@@ -49,9 +49,9 @@ export class PassportLocalService {
   public deserialize(id, done) {
     using(new XLog(PassportLocalService.logger, levels.INFO, 'deserialize', `id = ${id}`), (log) => {
       this.userService.findById(undefined, id)
-        .then((user) => {
-          log.log(`user = ${user}`);
-          done(null, user);
+        .then((userResult) => {
+          log.log(`user = ${userResult}`);
+          done(null, userResult.item);
         });
     });
   }
@@ -71,12 +71,12 @@ export class PassportLocalService {
         passwordField: 'password',
         passReqToCallback: true // allows us to pass back the entire request to the callback
       },
-        (req, username, password, done) => {
+        (request: ISessionRequest, username: string, password: string, done) => {
           // console.log('LOCAL SIGNUP', username, password);
           // asynchronous
           // User.findOne wont fire unless data is sent back
           process.nextTick(() => {
-            this.onLocalSignup(req, username, password, done);
+            this.onLocalSignup(request, username, password, done);
           });
         })
       );
@@ -97,12 +97,12 @@ export class PassportLocalService {
         passwordField: 'password',
         passReqToCallback: true // allows us to pass back the entire request to the callback
       },
-        (req, username, password, done) => {
+        (request: ISessionRequest, username: string, password: string, done) => {
           // console.log('LOCAL SIGNUP', username, password);
           // asynchronous
           // User.findOne wont fire unless data is sent back
           process.nextTick(() => {
-            this.onLocalChangePassword(req, username, password, done);
+            this.onLocalChangePassword(request, username, password, done);
           });
         })
       );
@@ -126,11 +126,10 @@ export class PassportLocalService {
     }, this.onLocalLogin));
   }
 
-  private onLocalLogin = (req, username, password, done) => {
+  private onLocalLogin = (request: IBodyRequest<IUser>, username: string, password: string, done) => {
     using(new XLog(PassportLocalService.logger, levels.INFO, 'onLocalLogin', `username = ${username}`), (log) => {
-      const clientId = 1;   // TODO
 
-      this.userService.findByCredentialUsername(new PassportSession(undefined, clientId), username, password)
+      this.userService.findByCredentialUsername(request, username, password)
         .then((user) => {
           if (!user) {
             return done(null, false); // req.flash is the way to set flashdata using connect-flash
@@ -144,15 +143,13 @@ export class PassportLocalService {
           done(err, false);
         });
     });
-
   }
 
 
-  private onLocalSignup(req: Express.Request, username: string, password: string, done): void {
+  private onLocalSignup(request: ISessionRequest, username: string, password: string, done): void {
     using(new XLog(PassportLocalService.logger, levels.INFO, 'onLocalSignup', `username = ${username}`), (log) => {
-      const clientId = 1;   // TODO
 
-      this.userService.findByUsername(new PassportSession(undefined, clientId), username)
+      this.userService.findByUsername(request, username)
         .then((user) => {
           if (user) { // User exists
             log.log(`user exists: ${user}`);
@@ -160,9 +157,8 @@ export class PassportLocalService {
             return done(Messages.USER_EXISTS(), false);
           }
 
-
           // Create new User
-          this.userService.create(new PassportSession(user.id, user.id_mandant), req.body as IUser)
+          this.userService.create(request, request.body as IUser)
             .then((result) => {
               result.item.resetCredentials();
 
@@ -175,15 +171,11 @@ export class PassportLocalService {
   }
 
 
-  private onLocalChangePassword(req: Express.Request, username: string, password: string, done): void {
+  private onLocalChangePassword(request: ISessionRequest, username: string, password: string, done): void {
     using(new XLog(PassportLocalService.logger, levels.INFO, 'onLocalChangePassword', `username = ${username}`),
       (log) => {
 
-        const clientId = 1;   // TODO
-
-        const session = new PassportSession(undefined, clientId);
-
-        this.userService.findByUsername(session, username)
+        this.userService.findByUsername(request, username)
           .then((user) => {
             if (!user) { // User does not exist (should not happen)
               log.log(`user does not exist: ${username}`);
@@ -192,17 +184,17 @@ export class PassportLocalService {
             }
 
             // aktuelle credentials prüfen
-            this.userService.findByCredentialUsername(session, username, password)
+            this.userService.findByCredentialUsername(request, username, password)
               .then((usr) => {
                 if (!usr) {
                   return done(null, false);
                 }
 
                 // neues Passwort übernehmen
-                user.password = req.body.passwordNew;
+                user.password = request.body.passwordNew;
 
                 // Create new User
-                this.userService.changePassword(new PassportSession(user.id, user.id_mandant), user)
+                this.userService.changePassword(request, user)
                   .then((result) => {
                     result.item.resetCredentials();
 

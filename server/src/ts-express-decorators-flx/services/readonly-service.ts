@@ -19,8 +19,8 @@ import {
 } from '@fluxgate/core';
 
 
-import { PassportSession } from '../session/passport-session';
-import { ISession } from '../session/session.interface';
+import { IBodyRequest } from '../session/body-request.interface';
+import { ISessionRequest } from '../session/session-request.interface';
 import { KnexQueryVisitor } from './knex-query-visitor';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
@@ -81,7 +81,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
    * @memberOf ServiceBase
    */
   public findById<T extends IEntity<TId>>(
-    session: ISession = undefined,
+    request: ISessionRequest,
     id: TId
   ): Promise<FindByIdResult<T, TId>> {
 
@@ -114,7 +114,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
                   log.debug('result = ', logResult);
                 }
 
-                if (session) {
+                if (request) {
                   // ggf. id_mandant der Ergebnis-Row mit der clientId des Users querchecken
                 }
 
@@ -148,14 +148,14 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
    * @memberOf ServiceBase
    */
   public find(
-    session: ISession = undefined
+    request: ISessionRequest
   ): Promise<FindResult<T>> {
     return using(new XLog(ReadonlyService.logger, levels.INFO, 'find', `[${this.tableName}]`), (log) => {
 
       return new Promise<FindResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
-          const query = this.createClientSelectorQuery(session, trx);
+          const query = this.createClientSelectorQuery(request, trx);
 
           query
 
@@ -211,7 +211,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
    * @memberOf ServiceBase
    */
   public queryKnex(
-    session: ISession = undefined,
+    request: ISessionRequest,
     query: Knex.QueryBuilder
   ): Promise<QueryResult<T>> {
 
@@ -220,7 +220,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
       return new Promise<QueryResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
-          query = this.createClientSelectorQuery(session, trx, query);
+          query = this.createClientSelectorQuery(request, trx, query);
 
           query
             .transacting(trx)
@@ -271,7 +271,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
 
 
   public query(
-    session: ISession = undefined,
+    request: ISessionRequest,
     query: IQuery
   ): Promise<QueryResult<T>> {
     return using(new XLog(ReadonlyService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
@@ -280,7 +280,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
       const visitor = new KnexQueryVisitor(knexQuery, this.metadata);
       query.term.accept(visitor);
 
-      return this.queryKnex(session, visitor.query(knexQuery));
+      return this.queryKnex(request, visitor.query(knexQuery));
     });
   }
 
@@ -549,13 +549,13 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
    * Ist @param{session} vorhanden, werden nur die Rows mit der ClientId des Users der Session geliefert
    *
    * @protected
-   * @param {ISession} session
+   * @param {ISessionRequest|IBodyRequest<IUser>} request
    * @param {Knex.Transaction} trx
    * @returns {Knex.QueryBuilder}
    *
    * @memberof ReadonlyService
    */
-  protected createClientSelectorQuery(session: ISession, trx: Knex.Transaction,
+  protected createClientSelectorQuery(request: ISessionRequest | IBodyRequest<IUser>, trx: Knex.Transaction,
     query?: Knex.QueryBuilder): Knex.QueryBuilder {
 
     // Knex-Beispielcode:
@@ -570,35 +570,24 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
       query = this.fromTable();
     }
 
-    // TODO: workaround
-    if (session && (session instanceof PassportSession)) {
-      return query;
-    }
+    if (request) {
+      const userColumnSelector = `${this._userMetadata.clientColumn.options.name}`;
+      let userIdValue;
 
-    if (session) {
-      let userColumnSelector: string;
-      let userIdValue: number;
 
       //
-      // falls eine (synthetische) PassportSession vorliegt, existiert nur die clientId, da noch
-      // kein Login gelaufen ist.
-      // Bei einer normalen ExpressSession legt Passport die user-id darin ab.
+      // beim Login-Request wir ein rudimentäres User-Objekt übergeben und liegt
+      // als body vor; bei allen anderen Requests existiert ein aktueller User, der in
+      // der Property user vorliegt.
       //
-      if (session instanceof PassportSession) {
-        userColumnSelector = `${this._userMetadata.clientColumn.options.name}`;
-        userIdValue = (session as PassportSession).clientId;
+      if (request.body !== null && request.body instanceof User) {
+        userIdValue = request.body.id_mandant;
       } else {
-        userColumnSelector = `${this._userMetadata.primaryKeyColumn.options.name}`;
-        userIdValue = session.passport.user;
+        userIdValue = request.user.id_mandant;
       }
 
       query = query
-        .select(`${this.tableName}.*`)
-        .innerJoin(this._userMetadata.tableName,                                              // .innerJoin('user',
-        `${this.tableName}.${this.metadata.clientColumn.options.name}`,                       //    'artikel.id_mandant',
-        `${this._userMetadata.tableName}.${this._userMetadata.clientColumn.options.name}`)    //    'user.id_mandant')
-        .andWhere(`${this._userMetadata.tableName}.` +                                        // .andWhere('user.user_id/id_mandant',
-        userColumnSelector, userIdValue);                                                     //      userId/clientId)
+        .andWhere(userColumnSelector, userIdValue);
     }
 
     return query

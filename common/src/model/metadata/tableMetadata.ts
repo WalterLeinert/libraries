@@ -93,7 +93,7 @@ export abstract class TableMetadata extends ClassMetadata {
    *
    * @memberOf TableMetadata
    */
-  public createEntity<T>() {
+  public createEntity<T>(): T {
     return Reflect.construct(this.target as (() => void), []) as T;
   }
 
@@ -127,6 +127,11 @@ export abstract class TableMetadata extends ClassMetadata {
         }
 
         Assert.notNull(colMetadata);
+
+        if (colMetadata.options.persisted) {
+          instance[colMetadata.propertyName] = colMetadata.convertToProperty(json[propName]);
+        }
+
         // if (!colMetadata) {
         //   log.warn(`todo: entity ${this.tableName} has no property ${propName.toString()}`);
 
@@ -135,7 +140,6 @@ export abstract class TableMetadata extends ClassMetadata {
         //     instance[colMetadata.propertyName] = colMetadata.convertToProperty(json[propName]);
         //   }
         // }
-
 
       }
 
@@ -174,7 +178,7 @@ export abstract class TableMetadata extends ClassMetadata {
    *
    * @memberOf TableMetadata
    */
-  public getColumnMetadataByProperty(propertyName: string) {
+  public getColumnMetadataByProperty(propertyName: string): ColumnMetadata {
     return this.propertyMap.get(propertyName);
   }
 
@@ -186,14 +190,14 @@ export abstract class TableMetadata extends ClassMetadata {
    *
    * @memberOf TableMetadata
    */
-  public getColumnMetadataByDbCol(dbColName: string) {
+  public getColumnMetadataByDbCol(dbColName: string): ColumnMetadata {
     return this.dbColMap.get(dbColName);
   }
 
   /**
    * Liefert den DB-Spaltennamen für den Propertynamen @param{propertyName}
    */
-  public getDbColumnName(propertyName: string) {
+  public getDbColumnName(propertyName: string): string {
     Assert.notNullOrEmpty(propertyName);
 
     const colMetadata = this.propertyMap.get(propertyName);

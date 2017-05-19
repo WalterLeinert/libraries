@@ -6,7 +6,7 @@ import { QueryResult } from '@fluxgate/common';
 import { Deprecated, IQuery, JsonSerializer } from '@fluxgate/core';
 
 import { ReadonlyService } from '../../services/readonly-service';
-import { ISession } from '../../session/session.interface';
+import { IBodyRequest } from '../../session/body-request.interface';
 
 
 @Deprecated('noch benötigt?')
@@ -20,14 +20,12 @@ export class QueryController<T, TId> {
   @Authenticated()
   @Post('/')
   public query(
-    @Required() @Session() session: ISession,
-    @Request() request: Express.Request
+    @Request() request: IBodyRequest<IQuery>
     ): Promise<QueryResult<T>> {
-    const query = (request as any).body as IQuery;
-    const deserializedQuery = this.serializer.deserialize<IQuery>(query);
+    const deserializedQuery = this.serializer.deserialize<IQuery>(request.body);
 
     return new Promise<QueryResult<T>>((resolve, reject) => {
-      this.service.query(session, deserializedQuery).then((result) => {
+      this.service.query(request, deserializedQuery).then((result) => {
         resolve(this.serializer.serialize(result));
       });
     });

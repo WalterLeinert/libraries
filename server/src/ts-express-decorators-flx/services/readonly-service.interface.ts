@@ -4,8 +4,8 @@ import * as Knex from 'knex';
 import { FindByIdResult, FindResult, IEntity, QueryResult } from '@fluxgate/common';
 import { IQuery, IToString } from '@fluxgate/core';
 
-import { ISession } from '../session/session.interface';
-
+import { IBodyRequest } from '../session/body-request.interface';
+import { ISessionRequest } from '../session/session-request.interface';
 
 /**
  * Interface für lesende CRUD-Operationen auf der DB über knex.
@@ -36,7 +36,7 @@ export interface IReadonlyService<T, TId extends IToString> {
    * @memberOf ServiceBase
    */
   findById<T extends IEntity<TId>>(
-    session: ISession,
+    request: ISessionRequest,
     id: TId
   ): Promise<FindByIdResult<T, TId>>;
 
@@ -49,7 +49,7 @@ export interface IReadonlyService<T, TId extends IToString> {
    * @memberOf ServiceBase
    */
   find(
-    session: ISession
+    request: ISessionRequest
   ): Promise<FindResult<T>>;
 
 
@@ -62,13 +62,13 @@ export interface IReadonlyService<T, TId extends IToString> {
    * @memberOf ServiceBase
    */
   queryKnex(
-    session: ISession,
+    request: ISessionRequest,
     query: Knex.QueryBuilder
   ): Promise<QueryResult<T>>;
 
 
   query(
-    session: ISession,
+    request: ISessionRequest,
     query: IQuery
   ): Promise<QueryResult<T>>;
 

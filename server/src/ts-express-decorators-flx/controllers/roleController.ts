@@ -1,8 +1,4 @@
-import {
-  Authenticated, Controller, Delete, Get,
-  PathParams, Post, Put,
-  Request, Required, Session
-} from 'ts-express-decorators';
+import { Authenticated, Controller, Delete, Get, PathParams, Post, Put, Request } from 'ts-express-decorators';
 
 // Fluxgate
 import {
@@ -12,7 +8,8 @@ import {
 import { IQuery } from '@fluxgate/core';
 
 import { RoleService } from '../services/role.service';
-import { ISession } from '../session/session.interface';
+import { IBodyRequest } from '../session/body-request.interface';
+import { ISessionRequest } from '../session/session-request.interface';
 import { ControllerBase } from './base/controllerBase';
 
 
@@ -25,54 +22,51 @@ export class RoleController extends ControllerBase<Role, number> {
   @Authenticated({ role: 'admin' })
   @Post('/')
   public create(
-    @Required() @Session() session: ISession,
-    @Request() request: Express.Request
+    @Request() request: IBodyRequest<Role>
     ): Promise<CreateResult<Role, number>> {
-    return super.createInternal(session, (request as any).body as Role);
+    return super.createInternal(request);
   }
 
   // @Authenticated()
   @Get('/')
   public find(
-    @Required() @Session() session: ISession,
-  ): Promise<FindResult<Role>> {
-    return super.findInternal(session);
+    @Request() request: ISessionRequest
+    ): Promise<FindResult<Role>> {
+    return super.findInternal(request);
   }
 
   // @Authenticated()
   @Get('/:id')
   public findById(
-    @Required() @Session() session: ISession,
+    @Request() request: ISessionRequest,
     @PathParams('id') id: number
     ): Promise<FindByIdResult<Role, number>> {
-    return super.findByIdInternal(session, id);
+    return super.findByIdInternal(request, id);
   }
 
 
   @Authenticated({ role: 'admin' })
   @Post('/')
   public query(
-    @Required() @Session() session: ISession,
-    @Request() request: Express.Request
+    @Request() request: IBodyRequest<IQuery>
     ): Promise<QueryResult<Role>> {
-    return super.queryInternal(session, (request as any).body as IQuery);
+    return super.queryInternal(request);
   }
 
   @Authenticated({ role: 'admin' })
   @Put('/')
   public update(
-    @Required() @Session() session: ISession,
-    @Request() request: Express.Request
+    @Request() request: IBodyRequest<Role>
     ): Promise<UpdateResult<Role, number>> {
-    return super.updateInternal(session, (request as any).body as Role);
+    return super.updateInternal(request);
   }
 
   @Authenticated({ role: 'admin' })
   @Delete('/:id')
   public delete(
-    @Required() @Session() session: ISession,
+    @Request() request: ISessionRequest,
     @PathParams('id') id: number
     ): Promise<DeleteResult<number>> {
-    return super.deleteInternal(session, id);
+    return super.deleteInternal(request, id);
   }
 }

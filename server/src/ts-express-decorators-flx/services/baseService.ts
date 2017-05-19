@@ -15,7 +15,7 @@ import {
 } from '@fluxgate/common';
 
 
-import { ISession } from '../session/session.interface';
+import { ISessionRequest } from '../session/session-request.interface';
 import { IBaseService } from './baseService.interface';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
@@ -58,7 +58,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    * @memberOf ServiceBase
    */
   public create(
-    session: ISession = undefined,
+    request: ISessionRequest,
     subject: T
   ): Promise<CreateResult<T, TId>> {
 
@@ -149,7 +149,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    * @memberOf ServiceBase
    */
   public update(
-    session: ISession = undefined,
+    requestXXX: ISessionRequest,
     subject: T
   ): Promise<UpdateResult<T, TId>> {
 
@@ -192,16 +192,16 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                       reject(exc);
                     } else {
 
-                      subject = this.createModelInstance(dbSubject);
+                      const resultSubject = this.createModelInstance(dbSubject);
 
                       if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
-                        this.findEntityVersionAndResolve(trx, UpdateResult, subject, resolve);
+                        this.findEntityVersionAndResolve(trx, UpdateResult, resultSubject, resolve);
                       } else {
 
                         trx.commit();
 
-                        log.debug('subject after commit (optimistic lock detection): ', subject);
-                        resolve(new UpdateResult(subject, -1));
+                        log.debug('subject after commit (optimistic lock detection): ', resultSubject);
+                        resolve(new UpdateResult(resultSubject, -1));
                       }
                     }
                   } else {
@@ -214,16 +214,16 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
 
                       reject(exc);
                     } else {
-                      subject = this.createModelInstance(dbSubject);
+                      const resultSubject = this.createModelInstance(dbSubject);
 
                       if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
-                        this.findEntityVersionAndResolve(trx, UpdateResult, subject, resolve);
+                        this.findEntityVersionAndResolve(trx, UpdateResult, resultSubject, resolve);
                       } else {
 
                         trx.commit();
 
-                        log.debug('subject after commit: ', subject);
-                        resolve(new UpdateResult(subject, -1));
+                        log.debug('subject after commit: ', resultSubject);
+                        resolve(new UpdateResult(resultSubject, -1));
                       }
 
                     }
@@ -253,7 +253,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    * @memberOf ServiceBase
    */
   public delete(
-    session: ISession = undefined,
+    request: ISessionRequest,
     id: TId
   ): Promise<DeleteResult<TId>> {
 

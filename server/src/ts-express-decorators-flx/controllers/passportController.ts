@@ -9,10 +9,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { ExceptionWrapper, IUser, User } from '@fluxgate/common';
-import { IException } from '@fluxgate/core';
+import { IException, JsonSerializer } from '@fluxgate/core';
 
 import { Messages } from '../../resources/messages';
 import { PassportLocalService } from '../services/passportLocal.service';
+import { ISessionRequest } from '../session/session-request.interface';
 
 /**
  * Controller zur Authentifizierung über Passport.js
@@ -22,6 +23,8 @@ import { PassportLocalService } from '../services/passportLocal.service';
 @Controller('/passport')
 export class PassportController {
   protected static logger = getLogger(PassportController);
+
+  private serializer: JsonSerializer = new JsonSerializer();
 
   constructor(passportLocalService: PassportLocalService) {
     passportLocalService.initLocalSignup();
@@ -51,6 +54,8 @@ export class PassportController {
     return using(new XLog(PassportController.logger, levels.INFO, 'login',
       `username = ${username}, clientId = ${clientId}`), (log) => {
         return new Promise<IUser>((resolve, reject) => {
+
+          request.user = this.serializer.deserialize<User>(request.user);
 
           try {
             Passport
@@ -92,7 +97,7 @@ export class PassportController {
    */
   @Post('/signup')
   public signup(
-    @Request() request: Express.Request,
+    @Request() request: ISessionRequest,
     @Response() response: Express.Response,
     @Next() next: Express.NextFunction
     ): Promise<IUser> {
@@ -120,7 +125,9 @@ export class PassportController {
    * @param request
    */
   @Get('/logout')
-  public logout( @Request() request: Express.Request) {
+  public logout(
+    @Request() request: Express.Request
+    ) {
     return using(new XLog(PassportController.logger, levels.INFO, 'logout'), (log) => {
       request.logout();
       return 'Disconnected';
@@ -146,7 +153,7 @@ export class PassportController {
     @Required() @BodyParams('username') username: string,
     @Required() @BodyParams('password') password: string,
     @Required() @BodyParams('passwordNew') passwordNew: string,
-    @Request() request: Express.Request,
+    @Request() request: ISessionRequest,
     @Response() response: Express.Response,
     @Next() next: Express.NextFunction
     ): Promise<IUser> {
@@ -194,7 +201,9 @@ export class PassportController {
    * @param request
    */
   @Get('/currentUser')
-  public getCurrentUser( @Request() request: Express.Request): Promise<IUser> {
+  public getCurrentUser(
+    @Request() request: ISessionRequest
+    ): Promise<IUser> {
     return using(new XLog(PassportController.logger, levels.INFO, 'currentUser'), (log) => {
       return new Promise<IUser>((resolve, reject) => {
         return resolve(request.user ? request.user : User.Null);

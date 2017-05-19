@@ -9,7 +9,8 @@ import { FindByIdResult, FindResult, IEntity, QueryResult } from '@fluxgate/comm
 import { Assert, IQuery, IToString, JsonSerializer } from '@fluxgate/core';
 
 import { IReadonlyService } from '../../services/readonly-service.interface';
-import { ISession } from '../../session/session.interface';
+import { IBodyRequest } from '../../session/body-request.interface';
+import { ISessionRequest } from '../../session/session-request.interface';
 
 
 /**
@@ -47,11 +48,11 @@ export abstract class ReadonlyController<T, TId extends IToString> {
    * @memberOf ControllerBase
    */
   protected findByIdInternal<T extends IEntity<TId>>(
-    session: ISession,
+    request: ISessionRequest,
     id: TId
   ): Promise<FindByIdResult<T, TId>> {
     return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {
-      this._service.findById(session, id).then((item) => {
+      this._service.findById(request, id).then((item) => {
         resolve(this.serialize(item));
       });
     });
@@ -66,10 +67,10 @@ export abstract class ReadonlyController<T, TId extends IToString> {
    * @memberOf ControllerBase
    */
   protected findInternal(
-    session: ISession
+    request: ISessionRequest,
   ): Promise<FindResult<T>> {
     return new Promise<FindResult<T>>((resolve, reject) => {
-      this._service.find(session).then((items) => {
+      this._service.find(request).then((items) => {
         resolve(this.serialize(items));
       });
     });
@@ -86,13 +87,12 @@ export abstract class ReadonlyController<T, TId extends IToString> {
    * @memberof ControllerBase
    */
   protected queryInternal(
-    session: ISession,
-    query: IQuery
+    request: IBodyRequest<IQuery>
   ): Promise<QueryResult<T>> {
     return new Promise<QueryResult<T>>((resolve, reject) => {
-      const deserializedQuery = this.serializer.deserialize<IQuery>(query);
+      const deserializedQuery = this.serializer.deserialize<IQuery>(request.body);
 
-      this._service.query(session, deserializedQuery).then((result) => {
+      this._service.query(request, deserializedQuery).then((result) => {
         resolve(this.serialize(result));
       });
     });

@@ -9,7 +9,8 @@ import { CreateResult, DeleteResult, IEntity, UpdateResult } from '@fluxgate/com
 import { IToString } from '@fluxgate/core';
 
 import { IBaseService } from '../../services/baseService.interface';
-import { ISession } from '../../session/session.interface';
+import { IBodyRequest } from '../../session/body-request.interface';
+import { ISessionRequest } from '../../session/session-request.interface';
 import { ReadonlyController } from './readonly-controller';
 
 
@@ -42,12 +43,11 @@ export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToStri
    * @memberOf ControllerBase
    */
   protected createInternal(
-    session: ISession,
-    subject: T
+    request: IBodyRequest<T>
   ): Promise<CreateResult<T, TId>> {
     return new Promise<CreateResult<T, TId>>((resolve, reject) => {
-      const deserializedSubject = this.deserialize<T>(subject);
-      this.service.create(session, deserializedSubject).then((item) => {
+      const deserializedSubject = this.deserialize<T>(request.body);
+      this.service.create(request, deserializedSubject).then((item) => {
         resolve(this.serialize(item));
       });
     });
@@ -63,12 +63,11 @@ export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToStri
    * @memberOf ControllerBase
    */
   protected updateInternal(
-    session: ISession,
-    subject: T
+    request: IBodyRequest<T>
   ): Promise<UpdateResult<T, TId>> {
     return new Promise<UpdateResult<T, TId>>((resolve, reject) => {
-      const deserializedSubject = this.deserialize<T>(subject);
-      this.service.update(session, deserializedSubject).then((item) => {
+      const deserializedSubject = this.deserialize<T>(request.body);
+      this.service.update(request, deserializedSubject).then((item) => {
         resolve(this.serialize(item));
       });
     });
@@ -84,11 +83,11 @@ export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToStri
    * @memberOf ControllerBase
    */
   protected deleteInternal(
-    session: ISession,
+    request: ISessionRequest,
     id: TId
   ): Promise<DeleteResult<TId>> {
     return new Promise<DeleteResult<TId>>((resolve, reject) => {
-      this.service.delete(session, id).then((result) => {
+      this.service.delete(request, id).then((result) => {
         resolve(this.serialize(result));
       });
     });
