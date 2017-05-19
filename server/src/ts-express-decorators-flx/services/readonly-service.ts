@@ -19,6 +19,7 @@ import {
 } from '@fluxgate/core';
 
 
+import { PassportSession } from '../session/passport-session';
 import { ISession } from '../session/session.interface';
 import { KnexQueryVisitor } from './knex-query-visitor';
 import { KnexService } from './knex.service';
@@ -569,13 +570,35 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
       query = this.fromTable();
     }
 
+    // TODO: workaround
+    if (session && (session instanceof PassportSession)) {
+      return query;
+    }
+
     if (session) {
+      let userColumnSelector: string;
+      let userIdValue: number;
+
+      //
+      // falls eine (synthetische) PassportSession vorliegt, existiert nur die clientId, da noch
+      // kein Login gelaufen ist.
+      // Bei einer normalen ExpressSession legt Passport die user-id darin ab.
+      //
+      if (session instanceof PassportSession) {
+        userColumnSelector = `${this._userMetadata.clientColumn.options.name}`;
+        userIdValue = (session as PassportSession).clientId;
+      } else {
+        userColumnSelector = `${this._userMetadata.primaryKeyColumn.options.name}`;
+        userIdValue = session.passport.user;
+      }
+
       query = query
+        .select(`${this.tableName}.*`)
         .innerJoin(this._userMetadata.tableName,                                              // .innerJoin('user',
         `${this.tableName}.${this.metadata.clientColumn.options.name}`,                       //    'artikel.id_mandant',
         `${this._userMetadata.tableName}.${this._userMetadata.clientColumn.options.name}`)    //    'user.id_mandant')
-        .andWhere(`${this._userMetadata.tableName}.` +                                        // .andWhere('user.user_id',
-        `${this._userMetadata.primaryKeyColumn.options.name}`, session.passport.user);        //      userId)
+        .andWhere(`${this._userMetadata.tableName}.` +                                        // .andWhere('user.user_id/id_mandant',
+        userColumnSelector, userIdValue);                                                     //      userId/clientId)
     }
 
     return query
