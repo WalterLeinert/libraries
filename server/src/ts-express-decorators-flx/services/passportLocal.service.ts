@@ -12,8 +12,8 @@ import { IUser } from '@fluxgate/common';
 
 import { MetadataService, UserService } from '.';
 import { Messages } from '../../resources/messages';
-import { ISessionRequest } from '../session/session-request.interface';
 import { IBodyRequest } from '../session/body-request.interface';
+import { ISessionRequest } from '../session/session-request.interface';
 
 @Service()
 export class PassportLocalService {
