@@ -13,6 +13,7 @@ import { IException, JsonSerializer } from '@fluxgate/core';
 
 import { Messages } from '../../resources/messages';
 import { PassportLocalService } from '../services/passportLocal.service';
+import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
 
 /**
@@ -45,47 +46,45 @@ export class PassportController {
   public login(
     @Required() @BodyParams('username') username: string,
     @Required() @BodyParams('password') password: string,
-    @Required() @BodyParams('client') clientId: number,
-    @Request() request: Express.Request,
+    @Request() request: IBodyRequest<IUser>,
     @Response() response: Express.Response,
     @Next() next: Express.NextFunction
     ): Promise<IUser> {
 
-    return using(new XLog(PassportController.logger, levels.INFO, 'login',
-      `username = ${username}, clientId = ${clientId}`), (log) => {
-        return new Promise<IUser>((resolve, reject) => {
+    return using(new XLog(PassportController.logger, levels.INFO, 'login', `username = ${username}`), (log) => {
+      return new Promise<IUser>((resolve, reject) => {
 
-          request.user = this.serializer.deserialize<User>(request.user);
+        request.body = this.serializer.deserialize<User>(request.body);
 
-          try {
-            Passport
-              .authenticate('login', (err, user: IUser) => {
-                if (err) {
-                  return reject(err);
+        try {
+          Passport
+            .authenticate('login', (err, user: IUser) => {
+              if (err) {
+                return reject(err);
+              }
+
+              request.logIn(user, (loginErr) => {
+                if (loginErr) {
+                  return reject(loginErr);
                 }
 
-                request.logIn(user, (loginErr) => {
-                  if (loginErr) {
-                    return reject(loginErr);
-                  }
+                user.resetCredentials();
+                resolve(user);
+              });
 
-                  user.resetCredentials();
-                  resolve(user);
-                });
-
-              })(request, response, next);
-          } catch (err) {
-            log.error(err);
-            return reject(this.createBusinessException(err));
+            })(request, response, next);
+        } catch (err) {
+          log.error(err);
+          return reject(this.createBusinessException(err));
+        }
+      })
+        .catch((err) => {
+          if (err && err.message === 'Failed to serialize user into session') {
+            return Promise.reject(this.createSystemException('user not found'));
           }
-        })
-          .catch((err) => {
-            if (err && err.message === 'Failed to serialize user into session') {
-              return Promise.reject(this.createSystemException('user not found'));
-            }
-            return Promise.reject(this.createSystemException(err));
-          });
-      });
+          return Promise.reject(this.createSystemException(err));
+        });
+    });
   }
 
 
