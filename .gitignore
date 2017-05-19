@@ -56,3 +56,4 @@ symbols.json
 /build/
 /dist/
 /client/dist
+.vscode
