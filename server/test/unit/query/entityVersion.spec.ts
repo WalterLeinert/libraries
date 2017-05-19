@@ -21,7 +21,7 @@ chai.should();
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { ConstantValueGenerator, NumberIdGenerator } from '@fluxgate/common';
+import { ConstantValueGenerator, EntityVersion, NumberIdGenerator } from '@fluxgate/common';
 
 import { EntityVersionService } from '../../../src/ts-express-decorators-flx/services/entityVersion.service';
 import { KnexTest } from '../knexTest.spec';
@@ -79,7 +79,7 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
 
       item.name = item.name + '-updated';
 
-      this.entityVersionService.findById('querytest').then((entityVersionResult) => {
+      this.entityVersionService.findById<EntityVersion>('querytest').then((entityVersionResult) => {
         const versionPrev = entityVersionResult.item.__version;
 
         this.service.update(item).then((updateResult) => {
@@ -92,7 +92,7 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
             done(`entity: versions different: ${updateResult.item.__version} !== ${item.__version}`);
           }
 
-          this.entityVersionService.findById('querytest').then((evResult) => {
+          this.entityVersionService.findById<EntityVersion>('querytest').then((evResult) => {
             if (evResult.item.__version !== versionPrev + 1) {
               done(`entityVersion: versions different: ${evResult.item.__version} !== ${versionPrev + 1}`);
             }
@@ -110,7 +110,7 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
 
       item.name = item.name + '-updated';
 
-      this.entityVersionService.findById('querytest').then((entityVersionResult) => {
+      this.entityVersionService.findById<EntityVersion>('querytest').then((entityVersionResult) => {
         const versionPrev = entityVersionResult.item.__version;
 
         this.service.update(item).then((updateResult) => {
@@ -124,7 +124,7 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
             done(`item versions different: ${updateResult.item.__version} !== ${item.__version}`);
           }
 
-          this.entityVersionService.findById('querytest').then((evResult) => {
+          this.entityVersionService.findById<EntityVersion>('querytest').then((evResult) => {
             if (evResult.item.__version !== versionPrev + 1) {
               done(`entityVersion versions different: ${evResult.item.__version} !== ${versionPrev + 1}`);
             }

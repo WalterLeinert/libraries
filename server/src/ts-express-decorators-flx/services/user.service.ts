@@ -32,7 +32,7 @@ export class UserService extends BaseService<IUser, number> {
   // ----------------------------------------------------------------
   public findById(id: number): Promise<FindByIdResult<IUser, number>> {
     return new Promise<FindByIdResult<IUser, number>>((resolve, reject) => {
-      super.findById(id)
+      super.findById<IUser>(id)
         .then((result) => {
           result.item.resetCredentials();
           resolve(result);
@@ -58,11 +58,11 @@ export class UserService extends BaseService<IUser, number> {
     });
   }
 
-  public update(user: IUser): Promise<UpdateResult<IUser>> {
+  public update(user: IUser): Promise<UpdateResult<IUser, number>> {
     if (user.role) {
       Assert.that(Role.isValidRole(user.role));
     }
-    return new Promise<UpdateResult<IUser>>((resolve, reject) => {
+    return new Promise<UpdateResult<IUser, number>>((resolve, reject) => {
       super.update(user)
         .then((result) => {
           result.item.resetCredentials();
@@ -84,12 +84,12 @@ export class UserService extends BaseService<IUser, number> {
    *
    * @memberOf UserService
    */
-  public create(user: IUser): Promise<CreateResult<IUser>> {
+  public create(user: IUser): Promise<CreateResult<IUser, number>> {
     Assert.that(Role.isValidRole(user.role));
 
     user.password_salt = shortid.gen();
 
-    return new Promise<CreateResult<IUser>>((resolve, reject) => {
+    return new Promise<CreateResult<IUser, number>>((resolve, reject) => {
       Encryption.hashPassword(user.password, user.password_salt, (err, encryptedPassword) => {
         if (err) {
           reject(this.createSystemException(err));
@@ -114,12 +114,12 @@ export class UserService extends BaseService<IUser, number> {
    *
    * @memberOf UserService
    */
-  public changePassword(user: IUser): Promise<UpdateResult<IUser>> {
+  public changePassword(user: IUser): Promise<UpdateResult<IUser, number>> {
     Assert.that(Role.isValidRole(user.role));
 
     user.password_salt = shortid.gen();
 
-    return new Promise<UpdateResult<IUser>>((resolve, reject) => {
+    return new Promise<UpdateResult<IUser, number>>((resolve, reject) => {
       Encryption.hashPassword(user.password, user.password_salt, (err, encryptedPassword) => {
         if (err) {
           reject(this.createSystemException(err));

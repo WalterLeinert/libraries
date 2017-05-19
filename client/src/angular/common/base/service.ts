@@ -1,4 +1,4 @@
-import { Headers, Http, RequestOptions, Response } from '@angular/http';
+import { Http, Response } from '@angular/http';
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
@@ -13,15 +13,15 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 import {
-  CreateResult, DeleteResult, FindByIdResult, FindResult, IService,
-  QueryResult, TableMetadata, UpdateResult
+  CreateResult, DeleteResult, IEntity, UpdateResult
 } from '@fluxgate/common';
 
-import { Assert, Funktion, InvalidOperationException, IQuery, IToString } from '@fluxgate/core';
+import { Assert, Funktion, InvalidOperationException, IToString } from '@fluxgate/core';
 
 import { ConfigService } from '../../services/config.service';
 import { MetadataService } from '../../services/metadata.service';
-import { ServiceBase } from './serviceBase';
+
+import { ReadonlyService } from './readonly-service';
 
 
 /**
@@ -32,10 +32,8 @@ import { ServiceBase } from './serviceBase';
  * @class Service
  * @template T
  */
-export abstract class Service<T, TId extends IToString> extends ServiceBase implements IService<T, TId> {
+export abstract class Service<T extends IEntity<TId>, TId extends IToString> extends ReadonlyService<T, TId> {
   protected static logger = getLogger(Service);
-
-  private _tableMetadata: TableMetadata;
 
 
   /**
@@ -46,16 +44,9 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    *
    * @memberOf Service
    */
-  protected constructor(model: Funktion, private metadataService: MetadataService,
-    http: Http, configService: ConfigService, private topic?: string) {
-    super(http, configService.config.url,
-      topic === undefined ? metadataService.findTableMetadata(model).options.name : topic);
-
-    Assert.notNull(model, 'model');
-
-    // Metadaten zur Entity ermitteln
-    this._tableMetadata = this.metadataService.findTableMetadata(model);
-    Assert.notNull(this._tableMetadata);
+  protected constructor(model: Funktion, metadataService: MetadataService,
+    http: Http, configService: ConfigService, topic?: string) {
+    super(model, metadataService, http, configService, topic);
   }
 
 
@@ -67,13 +58,13 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    *
    * @memberOf Service
    */
-  public create(item: T): Observable<CreateResult<T>> {
+  public create(item: T): Observable<CreateResult<T, TId>> {
     Assert.notNull(item, 'item');
     return using(new XLog(Service.logger, levels.INFO, 'create', `[${this.getModelClassName()}]`), (log) => {
 
       return this.http.post(this.getUrl(), this.serialize(item))
         .map((response: Response) => this.deserialize(response.json()))
-        .do((result: CreateResult<T>) => {
+        .do((result: CreateResult<T, TId>) => {
           if (log.isInfoEnabled()) {
             log.log(`Service.create: ${JSON.stringify(result)}`);
           }
@@ -85,52 +76,6 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
 
   /**
-   * Find all entities of type T.
-   *
-   * @returns {Observable<FindResult<T>>}
-   *
-   * @memberOf Service
-   */
-  public find(): Observable<FindResult<T>> {
-    return using(new XLog(Service.logger, levels.INFO, 'find', `[${this.getModelClassName()}]`), (log) => {
-
-      return this.http.get(this.getUrl())
-        .map((response: Response) => this.deserialize(response.json()))
-        .do((result: FindResult<T>) => {
-          if (log.isInfoEnabled()) {
-            log.log(`Service.find [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
-          }
-        })
-        .catch(this.handleError);
-    });
-  }
-
-
-  /**
-   * Find the entity with the given id.
-   *
-   * @param {TId} id -- entity id.
-   * @returns {Observable<FindByIdResult<T, TId>>}
-   *
-   * @memberOf Service
-   */
-  public findById(id: TId): Observable<FindByIdResult<T, TId>> {
-    Assert.notNull(id, 'id');
-    return using(new XLog(Service.logger, levels.INFO, 'findById', `[${this.getModelClassName()}]`), (log) => {
-
-      return this.http.get(`${this.getUrl()}/${id}`)
-        .map((response: Response) => this.deserialize(response.json()))
-        .do((result: FindByIdResult<T, TId>) => {
-          if (log.isInfoEnabled()) {
-            log.log(`Service.findById [${this.getModelClassName()}]: id = ${id} -> ${JSON.stringify(result)}`);
-          }
-        })
-        .catch(this.handleError);
-    });
-  }
-
-
-  /**
    * Update the entity {item} with the given id.
    *
    * @param {T} item
@@ -138,13 +83,13 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    *
    * @memberOf Service
    */
-  public update(item: T): Observable<UpdateResult<T>> {
+  public update(item: T): Observable<UpdateResult<T, TId>> {
     Assert.notNull(item, 'item');
     return using(new XLog(Service.logger, levels.INFO, 'update', `[${this.getModelClassName()}]`), (log) => {
 
       return this.http.put(`${this.getUrl()}`, this.serialize(item))
         .map((response: Response) => this.deserialize(response.json()))
-        .do((result: UpdateResult<T>) => {
+        .do((result: UpdateResult<T, TId>) => {
           if (log.isInfoEnabled()) {
             log.log(`Service.update [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
           }
@@ -168,7 +113,7 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
       (log) => {
 
         return this.http.delete(`${this.getUrl()}/${id}`)
-          .map((response: Response) => response.json())
+          .map((response: Response) => this.deserialize(response.json()))
           .do((result: DeleteResult<TId>) => {
             if (log.isInfoEnabled()) {
               log.log(`Service.delete [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
@@ -180,53 +125,6 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
 
 
   /**
-   * Finds all entities for the given query @param{query}
-   *
-   * @param {IQuery} query
-   * @returns {Observable<QueryResult<T>>}
-   *
-   * @memberOf Service
-   */
-  public query(query: IQuery): Observable<QueryResult<T>> {
-    Assert.notNull(query, 'query');
-    return using(new XLog(Service.logger, levels.INFO, 'query', `[${this.getModelClassName()}]`), (log) => {
-
-      const headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-      const options = new RequestOptions({ headers: headers });           // Create a request option
-
-
-      const serializedQuery = this.serialize(query);
-
-      return this.http.post(`${this.getUrl()}/query`, serializedQuery, options)
-        .map((response: Response) => this.deserialize(response.json()))
-        .do((result: QueryResult<T>) => {
-          if (log.isInfoEnabled()) {
-            log.log(`result: ${result.items.length} item(s)`);
-
-            if (log.isDebugEnabled()) {
-              log.debug(`query = ${JSON.stringify(query)} -> ${JSON.stringify(result)}`);
-            }
-          }
-        })
-        .catch(this.handleError);
-    });
-  }
-
-
-  /**
-   * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
-   *
-   * @type {string}
-   */
-  public getModelClassName(): string {
-    return this._tableMetadata.className;
-  }
-
-  public getTableName(): string {
-    return this._tableMetadata.tableName;
-  }
-
-  /**
    * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
    * Sonst wird ein Error geworfen.
    *
@@ -234,10 +132,10 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    * @memberOf Service
    */
   public getEntityId(item: T): TId {
-    if (!this._tableMetadata.primaryKeyColumn) {
-      throw new InvalidOperationException(`Table ${this._tableMetadata.options.name}: no primary key column`);
+    if (!this.tableMetadata.primaryKeyColumn) {
+      throw new InvalidOperationException(`Table ${this.tableMetadata.options.name}: no primary key column`);
     }
-    return item[this._tableMetadata.primaryKeyColumn.propertyName];
+    return item[this.tableMetadata.primaryKeyColumn.propertyName];
   }
 
 
@@ -249,23 +147,10 @@ export abstract class Service<T, TId extends IToString> extends ServiceBase impl
    * @memberOf Service
    */
   public setEntityId(item: T, id: TId) {
-    if (!this._tableMetadata.primaryKeyColumn) {
-      throw new InvalidOperationException(`Table ${this._tableMetadata.options.name}: no primary key column`);
+    if (!this.tableMetadata.primaryKeyColumn) {
+      throw new InvalidOperationException(`Table ${this.tableMetadata.options.name}: no primary key column`);
     }
-    item[this._tableMetadata.primaryKeyColumn.propertyName] = id;
-  }
-
-
-  /**
-   * Liefert die zugehörige @see{TableMetadata}
-   *
-   * @readonly
-   * @protected
-   * @type {TableMetadata}
-   * @memberOf Service
-   */
-  protected get tableMetadata(): TableMetadata {
-    return this._tableMetadata;
+    item[this.tableMetadata.primaryKeyColumn.propertyName] = id;
   }
 
 }

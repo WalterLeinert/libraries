@@ -5,10 +5,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { FindByIdResult, FindResult, QueryResult } from '@fluxgate/common';
+import { FindByIdResult, FindResult, IEntity, QueryResult } from '@fluxgate/common';
 import { Assert, IQuery, IToString, JsonSerializer } from '@fluxgate/core';
 
-import { IFindService } from '../../services/find-service.interface';
+import { IReadonlyService } from '../../services/readonly-service.interface';
 
 /**
  * Abstrakte Basisklasse für alle REST-Controller, die nur lesende Zugriffe durchführen (find, findById, query)
@@ -18,16 +18,16 @@ import { IFindService } from '../../services/find-service.interface';
  *
  * @export
  * @abstract
- * @class FindController
+ * @class ReadonlyController
  * @template T      - Entity-Typ
  * @template TId    - Typ der Id-Spalte
  */
-export abstract class FindController<T, TId extends IToString> {
-  protected static logger = getLogger(FindController);
+export abstract class ReadonlyController<T, TId extends IToString> {
+  protected static logger = getLogger(ReadonlyController);
 
   private serializer: JsonSerializer = new JsonSerializer();
 
-  constructor(private _service: IFindService<T, TId>, private _tableName: string, private _idName: string) {
+  constructor(private _service: IReadonlyService<T, TId>, private _tableName: string, private _idName: string) {
     Assert.notNull(_service);
     Assert.notNullOrEmpty(_tableName);
     Assert.notNullOrEmpty(_idName);
@@ -44,7 +44,7 @@ export abstract class FindController<T, TId extends IToString> {
    *
    * @memberOf ControllerBase
    */
-  protected findByIdInternal(
+  protected findByIdInternal<T extends IEntity<TId>>(
     id: TId
   ): Promise<FindByIdResult<T, TId>> {
     return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {
@@ -143,7 +143,7 @@ export abstract class FindController<T, TId extends IToString> {
     return this._idName;
   }
 
-  protected getService(): IFindService<T, TId> {
+  protected getService(): IReadonlyService<T, TId> {
     return this._service;
   }
 }

@@ -1,6 +1,7 @@
 
 import { Observable } from 'rxjs/Observable';
 
+import { IEntity } from '@fluxgate/common';
 import { IListAdapter } from '@fluxgate/core';
 
 import { Service } from '../base/service';
@@ -8,7 +9,7 @@ import { Service } from '../base/service';
 /**
  * Adapter zum Bereitstellen einer Liste von Items vom Typ {T} aus einer DB-Tabelle
  */
-export class TableListAdapter<T, TId> implements IListAdapter<T> {
+export class TableListAdapter<T extends IEntity<TId>, TId> implements IListAdapter<T> {
   private _className: string;
 
   /**

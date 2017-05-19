@@ -419,7 +419,7 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    * Erlaubt das Wrappen des Service in abgeleiteten Klassen
    * @param service
    */
-  protected createDataService(service: IService<T, any>) {
+  protected createDataService(service: IService<IEntity<any>, any>) {
     return service;
   }
 

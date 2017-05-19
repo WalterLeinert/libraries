@@ -5,6 +5,8 @@ export * from './current-item-service-requests';
 export * from './entity-version-service';
 export * from './extended-crud-service-requests.interface';
 export * from './extended-crud-service-requests';
+export * from './readonly-service-requests';
+export * from './readonly-service-requests.interface';
 export * from './service-requests.interface';
 export * from './service-requests';
 export * from './simple-service-requests';

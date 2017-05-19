@@ -5,8 +5,9 @@ import { Observable } from 'rxjs/Observable';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { Assert, IQuery } from '@fluxgate/core';
+import { Assert, IQuery, IToString, StringBuilder, StringUtil, Types } from '@fluxgate/core';
 
+import { IEntity } from '../entity.interface';
 import { CreateResult } from './create-result';
 import { DeleteResult } from './delete-result';
 import { FindByIdResult } from './find-by-id-result';
@@ -19,7 +20,7 @@ import { UpdateResult } from './update-result';
  * Proxy für REST-Api Services.
  * Delegiert service calls an den eigentlichen Service.
  */
-export class ServiceProxy<T, TId> implements IService<T, TId> {
+export class ServiceProxy<T extends IEntity<TId>, TId extends IToString> implements IService<T, TId> {
   protected static readonly logger = getLogger(ServiceProxy);
 
 
@@ -30,7 +31,7 @@ export class ServiceProxy<T, TId> implements IService<T, TId> {
     Assert.notNull(_service);
   }
 
-  public create(item: T): Observable<CreateResult<T>> {
+  public create(item: T): Observable<CreateResult<T, TId>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'create'), (log) => {
       return this.service.create(item);
     });
@@ -48,7 +49,7 @@ export class ServiceProxy<T, TId> implements IService<T, TId> {
     });
   }
 
-  public findById(id: TId): Observable<FindByIdResult<T, TId>> {
+  public findById<T extends IEntity<TId>>(id: TId): Observable<FindByIdResult<T, TId>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'findById'), (log) => {
       return this.service.findById(id);
     });
@@ -60,7 +61,7 @@ export class ServiceProxy<T, TId> implements IService<T, TId> {
     });
   }
 
-  public update(item: T): Observable<UpdateResult<T>> {
+  public update(item: T): Observable<UpdateResult<T, TId>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'update'), (log) => {
       return this.service.update(item);
     });
@@ -100,5 +101,31 @@ export class ServiceProxy<T, TId> implements IService<T, TId> {
    */
   protected get service(): IService<T, TId> {
     return this._service;
+  }
+
+  /**
+   * Liefert für @param{obj} eine Objekt-Id bestehend aus Tabellennamen und einer Entity-Id.
+   *
+   * @protected
+   * @param {(T | TId)} obj
+   * @returns {string}
+   *
+   * @memberof ServiceProxy
+   */
+  protected getObjId(obj: T | TId): string {
+    const sb = new StringBuilder(this.getTableName());
+
+    if (!Types.isPrimitive(obj)) {
+      const item = obj as T;
+      sb.append(`, id: ${item.id}`);
+
+      return `${StringUtil.enclose(this.getTableName(), StringUtil.format(`id: ${item.id}`))}`;
+    } else {
+      if (Types.isPresent(obj)) {
+        sb.append(`, id: ${obj}`);
+      }
+
+      return `${StringUtil.enclose(sb.toString())}`;
+    }
   }
 }

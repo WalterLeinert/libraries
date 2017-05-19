@@ -6,7 +6,7 @@ import { TableOptions } from '../decorator/model/tableOptions.interface';
 import { IEntity } from '../entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { EnumTableService } from '../service/enumTableService';
-import { IServiceCrud } from '../service/service-crud.interface';
+import { IReadonlyService } from '../service/readonly-service.interface';
 import { SpecialColumns } from './specialColumns';
 
 /**
@@ -227,7 +227,7 @@ export abstract class TableMetadata extends ClassMetadata {
    *
    * @memberOf TableMetadata
    */
-  public getServiceInstance<T, TId>(injector: any): IServiceCrud<T, TId> {
+  public getServiceInstance<T, TId>(injector: any): IReadonlyService<T, TId> {
     if (this.options instanceof EnumTableOptions) {
       return new EnumTableService(this, this.options.enumValues);
     } else {

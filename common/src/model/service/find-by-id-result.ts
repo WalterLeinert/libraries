@@ -1,5 +1,6 @@
-import { IToString, Serializable } from '@fluxgate/core';
+import { IToString, Serializable, StringUtil } from '@fluxgate/core';
 
+import { IEntity } from '../entity.interface';
 import { ServiceResult } from './service-result';
 
 /**
@@ -11,7 +12,7 @@ import { ServiceResult } from './service-result';
  * @template TId
  */
 @Serializable()
-export class FindByIdResult<T, TId extends IToString> extends ServiceResult {
+export class FindByIdResult<T extends IEntity<TId>, TId extends IToString> extends ServiceResult {
 
   constructor(private _item: T, entityVersion: number) {
     super(entityVersion);
@@ -19,5 +20,14 @@ export class FindByIdResult<T, TId extends IToString> extends ServiceResult {
 
   public get item(): T {
     return this._item;
+  }
+
+  // public toString(): string {
+  //   return `${super.toString()}, item.id: ${this._item.id}`;
+  // }
+
+
+  public toString(): string {
+    return StringUtil.enclose(this, `${super.toString()}, item.id: ${this._item.id}`);
   }
 }

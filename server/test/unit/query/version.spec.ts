@@ -5,7 +5,6 @@
 require('reflect-metadata');
 
 import * as chai from 'chai';
-import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import 'mocha';
 import { suite, test } from 'mocha-typescript';
@@ -61,9 +60,18 @@ class VersionTest extends KnexTest<QueryTest, number> {
   }
 
 
-  @test 'should create new record -> version == 0'() {
+  @test 'should create new record -> version == 0'(done: (err?: any) => void) {
     const item1 = this.createItem();
-    expect(this.service.create(item1).then((result) => result.item.__version)).to.become(0);
+    const ev = this.getNextEntityVersionFor(QueryTest);
+    this.service.create(item1).then((result) => {
+      if (result.item.__version !== 0) {
+        done(`${result.item.__version} must be 0.`);
+      }
+      if (result.entityVersion !== ev) {
+        done(`${result.entityVersion} must be ${ev}`);
+      }
+      done();
+    });
   }
 
 

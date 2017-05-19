@@ -76,7 +76,7 @@ class UpdateCurrentTest extends ReduxBaseTest<IUser, number, any> {
       // state.items erzeugen
       this.crudServiceRequests.find().subscribe((items) => {
 
-        this.serviceFake.findById(UpdateCurrentTest.UPDATE_ID).subscribe((findByIdResult) => {
+        this.serviceFake.findById<IUser>(UpdateCurrentTest.UPDATE_ID).subscribe((findByIdResult) => {
           this.item = findByIdResult.item;
 
           // currentItem setzen -> nach update prüfen

@@ -15,7 +15,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  CreateResult, DeleteResult, IService,
+  CreateResult, DeleteResult, IEntity, IService,
   IServiceBase, UpdateResult
 } from '@fluxgate/common';
 import { Assert, Deprecated, InstanceAccessor, InstanceSetter, NotSupportedException, Utility } from '@fluxgate/core';
@@ -95,7 +95,7 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
    *
    * @memberOf BaseComponent
    */
-  protected performAction<T, TId>(items: T[], routeParams: IRouterNavigationAction<T>,
+  protected performAction<T extends IEntity<TId>, TId>(items: T[], routeParams: IRouterNavigationAction<T>,
     service?: IService<T, TId>): Observable<TId> {
 
     Assert.notNull(routeParams);
@@ -167,7 +167,7 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
    *
    * @memberOf BaseComponent
    */
-  protected refreshItems<T, TId>(idToSelect: TId, idAccessor?: InstanceAccessor<T, TId>,
+  protected refreshItems<T extends IEntity<TId>, TId>(idToSelect: TId, idAccessor?: InstanceAccessor<T, TId>,
     service?: IService<T, TId>): Observable<IRefreshHelper<T>> {
 
     let selectedItem: T;
@@ -205,7 +205,7 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
   }
 
 
-  protected createItem<T, TId>(
+  protected createItem<T extends IEntity<TId>, TId>(
     item: T,
     groupName: string = FormGroupInfo.DEFAULT_NAME,
     idAccessor?: InstanceAccessor<T, TId>,
@@ -225,12 +225,12 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       service = this.service as any as IService<T, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.create(item)
-      .do((result: CreateResult<T>) => {
+      .do((result: CreateResult<T, TId>) => {
         idSetter(result.item, idAccessor(result.item));
         this.addSuccessMessage('Record created.');
         this.resetFormGroup(result.item, groupName);
       })
-      .map((result: CreateResult<T>) => {
+      .map((result: CreateResult<T, TId>) => {
         return result.item;
       })
       .catch((err: any, caught: Observable<T>) => {
@@ -239,17 +239,17 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       });
   }
 
-  protected updateItem<T, TId>(item: T, groupName: string = FormGroupInfo.DEFAULT_NAME,
+  protected updateItem<T extends IEntity<TId>, TId>(item: T, groupName: string = FormGroupInfo.DEFAULT_NAME,
     service?: IService<T, TId>): Observable<T> {
     if (!service) {
       service = this.service as any as IService<T, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.update(item)
-      .do((result: UpdateResult<T>) => {
+      .do((result: UpdateResult<T, TId>) => {
         this.addSuccessMessage('Record updated.');
         this.resetFormGroup(result.item, groupName);
       })
-      .map((result: UpdateResult<T>) => {
+      .map((result: UpdateResult<T, TId>) => {
         return result.item;
       })
       .catch((err: any, caught: Observable<T>) => {

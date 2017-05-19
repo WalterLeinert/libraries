@@ -13,6 +13,7 @@ import {
   IServiceRequests, IServiceState, ItemCreatedCommand,
   ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
+
 import { MessageService } from '../../services/message.service';
 import { ExtendedCoreComponent } from './extended-core.component';
 
@@ -29,6 +30,7 @@ import { ExtendedCoreComponent } from './extended-core.component';
 export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServiceRequests>
   extends ExtendedCoreComponent {
   protected static readonly logger = getLogger(ServiceRequestsComponent);
+  private static serviceRequestsSubscriptions: Set<string> = new Set<string>();
 
 
   /**
@@ -44,14 +46,22 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
     private _serviceRequests: TServiceRequests) {
     super(router, route, messageService);
 
+    //
+    // Subscription nur einmal pro Store registrieren
+    //
+    if (!ServiceRequestsComponent.serviceRequestsSubscriptions.has(this._serviceRequests.storeId)) {
+      ServiceRequestsComponent.serviceRequestsSubscriptions.add(this._serviceRequests.storeId);
+
+      this.getStoreSubject(this._serviceRequests.storeId).subscribe((command) => {
+        this.onStoreUpdatedGlobal(command);
+      });
+    }
+
     this.subscribeToStore(this._serviceRequests.storeId);
   }
 
-
-  protected onStoreUpdated<T>(command: ServiceCommand<T>): void {
-    super.onStoreUpdated(command);
-
-    using(new XLog(ServiceRequestsComponent.logger, levels.INFO, 'onStoreUpdated',
+  protected onStoreUpdatedGlobal<T>(command: ServiceCommand<T>): void {
+    using(new XLog(ServiceRequestsComponent.logger, levels.INFO, 'onStoreUpdatedGlobal',
       `class: ${this.constructor.name}`), (log) => {
         log.log(`command = ${command.constructor.name}: ${command.toString()}`);
 
@@ -66,6 +76,10 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
           this.addSuccessMessage('Record deleted.');
         }
       });
+  }
+
+  protected onStoreUpdated<T>(command: ServiceCommand<T>): void {
+    super.onStoreUpdated(command);
   }
 
 

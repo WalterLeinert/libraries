@@ -5,14 +5,14 @@ import { Authenticated, Controller, Post, Request } from 'ts-express-decorators'
 import { QueryResult } from '@fluxgate/common';
 import { Deprecated, IQuery, JsonSerializer } from '@fluxgate/core';
 
-import { BaseService } from '../../services/baseService';
+import { ReadonlyService } from '../../services/readonly-service';
 
 @Deprecated('noch benötigt?')
 @Controller('/query')
 export class QueryController<T, TId> {
   private serializer: JsonSerializer = new JsonSerializer();
 
-  constructor(private service: BaseService<T, TId>) {
+  constructor(private service: ReadonlyService<T, TId>) {
   }
 
   @Authenticated()

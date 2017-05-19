@@ -1,3 +1,4 @@
+import { Types } from '../types/types';
 import { Assert } from './../util/assert';
 import { StringBuilder } from './stringBuilder';
 
@@ -39,6 +40,48 @@ export class StringUtil {
     }
 
     return sb.toString();
+  }
+
+
+  /**
+   * Erzeugt einen JSON-ähnlichen String, dem Typnamen von @param{obj} und den Argumenten @param{args}
+   *
+   * @static
+   * @param {Object} obj
+   * @param {...any[]} args
+   * @returns
+   *
+   * @memberof StringUtil
+   */
+  public static enclose(obj: Object | string, ...args: any[]) {
+    const sb = new StringBuilder('{ ');
+    if (Types.isString(obj)) {
+      sb.append(obj as string);
+    } else {
+      sb.append(obj.constructor.name);
+    }
+
+    if (!Types.isNullOrEmpty(args)) {
+      sb.append(`: `);
+      sb.append(`${args}`);
+    }
+
+    sb.append(' }');
+
+    return sb.toString();
+  }
+
+  /**
+   * Erzeugt einen interpolierten String für die Argumente @param{args}
+   *
+   * @static
+   * @param {...any[]} args
+   * @returns
+   *
+   * @memberof StringUtil
+   */
+  public static format(...args: any[]) {
+    return `${args}`;
   }
 
 }

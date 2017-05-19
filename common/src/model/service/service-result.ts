@@ -26,4 +26,9 @@ export abstract class ServiceResult {
   public get entityVersion(): number {
     return this._entityVersion;
   }
+
+
+  public toString(): string {
+    return `entityVersion: ${this._entityVersion}`;
+  }
 }

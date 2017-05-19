@@ -25,7 +25,7 @@ export class RoleController extends ControllerBase<Role, number> {
   @Post('/')
   public create(
     @Request() request: Express.Request
-    ): Promise<CreateResult<Role>> {
+    ): Promise<CreateResult<Role, number>> {
     return super.createInternal((request as any).body as Role);
   }
 
@@ -57,7 +57,7 @@ export class RoleController extends ControllerBase<Role, number> {
   @Put('/')
   public update(
     @Request() request: Express.Request
-    ): Promise<UpdateResult<Role>> {
+    ): Promise<UpdateResult<Role, number>> {
     return super.updateInternal((request as any).body as Role);
   }
 
