@@ -13,6 +13,8 @@
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
   "devDependencies": {
+    "@angular/compiler": "^4.1.0",
+    "@angular/core": "^4.1.0",
     "@compodoc/compodoc": "^1.0.0-beta.8",
     "@compodoc/gulp-compodoc": "0.0.4",
     "codelyzer": "^2.1.1",
