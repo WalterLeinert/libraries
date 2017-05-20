@@ -7,7 +7,7 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { IQuery, IToString, StringBuilder, Types } from '@fluxgate/core';
+import { Clone, IQuery, IToString, StringBuilder, Types } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
@@ -150,7 +150,14 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
                   `items = ${cacheEntry.items.length}]`);
               }
 
-              observer.next(new FindResult<T>(cacheEntry.items, cacheEntry.version));
+              let items = cacheEntry.items;
+
+              //
+              // items aus dem Cache immer Klonen, damit es sich ähnlich wie bei echten Serverrequests verhält 
+              //
+              items = Clone.clone(items);
+
+              observer.next(new FindResult<T>(items, cacheEntry.version));
             }
           } else {
             finder(log, entityVersionResult.item, 'no cache yet');
@@ -212,11 +219,18 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
 
                 } else {
                   // Item aus Cache
-                  const item = cacheEntry.items.find((e) => e.id === id);
+                  let item = cacheEntry.items.find((e) => e.id === id);
 
                   if (log.isDebugEnabled()) {
                     log.debug(`entityVersion[${this.getTableName()}] already cached`);
                   }
+
+
+                  //
+                  // item aus dem Cache immer Klonen, damit es sich ähnlich wie bei echten Serverrequests verhält 
+                  //
+                  item = Clone.clone(item);
+
                   observer.next(new FindByIdResult<T, TId>(item, cacheEntry.version));
                 }
               } else {
