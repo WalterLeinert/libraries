@@ -9,7 +9,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { AssertionException } from '@fluxgate/core';
 
-import { Column, MetadataStorage, Table, TableServiceRequests } from '../../../../src/model';
+import { Column, IdColumn, MetadataStorage, Table, TableServiceRequests } from '../../../../src/model';
 import { TableMetadataInternal } from '../../../../src/model/metadata/tableMetadataInternal';
 
 
@@ -20,7 +20,7 @@ class NoValidEntity {
 class ArtikelTableServiceRequests {
   public static readonly TABLE_NAME = 'artikel';
 
-  @Column({ name: 'artikel_id', primary: true, generated: true })
+  @IdColumn({ name: 'artikel_id' })
   public id: number;
 
   @Column({ name: 'artikel_name', displayName: 'Name' })

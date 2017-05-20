@@ -1,35 +1,15 @@
-import { ColumnType } from '../metadata/columnTypes';
+import { IdColumnOptions } from './idColumnOptions';
 
 
 /**
- * Optionen für den Column-Decorator
+ * Optionen für den Column-Decorator: ergänzt die Optionen der IdColumn um die Properties
+ * primary und generated.
  *
  * @export
  * @interface ColumnOptions
  */
 // tslint:disable-next-line:interface-name
-export interface ColumnOptions {
-
-  /**
-   * Workaround für Metadata-Problem mit Date: Typ der Property
-   */
-  propertyType?: ColumnType;
-
-  /**
-   * Anzeigename (z.B. auf einer Form)
-   * Ist displayName nicht definiert, wird standardmäßig die Spalte nicht angzeigt.
-   */
-  displayName?: string;
-
-  /**
-   * DB-Spaltenname
-   */
-  name?: string;
-
-  /**
-   * Typ
-   */
-  type?: ColumnType;
+export interface ColumnOptions extends IdColumnOptions {
 
   /**
    * Spalte ist primary key.
@@ -42,28 +22,4 @@ export interface ColumnOptions {
    */
   readonly generated?: boolean;
 
-  /**
-   * Spaltenwerte sind unique
-   */
-  readonly unique?: boolean;
-
-  /**
-   * Spaltenwert kann null sein.
-   */
-  nullable?: boolean;
-
-  /**
-   * Column comment.
-   */
-  readonly comment?: string;
-
-  /**
-   * Defaultwert.
-   */
-  readonly default?: any;
-
-  /**
-   * false: Spaltenwert wird nicht persistiert (default: true); z.B. berechnete Property
-   */
-  persisted?: boolean;
 }

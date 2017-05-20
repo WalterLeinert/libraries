@@ -3,6 +3,7 @@ import { EnumHelper, Funktion } from '@fluxgate/core';
 import { AppRegistry } from '../base/appRegistry';
 import { ClientColumn } from '../model/decorator/client-column';
 import { Column } from '../model/decorator/column';
+import { IdColumn } from '../model/decorator/id-column';
 import { Table } from '../model/decorator/table';
 import { Validation } from '../model/decorator/validation';
 import { VersionColumn } from '../model/decorator/version-column';
@@ -47,7 +48,7 @@ export class Role extends FlxEntity<number> implements IRole {
     return true;
   })();
 
-  @Column({ name: 'role_id', primary: true, generated: true, displayName: 'Id' })
+  @IdColumn({ name: 'role_id', displayName: 'Id' })
   public id: number;
 
   @Validation([

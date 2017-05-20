@@ -1,4 +1,5 @@
 import { Column } from '../model/decorator/column';
+import { IdColumn } from '../model/decorator/id-column';
 import { Table } from '../model/decorator/table';
 import { Validation } from '../model/decorator/validation';
 import { VersionColumn } from '../model/decorator/version-column';
@@ -14,7 +15,7 @@ export class Client implements IFlxEntity<number> {
   public static readonly TABLE_NAME = 'client';
   public static readonly FIRST_ID = 1;
 
-  @Column({ name: 'client_id', primary: true, generated: true, displayName: 'Id' })
+  @IdColumn({ name: 'client_id', displayName: 'Id' })
   public id: number;
 
   @Validation([

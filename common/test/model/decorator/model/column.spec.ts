@@ -7,14 +7,14 @@ require('reflect-metadata');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Column, ColumnTypes, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
+import { Column, ColumnTypes, IdColumn, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
 
 
 @Table({ name: Artikel.TABLE_NAME })
 class Artikel {
   public static readonly TABLE_NAME = 'artikel';
 
-  @Column({ name: 'artikel_id', primary: true, generated: true })
+  @IdColumn({ name: 'artikel_id' })
   public id: number;
 
   @Column({ name: 'artikel_name', displayName: 'Name' })

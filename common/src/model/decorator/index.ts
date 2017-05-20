@@ -4,6 +4,7 @@ export * from './columnOptions';
 export * from './enum';
 export * from './enumTable';
 export * from './enumTableOptions.interface';
+export * from './id-column';
 export * from './table';
 export * from './tableOptions.interface';
 export * from './table-service';

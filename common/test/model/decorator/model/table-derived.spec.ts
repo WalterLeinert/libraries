@@ -7,14 +7,14 @@ require('reflect-metadata');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Column, ColumnTypes, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
+import { Column, ColumnTypes, IdColumn, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
 
 
 @Table({ name: ArtikelDerived.TABLE_NAME })
 export class ArtikelDerived {
   public static readonly TABLE_NAME: string = 'artikel';
 
-  @Column({ name: 'artikel_id', primary: true, generated: true })
+  @IdColumn({ name: 'artikel_id' })
   public id: number;
 
   @Column({ name: 'artikel_name', displayName: 'Name' })
@@ -26,7 +26,7 @@ export class ArtikelDerived {
 class ArtikelDerivedDerived extends ArtikelDerived {
   public static readonly TABLE_NAME: string = 'artikelderived';
 
-  @Column({ name: 'artikelderived_id', primary: true, generated: true })
+  @IdColumn({ name: 'artikelderived_id' })
   public id: number;
 
   @Column({ name: 'artikelderived_name', displayName: 'Name-Derived' })

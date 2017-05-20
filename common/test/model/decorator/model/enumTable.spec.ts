@@ -9,14 +9,14 @@ import { suite, test } from 'mocha-typescript';
 
 import { Types } from '@fluxgate/core';
 
-import { Column, ColumnTypes, Enum, EnumTable, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
+import { Column, ColumnTypes, Enum, EnumTable, IdColumn, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
 
 
 @Table({ name: ArtikelEnumTable.TABLE_NAME })
 class ArtikelEnumTable {
   public static readonly TABLE_NAME = 'artikel';
 
-  @Column({ name: 'artikel_id', primary: true, generated: true })
+  @IdColumn({ name: 'artikel_id' })
   public id: number;
 
   @Column({ name: 'artikel_name', displayName: 'Name' })
@@ -41,7 +41,7 @@ class KollektionEnumTable {
   ];
 
 
-  @Column({ name: 'kollektion_id', primary: true, generated: true })
+  @IdColumn({ name: 'kollektion_id' })
   public idKoll: number = 1;
 
   @Column({ name: 'kollektion_name' })

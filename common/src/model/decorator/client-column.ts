@@ -4,7 +4,7 @@ import { registerColumn } from './column';
 import { ColumnOptions } from './columnOptions';
 
 /**
- * Decorator: definiert die Property des Mandanten (Mandantenfähigkeit)
+ * Decorator: definiert die Property der Client-Id (Mandantenfähigkeit)
  */
 export function ClientColumn(options?: ColumnOptions) {
   // tslint:disable-next-line:only-arrow-functions

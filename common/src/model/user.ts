@@ -4,6 +4,7 @@ import { AppRegistry } from '../base/appRegistry';
 import { ClientColumn } from '../model/decorator/client-column';
 import { Column } from '../model/decorator/column';
 import { Enum } from '../model/decorator/enum';
+import { IdColumn } from '../model/decorator/id-column';
 import { Table } from '../model/decorator/table';
 import { Validation } from '../model/decorator/validation';
 import { VersionColumn } from '../model/decorator/version-column';
@@ -31,7 +32,7 @@ export class User implements IUser {
   public static Null = new User(-1, '-no-name-', -1, 'none');
 
 
-  @Column({ name: 'user_id', primary: true, generated: true, displayName: 'Id' })
+  @IdColumn({ name: 'user_id', displayName: 'Id' })
   public id: number;
 
   @Column({ name: 'user_firstname', nullable: true, displayName: 'Firstname' })

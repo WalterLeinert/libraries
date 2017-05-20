@@ -7,14 +7,14 @@ require('reflect-metadata');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Column, ColumnTypes, Enum, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
+import { Column, ColumnTypes, Enum, IdColumn, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
 
 
 @Table({ name: ArtikelEnum.TABLE_NAME })
 class ArtikelEnum {
   public static readonly TABLE_NAME = 'artikel';
 
-  @Column({ name: 'artikel_id', primary: true, generated: true })
+  @IdColumn({ name: 'artikel_id' })
   public id: number;
 
   @Column({ name: 'artikel_name', displayName: 'Name' })
@@ -31,7 +31,7 @@ class ArtikelEnum {
 @Table({ name: 'kollektion' })
 class KollektionEnum {
 
-  @Column({ name: 'kollektion_id', primary: true, generated: true })
+  @IdColumn({ name: 'kollektion_id' })
   public idKoll: number = 1;
 
   @Column({ name: 'kollektion_name' })
