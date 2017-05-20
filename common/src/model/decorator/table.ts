@@ -1,7 +1,7 @@
 import { ClassSerializerMetadata, Funktion, SerializerMetadataStorage } from '@fluxgate/core';
 
-import { MetadataStorage } from '../../metadata/metadataStorage';
-import { TableMetadataInternal } from '../../metadata/tableMetadataInternal';
+import { MetadataStorage } from '../metadata/metadataStorage';
+import { TableMetadataInternal } from '../metadata/tableMetadataInternal';
 
 import { TableOptions } from './tableOptions.interface';
 

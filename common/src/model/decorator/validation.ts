@@ -1,7 +1,7 @@
-import { MetadataStorage } from '../../metadata/metadataStorage';
-import { ValidationMetadata } from '../../metadata/validationMetadata';
-import { CompoundValidator } from '../../validation/compoundValidator';
-import { IValidation } from '../../validation/validation.interface';
+import { MetadataStorage } from '../metadata/metadataStorage';
+import { ValidationMetadata } from '../metadata/validationMetadata';
+import { CompoundValidator } from '../validation/compoundValidator';
+import { IValidation } from '../validation/validation.interface';
 
 
 /**

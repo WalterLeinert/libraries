@@ -1,6 +1,6 @@
-import { Column } from '../model/decorator/model/column';
-import { Table } from '../model/decorator/model/table';
-import { VersionColumn } from '../model/decorator/model/version-column';
+import { Column } from '../model/decorator/column';
+import { Table } from '../model/decorator/table';
+import { VersionColumn } from '../model/decorator/version-column';
 import { IFlxEntity } from './flx-entity.interface';
 import { IVersionedEntity } from './versioned-entity.interface';
 

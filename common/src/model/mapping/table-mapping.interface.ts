@@ -1,4 +1,4 @@
-import { TableOptions } from '../decorator/model/tableOptions.interface';
+import { TableOptions } from '../decorator/tableOptions.interface';
 import { IColumnMapping } from './column-mapping.interface';
 
 export interface ITableMapping {

@@ -4,10 +4,10 @@ require('reflect-metadata');
 import { Funktion, ShortTime, Time } from '@fluxgate/core';
 import { getLogger } from '@fluxgate/platform';
 
-import { ColumnTypeUndefinedError } from '../../error/columnTypeUndefinedError';
-import { ColumnMetadata } from '../../metadata/columnMetadata';
-import { ColumnTypes } from '../../metadata/columnTypes';
-import { MetadataStorage } from '../../metadata/metadataStorage';
+import { ColumnTypeUndefinedError } from '../error/columnTypeUndefinedError';
+import { ColumnMetadata } from '../metadata/columnMetadata';
+import { ColumnTypes } from '../metadata/columnTypes';
+import { MetadataStorage } from '../metadata/metadataStorage';
 
 import { ColumnOptions } from './columnOptions';
 

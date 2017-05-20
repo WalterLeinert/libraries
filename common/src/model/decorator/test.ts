@@ -1,5 +1,5 @@
-import { MetadataStorage } from '../../metadata/metadataStorage';
-import { SpecialColumns } from '../../metadata/specialColumns';
+import { MetadataStorage } from '../metadata/metadataStorage';
+import { SpecialColumns } from '../metadata/specialColumns';
 
 /**
  * Decorator: definiert die Test-Spalte für Implementierung von speziellen internen Tests

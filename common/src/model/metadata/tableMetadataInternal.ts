@@ -1,7 +1,7 @@
 import { Funktion } from '@fluxgate/core';
 
-import { EnumTableOptions } from '../decorator/model/enumTableOptions';
-import { TableOptions } from '../decorator/model/tableOptions.interface';
+import { EnumTableOptions } from '../decorator/enumTableOptions';
+import { TableOptions } from '../decorator/tableOptions.interface';
 import { TableMetadata } from './tableMetadata';
 
 

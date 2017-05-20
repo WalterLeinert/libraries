@@ -1,8 +1,8 @@
 import { Funktion } from '@fluxgate/core';
 import { getLogger } from '@fluxgate/platform';
 
-import { EnumTableMetadata } from '../../metadata/enumTableMetadata';
-import { MetadataStorage } from '../../metadata/metadataStorage';
+import { EnumTableMetadata } from '../metadata/enumTableMetadata';
+import { MetadataStorage } from '../metadata/metadataStorage';
 import { EnumTableOptions } from './enumTableOptions';
 import { IEnumTableOptions } from './enumTableOptions.interface';
 

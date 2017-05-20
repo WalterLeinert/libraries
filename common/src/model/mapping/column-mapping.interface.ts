@@ -1,4 +1,4 @@
-import { ColumnOptions } from '../decorator/model/columnOptions';
+import { ColumnOptions } from '../decorator/columnOptions';
 import { ColumnType } from '../metadata/columnTypes';
 
 export interface IColumnMapping {

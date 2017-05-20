@@ -1,7 +1,7 @@
 import { Assert, Funktion } from '@fluxgate/core';
 
-import { MetadataStorage } from '../../metadata/metadataStorage';
-import { TableMetadataInternal } from '../../metadata/tableMetadataInternal';
+import { MetadataStorage } from '../metadata/metadataStorage';
+import { TableMetadataInternal } from '../metadata/tableMetadataInternal';
 
 /**
  * TableServiceRequests-Decorator für Modellklassen

@@ -6,8 +6,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { Assert, ClassMetadata, Dictionary, Funktion, IToString } from '@fluxgate/core';
 
 import { ICrudServiceRequests } from '../../redux/service-requests/crud-service-requests.interface';
-import { EnumTableOptions } from '../decorator/model/enumTableOptions';
-import { TableOptions } from '../decorator/model/tableOptions.interface';
+import { EnumTableOptions } from '../decorator/enumTableOptions';
+import { TableOptions } from '../decorator/tableOptions.interface';
 import { IEntity } from '../entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { EnumTableService } from '../service/enumTableService';

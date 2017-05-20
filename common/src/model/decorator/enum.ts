@@ -1,7 +1,7 @@
 import { Assert, ICtor, InstanceAccessor } from '@fluxgate/core';
 
-import { EnumMetadata } from '../../metadata/enumMetadata';
-import { MetadataStorage } from '../../metadata/metadataStorage';
+import { EnumMetadata } from '../metadata/enumMetadata';
+import { MetadataStorage } from '../metadata/metadataStorage';
 
 
 /**

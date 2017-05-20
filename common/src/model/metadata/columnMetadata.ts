@@ -2,7 +2,7 @@ import * as moment from 'moment';
 
 import { Assert, InvalidOperationException, PropertyMetadata, ShortTime, Time, Types } from '@fluxgate/core';
 
-import { ColumnOptions } from '../decorator/model/columnOptions';
+import { ColumnOptions } from '../decorator/columnOptions';
 import { IValidation } from './../validation/validation.interface';
 import { ValidationResult } from './../validation/validationResult';
 import { ColumnType, ColumnTypes } from './columnTypes';

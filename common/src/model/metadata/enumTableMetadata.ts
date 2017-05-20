@@ -1,6 +1,6 @@
 import { Assert, Funktion } from '@fluxgate/core';
 
-import { EnumTableOptions } from '../decorator/model/enumTableOptions';
+import { EnumTableOptions } from '../decorator/enumTableOptions';
 import { TableMetadataInternal } from './tableMetadataInternal';
 
 export class EnumTableMetadata extends TableMetadataInternal {

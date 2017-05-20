@@ -1,12 +1,12 @@
 import { Funktion, StringBuilder, Utility } from '@fluxgate/core';
 
 import { AppRegistry } from '../base/appRegistry';
-import { ClientColumn } from '../model/decorator/model/client-column';
-import { Column } from '../model/decorator/model/column';
-import { Enum } from '../model/decorator/model/enum';
-import { Table } from '../model/decorator/model/table';
-import { Validation } from '../model/decorator/model/validation';
-import { VersionColumn } from '../model/decorator/model/version-column';
+import { ClientColumn } from '../model/decorator/client-column';
+import { Column } from '../model/decorator/column';
+import { Enum } from '../model/decorator/enum';
+import { Table } from '../model/decorator/table';
+import { Validation } from '../model/decorator/validation';
+import { VersionColumn } from '../model/decorator/version-column';
 import { Validators } from '../model/validation/validators';
 
 

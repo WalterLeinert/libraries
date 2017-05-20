@@ -1,5 +1,5 @@
-import { MetadataStorage } from '../../metadata/metadataStorage';
-import { SpecialColumns } from '../../metadata/specialColumns';
+import { MetadataStorage } from '../metadata/metadataStorage';
+import { SpecialColumns } from '../metadata/specialColumns';
 import { registerColumn } from './column';
 import { ColumnOptions } from './columnOptions';
 
