@@ -25,7 +25,7 @@ export class RoleServiceFake extends ServiceFake<IRole, number> {
         tableMetadata: MetadataStorage.instance.findTableMetadata(Role),
         idGenerator: new NumberIdGenerator(RoleServiceFake.MAX_ITEMS),
         columns: {
-          id_mandant: new ConstantValueGenerator(1),
+          id_client: new ConstantValueGenerator(1),
           deleted: new ConstantValueGenerator(false),
           __version: new ConstantValueGenerator(0),
         }

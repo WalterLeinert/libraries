@@ -12,15 +12,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
-import {
-  FindByIdResult, FindResult, IEntity,
-  QueryResult, TableMetadata
-} from '@fluxgate/common';
+import { FindByIdResult, FindResult, IEntity, QueryResult } from '@fluxgate/common';
 import { Assert, Funktion, IQuery, IToString } from '@fluxgate/core';
 
 import { ConfigService } from '../../services/config.service';
 import { MetadataService } from '../../services/metadata.service';
-import { ServiceBase } from './serviceBase';
+import { ServiceBase } from './service-base';
 
 
 /**
@@ -31,22 +28,13 @@ import { ServiceBase } from './serviceBase';
  * @class ReadonlyService
  * @template T
  */
-export abstract class ReadonlyService<T, TId extends IToString> extends ServiceBase {
+export abstract class ReadonlyService<T, TId extends IToString> extends ServiceBase<T, TId> {
   protected static logger = getLogger(ReadonlyService);
 
-  private _tableMetadata: TableMetadata;
 
-
-  protected constructor(model: Funktion, private metadataService: MetadataService,
-    http: Http, configService: ConfigService, private topic?: string) {
-    super(http, configService.config.url,
-      topic === undefined ? metadataService.findTableMetadata(model).options.name : topic);
-
-    Assert.notNull(model, 'model');
-
-    // Metadaten zur Entity ermitteln
-    this._tableMetadata = this.metadataService.findTableMetadata(model);
-    Assert.notNull(this._tableMetadata);
+  protected constructor(model: Funktion, metadataService: MetadataService,
+    http: Http, configService: ConfigService, topic?: string) {
+    super(model, metadataService, http, configService, topic);
   }
 
 
@@ -128,32 +116,4 @@ export abstract class ReadonlyService<T, TId extends IToString> extends ServiceB
         .catch(this.handleError);
     });
   }
-
-
-  /**
-   * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
-   *
-   * @type {string}
-   */
-  public getModelClassName(): string {
-    return this._tableMetadata.className;
-  }
-
-  public getTableName(): string {
-    return this._tableMetadata.tableName;
-  }
-
-
-  /**
-   * Liefert die zugehörige @see{TableMetadata}
-   *
-   * @readonly
-   * @protected
-   * @type {TableMetadata}
-   * @memberOf Service
-   */
-  protected get tableMetadata(): TableMetadata {
-    return this._tableMetadata;
-  }
-
 }

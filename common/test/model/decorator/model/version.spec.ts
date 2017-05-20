@@ -7,7 +7,9 @@ require('reflect-metadata');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Column, ColumnTypes, IFlxEntity, MetadataStorage, Table, TableMetadata, Version } from '../../../../src/model';
+import {
+  Column, ColumnTypes, IFlxEntity, MetadataStorage, Table, TableMetadata, VersionColumn
+} from '../../../../src/model';
 
 
 @Table({ name: ArtikelVersion.TABLE_NAME })
@@ -20,8 +22,7 @@ class ArtikelVersion implements IFlxEntity<number> {
   @Column({ name: 'artikel_name', displayName: 'Name' })
   public name: string;
 
-  @Version()
-  @Column({ name: 'artikel_version', displayName: 'Version' })
+  @VersionColumn({ name: 'artikel_version', displayName: 'Version' })
   public __version: number;
 }
 

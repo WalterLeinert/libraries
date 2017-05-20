@@ -9,7 +9,9 @@ import { suite, test } from 'mocha-typescript';
 
 import { Clone, ConfigurationException, InvalidOperationException, ShortTime, Time } from '@fluxgate/core';
 
-import { Client, Column, IFlxEntity, MetadataStorage, Table, TableMetadata, Version } from '../../../src/model';
+import {
+  ClientColumn, Column, IFlxEntity, MetadataStorage, Table, TableMetadata, VersionColumn
+} from '../../../src/model';
 import { ConstantValueGenerator } from '../../../src/model/generator/constant-value-generator';
 import { DateValueGenerator } from '../../../src/model/generator/date-value-generator';
 import { DatetimeValueGenerator } from '../../../src/model/generator/datetime-value-generator';
@@ -68,12 +70,10 @@ class ArtikelGenerator implements IFlxEntity<number> {
   @Column()
   public deleted?: boolean;
 
-  @Client()
-  @Column()
+  @ClientColumn()
   public mandant?: number;
 
-  @Version()
-  @Column()
+  @VersionColumn()
   public __version: number;
 }
 

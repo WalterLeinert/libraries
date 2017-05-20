@@ -41,7 +41,7 @@ export interface IUser extends IFlxEntity<number> {
   /**
    * Mandanten-Id
    */
-  id_mandant?: number;
+  id_client?: number;
 
   /**
    * Setzt Passwort und Salt zurück

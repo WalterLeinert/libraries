@@ -67,11 +67,10 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
         log.debug('subject: ', subject);
       }
 
-      log.warn(`Client-Id für aktuellen User ermitteln`);
-      const clientId = 1;     // TODO für aktuellen User ermitteln
-
       if (this.metadata.clientColumn) {
-        subject[this.metadata.clientColumn.name] = clientId;    // TODO: Konstante
+        if (request && request.user) {
+          subject[this.metadata.clientColumn.name] = request.user.id_client;
+        }
       }
 
       if (this.metadata.versionColumn) {
@@ -91,7 +90,6 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
 
           // query für Inkrement der EntityVersion Tabelle oder nop-query erzeugen
           let entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
-
 
           entityversionQuery
             .then((item) => {
@@ -149,7 +147,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    * @memberOf ServiceBase
    */
   public update(
-    requestXXX: ISessionRequest,
+    request: ISessionRequest,
     subject: T
   ): Promise<UpdateResult<T, TId>> {
 
@@ -162,7 +160,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
         this.knexService.knex.transaction((trx) => {
 
           // quer< zur Selektion der Entity und ggf. des Versionsinkrements
-          let query: Knex.QueryBuilder = this.createUpdateQuery(trx, subject.id, dbSubject);
+          let query: Knex.QueryBuilder = this.createUpdateQuery(request, trx, subject.id, dbSubject);
 
           // query für increment der entityversion Tabelle oder nop-query erzeugen
           let entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
@@ -261,13 +259,12 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
       return new Promise<DeleteResult<TId>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
-          log.warn(`Client-Id für aktuellen User ermitteln`);
-          const clientId = 1;     // TODO für aktuellen User ermitteln
-
           let query = this.fromTable();
           query = this.addIdSelector(query, trx, id);
-          query = this.addClientSelector(query, trx, clientId);
 
+          if (request && request.user) {
+            query = this.addClientSelector(query, trx, request.user.id_client);
+          }
 
           // query für increment der entityversion Tabelle oder nop-query erzeugen
           let entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
@@ -329,17 +326,16 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    *
    * @memberof BaseService
    */
-  private createUpdateQuery(trx: Knex.Transaction, id: TId, dbSubject: any): Knex.QueryBuilder {
+  private createUpdateQuery(request: ISessionRequest, trx: Knex.Transaction, id: TId, dbSubject: any):
+    Knex.QueryBuilder {
     return using(new XLog(BaseService.logger, levels.INFO, 'createUpdateQuery'), (log) => {
-
-      // Selektion der Entity
-
-      log.warn(`Client-Id für aktuellen User ermitteln`);
-      const clientId = 1;     // TODO für aktuellen User ermitteln
 
       let query = this.fromTable();
       query = this.addIdSelector(query, trx, id);
-      query = this.addClientSelector(query, trx, clientId);
+
+      if (request && request.user) {
+        query = this.addClientSelector(query, trx, request.user.id_client);
+      }
 
 
       //

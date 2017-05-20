@@ -22,5 +22,5 @@ export interface IRole extends IFlxEntity<number> {
   /**
    * Mandanten-Id
    */
-  id_mandant?: number;
+  id_client?: number;
 }

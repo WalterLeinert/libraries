@@ -13,7 +13,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // fluxgate
-import { BaseComponent, MessageService, MetadataService } from '@fluxgate/client';
+import { ExtendedCoreComponent, MessageService, MetadataService } from '@fluxgate/client';
 import { IRole, User, UserRoleId } from '@fluxgate/common';
 import { Assert, Types } from '@fluxgate/core';
 import { AuthenticationNavigation, AuthenticationNavigationToken } from '../authenticationNavigation';
@@ -90,17 +90,17 @@ import { PassportService } from '../passport.service';
 }
 `]
 })
-export class RegisterComponent extends BaseComponent<PassportService> {
+export class RegisterComponent extends ExtendedCoreComponent {
   protected static logger = getLogger(RegisterComponent);
 
   public user: User;
 
   constructor(
     private fb: FormBuilder, router: Router, route: ActivatedRoute, private location: Location, messageService: MessageService,
-    @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation, service: PassportService,
+    @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation, private service: PassportService,
     metadataService: MetadataService) {
 
-    super(router, route, messageService, service);
+    super(router, route, messageService);
 
     const userTableMetadata = metadataService.findTableMetadata(User);
     Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name}`);

@@ -1,11 +1,11 @@
 import { EnumHelper, Funktion } from '@fluxgate/core';
 
 import { AppRegistry } from '../base/appRegistry';
-import { Client } from '../model/decorator/model/client';
+import { ClientColumn } from '../model/decorator/model/client-column';
 import { Column } from '../model/decorator/model/column';
 import { Table } from '../model/decorator/model/table';
 import { Validation } from '../model/decorator/model/validation';
-import { Version } from '../model/decorator/model/version';
+import { VersionColumn } from '../model/decorator/model/version-column';
 import { FlxEntity } from '../model/flx-entity';
 import { Validators } from '../model/validation/validators';
 
@@ -65,12 +65,10 @@ export class Role extends FlxEntity<number> implements IRole {
   @Validation([
     Validators.required
   ])
-  @Client()
-  @Column({ name: 'id_mandant' })
-  public id_mandant?: number;   // = Mandant.FIRST_ID;
+  @ClientColumn({ name: 'id_client' })
+  public id_client?: number;   // = Mandant.FIRST_ID;
 
-  @Version()
-  @Column({ name: 'role_version', displayName: 'Version', default: 0 })
+  @VersionColumn({ name: 'role_version', displayName: 'Version', default: 0 })
   public __version: number;
 
 

@@ -14,14 +14,14 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  ConfigService, MetadataService, ServiceBase
+  ConfigService, MetadataService, ServiceCore
 } from '@fluxgate/client';
 import { IUser, PasswordChange, User } from '@fluxgate/common';
 import { Assert } from '@fluxgate/core';
 
 
 @Injectable()
-export class PassportService extends ServiceBase {
+export class PassportService extends ServiceCore {
   protected static logger = getLogger(PassportService);
 
   public static get LOGIN() { return '/login'; }
@@ -40,8 +40,7 @@ export class PassportService extends ServiceBase {
    *
    * @memberOf PassportService
    */
-  constructor(http: Http, configService: ConfigService, private metadataService: MetadataService,
-    private topic?: string) {
+  constructor(http: Http, configService: ConfigService) {
     super(http, configService.config.url, 'passport');
 
     using(new XLog(PassportService.logger, levels.INFO, 'ctor'), (log) => {
@@ -58,20 +57,15 @@ export class PassportService extends ServiceBase {
    *
    * @memberOf PassportService
    */
-  public login(username: string, password: string, clientId?: number): Observable<IUser> {
+  public login(username: string, password: string, clientId: number): Observable<IUser> {
     Assert.notNullOrEmpty(username, 'username');
     Assert.notNullOrEmpty(password, 'password');
     return using(new XLog(PassportService.logger, levels.INFO, 'login', `username =  ${username}`), (log) => {
 
-      const userTableMetadata = this.metadataService.findTableMetadata(User.name);
-      Assert.notNull(userTableMetadata, `Metadaten für Tabelle ${User.name} nicht gefunden.`);
-
-      clientId = 1;     // TODO
-
-      const user = userTableMetadata.createEntity<IUser>();
+      const user = new User();
       user.username = username;
       user.password = password;
-      user.id_mandant = clientId;
+      user.id_client = clientId;
 
       return this.http.post(this.getUrl() + PassportService.LOGIN, this.serialize(user))
         .map((response: Response) => this.deserialize(response.json()))

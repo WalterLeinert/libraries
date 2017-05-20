@@ -1,6 +1,6 @@
 import { Column } from '../model/decorator/model/column';
 import { Table } from '../model/decorator/model/table';
-import { Version } from '../model/decorator/model/version';
+import { VersionColumn } from '../model/decorator/model/version-column';
 import { IFlxEntity } from './flx-entity.interface';
 import { IVersionedEntity } from './versioned-entity.interface';
 
@@ -14,7 +14,6 @@ export class EntityVersion implements IFlxEntity<string>, IVersionedEntity {
   @Column({ name: 'entityversion_id', primary: true, displayName: 'EntityVersionId' })
   public id: string;
 
-  @Version()
-  @Column({ name: 'entityversion_version', displayName: 'Version' })
+  @VersionColumn({ name: 'entityversion_version', displayName: 'Version' })
   public __version: number;
 }

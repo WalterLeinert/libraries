@@ -1,4 +1,4 @@
-export * from './client';
+export * from './client-column';
 export * from './column';
 export * from './columnOptions';
 export * from './enum';
@@ -10,4 +10,4 @@ export * from './table-service';
 export * from './table-service-requests';
 export * from './test';
 export * from './validation';
-export * from './version';
+export * from './version-column';

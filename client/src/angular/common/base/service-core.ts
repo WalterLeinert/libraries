@@ -10,6 +10,7 @@ import * as HttpStatusCodes from 'http-status-codes';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
+import { IServiceCore } from '@fluxgate/common';
 import { Assert, Constants, IException, JsonSerializer, ServerSystemException, StringBuilder } from '@fluxgate/core';
 
 
@@ -18,13 +19,13 @@ import { Assert, Constants, IException, JsonSerializer, ServerSystemException, S
  *
  * @export
  * @abstract
- * @class Service
+ * @class ServiceCore
  * @template T
  */
-export abstract class ServiceBase {
-  protected static logger = getLogger(ServiceBase);
+export abstract class ServiceCore implements IServiceCore {
+  protected static logger = getLogger(ServiceCore);
 
-  private static serializer: JsonSerializer = new JsonSerializer();
+  private static _serializer: JsonSerializer = new JsonSerializer();
   private _url: string;
 
 
@@ -92,7 +93,7 @@ export abstract class ServiceBase {
    * @memberOf ServiceBase
    */
   public static handleServerError(response: Response): ErrorObservable {
-    return Observable.throw(ServiceBase.createServerException(response));
+    return Observable.throw(ServiceCore.createServerException(response));
   }
 
 
@@ -100,7 +101,7 @@ export abstract class ServiceBase {
    * Erzeugt eine Serverexception für die Response @param{response}
    */
   public static createServerException(response: Response): IException {
-    return using(new XLog(ServiceBase.logger, levels.INFO, 'handleServerError'), (log) => {
+    return using(new XLog(ServiceCore.logger, levels.INFO, 'handleServerError'), (log) => {
       // In a real world app, we might use a remote logging infrastructure
       let errorMessage = '** unknown error **';
 
@@ -112,10 +113,10 @@ export abstract class ServiceBase {
         errorMessage = 'Server down?';
       }
 
-      log.error(`errorMessage = ${errorMessage}: [ ${ServiceBase.formatResponseStatus(response)} ]`);
+      log.error(`errorMessage = ${errorMessage}: [ ${ServiceCore.formatResponseStatus(response)} ]`);
 
       if (JsonSerializer.isSerialized(response.json())) {
-        return ServiceBase.serializer.deserialize<IException>(response.json());
+        return ServiceCore._serializer.deserialize<IException>(response.json());
       }
 
       return new ServerSystemException(errorMessage);
@@ -138,16 +139,16 @@ export abstract class ServiceBase {
 
 
   protected handleError(response: Response): ErrorObservable {
-    return ServiceBase.handleServerError(response);
+    return ServiceCore.handleServerError(response);
   }
 
 
   protected serialize<TSource>(value: TSource): any {
-    return ServiceBase.serializer.serialize<TSource>(value);
+    return ServiceCore._serializer.serialize<TSource>(value);
   }
 
   protected deserialize<TDest>(json: any): TDest {
-    return ServiceBase.serializer.deserialize<TDest>(json);
+    return ServiceCore._serializer.deserialize<TDest>(json);
   }
 
 

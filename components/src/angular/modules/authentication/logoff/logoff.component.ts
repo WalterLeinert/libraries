@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
-import { BaseComponent, MessageService } from '@fluxgate/client';
+import { ExtendedCoreComponent, MessageService } from '@fluxgate/client';
 import { Types } from '@fluxgate/core';
 
 // commands
@@ -22,13 +22,13 @@ import { PassportService } from './../passport.service';
   `,
   styles: []
 })
-export class LogoffComponent extends BaseComponent<PassportService> {
+export class LogoffComponent extends ExtendedCoreComponent {
   protected static logger = getLogger(LogoffComponent);
 
   constructor(private serviceRequests: CurrentUserServiceRequests,
-    router: Router, route: ActivatedRoute, messageService: MessageService, service: PassportService,
+    router: Router, route: ActivatedRoute, messageService: MessageService, private service: PassportService,
     @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation) {
-    super(router, route, messageService, service);
+    super(router, route, messageService);
   }
 
   public ngOnInit() {

@@ -16,7 +16,7 @@ import {
   CreateResult, DeleteResult, IEntity, UpdateResult
 } from '@fluxgate/common';
 
-import { Assert, Funktion, InvalidOperationException, IToString } from '@fluxgate/core';
+import { Assert, Funktion, IToString } from '@fluxgate/core';
 
 import { ConfigService } from '../../services/config.service';
 import { MetadataService } from '../../services/metadata.service';
@@ -123,34 +123,5 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
       });
   }
 
-
-  /**
-   * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
-   * Sonst wird ein Error geworfen.
-   *
-   * @type {any}
-   * @memberOf Service
-   */
-  public getEntityId(item: T): TId {
-    if (!this.tableMetadata.primaryKeyColumn) {
-      throw new InvalidOperationException(`Table ${this.tableMetadata.options.name}: no primary key column`);
-    }
-    return item[this.tableMetadata.primaryKeyColumn.propertyName];
-  }
-
-
-  /**
-   * Setzt die Id der Entity @param{item} über die Metainformation, falls vorhanden.
-   * Sonst wird ein Error geworfen.
-   *
-   * @type {any}
-   * @memberOf Service
-   */
-  public setEntityId(item: T, id: TId) {
-    if (!this.tableMetadata.primaryKeyColumn) {
-      throw new InvalidOperationException(`Table ${this.tableMetadata.options.name}: no primary key column`);
-    }
-    item[this.tableMetadata.primaryKeyColumn.propertyName] = id;
-  }
 
 }

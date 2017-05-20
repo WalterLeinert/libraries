@@ -41,30 +41,30 @@ LOCK TABLES `entityversion` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `mandant`
+-- Table structure for table `client`
 --
 
-DROP TABLE IF EXISTS `mandant`;
+DROP TABLE IF EXISTS `client`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mandant` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `description` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name_UNIQUE` (`name`)
+CREATE TABLE `client` (
+  `client_id` int(11) NOT NULL AUTO_INCREMENT,
+  `client_name` varchar(45) NOT NULL,
+  `client_description` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`client_id`),
+  UNIQUE KEY `client_name_UNIQUE` (`client_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `mandant`
+-- Dumping data for table `client`
 --
 
-LOCK TABLES `mandant` WRITE;
-/*!40000 ALTER TABLE `mandant` DISABLE KEYS */;
-INSERT INTO `mandant` VALUES (1,'Mandant-1','Test für Mandantenfähigkeit (1)');
-INSERT INTO `mandant` VALUES (2,'Mandant-2','Test für Mandantenfähigkeit (2)');
-/*!40000 ALTER TABLE `mandant` ENABLE KEYS */;
+LOCK TABLES `client` WRITE;
+/*!40000 ALTER TABLE `client` DISABLE KEYS */;
+INSERT INTO `client` VALUES (1,'Mandant-1','Test für Mandantenfähigkeit (1)');
+INSERT INTO `client` VALUES (2,'Mandant-2','Test für Mandantenfähigkeit (2)');
+/*!40000 ALTER TABLE `client` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -79,7 +79,7 @@ CREATE TABLE `role` (
   `role_name` varchar(45) CHARACTER SET utf8 NOT NULL,
   `role_description` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
   `role_deleted` tinyint(4) NOT NULL DEFAULT '0',
-  `id_mandant` int(11) NOT NULL DEFAULT '1',
+  `id_client` int(11) NOT NULL DEFAULT '1',
   `role_version` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`role_id`),
   UNIQUE KEY `role_name_UNIQUE` (`role_name`),
@@ -114,7 +114,7 @@ CREATE TABLE `user` (
   `user_password_salt` varchar(45) NOT NULL,
   `id_role` int(11) NOT NULL,
   `user_deleted` tinyint(4) NOT NULL DEFAULT '0',
-  `id_mandant` int(11) NOT NULL DEFAULT '1',
+  `id_client` int(11) NOT NULL DEFAULT '1',
   `user_version` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username_UNIQUE` (`user_username`)

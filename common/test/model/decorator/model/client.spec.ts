@@ -7,7 +7,7 @@ require('reflect-metadata');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Client, Column, ColumnTypes, IEntity, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
+import { ClientColumn, Column, ColumnTypes, IEntity, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
 
 
 @Table({ name: ArtikelClient.TABLE_NAME })
@@ -20,9 +20,8 @@ class ArtikelClient implements IEntity<number> {
   @Column({ name: 'artikel_name', displayName: 'Name' })
   public name: string;
 
-  @Client()
-  @Column({ name: 'id_mandant' })
-  public id_mandant?: number;
+  @ClientColumn({ name: 'id_client' })
+  public id_client?: number;
 }
 
 
@@ -39,7 +38,7 @@ class ColumnTest {
     const clientMetadata = this.tableMetadata.clientColumn;
     expect(clientMetadata).to.be.not.null;
 
-    expect(clientMetadata.propertyName).to.equal('id_mandant');
+    expect(clientMetadata.propertyName).to.equal('id_client');
     expect(clientMetadata.propertyType).to.equal(ColumnTypes.NUMBER);
   }
 

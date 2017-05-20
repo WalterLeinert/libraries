@@ -12,13 +12,13 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { ColumnTypes, IPrintOptions, IPrintTask, ITableRow, TableMetadata, TableType } from '@fluxgate/common';
 import { Assert } from '@fluxgate/core';
 
-import { ServiceBase } from '../common/base/serviceBase';
+import { ServiceCore } from '../common/base/service-core';
 import { ConfigService } from './config.service';
 import { MetadataService } from './metadata.service';
 
 
 @Injectable()
-export class PrintService extends ServiceBase {
+export class PrintService extends ServiceCore {
   protected static readonly logger = getLogger(PrintService);
 
   // TODO: public static readonly TOPIC = 'print';

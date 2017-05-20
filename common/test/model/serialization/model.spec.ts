@@ -9,7 +9,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { configure, IConfig, JsonSerializer, ShortTime } from '@fluxgate/core';
 
-import { Client, Column, IEntity, Table } from '../../../src/model';
+import { ClientColumn, Column, IEntity, Table } from '../../../src/model';
 
 
 @Table({ name: ArtikelSerialization.TABLE_NAME })
@@ -22,9 +22,8 @@ class ArtikelSerialization implements IEntity<number> {
   @Column({ name: 'artikel_name', displayName: 'Name' })
   public name: string;
 
-  @Client()
-  @Column({ name: 'id_mandant' })
-  public id_mandant?: number;
+  @ClientColumn({ name: 'id_client' })
+  public id_client?: number;
 
   @Column({ name: 'artikel_created' })
   public created: Date;
@@ -54,7 +53,7 @@ class ModelSerializationTest {
     const test = new ArtikelSerialization();
     test.id = 1;
     test.name = 'Hemd';
-    test.id_mandant = 2;
+    test.id_client = 2;
     test.created = new Date('2017-05-10');
     test.start = new ShortTime(8, 30);
 

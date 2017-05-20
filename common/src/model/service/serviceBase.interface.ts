@@ -1,9 +1,9 @@
-import { IRestUri } from './restUri.interface';
+import { IServiceCore } from './service-core.interface';
 
 /**
  * Interface mit gemeinsamen Funktionen aller Services
  */
-export interface IServiceBase<T, TId> extends IRestUri {
+export interface IServiceBase<T, TId> extends IServiceCore {
 
   /**
    * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).

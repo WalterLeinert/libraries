@@ -115,7 +115,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
                 }
 
                 if (request) {
-                  // ggf. id_mandant der Ergebnis-Row mit der clientId des Users querchecken
+                  // ggf. id_client der Ergebnis-Row mit der clientId des Users querchecken
                 }
 
                 // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
@@ -561,7 +561,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
     // Knex-Beispielcode:
     // this._knexService.knex
     //   .from('artikel')
-    //   .innerJoin('user', 'artikel.id_mandant', 'user.id_mandant')
+    //   .innerJoin('user', 'artikel.id_client', 'user.id_client')
     //   .andWhere('user.user_id', userId).then((res) => {
     //    ...
     //   });
@@ -581,9 +581,9 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
       // der Property user vorliegt.
       //
       if (request.body !== null && request.body instanceof User) {
-        userIdValue = request.body.id_mandant;
+        userIdValue = request.body.id_client;
       } else {
-        userIdValue = request.user.id_mandant;
+        userIdValue = request.user.id_client;
       }
 
       query = query

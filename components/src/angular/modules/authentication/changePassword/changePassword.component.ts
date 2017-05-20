@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { BaseComponent, MessageService } from '@fluxgate/client';
+import { ExtendedCoreComponent, MessageService } from '@fluxgate/client';
 import { Types } from '@fluxgate/core';
 
 
@@ -76,7 +76,7 @@ import { PassportService } from '../passport.service';
 `]
 })
 
-export class ChangePasswordComponent extends BaseComponent<PassportService> {
+export class ChangePasswordComponent extends ExtendedCoreComponent {
   protected static logger = getLogger(ChangePasswordComponent);
 
   public password: string;
@@ -86,8 +86,8 @@ export class ChangePasswordComponent extends BaseComponent<PassportService> {
   constructor(private fb: FormBuilder, private serviceRequests: CurrentUserServiceRequests,
     router: Router, route: ActivatedRoute, private location: Location, messageService: MessageService,
     @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation,
-    service: PassportService) {
-    super(router, route, messageService, service);
+    private service: PassportService) {
+    super(router, route, messageService);
 
     const form = fb.group({
       password: [undefined, Validators.required],

@@ -12,7 +12,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 
-import { BaseComponent, MessageService } from '@fluxgate/client';
+import { ExtendedCoreComponent, MessageService } from '@fluxgate/client';
 
 // commands
 import { CurrentUserServiceRequests } from '../../../redux/current-user-service-requests';
@@ -61,7 +61,7 @@ import { PassportService } from '../passport.service';
 `]
 })
 
-export class LoginComponent extends BaseComponent<PassportService> {
+export class LoginComponent extends ExtendedCoreComponent {
   protected static logger = getLogger(LoginComponent);
 
   public username: string;
@@ -84,8 +84,8 @@ export class LoginComponent extends BaseComponent<PassportService> {
   constructor(private serviceRequests: CurrentUserServiceRequests,
     private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
     @Inject(AuthenticationNavigationToken) private authenticationNavigation: AuthenticationNavigation,
-    service: PassportService) {
-    super(router, route, messageService, service);
+    private service: PassportService) {
+    super(router, route, messageService);
 
     using(new XLog(LoginComponent.logger, levels.INFO, 'ctor'), (log) => {
 
@@ -99,7 +99,10 @@ export class LoginComponent extends BaseComponent<PassportService> {
 
   public login() {
     using(new XLog(LoginComponent.logger, levels.INFO, 'login'), (log) => {
-      this.registerSubscription(this.service.login(this.username, this.password)
+      const clientId = 1;     // TODO
+      log.warn(`Login component um clientId erweitern`);
+
+      this.registerSubscription(this.service.login(this.username, this.password, clientId)
         .subscribe((result) => {
           log.log(JSON.stringify(result));
 

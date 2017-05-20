@@ -14,5 +14,6 @@ export * from './formGroupInfo';
 export * from './resolver-base';
 export * from './readonly-service';
 export * from './service';
-export * from './serviceBase';
+export * from './service-base';
+export * from './service-core';
 export * from './service-requests-component';

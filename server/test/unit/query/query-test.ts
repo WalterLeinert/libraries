@@ -1,4 +1,4 @@
-import { Column, IFlxEntity, Table, Version } from '@fluxgate/common';
+import { Column, IFlxEntity, Table, VersionColumn } from '@fluxgate/common';
 
 
 /**
@@ -18,8 +18,7 @@ export class QueryTest implements IFlxEntity<number> {
   @Column({ displayName: 'Name' })
   public name: string;
 
-  @Version()
-  @Column({ name: 'version' })
+  @VersionColumn({ name: 'version' })
   public __version: number;
 
   // @Test()

@@ -2,7 +2,7 @@
  * Interface für alle REST-Api-Implementierungen
  *
  */
-export interface IRestUri {
+export interface IServiceCore {
 
   /**
    * Liefert das Topic des REST-Api (z.B. 'passport' oder 'artikel')
