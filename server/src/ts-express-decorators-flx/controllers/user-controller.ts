@@ -3,35 +3,36 @@ import { Authenticated, Controller, Delete, Get, PathParams, Post, Put, Request 
 // Fluxgate
 import {
   CreateResult, DeleteResult, FindByIdResult, FindResult, QueryResult,
-  Role, UpdateResult
+  UpdateResult, User
 } from '@fluxgate/common';
 import { IQuery } from '@fluxgate/core';
 
-import { RoleService } from '../services/role.service';
+import { UserService } from '../services/user.service';
 import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
-import { ControllerBase } from './base/controllerBase';
+import { ControllerBase } from './base/controller-base';
 
 
-@Controller('/role')
-export class RoleController extends ControllerBase<Role, number> {
-  constructor(service: RoleService) {
-    super(service, 'role', 'role_id');
+@Controller('/user')
+export class UserController extends ControllerBase<User, number> {
+  constructor(service: UserService) {
+    super(service, 'user', 'user_id');
   }
 
   @Authenticated({ role: 'admin' })
   @Post('/')
   public create(
-    @Request() request: IBodyRequest<Role>
-    ): Promise<CreateResult<Role, number>> {
+    @Request() request: IBodyRequest<User>
+    ): Promise<CreateResult<User, number>> {
     return super.createInternal(request);
   }
+
 
   // @Authenticated()
   @Get('/')
   public find(
     @Request() request: ISessionRequest
-    ): Promise<FindResult<Role>> {
+    ): Promise<FindResult<User>> {
     return super.findInternal(request);
   }
 
@@ -40,7 +41,7 @@ export class RoleController extends ControllerBase<Role, number> {
   public findById(
     @Request() request: ISessionRequest,
     @PathParams('id') id: number
-    ): Promise<FindByIdResult<Role, number>> {
+    ): Promise<FindByIdResult<User, number>> {
     return super.findByIdInternal(request, id);
   }
 
@@ -49,15 +50,16 @@ export class RoleController extends ControllerBase<Role, number> {
   @Post('/')
   public query(
     @Request() request: IBodyRequest<IQuery>
-    ): Promise<QueryResult<Role>> {
+    ): Promise<QueryResult<User>> {
     return super.queryInternal(request);
   }
+
 
   @Authenticated({ role: 'admin' })
   @Put('/')
   public update(
-    @Request() request: IBodyRequest<Role>
-    ): Promise<UpdateResult<Role, number>> {
+    @Request() request: IBodyRequest<User>
+    ): Promise<UpdateResult<User, number>> {
     return super.updateInternal(request);
   }
 

@@ -15,6 +15,8 @@ import { Messages } from '../../resources/messages';
 import { PassportLocalService } from '../services/passportLocal.service';
 import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
+import { ControllerCore } from './base/controller-core';
+
 
 /**
  * Controller zur Authentifizierung über Passport.js
@@ -22,16 +24,19 @@ import { ISessionRequest } from '../session/session-request.interface';
  * @class PassportController
  */
 @Controller('/passport')
-export class PassportController {
+export class PassportController extends ControllerCore {
   protected static logger = getLogger(PassportController);
 
-  private serializer: JsonSerializer = new JsonSerializer();
+
 
   constructor(passportLocalService: PassportLocalService) {
+    super('dummy', 'dummy');
+
     passportLocalService.initLocalSignup();
     passportLocalService.initLocalLogin();
     passportLocalService.initLocalChangePassword();
   }
+
 
   /**
    * Authenticate user with local info (in Database).
@@ -54,7 +59,7 @@ export class PassportController {
     return using(new XLog(PassportController.logger, levels.INFO, 'login', `username = ${username}`), (log) => {
       return new Promise<IUser>((resolve, reject) => {
 
-        request.body = this.serializer.deserialize<User>(request.body);
+        request.body = this.deserialize<User>(request.body);
 
         try {
           Passport
@@ -69,7 +74,7 @@ export class PassportController {
                 }
 
                 user.resetCredentials();
-                resolve(user);
+                resolve(this.serialize(user));
               });
 
             })(request, response, next);
@@ -112,7 +117,7 @@ export class PassportController {
             return reject(!!err);
           }
 
-          return resolve(user);
+          return resolve(this.serialize(user));
 
         })(request, response, next);
       });
@@ -176,7 +181,7 @@ export class PassportController {
                 return reject(err);
               }
 
-              resolve(changedUser);
+              resolve(this.serialize(changedUser));
 
             })(request, response, next);
         } catch (err) {
@@ -205,7 +210,7 @@ export class PassportController {
     ): Promise<IUser> {
     return using(new XLog(PassportController.logger, levels.INFO, 'currentUser'), (log) => {
       return new Promise<IUser>((resolve, reject) => {
-        return resolve(request.user ? request.user : User.Null);
+        return resolve(this.serialize(request.user ? request.user : User.Null));
       });
     });
   }

@@ -6,11 +6,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { FindByIdResult, FindResult, IEntity, QueryResult } from '@fluxgate/common';
-import { Assert, IQuery, IToString, JsonSerializer } from '@fluxgate/core';
+import { Assert, IQuery, IToString } from '@fluxgate/core';
 
 import { IReadonlyService } from '../../services/readonly-service.interface';
 import { IBodyRequest } from '../../session/body-request.interface';
 import { ISessionRequest } from '../../session/session-request.interface';
+import { ControllerCore } from './controller-core';
 
 
 /**
@@ -25,17 +26,14 @@ import { ISessionRequest } from '../../session/session-request.interface';
  * @template T      - Entity-Typ
  * @template TId    - Typ der Id-Spalte
  */
-export abstract class ReadonlyController<T, TId extends IToString> {
+export abstract class ReadonlyController<T, TId extends IToString> extends ControllerCore {
   protected static logger = getLogger(ReadonlyController);
 
-  private serializer: JsonSerializer = new JsonSerializer();
-
-  constructor(private _service: IReadonlyService<T, TId>, private _tableName: string, private _idName: string) {
+  constructor(private _service: IReadonlyService<T, TId>, tableName: string, idName: string) {
+    super(tableName, idName);
     Assert.notNull(_service);
-    Assert.notNullOrEmpty(_tableName);
-    Assert.notNullOrEmpty(_idName);
 
-    this._service.idColumnName = this._idName;
+    this._service.idColumnName = idName;
   }
 
 
@@ -90,7 +88,7 @@ export abstract class ReadonlyController<T, TId extends IToString> {
     request: IBodyRequest<IQuery>
   ): Promise<QueryResult<T>> {
     return new Promise<QueryResult<T>>((resolve, reject) => {
-      const deserializedQuery = this.serializer.deserialize<IQuery>(request.body);
+      const deserializedQuery = this.deserialize<IQuery>(request.body);
 
       this._service.query(request, deserializedQuery).then((result) => {
         resolve(this.serialize(result));
@@ -98,56 +96,6 @@ export abstract class ReadonlyController<T, TId extends IToString> {
     });
   }
 
-
-  /**
-   * Serialisiert das @param{item} für die Übertragung zum Client über das REST-Api.
-   *
-   * @param {any} item
-   * @returns {any}
-   */
-  protected serialize<TSerialize>(item: TSerialize): any {
-    Assert.notNull(item);
-    return this.serializer.serialize(item);
-  }
-
-
-  /**
-   * Deserialisiert das Json-Objekt, welches über das REST-Api vom Client zum Server übertragen wurde
-   *
-   * @param {any} json - Json-Objekt vom Client
-   * @returns {any}
-   *
-   */
-  protected deserialize<TSerialize>(json: any): TSerialize {
-    Assert.notNull(json);
-    return this.serializer.deserialize<TSerialize>(json);
-  }
-
-
-
-  /**
-   * Liefert den zugehörigen Tabellennamen
-   *
-   * @readonly
-   * @protected
-   * @type {string}
-   * @memberOf ControllerBase
-   */
-  protected get tableName(): string {
-    return this._tableName;
-  }
-
-  /**
-   * Liefert den zugehörigen PrimaryKey-Tabellenspaltennamen.
-   *
-   * @readonly
-   * @protected
-   * @type {string}
-   * @memberOf ControllerBase
-   */
-  protected get idName(): string {
-    return this._idName;
-  }
 
   protected getService(): IReadonlyService<T, TId> {
     return this._service;
