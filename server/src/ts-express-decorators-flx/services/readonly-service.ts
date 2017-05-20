@@ -118,8 +118,8 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
                   // ggf. id_client der Ergebnis-Row mit der clientId des Users querchecken
                 }
 
-                // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
-                if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata           
+                if (this.hasEntityVersionInfo()) {
                   this.findEntityVersionAndResolve(trx, FindByIdResult, result, resolve);
                 } else {
                   trx.commit();
@@ -181,7 +181,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
                 }
 
                 // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
-                if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                if (this.hasEntityVersionInfo()) {
                   this.findEntityVersionAndResolve(trx, FindResult, result, resolve);
                 } else {
                   trx.commit();
@@ -249,7 +249,7 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
                 }
 
                 // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
-                if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                if (this.hasEntityVersionInfo()) {
                   this.findEntityVersionAndResolve(trx, QueryResult, result, resolve);
                 } else {
                   trx.commit();
@@ -546,7 +546,8 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
 
   /**
    * Liefert eine Knex-Query, die für die aktuelle Tabelle alle Rows liefert.
-   * Ist @param{session} vorhanden, werden nur die Rows mit der ClientId des Users der Session geliefert
+   * Ist @param{session} vorhanden und eine ClientColumn definiert, werden nur die Rows mit der
+   * ClientId des Users der Session geliefert
    *
    * @protected
    * @param {ISessionRequest|IBodyRequest<IUser>} request
@@ -558,19 +559,11 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
   protected createClientSelectorQuery(request: ISessionRequest | IBodyRequest<IUser>, trx: Knex.Transaction,
     query?: Knex.QueryBuilder): Knex.QueryBuilder {
 
-    // Knex-Beispielcode:
-    // this._knexService.knex
-    //   .from('artikel')
-    //   .innerJoin('user', 'artikel.id_client', 'user.id_client')
-    //   .andWhere('user.user_id', userId).then((res) => {
-    //    ...
-    //   });
-
     if (!query) {
       query = this.fromTable();
     }
 
-    if (request) {
+    if (request && this.metadata.clientColumn) {
       const userColumnSelector = `${this._userMetadata.clientColumn.options.name}`;
       let userIdValue;
 
@@ -592,5 +585,20 @@ export abstract class ReadonlyService<T, TId extends IToString> implements IRead
 
     return query
       .transacting(trx);
+  }
+
+
+  /**
+   * Liefert true, falls für das aktuelle Model EntityVersion-Information aktualisiert wird und die letzte Version
+   * geliefert werden kann.
+   * 
+   * @private
+   * @returns {boolean}
+   * 
+   * @memberof ReadonlyService
+   */
+  protected hasEntityVersionInfo(): boolean {
+    return (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata &&
+      !this.metadata.options.isView);
   }
 }

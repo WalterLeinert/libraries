@@ -114,7 +114,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
 
                     subject = this.createModelInstance(dbSubject);
 
-                    if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                    if (this.hasEntityVersionInfo()) {
                       this.findEntityVersionAndResolve(trx, CreateResult, subject, resolve);
                     } else {
                       trx.commit();
@@ -192,7 +192,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
 
                       const resultSubject = this.createModelInstance(dbSubject);
 
-                      if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                      if (this.hasEntityVersionInfo()) {
                         this.findEntityVersionAndResolve(trx, UpdateResult, resultSubject, resolve);
                       } else {
 
@@ -214,7 +214,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                     } else {
                       const resultSubject = this.createModelInstance(dbSubject);
 
-                      if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                      if (this.hasEntityVersionInfo()) {
                         this.findEntityVersionAndResolve(trx, UpdateResult, resultSubject, resolve);
                       } else {
 
@@ -286,7 +286,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                       new EntityNotFoundException(`table: ${this.tableName}, id: ${id}`)));
                   } else {
 
-                    if (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata) {
+                    if (this.hasEntityVersionInfo()) {
                       this.findEntityVersionAndResolve(trx, DeleteResult, id, resolve);
                     } else {
 
