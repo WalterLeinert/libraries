@@ -47,8 +47,8 @@ export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToStri
   ): Promise<CreateResult<T, TId>> {
     return new Promise<CreateResult<T, TId>>((resolve, reject) => {
       const deserializedSubject = this.deserialize<T>(request.body);
-      this.service.create(request, deserializedSubject).then((item) => {
-        resolve(this.serialize(item));
+      this.service.create(request, deserializedSubject).then((result) => {
+        resolve(this.serialize(result));
       });
     });
   }
@@ -67,8 +67,8 @@ export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToStri
   ): Promise<UpdateResult<T, TId>> {
     return new Promise<UpdateResult<T, TId>>((resolve, reject) => {
       const deserializedSubject = this.deserialize<T>(request.body);
-      this.service.update(request, deserializedSubject).then((item) => {
-        resolve(this.serialize(item));
+      this.service.update(request, deserializedSubject).then((result) => {
+        resolve(this.serialize(result));
       });
     });
   }

@@ -50,8 +50,8 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
     id: TId
   ): Promise<FindByIdResult<T, TId>> {
     return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {
-      this._service.findById(request, id).then((item) => {
-        resolve(this.serialize(item));
+      this._service.findById(request, id).then((result) => {
+        resolve(this.serialize(result));
       });
     });
   }
@@ -68,8 +68,8 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
     request: ISessionRequest,
   ): Promise<FindResult<T>> {
     return new Promise<FindResult<T>>((resolve, reject) => {
-      this._service.find(request).then((items) => {
-        resolve(this.serialize(items));
+      this._service.find(request).then((result) => {
+        resolve(this.serialize(result));
       });
     });
   }
