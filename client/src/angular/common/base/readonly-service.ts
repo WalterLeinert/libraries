@@ -52,7 +52,7 @@ export abstract class ReadonlyService<T, TId extends IToString> extends ServiceB
         .map((response: Response) => this.deserialize(response.json()))
         .do((result: FindResult<T>) => {
           if (log.isInfoEnabled()) {
-            log.log(`Service.find [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
+            log.log(`find [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
           }
         })
         .catch(this.handleError);
