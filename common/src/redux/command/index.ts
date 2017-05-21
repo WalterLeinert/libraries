@@ -1,4 +1,5 @@
 export * from './command.interface';
+export * from './core-items-found-command';
 export * from './current-item-set-command';
 export * from './creating-item-command';
 export * from './deleting-item-command';
@@ -15,5 +16,4 @@ export * from './items-queried-command';
 export * from './querying-items-command';
 export * from './service-command';
 export * from './setting-current-item-command';
-export * from './simple-items-found-command';
 export * from './updating-item-command';

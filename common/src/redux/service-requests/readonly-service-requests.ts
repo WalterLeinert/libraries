@@ -8,7 +8,6 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { IQuery } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
@@ -17,13 +16,13 @@ import { IService } from '../../model/service/service.interface';
 import { ProxyFactory } from '../cache/proxy-factory';
 import {
   ErrorCommand,
-  FindingItemByIdCommand, FindingItemsCommand,
-  ItemFoundByIdCommand, ItemsFoundCommand, ItemsQueriedCommand,
-  QueryingItemsCommand
+  FindingItemByIdCommand,
+  ItemFoundByIdCommand
 } from '../command';
 import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { CommandStore } from '../store/command-store';
 import { Store } from '../store/store';
+import { CoreServiceRequests } from './core-service-requests';
 import { IReadonlyServiceRequests } from './readonly-service-requests.interface';
 import { ServiceRequests } from './service-requests';
 
@@ -39,7 +38,7 @@ import { ServiceRequests } from './service-requests';
  * @template TService
  */
 export class ReadonlyServiceRequests<T, TId extends IToString>
-  extends ServiceRequests implements IReadonlyServiceRequests<T, TId> {
+  extends CoreServiceRequests<T> implements IReadonlyServiceRequests<T, TId> {
   protected static readonly logger = getLogger(ReadonlyServiceRequests);
 
   public static readonly INITIAL_STATE: ICrudServiceState<any, any> = {
@@ -53,69 +52,11 @@ export class ReadonlyServiceRequests<T, TId extends IToString>
 
   public constructor(storeId: string | CommandStore<ICrudServiceState<T, TId>>, service: IReadonlyService<T, TId>,
     store: Store, entityVersionService: IService<EntityVersion, string>, parentStoreId?: string) {
-    super(storeId, store, parentStoreId);
+    super(storeId, service, store, parentStoreId);
 
     this._service = ProxyFactory.createProxy(service as any as IReadonlyService<IEntity<TId>, TId>,
       entityVersionService) as any as IReadonlyService<T, TId>;
   }
-
-
-  /**
-   * Führt die query-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
-   *
-   * @param {boolean} useCache - falls true, werden nur die Daten aus dem State übernommen; sonst Servercall
-   * @memberOf ServiceRequests
-   */
-  public query(query: IQuery): Observable<T[]> {
-    return Observable.create((observer: Subscriber<T[]>) => {
-      try {
-        this.dispatch(new QueryingItemsCommand(this, query));
-
-        this.service.query(query).subscribe(
-          (queryResult) => {
-            this.dispatch(new ItemsQueriedCommand(this, queryResult.items));
-            observer.next(queryResult.items);
-          },
-          (exc: IException) => {
-            this.dispatch(new ErrorCommand(this, exc));
-            throw exc;
-          });
-
-      } catch (exc) {
-        observer.error(exc);
-      }
-    });
-  }
-
-
-
-  /**
-   * Führt die find-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
-   *
-   * @memberOf ServiceRequests
-   */
-  public find(): Observable<T[]> {
-    return Observable.create((observer: Subscriber<T[]>) => {
-
-      try {
-        this.dispatch(new FindingItemsCommand(this));
-
-        this.service.find().subscribe(
-          (findResult) => {
-            this.dispatch(new ItemsFoundCommand(this, findResult.items));
-            observer.next(findResult.items);
-          },
-          (exc: IException) => {
-            this.dispatch(new ErrorCommand(this, exc));
-            throw exc;
-          });
-
-      } catch (exc) {
-        observer.error(exc);
-      }
-    });
-  }
-
 
 
   /**
@@ -150,10 +91,6 @@ export class ReadonlyServiceRequests<T, TId extends IToString>
 
   public getEntityId(item: T): TId {
     return this._service.getEntityId(item);
-  }
-
-  public getModelClassName(): string {
-    return this._service.getModelClassName();
   }
 
   protected get service(): IReadonlyService<T, TId> {

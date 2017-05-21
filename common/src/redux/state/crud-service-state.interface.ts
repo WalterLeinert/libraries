@@ -1,4 +1,4 @@
-import { ISimpleServiceState } from './simple-service-state.interface';
+import { ICoreServiceState } from './core-service-state.interface';
 
 /**
  * Interface für den Service-Status von CRUD Servicerequests
@@ -8,7 +8,7 @@ import { ISimpleServiceState } from './simple-service-state.interface';
  * @template T
  * @template TId
  */
-export interface ICrudServiceState<T, TId> extends ISimpleServiceState<T> {
+export interface ICrudServiceState<T, TId> extends ICoreServiceState<T> {
 
   /**
    * aktuelle Item-Liste (z.B. für Anzeige im Grid)

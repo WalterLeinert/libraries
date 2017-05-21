@@ -11,6 +11,7 @@ export * from './core.component';
 export * from './extended-core.component';
 export * from './form-action';
 export * from './formGroupInfo';
+export * from './query-resolver';
 export * from './resolver-base';
 export * from './readonly-service';
 export * from './service';

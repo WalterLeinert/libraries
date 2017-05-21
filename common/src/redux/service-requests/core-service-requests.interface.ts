@@ -1,22 +1,20 @@
 import { Observable } from 'rxjs/Observable';
 
-import { IQuery, IToString } from '@fluxgate/core';
+import { IQuery } from '@fluxgate/core';
 
-import { IEntity } from '../../model/entity.interface';
 import { IServiceRequests } from './service-requests.interface';
-import { ICoreServiceRequests } from './core-service-requests.interface';
 
 
 /**
- * Interface für CRUD-Operationen über ServiceRequests und Rest-API.
+ * Interface für alle ServiceRequests. Die Servicemethoden liefern Entities, die keine
+ * Id (keinen primary key) haben müssen.
  *
  * @export
- * @interface ICrudServiceRequests
+ * @interface ICoreServiceRequests
  * @extends {IServiceRequests}
  * @template T - Entity-Typ
- * @template TId - Typ der Entity-Id
  */
-export interface IReadonlyServiceRequests<T, TId extends IToString> extends ICoreServiceRequests<T> {
+export interface ICoreServiceRequests<T> extends IServiceRequests {
 
   /**
    * Führt die query-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
@@ -33,16 +31,6 @@ export interface IReadonlyServiceRequests<T, TId extends IToString> extends ICor
    * @memberOf ICrudServiceRequests
    */
   find(): Observable<T[]>;
-
-
-  /**
-   * Führt die findById-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
-   *
-   * @param {TId} id
-   *
-   * @memberOf ICrudServiceRequests
-   */
-  findById<T extends IEntity<TId>>(id: TId): Observable<T>;
 
   /**
    * Liefert den Namen der zugehörigen Modelklasse der Entity (z.B. User)

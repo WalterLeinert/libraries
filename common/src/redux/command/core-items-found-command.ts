@@ -1,6 +1,5 @@
-
+import { ICoreServiceState } from '../state/core-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
-import { ISimpleServiceState } from '../state/simple-service-state.interface';
 import { IServiceRequests } from './../service-requests';
 import { ServiceCommand } from './service-command';
 
@@ -17,7 +16,7 @@ import { ServiceCommand } from './service-command';
  * @template T
  * @template TId
  */
-export class SimpleItemsFoundCommand<T> extends ServiceCommand<T> {
+export class CoreItemsFoundCommand<T> extends ServiceCommand<T> {
 
   constructor(serviceRequests: IServiceRequests, private items: T[]) {
     super(serviceRequests);
@@ -36,7 +35,7 @@ export class SimpleItemsFoundCommand<T> extends ServiceCommand<T> {
    *
    * @memberOf FindItemsCommand
    */
-  protected updateState(state: ISimpleServiceState<T>): ISimpleServiceState<T> {
+  protected updateState(state: ICoreServiceState<T>): ICoreServiceState<T> {
     return {
       ...state,
       items: [...this.items],

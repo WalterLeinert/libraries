@@ -1,15 +1,15 @@
-
 import { IServiceState } from './service-state.interface';
 
+
 /**
- * Interface für den Service-Status von CRUD Servicerequests, die nicht auf
+ * Interface für den Service-Status von Servicerequests, die nicht auf
  * Entities mit Ids basieren
  *
  * @export
- * @interface ISimpleServiceState
+ * @interface ICoreServiceState
  * @template T
  */
-export interface ISimpleServiceState<T> extends IServiceState {
+export interface ICoreServiceState<T> extends IServiceState {
 
   /**
    * aktuelle Item-Liste (z.B. für Anzeige im Grid)
