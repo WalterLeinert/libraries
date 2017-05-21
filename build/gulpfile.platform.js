@@ -54,7 +54,7 @@ gulp.copy = function (src, dest) {
 // Start: platform
 //-----------------------------------------------------------------------
 gulp.task('tslint:platform', function (cb) {
-  execCommand('gulp tslint', 'platform', bufferSize, cb);
+  var stream = execCommand('gulp tslint', 'platform', bufferSize, cb);
   return stream;
 })
 

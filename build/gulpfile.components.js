@@ -54,7 +54,7 @@ gulp.copy = function (src, dest) {
 // Start: components
 //-----------------------------------------------------------------------
 gulp.task('tslint:components', function (cb) {
-  execCommand('gulp tslint', 'components', bufferSize, cb);
+  var stream = execCommand('gulp tslint', 'components', bufferSize, cb);
   return stream;
 })
 
