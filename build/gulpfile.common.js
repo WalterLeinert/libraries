@@ -54,8 +54,7 @@ gulp.copy = function (src, dest) {
 // Start: common
 //-----------------------------------------------------------------------
 gulp.task('tslint:common', function (cb) {
-  var stream = execCommand('gulp tslint', 'common', bufferSize, cb);
-  return stream;
+  execCommand('gulp tslint', 'common', bufferSize, cb);
 })
 
 gulp.task('really-clean:common', ['clean:common'], function (cb) {
