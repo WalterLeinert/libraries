@@ -63,7 +63,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
       try {
         this.dispatch(new CreatingItemCommand(this, item));
 
-        this.crudService.create(item).subscribe(
+        this.getService().create(item).subscribe(
           (createResult) => {
             this.dispatch(new ItemCreatedCommand(this, createResult.item));
 
@@ -96,7 +96,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
       try {
         this.dispatch(new UpdatingItemCommand(this, item));
 
-        this.crudService.update(item).subscribe(
+        this.getService().update(item).subscribe(
           (updateResult) => {
             this.dispatch(new ItemUpdatedCommand(this, updateResult.item));
 
@@ -131,7 +131,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
       try {
         this.dispatch(new DeletingItemCommand(this, id));
 
-        this.crudService.delete(id).subscribe(
+        this.getService().delete(id).subscribe(
           (deleteResult) => {
             this.dispatch(new ItemDeletedCommand(this, deleteResult.id));
 
@@ -158,8 +158,8 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
     return super.getStoreState(storeId) as ICrudServiceState<T, TId>;
   }
 
-  protected get crudService(): IService<T, TId> {
-    return this.service as IService<T, TId>;
+  protected getService(): IService<T, TId> {
+    return super.getService() as IService<T, TId>;
   }
 
 }

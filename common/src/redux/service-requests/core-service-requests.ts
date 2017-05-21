@@ -105,4 +105,7 @@ export abstract class CoreServiceRequests<T> extends ServiceRequests implements 
     return this._coreService.getModelClassName();
   }
 
+  protected getService(): ICoreService<T> {
+    return this._coreService;
+  }
 }

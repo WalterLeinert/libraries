@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/common",
-  "version": "2.2.2-beta.12",
+  "version": "2.2.2-beta.13",
   "description": "Fluxgate Library client/server übergreifend",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",

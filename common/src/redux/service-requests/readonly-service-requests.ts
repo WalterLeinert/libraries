@@ -37,7 +37,7 @@ import { ServiceRequests } from './service-requests';
  * @template TId
  * @template TService
  */
-export class ReadonlyServiceRequests<T, TId extends IToString>
+export class ReadonlyServiceRequests<T extends IEntity<TId>, TId extends IToString>
   extends CoreServiceRequests<T> implements IReadonlyServiceRequests<T, TId> {
   protected static readonly logger = getLogger(ReadonlyServiceRequests);
 
@@ -67,12 +67,12 @@ export class ReadonlyServiceRequests<T, TId extends IToString>
    *
    * @memberOf ReadonlyServiceRequests
    */
-  public findById<T extends IEntity<TId>>(id: TId): Observable<T> {
+  public findById<T>(id: TId): Observable<T> {
     return Observable.create((observer: Subscriber<IEntity<TId>>) => {
       try {
         this.dispatch(new FindingItemByIdCommand(this, id));
 
-        this.service.findById(id).subscribe(
+        this.getService().findById(id).subscribe(
           (findByIdResult) => {
             this.dispatch(new ItemFoundByIdCommand(this, findByIdResult.item));
             observer.next(findByIdResult.item);
@@ -93,7 +93,7 @@ export class ReadonlyServiceRequests<T, TId extends IToString>
     return this._service.getEntityId(item);
   }
 
-  protected get service(): IReadonlyService<T, TId> {
+  protected getService(): IReadonlyService<T, TId> {
     return this._service;
   }
 }

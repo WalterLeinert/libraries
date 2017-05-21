@@ -1,9 +1,8 @@
 import { Observable } from 'rxjs/Observable';
 
-import { IQuery, IToString } from '@fluxgate/core';
+import { IToString } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
-import { IServiceRequests } from './service-requests.interface';
 import { ICoreServiceRequests } from './core-service-requests.interface';
 
 
@@ -16,23 +15,8 @@ import { ICoreServiceRequests } from './core-service-requests.interface';
  * @template T - Entity-Typ
  * @template TId - Typ der Entity-Id
  */
-export interface IReadonlyServiceRequests<T, TId extends IToString> extends ICoreServiceRequests<T> {
-
-  /**
-   * Führt die query-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
-   *
-   * @param {IQuery} query
-   * @memberOf ICrudServiceRequests
-   */
-  query(query: IQuery): Observable<T[]>;
-
-  /**
-   * Führt die find-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
-   * @param {boolean} useCache - falls true, werden nur die Daten aus dem State übernommen; sonst Servercall
-   *
-   * @memberOf ICrudServiceRequests
-   */
-  find(): Observable<T[]>;
+export interface IReadonlyServiceRequests<T extends IEntity<TId>, TId extends IToString>
+  extends ICoreServiceRequests<T> {
 
 
   /**
@@ -42,14 +26,15 @@ export interface IReadonlyServiceRequests<T, TId extends IToString> extends ICor
    *
    * @memberOf ICrudServiceRequests
    */
-  findById<T extends IEntity<TId>>(id: TId): Observable<T>;
+  findById<T>(id: TId): Observable<T>;
 
   /**
-   * Liefert den Namen der zugehörigen Modelklasse der Entity (z.B. User)
+   * Liefert die Id der Entity @param{item}
    *
-   * @returns {string}
+   * @param {T} item
+   * @returns {TId}
    *
    * @memberOf ICrudServiceRequests
    */
-  getModelClassName(): string;
+  getEntityId(item: T): TId;
 }
