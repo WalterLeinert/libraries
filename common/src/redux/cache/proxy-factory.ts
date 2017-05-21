@@ -54,7 +54,7 @@ export class ProxyFactory {
       case ProxyModes.CACHE:
         return new CacheProxy<T, TId>(service as IService<T, TId>);
 
-      case ProxyModes.SERVICE:
+      case ProxyModes.ENTITY_VERSION:
         return new EntityVersionProxy<T, TId>(service as IService<T, TId>, entityVersionService);
 
       default:

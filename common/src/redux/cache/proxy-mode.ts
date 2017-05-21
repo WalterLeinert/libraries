@@ -13,10 +13,10 @@ export type ProxyMode =
   /**
    * Servicecalls werden über EntityVersionProxy optimiert
    */
-  'service';
+  'entityVersion';
 
 export class ProxyModes {
   public static NOP: ProxyMode = 'nop';
   public static CACHE: ProxyMode = 'cache';
-  public static SERVICE: ProxyMode = 'service';
+  public static ENTITY_VERSION: ProxyMode = 'entityVersion';
 }
