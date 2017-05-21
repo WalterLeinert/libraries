@@ -30,7 +30,8 @@ export abstract class QueryResolver<T> implements Resolve<T> {
   protected static readonly logger = getLogger(QueryResolver);
 
 
-  protected constructor(private serviceRequests: ICoreServiceRequests<T>, private router: Router) {
+  protected constructor(private serviceRequests: ICoreServiceRequests<T>, private router: Router,
+    private attribute?: string, private operator?: string) {
     Assert.notNull(serviceRequests);
     Assert.notNull(router);
   }
@@ -39,11 +40,14 @@ export abstract class QueryResolver<T> implements Resolve<T> {
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<T> {
     return using(new XLog(QueryResolver.logger, levels.INFO, 'resolve'), (log) => {
       // tslint:disable-next-line:no-string-literal
-      const attribute = route.params['attribute'];
+      const id = route.params['id'];
+
       // tslint:disable-next-line:no-string-literal
-      const operator = route.params['operator'] ? route.params['operator'] : '=';
+      const attribute = route.params['attribute'] ? route.params['attribute'] : this.attribute;
       // tslint:disable-next-line:no-string-literal
-      const value = route.params['value'];
+      const operator = route.params['operator'] ? route.params['operator'] : (this.operator ? this.operator : '=');
+      // tslint:disable-next-line:no-string-literal
+      const value = route.params['value'] ? route.params['value'] : id;
 
       const query = new Query(
         new SelectorTerm({
