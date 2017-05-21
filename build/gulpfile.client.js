@@ -55,6 +55,7 @@ gulp.copy = function (src, dest) {
 //-----------------------------------------------------------------------
 gulp.task('tslint:client', function (cb) {
   execCommand('gulp tslint', 'client', bufferSize, cb);
+  return stream;
 })
 
 gulp.task('really-clean:client', ['clean:client'], function (cb) {
