@@ -97,6 +97,18 @@ export class ServiceProxy<T extends IEntity<TId>, TId extends IToString> impleme
 
 
   /**
+   * Liefert den Originalservice.
+   *
+   * @returns {IService<T, TId>}
+   *
+   * @memberof ProxyService
+   */
+  public getProxiedService(): IService<T, TId> {
+    return this._service as IService<T, TId>;
+  }
+
+
+  /**
    * der eigentliche Service
    */
   protected get service(): IService<T, TId> {
