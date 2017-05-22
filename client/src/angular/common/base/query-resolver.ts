@@ -2,6 +2,7 @@ import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@a
 
 import 'rxjs/add/operator/first';
 import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs/Subscriber';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -29,7 +30,6 @@ import { Assert, Query, SelectorTerm } from '@fluxgate/core';
 export abstract class QueryResolver<T> implements Resolve<T> {
   protected static readonly logger = getLogger(QueryResolver);
 
-
   protected constructor(private serviceRequests: ICoreServiceRequests<T>, private router: Router,
     private attribute?: string, private operator?: string) {
     Assert.notNull(serviceRequests);
@@ -39,6 +39,7 @@ export abstract class QueryResolver<T> implements Resolve<T> {
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<T> {
     return using(new XLog(QueryResolver.logger, levels.INFO, 'resolve'), (log) => {
+
       // tslint:disable-next-line:no-string-literal
       const id = route.params['id'];
 
@@ -61,25 +62,22 @@ export abstract class QueryResolver<T> implements Resolve<T> {
         log.debug(`entity: ${this.serviceRequests.getModelClassName}: query = ${JSON.stringify(query)}`);
       }
 
-
       /**
        * Hinweis: first() ist wichtig!
        * "Currently the router waits for the observable to close.
        * You can ensure it gets closed after the first value is emitted, by using the first() operator."
        */
       return this.serviceRequests.query(query)
-        .do((result) => {
-          if (result.length <= 0) {
-            return Observable.throw(new Error(`not item found. query = ${JSON.stringify(query)}`));
-          }
-          if (result.length > 1) {
-            return Observable.throw(new Error(`more than one item found. query = ${JSON.stringify(query)}`));
+        .do((items) => {
+          if (log.isDebugEnabled()) {
+            log.debug(`items = ${JSON.stringify(items)}`);
           }
         })
+        .map((items) => items[0])
         .first()
         .catch((error: Error) => {
           log.error(`error = ${error}`);
-          return null;
+          return Observable.throw(error);
         });
     });
   }
