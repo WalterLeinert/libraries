@@ -19,7 +19,7 @@ import { ENTITY_VERSION_SERVICE, EntityVersion, TableService } from '@fluxgate/c
  */
 @Injectable()
 @TableService(EntityVersion)
-export class EntityVersionService extends ReadonlyService<EntityVersion, number> {
+export class EntityVersionService extends ReadonlyService<EntityVersion, string> {
 
   constructor(metadataService: MetadataService, http: Http, configService: ConfigService) {
     super(EntityVersion, metadataService, http, configService);
