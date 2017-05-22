@@ -188,8 +188,15 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
 
           const finder = (lg: XLog, ev: EntityVersion, findId: TId, items: T[], message: string) => {
             super.findById(findId).subscribe((findByIdResult: FindByIdResult<T, TId>) => {
-              const itemsFiltered = items.map((e) => e.id === findByIdResult.item.id ? findByIdResult.item : e);
-              this.updateCache(lg, findByIdResult.entityVersion, itemsFiltered, message);
+              //
+              // nur, falls bereits einmal find() durchgeführt wurde existieren Items im Cache;
+              // sonst wird der Cache nicht gepflegt, bis das erste find() gelaufen ist
+              //
+              if (items.length > 0) {
+                const itemsFiltered = items.map((e) => e.id === findByIdResult.item.id ? findByIdResult.item : e);
+                this.updateCache(lg, findByIdResult.entityVersion, itemsFiltered, message);
+              }
+
               observer.next(findByIdResult);
             });
           };
