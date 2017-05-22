@@ -8,6 +8,7 @@ export * from './base4.component';
 export * from './controlType';
 export * from './control-base.component';
 export * from './core.component';
+export * from './core-service';
 export * from './extended-core.component';
 export * from './form-action';
 export * from './formGroupInfo';

@@ -25,8 +25,10 @@ import { ReadonlyService } from './readonly-service';
 
 
 /**
- * Abstract base class for common rest-api service calls
- *
+ * Abstrakte Basisklasse für alle REST-Services, die noch auf Entities arbeiten,
+ * die einen Primary Key haben (Interface @see{IEntity}) und Änderungen auf Entities
+ * durchführen (CRUD).
+ * 
  * @export
  * @abstract
  * @class Service
