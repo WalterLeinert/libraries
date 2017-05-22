@@ -1,11 +1,9 @@
-import * as Knex from 'knex';
-
 // Fluxgate
-import { FindByIdResult, FindResult, IEntity, QueryResult } from '@fluxgate/common';
-import { IQuery, IToString } from '@fluxgate/core';
+import { FindByIdResult, IEntity } from '@fluxgate/common';
+import { IToString } from '@fluxgate/core';
 
-import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
+import { ICoreService } from './core-service.interface'
 
 /**
  * Interface für lesende CRUD-Operationen auf der DB über knex.
@@ -16,7 +14,7 @@ import { ISessionRequest } from '../session/session-request.interface';
  * @template T
  * @template TId
  */
-export interface IReadonlyService<T, TId extends IToString> {
+export interface IReadonlyService<T extends IEntity<TId>, TId extends IToString> extends ICoreService<T, TId> {
 
   /**
    * Liefert oder setzt den DB-Id-Spaltennamen (primary key column)
@@ -35,51 +33,9 @@ export interface IReadonlyService<T, TId extends IToString> {
    *
    * @memberOf ServiceBase
    */
-  findById<T extends IEntity<TId>>(
+  findById(
     request: ISessionRequest,
     id: TId
   ): Promise<FindByIdResult<T, TId>>;
 
-
-  /**
-   * Liefert alle Entity-Instanzen vom Typ {T} als @see{Promise}
-   *
-   * @returns {Promise<T[]>}
-   *
-   * @memberOf ServiceBase
-   */
-  find(
-    request: ISessionRequest
-  ): Promise<FindResult<T>>;
-
-
-  /**
-   * Führt die Query {query} aus und liefert ein Array von Entity-Instanzen vom Typ {T} als @see{Promise}
-   *
-   * @param {Knex.QueryBuilder} query
-   * @returns {Promise<T[]>}
-   *
-   * @memberOf ServiceBase
-   */
-  queryKnex(
-    request: ISessionRequest,
-    query: Knex.QueryBuilder
-  ): Promise<QueryResult<T>>;
-
-
-  query(
-    request: ISessionRequest,
-    query: IQuery
-  ): Promise<QueryResult<T>>;
-
-
-  /**
-   * Liefert die from(<table>) Clause für den aktuellen Tabellennamen
-   *
-   * @readonly
-   * @protected
-   * @type {Knex.QueryBuilder}
-   * @memberOf ServiceBase
-   */
-  fromTable(): Knex.QueryBuilder;
 }

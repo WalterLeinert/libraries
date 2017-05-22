@@ -5,19 +5,18 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { FindByIdResult, FindResult, IEntity, QueryResult } from '@fluxgate/common';
-import { Assert, IQuery, IToString } from '@fluxgate/core';
+import { FindByIdResult, IEntity } from '@fluxgate/common';
+import { IToString } from '@fluxgate/core';
 
 import { IReadonlyService } from '../../services/readonly-service.interface';
-import { IBodyRequest } from '../../session/body-request.interface';
 import { ISessionRequest } from '../../session/session-request.interface';
-import { ControllerCore } from './controller-core';
+import { CoreController } from './core-controller';
 
 
 /**
- * Abstrakte Basisklasse für alle REST-Controller, die nur lesende Zugriffe durchführen (find, findById, query)
- * oder auf DB-Views arbeiten.
- *
+ * Abstrakte Basisklasse für alle REST-Controller, die nur lesende Zugriffe durchführen (findById) und 
+ * auf Entities mit Id arbeiten
+ * 
  * Delegiert alle Controller-Calls an den zugehörigen Service @see{TId}.
  *
  * @export
@@ -26,14 +25,13 @@ import { ControllerCore } from './controller-core';
  * @template T      - Entity-Typ
  * @template TId    - Typ der Id-Spalte
  */
-export abstract class ReadonlyController<T, TId extends IToString> extends ControllerCore {
+export abstract class ReadonlyController<T extends IEntity<TId>, TId extends IToString> extends CoreController<T, TId> {
   protected static logger = getLogger(ReadonlyController);
 
-  constructor(private _service: IReadonlyService<T, TId>, tableName: string, idName: string) {
-    super(tableName, idName);
-    Assert.notNull(_service);
+  constructor(service: IReadonlyService<T, TId>, tableName: string, idName: string) {
+    super(service, tableName, idName);
 
-    this._service.idColumnName = idName;
+    this.getService().idColumnName = idName;
   }
 
 
@@ -50,54 +48,13 @@ export abstract class ReadonlyController<T, TId extends IToString> extends Contr
     id: TId
   ): Promise<FindByIdResult<T, TId>> {
     return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {
-      this._service.findById(request, id).then((result) => {
+      this.getService().findById(request, id).then((result) => {
         resolve(this.serialize(result));
       });
     });
   }
-
-
-  /**
-   * Liefert alle Entities vom Typ {T}.
-   *
-   * @returns {Promise<T[]>}
-   *
-   * @memberOf ControllerBase
-   */
-  protected findInternal(
-    request: ISessionRequest,
-  ): Promise<FindResult<T>> {
-    return new Promise<FindResult<T>>((resolve, reject) => {
-      this._service.find(request).then((result) => {
-        resolve(this.serialize(result));
-      });
-    });
-  }
-
-
-  /**
-   * Liefert alle Entities vom Typ {T} über die Query @param{query}.
-   *
-   * @protected
-   * @param {IQuery} query
-   * @returns {Promise<T[]>}
-   *
-   * @memberof ControllerBase
-   */
-  protected queryInternal(
-    request: IBodyRequest<IQuery>
-  ): Promise<QueryResult<T>> {
-    return new Promise<QueryResult<T>>((resolve, reject) => {
-      const deserializedQuery = this.deserialize<IQuery>(request.body);
-
-      this._service.query(request, deserializedQuery).then((result) => {
-        resolve(this.serialize(result));
-      });
-    });
-  }
-
 
   protected getService(): IReadonlyService<T, TId> {
-    return this._service;
+    return super.getService() as IReadonlyService<T, TId>;
   }
 }

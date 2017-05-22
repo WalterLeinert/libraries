@@ -5,7 +5,7 @@ import { Authenticated, Controller, Post, Request } from 'ts-express-decorators'
 import { QueryResult } from '@fluxgate/common';
 import { Deprecated, IQuery } from '@fluxgate/core';
 
-import { ReadonlyService } from '../../services/readonly-service';
+import { ICoreService } from '../../services/core-service.interface';
 import { IBodyRequest } from '../../session/body-request.interface';
 import { ControllerCore } from './controller-core';
 
@@ -14,7 +14,7 @@ import { ControllerCore } from './controller-core';
 @Controller('/query')
 export class QueryController<T, TId> extends ControllerCore {
 
-  constructor(private service: ReadonlyService<T, TId>) {
+  constructor(private service: ICoreService<T, TId>) {
     super('dummy', 'dummy');
   }
 
