@@ -1,6 +1,4 @@
-import { IEntity } from '../../model/entity.interface';
-
-import { ICrudServiceState } from '../state/crud-service-state.interface';
+import { ICoreServiceState } from '../state/core-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
 import { IServiceRequests } from './../service-requests';
 import { ServiceCommand } from './service-command';
@@ -18,7 +16,7 @@ import { ServiceCommand } from './service-command';
  * @template T
  * @template TId
  */
-export class FindingItemsCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T> {
+export class FindingItemsCommand<T, TId> extends ServiceCommand<T> {
 
   constructor(serviceRequests: IServiceRequests) {
     super(serviceRequests);
@@ -32,7 +30,7 @@ export class FindingItemsCommand<T extends IEntity<TId>, TId> extends ServiceCom
    *
    * @memberOf FindItemsCommand
    */
-  protected updateState(state: ICrudServiceState<T, TId>): ICrudServiceState<T, TId> {
+  protected updateState(state: ICoreServiceState<T>): ICoreServiceState<T> {
     return {
       ...state,
       items: [...state.items],

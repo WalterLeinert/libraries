@@ -62,7 +62,7 @@
     "@angular/platform-browser-dynamic": "^4.1.0",
     "@angular/platform-server": "^4.1.0",
     "@angular/router": "^4.1.0",
-    "@fluxgate/common": "^2.2.2-beta.15",
+    "@fluxgate/common": "^2.2.2-beta.17",
     "@fluxgate/core": "^2.2.2-beta.1",
     "@fluxgate/platform": "^2.2.2-beta.1",
     "bootstrap": "^3.3.7",
