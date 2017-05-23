@@ -53,10 +53,9 @@ export class KnexQueryVisitor implements IVisitor<VisitableNode> {
 
   private handleBinaryTerm(op: Operator, term) {
 
-    term.leftTerm.accept(this);
-    this.queryBuilder.where(this.queryStack.pop());
-
     term.rightTerm.accept(this);
+    this.queryBuilder.where(this.queryStack.pop());
+    term.leftTerm.accept(this);
 
     switch (op) {
       case 'AND':
@@ -77,7 +76,7 @@ export class KnexQueryVisitor implements IVisitor<VisitableNode> {
     if (term instanceof NotTerm) {
       term.term.accept(this);
 
-      this.queryStack.push((qb) => qb.andWhereNot(this.queryStack.pop()));
+      this.queryStack.push((qb) => qb.whereNot(this.queryStack.pop()));
 
     } else if (term instanceof SelectorTerm) {
       const columnName = this.tableMetadata.getDbColumnName(term.selector.name);
