@@ -7,7 +7,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  Assert, EntityNotFoundException, Funktion, IToString, OptimisticLockException
+  EntityNotFoundException, Funktion, IToString, OptimisticLockException
 } from '@fluxgate/core';
 
 import {

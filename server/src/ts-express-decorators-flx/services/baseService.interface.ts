@@ -4,7 +4,6 @@ import {
 } from '@fluxgate/common';
 import { IToString } from '@fluxgate/core';
 
-import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
 import { IReadonlyService } from './readonly-service.interface';
 

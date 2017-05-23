@@ -9,7 +9,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { ExceptionWrapper, IUser, User } from '@fluxgate/common';
-import { IException, JsonSerializer } from '@fluxgate/core';
+import { IException } from '@fluxgate/core';
 
 import { Messages } from '../../resources/messages';
 import { PassportLocalService } from '../services/passportLocal.service';

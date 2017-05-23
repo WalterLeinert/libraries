@@ -14,9 +14,9 @@ import { CoreController } from './core-controller';
 
 
 /**
- * Abstrakte Basisklasse für alle REST-Controller, die nur lesende Zugriffe durchführen (findById) und 
+ * Abstrakte Basisklasse für alle REST-Controller, die nur lesende Zugriffe durchführen (findById) und
  * auf Entities mit Id arbeiten
- * 
+ *
  * Delegiert alle Controller-Calls an den zugehörigen Service @see{TId}.
  *
  * @export

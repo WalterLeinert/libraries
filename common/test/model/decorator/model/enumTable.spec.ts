@@ -9,7 +9,9 @@ import { suite, test } from 'mocha-typescript';
 
 import { Types } from '@fluxgate/core';
 
-import { Column, ColumnTypes, Enum, EnumTable, IdColumn, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
+import {
+  Column, ColumnTypes, Enum, EnumTable, IdColumn, MetadataStorage, Table, TableMetadata
+} from '../../../../src/model';
 
 
 @Table({ name: ArtikelEnumTable.TABLE_NAME })

@@ -1,4 +1,4 @@
-import { Headers, Http, RequestOptions, Response } from '@angular/http';
+import { Http, Response } from '@angular/http';
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';

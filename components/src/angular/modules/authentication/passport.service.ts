@@ -14,7 +14,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  ConfigService, MetadataService, ServiceCore
+  ConfigService, ServiceCore
 } from '@fluxgate/client';
 import { IUser, PasswordChange, User } from '@fluxgate/common';
 import { Assert } from '@fluxgate/core';

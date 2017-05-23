@@ -153,7 +153,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               let items = cacheEntry.items;
 
               //
-              // items aus dem Cache immer Klonen, damit es sich ähnlich wie bei echten Serverrequests verhält 
+              // items aus dem Cache immer Klonen, damit es sich ähnlich wie bei echten Serverrequests verhält
               //
               items = Clone.clone(items);
 
@@ -234,7 +234,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
 
 
                   //
-                  // item aus dem Cache immer Klonen, damit es sich ähnlich wie bei echten Serverrequests verhält 
+                  // item aus dem Cache immer Klonen, damit es sich ähnlich wie bei echten Serverrequests verhält
                   //
                   item = Clone.clone(item);
 

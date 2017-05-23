@@ -3,7 +3,7 @@ import { FindByIdResult, IEntity } from '@fluxgate/common';
 import { IToString } from '@fluxgate/core';
 
 import { ISessionRequest } from '../session/session-request.interface';
-import { ICoreService } from './core-service.interface'
+import { ICoreService } from './core-service.interface';
 
 /**
  * Interface für lesende CRUD-Operationen auf der DB über knex.
