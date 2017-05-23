@@ -156,6 +156,20 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     }
   }
 
+  public isValid(groupName?: string): boolean {
+    if (Utility.isNullOrEmpty(groupName)) {
+      for (const info of this.formInfos.values) {
+        if (!info.isValid()) {
+          return false;
+        }
+        return true;
+      }
+      return false;
+    } else {
+      return this.formInfos.get(groupName).isValid();
+    }
+  }
+
 
 
   /**

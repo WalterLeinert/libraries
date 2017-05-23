@@ -40,6 +40,10 @@ export class FormGroupInfo {
     return this._form && this._form.dirty;
   }
 
+  public isValid(): boolean {
+    return this._form && this._form.valid;
+  }
+
   public reset(value?: any) {
     this._form.reset(value);
   }
