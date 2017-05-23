@@ -13,4 +13,15 @@ export class Stack<T> {
     }
     return this._store.pop();
   }
+
+  public peek(): T {
+    if (this._store.length <= 0) {
+      throw new InvalidOperationException(`top called on empty stack`);
+    }
+    return this._store[this._store.length - 1];
+  }
+
+  public isEmpty(): boolean {
+    return this._store.length <= 0;
+  }
 }
