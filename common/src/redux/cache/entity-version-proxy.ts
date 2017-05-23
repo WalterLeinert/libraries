@@ -322,7 +322,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               const itemsFiltered = cacheEntry.items.map((e) => e.id === updateResult.item.id ? updateResult.item : e);
               this.updateCache(log, updateResult.entityVersion, itemsFiltered,
                 `update item[${this.getTableName()}] in cache`);
-              observer.next(updateResult);
+              observer.next(new UpdateResult<T, TId>(Clone.clone(updateResult.item), updateResult.entityVersion));
 
             } else {
              // noch nie gecached -> kein cache update
