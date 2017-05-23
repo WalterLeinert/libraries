@@ -1,0 +1,84 @@
+{
+  // Use IntelliSense to learn about possible Node.js debug attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+        {
+      "type": "node",
+      "request": "launch",
+      "name": "core: run Mocha",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "core/dist/test/**/*.spec.js",
+        "--no-timeouts"
+      ],
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": null,
+      "outFiles": [
+      ],
+      "sourceMaps": true,
+      "stopOnEntry": false,
+      "env": {
+        "NODE_ENV": "debug"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "common: run Mocha",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "dist/test/**/*.spec.js",
+        "--no-timeouts"
+      ],
+      "cwd": "${workspaceRoot}/common",
+      "runtimeExecutable": null,
+      "outFiles": [
+      ],
+      "sourceMaps": true,
+      "stopOnEntry": false,
+      "env": {
+        "NODE_ENV": "debug"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "platform: run Mocha",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "platform/dist/node/test/**/*.spec.js",
+        "--no-timeouts"
+      ],
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": null,
+      "outFiles": [
+      ],
+      "sourceMaps": true,
+      "stopOnEntry": false,
+      "env": {
+        "NODE_ENV": "debug"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "server: run Mocha",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "dist/test/**/*.js",
+        "--no-timeouts"
+      ],
+      "cwd": "${workspaceRoot}/server",
+      "runtimeExecutable": null,
+       "outFiles": [
+      ],
+      "sourceMaps": true,
+      "stopOnEntry": false,
+      "env": {
+        "NODE_ENV": "debug"
+      }
+    }
+  ]
+}
