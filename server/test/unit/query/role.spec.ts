@@ -40,7 +40,7 @@ class RoleTest extends KnexTest<Role, number> {
     using(new XLog(RoleTest.logger, levels.INFO, 'static.before'), (log) => {
       super.before(() => {
 
-        super.setup(Role, RoleService, new NumberIdGenerator(1), () => {
+        super.setup(RoleService, new NumberIdGenerator(1), () => {
           done();
         });
       });

@@ -1,7 +1,7 @@
 import * as Knex from 'knex';
 
 // Fluxgate
-import { FindResult, QueryResult } from '@fluxgate/common';
+import { FindResult, QueryResult, TableMetadata } from '@fluxgate/common';
 import { IQuery, IToString } from '@fluxgate/core';
 import { ISessionRequest } from '../session/session-request.interface';
 
@@ -15,6 +15,8 @@ import { ISessionRequest } from '../session/session-request.interface';
  * @template TId
  */
 export interface ICoreService<T, TId extends IToString> {
+
+  metadata: TableMetadata;
 
   /**
    * Liefert alle Entity-Instanzen vom Typ {T} als @see{Promise}
@@ -57,4 +59,5 @@ export interface ICoreService<T, TId extends IToString> {
    * @memberOf ServiceBase
    */
   fromTable(): Knex.QueryBuilder;
+
 }

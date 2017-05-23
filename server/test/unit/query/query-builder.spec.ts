@@ -39,7 +39,7 @@ class QueryBuilderTest extends KnexTest<Role, number> {
   public static before(done: () => void) {
     using(new XLog(QueryBuilderTest.logger, levels.INFO, 'static.before'), (log) => {
       super.before(() => {
-        super.setup(Role, RoleService, new NumberIdGenerator(1), () => {
+        super.setup(RoleService, new NumberIdGenerator(1), () => {
           done();
         });
       });
@@ -55,11 +55,7 @@ class QueryBuilderTest extends KnexTest<Role, number> {
     const visitor = new KnexQueryVisitor(queryBuilder, this.tableMetadata);
     term.accept(visitor);
 
-    visitor.query(queryBuilder).then((roles: Role[]) => {
-      expect(roles).to.exist;
-      expect(roles.length).to.equal(1);
-      // expect(roles[0].name).to.equal(term.selector.value);
-    });
+    return expect(visitor.query(queryBuilder).then((roles: Role[]) => roles.length)).to.eventually.equal(1);
   }
 
   @test 'should query admin or guest role'() {
@@ -72,12 +68,7 @@ class QueryBuilderTest extends KnexTest<Role, number> {
 
     const visitor = new KnexQueryVisitor(queryBuilder, this.tableMetadata);
     term.accept(visitor);
-
-    visitor.query(queryBuilder).then((roles: Role[]) => {
-      expect(roles).to.exist;
-      expect(roles.length).to.equal(2);
-      // expect(roles[0].name).to.equal(term.selector.value);
-    });
+    return expect(visitor.query(queryBuilder).then((roles: Role[]) => roles.length)).to.eventually.equal(2);
   }
 
   @test 'should query admin name and admin id'() {
@@ -91,11 +82,7 @@ class QueryBuilderTest extends KnexTest<Role, number> {
     const visitor = new KnexQueryVisitor(queryBuilder, this.tableMetadata);
     term.accept(visitor);
 
-    visitor.query(queryBuilder).then((roles: Role[]) => {
-      expect(roles).to.exist;
-      expect(roles.length).to.equal(1);
-      // expect(roles[0].name).to.equal(term.selector.value);
-    });
+    return expect(visitor.query(queryBuilder).then((roles: Role[]) => roles.length)).to.eventually.equal(1);
   }
 
 }

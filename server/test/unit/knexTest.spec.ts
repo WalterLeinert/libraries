@@ -10,23 +10,14 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  BaseTest, EntityGenerator, EntityVersion, IEntity, IEntityGeneratorColumnConfig, TableMetadata, ValueGenerator
+  BaseTest, EntityGenerator, EntityVersion, IEntity, IEntityGeneratorConfig, TableMetadata, ValueGenerator
 } from '@fluxgate/common';
-import { Activator, Dictionary, fromEnvironment, Funktion, ICtor, IToString } from '@fluxgate/core';
+import { Activator, Dictionary, fromEnvironment, Funktion, ICtor, IToString, Types } from '@fluxgate/core';
 import { JsonReader } from '@fluxgate/platform';
 
 import { IBaseService, IBaseServiceRaw } from '../../src/ts-express-decorators-flx/services/baseService.interface';
 import { KnexService } from '../../src/ts-express-decorators-flx/services/knex.service';
 import { MetadataService } from '../../src/ts-express-decorators-flx/services/metadata.service';
-
-
-export interface IKnexGeneratorConfig<TId> {
-  modelClass: Funktion;
-  count: number;
-  maxCount: number;
-  idGenerator: ValueGenerator<TId>;
-  columnConfig?: IEntityGeneratorColumnConfig;
-}
 
 
 /**
@@ -45,6 +36,17 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
    */
   private static _firstTestId: number = 0;
 
+
+  // tslint:disable-next-line:no-unused-variable
+  private static ___initialize = (() => {
+    KnexTest._firstTestId = 0;
+
+    KnexTest._knexService = new KnexService();
+    KnexTest._metadataService = new MetadataService();
+    KnexTest._entityVersionMetadata = KnexTest._metadataService.findTableMetadata(EntityVersion);
+  })();
+
+
   private entityGenerator: EntityGenerator<T, TId>;
   private _generatedItems: T[];
   private entityVersionDict: Dictionary<string, number> = new Dictionary<string, number>();
@@ -57,18 +59,12 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
    *
    * @memberOf KnexTest
    */
-  constructor(generatorConfig?: IKnexGeneratorConfig<TId>) {
+  constructor(generatorConfig?: IEntityGeneratorConfig) {
     super();
 
     using(new XLog(KnexTest.logger, levels.INFO, 'ctor'), (log) => {
       if (generatorConfig) {
-        this.entityGenerator = new EntityGenerator<T, TId>({
-          count: generatorConfig.count,
-          maxCount: generatorConfig.maxCount,
-          tableMetadata: KnexTest.metadataService.findTableMetadata(generatorConfig.modelClass),
-          idGenerator: generatorConfig.idGenerator,
-          columns: generatorConfig.columnConfig
-        });
+        this.entityGenerator = new EntityGenerator<T, TId>(generatorConfig);
 
         this._generatedItems = this.entityGenerator.generate();
       }
@@ -88,38 +84,49 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
    *
    * @memberOf KnexTest
    */
-  protected static setup(modelClass: Funktion, serviceClass: ICtor<IBaseServiceRaw>,
-    idGenerator: ValueGenerator<any>, done: (err?: any) => void) {
+  protected static setup<TId>(serviceClass: ICtor<IBaseServiceRaw>,
+    generatorConfig: IEntityGeneratorConfig | ValueGenerator<any>,
+    done: (err?: any) => void) {
     using(new XLog(KnexTest.logger, levels.INFO, 'static.setup'), (log) => {
       KnexTest._service = KnexTest.createService(serviceClass);
 
-      /**
-       * eine EntityGenerator erzeugen, der genau ein Item erzeugen kann.
-       */
-      const eg = new EntityGenerator<any, any>({
-        count: 1,
-        maxCount: 1,
-        tableMetadata: KnexTest.metadataService.findTableMetadata(modelClass),
-        idGenerator: idGenerator
-      });
+      if (Types.isPresent(generatorConfig)) {
 
-      /**
-       * ein neues Item erzeugen und wieder löschen, damit wir die Id erhalten (-> _firstTestId),
-       * ab der wir alle Test-Items löschen können
-       */
-      const item = eg.createItem();
-      KnexTest._service.create(undefined, item).then((result) => {
-        log.log(`created temp. entity: id = ${result.item.id}`);
+        let config: IEntityGeneratorConfig;
 
-        KnexTest._firstTestId = result.item.id;
+        if (generatorConfig instanceof ValueGenerator) {
+          config = {
+            count: 1,
+            maxCount: 1,
+            idGenerator: generatorConfig,
+            tableMetadata: KnexTest._service.metadata
+          };
+        } else {
+          config = generatorConfig;
+        }
 
-        KnexTest._service.delete(undefined, KnexTest._firstTestId).then((rowsAffected) => {
-          log.log(`deleted temp. entity: id = ${result.item.id}`);
+        /**
+         * eine EntityGenerator erzeugen, der genau ein Item erzeugen kann.
+         */
+        const eg = new EntityGenerator(config);
 
-          done();
+        /**
+         * ein neues Item erzeugen und wieder löschen, damit wir die Id erhalten (-> _firstTestId),
+         * ab der wir alle Test-Items löschen können
+         */
+        const item = eg.createItem();
+        KnexTest._service.create(undefined, item).then((result) => {
+          log.log(`created temp. entity: id = ${result.item.id}`);
+
+          KnexTest._firstTestId = result.item.id;
+
+          KnexTest._service.delete(undefined, KnexTest._firstTestId).then((rowsAffected) => {
+            log.log(`deleted temp. entity: id = ${result.item.id}`);
+
+            done();
+          });
         });
-      });
-
+      }
     });
   }
 
@@ -151,9 +158,6 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
           const knexConfig: Knex.Config = config[systemEnv];
           KnexService.configure(knexConfig);
 
-          KnexTest._knexService = new KnexService();
-          KnexTest._metadataService = new MetadataService();
-          KnexTest._entityVersionMetadata = KnexTest._metadataService.findTableMetadata(EntityVersion);
 
           done();
         } catch (err) {

@@ -39,14 +39,14 @@ class OptimisticLockTest extends KnexTest<QueryTest, number> {
 
   constructor() {
     super({
-      modelClass: QueryTest,
       count: OptimisticLockTest.ITEMS,
       maxCount: OptimisticLockTest.MAX_ITEMS,
       idGenerator: new NumberIdGenerator(OptimisticLockTest.MAX_ITEMS),
-      columnConfig: {
+      columns: {
         __version: new ConstantValueGenerator(0),
         __test: new ConstantValueGenerator(0),
-      }
+      },
+      tableMetadata: KnexTest.metadataService.findTableMetadata(QueryTest)
     });
   }
 
@@ -54,7 +54,7 @@ class OptimisticLockTest extends KnexTest<QueryTest, number> {
     using(new XLog(OptimisticLockTest.logger, levels.INFO, 'static.before'), (log) => {
       super.before(() => {
 
-        super.setup(QueryTest, QueryTestService, new NumberIdGenerator(1), () => {
+        super.setup(QueryTestService, new NumberIdGenerator(1), () => {
           done();
         });
       });

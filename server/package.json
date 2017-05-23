@@ -55,7 +55,7 @@
     "yargs": "^7.0.2"
   },
   "dependencies": {
-    "@fluxgate/common": "^2.2.2-beta.17",
+    "@fluxgate/common": "^2.2.2-beta.18",
     "@fluxgate/core": "^2.2.2-beta.1",
     "@fluxgate/platform": "^2.2.2-beta.1",
     "emailjs": "^1.0.8",

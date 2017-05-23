@@ -318,13 +318,14 @@ export abstract class CoreService<T, TId extends IToString> implements ICoreServ
     return this.metadata.tableName;
   }
 
+  public get metadata(): TableMetadata {
+    return this._metadata;
+  }
+
   protected get knexService(): KnexService {
     return this._knexService;
   }
 
-  protected get metadata(): TableMetadata {
-    return this._metadata;
-  }
 
   protected get entityVersionMetadata(): TableMetadata {
     return this._entityVersionMetadata;

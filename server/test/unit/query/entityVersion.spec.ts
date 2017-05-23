@@ -40,14 +40,14 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
 
   constructor() {
     super({
-      modelClass: QueryTest,
       count: EntityVersionTest.ITEMS,
       maxCount: EntityVersionTest.MAX_ITEMS,
       idGenerator: new NumberIdGenerator(EntityVersionTest.MAX_ITEMS),
-      columnConfig: {
+      columns: {
         __version: new ConstantValueGenerator(0),
         __test: new ConstantValueGenerator(0),
-      }
+      },
+      tableMetadata: KnexTest.metadataService.findTableMetadata(QueryTest)
     });
 
     this.entityVersionService = KnexTest.createService(EntityVersionService);
@@ -57,7 +57,7 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
   public static before(done: (err?: any) => void) {
     using(new XLog(EntityVersionTest.logger, levels.INFO, 'static.before'), (log) => {
       super.before((doneBefore: (err?: any) => void) => {
-        super.setup(QueryTest, QueryTestService, new NumberIdGenerator(1), (doneSetup: (err?: any) => void) => {
+        super.setup(QueryTestService, new NumberIdGenerator(1), (doneSetup: (err?: any) => void) => {
           done();
         });
       });
