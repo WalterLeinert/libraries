@@ -8,6 +8,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { Assert, IQuery, IToString, StringBuilder, StringUtil, Types } from '@fluxgate/core';
 
 import { IEntity } from '../entity.interface';
+import { TableMetadata } from '../metadata/tableMetadata';
 import { CreateResult } from './create-result';
 import { DeleteResult } from './delete-result';
 import { FindByIdResult } from './find-by-id-result';
@@ -95,6 +96,9 @@ export class ServiceProxy<T extends IEntity<TId>, TId extends IToString> impleme
     return this.service.getTableName();
   }
 
+  public get tableMetadata(): TableMetadata {
+    return this._service.tableMetadata;
+  }
 
   /**
    * Liefert den Originalservice.

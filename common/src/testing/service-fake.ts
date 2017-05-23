@@ -212,7 +212,6 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
     return [...this._items];
   }
 
-
   /**
    * Liefert die zugehörige @see{TableMetadata}
    *
@@ -221,7 +220,7 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
    * @type {TableMetadata}
    * @memberOf Service
    */
-  protected get tableMetadata(): TableMetadata {
+  public get tableMetadata(): TableMetadata {
     return this._tableMetadata;
   }
 

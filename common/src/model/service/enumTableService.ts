@@ -66,6 +66,10 @@ export class EnumTableService implements IService<any, any> {
     throw new NotSupportedException();
   }
 
+  public get tableMetadata(): TableMetadata {
+    return this._tableMetadata;
+  }
+
   public create(item: any): any {
     return Observable.throw(`Not supported`);
   }

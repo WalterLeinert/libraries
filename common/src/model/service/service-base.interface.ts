@@ -1,9 +1,18 @@
+import { TableMetadata } from '../metadata/tableMetadata';
 import { IServiceCore } from './service-core.interface';
 
 /**
  * Interface mit gemeinsamen Funktionen aller Services
  */
 export interface IServiceBase<T, TId> extends IServiceCore {
+
+  /**
+   * Liefert die Metadaten der zugehörigen Tabelle.
+   *
+   * @type {TableMetadata}
+   * @memberof IServiceBase
+   */
+  tableMetadata: TableMetadata;
 
   /**
    * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
@@ -37,4 +46,5 @@ export interface IServiceBase<T, TId> extends IServiceCore {
    * @type {any}
    */
   setEntityId(item: T, id: TId);
+
 }
