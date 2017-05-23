@@ -71,7 +71,7 @@ export abstract class ServiceBase<T, TId> extends ServiceCore implements IServic
    * @type {TableMetadata}
    * @memberOf Service
    */
-  protected get tableMetadata(): TableMetadata {
+  public get tableMetadata(): TableMetadata {
     return this._tableMetadata;
   }
 
