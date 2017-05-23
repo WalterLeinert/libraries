@@ -63,7 +63,7 @@
     "@angular/platform-server": "^4.1.0",
     "@angular/router": "^4.1.0",
     "@fluxgate/common": "^2.2.2-beta.18",
-    "@fluxgate/core": "^2.2.2-beta.1",
+    "@fluxgate/core": "^2.2.2-beta.2",
     "@fluxgate/platform": "^2.2.2-beta.1",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
