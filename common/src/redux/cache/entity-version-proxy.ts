@@ -192,7 +192,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               // nur, falls bereits einmal find() durchgeführt wurde existieren Items im Cache;
               // sonst wird der Cache nicht gepflegt, bis das erste find() gelaufen ist
               //
-              if (items.length > 0) {
+              if (!Types.isNullOrEmpty(items)) {
                 const itemsFiltered = items.map((e) => e.id === findByIdResult.item.id ? findByIdResult.item : e);
                 this.updateCache(lg, findByIdResult.entityVersion, itemsFiltered, message);
               }
@@ -241,14 +241,13 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
                   observer.next(new FindByIdResult<T, TId>(item, cacheEntry.version));
                 }
               } else {
-                // noch nie gecached -> findById + update cache
-                finder(log, entityVersionResult.item, id, [], 'no cache yet');
+                // noch nie gecached -> kein cache update
+                finder(log, entityVersionResult.item, id, null, 'no cache yet');
               }
             });
         });
       });
   }
-
 
 
 
@@ -283,7 +282,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
                 `delete item[${this.getTableName()}] from cache`);
               observer.next(deleteResult);
             } else {
-              this.updateCache(log, deleteResult.entityVersion, [], 'no cache yet');
+              // noch nie gecached -> kein cache update
               observer.next(deleteResult);
             }
           });
@@ -326,7 +325,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               observer.next(updateResult);
 
             } else {
-              this.updateCache(log, updateResult.entityVersion, [], 'no cache yet');
+             // noch nie gecached -> kein cache update
               observer.next(updateResult);
             }
           });
