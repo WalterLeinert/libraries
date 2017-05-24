@@ -1,3 +1,4 @@
+import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Metadata } from './metadata';
 
 /**
@@ -8,13 +9,19 @@ import { Metadata } from './metadata';
  * @class Metadata
  * @template T
  */
-export abstract class PropertyMetadata extends Metadata<Object> {
+export abstract class PropertyMetadata<T> extends Metadata<T> {
 
-  protected constructor(target: Object, name: string) {
+  protected constructor(target: T, name: string) {
     super(target, name);
   }
 
   public get targetName(): string {
-    return this.target.constructor.name;
+    if (this.target instanceof Function) {
+      return this.target.name;
+    }
+    if (this.target instanceof Object) {
+      return (this.target as Object).constructor.name;
+    }
+    throw new NotSupportedException(`name = ${this.name}: not supported target ${JSON.stringify(this.target)}`);
   }
 }

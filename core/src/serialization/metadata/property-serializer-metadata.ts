@@ -1,6 +1,6 @@
 import { PropertyMetadata } from '../../metadata/property-metadata';
 
-export class PropertySerializerMetadata extends PropertyMetadata {
+export class PropertySerializerMetadata extends PropertyMetadata<Object> {
 
   constructor(target: Object, name: string, private _serializable: boolean) {
     super(target, name);
