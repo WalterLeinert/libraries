@@ -454,9 +454,9 @@ export abstract class CoreService<T, TId extends IToString> implements ICoreServ
       // der Property user vorliegt.
       //
       if (request.body !== null && request.body instanceof User) {
-        userIdValue = request.body.id_client;
+        userIdValue = request.body.__client;
       } else {
-        userIdValue = request.user.id_client;
+        userIdValue = request.user.__client;
       }
 
       query = query

@@ -1,4 +1,4 @@
-import { Column, IFlxEntity, Table, VersionColumn } from '@fluxgate/common';
+import { Column, FlxEntity, Table } from '@fluxgate/common';
 
 
 /**
@@ -9,7 +9,7 @@ import { Column, IFlxEntity, Table, VersionColumn } from '@fluxgate/common';
  * @implements {IFlxEntity<number>}
  */
 @Table({ name: QueryTest.TABLE_NAME })
-export class QueryTest implements IFlxEntity<number> {
+export class QueryTest extends FlxEntity<number> {
   public static readonly TABLE_NAME = 'querytest';
 
   @Column({ primary: true, generated: true })
@@ -17,9 +17,6 @@ export class QueryTest implements IFlxEntity<number> {
 
   @Column({ displayName: 'Name' })
   public name: string;
-
-  @VersionColumn({ name: 'version' })
-  public __version: number;
 
   // @Test()
   @Column({ name: 'test' })

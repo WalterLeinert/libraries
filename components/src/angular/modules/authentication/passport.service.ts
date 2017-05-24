@@ -65,7 +65,7 @@ export class PassportService extends ServiceCore {
       const user = new User();
       user.username = username;
       user.password = password;
-      user.id_client = clientId;
+      user.__client = clientId;
 
       return this.http.post(this.getUrl() + PassportService.LOGIN, this.serialize(user))
         .map((response: Response) => this.deserialize(response.json()))

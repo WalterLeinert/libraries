@@ -164,9 +164,10 @@ class RoleTest extends KnexTest<Role, number> {
     role.id = undefined;
     role.name = `Test-Rolename-${id}`;
     role.description = `Test-Roledescription-${id}`;
-    role.id_client = 1;
+
     role.deleted = false;
     role.__version = 0;
+    role.__client = 1;
 
     return role;
   }

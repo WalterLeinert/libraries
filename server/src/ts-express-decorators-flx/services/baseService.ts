@@ -69,7 +69,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
 
       if (this.metadata.clientColumn) {
         if (request && request.user) {
-          subject[this.metadata.clientColumn.name] = request.user.id_client;
+          subject[this.metadata.clientColumn.name] = request.user.__client;
         }
       }
 
@@ -263,7 +263,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
           query = this.addIdSelector(query, trx, id);
 
           if (request && request.user) {
-            query = this.addClientSelector(query, trx, request.user.id_client);
+            query = this.addClientSelector(query, trx, request.user.__client);
           }
 
           // query für increment der entityversion Tabelle oder nop-query erzeugen
@@ -334,7 +334,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
       query = this.addIdSelector(query, trx, id);
 
       if (request && request.user) {
-        query = this.addClientSelector(query, trx, request.user.id_client);
+        query = this.addClientSelector(query, trx, request.user.__client);
       }
 
 
