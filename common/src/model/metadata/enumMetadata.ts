@@ -15,7 +15,7 @@ export type RelationTypeInFunction = ((type?: any) => Funktion) | Funktion;
  * @export
  * @class EnumMetadata
  */
-export class EnumMetadata<T, TText, TId> extends PropertyMetadata {
+export class EnumMetadata<T, TText, TId> extends PropertyMetadata<Funktion> {
   private _textField: string;
   private _valueField: string;
 
@@ -29,7 +29,7 @@ export class EnumMetadata<T, TText, TId> extends PropertyMetadata {
    *
    * @memberOf EnumMetadata
    */
-  constructor(target: Object, public propertyName: string,
+  constructor(target: Funktion, public propertyName: string,
     private _dataSource: RelationTypeInFunction,
     private _foreignText: InstanceAccessor<T, TText>,
     private _foreignId: InstanceAccessor<T, TId>,

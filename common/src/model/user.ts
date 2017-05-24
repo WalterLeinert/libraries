@@ -1,13 +1,12 @@
 import { Funktion, StringBuilder, Utility } from '@fluxgate/core';
 
 import { AppRegistry } from '../base/appRegistry';
-import { ClientColumn } from '../model/decorator/client-column';
 import { Column } from '../model/decorator/column';
 import { Enum } from '../model/decorator/enum';
 import { IdColumn } from '../model/decorator/id-column';
 import { Table } from '../model/decorator/table';
 import { Validation } from '../model/decorator/validation';
-import { VersionColumn } from '../model/decorator/version-column';
+import { FlxEntity } from '../model/flx-entity';
 import { Validators } from '../model/validation/validators';
 
 
@@ -21,7 +20,7 @@ import { IUser } from './user.interface';
  */
 // tslint:disable-next-line:max-classes-per-file
 @Table({ name: User.TABLE_NAME })
-export class User implements IUser {
+export class User extends FlxEntity<number> implements IUser {
   public static readonly TABLE_NAME = 'user';
 
   /**
@@ -86,17 +85,10 @@ export class User implements IUser {
   @Column({ name: 'user_deleted' })
   public deleted?: boolean;
 
-  @Validation([
-    Validators.required
-  ])
-  @ClientColumn({ name: 'id_client' })
-  public id_client?: number;   // = Mandant.FIRST_ID;
-
-  @VersionColumn({ name: 'user_version', displayName: 'Version', default: 0 })
-  public __version: number;
-
 
   constructor(id?: number, username?: string, role?: number, lastname?: string) {
+    super();
+
     this.id = id;
     this.username = username;
     this.role = role;

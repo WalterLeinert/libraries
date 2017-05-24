@@ -39,11 +39,6 @@ export interface IUser extends IFlxEntity<number> {
   deleted?: boolean;
 
   /**
-   * Mandanten-Id
-   */
-  id_client?: number;
-
-  /**
    * Setzt Passwort und Salt zurück
    *
    * @memberOf User

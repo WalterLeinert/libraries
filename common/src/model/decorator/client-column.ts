@@ -8,8 +8,8 @@ import { ColumnOptions } from './columnOptions';
  */
 export function ClientColumn(options?: ColumnOptions) {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: any, propertyName: string) {
+  return function (target: Object, propertyName: string) {
     registerColumn(target, propertyName, options);
-    MetadataStorage.instance.setSpecialColumn(target, propertyName, SpecialColumns.CLIENT);
+    MetadataStorage.instance.setSpecialColumn(target.constructor, propertyName, SpecialColumns.CLIENT);
   };
 }

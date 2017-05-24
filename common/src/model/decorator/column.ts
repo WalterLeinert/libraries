@@ -24,13 +24,13 @@ const logger = getLogger(Column);
 export function Column(options?: ColumnOptions) {
 
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: any, propertyName: string) {
+  return function (target: Object, propertyName: string) {
     registerColumn(target, propertyName, options);
   };
 }
 
 
-export function registerColumn(target: any, propertyName: string, options?: ColumnOptions) {
+export function registerColumn(target: Object, propertyName: string, options?: ColumnOptions) {
   let propertyType: Funktion = (Reflect as any).getMetadata('design:type', target, propertyName);
 
   //
@@ -42,17 +42,17 @@ export function registerColumn(target: any, propertyName: string, options?: Colu
       case ColumnTypes.DATE:
       case ColumnTypes.DATETIME:
         propertyType = Date;
-        logger.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
+        logger.warn(`${target.constructor.name}.${propertyName}: set type to ${propertyType}`);
         break;
 
       case ColumnTypes.TIME:
         propertyType = Time;
-        logger.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
+        logger.warn(`${target.constructor.name}.${propertyName}: set type to ${propertyType}`);
         break;
 
       case ColumnTypes.SHORTTIME:
         propertyType = ShortTime;
-        logger.warn(`${target.name}.${propertyName}: set type to ${propertyType}`);
+        logger.warn(`${target.constructor.name}.${propertyName}: set type to ${propertyType}`);
         break;
 
       default:
@@ -91,6 +91,6 @@ export function registerColumn(target: any, propertyName: string, options?: Colu
     type = options.propertyType;
   }
 
-  MetadataStorage.instance.addColumnMetadata(new ColumnMetadata(target, propertyName,
+  MetadataStorage.instance.addColumnMetadata(new ColumnMetadata(target.constructor, propertyName,
     type, options));
 }

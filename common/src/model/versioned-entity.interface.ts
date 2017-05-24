@@ -3,9 +3,14 @@
  *
  * @export
  * @interface IVersionedEntity
- * @extends {IEntity<TId>}
- * @template TId
  */
 export interface IVersionedEntity {
+
+  /**
+   * interne Versionsnummer der Änderungen
+   *
+   * @type {number}
+   * @memberof IVersionedEntity
+   */
   __version: number;
 }

@@ -10,7 +10,7 @@ import { suite, test } from 'mocha-typescript';
 import { Clone, ConfigurationException, InvalidOperationException, ShortTime, Time } from '@fluxgate/core';
 
 import {
-  ClientColumn, Column, IFlxEntity, MetadataStorage, Table, TableMetadata, VersionColumn
+  Column, FlxEntity, MetadataStorage, Table, TableMetadata
 } from '../../../src/model';
 import { ConstantValueGenerator } from '../../../src/model/generator/constant-value-generator';
 import { DateValueGenerator } from '../../../src/model/generator/date-value-generator';
@@ -22,7 +22,7 @@ import { TimeValueGenerator } from '../../../src/model/generator/time-value-gene
 
 
 @Table({ name: ArtikelGenerator.TABLE_NAME })
-class ArtikelGenerator implements IFlxEntity<number> {
+class ArtikelGenerator extends FlxEntity<number> {
   public static readonly TABLE_NAME = 'artikel';
 
   @Column({ primary: true, generated: true })
@@ -69,12 +69,6 @@ class ArtikelGenerator implements IFlxEntity<number> {
 
   @Column()
   public deleted?: boolean;
-
-  @ClientColumn()
-  public mandant?: number;
-
-  @VersionColumn()
-  public __version: number;
 }
 
 
@@ -102,7 +96,7 @@ class EntityGeneratorTest {
       tableMetadata: this.tableMetadata,
       idGenerator: new NumberIdGenerator(EntityGeneratorTest.MAX_ITEMS),
       columns: {
-        mandant: new ConstantValueGenerator(EntityGeneratorTest.MANDANT),
+        __client: new ConstantValueGenerator(EntityGeneratorTest.MANDANT),
         deleted: new ConstantValueGenerator(EntityGeneratorTest.DELETED),
         __version: new ConstantValueGenerator(EntityGeneratorTest.VERSION),
       }
@@ -136,7 +130,7 @@ class EntityGeneratorTest {
     this.items.forEach((item) => {
       expect(item.__version).to.equal(EntityGeneratorTest.VERSION);
       expect(item.deleted).to.equal(EntityGeneratorTest.DELETED);
-      expect(item.mandant).to.equal(EntityGeneratorTest.MANDANT);
+      expect(item.__client).to.equal(EntityGeneratorTest.MANDANT);
     });
   }
 

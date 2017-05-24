@@ -1,12 +1,10 @@
 import { EnumHelper, Funktion } from '@fluxgate/core';
 
 import { AppRegistry } from '../base/appRegistry';
-import { ClientColumn } from '../model/decorator/client-column';
 import { Column } from '../model/decorator/column';
 import { IdColumn } from '../model/decorator/id-column';
 import { Table } from '../model/decorator/table';
 import { Validation } from '../model/decorator/validation';
-import { VersionColumn } from '../model/decorator/version-column';
 import { FlxEntity } from '../model/flx-entity';
 import { Validators } from '../model/validation/validators';
 
@@ -62,16 +60,6 @@ export class Role extends FlxEntity<number> implements IRole {
 
   @Column({ name: 'role_deleted' })
   public deleted?: boolean;
-
-  @Validation([
-    Validators.required
-  ])
-  @ClientColumn({ name: 'id_client' })
-  public id_client?: number;   // = Mandant.FIRST_ID;
-
-  @VersionColumn({ name: 'role_version', displayName: 'Version', default: 0 })
-  public __version: number;
-
 
   /**
    * prüft, ob @param{id} eine gültige Role-Id darstellt.

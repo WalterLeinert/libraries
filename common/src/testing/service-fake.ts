@@ -9,7 +9,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { Assert, Clone, InvalidOperationException, IQuery, IToString, NotSupportedException } from '@fluxgate/core';
 
-import { EntityGenerator, EntityVersion, IEntity, IFlxEntity, IService, TableMetadata } from '../model';
+import {
+  EntityGenerator, EntityVersion, IEntity, IFlxEntity, IService, TableMetadata, VersionedEntity
+} from '../model';
 import { CreateResult } from '../model/service/create-result';
 import { DeleteResult } from '../model/service/delete-result';
 import { FindByIdResult } from '../model/service/find-by-id-result';
@@ -30,10 +32,10 @@ import { UpdateResult } from '../model/service/update-result';
 export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString> implements IService<T, TId> {
   protected static readonly logger = getLogger(ServiceFake);
 
-  private _items: Array<IFlxEntity<TId>>;
+  private _items: Array<IEntity<TId>>;
 
   protected constructor(private _tableMetadata: TableMetadata,
-    private _entityGenerator: EntityGenerator<IFlxEntity<TId>, TId>,
+    private _entityGenerator: EntityGenerator<IEntity<TId>, TId>,
     private _entityVersionServiceFake?: ServiceFake<EntityVersion, string>) {
     Assert.notNull(_tableMetadata);
     Assert.notNull(_entityGenerator);
@@ -208,7 +210,7 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
     throw new NotSupportedException();
   }
 
-  public get items(): Array<IFlxEntity<TId>> {
+  public get items(): Array<IEntity<TId>> {
     return [...this._items];
   }
 
@@ -226,13 +228,23 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
 
   private incrementEntityVersion() {
     if (this._entityVersionServiceFake) {
-      this._entityVersionServiceFake.items.find((ev) => ev.id === this.getTableName()).__version++;
+      const versionedEntity = this._entityVersionServiceFake.items.find((ev) => ev.id === this.getTableName());
+      if (versionedEntity instanceof VersionedEntity) {
+        versionedEntity.__version++;
+      } else {
+        throw new InvalidOperationException(`Entity ${this.getModelClassName} ist not versioned`);
+      }
     }
   }
 
   private getEntityVersion(): number {
     if (this._entityVersionServiceFake) {
-      return this._entityVersionServiceFake.items.find((ev) => ev.id === this.getTableName()).__version;
+      const versionedEntity = this._entityVersionServiceFake.items.find((ev) => ev.id === this.getTableName());
+      if (versionedEntity instanceof VersionedEntity) {
+        return versionedEntity.__version;
+      } else {
+        throw new InvalidOperationException(`Entity ${this.getModelClassName} ist not versioned`);
+      }
     }
     throw new NotSupportedException();
   }

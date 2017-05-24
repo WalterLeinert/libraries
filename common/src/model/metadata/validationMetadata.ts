@@ -8,7 +8,7 @@ import { Validator } from '../validation/validator';
  * @export
  * @class ValidationMetadata
  */
-export class ValidationMetadata extends PropertyMetadata {
+export class ValidationMetadata extends PropertyMetadata<Funktion> {
   constructor(target: Funktion, public propertyName: string, public validator: Validator) {
     super(target, propertyName);
   }

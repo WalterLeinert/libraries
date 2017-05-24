@@ -8,12 +8,12 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import {
-  Column, ColumnTypes, IFlxEntity, MetadataStorage, Table, TableMetadata, VersionColumn
+  Column, ColumnTypes, MetadataStorage, Table, TableMetadata, VersionedEntity
 } from '../../../../src/model';
 
 
 @Table({ name: ArtikelVersion.TABLE_NAME })
-class ArtikelVersion implements IFlxEntity<number> {
+class ArtikelVersion extends VersionedEntity<number> {
   public static readonly TABLE_NAME = 'artikel';
 
   @Column({ name: 'artikel_id', primary: true, generated: true })
@@ -21,9 +21,6 @@ class ArtikelVersion implements IFlxEntity<number> {
 
   @Column({ name: 'artikel_name', displayName: 'Name' })
   public name: string;
-
-  @VersionColumn({ name: 'artikel_version', displayName: 'Version' })
-  public __version: number;
 }
 
 

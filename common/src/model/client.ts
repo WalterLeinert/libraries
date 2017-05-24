@@ -2,16 +2,14 @@ import { Column } from '../model/decorator/column';
 import { IdColumn } from '../model/decorator/id-column';
 import { Table } from '../model/decorator/table';
 import { Validation } from '../model/decorator/validation';
-import { VersionColumn } from '../model/decorator/version-column';
 import { Validators } from '../model/validation/validators';
-import { IFlxEntity } from './flx-entity.interface';
-
+import { VersionedEntity } from './versioned-entity';
 
 /**
  * Modelliert Mandanten
  */
 @Table({ name: Client.TABLE_NAME })
-export class Client implements IFlxEntity<number> {
+export class Client extends VersionedEntity<number> {
   public static readonly TABLE_NAME = 'client';
   public static readonly FIRST_ID = 1;
 
@@ -26,8 +24,5 @@ export class Client implements IFlxEntity<number> {
 
   @Column({ name: 'client_description', displayName: 'Description' })
   public description: string;
-
-  @VersionColumn({ name: 'client_version', displayName: 'Version', default: 0 })
-  public __version: number;
 
 }

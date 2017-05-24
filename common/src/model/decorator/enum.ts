@@ -23,9 +23,9 @@ export function Enum<T, TText, TId>(
   cacheable: boolean = false
 ) {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: any, propertyName: string) {
+  return function (target: Object, propertyName: string) {
     Assert.notNull(dataSource);
     MetadataStorage.instance.addEnumMetadata(
-      new EnumMetadata(target, propertyName, dataSource, foreignText, foreignId, cacheable));
+      new EnumMetadata(target.constructor, propertyName, dataSource, foreignText, foreignId, cacheable));
   };
 }

@@ -3,7 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, Clone, Dictionary, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
+import { Assert, Dictionary, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
 
 import { CompoundValidator } from './../validation/compoundValidator';
 import { Validator } from './../validation/validator';
@@ -152,6 +152,7 @@ export class MetadataStorage {
         }
 
 
+
         //
         // abgeleitete Modelklasse?
         //
@@ -162,6 +163,27 @@ export class MetadataStorage {
           // Metadaten der Basisklasse ermitteln
           const baseTableMetadata = this.tableDict.get(baseClazz.name);
 
+
+          //
+          // alle speziellen Columns prüfen (primaryKey, version, client)
+          //
+          baseTableMetadata.specialColumnKeys.forEach((specialColKey) => {
+            const baseSpecialCol = baseTableMetadata.getSpecialColumn(specialColKey);
+
+            const specialCol = metadata.getColumnMetadataByDbCol(baseSpecialCol.options.name);
+
+            // falls überschrieben, müssen die Namen übereinstimmen
+            if (specialCol) {
+              Assert.that(specialCol.propertyName === baseSpecialCol.propertyName,
+                `${metadata.className}/${baseTableMetadata.className}: ` +
+                `${specialCol.propertyName}/${baseSpecialCol.propertyName} properties must have same name`);
+            }
+          });
+
+
+          //
+          // alle Properties der Basisklasse prüfen bzw. vererben
+          //
           baseTableMetadata.columnMetadata.forEach((baseCol) => {
             //
             // bei gleichen DB-Spaltennamen müssen die Propertynamen gleich sein!
@@ -179,9 +201,25 @@ export class MetadataStorage {
             //
             const col = metadata.getColumnMetadataByProperty(baseCol.propertyName);
             if (!col) {
-              metadata.add(Clone.clone(baseCol));
+              // Metadaten vererben
+              const colInherited = new ColumnMetadata(
+                metadata.target, baseCol.propertyName, baseCol.propertyType, baseCol.options);
+              metadata.add(colInherited);
             }
+          });
 
+
+          //
+          // alle speziellen vererbten Columns setzen (primaryKey, version, client)
+          //
+          baseTableMetadata.specialColumnKeys.forEach((specialColKey) => {
+            const baseSpecialCol = baseTableMetadata.getSpecialColumn(specialColKey);
+
+            // falls spezial Column noch nicht gesetzt, diese setzen
+            // (Hinweis: die primaryKey-Column wird beim Vererben gesetzt)
+            if (!metadata.getSpecialColumn(specialColKey)) {
+              metadata.setSpecialColumn(baseSpecialCol.propertyName, specialColKey);
+            }
           });
         }
 
@@ -212,10 +250,10 @@ export class MetadataStorage {
   }
 
 
-  public setSpecialColumn(target: Object, propertyName: string, key: SpecialColumn) {
+  public setSpecialColumn(target: Funktion, propertyName: string, key: SpecialColumn) {
     let dict: Dictionary<string, SpecialColumn>;
 
-    const targetName = Types.getClassName(target);
+    const targetName = target.name;
     if (!this.tableSpecialColumnDict.containsKey(targetName)) {
       dict = new Dictionary<string, SpecialColumn>();
       this.tableSpecialColumnDict.set(targetName, dict);

@@ -1,3 +1,4 @@
+export * from './client-entity.interface';
 export * from './decorator';
 export * from './entity';
 export * from './entityVersion';
@@ -16,4 +17,6 @@ export * from './service';
 export * from './user';
 export * from './user.interface';
 export * from './validation';
+export * from './validation';
+export * from './versioned-entity';
 export * from './versioned-entity.interface';

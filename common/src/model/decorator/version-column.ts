@@ -8,7 +8,7 @@ import { ColumnOptions } from './columnOptions';
  */
 export function VersionColumn(options?: ColumnOptions) {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: any, propertyName: string) {
+  return function (target: Object, propertyName: string) {
     let columnOptions = options;
 
     //
@@ -27,6 +27,6 @@ export function VersionColumn(options?: ColumnOptions) {
     }
 
     registerColumn(target, propertyName, columnOptions);
-    MetadataStorage.instance.setSpecialColumn(target, propertyName, SpecialColumns.VERSION);
+    MetadataStorage.instance.setSpecialColumn(target.constructor, propertyName, SpecialColumns.VERSION);
   };
 }

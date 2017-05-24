@@ -18,9 +18,4 @@ export interface IRole extends IFlxEntity<number> {
    * liefert true, falls die Entity als gelöscht markiert ist
    */
   deleted?: boolean;
-
-  /**
-   * Mandanten-Id
-   */
-  id_client?: number;
 }

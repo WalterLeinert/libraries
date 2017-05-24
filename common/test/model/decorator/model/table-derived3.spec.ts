@@ -20,7 +20,7 @@ class ArtikelDerivedDerived3 extends ArtikelDerived {
 }
 
 
-@suite('model.decorator.Table: derived (only overridden name column)')
+@suite('model.decorator.Table: derived (id column inherited)')
 class TableDerived2Test {
   private derivedTableMetadata: TableMetadata;
 
@@ -33,7 +33,7 @@ class TableDerived2Test {
     expect(this.derivedTableMetadata.options.name).to.equal(ArtikelDerivedDerived3.TABLE_NAME);
   }
 
-  @test 'should exist columnMetadata for id (from base class)'() {
+  @test 'should exist columnMetadata for id (inherited from base class)'() {
     const propertyName = 'id';
     const colMetaData = this.derivedTableMetadata.getColumnMetadataByProperty(propertyName);
     expect(colMetaData).to.be.not.null;
@@ -55,6 +55,18 @@ class TableDerived2Test {
     expect(colMetaData.options.displayName).to.equal('Name-Derived');
     expect(colMetaData.options.primary).to.be.undefined;
     expect(colMetaData.options.generated).to.be.undefined;
+  }
+
+  @test 'should have right target'() {
+    const propertyName = 'id';
+    const colMetaData = this.derivedTableMetadata.getColumnMetadataByProperty(propertyName);
+    expect(colMetaData.target).to.equal(ArtikelDerivedDerived3);
+  }
+
+  @test 'should have inherited id column (primary key)'() {
+    const propertyName = 'id';
+    const colMetaData = this.derivedTableMetadata.getColumnMetadataByProperty(propertyName);
+    expect(colMetaData).to.equal(this.derivedTableMetadata.primaryKeyColumn);
   }
 
 

@@ -36,7 +36,7 @@ class ArtikelDerivedDerived extends ArtikelDerived {
 
 @suite('model.decorator.Table: derived')
 class TableDerivedTest {
-  private derivedTableMetadata: TableMetadata;
+  private derivedTableMetadata: TableMetadata;    // Metadata from ArtikelDerivedDerived
 
   @test 'should exist tableMetadata'() {
     expect(MetadataStorage.instance.findTableMetadata(ArtikelDerived)).to.be.not.null;
@@ -73,6 +73,11 @@ class TableDerivedTest {
     expect(colMetaData.options.generated).to.be.undefined;
   }
 
+  @test 'should have right target'() {
+    const propertyName = 'id';
+    const colMetaData = this.derivedTableMetadata.getColumnMetadataByProperty(propertyName);
+    expect(colMetaData.target).to.equal(ArtikelDerivedDerived);
+  }
 
   protected before() {
     this.derivedTableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelDerivedDerived);

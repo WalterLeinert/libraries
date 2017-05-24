@@ -72,6 +72,12 @@ export abstract class TableMetadata extends ClassMetadata {
     this._specialColMap.set(key, metadata);
   }
 
+  public getSpecialColumn(key: SpecialColumns): ColumnMetadata {
+    Assert.notNull(key);
+    return this._specialColMap.get(key);
+  }
+
+
 
   /**
    * Liefert alle {ColumnMetadata}-Infos.
@@ -82,6 +88,10 @@ export abstract class TableMetadata extends ClassMetadata {
    */
   public get columnMetadata(): ColumnMetadata[] {
     return this._columnMetadata;
+  }
+
+  public get specialColumnKeys(): SpecialColumns[] {
+    return this._specialColMap.keys;
   }
 
 
