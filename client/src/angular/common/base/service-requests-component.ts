@@ -10,9 +10,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
+  ExtendedCrudServiceRequests,
   IServiceRequests, IServiceState, ItemCreatedCommand,
   ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
+import { InvalidOperationException } from '@fluxgate/core';
 
 import { MessageService } from '../../services/message.service';
 import { ExtendedCoreComponent } from './extended-core.component';
@@ -59,6 +61,38 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
 
     this.subscribeToStore(this._serviceRequests.storeId);
   }
+
+
+  /**
+   * Setzt @param{item} als current item im zugehörigen Store oder (falls item undefined) das erste Item
+   * aus der Liste @param{items}.
+   *
+   * @protected
+   * @param {T[]} items - Itemliste
+   * @param {T} item - zu selektierendes Item oder undefined
+   *
+   * @memberof ServiceRequestsComponent
+   */
+  protected selectItem(items: T[], item?: T) {
+
+    if (!(this.serviceRequests instanceof ExtendedCrudServiceRequests)) {
+      throw new InvalidOperationException(`serviceRequests no instance of ExtendedCrudServiceRequests`);
+    }
+
+    // const serviceRequests = this.serviceRequests as ExtendedCrudServiceRequests<any, any>;
+
+    let currentItem;
+    if (item) {
+      currentItem = item;
+    } else {
+      currentItem = items.length > 0 ? items[0] : null;
+    }
+
+    this.serviceRequests.setCurrent(currentItem).subscribe((curr) => {
+      // ok
+    });
+  }
+
 
   protected onStoreUpdatedGlobal<T>(command: ServiceCommand<T>): void {
     using(new XLog(ServiceRequestsComponent.logger, levels.INFO, 'onStoreUpdatedGlobal',
