@@ -51,4 +51,7 @@ export {
   MessageServiceModule
 } from './angular/services';
 
-export { ROLE_SERVICE_FAKE_PROVIDER, RoleServiceFakeService, USER_SERVICE_FAKE_PROVIDER, UserServiceFakeService } from './testing';
+export {
+  ENTITY_VERSION_SERVICE_FAKE_PROVIDER, EntityVersionServiceFakeService,
+  ROLE_SERVICE_FAKE_PROVIDER, RoleServiceFakeService, USER_SERVICE_FAKE_PROVIDER, UserServiceFakeService
+} from './testing';
