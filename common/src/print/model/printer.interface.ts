@@ -1,4 +1,4 @@
-import { IPrinterTray } from './printertray.interface';
+import { IPrinterTray } from './printerTray.interface';
 
 
 /**

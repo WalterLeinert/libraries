@@ -1,5 +1,5 @@
 import { IPrinter } from './printer.interface';
-import { IPrinterTray } from './printertray.interface';
+import { IPrinterTray } from './printerTray.interface';
 
 export class Printer implements IPrinter {
 

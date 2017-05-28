@@ -1,4 +1,7 @@
 export * from './fieldInfo.interface';
+export * from './printer';
+export * from './printer.interface';
+export * from './printerTray.interface';
 export * from './printJob.interface';
 export * from './printOptions.interface';
 export * from './printOptions';
