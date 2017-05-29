@@ -66,8 +66,11 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
             this.updateCache(log, createResult.entityVersion, [...cacheEntry.items, createResult.item],
               `add item[${this.getObjId(createResult.item)}] to cache`);
 
-          } else {
-            this.updateCache(log, createResult.entityVersion, [createResult.item], 'no cache yet');
+
+            //
+            // items aus dem Cache immer Klonen, damit es sich ähnlich wie bei echten Serverrequests verhält
+            //
+            createResult = new CreateResult(Clone.clone(createResult.item), createResult.entityVersion);
           }
 
           observer.next(createResult);
@@ -195,6 +198,11 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               if (!Types.isNullOrEmpty(items)) {
                 const itemsFiltered = items.map((e) => e.id === findByIdResult.item.id ? findByIdResult.item : e);
                 this.updateCache(lg, findByIdResult.entityVersion, itemsFiltered, message);
+
+                //
+                // item aus dem Cache immer Klonen, damit es sich ähnlich wie bei echten Serverrequests verhält
+                //
+                findByIdResult = new FindByIdResult(Clone.clone(findByIdResult.item), findByIdResult.entityVersion);
               }
 
               observer.next(findByIdResult);
@@ -322,10 +330,17 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               const itemsFiltered = cacheEntry.items.map((e) => e.id === updateResult.item.id ? updateResult.item : e);
               this.updateCache(log, updateResult.entityVersion, itemsFiltered,
                 `update item[${this.getTableName()}] in cache`);
-              observer.next(new UpdateResult<T, TId>(Clone.clone(updateResult.item), updateResult.entityVersion));
+
+
+              //
+              // item aus dem Cache immer Klonen, damit es sich ähnlich wie bei echten Serverrequests verhält
+              //
+              updateResult = new UpdateResult<T, TId>(Clone.clone(updateResult.item), updateResult.entityVersion);
+
+              observer.next(updateResult);
 
             } else {
-             // noch nie gecached -> kein cache update
+              // noch nie gecached -> kein cache update
               observer.next(updateResult);
             }
           });
@@ -356,7 +371,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
 
 
 
-  private logEntityVersion(log: XLog, id: TId = undefined, result: ServiceResult = undefined,
+  private logEntityVersion(log: XLog, id: TId, result: ServiceResult,
     cacheEntry: EntityVersionCacheEntry<T>) {
 
     if (log.isDebugEnabled()) {
