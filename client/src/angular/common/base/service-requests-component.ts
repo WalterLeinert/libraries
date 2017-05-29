@@ -14,7 +14,7 @@ import {
   IServiceRequests, IServiceState, ItemCreatedCommand,
   ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
-import { InvalidOperationException } from '@fluxgate/core';
+import { Assert, InvalidOperationException } from '@fluxgate/core';
 
 import { MessageService } from '../../services/message.service';
 import { ExtendedCoreComponent } from './extended-core.component';
@@ -64,7 +64,7 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
 
 
   /**
-   * Setzt @param{item} als current item im zugehörigen Store oder (falls item undefined) das erste Item
+   * Liefert @param{item} als zu selektierendes Item oder (falls item undefined) das erste Item
    * aus der Liste @param{items}.
    *
    * @protected
@@ -73,13 +73,8 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
    *
    * @memberof ServiceRequestsComponent
    */
-  protected selectItem(items: T[], item?: T) {
-
-    if (!(this.serviceRequests instanceof ExtendedCrudServiceRequests)) {
-      throw new InvalidOperationException(`serviceRequests no instance of ExtendedCrudServiceRequests`);
-    }
-
-    // const serviceRequests = this.serviceRequests as ExtendedCrudServiceRequests<any, any>;
+  protected selectItem(items: T[], item?: T): T {
+    Assert.notNull(items);
 
     let currentItem;
     if (item) {
@@ -88,9 +83,7 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
       currentItem = items.length > 0 ? items[0] : null;
     }
 
-    this.serviceRequests.setCurrent(currentItem).subscribe((curr) => {
-      // ok
-    });
+    return currentItem;
   }
 
 
