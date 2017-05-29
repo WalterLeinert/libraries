@@ -14,3 +14,4 @@ export * from './readonly-service';
 export * from './readonly-service.interface';
 export * from './role.service';
 export * from './user.service';
+export * from './print.service';
