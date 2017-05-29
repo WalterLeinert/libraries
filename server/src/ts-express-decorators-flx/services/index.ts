@@ -7,6 +7,8 @@ export * from './entityVersion.service';
 export * from './knex.service';
 export * from './knex-query-visitor';
 export * from './metadata.service';
+export * from './nano-service';
+export * from './nano-service.interface';
 export * from './passportLocal.service';
 export * from './readonly-service';
 export * from './readonly-service.interface';
