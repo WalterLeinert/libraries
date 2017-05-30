@@ -5,18 +5,17 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { FindResult, QueryResult } from '@fluxgate/common';
-import { Assert, IQuery, IToString } from '@fluxgate/core';
+import { FindResult } from '@fluxgate/common';
+import { Assert } from '@fluxgate/core';
 
 import { INanoService } from '../../services/nano-service.interface';
-import { IBodyRequest } from '../../session/body-request.interface';
 import { ISessionRequest } from '../../session/session-request.interface';
 import { ControllerCore } from './controller-core';
 
 
 /**
- * Abstrakte Basisklasse für alle REST-Controller, die nur lesende Zugriffe durchführen (find, query)
- * oder auf DB-Views arbeiten und mit Entities ohne Id/primary key
+ * Abstrakte Basisklasse für alle REST-Controller, die nur lesende Zugriffe durchführen (find)
+ *
  *
  * Delegiert alle Controller-Calls an den zugehörigen Service @see{TId}.
  *
@@ -24,7 +23,6 @@ import { ControllerCore } from './controller-core';
  * @abstract
  * @class ReadonlyController
  * @template T      - Entity-Typ
- * @template TId    - Typ der Id-Spalte
  */
 export abstract class NanoController<T> extends ControllerCore {
   protected static logger = getLogger(NanoController);

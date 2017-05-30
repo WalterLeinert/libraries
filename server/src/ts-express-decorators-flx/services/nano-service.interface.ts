@@ -5,13 +5,12 @@ import { FindResult } from '@fluxgate/common';
 import { ISessionRequest } from '../session/session-request.interface';
 
 /**
- * Interface für REST-Services, die auf Entities ohne Id arbeiten (z.B. DB-Views)
+ * Interface für REST-Services, die auf Entities ohne Id arbeiten
  *
  * @export
  * @abstract
  * @class ServiceBase
  * @template T
- * @template TId
  */
 export interface INanoService<T> {
 

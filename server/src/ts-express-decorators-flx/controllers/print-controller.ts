@@ -19,7 +19,7 @@ export class PrinterController extends NanoController<IPrinter> {
     super(service, 'undefined', 'undefined');
   }
 
-
+  @Authenticated()
   @Get('/')
   public find(
     @Request() request: ISessionRequest
