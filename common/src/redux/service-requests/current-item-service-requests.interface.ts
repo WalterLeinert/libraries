@@ -1,7 +1,5 @@
 import { Observable } from 'rxjs/Observable';
 
-import { IToString } from '@fluxgate/core';
-import { IEntity } from '../../model/entity.interface';
 import { ICurrentItemServiceState } from '../state/current-item-service-state.interface';
 import { IServiceRequests } from './service-requests.interface';
 

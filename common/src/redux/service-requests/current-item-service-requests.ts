@@ -1,9 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
 
-import { IToString } from '@fluxgate/core';
-
-import { IEntity } from '../../model/entity.interface';
 import { CurrentItemSetCommand } from '../command/current-item-set-command';
 import { SettingCurrentItemCommand } from '../command/setting-current-item-command';
 import { Store } from '../store';

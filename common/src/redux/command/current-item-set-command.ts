@@ -1,5 +1,3 @@
-import { IEntity } from '../../model/entity.interface';
-
 import { ICurrentItemServiceState } from '../state/current-item-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
 import { IServiceRequests } from './../service-requests';
