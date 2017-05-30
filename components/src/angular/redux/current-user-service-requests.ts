@@ -10,7 +10,7 @@ import { UserService } from './user.service';
 
 
 @Injectable()
-export class CurrentUserServiceRequests extends CurrentItemServiceRequests<IUser, number> {
+export class CurrentUserServiceRequests extends CurrentItemServiceRequests<IUser> {
 
   constructor(service: UserService, @Inject(APP_STORE) store: Store) {
     super(CurrentUserStore.ID, store);
