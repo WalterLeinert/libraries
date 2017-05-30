@@ -12,9 +12,8 @@ import { IServiceRequests } from './service-requests.interface';
  * @interface ICurrentItemServiceRequests
  * @extends {ServiceRequests}
  * @template T
- * @template TId
  */
-export interface ICurrentItemServiceRequests<T extends IEntity<TId>, TId extends IToString> extends IServiceRequests {
+export interface ICurrentItemServiceRequests<T> extends IServiceRequests {
 
   /**
    * Setzt das aktuelle Item.

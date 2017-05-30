@@ -107,8 +107,8 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TServi
     return this._serviceRequests as ICrudServiceRequests<T, TId>;
   }
 
-  protected get currentItemServiceRequests(): ICurrentItemServiceRequests<T, TId> {
-    return this._serviceRequests as ICurrentItemServiceRequests<T, TId>;
+  protected get currentItemServiceRequests(): ICurrentItemServiceRequests<T> {
+    return this._serviceRequests as ICurrentItemServiceRequests<T>;
   }
 
 

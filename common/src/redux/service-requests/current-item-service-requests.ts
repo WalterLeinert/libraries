@@ -21,8 +21,8 @@ import { ServiceRequests } from './service-requests';
  * @template TId
  * @template TService
  */
-export class CurrentItemServiceRequests<T extends IEntity<TId>, TId extends IToString>
-  extends ServiceRequests implements ICurrentItemServiceRequests<T, TId> {
+export class CurrentItemServiceRequests<T>
+  extends ServiceRequests implements ICurrentItemServiceRequests<T> {
 
   public static readonly INITIAL_STATE: ICurrentItemServiceState<any> = {
     ...ServiceRequests.INITIAL_STATE,
