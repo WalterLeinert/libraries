@@ -1,6 +1,7 @@
 // Fluxgate
 import { Assert, JsonSerializer } from '@fluxgate/core';
 
+import { IServiceCore } from '../../services/service-core.interface';
 
 /**
  * Abstrakte Basisklasse für alle Controller.
@@ -11,6 +12,11 @@ import { Assert, JsonSerializer } from '@fluxgate/core';
  */
 export abstract class ControllerCore {
   private serializer: JsonSerializer = new JsonSerializer();
+
+
+  protected constructor(private _service: IServiceCore) {
+    Assert.notNull(_service);
+  }
 
 
   /**
@@ -35,5 +41,9 @@ export abstract class ControllerCore {
   protected deserialize<T>(json: any): T {
     Assert.notNull(json);
     return this.serializer.deserialize<T>(json);
+  }
+
+  protected getService(): IServiceCore {
+    return this._service;
   }
 }

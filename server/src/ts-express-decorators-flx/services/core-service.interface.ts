@@ -3,7 +3,9 @@ import * as Knex from 'knex';
 // Fluxgate
 import { FindResult, QueryResult, TableMetadata } from '@fluxgate/common';
 import { IQuery } from '@fluxgate/core';
+
 import { ISessionRequest } from '../session/session-request.interface';
+import { IServiceCore } from './service-core.interface';
 
 /**
  * Interface für REST-Services, die auf Entities ohne Id arbeiten (z.B. DB-Views)
@@ -13,7 +15,7 @@ import { ISessionRequest } from '../session/session-request.interface';
  * @class ServiceBase
  * @template T
  */
-export interface ICoreService<T> {
+export interface ICoreService<T> extends IServiceCore {
 
   metadata: TableMetadata;
 

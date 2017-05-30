@@ -30,7 +30,7 @@ export class PassportController extends ControllerCore {
 
 
   constructor(passportLocalService: PassportLocalService) {
-    super();
+    super(passportLocalService);
 
     passportLocalService.initLocalSignup();
     passportLocalService.initLocalLogin();

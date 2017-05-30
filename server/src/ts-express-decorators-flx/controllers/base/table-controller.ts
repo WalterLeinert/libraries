@@ -7,8 +7,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import { Assert } from '@fluxgate/core';
 
+import { IServiceCore } from '../../services/service-core.interface';
 import { ControllerCore } from './controller-core';
-
 
 /**
  * Abstrakte Basisklasse für alle Controller, die über Knex auf DB-Tabellen arbeiten
@@ -20,8 +20,8 @@ import { ControllerCore } from './controller-core';
 export abstract class TableController extends ControllerCore {
   protected static logger = getLogger(TableController);
 
-  constructor(private _tableName: string, private _idName: string) {
-    super();
+  protected constructor(service: IServiceCore, private _tableName: string, private _idName: string) {
+    super(service);
     Assert.notNullOrEmpty(_tableName);
     Assert.notNullOrEmpty(_idName);
   }

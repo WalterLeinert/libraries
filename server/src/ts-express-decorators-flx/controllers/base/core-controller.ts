@@ -28,9 +28,8 @@ import { TableController } from './table-controller';
 export abstract class CoreController<T> extends TableController {
   protected static logger = getLogger(CoreController);
 
-  constructor(private _service: ICoreService<T>, tableName: string, idName: string) {
-    super(tableName, idName);
-    Assert.notNull(_service);
+  constructor(service: ICoreService<T>, tableName: string, idName: string) {
+    super(service, tableName, idName);
   }
 
 
@@ -45,7 +44,7 @@ export abstract class CoreController<T> extends TableController {
     request: ISessionRequest,
   ): Promise<FindResult<T>> {
     return new Promise<FindResult<T>>((resolve, reject) => {
-      this._service.find(request).then((result) => {
+      this.getService().find(request).then((result) => {
         resolve(this.serialize(result));
       });
     });
@@ -67,7 +66,7 @@ export abstract class CoreController<T> extends TableController {
     return new Promise<QueryResult<T>>((resolve, reject) => {
       const deserializedQuery = this.deserialize<IQuery>(request.body);
 
-      this._service.query(request, deserializedQuery).then((result) => {
+      this.getService().query(request, deserializedQuery).then((result) => {
         resolve(this.serialize(result));
       });
     });
@@ -75,6 +74,6 @@ export abstract class CoreController<T> extends TableController {
 
 
   protected getService(): ICoreService<T> {
-    return this._service;
+    return super.getService() as ICoreService<T>;
   }
 }

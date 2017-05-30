@@ -2,6 +2,8 @@
 import { ExceptionWrapper } from '@fluxgate/common';
 import { IException } from '@fluxgate/core';
 
+import { IServiceCore } from './service-core.interface';
+
 
 /**
  * Abstrakte Basisklasse für alle REST-Services
@@ -11,7 +13,7 @@ import { IException } from '@fluxgate/core';
  * @class ServiceCore
  * @template T
  */
-export abstract class ServiceCore {
+export abstract class ServiceCore implements IServiceCore {
 
   /**
    * Liefert eine BusinessException für den angegebenen Fehler @param{error}.
@@ -22,7 +24,7 @@ export abstract class ServiceCore {
    *
    * @memberof ServiceCore
    */
-  protected createBusinessException(error: string | IException | Error): IException {
+  public createBusinessException(error: string | IException | Error): IException {
     return ExceptionWrapper.createBusinessException(error);
   }
 
@@ -35,7 +37,7 @@ export abstract class ServiceCore {
    *
    * @memberof ServiceCore
    */
-  protected createSystemException(error: string | IException | Error): IException {
+  public createSystemException(error: string | IException | Error): IException {
     return ExceptionWrapper.createSystemException(error);
   }
 

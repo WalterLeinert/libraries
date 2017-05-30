@@ -14,8 +14,8 @@ import { ControllerCore } from './controller-core';
 @Controller('/query')
 export class QueryController<T, TId> extends ControllerCore {
 
-  constructor(private service: ICoreService<T>) {
-    super();
+  constructor(service: ICoreService<T>) {
+    super(service);
   }
 
   @Authenticated()
@@ -26,11 +26,15 @@ export class QueryController<T, TId> extends ControllerCore {
     const deserializedQuery = this.deserialize<IQuery>(request.body);
 
     return new Promise<QueryResult<T>>((resolve, reject) => {
-      this.service.query(request, deserializedQuery).then((result) => {
+      this.getService().query(request, deserializedQuery).then((result) => {
         resolve(this.serialize(result));
       });
     });
 
   }
 
+
+  protected getService(): ICoreService<T> {
+    return super.getService() as ICoreService<T>;
+  }
 }

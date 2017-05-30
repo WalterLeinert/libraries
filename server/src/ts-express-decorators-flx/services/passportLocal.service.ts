@@ -14,9 +14,11 @@ import { MetadataService, UserService } from '.';
 import { Messages } from '../../resources/messages';
 import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
+import { ServiceCore } from './service-core';
+
 
 @Service()
-export class PassportLocalService {
+export class PassportLocalService extends ServiceCore {
   protected static logger = getLogger(PassportLocalService);
 
   /**
@@ -32,6 +34,7 @@ export class PassportLocalService {
 
 
   constructor(private userService: UserService, private metadataService: MetadataService) {
+    super();
 
     // used to serialize the user for the session
     Passport.serializeUser(PassportLocalService.serialize);
