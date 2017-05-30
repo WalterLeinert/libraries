@@ -123,9 +123,9 @@
   dependencies:
     tsickle "^0.21.0"
 
-"@fluxgate/client@^2.2.4-beta.3":
-  version "2.2.4-beta.3"
-  resolved "http://localhost:4873/@fluxgate%2fclient/-/client-2.2.4-beta.3.tgz#f1dcbe0c0e9fe7aebdd0840bb8acf9ac40fa2a69"
+"@fluxgate/client@^2.2.4":
+  version "2.2.4"
+  resolved "http://localhost:4873/@fluxgate%2fclient/-/client-2.2.4.tgz#5b5d408998eea4139ae84a26166e66c23d6f693d"
   dependencies:
     "@angular/animations" "4.1.3"
     "@angular/common" "4.1.3"
@@ -137,9 +137,9 @@
     "@angular/platform-browser-dynamic" "4.1.3"
     "@angular/platform-server" "4.1.3"
     "@angular/router" "4.1.3"
-    "@fluxgate/common" "^2.2.4-beta.3"
-    "@fluxgate/core" "^2.2.4-beta.0"
-    "@fluxgate/platform" "^2.2.4-beta.0"
+    "@fluxgate/common" "^2.2.4"
+    "@fluxgate/core" "^2.2.4"
+    "@fluxgate/platform" "^2.2.4"
     bootstrap "^3.3.7"
     core-js "^2.4.1"
     font-awesome "^4.7.0"
@@ -150,21 +150,21 @@
     rxjs "^5.3.0"
     zone.js "^0.8.4"
 
-"@fluxgate/common@^2.2.4-beta.3":
-  version "2.2.4-beta.3"
-  resolved "http://localhost:4873/@fluxgate%2fcommon/-/common-2.2.4-beta.3.tgz#9a50b491f2dad17713da4425e9a50c612ffa2011"
+"@fluxgate/common@^2.2.4":
+  version "2.2.4"
+  resolved "http://localhost:4873/@fluxgate%2fcommon/-/common-2.2.4.tgz#48c3bfb1849bece6b0b93f2877effa92e97b9d72"
   dependencies:
-    "@fluxgate/core" "^2.2.4-beta.0"
-    "@fluxgate/platform" "^2.2.4-beta.0"
+    "@fluxgate/core" "^2.2.4"
+    "@fluxgate/platform" "^2.2.4"
     moment "^2.17.1"
     object.entries "^1.0.4"
     reflect-metadata "^0.1.9"
     rxjs "^5.3.0"
     tslib "^1.5.0"
 
-"@fluxgate/core@^2.2.4-beta.0":
-  version "2.2.4-beta.0"
-  resolved "http://localhost:4873/@fluxgate%2fcore/-/core-2.2.4-beta.0.tgz#74ad96bb6f44ad57782a51c49866233a4177b682"
+"@fluxgate/core@^2.2.4":
+  version "2.2.4"
+  resolved "http://localhost:4873/@fluxgate%2fcore/-/core-2.2.4.tgz#48ddd91747f4fa3a30f6ffee22b80146300f595a"
   dependencies:
     dashdash "^1.14.1"
     left-pad "^1.1.3"
@@ -175,11 +175,11 @@
     tinycolor2 "^1.4.1"
     tslib "^1.5.0"
 
-"@fluxgate/platform@^2.2.4-beta.0":
-  version "2.2.4-beta.0"
-  resolved "http://localhost:4873/@fluxgate%2fplatform/-/platform-2.2.4-beta.0.tgz#e48909a3fa0257525199deedf424c78facc75b0f"
+"@fluxgate/platform@^2.2.4":
+  version "2.2.4"
+  resolved "http://localhost:4873/@fluxgate%2fplatform/-/platform-2.2.4.tgz#17740d3af84aaf60f3ac051bfd41962c4d7b2dc2"
   dependencies:
-    "@fluxgate/core" "^2.2.4-beta.0"
+    "@fluxgate/core" "^2.2.4"
     tslib "^1.5.0"
 
 "@gulp-sourcemaps/identity-map@1.X":
