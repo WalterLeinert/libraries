@@ -456,7 +456,7 @@ export class AutoformComponent extends BaseComponent<ServiceProxy<any, any>> {
 
       log.log(`table = ${tableMetadata.options.name}`);
 
-      const service = tableMetadata.getServiceInstance(this.injector);
+      const service = tableMetadata.getServiceRequestsInstance(this.injector);
       this.setService(new ServiceProxy(service as IService<any, any>));
     });
   }

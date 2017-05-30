@@ -8,10 +8,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { TableMetadata } from '@fluxgate/common';
+import { Store, TableMetadata } from '@fluxgate/common';
 import { Assert, InvalidOperationException } from '@fluxgate/core';
 
 import { ControlType } from '../../angular/common/base/controlType';
+import { APP_STORE } from '../../angular/redux/app-store';
 import { MetadataService } from '../../angular/services/metadata.service';
 import { ControlDisplayInfo } from './controlDisplayInfo';
 import { IControlDisplayInfo } from './controlDisplayInfo.interface';
@@ -74,8 +75,10 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
         if (!displayInfo.enumInfo) {
 
           const enumTableMetadata = this.metadataService.findTableMetadata(colMetaData.enumMetadata.dataSource);
+          const store = this.injector.get(APP_STORE) as Store;
+
           displayInfo.enumInfo = {
-            selectorDataServiceRequests: enumTableMetadata.getServiceRequestsInstance(this.injector),
+            selectorDataServiceRequests: enumTableMetadata.getServiceRequestsInstance(this.injector, store),
             textField: colMetaData.enumMetadata.textField,
             valueField: colMetaData.enumMetadata.valueField
           };
@@ -106,8 +109,10 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
           dataType = DataTypes.ENUM;
 
           const enumTableMetadata = this.metadataService.findTableMetadata(metaData.enumMetadata.dataSource);
+          const store = this.injector.get(APP_STORE) as Store;
+
           enumInfo = {
-            selectorDataServiceRequests: enumTableMetadata.getServiceRequestsInstance(this.injector),
+            selectorDataServiceRequests: enumTableMetadata.getServiceRequestsInstance(this.injector, store),
             textField: metaData.enumMetadata.textField,
             valueField: metaData.enumMetadata.valueField
           };
