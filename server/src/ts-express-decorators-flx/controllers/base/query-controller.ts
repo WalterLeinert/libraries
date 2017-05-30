@@ -14,8 +14,8 @@ import { ControllerCore } from './controller-core';
 @Controller('/query')
 export class QueryController<T, TId> extends ControllerCore {
 
-  constructor(private service: ICoreService<T, TId>) {
-    super('dummy', 'dummy');
+  constructor(private service: ICoreService<T>) {
+    super();
   }
 
   @Authenticated()

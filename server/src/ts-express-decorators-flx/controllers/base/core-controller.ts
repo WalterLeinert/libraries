@@ -6,30 +6,29 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { FindResult, QueryResult } from '@fluxgate/common';
-import { Assert, IQuery, IToString } from '@fluxgate/core';
+import { Assert, IQuery } from '@fluxgate/core';
 
 import { ICoreService } from '../../services/core-service.interface';
 import { IBodyRequest } from '../../session/body-request.interface';
 import { ISessionRequest } from '../../session/session-request.interface';
-import { ControllerCore } from './controller-core';
+import { TableController } from './table-controller';
 
 
 /**
  * Abstrakte Basisklasse für alle REST-Controller, die nur lesende Zugriffe durchführen (find, query)
  * oder auf DB-Views arbeiten und mit Entities ohne Id/primary key
  *
- * Delegiert alle Controller-Calls an den zugehörigen Service @see{TId}.
+ * Delegiert alle Controller-Calls an den zugehörigen Service.
  *
  * @export
  * @abstract
  * @class ReadonlyController
  * @template T      - Entity-Typ
- * @template TId    - Typ der Id-Spalte
  */
-export abstract class CoreController<T, TId extends IToString> extends ControllerCore {
+export abstract class CoreController<T> extends TableController {
   protected static logger = getLogger(CoreController);
 
-  constructor(private _service: ICoreService<T, TId>, tableName: string, idName: string) {
+  constructor(private _service: ICoreService<T>, tableName: string, idName: string) {
     super(tableName, idName);
     Assert.notNull(_service);
   }
@@ -75,7 +74,7 @@ export abstract class CoreController<T, TId extends IToString> extends Controlle
   }
 
 
-  protected getService(): ICoreService<T, TId> {
+  protected getService(): ICoreService<T> {
     return this._service;
   }
 }

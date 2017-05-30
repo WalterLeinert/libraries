@@ -86,10 +86,10 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
       return new Promise<CreateResult<T, TId>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
-          let query: Knex.QueryBuilder = this.fromTable();
+          const query: Knex.QueryBuilder = this.fromTable();
 
           // query für Inkrement der EntityVersion Tabelle oder nop-query erzeugen
-          let entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
+          const entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
 
           entityversionQuery
             .then((item) => {
@@ -160,10 +160,10 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
         this.knexService.knex.transaction((trx) => {
 
           // quer< zur Selektion der Entity und ggf. des Versionsinkrements
-          let query: Knex.QueryBuilder = this.createUpdateQuery(request, trx, subject.id, dbSubject);
+          const query: Knex.QueryBuilder = this.createUpdateQuery(request, trx, subject.id, dbSubject);
 
           // query für increment der entityversion Tabelle oder nop-query erzeugen
-          let entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
+          const entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
 
 
           log.debug('dbSbject: ', dbSubject);
@@ -267,7 +267,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
           }
 
           // query für increment der entityversion Tabelle oder nop-query erzeugen
-          let entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
+          const entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
 
 
           entityversionQuery

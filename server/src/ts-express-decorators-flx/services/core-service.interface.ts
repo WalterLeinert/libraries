@@ -2,7 +2,7 @@ import * as Knex from 'knex';
 
 // Fluxgate
 import { FindResult, QueryResult, TableMetadata } from '@fluxgate/common';
-import { IQuery, IToString } from '@fluxgate/core';
+import { IQuery } from '@fluxgate/core';
 import { ISessionRequest } from '../session/session-request.interface';
 
 /**

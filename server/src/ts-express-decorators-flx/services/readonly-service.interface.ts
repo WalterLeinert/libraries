@@ -14,7 +14,7 @@ import { ICoreService } from './core-service.interface';
  * @template T
  * @template TId
  */
-export interface IReadonlyService<T extends IEntity<TId>, TId extends IToString> extends ICoreService<T, TId> {
+export interface IReadonlyService<T extends IEntity<TId>, TId extends IToString> extends ICoreService<T> {
 
   /**
    * Liefert oder setzt den DB-Id-Spaltennamen (primary key column)

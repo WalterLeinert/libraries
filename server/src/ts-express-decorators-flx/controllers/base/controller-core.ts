@@ -1,9 +1,3 @@
-// -------------------------------------- logging --------------------------------------------
-// tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
-// -------------------------------------- logging --------------------------------------------
-
-
 // Fluxgate
 import { Assert, JsonSerializer } from '@fluxgate/core';
 
@@ -16,23 +10,16 @@ import { Assert, JsonSerializer } from '@fluxgate/core';
  * @class ControllerCore
  */
 export abstract class ControllerCore {
-  protected static logger = getLogger(ControllerCore);
-
   private serializer: JsonSerializer = new JsonSerializer();
-
-  constructor(private _tableName: string, private _idName: string) {
-    Assert.notNullOrEmpty(_tableName);
-    Assert.notNullOrEmpty(_idName);
-  }
 
 
   /**
    * Serialisiert das @param{item} für die Übertragung zum Client über das REST-Api.
    *
-   * @param {any} item
+   * @param {T} item
    * @returns {any}
    */
-  protected serialize<TSerialize>(item: TSerialize): any {
+  protected serialize<T>(item: T): any {
     Assert.notNull(item);
     return this.serializer.serialize(item);
   }
@@ -42,38 +29,11 @@ export abstract class ControllerCore {
    * Deserialisiert das Json-Objekt, welches über das REST-Api vom Client zum Server übertragen wurde
    *
    * @param {any} json - Json-Objekt vom Client
-   * @returns {any}
+   * @returns {T}
    *
    */
-  protected deserialize<TSerialize>(json: any): TSerialize {
+  protected deserialize<T>(json: any): T {
     Assert.notNull(json);
-    return this.serializer.deserialize<TSerialize>(json);
+    return this.serializer.deserialize<T>(json);
   }
-
-
-
-  /**
-   * Liefert den zugehörigen Tabellennamen
-   *
-   * @readonly
-   * @protected
-   * @type {string}
-   * @memberOf ControllerBase
-   */
-  protected get tableName(): string {
-    return this._tableName;
-  }
-
-  /**
-   * Liefert den zugehörigen PrimaryKey-Tabellenspaltennamen.
-   *
-   * @readonly
-   * @protected
-   * @type {string}
-   * @memberOf ControllerBase
-   */
-  protected get idName(): string {
-    return this._idName;
-  }
-
 }

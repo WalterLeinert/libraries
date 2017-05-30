@@ -25,7 +25,7 @@ import { CoreController } from './core-controller';
  * @template T      - Entity-Typ
  * @template TId    - Typ der Id-Spalte
  */
-export abstract class ReadonlyController<T extends IEntity<TId>, TId extends IToString> extends CoreController<T, TId> {
+export abstract class ReadonlyController<T extends IEntity<TId>, TId extends IToString> extends CoreController<T> {
   protected static logger = getLogger(ReadonlyController);
 
   constructor(service: IReadonlyService<T, TId>, tableName: string, idName: string) {

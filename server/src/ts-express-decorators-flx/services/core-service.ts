@@ -7,14 +7,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  EntityVersion, ExceptionWrapper, FindResult, IUser, QueryResult,
+  EntityVersion, FindResult, IUser, QueryResult,
   ServiceResult, TableMetadata, User
 } from '@fluxgate/common';
 import {
   Assert, Clone, Funktion, ICtor,
-  IException,
-  IQuery, IToString,
-  JsonSerializer, Types
+  IQuery, Types
 } from '@fluxgate/core';
 
 
@@ -24,6 +22,7 @@ import { ICoreService } from './core-service.interface';
 import { KnexQueryVisitor } from './knex-query-visitor';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
+import { ServiceCore } from './service-core';
 
 
 /**
@@ -34,9 +33,8 @@ import { MetadataService } from './metadata.service';
  * @class CoreService
  * @template T
  */
-export abstract class CoreService<T> implements ICoreService<T>  {
+export abstract class CoreService<T> extends ServiceCore implements ICoreService<T>  {
   protected static logger = getLogger(CoreService);
-  private serializer: JsonSerializer = new JsonSerializer();
 
   private _metadata: TableMetadata;
   private _entityVersionMetadata: TableMetadata;
@@ -53,6 +51,7 @@ export abstract class CoreService<T> implements ICoreService<T>  {
    * @memberOf ServiceBase
    */
   constructor(table: Funktion, private _knexService: KnexService, metadataService: MetadataService) {
+    super();
     Assert.notNull(table);
     Assert.notNull(_knexService);
     Assert.notNull(metadataService);
@@ -199,7 +198,7 @@ export abstract class CoreService<T> implements ICoreService<T>  {
     query: IQuery
   ): Promise<QueryResult<T>> {
     return using(new XLog(CoreService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
-      let knexQuery = this.fromTable();
+      const knexQuery = this.fromTable();
 
       const visitor = new KnexQueryVisitor(knexQuery, this.metadata);
       query.term.accept(visitor);
@@ -219,7 +218,7 @@ export abstract class CoreService<T> implements ICoreService<T>  {
    *
    * @memberof ReadonlyService
    */
-  public fromTable(table: string | Function = this.tableName): Knex.QueryBuilder {
+  public fromTable(table: string | Funktion = this.tableName): Knex.QueryBuilder {
     Assert.notNull(table);
 
     let tableName: string;
@@ -269,42 +268,6 @@ export abstract class CoreService<T> implements ICoreService<T>  {
     }
     return result;
   }
-
-
-  protected createBusinessException(error: string | IException | Error): IException {
-    return ExceptionWrapper.createBusinessException(error);
-  }
-
-  protected createSystemException(error: string | IException | Error): IException {
-    return ExceptionWrapper.createSystemException(error);
-  }
-
-
-
-  /**
-   * Serialisiert das @param{item} für die Übertragung zum Client über das REST-Api.
-   *
-   * @param {any} item
-   * @returns {any}
-   */
-  protected serialize<TSerialize>(item: TSerialize): any {
-    Assert.notNull(item);
-    return this.serializer.serialize(item);
-  }
-
-
-  /**
-   * Deserialisiert das Json-Objekt, welches über das REST-Api vom Client zum Server übertragen wurde
-   *
-   * @param {any} json - Json-Objekt vom Client
-   * @returns {any}
-   *
-   */
-  protected deserialize<TSerialize>(json: any): TSerialize {
-    Assert.notNull(json);
-    return this.serializer.deserialize<TSerialize>(json);
-  }
-
 
   /**
    * Liefert den DB-Tabellennamen
