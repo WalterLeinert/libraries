@@ -33,9 +33,8 @@ import { MetadataService } from './metadata.service';
  * @abstract
  * @class CoreService
  * @template T
- * @template TId
  */
-export abstract class CoreService<T, TId extends IToString> implements ICoreService<T, TId>  {
+export abstract class CoreService<T> implements ICoreService<T>  {
   protected static logger = getLogger(CoreService);
   private serializer: JsonSerializer = new JsonSerializer();
 
@@ -369,7 +368,7 @@ export abstract class CoreService<T, TId extends IToString> implements ICoreServ
           resolve(new resultClazz(queryResult, entityVersion));
         });
     });
-  };
+  }
 
 
   protected addClientSelector(qb: Knex.QueryBuilder, trx: Knex.Transaction, clientId: any):

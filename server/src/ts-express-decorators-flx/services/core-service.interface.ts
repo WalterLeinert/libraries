@@ -12,9 +12,8 @@ import { ISessionRequest } from '../session/session-request.interface';
  * @abstract
  * @class ServiceBase
  * @template T
- * @template TId
  */
-export interface ICoreService<T, TId extends IToString> {
+export interface ICoreService<T> {
 
   metadata: TableMetadata;
 
