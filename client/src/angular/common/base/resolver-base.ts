@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { ICrudServiceRequests, IEntity } from '@fluxgate/common';
-import { Assert, ConverterRegistry, IToString } from '@fluxgate/core';
+import { Assert, ConverterRegistry, Funktion, IToString } from '@fluxgate/core';
 
 
 /**
@@ -29,7 +29,7 @@ export abstract class ResolverBase<T extends IEntity<TId>, TId extends IToString
 
 
   protected constructor(private serviceRequests: ICrudServiceRequests<T, TId>,
-    private router: Router, private idType: string | Function) {
+    private router: Router, private idType: string | Funktion) {
     Assert.notNull(idType);
   }
 
