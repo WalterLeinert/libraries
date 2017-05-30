@@ -25,7 +25,7 @@ import { IReadonlyService } from './readonly-service.interface';
  * @template T
  * @template TId
  */
-export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToString> extends CoreService<T, TId>
+export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToString> extends CoreService<T>
   implements IReadonlyService<T, TId>  {
   protected static logger = getLogger(ReadonlyService);
 
