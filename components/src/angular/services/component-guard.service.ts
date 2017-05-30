@@ -1,14 +1,12 @@
 import { Injectable, NgModule } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanDeactivate, Router, RouterStateSnapshot } from '@angular/router';
 
+
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
 
 // Fluxgate
-import { BaseComponent } from '@fluxgate/client';
-import { IServiceBase } from '@fluxgate/common';
-
-import { ConfirmationDialogComponent, ConfirmationDialogModule } from '../modules/common';
+import { CoreComponent, MessageService, } from '@fluxgate/client';
 
 
 /**
@@ -22,37 +20,34 @@ import { ConfirmationDialogComponent, ConfirmationDialogModule } from '../module
  * @template TService
  */
 @Injectable()
-export class ComponentGuardService<T extends BaseComponent<TService>, TService extends IServiceBase<T, any>>
+export class ComponentGuardService<T extends CoreComponent> extends CoreComponent
   implements CanActivate, CanDeactivate<T>  {
 
-  constructor(private _router: Router /*, private _confirmationDialog: ConfirmationDialogComponent*/) {
+  constructor(private _router: Router, messageService: MessageService) {
+    super(messageService);
   }
 
 
   public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean> | Promise<boolean> | boolean {
-
     return true;
   }
 
   public canDeactivate(component: T, route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean> | Promise<boolean> | boolean {
 
-    if (component.hasChanges()) {
-
-      // TODO: geht so nicht, weil confirmAction nicht blockt.
-      // let confirm = false;
-      // component.confirmAction({
-      //   header: 'Unsaved Changes',
-      //   message: 'You have unsaved changes: OK to discard?'
-      // }, () => confirm = true);
-      // return confirm;
-
-
-      return confirm('You have unsaved changes: OK to discard?');     // TODO: durch eigenen Dialog ersetzen
-    } else {
-      return true;
-    }
+    return new Promise<boolean>((resolve, reject) => {
+      if (component.hasChanges()) {
+        this.confirmationService.confirm({
+          header: 'Unsaved Changes',
+          message: 'You have unsaved changes: OK to discard?',
+          accept: () => resolve(true),
+          reject: () => resolve(false)
+        });
+      } else {
+        resolve(true);
+      }
+    });
   }
 }
 
@@ -60,12 +55,6 @@ export class ComponentGuardService<T extends BaseComponent<TService>, TService e
 
 // tslint:disable-next-line:max-classes-per-file
 @NgModule({
-  imports: [
-    ConfirmationDialogModule
-  ],
-  exports: [
-    ConfirmationDialogComponent
-  ],
   providers: [
     ComponentGuardService
   ]
