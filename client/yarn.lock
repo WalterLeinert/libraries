@@ -123,9 +123,9 @@
   dependencies:
     tsickle "^0.21.0"
 
-"@fluxgate/common@^2.2.4-beta.0":
-  version "2.2.4-beta.0"
-  resolved "http://localhost:4873/@fluxgate%2fcommon/-/common-2.2.4-beta.0.tgz#e003d0aba906904a83f10afbe6c56818c1b9a121"
+"@fluxgate/common@^2.2.4-beta.3":
+  version "2.2.4-beta.3"
+  resolved "http://localhost:4873/@fluxgate%2fcommon/-/common-2.2.4-beta.3.tgz#9a50b491f2dad17713da4425e9a50c612ffa2011"
   dependencies:
     "@fluxgate/core" "^2.2.4-beta.0"
     "@fluxgate/platform" "^2.2.4-beta.0"
