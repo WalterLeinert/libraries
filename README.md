@@ -78,3 +78,17 @@ Die Library stellt Komponenten und Module zur Verfügung zur effizienten Impleme
     - flx-time-selector
     - flx-user-selector
     - flx-role-selector
+
+
+
+### Release Notes
+
+#### Version 2.2.4
+
+  - common
+    - EntityVersionProxy: Clone der Entities für Ergebnisse aus dem Cache
+    - redux: CurrentItem muss keine Entity mit Id sein
+
+  - server
+    - refactoring der Service/Controller-Struktur (neu: TableController, IServiceCore)
+
