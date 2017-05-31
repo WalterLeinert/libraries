@@ -8,15 +8,15 @@ import {
 
 import { PrintService } from '../services/print.service';
 import { ISessionRequest } from '../session/session-request.interface';
-import { NanoController } from './base/nano-controller';
+import { ControllerCore } from './base/controller-core';
 
 
 @Controller('/printer')
-export class PrinterController extends NanoController<IPrinter> {
+export class PrinterController extends ControllerCore {
 
 
   constructor(service: PrintService) {
-    super(service, 'undefined', 'undefined');
+    super(service);
   }
 
   @Authenticated()
@@ -24,7 +24,22 @@ export class PrinterController extends NanoController<IPrinter> {
   public find(
     @Request() request: ISessionRequest
     ): Promise<FindResult<IPrinter>> {
-    return super.findInternal(request);
+    return this.findInternal(request);
+  }
+
+  protected getService(): PrintService {
+    return super.getService() as PrintService;
+  }
+
+
+  private findInternal(
+    request: ISessionRequest,
+  ): Promise<FindResult<IPrinter>> {
+    return new Promise<FindResult<IPrinter>>((resolve, reject) => {
+      this.getService().find(request).then((result) => {
+        resolve(this.serialize(result));
+      });
+    });
   }
 
 }

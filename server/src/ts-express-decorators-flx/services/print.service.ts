@@ -2,17 +2,17 @@ import { Service } from 'ts-express-decorators';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-//import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
 import { FindResult, IPrinter, Printer } from '@fluxgate/common';
 
 import { ISessionRequest } from '../session/session-request.interface';
-import { NanoService } from './nano-service';
+import { ServiceCore } from './service-core';
 
 @Service()
-export class PrintService extends NanoService<IPrinter> {
+export class PrintService extends ServiceCore {
 
 
   /**
