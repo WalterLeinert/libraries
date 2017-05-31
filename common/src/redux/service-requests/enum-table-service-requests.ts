@@ -11,11 +11,13 @@ import {
 } from '../command';
 import { ReduxStore } from '../decorators/redux-store.decorator';
 import { ICoreServiceState } from '../state/core-service-state.interface';
+import { ICrudServiceState } from '../state/crud-service-state.interface';
 import { CommandStore } from '../store/command-store';
 import { GenericStore } from '../store/generic-store';
 import { Store } from '../store/store';
-import { CoreServiceRequests } from './core-service-requests';
-import { ICoreServiceRequests } from './core-service-requests.interface';
+import { CrudServiceRequests } from './crud-service-requests';
+import { ICrudServiceRequests } from './crud-service-requests.interface';
+import { ServiceRequests } from './service-requests';
 
 
 /**
@@ -26,16 +28,11 @@ import { ICoreServiceRequests } from './core-service-requests.interface';
  * @class EnumTableServiceRequests
  * @extends {CoreServiceRequests<any>}
  */
-export class EnumTableServiceRequests extends CoreServiceRequests<any> {
+export class EnumTableServiceRequests extends ServiceRequests implements ICrudServiceRequests<any, any> {
 
-  public constructor(store: Store, private enumValues: any[]) {
-    super(new GenericStore<any, any>(CommandStore.NoId), null /*unused -> enumValues*/, store, EnumTableStore.ID);
+  public constructor(private _tableMetadata: TableMetadata, store: Store, private enumValues: any[]) {
+    super(new GenericStore<any, any>(CommandStore.NoId), store, EnumTableStore.ID);
     Assert.notNullOrEmpty(enumValues, 'enumValues');
-  }
-
-
-  public query(query: IQuery): Observable<any[]> {
-    throw new NotSupportedException();
   }
 
 
@@ -61,7 +58,43 @@ export class EnumTableServiceRequests extends CoreServiceRequests<any> {
     });
   }
 
+
+  public query(query: IQuery): Observable<any[]> {
+    throw new NotSupportedException();
+  }
+
+  public findById<T>(id: any): Observable<T> {
+    throw new NotSupportedException();
+  }
+
+  public create(item: any): Observable<any> {
+    throw new NotSupportedException();
+  }
+
+  public update(item: any): Observable<any> {
+    throw new NotSupportedException();
+  }
+
+  public delete(id: any): Observable<any> {
+    throw new NotSupportedException();
+  }
+
+  public getEntityId(item: any): any {
+    throw new NotSupportedException();
+  }
+
+  public getModelClassName(): string {
+    return this._tableMetadata.className;
+  }
+
+
+
+  public getCrudState(storeId: string): ICrudServiceState<any, any> {
+    return super.getStoreState(storeId) as ICrudServiceState<any, any>;
+  }
+
 }
+
 
 
 // tslint:disable-next-line:max-classes-per-file
@@ -70,6 +103,6 @@ export class EnumTableStore extends CommandStore<ICoreServiceState<any>> {
   public static ID = 'enumTable';
 
   constructor() {
-    super(EnumTableStore.ID, CoreServiceRequests.INITIAL_STATE);
+    super(EnumTableStore.ID, CrudServiceRequests.INITIAL_STATE);
   }
 }

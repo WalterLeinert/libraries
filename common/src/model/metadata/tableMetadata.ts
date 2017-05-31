@@ -269,10 +269,22 @@ export abstract class TableMetadata extends ClassMetadata {
     }
   }
 
+
+  /**
+   * Liefert eine zugehörige ServiceRequests-Instanz.
+   *
+   * Wenn die Table keine EnumTable ist, wird die ServiceRequests-Instanz über den @param{injector} ermittelt;
+   * sonst wird ein entsprechender @see{EnumTableServiceRequests} erzeugt.
+   *
+   * @param {*} injector
+   * @returns {IServiceCrud}
+   *
+   * @memberOf TableMetadata
+   */
   public getServiceRequestsInstance<T extends IEntity<TId>, TId extends IToString>(injector: any, store: Store):
-    ICoreServiceRequests<T> {
+    ICrudServiceRequests<T, TId> {
     if (this.options instanceof EnumTableOptions) {
-      return new EnumTableServiceRequests(store, this.options.enumValues);
+      return new EnumTableServiceRequests(this, store, this.options.enumValues);
     } else {
       return injector.get(this.serviceRequestsClazz);
     }
