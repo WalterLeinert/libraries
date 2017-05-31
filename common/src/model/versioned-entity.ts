@@ -1,3 +1,4 @@
+import { Funktion } from '@fluxgate/core';
 import { Table } from '../model/decorator/table';
 import { VersionColumn } from '../model/decorator/version-column';
 import { Entity } from './entity';
@@ -17,10 +18,10 @@ import { IVersionedEntity } from './versioned-entity.interface';
 @Table()
 export abstract class VersionedEntity<TId> extends Entity<TId> implements IVersionedEntity {
 
-  @VersionColumn({ name: '__version', displayName: 'Version', default: 0 })
+  @VersionColumn({ name: '__version', default: 0 })
   public __version: number;
 
   public toString(): string {
-    return `{ type: ${(this as any as Function).name}, id: ${this.id}, version: ${this.__version} }`;
+    return `{ type: ${(this as any as Funktion).name}, id: ${this.id}, version: ${this.__version} }`;
   }
 }

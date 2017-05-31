@@ -35,7 +35,11 @@ class ColumnTest {
 
   @test 'should exist versionMetadata'() {
     const versionMetadata = this.tableMetadata.versionColumn;
+    // tslint:disable-next-line:no-unused-expression
     expect(versionMetadata).to.be.not.null;
+
+    // tslint:disable-next-line:no-unused-expression
+    expect(versionMetadata.options.hidden).to.be.true;
 
     expect(versionMetadata.propertyName).to.equal('__version');
     expect(versionMetadata.propertyType).to.equal(ColumnTypes.NUMBER);

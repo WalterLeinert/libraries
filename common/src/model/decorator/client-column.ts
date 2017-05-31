@@ -8,8 +8,25 @@ import { ColumnOptions } from './columnOptions';
  */
 export function ClientColumn(options?: ColumnOptions) {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: Object, propertyName: string) {
-    registerColumn(target, propertyName, options);
+  return function(target: object, propertyName: string) {
+    let columnOptions = options;
+
+    //
+    // defaults, falls keine Options angegeben
+    //
+    if (columnOptions === undefined) {
+      columnOptions = {
+        hidden: true
+      };
+    } else {
+      // sonst, defaults setzen
+      columnOptions = {
+        ...options,
+        hidden: options.hidden === undefined ? true : options.hidden              // default: true
+      };
+    }
+
+    registerColumn(target, propertyName, columnOptions);
     MetadataStorage.instance.setSpecialColumn(target.constructor, propertyName, SpecialColumns.CLIENT);
   };
 }

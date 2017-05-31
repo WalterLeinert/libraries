@@ -8,7 +8,7 @@ import { ColumnOptions } from './columnOptions';
  */
 export function VersionColumn(options?: ColumnOptions) {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: Object, propertyName: string) {
+  return function(target: object, propertyName: string) {
     let columnOptions = options;
 
     //
@@ -16,13 +16,15 @@ export function VersionColumn(options?: ColumnOptions) {
     //
     if (columnOptions === undefined) {
       columnOptions = {
-        generated: true
+        generated: true,
+        hidden: true
       };
     } else {
       // sonst, defaults setzen
       columnOptions = {
         ...options,
-        generated: options.generated === undefined ? true : options.generated   // default: true
+        generated: options.generated === undefined ? true : options.generated,    // default: true,
+        hidden: options.hidden === undefined ? true : options.hidden              // default: true
       };
     }
 

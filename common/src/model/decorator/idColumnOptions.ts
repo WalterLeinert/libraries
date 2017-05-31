@@ -55,4 +55,9 @@ export interface IdColumnOptions {
    * false: Spaltenwert wird nicht persistiert (default: true); z.B. berechnete Property
    */
   persisted?: boolean;
+
+  /**
+   * falls true, wird die Spalte im GUI nicht angezeigt
+   */
+  hidden?: boolean;
 }

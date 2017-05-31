@@ -80,6 +80,10 @@ export function registerColumn(target: Object, propertyName: string, options?: C
     options.name = propertyName;
   }
 
+  if (options.hidden === undefined) {
+    options.hidden = false;       // default: im GUI anzeigen
+  }
+
   if (options.persisted === undefined) {
     options.persisted = true;       // default: Persistieren
   }
