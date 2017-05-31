@@ -12,10 +12,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  AutoformConfiguration, BaseComponent, ControlType, FormAction, FormActions,
-  IAutoformConfig, IControlDisplayInfo, IDataFormAction, MessageService, MetadataService
+  APP_STORE,
+  AutoformConfiguration, ControlType, FormAction, FormActions, IAutoformConfig,
+  IControlDisplayInfo, IDataFormAction, MessageService, MetadataService, ServiceRequestsComponent
 } from '@fluxgate/client';
-import { IService, ServiceProxy, TableMetadata } from '@fluxgate/common';
+import { ICrudServiceRequests, IService, ServiceProxy, Store, TableMetadata } from '@fluxgate/common';
 import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/core';
 
 
@@ -144,7 +145,7 @@ import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/
 }
 `]
 })
-export class AutoformComponent extends BaseComponent<ServiceProxy<any, any>> {
+export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServiceRequests<any, any>> {
   protected static readonly logger = getLogger(AutoformComponent);
 
   public static DETAILS = 'Details';
@@ -312,7 +313,7 @@ export class AutoformComponent extends BaseComponent<ServiceProxy<any, any>> {
    */
   public submit() {
     if (this.action === FormActions.UPDATE) {
-      this.registerSubscription(this.service.update(this.value).subscribe(
+      this.registerSubscription(this.serviceRequests.update(this.value).subscribe(
         (value: any) => {
           this.resetFormGroup(this.value);
           this.addSuccessMessage(`Record updated.`);
@@ -322,7 +323,7 @@ export class AutoformComponent extends BaseComponent<ServiceProxy<any, any>> {
           this.handleError(error);
         }));
     } else if (this.action === FormActions.CREATE) {
-      this.registerSubscription(this.service.create(this.value).subscribe(
+      this.registerSubscription(this.serviceRequests.create(this.value).subscribe(
         (value: any) => {
           this.resetFormGroup(this.value);
           this.addSuccessMessage(`Record created.`);
@@ -341,7 +342,7 @@ export class AutoformComponent extends BaseComponent<ServiceProxy<any, any>> {
    * Löscht die Entity
    */
   public delete() {
-    this.registerSubscription(this.service.delete(this.service.getEntityId(this.value)).subscribe(
+    this.registerSubscription(this.serviceRequests.delete(this.serviceRequests.getEntityId(this.value)).subscribe(
       (value: any) => {
         this.resetFormGroup(this.value);
         this.addSuccessMessage(`Record deleted.`);
@@ -456,8 +457,9 @@ export class AutoformComponent extends BaseComponent<ServiceProxy<any, any>> {
 
       log.log(`table = ${tableMetadata.options.name}`);
 
-      const service = tableMetadata.getServiceRequestsInstance(this.injector);
-      this.setService(new ServiceProxy(service as IService<any, any>));
+      const store = this.injector.get(APP_STORE) as Store;
+      const serviceRequests = tableMetadata.getServiceRequestsInstance(this.injector, store);
+      this.setServiceRequests(serviceRequests);
     });
   }
 

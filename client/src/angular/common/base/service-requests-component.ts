@@ -13,7 +13,7 @@ import {
   IServiceRequests, IServiceState, ItemCreatedCommand,
   ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
-import { Assert } from '@fluxgate/core';
+import { Assert, Types } from '@fluxgate/core';
 
 import { MessageService } from '../../services/message.service';
 import { ExtendedCoreComponent } from './extended-core.component';
@@ -48,17 +48,12 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
     super(router, route, messageService);
 
     //
-    // Subscription nur einmal pro Store registrieren
+    // z.B. bei Verwendung in AutoformComponent ist zu diesem Zeitpunkt _serviceRequests noch undefiniert und
+    // wird erst über @see{setServiceRequests} gesetzt.
     //
-    if (!ServiceRequestsComponent.serviceRequestsSubscriptions.has(this._serviceRequests.storeId)) {
-      ServiceRequestsComponent.serviceRequestsSubscriptions.add(this._serviceRequests.storeId);
-
-      this.getStoreSubject(this._serviceRequests.storeId).subscribe((command) => {
-        this.onStoreUpdatedGlobal(command);
-      });
+    if (this._serviceRequests) {
+      this.setupServiceRequests();
     }
-
-    this.subscribeToStore(this._serviceRequests.storeId);
   }
 
 
@@ -147,5 +142,48 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
   protected get serviceRequests(): TServiceRequests {
     return this._serviceRequests;
   }
+
+
+  /**
+   * setzt die ServiceRequests-Instanz
+   *
+   * @protected
+   * @param {TServiceRequests} serviceRequests
+   *
+   * @memberof ServiceRequestsComponent
+   */
+  protected setServiceRequests(serviceRequests: TServiceRequests) {
+    Assert.that(!Types.isPresent(this._serviceRequests));
+
+    this._serviceRequests = serviceRequests;
+    this.setupServiceRequests();
+  }
+
+
+  /**
+   * registriert die ServiceRequests-Instanz für Store-Updates
+   *
+   * @protected
+   * @param {TServiceRequests} serviceRequests
+   *
+   * @memberof ServiceRequestsComponent
+   */
+  private setupServiceRequests() {
+    Assert.notNull(this._serviceRequests);
+
+    //
+    // Subscription nur einmal pro Store registrieren
+    //
+    if (!ServiceRequestsComponent.serviceRequestsSubscriptions.has(this._serviceRequests.storeId)) {
+      ServiceRequestsComponent.serviceRequestsSubscriptions.add(this._serviceRequests.storeId);
+
+      this.getStoreSubject(this._serviceRequests.storeId).subscribe((command) => {
+        this.onStoreUpdatedGlobal(command);
+      });
+    }
+
+    this.subscribeToStore(this._serviceRequests.storeId);
+  }
+
 
 }
