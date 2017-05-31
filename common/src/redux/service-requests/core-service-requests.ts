@@ -3,7 +3,11 @@ import { Subscriber } from 'rxjs/Subscriber';
 
 import { IException, IQuery } from '@fluxgate/core';
 
+import { EntityVersion } from '../../model/entityVersion';
 import { ICoreService } from '../../model/service/core-service.interface';
+import { IReadonlyService } from '../../model/service/readonly-service.interface';
+import { IService } from '../../model/service/service.interface';
+import { ProxyFactory } from '../cache/proxy-factory';
 import {
   ErrorCommand, FindingItemsCommand, ItemsFoundCommand, ItemsQueriedCommand,
   QueryingItemsCommand
@@ -37,10 +41,19 @@ export abstract class CoreServiceRequests<T> extends ServiceRequests implements 
     error: undefined
   };
 
+  private _coreService: ICoreService<T>;
 
   protected constructor(storeId: string | CommandStore<ICoreServiceState<T>>,
-    private _coreService: ICoreService<T>, store: Store, parentStoreId?: string) {
+    service: ICoreService<T>, store: Store, entityVersionService: IService<EntityVersion, string>,
+    parentStoreId?: string) {
     super(storeId, store, parentStoreId);
+
+    if (service.tableMetadata.options.isView) {
+      this._coreService = service;
+    } else {
+      this._coreService = ProxyFactory.createProxy(service as IService<any, any>,
+        entityVersionService) as any as ICoreService<T>;
+    }
   }
 
 

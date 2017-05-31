@@ -33,7 +33,8 @@ export class ProxyFactory {
    *
    * @memberof ProxyFactory
    */
-  public static createProxy<T extends IEntity<TId>, TId extends IToString>(service: IReadonlyService<T, TId>,
+  public static createProxy<T extends IEntity<TId>, TId extends IToString,
+    TService extends IService<any, any>>(service: TService,
     entityVersionService: IService<EntityVersion, string>): IService<T, TId> {
     Assert.notNull(service);
 
@@ -49,7 +50,7 @@ export class ProxyFactory {
 
     switch (proxyMode) {
       case ProxyModes.NOP:
-        return new NopProxy<T, TId>(service as IService<T, TId>);
+        return new NopProxy<T, TId>(service);
 
       case ProxyModes.CACHE:
         return new CacheProxy<T, TId>(service as IService<T, TId>);

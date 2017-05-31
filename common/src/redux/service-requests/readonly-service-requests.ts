@@ -48,14 +48,10 @@ export class ReadonlyServiceRequests<T extends IEntity<TId>, TId extends IToStri
     deletedId: null
   };
 
-  private _service: IReadonlyService<T, TId>;
 
   public constructor(storeId: string | CommandStore<ICrudServiceState<T, TId>>, service: IReadonlyService<T, TId>,
     store: Store, entityVersionService: IService<EntityVersion, string>, parentStoreId?: string) {
-    super(storeId, service, store, parentStoreId);
-
-    this._service = ProxyFactory.createProxy(service as any as IReadonlyService<IEntity<TId>, TId>,
-      entityVersionService) as any as IReadonlyService<T, TId>;
+    super(storeId, service, store, entityVersionService, parentStoreId);
   }
 
 
@@ -90,10 +86,10 @@ export class ReadonlyServiceRequests<T extends IEntity<TId>, TId extends IToStri
 
 
   public getEntityId(item: T): TId {
-    return this._service.getEntityId(item);
+    return this.getService().getEntityId(item);
   }
 
   protected getService(): IReadonlyService<T, TId> {
-    return this._service;
+    return super.getService() as IReadonlyService<T, TId>;
   }
 }
