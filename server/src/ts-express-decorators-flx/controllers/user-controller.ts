@@ -47,7 +47,7 @@ export class UserController extends ControllerBase<User, number> {
 
 
   @Authenticated({ role: 'admin' })
-  @Post('/')
+  @Post('/query')
   public query(
     @Request() request: IBodyRequest<IQuery>
     ): Promise<QueryResult<User>> {
