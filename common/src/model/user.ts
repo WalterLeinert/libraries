@@ -82,7 +82,7 @@ export class User extends FlxEntity<number> implements IUser {
     return sb.toString();
   }
 
-  @Column({ name: 'user_deleted' })
+  @Column({ name: 'user_deleted', hidden: true })
   public deleted?: boolean;
 
 

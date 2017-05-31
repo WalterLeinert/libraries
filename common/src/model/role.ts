@@ -58,7 +58,7 @@ export class Role extends FlxEntity<number> implements IRole {
   @Column({ name: 'role_description', displayName: 'Description' })
   public description: string;
 
-  @Column({ name: 'role_deleted' })
+  @Column({ name: 'role_deleted', hidden: true })
   public deleted?: boolean;
 
   /**
