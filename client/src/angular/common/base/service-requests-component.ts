@@ -172,7 +172,7 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
     Assert.notNull(this._serviceRequests);
 
     //
-    // Subscription nur einmal pro Store registrieren
+    // globale Subscription (für zentrale Infomeldungen) nur einmal pro Store registrieren
     //
     if (!ServiceRequestsComponent.serviceRequestsSubscriptions.has(this._serviceRequests.storeId)) {
       ServiceRequestsComponent.serviceRequestsSubscriptions.add(this._serviceRequests.storeId);
@@ -184,6 +184,5 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
 
     this.subscribeToStore(this._serviceRequests.storeId);
   }
-
 
 }
