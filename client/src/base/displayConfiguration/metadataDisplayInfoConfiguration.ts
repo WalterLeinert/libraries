@@ -101,7 +101,10 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
     const columnInfos: IControlDisplayInfo[] = [];
 
     for (const metaData of this.tableMetadata.columnMetadata) {
-      if (metaData.options.displayName) {
+      //
+      // nur DisplayInfo generieren, falls hidden nicht gesetzt ist
+      //
+      if (!metaData.options.hidden) {
         let dataType = DataTypes.mapColumnTypeToDataType(metaData.propertyType);
         let enumInfo;
 
