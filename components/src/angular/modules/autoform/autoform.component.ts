@@ -23,7 +23,7 @@ import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/
 @Component({
   selector: 'flx-autoform',
   template: `
-<p-dialog [(visible)]="dataItem" [header]="pageTitle" (onBeforeHide)="onBeforeDialogHide($event)" [responsive]="true" showEffect="fade"
+<p-dialog [(visible)]="dataItem" [header]="pageTitle" (onHide)="onBeforeDialogHide($event)" [responsive]="true" showEffect="fade"
   [modal]="true" width="600">
   <div class="container-fluid">
     <form *ngIf="dataItem" class="form-horizontal" [formGroup]="getForm()">
@@ -282,7 +282,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
    * Handler für das Schliessen über ESC oder close-icon
    */
   public onBeforeDialogHide() {
-    this.closePopup(true);
+    this.closePopup();
   }
 
 
@@ -290,21 +290,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
    * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
    */
   public cancel(): void {
-    if (this.hasChanges()) {
-      if (confirm('You have unsaved changes: OK to discard?')) {
-        this.doClose(true);
-      }
-
-      // TODO: auf confirmAction umstellen
-      // this.confirmAction({
-      //   header: 'Unsaved Changes',
-      //   message: 'You have unsaved changes: OK to discard?'
-      // }, () =>
-      //     this.doClose(cancelled)
-      // );
-    } else {
-      this.doClose(true);
-    }
+    this.closePopup();
   }
 
 
@@ -316,7 +302,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       this.registerSubscription(this.serviceRequests.update(this.value).subscribe(
         (value: any) => {
           this.resetFormGroup(this.value);
-          this.closePopup(false);
+          this.doClose(false);
         },
         (error: Error) => {
           this.handleError(error);
@@ -325,7 +311,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       this.registerSubscription(this.serviceRequests.create(this.value).subscribe(
         (value: any) => {
           this.resetFormGroup(this.value);
-          this.closePopup(false);
+          this.doClose(false);
         },
         (error: Error) => {
           this.handleError(error);
@@ -343,7 +329,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     this.registerSubscription(this.serviceRequests.delete(this.serviceRequests.getEntityId(this.value)).subscribe(
       (value: any) => {
         this.resetFormGroup(this.value);
-        this.closePopup(false);
+        this.doClose(false);
       },
       (error: Error) => {
         this.handleError(error);
@@ -464,44 +450,67 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   }
 
 
-  private closePopup(cancelled: boolean) {
+  /**
+   * Schliesst Autoform, falls keine ungespeicherten Änderungen vorliegen bzw. das Schliessen bestätigt wurde.
+   *
+   * @private
+   *
+   * @memberof AutoformComponent
+   */
+  private closePopup() {
     if (this.hasChanges()) {
+
       if (confirm('You have unsaved changes: OK to discard?')) {
-        this.doClose(cancelled);
+        this.doClose(true);
       }
 
-      // TODO: auf confirmAction umstellen
       // this.confirmAction({
       //   header: 'Unsaved Changes',
       //   message: 'You have unsaved changes: OK to discard?'
       // }, () =>
-      //     this.doClose(cancelled)
+      //     this.doClose(true)
       // );
     } else {
-      this.doClose(cancelled);
+      this.doClose(false);
     }
   }
 
 
-  private doClose(cancelled: boolean) {
-    let navigationPath: string;
+  /**
+   * Schliesst Autoform, indem auf die vorherige Seite navigiert wird.
+   *
+   * @private
+   * @param {boolean} formResetRequired - falls true, wird ein resetFormGroup durchgeführt,
+   * damit nicht ein GuardService die Navigation verhindert.
+   *
+   * @memberof AutoformComponent
+   */
+  private doClose(formResetRequired: boolean) {
+    using(new XLog(AutoformComponent.logger, levels.INFO, 'doClose', `formResetRequired = ${formResetRequired}, action = ${this.action}`), (log) => {
+      let navigationPath: string;
 
-    switch (this.action) {
-      // die Navigation für create hat keine Id im Pfad (.../create)
-      case FormActions.CREATE:
-        navigationPath = '..';
-        break;
+      if (formResetRequired) {
+        // weitere Abfragen unterdrücken
+        this.resetFormGroup(this.value);
+      }
 
-      case FormActions.UPDATE:
-        // die Navigation für update hat eine Id im Pfad (.../update/:id)
-        navigationPath = '../..';
-        break;
+      switch (this.action) {
+        // die Navigation für create hat keine Id im Pfad (.../create)
+        case FormActions.CREATE:
+          navigationPath = '..';
+          break;
 
-      default:
-        throw new NotSupportedException(`unsupported action ${this.action}`);
-    }
+        case FormActions.UPDATE:
+          // die Navigation für update hat eine Id im Pfad (.../update/:id)
+          navigationPath = '../..';
+          break;
 
-    this.navigate([navigationPath, { refresh: !cancelled }], { relativeTo: this.route });
+        default:
+          throw new NotSupportedException(`unsupported action ${this.action}`);
+      }
+
+      this.navigate([navigationPath, { refresh: !formResetRequired }], { relativeTo: this.route });
+    });
   }
 
 
