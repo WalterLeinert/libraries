@@ -316,7 +316,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       this.registerSubscription(this.serviceRequests.update(this.value).subscribe(
         (value: any) => {
           this.resetFormGroup(this.value);
-          this.addSuccessMessage(`Record updated.`);
           this.closePopup(false);
         },
         (error: Error) => {
@@ -326,7 +325,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       this.registerSubscription(this.serviceRequests.create(this.value).subscribe(
         (value: any) => {
           this.resetFormGroup(this.value);
-          this.addSuccessMessage(`Record created.`);
           this.closePopup(false);
         },
         (error: Error) => {
@@ -345,7 +343,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     this.registerSubscription(this.serviceRequests.delete(this.serviceRequests.getEntityId(this.value)).subscribe(
       (value: any) => {
         this.resetFormGroup(this.value);
-        this.addSuccessMessage(`Record deleted.`);
         this.closePopup(false);
       },
       (error: Error) => {
