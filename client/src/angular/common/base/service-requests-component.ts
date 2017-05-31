@@ -56,6 +56,30 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
     }
   }
 
+  /**
+   * Liefert true, falls keine Änderungen an den Daten vorliegen oder diese invalid sind.
+   * Zur Verwendung der disabled-Steuerung eines Save-Buttons.
+   *
+   * @returns {boolean}
+   *
+   * @memberof ServiceRequestsComponent
+   */
+  public isSaveDisabled(): boolean {
+    return !(this.hasChanges() && this.isValid());
+  }
+
+  /**
+   * Liefert true, falls im GUI ein Delete-Button disabled werden soll.
+   *
+   * @returns {boolean}
+   *
+   * @memberof ServiceRequestsComponent
+   */
+  public isDeleteDisabled(): boolean {
+    return false;
+  }
+
+
 
   /**
    * Liefert @param{item} als zu selektierendes Item oder (falls item undefined) das erste Item
