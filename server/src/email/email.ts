@@ -4,22 +4,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 import { IServerConfiguration } from '../ts-express-decorators-flx/serverBase';
+import { IMessage } from './email.interface';
 
-
-/**
- * Interface für eigentliche Email
- *
- * @export
- * @interface IMessage
- */
-export interface IMessage {
-  from?: string;
-  to: string;
-  cc?: string;
-  bcc?: string;
-  subject: string;
-  text: string;
-}
 
 
 /**
@@ -30,14 +16,14 @@ export interface IMessage {
  */
 export class Email {
   protected static readonly logger = getLogger(Email);
-  public constructor(private configuration: IServerConfiguration) { }
+  public constructor(private configuration: IMessage) { }
 
   public sendmail(message: IMessage): void {
     return using(new XLog(Email.logger, levels.INFO, 'Initialize Emailsystem'), (log) => {
       const email = require('emailjs/email');
-      const mailtransport = email.server.connect(this.configuration.mail);
+      const mailtransport = email.server.connect(this.configuration);
       if (!message.from) {
-        message.from = this.configuration.mail.from;
+        message.from = this.configuration.from;
       }
 
       mailtransport.send(message, (err, themessage) => {

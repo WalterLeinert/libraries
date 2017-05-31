@@ -1,6 +1,9 @@
-import { IPrinter } from './printer.interface';
-import { IPrinterTray } from './printertray.interface';
+import { Serializable } from '@fluxgate/core';
 
+import { IPrinter } from './printer.interface';
+import { IPrinterTray } from './printerTray.interface';
+
+@Serializable()
 export class Printer implements IPrinter {
 
   constructor(public name: string, public orientation?: string, public type?: string, public state?: string,
