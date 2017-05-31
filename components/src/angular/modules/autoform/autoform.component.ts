@@ -126,7 +126,7 @@ import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/
       <p-footer>
         <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
             <button type="button" class="btn btn-primary" (click)='cancel()'>Cancel</button>
-            <button type="button" class="btn btn-primary" (click)='submit()'>Save</button>
+            <button type="button" class="btn btn-primary" [disabled]="isSaveDisabled()" (click)='submit()'>Save</button>
             <button type="button" class="btn btn-primary" (click)='confirmDelete()'>Delete</button>
         </div>
       </p-footer>
@@ -402,6 +402,9 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     return undefined;
   }
 
+  public isSaveDisabled(): boolean {
+    return !(this.hasChanges() && this.isValid());
+  }
 
 
   // -------------------------------------------------------------------------------------
