@@ -27,8 +27,22 @@ export class PrintService extends NanoService<IPrinter> {
     request: ISessionRequest
   ): Promise<FindResult<IPrinter>> {
     return new Promise<FindResult<IPrinter>>((resolve) => {
-      const printer = new Printer('pr01');
-      resolve(new FindResult([printer], -1));
+
+// var req = http.get(options, function (res) {
+//     var bodyChunks = [];
+//     res.on('data', function (chunk) {
+//         bodyChunks.push(chunk);
+//     }).on('end', function () {
+//         var body = Buffer.concat(bodyChunks);
+
+//         myreturn = JSON.parse(body.toString());
+        const printers: IPrinter[] = [];
+        resolve(new FindResult(printers, undefined));
+
+//     })
+// });
+      // const printer = new Printer('pr01');
+      // resolve(new FindResult([printer], -1));
     });
   }
 

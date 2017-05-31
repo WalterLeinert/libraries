@@ -38,8 +38,8 @@ export abstract class NanoService<T> implements INanoService<T>  {
     return using(new XLog(NanoService.logger, levels.INFO, 'find', `nano`), (log) => {
       return new Promise<FindResult<T>>((resolve, reject) => {
         resolve(new FindResult([], undefined));
-      })
-    })
+      });
+    });
   }
 
   protected createBusinessException(error: string | IException | Error): IException {
