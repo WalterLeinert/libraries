@@ -153,8 +153,7 @@ export abstract class ServerBase extends ServerLoader {
         const key = FileSystem.readTextFile(errorLogger, this.configuration.cert.keyPath, 'Private Key');
 
 
-        this.setEndpoint(this.configuration.express.endPoint)
-          .scan(serverControllers)
+        this.mount(this.configuration.express.endPoint, serverControllers)
           .createHttpServer(this.configuration.express.port)
           .createHttpsServer({
             port: this.configuration.express.httpsPort,
