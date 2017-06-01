@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@fluxgate/core@^2.2.4":
-  version "2.2.4"
-  resolved "http://localhost:4873/@fluxgate%2fcore/-/core-2.2.4.tgz#48ddd91747f4fa3a30f6ffee22b80146300f595a"
+"@fluxgate/core@^2.2.6-beta.0":
+  version "2.2.6-beta.0"
+  resolved "http://localhost:4873/@fluxgate%2fcore/-/core-2.2.6-beta.0.tgz#6e072fd295c52fb1bbf311c53bb00778d5e36c55"
   dependencies:
     dashdash "^1.14.1"
     left-pad "^1.1.3"
