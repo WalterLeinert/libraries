@@ -73,6 +73,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   private formInfos: Dictionary<string, FormGroupInfo> = new Dictionary<string, FormGroupInfo>();
   // << Formvalidierung
   private subscriptions: Subscription[] = [];
+  private destroyed = false;
 
   private store: Store;
   private _confirmationService: ConfirmationService;
@@ -117,6 +118,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    */
   public ngOnDestroy() {
     using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnDestroy', `class: ${this.constructor.name}`), (log) => {
+      this.destroyed = true;
 
       log.log(`unsubscribe store ${this.subscriptions.length} subscriptions`);
       Observable.from(this.subscriptions).subscribe((sub) => {
