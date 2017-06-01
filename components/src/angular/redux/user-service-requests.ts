@@ -15,7 +15,7 @@ export class UserServiceRequests extends EnhancedServiceRequests<IUser, number, 
 
   constructor(service: UserService, @Inject(APP_STORE) store: Store,
     @Inject(ENTITY_VERSION_SERVICE) entityVersionService?: IService<EntityVersion, string>) {
-    super(UserStore.ID, service, store);
+    super(UserStore.ID, service, store, entityVersionService);
   }
 }
 
