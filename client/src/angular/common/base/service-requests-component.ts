@@ -31,7 +31,6 @@ import { ExtendedCoreComponent } from './extended-core.component';
 export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServiceRequests>
   extends ExtendedCoreComponent {
   protected static readonly logger = getLogger(ServiceRequestsComponent);
-  private static serviceRequestsSubscriptions: Set<string> = new Set<string>();
 
 
   /**
@@ -108,6 +107,8 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
   protected onStoreUpdatedGlobal<T>(command: ServiceCommand<T>): void {
     using(new XLog(ServiceRequestsComponent.logger, levels.INFO, 'onStoreUpdatedGlobal',
       `class: ${this.constructor.name}`), (log) => {
+        super.onStoreUpdatedGlobal(command);
+
         log.log(`command = ${command.constructor.name}: ${command.toString()}`);
 
         const state = super.getStoreState(command.storeId);
@@ -198,8 +199,8 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
     //
     // globale Subscription (für zentrale Infomeldungen) nur einmal pro Store registrieren
     //
-    if (!ServiceRequestsComponent.serviceRequestsSubscriptions.has(this._serviceRequests.storeId)) {
-      ServiceRequestsComponent.serviceRequestsSubscriptions.add(this._serviceRequests.storeId);
+    if (!ServiceRequestsComponent.hasStoreSubscription(this._serviceRequests.storeId)) {
+      ServiceRequestsComponent.addStoreSubscription(this._serviceRequests.storeId);
 
       this.getStoreSubject(this._serviceRequests.storeId).subscribe((command) => {
         this.onStoreUpdatedGlobal(command);

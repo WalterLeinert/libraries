@@ -21,7 +21,8 @@ import {
 } from '@fluxgate/core';
 
 import {
-  CompoundValidator, CurrentItemSetCommand, CurrentUserStore, ICurrentItemServiceState, IEntity, IServiceState,
+  CompoundValidator, CurrentItemSetCommand, CurrentUserStore, EntityVersionCache,
+  ICurrentItemServiceState, IEntity, IServiceState,
   IUser, PatternValidator, RangeValidator,
   RequiredValidator, ServiceCommand, Store, TableMetadata
 } from '@fluxgate/common';
@@ -59,6 +60,9 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   private static subscriptionMap: Dictionary<UniqueIdentifiable, Subscription[]> =
   new Dictionary<UniqueIdentifiable, Subscription[]>();
 
+  // statisches Set für globale/unique Store-Subscriptions
+  private static storeSubscriptions: Set<string> = new Set<string>();
+
   // TODO: über Language-Service ermitteln
   public static SUCCESS_TEXT = 'Success!';
   public static INFO_TEXT = 'Info';
@@ -80,6 +84,17 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     this.store = AppInjector.instance.getInstance<Store>(APP_STORE);
     this._confirmationService = AppInjector.instance.getInstance<ConfirmationService>(ConfirmationService);
     this._currentUserService = AppInjector.instance.getInstance<CurrentUserService>(CurrentUserService);
+
+    /**
+     * Änderungen am CurrentUserStore global überwachen
+     */
+    if (!CoreComponent.hasStoreSubscription(CurrentUserStore.ID)) {
+      CoreComponent.addStoreSubscription(CurrentUserStore.ID);
+
+      this.getStoreSubject(CurrentUserStore.ID).subscribe((command) => {
+        this.onStoreUpdatedGlobal(command);
+      });
+    }
   }
 
 
@@ -627,7 +642,46 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * "virtuelle" Methode; muss in konkreten Klassen überschrieben werden, um die entsprechenden Statusupdates
-   * mitzubekommen.
+   * mitzubekommen. Dieser Handler wird nur einmal pro CommandStore registriert!
+   *
+   * @protected
+   * @template T
+   * @param {ServiceCommand<T>} command
+   *
+   * @memberof CoreComponent
+   */
+  protected onStoreUpdatedGlobal<T>(command: ServiceCommand<T>): void {
+    Assert.notNull(command);
+
+    using(new XLog(CoreComponent.logger, levels.INFO, 'onStoreUpdatedGlobal',
+      `class: ${this.constructor.name}`), (log) => {
+        log.log(`command = ${command.constructor.name}: ${command.toString()}`);
+
+        const state = this.getStoreState(command.storeId);
+        if (state.error) {
+          log.error(`${state.error}`);
+        }
+
+        if (command.storeId === CurrentUserStore.ID && command instanceof CurrentItemSetCommand) {
+          const userState = state as ICurrentItemServiceState<IUser>;
+
+          // beim Logoff wird
+          // - der Store zurückgesetzt, damit wir nicht beim nächsten Userlogin
+          //   falsche oder eigentlich nicht verfügbare (Security) Daten übernehmen
+          // - der EntityVersionCache zurückgesetzt
+          if (!Types.isPresent(userState.currentItem)) {
+            this.resetStore();
+
+            EntityVersionCache.instance.reset();
+          }
+        }
+      });
+  }
+
+
+  /**
+   * "virtuelle" Methode; muss in konkreten Klassen überschrieben werden, um die entsprechenden Statusupdates
+   * mitzubekommen. Dieser Handler wird für jede Componenten-Instanz registriert!
    *
    * @protected
    * @template T
@@ -638,27 +692,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    */
   protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T>): void {
     Assert.notNull(command);
-
-    using(new XLog(CoreComponent.logger, levels.INFO, 'onStoreUpdated', `class: ${this.constructor.name}`), (log) => {
-      log.log(`command = ${command.constructor.name}: ${command.toString()}`);
-
-      const state = this.getStoreState(command.storeId);
-      if (state.error) {
-        log.error(`${state.error}`);
-      }
-
-      if (command.storeId === CurrentUserStore.ID && command instanceof CurrentItemSetCommand) {
-        const userState = state as ICurrentItemServiceState<IUser>;
-
-        // beim Logoff wird der Store zurückgesetzt, damit wir nicht beim nächsten Userlogin
-        // falsche oder eigentlich nicht verfügbare (Security) Daten übernehmen
-        if (!Types.isPresent(userState.currentItem)) {
-          this.resetStore();
-        }
-      }
-    });
   }
-
 
 
   /**
@@ -702,6 +736,15 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   protected getStoreSubject(storeId: string): CustomSubject<any> {
     return this.store.subject(storeId);
+  }
+
+
+  protected static hasStoreSubscription(storeId: string): boolean {
+    return CoreComponent.storeSubscriptions.has(storeId);
+  }
+
+  protected static addStoreSubscription(storeId: string) {
+    CoreComponent.storeSubscriptions.add(storeId);
   }
 
 }
