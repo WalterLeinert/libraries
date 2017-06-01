@@ -4,10 +4,9 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { Assert, IException, IQuery, NotSupportedException } from '@fluxgate/core';
 
 import { TableMetadata } from '../../model/metadata';
-import { EnumTableService, FindResult } from '../../model/service';
+import { FindResult } from '../../model/service';
 import {
-  ErrorCommand, FindingItemsCommand, ItemsFoundCommand, ItemsQueriedCommand,
-  QueryingItemsCommand
+  ErrorCommand, FindingItemsCommand, ItemsFoundCommand
 } from '../command';
 import { ReduxStore } from '../decorators/redux-store.decorator';
 import { ICoreServiceState } from '../state/core-service-state.interface';

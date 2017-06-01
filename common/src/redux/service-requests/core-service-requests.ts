@@ -5,7 +5,6 @@ import { IException, IQuery } from '@fluxgate/core';
 
 import { EntityVersion } from '../../model/entityVersion';
 import { ICoreService } from '../../model/service/core-service.interface';
-import { IReadonlyService } from '../../model/service/readonly-service.interface';
 import { IService } from '../../model/service/service.interface';
 import { ProxyFactory } from '../cache/proxy-factory';
 import {

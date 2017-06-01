@@ -13,7 +13,6 @@ import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
 import { IReadonlyService } from '../../model/service/readonly-service.interface';
 import { IService } from '../../model/service/service.interface';
-import { ProxyFactory } from '../cache/proxy-factory';
 import {
   ErrorCommand,
   FindingItemByIdCommand,

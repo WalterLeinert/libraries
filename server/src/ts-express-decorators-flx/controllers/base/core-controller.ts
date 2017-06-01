@@ -6,7 +6,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { FindResult, QueryResult } from '@fluxgate/common';
-import { Assert, IQuery } from '@fluxgate/core';
+import { IQuery } from '@fluxgate/core';
 
 import { ICoreService } from '../../services/core-service.interface';
 import { IBodyRequest } from '../../session/body-request.interface';

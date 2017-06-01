@@ -1,9 +1,6 @@
 // Fluxgate
-import { FindByIdResult, IEntity } from '@fluxgate/common';
-import { IException, IToString } from '@fluxgate/core';
+import { IException } from '@fluxgate/core';
 
-import { ISessionRequest } from '../session/session-request.interface';
-import { ICoreService } from './core-service.interface';
 
 /**
  * Interface für lesende CRUD-Operationen auf der DB über knex.

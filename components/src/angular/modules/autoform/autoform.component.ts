@@ -16,7 +16,7 @@ import {
   AutoformConfiguration, ControlType, FormAction, FormActions, IAutoformConfig,
   IControlDisplayInfo, IDataFormAction, MessageService, MetadataService, ServiceRequestsComponent
 } from '@fluxgate/client';
-import { ICrudServiceRequests, IService, ServiceProxy, Store, TableMetadata } from '@fluxgate/common';
+import { ICrudServiceRequests, Store, TableMetadata } from '@fluxgate/common';
 import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/core';
 
 

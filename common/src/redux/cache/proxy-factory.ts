@@ -4,7 +4,6 @@ import { AppConfig, IAppConfig } from '../../base/appConfig';
 import { AppRegistry } from '../../base/appRegistry';
 import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
-import { IReadonlyService } from '../../model/service/readonly-service.interface';
 import { IService } from '../../model/service/service.interface';
 import { CacheProxy } from './cache-proxy';
 import { EntityVersionProxy } from './entity-version-proxy';

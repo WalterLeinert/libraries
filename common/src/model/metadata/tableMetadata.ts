@@ -5,7 +5,6 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { Assert, ClassMetadata, Dictionary, Funktion, IToString } from '@fluxgate/core';
 
-import { ICoreServiceRequests } from '../../redux/service-requests/core-service-requests.interface';
 import { ICrudServiceRequests } from '../../redux/service-requests/crud-service-requests.interface';
 import { EnumTableServiceRequests } from '../../redux/service-requests/enum-table-service-requests';
 import { Store } from '../../redux/store/store';

@@ -3,9 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { IServerConfiguration } from '../ts-express-decorators-flx/serverBase';
 import { IMessage } from './email.interface';
-
 
 
 /**

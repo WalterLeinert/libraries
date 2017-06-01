@@ -1,9 +1,10 @@
-import { Authenticated, Controller, Delete, Get, PathParams, Post, Put, Request } from 'ts-express-decorators';
+import {
+  Authenticated, Controller, Get, Request
+} from 'ts-express-decorators';
 
 // Fluxgate
 import {
-  CreateResult, DeleteResult, FindByIdResult, FindResult, IPrinter, QueryResult,
-  Role, UpdateResult
+  FindResult, IPrinter
 } from '@fluxgate/common';
 
 import { PrintService } from '../services/print.service';
@@ -13,7 +14,6 @@ import { ControllerCore } from './base/controller-core';
 
 @Controller('/printer')
 export class PrinterController extends ControllerCore {
-
 
   constructor(service: PrintService) {
     super(service);
