@@ -339,10 +339,15 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
   public confirmDelete() {
     using(new XLog(AutoformComponent.logger, levels.INFO, 'confirmDelete'), (log) => {
-      this.confirmAction({
-        header: 'Delete',
-        message: 'Do you want to delete this record?'
-      }, () => this.delete());
+
+      if (confirm('Do you want to delete this record?')) {
+        this.delete();
+      }
+
+      // this.confirmAction({
+      //   header: 'Delete',
+      //   message: 'Do you want to delete this record?'
+      // }, () => this.delete());
     });
   }
 
