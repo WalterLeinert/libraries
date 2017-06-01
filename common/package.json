@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/common",
-  "version": "2.2.6-beta.1",
+  "version": "2.2.6-beta.2",
   "description": "Fluxgate Library client/server übergreifend",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -17,6 +17,7 @@
     "@types/chai": "^3.4.34",
     "@types/chai-as-promised": "0.0.30",
     "@types/left-pad": "^1.1.0",
+    "@types/lru-cache": "^4.0.0",
     "@types/mocha": "^2.2.39",
     "@types/node": "7.0.14",
     "@types/tinycolor2": "^1.1.0",
@@ -45,6 +46,7 @@
   "dependencies": {
     "@fluxgate/core": "^2.2.6-beta.0",
     "@fluxgate/platform": "^2.2.6-beta.0",
+    "lru-cache": "^4.0.2",
     "moment": "^2.17.1",
     "object.entries": "^1.0.4",
     "reflect-metadata": "^0.1.9",

@@ -1,27 +1,50 @@
+// -------------------------------------- logging --------------------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
+
 import { Assert, Dictionary } from '@fluxgate/core';
 
 export class EntityVersionCache {
+  protected static readonly logger = getLogger(EntityVersionCache);
+
   public static instance = new EntityVersionCache();
 
   private entityDict: Dictionary<string, EntityVersionCacheEntry<any>> =
   new Dictionary<string, EntityVersionCacheEntry<any>>();
 
   public set<T>(entity: string, cacheEntry: EntityVersionCacheEntry<T>) {
-    Assert.notNullOrEmpty(entity);
-    Assert.notNull(cacheEntry);
+    using(new XLog(EntityVersionCache.logger, levels.INFO, 'set'), (log) => {
+      Assert.notNullOrEmpty(entity);
+      Assert.notNull(cacheEntry);
 
-    this.entityDict.set(entity, cacheEntry);
+      if (log.isDebugEnabled()) {
+        log.debug(`entity = ${entity}: ${JSON.stringify(cacheEntry)}`);
+      }
+
+      this.entityDict.set(entity, cacheEntry);
+    });
   }
 
   public get<T>(entity: string): EntityVersionCacheEntry<T> {
-    Assert.notNullOrEmpty(entity);
+    return using(new XLog(EntityVersionCache.logger, levels.INFO, 'get'), (log) => {
+      Assert.notNullOrEmpty(entity);
 
-    return this.entityDict.get(entity);
+      const cacheEntry = this.entityDict.get(entity);
+
+      if (log.isDebugEnabled()) {
+        log.debug(`entity = ${entity}: ${JSON.stringify(cacheEntry)}`);
+      }
+
+      return cacheEntry;
+    });
   }
 
 
   public reset() {
-    this.entityDict.clear();
+    using(new XLog(EntityVersionCache.logger, levels.INFO, 'reset'), (log) => {
+      this.entityDict.clear();
+    });
   }
 }
 
