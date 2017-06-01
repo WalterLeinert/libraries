@@ -42,12 +42,21 @@ export abstract class ResolverBase<T extends IEntity<TId>, TId extends IToString
       const idConverted = idConverter.convertBack(id);
 
 
+      if (log.isDebugEnabled()) {
+        log.debug(`entity: ${this.serviceRequests.getModelClassName()}: id = ${id}`);
+      }
+
       /**
        * Hinweis: first() ist wichtig!
        * "Currently the router waits for the observable to close.
        * You can ensure it gets closed after the first value is emitted, by using the first() operator."
        */
       return this.serviceRequests.findById(idConverted)
+        .do((item) => {
+          if (log.isDebugEnabled()) {
+            log.debug(`item = ${JSON.stringify(item)}`);
+          }
+        })
         .first()
         .catch((error: Error) => {
           log.error(`error = ${error}`);

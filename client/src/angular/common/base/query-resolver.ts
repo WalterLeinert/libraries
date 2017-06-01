@@ -58,7 +58,7 @@ export abstract class QueryResolver<T> implements Resolve<T> {
       );
 
       if (log.isDebugEnabled()) {
-        log.debug(`entity: ${this.serviceRequests.getModelClassName}: query = ${JSON.stringify(query)}`);
+        log.debug(`entity: ${this.serviceRequests.getModelClassName()}: query = ${JSON.stringify(query)}`);
       }
 
       /**
