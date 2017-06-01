@@ -159,6 +159,11 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
     super.ngOnInit();
   }
 
+  // tslint:disable-next-line:use-life-cycle-interface
+  public ngOnDestroy() {
+    super.ngOnDestroy();
+  }
+
 
   public validate(control: FormControl): { [key: string]: any } {
     return (!this.parseError) ? null : {
