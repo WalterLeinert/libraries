@@ -100,7 +100,7 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
 
                 // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
                 if (this.hasEntityVersionInfo()) {
-                  this.findEntityVersionAndResolve(trx, FindByIdResult, result, resolve);
+                  this.findEntityVersionAndResolve(trx, FindByIdResult, result, resolve, reject);
                 } else {
                   trx.commit();
                   resolve(new FindByIdResult<T, TId>(result, -1));

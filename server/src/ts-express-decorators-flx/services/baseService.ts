@@ -115,7 +115,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                     subject = this.createModelInstance(dbSubject);
 
                     if (this.hasEntityVersionInfo()) {
-                      this.findEntityVersionAndResolve(trx, CreateResult, subject, resolve);
+                      this.findEntityVersionAndResolve(trx, CreateResult, subject, resolve, reject);
                     } else {
                       trx.commit();
 
@@ -193,7 +193,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                       const resultSubject = this.createModelInstance(dbSubject);
 
                       if (this.hasEntityVersionInfo()) {
-                        this.findEntityVersionAndResolve(trx, UpdateResult, resultSubject, resolve);
+                        this.findEntityVersionAndResolve(trx, UpdateResult, resultSubject, resolve, reject);
                       } else {
 
                         trx.commit();
@@ -215,7 +215,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                       const resultSubject = this.createModelInstance(dbSubject);
 
                       if (this.hasEntityVersionInfo()) {
-                        this.findEntityVersionAndResolve(trx, UpdateResult, resultSubject, resolve);
+                        this.findEntityVersionAndResolve(trx, UpdateResult, resultSubject, resolve, reject);
                       } else {
 
                         trx.commit();
@@ -287,7 +287,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                   } else {
 
                     if (this.hasEntityVersionInfo()) {
-                      this.findEntityVersionAndResolve(trx, DeleteResult, id, resolve);
+                      this.findEntityVersionAndResolve(trx, DeleteResult, id, resolve, reject);
                     } else {
 
                       trx.commit();

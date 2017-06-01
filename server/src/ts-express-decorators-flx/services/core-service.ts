@@ -105,7 +105,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
                 // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
                 if (this.hasEntityVersionInfo()) {
-                  this.findEntityVersionAndResolve(trx, FindResult, result, resolve);
+                  this.findEntityVersionAndResolve(trx, FindResult, result, resolve, reject);
                 } else {
                   trx.commit();
                   resolve(new FindResult(result, -1));
@@ -173,7 +173,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
                 // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
                 if (this.hasEntityVersionInfo()) {
-                  this.findEntityVersionAndResolve(trx, QueryResult, result, resolve);
+                  this.findEntityVersionAndResolve(trx, QueryResult, result, resolve, reject);
                 } else {
                   trx.commit();
                   resolve(new QueryResult(result, -1));
@@ -311,7 +311,8 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    * @memberof ReadonlyService
    */
   protected findEntityVersionAndResolve<TResult>(trx: Knex.Transaction, resultClazz: ICtor<ServiceResult>,
-    queryResult: TResult, resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void)) {
+    queryResult: TResult, resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void),
+    reject: ((reason?: any) => void)) {
 
     using(new XLog(CoreService.logger, levels.INFO, 'findEntityVersionAndResolve'), (log) => {
 
@@ -329,7 +330,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
           log.debug('queryResult after commit: ', queryResult);
 
           resolve(new resultClazz(queryResult, entityVersion));
-        });
+        }).catch(reject);
     });
   }
 
