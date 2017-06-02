@@ -124,11 +124,6 @@ class ParentStoreTest extends ReduxBaseTest<IUser, number, any> {
   }
 
 
-  @test 'should set currentItem in childStore only'() {
-    const state0 = this.getParentCurrentItemStateAt(0);
-  }
-
-
   protected before(done: (err?: any) => void) {
     super.before(() => {
 
