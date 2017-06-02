@@ -9,7 +9,8 @@ export class Validators {
   '(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?';
 
   public static email: IValidation = new PatternValidator(Validators.mailPattern, 'Invalid Email');
-  public static integer: IValidation = new PatternValidator('[+-]?[0-9]+', 'Invalid numnber');
+  public static integer: IValidation = new PatternValidator('^[+-]?[0-9]+', 'Invalid number');
+  public static positiveInteger: IValidation = new PatternValidator('^[0-9]+', 'Invalid positive number');
 
   public static required: IValidation = new RequiredValidator();
 

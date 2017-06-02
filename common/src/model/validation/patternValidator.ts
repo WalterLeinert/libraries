@@ -1,4 +1,4 @@
-import { Assert, StringBuilder, Utility } from '@fluxgate/core';
+import { Assert, StringBuilder, Types } from '@fluxgate/core';
 
 import { ValidationResult } from './validationResult';
 import { Validator } from './validator';
@@ -14,11 +14,12 @@ export class PatternValidator extends Validator {
   }
 
   public validate(value: string, propertyName?: string): ValidationResult {
-    const sb = new StringBuilder(this.formatPropertyName(propertyName));
-
-    if (Utility.isNullOrEmpty(value)) {
+    if (!Types.isPresent(value)) {
       return ValidationResult.Ok;
     }
+    Assert.that(Types.isString(value));
+
+    const sb = new StringBuilder(this.formatPropertyName(propertyName));
 
     const matchResult = value.match(this.regex);
 

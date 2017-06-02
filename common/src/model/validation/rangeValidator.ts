@@ -1,4 +1,4 @@
-import { Assert, StringBuilder } from '@fluxgate/core';
+import { Assert, StringBuilder, Types } from '@fluxgate/core';
 
 import { ValidationResult } from './validationResult';
 import { Validator } from './validator';
@@ -16,39 +16,21 @@ export class RangeValidator extends Validator {
     Assert.that(_options.min !== undefined || _options.max !== undefined);
   }
 
-  public validate(value: string, propertyName?: string): ValidationResult {
-    if (this._options.min !== undefined) {
-      let error = true;
-      const sb = new StringBuilder(this.formatPropertyName(propertyName));
-      sb.append(`Text`);
+  public validate(value: any, propertyName?: string): ValidationResult {
+    if (!Types.isPresent(value)) {
+      return ValidationResult.Ok;
+    }
 
-      if (value === undefined) {
-        sb.append(' is missing and');
-      } else if (value.length < this._options.min) {
-        sb.append(` '${value}'`);
-      } else {
-        error = false;
-      }
-      if (error) {
-        sb.append(` must contain at least ${this._options.min} characters.`);
+    const sb = new StringBuilder(this.formatPropertyName(propertyName));
+
+    if (this._options.min !== undefined) {
+      if (!RangeValidator.isLessThan(value, this._options.min, sb)) {
         return ValidationResult.create(false, sb.toString());
       }
     }
 
     if (this._options.max !== undefined) {
-      let error = true;
-      const sb = new StringBuilder(this.formatPropertyName(propertyName));
-      sb.append(`Text`);
-
-      if (value === undefined) {
-        sb.append(' ist missing and');
-      } else if (value.length > this._options.max) {
-        sb.append(` '${value}'`);
-      } else {
-        error = false;
-      }
-      if (error) {
-        sb.append(` may contain not more than ${this._options.max} characters.`);
+      if (!RangeValidator.isGreaterThan(value, this._options.max, sb)) {
         return ValidationResult.create(false, sb.toString());
       }
     }
@@ -56,7 +38,54 @@ export class RangeValidator extends Validator {
     return ValidationResult.Ok;
   }
 
+
   public get options(): IRangeOptions {
     return this._options;
+  }
+
+
+  private static isLessThan(value: any, min: number, sb: StringBuilder): boolean {
+    let rval = true;
+    if (typeof value === 'string') {
+      if (value.length < min) {
+        sb.append(`Text '${value}' may not contain less than ${min} characters.`);
+        rval = false;
+      }
+    } if (typeof value === 'number') {
+      if (value < min) {
+        sb.append(`${value} may not be less than ${min}.`);
+        rval = false;
+      }
+    } else if (Array.isArray(value)) {
+      if (value.length < min) {
+        sb.append(`Array [${value.length}] may not contain less than ${min} elements.`);
+        rval = false;
+      }
+    }
+
+    return rval;
+  }
+
+
+  private static isGreaterThan(value: any, max: number, sb: StringBuilder): boolean {
+    let rval = true;
+    if (typeof value === 'string') {
+      if (value.length > max) {
+        sb.append(`Text '${value}' may not contain more than ${max} characters.`);
+        rval = false;
+      }
+    } if (typeof value === 'number') {
+      if (value > max) {
+        sb.append(`${value} may not be greater than ${max}.`);
+        rval = false;
+      }
+    } else if (Array.isArray(value)) {
+      if (value.length > max) {
+        sb.append(`Array [${value.length}] may not contain more than ${max} elements.`);
+        rval = false;
+      }
+    }
+
+    return rval;
   }
 }

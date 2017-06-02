@@ -1,5 +1,5 @@
 import { OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 import 'rxjs/add/observable/from';
 import { Observable } from 'rxjs/Observable';
@@ -23,7 +23,7 @@ import {
 import {
   CompoundValidator, CurrentItemSetCommand, CurrentUserStore, EntityVersionCache,
   ICurrentItemServiceState, IEntity, IServiceState,
-  IUser, PatternValidator, RangeValidator,
+  IUser, IValidation, PatternValidator, RangeValidator,
   RequiredValidator, ServiceCommand, Store, TableMetadata
 } from '@fluxgate/common';
 
@@ -381,29 +381,60 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
         if (tableMetadata) {
           const colMetadata = tableMetadata.getColumnMetadataByProperty(info.valueField);
+
           if (colMetadata.validator instanceof CompoundValidator) {
             const vs = (colMetadata.validator as CompoundValidator).validators;
+
             vs.forEach((v) => {
-              if (v instanceof PatternValidator) {
-                validators.push(Validators.pattern(v.pattern));
-                // tslint:disable-next-line:no-string-literal
-                messageDict['pattern'] = Utility.isNullOrEmpty(v.info) ? `Pattern ${v.pattern} not matched` : v.info;
-              } else if (v instanceof RequiredValidator) {
-                validators.push(Validators.required);
-                // tslint:disable-next-line:no-string-literal
-                messageDict['required'] = 'Value required';
-              } else if (v instanceof RangeValidator) {
-                if (v.options.min !== undefined) {
-                  validators.push(Validators.minLength(v.options.min));
-                  // tslint:disable-next-line:no-string-literal
-                  messageDict['minlength'] = `Minimum length of ${v.options.min} characters required`;
-                }
-                if (v.options.max !== undefined) {
-                  validators.push(Validators.maxLength(v.options.max));
-                  // tslint:disable-next-line:no-string-literal
-                  messageDict['maxlength'] = `Maximum length of ${v.options.max} characters required`;
-                }
-              }
+
+              //
+              // angular kompatible ValidatorFn erzeugen, die mit fluxgate Validation arbeitet
+              //
+              const validatorFn = (name: string, vd: IValidation) =>
+                (control: AbstractControl): ValidationErrors | null => {
+                  return using(new XLog(CoreComponent.logger, levels.DEBUG, 'validatorFn',
+                    `propertyName = ${name}`, `value = ${control.value}`), (lg) => {
+
+                      const result = vd.validate(control.value);
+                      if (result.ok) {
+                        if (lg.isDebugEnabled()) {
+                          lg.debug(`result ok`);
+                        }
+                        return null;
+                      }
+
+                      if (lg.isDebugEnabled()) {
+                        lg.debug(`errors: ${JSON.stringify(result.messages)}`);
+                      }
+                      return {
+                        [name]: result.messages
+                      };
+                    });
+                };
+
+
+              validators.push(validatorFn(colMetadata.propertyName, v));
+
+              // if (v instanceof PatternValidator) {
+              //   validators.push(Validators.pattern(v.pattern));
+              //   // tslint:disable-next-line:no-string-literal
+              //   messageDict['pattern'] = Utility.isNullOrEmpty(v.info) ? `Pattern ${v.pattern} not matched` : v.info;
+              // } else if (v instanceof RequiredValidator) {
+              //   validators.push(Validators.required);
+              //   // tslint:disable-next-line:no-string-literal
+              //   messageDict['required'] = 'Value required';
+              // } else if (v instanceof RangeValidator) {
+              //   if (v.options.min !== undefined) {
+              //     validators.push(Validators.minLength(v.options.min));
+              //     // tslint:disable-next-line:no-string-literal
+              //     messageDict['minlength'] = `Minimum length of ${v.options.min} characters required`;
+              //   }
+              //   if (v.options.max !== undefined) {
+              //     validators.push(Validators.maxLength(v.options.max));
+              //     // tslint:disable-next-line:no-string-literal
+              //     messageDict['maxlength'] = `Maximum length of ${v.options.max} characters required`;
+              //   }
+              // }
             });
           }
         } else {

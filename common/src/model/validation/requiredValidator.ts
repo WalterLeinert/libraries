@@ -13,7 +13,7 @@ export class RequiredValidator extends Validator {
   public validate(value: any, propertyName?: string): ValidationResult {
     const sb = new StringBuilder(this.formatPropertyName(propertyName));
 
-    if (value === undefined || value === null) {
+    if (!Types.isPresent(value)) {
       sb.append(`Value is required.`);
       return ValidationResult.create(false, sb.toString());
     }
