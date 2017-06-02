@@ -53,7 +53,7 @@ const expectedResults = [
     propName: 'name',
     validator: rangeValidator,
     value: '',
-    result: { ok: false, text: 'name: Text \'\' may not contain less than 3 characters.' }
+    result: { ok: false, text: 'Text \'\' may not contain less than 3 characters.' }
   },
 
 
@@ -61,14 +61,14 @@ const expectedResults = [
     propName: 'name',
     validator: rangeValidator,
     value: 'a',
-    result: { ok: false, text: 'name: Text \'a\' may not contain less than 3 characters.' }
+    result: { ok: false, text: 'Text \'a\' may not contain less than 3 characters.' }
   },
 
   {
     propName: 'name',
     validator: rangeValidator,
     value: '12345678901',
-    result: { ok: false, text: 'name: Text \'12345678901\' may not contain more than 10 characters.' }
+    result: { ok: false, text: 'Text \'12345678901\' may not contain more than 10 characters.' }
   },
 ];
 

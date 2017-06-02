@@ -53,7 +53,7 @@ const expectedResults = [
     propName: 'array',
     validator: rangeValidator,
     value: [1],
-    result: { ok: false, text: 'array: Array [1] may not contain less than 3 elements.' }
+    result: { ok: false, text: 'Array [1] may not contain less than 3 elements.' }
   },
 
 
@@ -61,7 +61,7 @@ const expectedResults = [
     propName: 'array',
     validator: rangeValidator,
     value: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-    result: { ok: false, text: 'array: Array [11] may not contain more than 10 elements.' }
+    result: { ok: false, text: 'Array [11] may not contain more than 10 elements.' }
   },
 ];
 
