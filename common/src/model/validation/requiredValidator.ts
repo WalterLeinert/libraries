@@ -19,7 +19,7 @@ export class RequiredValidator extends Validator {
     }
     if (Types.isString(value)) {
       if (value.length <= 0) {
-        sb.append(`Text is missing.`);
+        sb.append(`Value is required.`);
         return ValidationResult.create(false, sb.toString());
       }
     }
