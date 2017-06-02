@@ -393,7 +393,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
               const validatorFn = (name: string, vd: IValidation) =>
                 (control: AbstractControl): ValidationErrors | null => {
                   return using(new XLog(CoreComponent.logger, levels.DEBUG, 'validatorFn',
-                    `propertyName = ${name}`, `value = ${control.value}`), (lg) => {
+                    `validator = ${vd.constructor.name}, propertyName = ${name}, value = ${control.value}`), (lg) => {
 
                       const result = vd.validate(control.value);
                       if (result.ok) {
@@ -414,27 +414,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
 
               validators.push(validatorFn(colMetadata.propertyName, v));
-
-              // if (v instanceof PatternValidator) {
-              //   validators.push(Validators.pattern(v.pattern));
-              //   // tslint:disable-next-line:no-string-literal
-              //   messageDict['pattern'] = Utility.isNullOrEmpty(v.info) ? `Pattern ${v.pattern} not matched` : v.info;
-              // } else if (v instanceof RequiredValidator) {
-              //   validators.push(Validators.required);
-              //   // tslint:disable-next-line:no-string-literal
-              //   messageDict['required'] = 'Value required';
-              // } else if (v instanceof RangeValidator) {
-              //   if (v.options.min !== undefined) {
-              //     validators.push(Validators.minLength(v.options.min));
-              //     // tslint:disable-next-line:no-string-literal
-              //     messageDict['minlength'] = `Minimum length of ${v.options.min} characters required`;
-              //   }
-              //   if (v.options.max !== undefined) {
-              //     validators.push(Validators.maxLength(v.options.max));
-              //     // tslint:disable-next-line:no-string-literal
-              //     messageDict['maxlength'] = `Maximum length of ${v.options.max} characters required`;
-              //   }
-              // }
             });
           }
         } else {
