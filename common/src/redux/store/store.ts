@@ -7,6 +7,7 @@ import { Assert, CustomSubject, Dictionary, InvalidOperationException, Types } f
 
 import { ICommand } from '../command/command.interface';
 import { CommandStoreStorage } from '../decorators/command-store-storage';
+import { CurrentItemCommand } from '../command/current-item-command';
 import { IServiceState } from '../state/service-state.interface';
 import { CommandStore } from './command-store';
 
@@ -56,11 +57,15 @@ export class Store {
 
     using(new XLog(Store.logger, levels.INFO, 'dispatch'), (log) => {
       const commandStore = this.getCommandStore(command.storeId);
-
-      // root CommandStore suchen
       let store = commandStore;
-      while (Types.isPresent(store.parent)) {
-        store = store.parent;
+
+      // CurrentItemCommands arbeiten nicht auf Parentstores!
+      if (!(command instanceof CurrentItemCommand)) {
+
+        // root CommandStore suchen
+        while (Types.isPresent(store.parent)) {
+          store = store.parent;
+        }
       }
 
       // ... und command dort dispatchen

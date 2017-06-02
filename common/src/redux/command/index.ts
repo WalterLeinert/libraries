@@ -1,5 +1,6 @@
 export * from './command.interface';
 export * from './core-items-found-command';
+export * from './current-item-command';
 export * from './current-item-set-command';
 export * from './creating-item-command';
 export * from './deleting-item-command';

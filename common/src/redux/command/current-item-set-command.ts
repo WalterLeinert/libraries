@@ -1,6 +1,7 @@
 import { ICurrentItemServiceState } from '../state/current-item-service-state.interface';
 import { ServiceRequestStates } from '../state/service-request-state';
 import { IServiceRequests } from './../service-requests';
+import { CurrentItemCommand } from './current-item-command';
 import { ServiceCommand } from './service-command';
 
 
@@ -11,14 +12,14 @@ import { ServiceCommand } from './service-command';
  *
  * @export
  * @class SetCurrentItemCommand
- * @extends {ServiceCommand<T, TId>}
+ * @extends {CurrentItemCommand<T>}
  * @template T
  * @template TId
  */
-export class CurrentItemSetCommand<T> extends ServiceCommand<T> {
+export class CurrentItemSetCommand<T> extends CurrentItemCommand<T> {
 
-  constructor(serviceRequests: IServiceRequests, private item: T) {
-    super(serviceRequests);
+  constructor(serviceRequests: IServiceRequests, item: T) {
+    super(serviceRequests, item);
   }
 
   /**

@@ -34,9 +34,15 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TServi
   private _serviceFake: TService;
   private _serviceRequests: IServiceRequests;
   private subscriptions: Subscription[] = [];
+
   private _commands: Array<ServiceCommand<T>> = [];
   private _states: IServiceState[] = [];
+
+  private _parentCommands: Array<ServiceCommand<T>> = [];
+  private _parentStates: IServiceState[] = [];
+
   private _entityVersionServiceFake: EntityVersionServiceFake;
+  protected parentStoreId: string;
 
   protected constructor(private storeId: string,
     private serviceRequestClazz: ICtor<ServiceRequests>,
@@ -52,6 +58,13 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TServi
     this._serviceRequests = new this.serviceRequestClazz(this.storeId, this._serviceFake, this._store,
       this._entityVersionServiceFake);
 
+    const commandStore = this._store.getCommandStore(this.storeId);
+
+    if (commandStore.parent) {
+      this.parentStoreId = commandStore.parent.name;
+      this.subscribeToParentStore(this.parentStoreId);
+    }
+
     this.subscribeToStore(this.storeId);
     this.reset();
 
@@ -62,6 +75,14 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TServi
   protected subscribeToStore<T, TId>(storeId: string): Subscription {
     const subscription = this.getStoreSubject(storeId).subscribe((command) => {
       this.onStoreUpdated(command);
+    });
+    this.subscriptions.push(subscription);
+    return subscription;
+  }
+
+  protected subscribeToParentStore<T, TId>(parentStoreId: string): Subscription {
+    const subscription = this.getStoreSubject(parentStoreId).subscribe((command) => {
+      this.onParentStoreUpdated(command);
     });
     this.subscriptions.push(subscription);
     return subscription;
@@ -84,23 +105,43 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TServi
     });
   }
 
+  protected onParentStoreUpdated(command: ServiceCommand<T>): void {
+    Assert.notNull(command);
+
+    using(new XLog(ReduxBaseTest.logger, levels.INFO, 'onParentStoreUpdated', `class: ${this.constructor.name}`),
+      (log) => {
+        log.log(`command = ${command.toString()}`);
+
+        this._parentCommands.push(command);
+        const state = this.getCrudState(this.parentStoreId);
+
+        if (log.isDebugEnabled()) {
+          log.debug(`state = ${JSON.stringify(state)}`);
+        }
+
+        this._parentStates.push(state);
+      });
+  }
+
 
   protected reset() {
     EntityVersionCache.instance.reset();
     this._commands = [];
     this._states = [];
+    this._parentCommands = [];
+    this._parentStates = [];
   }
 
 
-  protected getStoreState(): IServiceState {
-    return this._serviceRequests.getStoreState(this.storeId);
+  protected getStoreState(storeId: string = this.storeId): IServiceState {
+    return this._store.getState(storeId);
   }
-  protected getCrudState(): ICrudServiceState<T, TId> {
-    return this.crudServiceRequests.getCrudState(this.storeId);
+  protected getCrudState(storeId: string = this.storeId): ICrudServiceState<T, TId> {
+    return this.crudServiceRequests.getCrudState(storeId);
   }
 
-  protected getCurrentItemState(): ICurrentItemServiceState<T> {
-    return this.currentItemServiceRequests.getCurrentItemState(this.storeId);
+  protected getCurrentItemState(storeId: string = this.storeId): ICurrentItemServiceState<T> {
+    return this.currentItemServiceRequests.getCurrentItemState(storeId);
   }
 
   protected get crudServiceRequests(): ICrudServiceRequests<T, TId> {
@@ -120,9 +161,10 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TServi
     return this._commands;
   }
 
-  // protected get states(): IServiceState[] {
-  //   return this._states;
-  // }
+  protected get parentCommands(): Array<ServiceCommand<T>> {
+    return this._parentCommands;
+  }
+
 
   protected getCrudStateAt(index: number): ICrudServiceState<T, TId> {
     return this._states[index] as ICrudServiceState<T, TId>;
@@ -131,6 +173,16 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TServi
   protected getCurrentItemStateAt(index: number): ICurrentItemServiceState<T> {
     return this._states[index] as ICurrentItemServiceState<T>;
   }
+
+
+  protected getParentCrudStateAt(index: number): ICrudServiceState<T, TId> {
+    return this._parentStates[index] as ICrudServiceState<T, TId>;
+  }
+
+  protected getParentCurrentItemStateAt(index: number): ICurrentItemServiceState<T> {
+    return this._parentStates[index] as ICurrentItemServiceState<T>;
+  }
+
 
   protected get store(): Store {
     return this._store;

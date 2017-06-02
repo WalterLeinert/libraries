@@ -8,6 +8,7 @@ import {
 } from '@fluxgate/core';
 
 import { ICommand } from '../command/command.interface';
+import { CurrentItemCommand } from '../command/current-item-command';
 import { IServiceState } from '../state/service-state.interface';
 
 
@@ -128,9 +129,12 @@ export class CommandStore<TState extends IServiceState> extends UniqueIdentifiab
 
       this.state = command.execute(this.state);
 
-      // rekursiv an alle Children dispatchen
-      for (const child of this.children) {
-        child.dispatch(command);
+      // CurrentItemCommands arbeiten nicht auf Parentstores!
+      if (!(command instanceof CurrentItemCommand)) {
+        // rekursiv an alle Children dispatchen
+        for (const child of this.children) {
+          child.dispatch(command);
+        }
       }
 
       this.pubSub.publish(this._channel, command);
