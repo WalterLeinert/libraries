@@ -74,9 +74,10 @@ export class FormGroupInfo {
 
         if (control && control.dirty && !control.valid) {
           const messages = this.validationMessages[field];
-          for (const key in control.errors) {
-            if (key) {
-              this.errors[field] += messages[key] + ' ';
+
+          for (const valMsg of control.errors[field]) {
+            if (valMsg) {
+              this.errors[field] += valMsg.text;
             }
           }
         }
