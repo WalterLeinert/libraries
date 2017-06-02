@@ -2,7 +2,6 @@ import { ICurrentItemServiceState } from '../state/current-item-service-state.in
 import { ServiceRequestStates } from '../state/service-request-state';
 import { IServiceRequests } from './../service-requests';
 import { CurrentItemCommand } from './current-item-command';
-import { ServiceCommand } from './service-command';
 
 
 /**
