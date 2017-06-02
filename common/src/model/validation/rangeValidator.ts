@@ -1,5 +1,6 @@
 import { Assert, StringBuilder, Types } from '@fluxgate/core';
 
+import { ColumnMetadata } from '../metadata/columnMetadata';
 import { ValidationResult } from './validationResult';
 import { Validator } from './validator';
 
@@ -10,28 +11,28 @@ export interface IRangeOptions {
 
 export class RangeValidator extends Validator {
 
-  constructor(private _options: IRangeOptions) {
-    super();
+  constructor(private _options: IRangeOptions, info?: string) {
+    super(info);
     Assert.notNull(_options);
     Assert.that(_options.min !== undefined || _options.max !== undefined);
   }
 
-  public validate(value: any, propertyName?: string): ValidationResult {
+  public validate(value: any, property?: string | ColumnMetadata): ValidationResult {
     if (!Types.isPresent(value)) {
       return ValidationResult.Ok;
     }
 
-    const sb = new StringBuilder(this.formatPropertyName(propertyName));
+    const sb = new StringBuilder(this.formatPropertyName(property));
 
     if (this._options.min !== undefined) {
-      if (!RangeValidator.isLessThan(value, this._options.min, sb)) {
-        return ValidationResult.create(false, sb.toString());
+      if (!RangeValidator.isLessThan(value, property, this._options.min, sb)) {
+        return ValidationResult.create(this, property, false, sb.toString());
       }
     }
 
     if (this._options.max !== undefined) {
-      if (!RangeValidator.isGreaterThan(value, this._options.max, sb)) {
-        return ValidationResult.create(false, sb.toString());
+      if (!RangeValidator.isGreaterThan(value, property, this._options.max, sb)) {
+        return ValidationResult.create(this, property, false, sb.toString());
       }
     }
 
@@ -44,7 +45,8 @@ export class RangeValidator extends Validator {
   }
 
 
-  private static isLessThan(value: any, min: number, sb: StringBuilder): boolean {
+  private static isLessThan(value: any, property: string | ColumnMetadata, min: number,
+    sb: StringBuilder): boolean {
     let rval = true;
     if (typeof value === 'string') {
       if (value.length < min) {
@@ -67,7 +69,8 @@ export class RangeValidator extends Validator {
   }
 
 
-  private static isGreaterThan(value: any, max: number, sb: StringBuilder): boolean {
+  private static isGreaterThan(value: any, property: string | ColumnMetadata, max: number,
+    sb: StringBuilder): boolean {
     let rval = true;
     if (typeof value === 'string') {
       if (value.length > max) {

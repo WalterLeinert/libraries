@@ -1,26 +1,23 @@
 import { StringBuilder, Types } from '@fluxgate/core';
 
+import { ColumnMetadata } from '../metadata/columnMetadata';
 import { ValidationResult } from './validationResult';
 import { Validator } from './validator';
 
 
 export class RequiredValidator extends Validator {
 
-  constructor() {
-    super();
+  constructor(info?: string) {
+    super(info);
   }
 
-  public validate(value: any, propertyName?: string): ValidationResult {
-    const sb = new StringBuilder(this.formatPropertyName(propertyName));
-
+  public validate(value: any, property?: string | ColumnMetadata): ValidationResult {
     if (!Types.isPresent(value)) {
-      sb.append(`Value is required.`);
-      return ValidationResult.create(false, sb.toString());
+      return ValidationResult.create(this, property, false, `Value is required.`);
     }
     if (Types.isString(value)) {
       if (value.length <= 0) {
-        sb.append(`Value is required.`);
-        return ValidationResult.create(false, sb.toString());
+        return ValidationResult.create(this, property, false, `Value is required.`);
       }
     }
 

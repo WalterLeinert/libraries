@@ -5,9 +5,15 @@
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
+import { RangeValidator } from '../../src/model/validation/rangeValidator';
 import { ValidationResult } from '../../src/model/validation/validationResult';
 import { Validators } from '../../src/model/validation/validators';
 import { CommonTest } from '../common.spec';
+
+const rangeValidator = new RangeValidator({
+  min: 3,
+  max: 10
+});
 
 const expectedResults = [
   /**
@@ -15,75 +21,54 @@ const expectedResults = [
    */
   {
     propName: 'name',
-    range: {
-      min: 3,
-      max: 10
-    },
-    text: undefined,
-    result: ValidationResult.Ok
+    validator: rangeValidator,
+    value: undefined,
+    result: { ok: true, text: undefined }
   },
 
   {
     propName: 'name',
-    range: {
-      min: 3,
-      max: 10
-    },
-    text: null,
-    result: ValidationResult.Ok
+    validator: rangeValidator,
+    value: null,
+    result: { ok: true, text: undefined }
   },
 
 
   {
     propName: 'name',
-    range: {
-      min: 3,
-      max: 10
-    },
-    text: 'abc',
-    result: ValidationResult.Ok
+    validator: rangeValidator,
+    value: 'abc',
+    result: { ok: true, text: undefined }
   },
 
   {
     propName: 'name',
-    range: {
-      min: 3,
-      max: 10
-    },
-    text: '1234567890',
-    result: ValidationResult.Ok
+    validator: rangeValidator,
+    value: '1234567890',
+    result: { ok: true, text: undefined }
   },
 
 
   {
     propName: 'name',
-    range: {
-      min: 3,
-      max: 10
-    },
-    text: '',
-    result: ValidationResult.create(false, 'name: Text \'\' may not contain less than 3 characters.')
+    validator: rangeValidator,
+    value: '',
+    result: { ok: false, text: 'name: Text \'\' may not contain less than 3 characters.' }
   },
 
 
   {
     propName: 'name',
-    range: {
-      min: 3,
-      max: 10
-    },
-    text: 'a',
-    result: ValidationResult.create(false, 'name: Text \'a\' may not contain less than 3 characters.')
+    validator: rangeValidator,
+    value: 'a',
+    result: { ok: false, text: 'name: Text \'a\' may not contain less than 3 characters.' }
   },
 
   {
     propName: 'name',
-    range: {
-      min: 3,
-      max: 10
-    },
-    text: '12345678901',
-    result: ValidationResult.create(false, 'name: Text \'12345678901\' may not contain more than 10 characters.')
+    validator: rangeValidator,
+    value: '12345678901',
+    result: { ok: false, text: 'name: Text \'12345678901\' may not contain more than 10 characters.' }
   },
 ];
 
@@ -92,15 +77,15 @@ const expectedResults = [
 @suite('common.validation: string range')
 class RangeValidationTest extends CommonTest {
 
+
   @test 'should test RangeValidator'() {
     for (const expectedResult of expectedResults) {
-      const validator = Validators.range({
-        min: expectedResult.range.min,
-        max: expectedResult.range.max
-      });
+      const validator = expectedResult.validator;
+      const expectedValidationResult = ValidationResult.create(validator, expectedResult.propName,
+        expectedResult.result.ok, expectedResult.result.text);
 
-      const res = validator.validate(expectedResult.text, expectedResult.propName);
-      expect(res).to.be.deep.equal(expectedResult.result);
+      const res = validator.validate(expectedResult.value, expectedResult.propName);
+      expect(res).to.be.deep.equal(expectedValidationResult);
     }
   }
 }

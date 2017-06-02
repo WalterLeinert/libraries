@@ -5,9 +5,16 @@
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
+import { RangeValidator } from '../../src/model/validation/rangeValidator';
 import { ValidationResult } from '../../src/model/validation/validationResult';
 import { Validators } from '../../src/model/validation/validators';
 import { CommonTest } from '../common.spec';
+
+const rangeValidator = new RangeValidator({
+  min: 3,
+  max: 10
+});
+
 
 const expectedResults = [
   /**
@@ -15,65 +22,47 @@ const expectedResults = [
    */
   {
     propName: 'num',
-    range: {
-      min: 3,
-      max: 10
-    },
+    validator: rangeValidator,
     value: undefined,
-    result: ValidationResult.Ok
+    result: { ok: true, text: undefined }
   },
 
   {
     propName: 'num',
-    range: {
-      min: 3,
-      max: 10
-    },
+    validator: rangeValidator,
     value: null,
-    result: ValidationResult.Ok
+    result: { ok: true, text: undefined }
   },
 
 
   {
     propName: 'num',
-    range: {
-      min: 3,
-      max: 10
-    },
+    validator: rangeValidator,
     value: 3,
-    result: ValidationResult.Ok
+    result: { ok: true, text: undefined }
   },
 
   {
     propName: 'num',
-    range: {
-      min: 3,
-      max: 10
-    },
+    validator: rangeValidator,
     value: 10,
-    result: ValidationResult.Ok
+    result: { ok: true, text: undefined }
   },
 
 
   {
     propName: 'num',
-    range: {
-      min: 3,
-      max: 10
-    },
+    validator: rangeValidator,
     value: 1,
-    result: ValidationResult.create(false, 'num: 1 may not be less than 3.')
+    result: { ok: false, text: 'num: 1 may not be less than 3.' }
   },
 
 
   {
     propName: 'num',
-    range: {
-      min: 3,
-      max: 10
-    },
+    validator: rangeValidator,
     value: 11,
-    result: ValidationResult.create(false, 'num: 11 may not be greater than 10.')
+    result: { ok: false, text: 'num: 11 may not be greater than 10.' }
   },
 ];
 
@@ -84,13 +73,12 @@ class RangeValidationTest extends CommonTest {
 
   @test 'should test RangeValidator'() {
     for (const expectedResult of expectedResults) {
-      const validator = Validators.range({
-        min: expectedResult.range.min,
-        max: expectedResult.range.max
-      });
+      const validator = expectedResult.validator;
+      const expectedValidationResult = ValidationResult.create(validator, expectedResult.propName,
+        expectedResult.result.ok, expectedResult.result.text);
 
       const res = validator.validate(expectedResult.value, expectedResult.propName);
-      expect(res).to.be.deep.equal(expectedResult.result);
+      expect(res).to.be.deep.equal(expectedValidationResult);
     }
   }
 }

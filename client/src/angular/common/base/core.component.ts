@@ -21,6 +21,7 @@ import {
 } from '@fluxgate/core';
 
 import {
+  ColumnMetadata,
   CompoundValidator, CurrentItemSetCommand, CurrentUserStore, EntityVersionCache,
   ICurrentItemServiceState, IEntity, IServiceState,
   IUser, IValidation, PatternValidator, RangeValidator,
@@ -390,12 +391,12 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
               //
               // angular kompatible ValidatorFn erzeugen, die mit fluxgate Validation arbeitet
               //
-              const validatorFn = (name: string, vd: IValidation) =>
+              const validatorFn = (metadata: ColumnMetadata, vd: IValidation) =>
                 (control: AbstractControl): ValidationErrors | null => {
                   return using(new XLog(CoreComponent.logger, levels.DEBUG, 'validatorFn',
                     `validator = ${vd.constructor.name}, propertyName = ${name}, value = ${control.value}`), (lg) => {
 
-                      const result = vd.validate(control.value);
+                      const result = vd.validate(control.value, metadata);
                       if (result.ok) {
                         if (lg.isDebugEnabled()) {
                           lg.debug(`result ok`);
@@ -407,13 +408,13 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
                         lg.debug(`errors: ${JSON.stringify(result.messages)}`);
                       }
                       return {
-                        [name]: result.messages
+                        [metadata.propertyName]: result.messages
                       };
                     });
                 };
 
 
-              validators.push(validatorFn(colMetadata.propertyName, v));
+              validators.push(validatorFn(colMetadata, v));
             });
           }
         } else {
