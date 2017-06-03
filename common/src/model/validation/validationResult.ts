@@ -1,3 +1,4 @@
+// tslint:disable:unified-signatures
 import { StringBuilder, Types } from '@fluxgate/core';
 
 import { ColumnMetadata } from '../metadata/columnMetadata';
@@ -10,10 +11,9 @@ export class ValidationResult {
   private _messages: ValidationMessage[] = [];
 
   public static create(validator: Validator, property: string | ColumnMetadata, ok: boolean, text: string);
-  // tslint:disable-next-line:unified-signatures
   public static create(validator: Validator, property: string | ColumnMetadata, ok: boolean, texts: string[]);
-  // tslint:disable-next-line:unified-signatures
-  public static create(validator: Validator, property: string | ColumnMetadata, ok: boolean, messages: ValidationMessage[]);
+  public static create(validator: Validator, property: string | ColumnMetadata, ok: boolean,
+    messages: ValidationMessage[]);
 
 
   public static create(validator: Validator, property: string | ColumnMetadata, ok: boolean,

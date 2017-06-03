@@ -1,4 +1,4 @@
-import { Types, Utility } from '@fluxgate/core';
+import { Types } from '@fluxgate/core';
 
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { IValidation } from './validation.interface';

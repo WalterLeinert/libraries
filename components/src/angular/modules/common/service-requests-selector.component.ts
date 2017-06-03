@@ -13,7 +13,7 @@ import { IEntity } from '@fluxgate/common';
 import {
   CurrentItemSetCommand, IExtendedCrudServiceRequests, IExtendedCrudServiceState, ItemsFoundCommand, ServiceCommand
 } from '@fluxgate/common';
-import { Assert, IToString, Types, Utility } from '@fluxgate/core';
+import { Assert, IToString, Types } from '@fluxgate/core';
 
 
 import { SelectorBaseComponent } from '../common/selectorBase.component';

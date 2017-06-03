@@ -1,4 +1,4 @@
-import { Assert, StringBuilder, Types } from '@fluxgate/core';
+import { Assert, Types } from '@fluxgate/core';
 
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { ValidationResult } from './validationResult';

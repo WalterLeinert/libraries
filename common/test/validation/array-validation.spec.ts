@@ -7,7 +7,6 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 import { RangeValidator } from '../../src/model/validation/rangeValidator';
 import { ValidationResult } from '../../src/model/validation/validationResult';
-import { Validators } from '../../src/model/validation/validators';
 import { CommonTest } from '../common.spec';
 
 const rangeValidator = new RangeValidator({
