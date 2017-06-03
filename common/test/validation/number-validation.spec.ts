@@ -53,7 +53,7 @@ const expectedResults = [
     propName: 'num',
     validator: rangeValidator,
     value: 1,
-    result: { ok: false, text: '1 may not be less than 3.' }
+    result: { ok: false, text: `Value may not be less than ${rangeValidator.options.min}.` }
   },
 
 
@@ -61,7 +61,7 @@ const expectedResults = [
     propName: 'num',
     validator: rangeValidator,
     value: 11,
-    result: { ok: false, text: '11 may not be greater than 10.' }
+    result: { ok: false, text: `Value may not be greater than ${rangeValidator.options.max}.` }
   },
 ];
 

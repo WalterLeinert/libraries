@@ -110,11 +110,11 @@ export class RangeValidator extends Validator {
             rval = false;
           }
         } catch (exc) {
-          sb.append(`value '${value}' no valid number.`);
+          sb.append(`Value '${value}' no valid number.`);
           rval = false;
         }
       } else {
-        sb.append(`value '${value}' no valid number.`);
+        sb.append(`Value '${value}' no valid number.`);
         rval = false;
       }
     } else {
@@ -129,7 +129,7 @@ export class RangeValidator extends Validator {
         }
       } if (typeof value === 'number') {
         if (compare(value, minMax)) {
-          sb.append(`${value} may not be ${minMaxTestNumber} than ${minMax}.`);
+          sb.append(`Value may not be ${minMaxTestNumber} than ${minMax}.`);
           rval = false;
         }
       } else if (Array.isArray(value)) {

@@ -19,8 +19,18 @@ export class ValidationResult {
   public static create(validator: Validator, property: string | ColumnMetadata, ok: boolean,
     text: string | Array<ValidationMessage | string>): ValidationResult {
 
+    let propertyName: string;
+
+    if (Types.isPresent(property)) {
+      if (typeof property === 'string') {
+        propertyName = property;
+      } else {
+        propertyName = property.propertyName;
+      }
+    }
+
     if (!ok) {
-      const sb = new StringBuilder(validator.formatPropertyName(property));
+      const sb = new StringBuilder();
 
       //
       // liegt ein einfach Meldungstext vor, wird dieser nur übernommen, falls keine spezielle Info vorliegt.
@@ -31,7 +41,7 @@ export class ValidationResult {
         } else {
           sb.append(text);
         }
-        return new ValidationResult(ok, [new ValidationMessage(sb.toString())]);
+        return new ValidationResult(ok, propertyName, [new ValidationMessage(sb.toString())]);
       }
 
       if (Array.isArray(text)) {
@@ -42,9 +52,9 @@ export class ValidationResult {
               const message = txt as any as string;
               messages.push(new ValidationMessage(message));
             }
-            return new ValidationResult(ok, messages);
+            return new ValidationResult(ok, propertyName, messages);
           } else {
-            return new ValidationResult(ok, text as any as ValidationMessage[]);
+            return new ValidationResult(ok, propertyName, text as any as ValidationMessage[]);
           }
         }
       }
@@ -53,7 +63,7 @@ export class ValidationResult {
   }
 
 
-  private constructor(private _ok: boolean, messages?: ValidationMessage[]) {
+  private constructor(private _ok: boolean, private _propertyName?: string, messages?: ValidationMessage[]) {
     if (messages) {
       for (const message of messages) {
         this._messages.push(message);
@@ -63,6 +73,10 @@ export class ValidationResult {
 
   public get ok(): boolean {
     return this._ok;
+  }
+
+  public get propertyName(): string {
+    return this._propertyName;
   }
 
   public get messages(): ValidationMessage[] {
