@@ -394,7 +394,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
               const validatorFn = (metadata: ColumnMetadata, vd: IValidation) =>
                 (control: AbstractControl): ValidationErrors | null => {
                   return using(new XLog(CoreComponent.logger, levels.DEBUG, 'validatorFn',
-                    `validator = ${vd.constructor.name}, propertyName = ${name}, value = ${control.value}`), (lg) => {
+                    `validator = ${vd.constructor.name}, propertyName = ${metadata.propertyName}, ` +
+                    `value = ${control.value}`), (lg) => {
 
                       const result = vd.validate(control.value, metadata);
                       if (result.ok) {
