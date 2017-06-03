@@ -47,16 +47,19 @@ export abstract class ServiceRequestsSelectorComponent<T extends IEntity<TId>, T
 
       this.subscribeToStore(this.serviceRequests.storeId);
       this.serviceRequests.find().subscribe((items) => {
+
         // ok: subscribe muss aufgerufen werden, damit der Call ausgeführt wird und die Items geholt werden!
 
-        // default: erste Rolle selektiert
-        const itemToSelect = Utility.isNullOrEmpty(items) ? null : items[0];
+        // HINWEIS: hier keine default-Selektion durchführen, da sonst angebundene Daten dirty werden
 
-        this.serviceRequests.setCurrent(itemToSelect).subscribe((item) => {
-          if (log.isDebugEnabled()) {
-            log.log(`class: ${this.constructor.name}: item = ${JSON.stringify(item)}`);
-          }
-        });
+        // default: erste Rolle selektiert
+        // const itemToSelect = Utility.isNullOrEmpty(items) ? null : items[0];
+
+        // this.serviceRequests.setCurrent(itemToSelect).subscribe((item) => {
+        //   if (log.isDebugEnabled()) {
+        //     log.log(`class: ${this.constructor.name}: item = ${JSON.stringify(item)}`);
+        //   }
+        // });
       });
     });
   }
