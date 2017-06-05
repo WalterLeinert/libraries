@@ -47,9 +47,13 @@ export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToStri
   ): Promise<CreateResult<T, TId>> {
     return new Promise<CreateResult<T, TId>>((resolve, reject) => {
       const deserializedSubject = this.deserialize<T>(request.body);
-      this.service.create(request, deserializedSubject).then((result) => {
-        resolve(this.serialize(result));
-      });
+      this.service.create(request, deserializedSubject)
+        .then((result) => {
+          resolve(this.serialize(result));
+        })
+        .catch((err) => {
+          reject(err);
+        });
     });
   }
 
@@ -67,9 +71,13 @@ export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToStri
   ): Promise<UpdateResult<T, TId>> {
     return new Promise<UpdateResult<T, TId>>((resolve, reject) => {
       const deserializedSubject = this.deserialize<T>(request.body);
-      this.service.update(request, deserializedSubject).then((result) => {
-        resolve(this.serialize(result));
-      });
+      this.service.update(request, deserializedSubject)
+        .then((result) => {
+          resolve(this.serialize(result));
+        })
+        .catch((err) => {
+          reject(err);
+        });
     });
   }
 
@@ -87,9 +95,13 @@ export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToStri
     id: TId
   ): Promise<DeleteResult<TId>> {
     return new Promise<DeleteResult<TId>>((resolve, reject) => {
-      this.service.delete(request, id).then((result) => {
-        resolve(this.serialize(result));
-      });
+      this.service.delete(request, id)
+        .then((result) => {
+          resolve(this.serialize(result));
+        })
+        .catch((err) => {
+          reject(err);
+        });
     });
   }
 

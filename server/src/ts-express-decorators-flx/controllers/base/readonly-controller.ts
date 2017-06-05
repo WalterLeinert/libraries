@@ -48,9 +48,13 @@ export abstract class ReadonlyController<T extends IEntity<TId>, TId extends ITo
     id: TId
   ): Promise<FindByIdResult<T, TId>> {
     return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {
-      this.getService().findById(request, id).then((result) => {
-        resolve(this.serialize(result));
-      });
+      this.getService().findById(request, id)
+        .then((result) => {
+          resolve(this.serialize(result));
+        })
+        .catch((err) => {
+          reject(err);
+        });
     });
   }
 
