@@ -8,7 +8,7 @@ import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import 'mocha';
 // tslint:disable-next-line:no-unused-variable
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 
 // Chai mit Promises verwenden (... to.become() ... etc.)
@@ -78,26 +78,35 @@ class OptimisticLockTest extends KnexTest<QueryTest, number> {
 
   @test 'should generate optimistic lock exception'(done: (err?: any) => void) {
     using(new XLog(OptimisticLockTest.logger, levels.INFO, 'should update 2 records'), (log) => {
-      this.service.find(undefined).then((findResult) => {
-        const item = findResult.items[findResult.items.length - 1];
-        const itemClone = Clone.clone(item);
+      this.service.find(undefined)
+        .then((findResult) => {
+          const item = findResult.items[findResult.items.length - 1];
+          const itemClone = Clone.clone(item);
 
-        // update für denselben Record direkt nacheinander -> optimistic lock exception
-        this.service.update(undefined, itemClone).then((firstUpdateResult) => {
-          // erster update war erfolgreich -> version = 1
-          this.service.update(undefined, item).then((secondUpdateResult) => {
-            //  2. update schlägt fehl
-            done(`should not happen`);
-          }).catch((err) => {
-            if (err instanceof OptimisticLockException) {
-              done();
-            } else {
-              done(`${err}: OptimisticLockException expected`);
-            }
-          });
+          // update für denselben Record direkt nacheinander -> optimistic lock exception
+          this.service.update(undefined, itemClone)
+            .then((firstUpdateResult) => {
+              // erster update war erfolgreich -> version = 1
+              this.service.update(undefined, item)
+                .then((secondUpdateResult) => {
+                  //  2. update schlägt fehl
+                  done(`should not happen`);
+                })
+                .catch((err) => {
+                  if (err instanceof OptimisticLockException) {
+                    done();
+                  } else {
+                    done(`${err}: OptimisticLockException expected`);
+                  }
+                });
+            })
+            .catch((err: Error) => {
+              done(`should not throw error after first update`);
+            });
+        })
+        .catch((err: Error) => {
+          done(`should not throw error after find`);
         });
-
-      });
     });
   }
 }
