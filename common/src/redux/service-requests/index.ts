@@ -4,6 +4,7 @@ export * from './crud-service-requests';
 export * from './crud-service-requests.interface';
 export * from './current-item-service-requests';
 export * from './current-item-service-requests.interface';
+export * from './enhanced-service-requests';
 export * from './entity-version-service';
 export * from './extended-crud-service-requests';
 export * from './extended-crud-service-requests.interface';
