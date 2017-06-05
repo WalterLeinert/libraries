@@ -67,7 +67,9 @@ const expectedResults = [
     propName: 'name',
     validator: rangeValidator,
     value: '12345678901',
-    result: { ok: false, text: `Text \'12345678901\' may not contain more than ${rangeValidator.options.max} characters.` }
+    result: {
+      ok: false, text: `Text \'12345678901\' may not contain more than ${rangeValidator.options.max} characters.`
+    }
   },
 ];
 
