@@ -183,7 +183,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                     if (affectedRows <= 0) {
                       trx.rollback();
 
-                      const exc = new OptimisticLockException(`Data was not up-to-date.\nReload data and ty again.`);
+                      const exc = new OptimisticLockException(`Data was not up to date.\nReload data and try again.`);
 
                       log.error(exc);
                       reject(exc);
