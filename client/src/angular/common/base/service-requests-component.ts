@@ -10,10 +10,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
+  CrudServiceRequests, EnhancedServiceRequests,
   IServiceRequests, IServiceState, ItemCreatedCommand,
   ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
-import { Assert, Types } from '@fluxgate/core';
+import { Assert, NotSupportedException, Types } from '@fluxgate/core';
 
 import { MessageService } from '../../services/message.service';
 import { ExtendedCoreComponent } from './extended-core.component';
@@ -78,6 +79,44 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
     return false;
   }
 
+
+  /**
+   * Löscht das Item @param{item}.
+   *
+   * Ist @param{setDeleted} true, wird nur das deleted-Flag gesetzt, falls die zugehörigen ServiceRequests vom
+   * Typ @see{EnhancedServiceRequests} sind.
+   * Ansonsten wird das Item komplett gelöscht.
+   *
+   * Unterstützen die ServiceRequest die Operationen (setDeleted, delete) nicht, wird eine Exception geworfen.
+   *
+   * @protected
+   * @param {T} item
+   * @param {boolean} setDeleted
+   *
+   * @memberof ServiceRequestsComponent
+   */
+  protected deleteItem(item: T, setDeleted: boolean = true) {
+    let observable;
+
+    if (setDeleted) {
+      if (this._serviceRequests instanceof EnhancedServiceRequests) {
+        observable = this._serviceRequests.setDeleted(item);
+      } else {
+        throw new NotSupportedException();
+      }
+    } else {
+
+      if (this._serviceRequests instanceof EnhancedServiceRequests) {
+        observable = this._serviceRequests.delete(this._serviceRequests.getEntityId(item));
+      } else {
+        throw new NotSupportedException();
+      }
+    }
+
+    observable.subscribe((result) => {
+      // -> onStoreUpdated
+    });
+  }
 
 
   /**
