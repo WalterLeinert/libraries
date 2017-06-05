@@ -1,5 +1,5 @@
 /**
- * Interface für eigentliche Email
+ * Interface für SMTP-Versende-Zugangsdaten
  *
  * @export
  * @interface ISMTPConfig
