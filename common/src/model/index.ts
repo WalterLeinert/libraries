@@ -11,6 +11,8 @@ export * from './client';
 export * from './mapping';
 export * from './metadata';
 export * from './passwordChange';
+export * from './systemconfig';
+export * from './systemconfig.interface';
 export * from './role';
 export * from './role.interface';
 export * from './service';
