@@ -74,7 +74,7 @@ export abstract class CoreServiceRequests<T> extends ServiceRequests implements 
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));
-            throw exc;
+            observer.error(exc);
           });
 
       } catch (exc) {
@@ -103,7 +103,7 @@ export abstract class CoreServiceRequests<T> extends ServiceRequests implements 
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));
-            throw exc;
+            observer.error(exc);
           });
 
       } catch (exc) {

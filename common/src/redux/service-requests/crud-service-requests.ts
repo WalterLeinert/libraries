@@ -75,7 +75,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));
-            throw exc;
+            observer.error(exc);
           });
       } catch (exc) {
         observer.error(exc);
@@ -109,7 +109,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));
-            throw exc;
+            observer.error(exc);
           });
 
       } catch (exc) {
@@ -144,7 +144,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));
-            throw exc;
+            observer.error(exc);
           });
 
       } catch (exc) {

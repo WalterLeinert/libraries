@@ -48,7 +48,7 @@ export class EnumTableServiceRequests extends ServiceRequests implements ICrudSe
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));
-            throw exc;
+            observer.error(exc);
           });
 
       } catch (exc) {

@@ -74,7 +74,7 @@ export class ReadonlyServiceRequests<T extends IEntity<TId>, TId extends IToStri
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));
-            throw exc;
+            observer.error(exc);
           });
 
       } catch (exc) {
