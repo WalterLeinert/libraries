@@ -6,6 +6,7 @@ import { InvalidOperationException, IToString, Types } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
+import { FlxStatusEntity } from '../../model/flx-status-entity';
 import { IService } from '../../model/service/service.interface';
 import { Store } from '../store/store';
 import { ExtendedCrudServiceRequests } from './extended-crud-service-requests';
@@ -28,17 +29,32 @@ export abstract class EnhancedServiceRequests<T extends IEntity<TId>, TId extend
 
 
   /**
-   *
+   * Setzt den Entity-Status auf deleted.
    *
    * @param {T} item
    *
    * @memberOf EnhancedServiceRequests
    */
   public setDeleted(item: T): Observable<T> {
-    if (!Types.hasProperty(item, 'deleted')) {
+    if (!(item instanceof FlxStatusEntity)) {
       throw new InvalidOperationException(`item ${JSON.stringify(item)} hat keine deleted-Property`);
     }
-    (item as any).deleted = true;
+    item.__deleted = true;
+    return this.update(item);
+  }
+
+  /**
+   * Setzt den Entity-Status auf archived.
+   *
+   * @param {T} item
+   *
+   * @memberOf EnhancedServiceRequests
+   */
+  public setArchived(item: T): Observable<T> {
+    if (!(item instanceof FlxStatusEntity)) {
+      throw new InvalidOperationException(`item ${JSON.stringify(item)} hat keine archived-Property`);
+    }
+    item.__archived = true;
     return this.update(item);
   }
 }

@@ -18,13 +18,13 @@ import { IStatusEntity } from './status-entity.interface';
  * @template TId
  */
 @Table()
-export class FlxStatusEntity<TId> extends FlxEntity<number> implements IStatusEntity {
-  @IdColumn({ name: 'user_id', displayName: 'Id' })
-  public id: number;
+export abstract class FlxStatusEntity<TId> extends FlxEntity<TId> implements IStatusEntity {
+  public static PROPERTY_NAME_STATUS = '__status';
+  public static PROPERTY_NAME_DELETED = '__deleted';
+  public static PROPERTY_NAME_ARCHIVED = '__archived';
 
-  @Column({ name: '__status', hidden: true })
+  @Column({ name: FlxStatusEntity.PROPERTY_NAME_STATUS, hidden: true })
   public __status: number;
-
 
   @StatusColumn(EntityStatus.Deleted)
   public get __deleted(): boolean {
