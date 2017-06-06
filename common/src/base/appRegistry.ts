@@ -25,7 +25,7 @@ export class AppRegistry {
       Assert.that(!this.exists(key), `Für Key ${key} ist bereits eine Dateninstanz registriert.`);
     }
 
-    this.dataDict[key] = data;
+    this.dataDict.set(key, data);
   }
 
 
@@ -39,7 +39,7 @@ export class AppRegistry {
    */
   public get<T>(key: string): T {
     Assert.notNullOrEmpty(key);
-    return this.dataDict[key];
+    return this.dataDict.get(key);
   }
 
   /**
@@ -51,7 +51,7 @@ export class AppRegistry {
    */
   public remove<T>(key: string) {
     Assert.notNullOrEmpty(key);
-    this.dataDict[key] = undefined;
+    this.dataDict.remove(key);
   }
 
   /**
@@ -64,7 +64,7 @@ export class AppRegistry {
    */
   public exists(key: string): boolean {
     Assert.notNullOrEmpty(key);
-    return (key in this.dataDict);
+    return this.dataDict.containsKey(key);
   }
 
   /**
