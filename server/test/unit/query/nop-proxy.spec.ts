@@ -94,7 +94,6 @@ class NopProxyTest extends KnexTest<QueryTest, number> {
       AppConfig.unregister();
       done();
     });
-
   }
 
 
@@ -112,7 +111,7 @@ class NopProxyTest extends KnexTest<QueryTest, number> {
       item.name = item.name + '-updated';
 
       this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((entityVersionResult) => {
-        const versionPrev = entityVersionResult.item.__version;
+        const entityVersionPrev = entityVersionResult.item.__version;
 
         this.service.update(undefined, item).then((updateResult) => {
           const expectedVersion = 1;
@@ -134,8 +133,8 @@ class NopProxyTest extends KnexTest<QueryTest, number> {
 
           // should not increment entityVersion table
           this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
-            if (evResult.item.__version !== versionPrev) {
-              done(`entityVersion: versions different: ${evResult.item.__version} !== ${versionPrev}`);
+            if (evResult.item.__version !== entityVersionPrev) {
+              done(`entityVersion: versions different: ${evResult.item.__version} !== ${entityVersionPrev}`);
             } else {
               done();
             }
@@ -154,7 +153,7 @@ class NopProxyTest extends KnexTest<QueryTest, number> {
       item.name = item.name + '-updated';
 
       this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((entityVersionResult) => {
-        const versionPrev = entityVersionResult.item.__version;
+        const entityVersionPrev = entityVersionResult.item.__version;
 
         this.service.update(undefined, item).then((updateResult) => {
           if (updateResult.item.__version !== item.__version + 1) {
@@ -170,8 +169,8 @@ class NopProxyTest extends KnexTest<QueryTest, number> {
 
           // should not increment entityVersion table
           this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
-            if (evResult.item.__version !== versionPrev) {
-              done(`entityVersion: versions different: ${evResult.item.__version} !== ${versionPrev}`);
+            if (evResult.item.__version !== entityVersionPrev) {
+              done(`entityVersion: versions different: ${evResult.item.__version} !== ${entityVersionPrev}`);
             } else {
               done();
             }

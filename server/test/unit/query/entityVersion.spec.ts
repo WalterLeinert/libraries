@@ -94,14 +94,28 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
       AppConfig.unregister();
       done();
     });
-
   }
 
 
-  @test 'should create new record -> version == 0'() {
+  @test 'should create new record -> version == 0, increment entityVersion'(done: (err?: any) => void) {
     const item1 = this.createItem();
+    this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((entityVersionResult) => {
+      const versionPrev = entityVersionResult.item.__version;
 
-    return expect(this.service.create(undefined, item1).then((result) => result.item.__version)).to.eventually.equal(0);
+      this.service.create(undefined, item1).then((result) => {
+        if (result.item.__version !== 0) {
+          done(`entity: initial version (${result.item.__version}) not 0`);
+        }
+
+        this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
+          if (evResult.item.__version !== versionPrev + 1) {
+            done(`entityVersion: versions different: ${evResult.item.__version} !== ${versionPrev + 1}`);
+          } else {
+            done();
+          }
+        });
+      });
+    });
   }
 
 
@@ -112,7 +126,7 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
       item.name = item.name + '-updated';
 
       this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((entityVersionResult) => {
-        const versionPrev = entityVersionResult.item.__version;
+        const entityVersionPrev = entityVersionResult.item.__version;
 
         this.service.update(undefined, item).then((updateResult) => {
           const expectedVersion = 1;
@@ -127,12 +141,12 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
           }
 
           this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
-            if (evResult.item.__version !== versionPrev + 1) {
-              done(`entityVersion: versions different: ${evResult.item.__version} !== ${versionPrev + 1}`);
-            } else {
-              done();
+            if (evResult.item.__version !== entityVersionPrev + 1) {
+              done(`entityVersion: versions different: ${evResult.item.__version} !== ${entityVersionPrev + 1}`);
+              return;
             }
 
+            done();
           });
         });
       });
@@ -147,7 +161,7 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
       item.name = item.name + '-updated';
 
       this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((entityVersionResult) => {
-        const versionPrev = entityVersionResult.item.__version;
+        const entityVersionPrev = entityVersionResult.item.__version;
 
         this.service.update(undefined, item).then((updateResult) => {
           if (updateResult.item.__version !== item.__version + 1) {
@@ -155,23 +169,62 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
             return;
           }
 
-          if (updateResult.entityVersion !== versionPrev + 1) {
+          if (updateResult.entityVersion !== entityVersionPrev + 1) {
             done(`entityVersion: version different to previous version: ` +
-              `${updateResult.entityVersion} !== ${versionPrev + 1}`);
+              `${updateResult.entityVersion} !== ${entityVersionPrev + 1}`);
             return;
           }
 
           this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
-
-            if (updateResult.entityVersion !== evResult.item.__version) {
-              done(`entityVersion: versions different: ${updateResult.entityVersion} !== ${evResult.item.__version}`);
-            } else {
-              done();
+            if (evResult.item.__version !== entityVersionPrev + 1) {
+              done(`entityVersion: versions different: ${evResult.item.__version} !== ${entityVersionPrev + 1}`);
+              return;
             }
 
+            // prüfen, ob der delete call die korrekte EntityVersion liefert
+            if (updateResult.entityVersion !== evResult.item.__version) {
+              done(`entityVersion: result version different: ` +
+                `${updateResult.entityVersion} !== ${evResult.item.__version}`);
+              return;
+            }
+
+            done();
           });
         });
       });
     });
   }
+
+
+
+  @test 'should delete record -> increment entityVersion'(done: (err?: any) => void) {
+    this.service.find(undefined).then((findResult) => {
+      const item = findResult.items[findResult.items.length - 1];   // new record
+
+      this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((entityVersionResult) => {
+        const entityVersionPrev = entityVersionResult.item.__version;
+
+        this.service.delete(undefined, item.id).then((deleteResult) => {
+          const expectedVersion = 1;
+
+          this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
+            if (evResult.item.__version !== entityVersionPrev + 1) {
+              done(`entityVersion: versions different: ${evResult.item.__version} !== ${entityVersionPrev + 1}`);
+              return;
+            }
+
+            // prüfen, ob der delete call die korrekte EntityVersion liefert
+            if (deleteResult.entityVersion !== evResult.item.__version) {
+              done(`entityVersion: result version different: (${deleteResult.entityVersion}) not ` +
+                `${evResult.item.__version} after deletion`);
+              return;
+            }
+
+            done();
+          });
+        });
+      });
+    });
+  }
+
 }
