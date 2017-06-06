@@ -1,3 +1,5 @@
+import { Funktion } from '@fluxgate/core';
+
 import { ClientColumn } from '../model/decorator/client-column';
 import { Table } from '../model/decorator/table';
 import { IClientEntity } from './client-entity.interface';
@@ -20,6 +22,6 @@ export abstract class FlxEntity<TId> extends VersionedEntity<TId> implements ICl
   public __client: number;   // = Mandant.FIRST_ID;
 
   public toString(): string {
-    return `{ type: ${(this as any as Function).name}, id: ${this.id}, version: ${this.__version} }`;
+    return `{ type: ${(this as any as Funktion).name}, id: ${this.id}, version: ${this.__version} }`;
   }
 }
