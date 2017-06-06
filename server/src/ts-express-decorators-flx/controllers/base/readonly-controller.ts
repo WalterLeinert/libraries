@@ -47,15 +47,9 @@ export abstract class ReadonlyController<T extends IEntity<TId>, TId extends ITo
     request: ISessionRequest,
     id: TId
   ): Promise<FindByIdResult<T, TId>> {
-    return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {
-      this.getService().findById(request, id)
-        .then((result) => {
-          resolve(this.serialize(result));
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+    return Promise.resolve()
+      .then(() => this.getService().findById(request, id))
+      .then<FindByIdResult<T, TId>>((result) => this.serialize(result));
   }
 
   protected getService(): IReadonlyService<T, TId> {

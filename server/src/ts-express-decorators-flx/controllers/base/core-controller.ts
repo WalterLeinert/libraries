@@ -43,15 +43,9 @@ export abstract class CoreController<T> extends TableController {
   protected findInternal(
     request: ISessionRequest,
   ): Promise<FindResult<T>> {
-    return new Promise<FindResult<T>>((resolve, reject) => {
-      this.getService().find(request)
-        .then((result) => {
-          resolve(this.serialize(result));
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+    return Promise.resolve()
+      .then(() => this.getService().find(request))
+      .then<FindResult<T>>((result) => this.serialize(result));
   }
 
 
@@ -67,17 +61,10 @@ export abstract class CoreController<T> extends TableController {
   protected queryInternal(
     request: IBodyRequest<IQuery>
   ): Promise<QueryResult<T>> {
-    return new Promise<QueryResult<T>>((resolve, reject) => {
-      const deserializedQuery = this.deserialize<IQuery>(request.body);
-
-      this.getService().query(request, deserializedQuery)
-        .then((result) => {
-          resolve(this.serialize(result));
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+    return Promise.resolve()
+      .then(() => this.deserialize<IQuery>(request.body))
+      .then((deserializedQuery) => this.getService().query(request, deserializedQuery))
+      .then<QueryResult<T>>((result) => this.serialize(result));
   }
 
 
