@@ -45,8 +45,16 @@ export interface ICrudServiceRequests<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ICrudServiceRequests
    */
-  delete(id: TId): Observable<TId>;
+  deleteById(id: TId): Observable<TId>;
 
+  /**
+   * Führt die delete-Methodes async aus und führt ein dispatch des zugehörigen Kommandos durch.
+   *
+   * @param {T} item
+   *
+   * @memberOf ICrudServiceRequests
+   */
+  delete(item: T): Observable<TId>;
 
 
   /**

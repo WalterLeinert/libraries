@@ -80,7 +80,7 @@ class DeleteCurrentTest extends ReduxBaseTest<IUser, number, any> {
           this.reset();
 
           // Test: Item löschen
-          this.crudServiceRequests.delete(DeleteCurrentTest.DELETE_ID).subscribe((id) => {
+          this.crudServiceRequests.deleteById(DeleteCurrentTest.DELETE_ID).subscribe((id) => {
             done();
           });
         });

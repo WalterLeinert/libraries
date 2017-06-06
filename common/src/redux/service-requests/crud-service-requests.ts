@@ -126,7 +126,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
    *
    * @memberOf ServiceRequests
    */
-  public delete(id: TId): Observable<TId> {
+  public deleteById(id: TId): Observable<TId> {
     return Observable.create((observer: Subscriber<TId>) => {
       try {
         this.dispatch(new DeletingItemCommand(this, id));
@@ -139,6 +139,41 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
             // Update der Itemliste nach delete
             this.dispatch(new ItemsFoundCommand(this,
               this.getCrudState(this.storeId).items.filter((item) => item.id !== deleteResult.id)));
+
+            observer.next(deleteResult.id);
+          },
+          (exc: IException) => {
+            this.dispatch(new ErrorCommand(this, exc));
+            observer.error(exc);
+          });
+
+      } catch (exc) {
+        observer.error(exc);
+      }
+    });
+  }
+
+
+  /**
+   * Führt die delete-Methodes async aus und führt ein dispatch des zugehörigen Kommandos durch.
+   *
+   * @param {TId} id
+   *
+   * @memberOf ServiceRequests
+   */
+  public delete(item: T): Observable<TId> {
+    return Observable.create((observer: Subscriber<TId>) => {
+      try {
+        this.dispatch(new DeletingItemCommand(this, item.id));
+
+        this.getService().delete(item.id).subscribe(
+          (deleteResult) => {
+            this.dispatch(new ItemDeletedCommand(this, deleteResult.id));
+
+            // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
+            // Update der Itemliste nach delete
+            this.dispatch(new ItemsFoundCommand(this,
+              this.getCrudState(this.storeId).items.filter((it) => it.id !== deleteResult.id)));
 
             observer.next(deleteResult.id);
           },

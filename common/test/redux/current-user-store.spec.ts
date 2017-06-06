@@ -75,7 +75,7 @@ class CurrentUserStoreTest extends ReduxBaseTest<IUser, number, any> {
       expect(err).to.be.instanceOf(NotSupportedException);
     });
 
-    this.crudServiceRequests.delete(1).subscribe((id) => {
+    this.crudServiceRequests.deleteById(1).subscribe((id) => {
       // ok
     }, (err) => {
       expect(err).to.be.instanceOf(NotSupportedException);

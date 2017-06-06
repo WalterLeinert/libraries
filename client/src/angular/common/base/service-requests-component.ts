@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  EnhancedServiceRequests,
+  CrudServiceRequests,
   IServiceRequests, IServiceState, ItemCreatedCommand,
   ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
@@ -83,11 +83,10 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
   /**
    * Löscht das Item @param{item}.
    *
-   * Ist @param{setDeleted} true, wird nur das deleted-Flag gesetzt, falls die zugehörigen ServiceRequests vom
-   * Typ @see{EnhancedServiceRequests} sind.
-   * Ansonsten wird das Item komplett gelöscht.
+   * Ist _serviceRequests keine Instanz von CrudServiceRequests, wird eine Exception geworfen.
    *
-   * Unterstützen die ServiceRequest die Operationen (setDeleted, delete) nicht, wird eine Exception geworfen.
+   * Ist _serviceRequests eine Instanz von @see{EnhancedServiceRequests}, wird nur das deleted-Flag
+   * im Entity-Status gesetzt; ansonsten wird das Item komplett gelöscht.
    *
    * @protected
    * @param {T} item
@@ -95,25 +94,12 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
    *
    * @memberof ServiceRequestsComponent
    */
-  protected deleteItem(item: T, setDeleted: boolean = true) {
-    let observable;
-
-    if (setDeleted) {
-      if (this._serviceRequests instanceof EnhancedServiceRequests) {
-        observable = this._serviceRequests.setDeleted(item);
-      } else {
-        throw new NotSupportedException();
-      }
-    } else {
-
-      if (this._serviceRequests instanceof EnhancedServiceRequests) {
-        observable = this._serviceRequests.delete(this._serviceRequests.getEntityId(item));
-      } else {
-        throw new NotSupportedException();
-      }
+  protected deleteItem(item: T) {
+    if (!(this._serviceRequests instanceof CrudServiceRequests)) {
+      throw new NotSupportedException();
     }
 
-    observable.subscribe((result) => {
+    this._serviceRequests.delete(item).subscribe((result) => {
       // -> onStoreUpdated
     });
   }

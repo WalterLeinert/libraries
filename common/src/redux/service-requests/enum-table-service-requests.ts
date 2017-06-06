@@ -74,7 +74,11 @@ export class EnumTableServiceRequests extends ServiceRequests implements ICrudSe
     throw new NotSupportedException();
   }
 
-  public delete(id: any): Observable<any> {
+  public deleteById(id: any): Observable<any> {
+    throw new NotSupportedException();
+  }
+
+  public delete(item: any): Observable<any> {
     throw new NotSupportedException();
   }
 
