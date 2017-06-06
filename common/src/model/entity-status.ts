@@ -21,6 +21,17 @@ export enum EntityStatus {
 
 
 export class EntityStatusHelper {
+  /**
+   * Der Name der Entity-Property, die den Status hält
+   *
+   * @static
+   *
+   * @memberof EntityStatusHelper
+   */
+  public static PROPERTY_NAME_STATUS = '__status';
+
+  public static PROPERTY_NAME_DELETED = '__deleted';
+  public static PROPERTY_NAME_ARCHIVED = '__archived';
 
   /**
    * Setzt das Flag @param{flag} im @param{bitfield} auf den Wert @param{value}.

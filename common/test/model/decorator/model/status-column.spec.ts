@@ -8,7 +8,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import {
-  ClientColumn, Column, ColumnTypes, EntityStatus, FlxStatusEntity,
+  ClientColumn, Column, ColumnTypes, EntityStatus, EntityStatusHelper, FlxStatusEntity,
   IdColumn, IEntity, MetadataStorage, Table, TableMetadata
 } from '../../../../src/model';
 
@@ -35,7 +35,7 @@ class StatusColumnTest {
 
 
   @test 'should exist status metadata'() {
-    const statusMetadata = this.tableMetadata.getColumnMetadataByProperty('__status');
+    const statusMetadata = this.tableMetadata.statusColumn;
     // tslint:disable-next-line:no-unused-expression
     expect(statusMetadata).to.be.not.null;
 
@@ -44,7 +44,7 @@ class StatusColumnTest {
     // tslint:disable-next-line:no-unused-expression
     expect(statusMetadata.options.persisted).to.be.true;
 
-    expect(statusMetadata.propertyName).to.equal('__status');
+    expect(statusMetadata.propertyName).to.equal(EntityStatusHelper.PROPERTY_NAME_STATUS);
     expect(statusMetadata.propertyType).to.equal(ColumnTypes.NUMBER);
   }
 
@@ -59,7 +59,7 @@ class StatusColumnTest {
     // tslint:disable-next-line:no-unused-expression
     expect(archivedMetadata.options.persisted).to.be.false;
 
-    expect(archivedMetadata.propertyName).to.equal('__archived');
+    expect(archivedMetadata.propertyName).to.equal(EntityStatusHelper.PROPERTY_NAME_ARCHIVED);
     expect(archivedMetadata.propertyType).to.equal(ColumnTypes.BOOLEAN);
   }
 
@@ -74,7 +74,7 @@ class StatusColumnTest {
     // tslint:disable-next-line:no-unused-expression
     expect(deletedMetadata.options.persisted).to.be.false;
 
-    expect(deletedMetadata.propertyName).to.equal('__deleted');
+    expect(deletedMetadata.propertyName).to.equal(EntityStatusHelper.PROPERTY_NAME_DELETED);
     expect(deletedMetadata.propertyType).to.equal(ColumnTypes.BOOLEAN);
   }
 
