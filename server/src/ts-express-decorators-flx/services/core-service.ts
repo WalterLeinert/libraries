@@ -7,7 +7,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  AppConfig, EntityVersion, FindResult, IUser, ProxyModes, QueryResult,
+  AppConfig, EntityStatus, EntityVersion, FindResult, FlxStatusEntity, IUser, ProxyModes, QueryResult,
   ServiceResult, TableMetadata, User
 } from '@fluxgate/common';
 import {
@@ -78,7 +78,11 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
       return new Promise<FindResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
-          const query = this.createClientSelectorQuery(request, trx);
+          // ggf. nach Mandanten filtern
+          let query = this.createClientSelectorQuery(request, trx);
+
+          // ggf. nach Status filtern
+          query = this.createStatusSelectorQuery(request, trx, query);
 
           query
 
@@ -143,7 +147,11 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
       return new Promise<QueryResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
+          // ggf. nach Mandanten filtern
           query = this.createClientSelectorQuery(request, trx, query);
+
+          // ggf. nach Status filtern
+          query = this.createStatusSelectorQuery(request, trx, query);
 
           query
             .transacting(trx)
@@ -432,6 +440,37 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
 
   /**
+   * Liefert eine Knex-Query, die für die aktuelle Tabelle alle Rows liefert, bei denen der
+   * Status 0 (EntityStatus.None) ist.
+   *
+   * @protected
+   * @param {ISessionRequest|IBodyRequest<IUser>} request
+   * @param {Knex.Transaction} trx
+   * @returns {Knex.QueryBuilder}
+   *
+   * @memberof ReadonlyService
+   */
+  protected createStatusSelectorQuery(request: ISessionRequest | IBodyRequest<IUser>, trx: Knex.Transaction,
+    query?: Knex.QueryBuilder): Knex.QueryBuilder {
+
+    if (!query) {
+      query = this.fromTable();
+    }
+
+    if (request && this.metadata.statusColumnKeys.length > 0) {
+      const statusColumn = this.metadata.statusColumn;
+
+      query = query
+        .andWhere(statusColumn.options.name, EntityStatus.None);
+    }
+
+    return query
+      .transacting(trx);
+  }
+
+
+
+  /**
    * Liefert true, falls mit der EntityVersion-Information gearbeitet werden soll, d.h.
    * - der EntitVersionProxy konfiguriert ist und
    * - für das aktuelle Model EntityVersion-Metadaten vorliegen und
@@ -445,7 +484,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
   protected hasEntityVersionInfo(): boolean {
     return (
       (
-        (! AppConfig.config) ||
+        (!AppConfig.config) ||
         (
           AppConfig.config && AppConfig.config.proxyMode === ProxyModes.ENTITY_VERSION
         )
