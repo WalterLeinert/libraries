@@ -29,15 +29,15 @@ import { QueryTestService } from './query-test.service';
 
 
 /**
- * Test mit EntityVersionTest-Konfiguration:
- * - EntityVersion-Tabelle muss involviert sein und bei Änderungen inkrementiert werden
+ * Test mit NopProxy-Konfiguration:
+ * - EntityVersion-Tabelle darf nicht involviert sein
  *
- * @class EntityVersionTest
+ * @class NopProxyTest
  * @extends {KnexTest<QueryTest, number>}
  */
-@suite('test entityversion table')
-class EntityVersionTest extends KnexTest<QueryTest, number> {
-  protected static readonly logger = getLogger(EntityVersionTest);
+@suite('test NopProxy')
+class NopProxyTest extends KnexTest<QueryTest, number> {
+  protected static readonly logger = getLogger(NopProxyTest);
 
   public static readonly ITEMS = 5;
   public static readonly MAX_ITEMS = 10;
@@ -46,9 +46,9 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
 
   constructor() {
     super({
-      count: EntityVersionTest.ITEMS,
-      maxCount: EntityVersionTest.MAX_ITEMS,
-      idGenerator: new NumberIdGenerator(EntityVersionTest.MAX_ITEMS),
+      count: NopProxyTest.ITEMS,
+      maxCount: NopProxyTest.MAX_ITEMS,
+      idGenerator: new NumberIdGenerator(NopProxyTest.MAX_ITEMS),
       columns: {
         __version: new ConstantValueGenerator(0),
         __test: new ConstantValueGenerator(0),
@@ -61,7 +61,7 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
 
 
   public static before(done: (err?: any) => void) {
-    using(new XLog(EntityVersionTest.logger, levels.INFO, 'static.before'), (log) => {
+    using(new XLog(NopProxyTest.logger, levels.INFO, 'static.before'), (log) => {
       super.before((doneBefore: (err?: any) => void) => {
         super.setup(QueryTestService, new NumberIdGenerator(1), (doneSetup: (err?: any) => void) => {
           done();
@@ -81,7 +81,7 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
           printUrl: 'dummy',
           printTopic: '',
           mode: 'local',
-          proxyMode: 'entityVersion'
+          proxyMode: 'nop'
         }
       );
 
@@ -105,7 +105,7 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
   }
 
 
-  @test 'should increment entity version && entityVersion.version (1st update)'(done: (err?: any) => void) {
+  @test 'should increment entity version (1st update)'(done: (err?: any) => void) {
     this.service.find(undefined).then((findResult) => {
       const item = findResult.items[findResult.items.length - 1];   // new record
 
@@ -122,13 +122,20 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
           }
 
           if (updateResult.item.__version !== item.__version + 1) {
-            done(`entity: versions different: ${updateResult.item.__version} !== ${item.__version}`);
+            done(`entity: versions different: ${updateResult.item.__version} !== ${item.__version + 1}`);
             return;
           }
 
+          if (updateResult.entityVersion !== -1) {
+            done(`entityVersion: result should have entityVersion -1: ` +
+              `${updateResult.entityVersion} !== ${-1}`);
+            return;
+          }
+
+          // should not increment entityVersion table
           this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
-            if (evResult.item.__version !== versionPrev + 1) {
-              done(`entityVersion: versions different: ${evResult.item.__version} !== ${versionPrev + 1}`);
+            if (evResult.item.__version !== versionPrev) {
+              done(`entityVersion: versions different: ${evResult.item.__version} !== ${versionPrev}`);
             } else {
               done();
             }
@@ -140,7 +147,7 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
   }
 
 
-  @test 'should increment entity version && entityVersion.version (2nd update)'(done: (err?: any) => void) {
+  @test 'should increment entity version (2nd update)'(done: (err?: any) => void) {
     this.service.find(undefined).then((findResult) => {
       const item = findResult.items[findResult.items.length - 1];   // new record
 
@@ -155,21 +162,21 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
             return;
           }
 
-          if (updateResult.entityVersion !== versionPrev + 1) {
-            done(`entityVersion: version different to previous version: ` +
-              `${updateResult.entityVersion} !== ${versionPrev + 1}`);
+          if (updateResult.entityVersion !== -1) {
+            done(`entityVersion: result should have entityVersion -1: ` +
+              `${updateResult.entityVersion} !== ${-1}`);
             return;
           }
 
+          // should not increment entityVersion table
           this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
-
-            if (updateResult.entityVersion !== evResult.item.__version) {
-              done(`entityVersion: versions different: ${updateResult.entityVersion} !== ${evResult.item.__version}`);
+            if (evResult.item.__version !== versionPrev) {
+              done(`entityVersion: versions different: ${evResult.item.__version} !== ${versionPrev}`);
             } else {
               done();
             }
-
           });
+
         });
       });
     });

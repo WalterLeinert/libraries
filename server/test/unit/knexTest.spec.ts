@@ -210,7 +210,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
   /**
    * wird vor jedem Test aufgerufen
    */
-  protected before(done: (err?: any) => void) {
+  protected before(done?: (err?: any) => void) {
     using(new XLog(KnexTest.logger, levels.INFO, 'before'), (log) => {
       super.before(() => {
         this.entityVersionDict.clear();
@@ -235,7 +235,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
   /**
    * wird nach jedem Test aufgerufen
    */
-  protected after(done: (err?: any) => void) {
+  protected after(done?: (err?: any) => void) {
     using(new XLog(KnexTest.logger, levels.INFO, 'after'), (log) => {
       super.after(() => {
         done();

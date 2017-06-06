@@ -7,7 +7,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  EntityVersion, FindResult, IUser, QueryResult,
+  AppConfig, EntityVersion, FindResult, IUser, ProxyModes, QueryResult,
   ServiceResult, TableMetadata, User
 } from '@fluxgate/common';
 import {
@@ -432,8 +432,10 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
 
   /**
-   * Liefert true, falls für das aktuelle Model EntityVersion-Information aktualisiert wird und die letzte Version
-   * geliefert werden kann.
+   * Liefert true, falls mit der EntityVersion-Information gearbeitet werden soll, d.h.
+   * - der EntitVersionProxy konfiguriert ist und
+   * - für das aktuelle Model EntityVersion-Metadaten vorliegen und
+   * - kein View vorliegt
    *
    * @private
    * @returns {boolean}
@@ -441,7 +443,14 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    * @memberof ReadonlyService
    */
   protected hasEntityVersionInfo(): boolean {
-    return (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata &&
+    return (
+      (
+        (! AppConfig.config) ||
+        (
+          AppConfig.config && AppConfig.config.proxyMode === ProxyModes.ENTITY_VERSION
+        )
+      ) &&
+      this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata &&
       !this.metadata.options.isView);
   }
 }

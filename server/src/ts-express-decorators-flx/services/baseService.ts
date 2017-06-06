@@ -11,7 +11,7 @@ import {
 } from '@fluxgate/core';
 
 import {
-  CreateResult, DeleteResult, IEntity, UpdateResult
+  AppConfig, CreateResult, DeleteResult, IEntity, ProxyModes, UpdateResult
 } from '@fluxgate/common';
 
 
@@ -377,7 +377,17 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
     return using(new XLog(BaseService.logger, levels.INFO, 'createEntityVersionIncrement'), (log) => {
       let rval = this.fromTable();
 
-      if (this.entityVersionMetadata) {
+      //
+      // falls wird mit dem EntityVersionProxy arbeiten und im Schema EntityVersion-Metadaten vorliegen
+      // inkrementieren wir die Version aktuellen Entity.
+      //
+      if (this.entityVersionMetadata &&
+      (
+        (! AppConfig.config) ||
+        (
+          AppConfig.config && AppConfig.config.proxyMode === ProxyModes.ENTITY_VERSION
+        )
+      )) {
 
         // query zum Inkrement der Version in Tabelle entityversion
 
