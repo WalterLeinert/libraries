@@ -25,15 +25,4 @@ export class UserService extends Service<User, number> {
   constructor(metadataService: MetadataService, http: Http, configService: ConfigService) {
     super(User, metadataService, http, configService);
   }
-
-
-  /**
-   * Markiert den User als deleted und führt einen Update in der DB durch.
-   *
-   * @param user
-   */
-  public setDeleted(user: User): Observable<UpdateResult<User, number>> {
-    user.deleted = true;
-    return super.update(user);
-  }
 }

@@ -6,7 +6,7 @@ import { Enum } from '../model/decorator/enum';
 import { IdColumn } from '../model/decorator/id-column';
 import { Table } from '../model/decorator/table';
 import { Validation } from '../model/decorator/validation';
-import { FlxEntity } from '../model/flx-entity';
+import { FlxStatusEntity } from '../model/flx-status-entity';
 import { Validators } from '../model/validation/validators';
 
 
@@ -20,7 +20,7 @@ import { IUser } from './user.interface';
  */
 // tslint:disable-next-line:max-classes-per-file
 @Table({ name: User.TABLE_NAME })
-export class User extends FlxEntity<number> implements IUser {
+export class User extends FlxStatusEntity<number> implements IUser {
   public static readonly TABLE_NAME = 'user';
 
   /**
@@ -81,9 +81,6 @@ export class User extends FlxEntity<number> implements IUser {
     }
     return sb.toString();
   }
-
-  @Column({ name: 'user_deleted', hidden: true })
-  public deleted?: boolean;
 
 
   constructor(id?: number, username?: string, role?: number, lastname?: string) {

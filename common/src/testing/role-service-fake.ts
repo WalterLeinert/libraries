@@ -26,8 +26,9 @@ export class RoleServiceFake extends ServiceFake<IRole, number> {
         idGenerator: new NumberIdGenerator(RoleServiceFake.MAX_ITEMS),
         columns: {
           __client: new ConstantValueGenerator(1),
-          deleted: new ConstantValueGenerator(false),
           __version: new ConstantValueGenerator(0),
+          __deleted: new ConstantValueGenerator(false),
+          __archived: new ConstantValueGenerator(false)
         }
       }), entityVersionServiceFake
     );

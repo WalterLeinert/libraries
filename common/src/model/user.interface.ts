@@ -1,9 +1,9 @@
-import { IFlxEntity } from './flx-entity.interface';
+import { IFlxStatusEntity } from './flx-status-entity.interface';
 
 /**
  * Interface für User
  */
-export interface IUser extends IFlxEntity<number> {
+export interface IUser extends IFlxStatusEntity<number> {
   /**
    * Der Benutzername (login)
    */
@@ -33,10 +33,6 @@ export interface IUser extends IFlxEntity<number> {
    */
   isAdmin: boolean;
 
-  /**
-   * liefert true, falls die Entity als gelöscht markiert ist
-   */
-  deleted?: boolean;
 
   /**
    * Setzt Passwort und Salt zurück

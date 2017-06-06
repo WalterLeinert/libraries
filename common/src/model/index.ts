@@ -8,6 +8,7 @@ export * from './error';
 export * from './flx-entity';
 export * from './flx-entity.interface';
 export * from './flx-status-entity';
+export * from './flx-status-entity.interface';
 export * from './generator';
 export * from './client';
 export * from './mapping';

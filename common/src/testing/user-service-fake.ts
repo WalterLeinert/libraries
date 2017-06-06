@@ -25,10 +25,11 @@ export class UserServiceFake extends ServiceFake<IUser, number> {
         tableMetadata: MetadataStorage.instance.findTableMetadata(User),
         idGenerator: new NumberIdGenerator(UserServiceFake.MAX_ITEMS),
         columns: {
-          __client: new ConstantValueGenerator(1),
           role: new ConstantValueGenerator(2),
-          deleted: new ConstantValueGenerator(false),
+          __client: new ConstantValueGenerator(1),
           __version: new ConstantValueGenerator(0),
+          __deleted: new ConstantValueGenerator(false),
+          __archived: new ConstantValueGenerator(false)
         }
       }), entityVersionServiceFake
     );
