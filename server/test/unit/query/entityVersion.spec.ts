@@ -5,7 +5,6 @@
 require('reflect-metadata');
 
 import * as chai from 'chai';
-import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import 'mocha';
 import { suite, test } from 'mocha-typescript';
@@ -205,7 +204,6 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
         const entityVersionPrev = entityVersionResult.item.__version;
 
         this.service.delete(undefined, item.id).then((deleteResult) => {
-          const expectedVersion = 1;
 
           this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
             if (evResult.item.__version !== entityVersionPrev + 1) {

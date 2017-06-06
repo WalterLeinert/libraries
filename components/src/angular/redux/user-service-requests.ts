@@ -7,7 +7,6 @@ import {
   ENTITY_VERSION_SERVICE, EntityVersion, IService, IUser, Store, TableServiceRequests, User, UserStore
 } from '@fluxgate/common';
 
-import { } from './enhanced-service-requests';
 import { UserService } from './user.service';
 
 @Injectable()
