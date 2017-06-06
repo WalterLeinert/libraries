@@ -3,15 +3,16 @@ import { Inject, Injectable, NgModule } from '@angular/core';
 // fluxgate
 import { APP_STORE } from '@fluxgate/client';
 import {
+  EnhancedServiceRequests,
   ENTITY_VERSION_SERVICE, EntityVersion, IService, IUser, Store, TableServiceRequests, User, UserStore
 } from '@fluxgate/common';
 
-import { EnhancedServiceRequests } from './enhanced-service-requests';
+import { } from './enhanced-service-requests';
 import { UserService } from './user.service';
 
 @Injectable()
 @TableServiceRequests(User)
-export class UserServiceRequests extends EnhancedServiceRequests<IUser, number, UserService> {
+export class UserServiceRequests extends EnhancedServiceRequests<IUser, number> {
 
   constructor(service: UserService, @Inject(APP_STORE) store: Store,
     @Inject(ENTITY_VERSION_SERVICE) entityVersionService?: IService<EntityVersion, string>) {

@@ -16,7 +16,9 @@ import {
   AutoformConfiguration, ControlType, FormAction, FormActions, IAutoformConfig,
   IControlDisplayInfo, IDataFormAction, MessageService, MetadataService, ServiceRequestsComponent
 } from '@fluxgate/client';
-import { ICrudServiceRequests, ServiceCommand, Store, TableMetadata } from '@fluxgate/common';
+import {
+  ICrudServiceRequests, ItemCreatedCommand, ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand, Store, TableMetadata
+} from '@fluxgate/common';
 import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/core';
 
 
@@ -301,19 +303,11 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     if (this.action === FormActions.UPDATE) {
       this.registerSubscription(this.serviceRequests.update(this.value).subscribe(
         (value: any) => {
-          this.resetFormGroup(this.value);
-          this.doClose(false);
-        },
-        (error: Error) => {
           // -> onStoreUpdated
         }));
     } else if (this.action === FormActions.CREATE) {
       this.registerSubscription(this.serviceRequests.create(this.value).subscribe(
         (value: any) => {
-          this.resetFormGroup(this.value);
-          this.doClose(false);
-        },
-        (error: Error) => {
           // -> onStoreUpdated
         }));
     } else {
@@ -322,26 +316,11 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   }
 
 
-  /**
-   * Löscht die Entity
-   */
-  public delete() {
-    this.registerSubscription(this.serviceRequests.delete(this.serviceRequests.getEntityId(this.value)).subscribe(
-      (value: any) => {
-        this.resetFormGroup(this.value);
-        this.doClose(false);
-      },
-      (error: Error) => {
-        this.handleError(error);
-      }));
-  }
-
-
   public confirmDelete() {
     using(new XLog(AutoformComponent.logger, levels.INFO, 'confirmDelete'), (log) => {
 
       if (confirm('Do you want to delete this record?')) {
-        this.delete();
+        this.deleteItem(this.value, true);
       }
 
       // this.confirmAction({
@@ -418,6 +397,11 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       const state = super.getStoreState(command.storeId);
       if (state.error) {
         this.doClose(true);
+      } else {
+        if (command instanceof ItemCreatedCommand || command instanceof ItemDeletedCommand || command instanceof ItemUpdatedCommand) {
+          this.resetFormGroup(this.value);
+          this.doClose(false);
+        }
       }
     });
   }
