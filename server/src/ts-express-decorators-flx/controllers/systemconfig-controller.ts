@@ -7,14 +7,14 @@ import {
 } from '@fluxgate/common';
 import { IQuery } from '@fluxgate/core';
 
-import { SystemConfigService } from '../services/systemconfig.service';
+import { SystemConfigService } from '../services/system-config.service';
 import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
 import { ControllerBase } from './base/controller-base';
 
 
 @Controller('/systemconfig')
-export class SystemConfigController extends ControllerBase<SystemConfig, number> {
+export class SystemConfigController extends ControllerBase<SystemConfig, any> {
   constructor(service: SystemConfigService) {
     super(service, 'systemconfig', 'systemconfig_id');
   }
@@ -23,7 +23,7 @@ export class SystemConfigController extends ControllerBase<SystemConfig, number>
   @Post('/')
   public create(
     @Request() request: IBodyRequest<SystemConfig>
-    ): Promise<CreateResult<SystemConfig, number>> {
+    ): Promise<CreateResult<SystemConfig, string>> {
     return super.createInternal(request);
   }
 
@@ -39,8 +39,8 @@ export class SystemConfigController extends ControllerBase<SystemConfig, number>
   @Get('/:id')
   public findById(
     @Request() request: ISessionRequest,
-    @PathParams('id') id: number
-    ): Promise<FindByIdResult<SystemConfig, number>> {
+    @PathParams('id') id: string
+    ): Promise<FindByIdResult<SystemConfig, string>> {
     return super.findByIdInternal(request, id);
   }
 
@@ -56,7 +56,7 @@ export class SystemConfigController extends ControllerBase<SystemConfig, number>
   @Put('/')
   public update(
     @Request() request: IBodyRequest<SystemConfig>
-    ): Promise<UpdateResult<SystemConfig, number>> {
+    ): Promise<UpdateResult<SystemConfig, string>> {
     return super.updateInternal(request);
   }
 
@@ -64,8 +64,8 @@ export class SystemConfigController extends ControllerBase<SystemConfig, number>
   @Delete('/:id')
   public delete(
     @Request() request: ISessionRequest,
-    @PathParams('id') id: number
-    ): Promise<DeleteResult<number>> {
+    @PathParams('id') id: string
+    ): Promise<DeleteResult<string>> {
     return super.deleteInternal(request, id);
   }
 }

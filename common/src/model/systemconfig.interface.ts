@@ -3,11 +3,11 @@ import { IFlxEntity } from './flx-entity.interface';
 /**
  * Interface für SystemConfig
  */
-export interface ISystemConfig extends IFlxEntity<number> {
+export interface ISystemConfig extends IFlxEntity<string> {
   /**
    * SystemConfigname
    */
-  name: string;
+  description: string;
 
   /**
    * Die Konfiguration im JSON-Format
