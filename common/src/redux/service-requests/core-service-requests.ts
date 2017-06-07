@@ -1,11 +1,13 @@
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
 
-import { IException, IQuery } from '@fluxgate/core';
+import { IException } from '@fluxgate/core';
 
 import { EntityVersion } from '../../model/entityVersion';
 import { ICoreService } from '../../model/service/core-service.interface';
 import { IService } from '../../model/service/service.interface';
+import { StatusFilter } from '../../model/service/status-filter';
+import { IStatusQuery } from '../../model/service/status-query';
 import { ProxyFactory } from '../cache/proxy-factory';
 import {
   ErrorCommand, FindingItemsCommand, ItemsFoundCommand, ItemsQueriedCommand,
@@ -62,7 +64,7 @@ export abstract class CoreServiceRequests<T> extends ServiceRequests implements 
    * @param {boolean} useCache - falls true, werden nur die Daten aus dem State übernommen; sonst Servercall
    * @memberOf ServiceRequests
    */
-  public query(query: IQuery): Observable<T[]> {
+  public query(query: IStatusQuery): Observable<T[]> {
     return Observable.create((observer: Subscriber<T[]>) => {
       try {
         this.dispatch(new QueryingItemsCommand(this, query));
@@ -90,13 +92,13 @@ export abstract class CoreServiceRequests<T> extends ServiceRequests implements 
    *
    * @memberOf ServiceRequests
    */
-  public find(): Observable<T[]> {
+  public find(filter?: StatusFilter): Observable<T[]> {
     return Observable.create((observer: Subscriber<T[]>) => {
 
       try {
         this.dispatch(new FindingItemsCommand(this));
 
-        this._coreService.find().subscribe(
+        this._coreService.find(filter).subscribe(
           (findResult) => {
             this.dispatch(new ItemsFoundCommand(this, findResult.items));
             observer.next(findResult.items);

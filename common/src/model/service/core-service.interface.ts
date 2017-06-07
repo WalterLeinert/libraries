@@ -1,9 +1,10 @@
 import { Observable } from 'rxjs/Observable';
 
-import { IQuery } from '@fluxgate/core';
 import { FindResult } from './find-result';
 import { QueryResult } from './query-result';
 import { IServiceBase } from './service-base.interface';
+import { StatusFilter } from './status-filter';
+import { IStatusQuery } from './status-query';
 
 /**
  * Interface für alle Services, die Entities ohne primary key (Id) liefern
@@ -11,20 +12,25 @@ import { IServiceBase } from './service-base.interface';
 export interface ICoreService<T> extends IServiceBase<T, any> {
 
   /**
-   * Queries all entities of type T with given @param{query}.
+   * Liefert alle Entities vom Typ T für die Query @param{query}
+   * Über @param{filter} kann bzgl. des Entitystatus gefiltert werden (falls vorhanden)
    *
-   * @param {IQuery} query
+   * @param {IStatusQuery} query
+   * @param {StatusFilter} [filter]
    * @returns {Observable<QueryResult<T>>}
    *
    */
-  query(query: IQuery): Observable<QueryResult<T>>;
+  query(query: IStatusQuery): Observable<QueryResult<T>>;
 
   /**
-   * Find all entities of type T.
+   * Liefert alle Entities vom Typ T.
+   * Über @param{filter} kann bzgl. des Entitystatus gefiltert werden (falls vorhanden)
    *
+   * @param {StatusFilter} [filter]
    * @returns {Observable<FindResult<T>>}
    *
+   * @memberof ICoreService
    */
-  find(): Observable<FindResult<T>>;
+  find(filter?: StatusFilter): Observable<FindResult<T>>;
 
 }
