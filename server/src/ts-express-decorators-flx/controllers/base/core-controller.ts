@@ -5,8 +5,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { FindResult, QueryResult } from '@fluxgate/common';
-import { IQuery } from '@fluxgate/core';
+import { FindResult, IStatusQuery, QueryResult, StatusFilter } from '@fluxgate/common';
 
 import { ICoreService } from '../../services/core-service.interface';
 import { IBodyRequest } from '../../session/body-request.interface';
@@ -41,10 +40,10 @@ export abstract class CoreController<T> extends TableController {
    * @memberOf ControllerBase
    */
   protected findInternal(
-    request: ISessionRequest,
+    request: IBodyRequest<StatusFilter>
   ): Promise<FindResult<T>> {
     return Promise.resolve()
-      .then(() => this.getService().find(request))
+      .then(() => this.getService().find(request, request.body))
       .then<FindResult<T>>((result) => this.serialize(result));
   }
 
@@ -59,10 +58,10 @@ export abstract class CoreController<T> extends TableController {
    * @memberof ControllerBase
    */
   protected queryInternal(
-    request: IBodyRequest<IQuery>
+    request: IBodyRequest<IStatusQuery>
   ): Promise<QueryResult<T>> {
     return Promise.resolve()
-      .then(() => this.deserialize<IQuery>(request.body))
+      .then(() => this.deserialize<IStatusQuery>(request.body))
       .then((deserializedQuery) => this.getService().query(request, deserializedQuery))
       .then<QueryResult<T>>((result) => this.serialize(result));
   }

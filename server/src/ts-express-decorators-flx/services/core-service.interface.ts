@@ -1,8 +1,7 @@
 import * as Knex from 'knex';
 
 // Fluxgate
-import { FindResult, QueryResult, TableMetadata } from '@fluxgate/common';
-import { IQuery } from '@fluxgate/core';
+import { FindResult, IStatusQuery, QueryResult, StatusFilter, TableMetadata } from '@fluxgate/common';
 
 import { ISessionRequest } from '../session/session-request.interface';
 import { IServiceCore } from './service-core.interface';
@@ -27,7 +26,8 @@ export interface ICoreService<T> extends IServiceCore {
    * @memberOf ServiceBase
    */
   find(
-    request: ISessionRequest
+    request: ISessionRequest,
+    filter?: StatusFilter
   ): Promise<FindResult<T>>;
 
 
@@ -47,7 +47,7 @@ export interface ICoreService<T> extends IServiceCore {
 
   query(
     request: ISessionRequest,
-    query: IQuery
+    query: IStatusQuery
   ): Promise<QueryResult<T>>;
 
 

@@ -7,12 +7,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  AppConfig, EntityStatus, EntityVersion, FindResult, IUser, ProxyModes, QueryResult,
-  ServiceResult, TableMetadata, User
+  AppConfig, EntityStatus, EntityVersion, FindResult, IStatusQuery, IUser, ProxyModes, QueryResult,
+  ServiceResult, StatusFilter, TableMetadata, User
 } from '@fluxgate/common';
 import {
-  Assert, Clone, Funktion, ICtor,
-  IQuery, Types
+  Assert, Clone, Funktion, ICtor, Types
 } from '@fluxgate/core';
 
 
@@ -71,7 +70,8 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    * @memberOf ServiceBase
    */
   public find(
-    request: ISessionRequest
+    request: ISessionRequest,
+    filter?: StatusFilter
   ): Promise<FindResult<T>> {
     return using(new XLog(CoreService.logger, levels.INFO, 'find', `[${this.tableName}]`), (log) => {
 
@@ -203,7 +203,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
   public query(
     request: ISessionRequest,
-    query: IQuery
+    query: IStatusQuery
   ): Promise<QueryResult<T>> {
     return using(new XLog(CoreService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
       const knexQuery = this.fromTable();
