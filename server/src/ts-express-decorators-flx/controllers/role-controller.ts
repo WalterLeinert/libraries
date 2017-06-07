@@ -2,10 +2,9 @@ import { Authenticated, Controller, Delete, Get, PathParams, Post, Put, Request 
 
 // Fluxgate
 import {
-  CreateResult, DeleteResult, FindByIdResult, FindResult, QueryResult,
-  Role, UpdateResult
+  CreateResult, DeleteResult, FindByIdResult, FindResult, IStatusQuery, QueryResult,
+  Role, ServiceConstants, StatusFilter, UpdateResult
 } from '@fluxgate/common';
-import { IQuery } from '@fluxgate/core';
 
 import { RoleService } from '../services/role.service';
 import { IBodyRequest } from '../session/body-request.interface';
@@ -20,7 +19,7 @@ export class RoleController extends ControllerBase<Role, number> {
   }
 
   @Authenticated({ role: 'admin' })
-  @Post('/')
+  @Post(`/${ServiceConstants.CREATE}`)
   public create(
     @Request() request: IBodyRequest<Role>
     ): Promise<CreateResult<Role, number>> {
@@ -28,9 +27,9 @@ export class RoleController extends ControllerBase<Role, number> {
   }
 
   // @Authenticated()
-  @Get('/')
+  @Post(`/${ServiceConstants.FIND}`)
   public find(
-    @Request() request: ISessionRequest
+    @Request() request: IBodyRequest<StatusFilter>
     ): Promise<FindResult<Role>> {
     return super.findInternal(request);
   }
@@ -46,15 +45,15 @@ export class RoleController extends ControllerBase<Role, number> {
 
 
   @Authenticated({ role: 'admin' })
-  @Post('/query')
+  @Post(`/${ServiceConstants.QUERY}`)
   public query(
-    @Request() request: IBodyRequest<IQuery>
+    @Request() request: IBodyRequest<IStatusQuery>
     ): Promise<QueryResult<Role>> {
     return super.queryInternal(request);
   }
 
   @Authenticated({ role: 'admin' })
-  @Put('/')
+  @Put(`/${ServiceConstants.UPDATE}`)
   public update(
     @Request() request: IBodyRequest<Role>
     ): Promise<UpdateResult<Role, number>> {

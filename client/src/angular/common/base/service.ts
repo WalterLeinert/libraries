@@ -13,7 +13,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 import {
-  CreateResult, DeleteResult, IEntity, UpdateResult
+  CreateResult, DeleteResult, IEntity, ServiceConstants, UpdateResult
 } from '@fluxgate/common';
 
 import { Assert, Funktion, IToString } from '@fluxgate/core';
@@ -64,7 +64,7 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
     Assert.notNull(item, 'item');
     return using(new XLog(Service.logger, levels.INFO, 'create', `[${this.getModelClassName()}]`), (log) => {
 
-      return this.http.post(this.getUrl(), this.serialize(item))
+      return this.http.post(`${this.getUrl()}/${ServiceConstants.CREATE}`, this.serialize(item))
         .map((response: Response) => this.deserialize(response.json()))
         .do((result: CreateResult<T, TId>) => {
           if (log.isInfoEnabled()) {
@@ -89,7 +89,7 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
     Assert.notNull(item, 'item');
     return using(new XLog(Service.logger, levels.INFO, 'update', `[${this.getModelClassName()}]`), (log) => {
 
-      return this.http.put(`${this.getUrl()}`, this.serialize(item))
+      return this.http.put(`${this.getUrl()}//${ServiceConstants.UPDATE}`, this.serialize(item))
         .map((response: Response) => this.deserialize(response.json()))
         .do((result: UpdateResult<T, TId>) => {
           if (log.isInfoEnabled()) {

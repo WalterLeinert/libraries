@@ -2,10 +2,10 @@ import { Authenticated, Controller, Delete, Get, PathParams, Post, Put, Request 
 
 // Fluxgate
 import {
-  CreateResult, DeleteResult, FindByIdResult, FindResult, QueryResult,
+  CreateResult, DeleteResult, FindByIdResult, FindResult, IStatusQuery, QueryResult,
+  ServiceConstants, StatusFilter,
   UpdateResult, User
 } from '@fluxgate/common';
-import { IQuery } from '@fluxgate/core';
 
 import { UserService } from '../services/user.service';
 import { IBodyRequest } from '../session/body-request.interface';
@@ -13,6 +13,7 @@ import { ISessionRequest } from '../session/session-request.interface';
 import { ControllerBase } from './base/controller-base';
 
 
+// tslint:disable-next-line:max-classes-per-file
 @Controller('/user')
 export class UserController extends ControllerBase<User, number> {
   constructor(service: UserService) {
@@ -20,7 +21,7 @@ export class UserController extends ControllerBase<User, number> {
   }
 
   @Authenticated({ role: 'admin' })
-  @Post('/')
+  @Post(`/${ServiceConstants.CREATE}`)
   public create(
     @Request() request: IBodyRequest<User>
     ): Promise<CreateResult<User, number>> {
@@ -29,9 +30,9 @@ export class UserController extends ControllerBase<User, number> {
 
 
   // @Authenticated()
-  @Get('/')
+  @Post(`/${ServiceConstants.FIND}`)
   public find(
-    @Request() request: ISessionRequest
+    @Request() request: IBodyRequest<StatusFilter>
     ): Promise<FindResult<User>> {
     return super.findInternal(request);
   }
@@ -47,16 +48,16 @@ export class UserController extends ControllerBase<User, number> {
 
 
   @Authenticated({ role: 'admin' })
-  @Post('/query')
+  @Post(`/${ServiceConstants.QUERY}`)
   public query(
-    @Request() request: IBodyRequest<IQuery>
+    @Request() request: IBodyRequest<IStatusQuery>
     ): Promise<QueryResult<User>> {
     return super.queryInternal(request);
   }
 
 
   @Authenticated({ role: 'admin' })
-  @Put('/')
+  @Put(`/${ServiceConstants.UPDATE}`)
   public update(
     @Request() request: IBodyRequest<User>
     ): Promise<UpdateResult<User, number>> {
