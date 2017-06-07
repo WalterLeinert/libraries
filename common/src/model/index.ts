@@ -22,3 +22,4 @@ export * from './validation';
 export * from './validation';
 export * from './versioned-entity';
 export * from './versioned-entity.interface';
+export * from './message.interface';
