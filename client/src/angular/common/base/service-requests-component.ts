@@ -85,7 +85,7 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
    *
    * Ist _serviceRequests keine Instanz von CrudServiceRequests, wird eine Exception geworfen.
    *
-   * Ist _serviceRequests eine Instanz von @see{EnhancedServiceRequests}, wird nur das deleted-Flag
+   * Ist _serviceRequests eine Instanz von @see{StatusServiceRequests}, wird nur das deleted-Flag
    * im Entity-Status gesetzt; ansonsten wird das Item komplett gelöscht.
    *
    * @protected
