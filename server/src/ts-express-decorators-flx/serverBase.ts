@@ -257,7 +257,7 @@ export abstract class ServerBase extends ServerLoader {
         // Just use passport strategy method to know if the user is Authenticated :)
         return request.isAuthenticated();
       });
-  };
+  }
 
 
   /**
