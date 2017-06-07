@@ -2,16 +2,13 @@ import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
 
 // fluxgate
-import { IException, InvalidOperationException, IToString, Types } from '@fluxgate/core';
+import { IException, InvalidOperationException, IToString } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
 import { FlxStatusEntity } from '../../model/flx-status-entity';
 import { IService } from '../../model/service/service.interface';
-import {
-  DeletingItemCommand, ErrorCommand,
-  ItemDeletedCommand, ItemsFoundCommand
-} from '../command';
+import { ErrorCommand, ItemsFoundCommand } from '../command';
 import { Store } from '../store/store';
 import { ExtendedCrudServiceRequests } from './extended-crud-service-requests';
 

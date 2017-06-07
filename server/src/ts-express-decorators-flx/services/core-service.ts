@@ -7,7 +7,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  AppConfig, EntityStatus, EntityVersion, FindResult, FlxStatusEntity, IUser, ProxyModes, QueryResult,
+  AppConfig, EntityStatus, EntityVersion, FindResult, IUser, ProxyModes, QueryResult,
   ServiceResult, TableMetadata, User
 } from '@fluxgate/common';
 import {

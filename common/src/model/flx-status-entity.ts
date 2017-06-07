@@ -1,5 +1,4 @@
 import { Column } from '../model/decorator/column';
-import { IdColumn } from '../model/decorator/id-column';
 import { StatusColumn } from '../model/decorator/status-column';
 import { Table } from '../model/decorator/table';
 import { EntityStatus, EntityStatusHelper } from './entity-status';

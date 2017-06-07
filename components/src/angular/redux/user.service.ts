@@ -1,14 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
-
 // Fluxgate
 import { ConfigService, MetadataService, Service } from '@fluxgate/client';
-import { TableService, UpdateResult, User } from '@fluxgate/common';
+import { TableService, User } from '@fluxgate/common';
 
 
 /**

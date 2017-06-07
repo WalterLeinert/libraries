@@ -11,7 +11,7 @@ import { suite, test } from 'mocha-typescript';
 import { Clone, ConfigurationException, InvalidOperationException, ShortTime, Time } from '@fluxgate/core';
 
 import {
-  Column, EntityStatus, EntityStatusHelper, FlxStatusEntity, MetadataStorage, Table, TableMetadata
+  Column, FlxStatusEntity, MetadataStorage, Table, TableMetadata
 } from '../../../src/model';
 import { ConstantValueGenerator } from '../../../src/model/generator/constant-value-generator';
 import { DateValueGenerator } from '../../../src/model/generator/date-value-generator';

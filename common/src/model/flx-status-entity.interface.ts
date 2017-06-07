@@ -1,5 +1,3 @@
-import { IClientEntity } from './client-entity.interface';
-import { IEntity } from './entity.interface';
 import { IFlxEntity } from './flx-entity.interface';
 import { IStatusEntity } from './status-entity.interface';
 

@@ -8,8 +8,8 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import {
-  ClientColumn, Column, ColumnTypes, EntityStatus, EntityStatusHelper, FlxStatusEntity,
-  IdColumn, IEntity, MetadataStorage, Table, TableMetadata
+  Column, ColumnTypes, EntityStatus, EntityStatusHelper, FlxStatusEntity,
+  IdColumn, MetadataStorage, Table, TableMetadata
 } from '../../../../src/model';
 
 
