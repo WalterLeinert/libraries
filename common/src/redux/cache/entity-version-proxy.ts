@@ -9,6 +9,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { Clone, IQuery, IToString, StringBuilder, Types } from '@fluxgate/core';
 
+import { EntityStatusHelper } from '../../model/entity-status';
 import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
 import { IFlxEntity } from '../../model/flx-entity.interface';
@@ -325,9 +326,19 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
             }
 
             if (cacheEntry) {
+              let itemsFiltered;
 
-              // Item ersetzen
-              const itemsFiltered = cacheEntry.items.map((e) => e.id === updateResult.item.id ? updateResult.item : e);
+              // TODO: eigentlich Test über "instanceof FlxStatusEntity" -> geht aber so nicht wegen
+              // zyklischer Abhängigkeiten!
+              if (Types.hasProperty(updateResult.item, EntityStatusHelper.PROPERTY_NAME_DELETED)
+                && updateResult.item[EntityStatusHelper.PROPERTY_NAME_DELETED] === true) {
+                // Item entfernen
+                itemsFiltered = cacheEntry.items.filter((e) => e.id !== updateResult.item.id);
+              } else {
+                // Item ersetzen
+                itemsFiltered = cacheEntry.items.map((e) => e.id === updateResult.item.id ? updateResult.item : e);
+              }
+
               this.updateCache(log, updateResult.entityVersion, itemsFiltered,
                 `update item[${this.getTableName()}] in cache`);
 
