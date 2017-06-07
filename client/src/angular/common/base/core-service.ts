@@ -12,8 +12,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { FindResult, QueryResult } from '@fluxgate/common';
-import { Assert, Funktion, IQuery, IToString } from '@fluxgate/core';
+import { FindResult, IStatusQuery, QueryResult, ServiceConstants, StatusFilter } from '@fluxgate/common';
+import { Assert, Funktion, IToString } from '@fluxgate/core';
 
 import { ConfigService } from '../../services/config.service';
 import { MetadataService } from '../../services/metadata.service';
@@ -32,6 +32,9 @@ import { ServiceBase } from './service-base';
 export abstract class CoreService<T, TId extends IToString> extends ServiceBase<T, TId> {
   protected static logger = getLogger(CoreService);
 
+  private static headers = new Headers({ 'Content-Type': 'application/json' });   // ... Set content type to JSON
+  private static options = new RequestOptions({ headers: CoreService.headers });           // Create a request option
+
 
   protected constructor(model: Funktion, metadataService: MetadataService,
     http: Http, configService: ConfigService, topic?: string) {
@@ -46,10 +49,12 @@ export abstract class CoreService<T, TId extends IToString> extends ServiceBase<
    *
    * @memberOf Service
    */
-  public find(): Observable<FindResult<T>> {
+  public find(filter?: StatusFilter): Observable<FindResult<T>> {
     return using(new XLog(CoreService.logger, levels.INFO, 'find', `[${this.getModelClassName()}]`), (log) => {
 
-      return this.http.get(this.getUrl())
+      const serializedFilter = this.serialize(filter);
+
+      return this.http.post(`${this.getUrl()}/${ServiceConstants.FIND}`, serializedFilter, CoreService.options)
         .map((response: Response) => this.deserialize(response.json()))
         .do((result: FindResult<T>) => {
           if (log.isInfoEnabled()) {
@@ -69,17 +74,13 @@ export abstract class CoreService<T, TId extends IToString> extends ServiceBase<
    *
    * @memberOf Service
    */
-  public query(query: IQuery): Observable<QueryResult<T>> {
+  public query(query: IStatusQuery): Observable<QueryResult<T>> {
     Assert.notNull(query, 'query');
     return using(new XLog(CoreService.logger, levels.INFO, 'query', `[${this.getModelClassName()}]`), (log) => {
 
-      const headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-      const options = new RequestOptions({ headers: headers });           // Create a request option
-
-
       const serializedQuery = this.serialize(query);
 
-      return this.http.post(`${this.getUrl()}/query`, serializedQuery, options)
+      return this.http.post(`${this.getUrl()}/${ServiceConstants.QUERY}`, serializedQuery, CoreService.options)
         .map((response: Response) => this.deserialize(response.json()))
         .do((result: QueryResult<T>) => {
           if (log.isInfoEnabled()) {
