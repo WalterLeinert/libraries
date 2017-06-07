@@ -19,11 +19,11 @@ import { ExtendedCrudServiceRequests } from './extended-crud-service-requests';
  * Erweiterung von @see{ExtendedCrudServiceRequests} um @see{setDeleted}.
  *
  * @export
- * @class EnhancedServiceRequests
+ * @class StatusServiceRequests
  * @template T
  * @template TId
  */
-export abstract class EnhancedServiceRequests<T extends IEntity<TId>, TId extends IToString>
+export abstract class StatusServiceRequests<T extends IEntity<TId>, TId extends IToString>
   extends ExtendedCrudServiceRequests<T, TId> {
 
   protected constructor(storeId: string, service: IService<T, TId>, store: Store,
@@ -32,48 +32,18 @@ export abstract class EnhancedServiceRequests<T extends IEntity<TId>, TId extend
   }
 
 
-  // /**
-  //  * Setzt den Entity-Status auf deleted.
-  //  *
-  //  * @param {T} item
-  //  *
-  //  * @memberOf EnhancedServiceRequests
-  //  */
-  // public setDeleted(item: T): Observable<T> {
-  //   if (!(item instanceof FlxStatusEntity)) {
-  //     throw new InvalidOperationException(`item ${JSON.stringify(item)} hat keine deleted-Property`);
-  //   }
-  //   item.__deleted = true;
-  //   return this.update(item);
-  // }
-
-  /**
-   * Setzt den Entity-Status auf archived.
-   *
-   * @param {T} item
-   *
-   * @memberOf EnhancedServiceRequests
-   */
-  public setArchived(item: T): Observable<T> {
-    if (!(item instanceof FlxStatusEntity)) {
-      throw new InvalidOperationException(`item ${JSON.stringify(item)} hat keine archived-Property`);
-    }
-    item.__archived = true;
-    return this.update(item);
-  }
-
   /**
    * Führt die delete-Methodes async aus und führt ein dispatch des zugehörigen Kommandos durch.
    * Delete markiert die Entity nur als deleted un löscht sie nicht wirklich!
    *
    * @param {TId} id
    *
-   * @memberOf EnhancedServiceRequests
+   * @memberOf StatusServiceRequests
    */
   public delete(item: T): Observable<TId> {
     if (!(item instanceof FlxStatusEntity)) {
       throw new InvalidOperationException(
-        `item ${JSON.stringify(item)} has no deleted property (is no FlxStatusEntity)`);
+        `item ${JSON.stringify(item)} is no FlxStatusEntity`);
     }
 
     return Observable.create((observer: Subscriber<TId>) => {
@@ -82,7 +52,7 @@ export abstract class EnhancedServiceRequests<T extends IEntity<TId>, TId extend
 
         super.update(item).subscribe(
           (updateResult) => {
-            this.dispatch(new ItemDeletedCommand(this, updateResult.id));
+            // this.dispatch(new ItemDeletedCommand(this, updateResult.id));
 
             this.dispatch(new ItemsFoundCommand(this,
               this.getCrudState(this.storeId).items.filter((it) => it.id !== updateResult.id)));
@@ -99,5 +69,44 @@ export abstract class EnhancedServiceRequests<T extends IEntity<TId>, TId extend
       }
     });
   }
+
+
+  /**
+   * Markiert die Entity als archiviert.
+   *
+   * @param {TId} id
+   *
+   * @memberOf StatusServiceRequests
+   */
+  public archive(item: T): Observable<TId> {
+    if (!(item instanceof FlxStatusEntity)) {
+      throw new InvalidOperationException(
+        `item ${JSON.stringify(item)} is no FlxStatusEntity`);
+    }
+
+    return Observable.create((observer: Subscriber<TId>) => {
+      try {
+        item.__archived = true;
+
+        super.update(item).subscribe(
+          (updateResult) => {
+            // this.dispatch(new ItemDeletedCommand(this, updateResult.id));
+
+            this.dispatch(new ItemsFoundCommand(this,
+              this.getCrudState(this.storeId).items.filter((it) => it.id !== updateResult.id)));
+
+            observer.next(updateResult.id);
+          },
+          (exc: IException) => {
+            this.dispatch(new ErrorCommand(this, exc));
+            observer.error(exc);
+          });
+
+      } catch (exc) {
+        observer.error(exc);
+      }
+    });
+  }
+
 
 }
