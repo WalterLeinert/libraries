@@ -2,7 +2,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 // Fluxgate
-import { ICrudServiceRequests, IEntity } from '@fluxgate/common';
+import { EntityStatus, FilterBehaviour, ICrudServiceRequests, IEntity } from '@fluxgate/common';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -100,7 +100,12 @@ export class EnumValueComponent extends CoreComponent {
     super.ngOnInit();
 
     if (this.dataServiceRequests) {
-      this.registerSubscription(this.dataServiceRequests.find().subscribe((items: any[]) => {
+
+      // deleted Items auch anzeigen
+      this.registerSubscription(this.dataServiceRequests.find({
+        behaviour: FilterBehaviour.Add,
+        status: EntityStatus.Deleted
+      }).subscribe((items: any[]) => {
         this.items = items;
 
         this.updateItem();

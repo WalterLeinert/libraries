@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { Assert, IQuery, IToString, StringBuilder, StringUtil, Types } from '@fluxgate/core';
+import { Assert, IToString, StringBuilder, StringUtil, Types } from '@fluxgate/core';
 
 import { IEntity } from '../entity.interface';
 import { TableMetadata } from '../metadata/tableMetadata';
@@ -15,6 +15,8 @@ import { FindByIdResult } from './find-by-id-result';
 import { FindResult } from './find-result';
 import { QueryResult } from './query-result';
 import { IService } from './service.interface';
+import { StatusFilter } from './status-filter';
+import { IStatusQuery } from './status-query';
 import { UpdateResult } from './update-result';
 
 /**
@@ -38,15 +40,15 @@ export class ServiceProxy<T extends IEntity<TId>, TId extends IToString> impleme
     });
   }
 
-  public query(query: IQuery): Observable<QueryResult<T>> {
+  public query(query: IStatusQuery): Observable<QueryResult<T>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'query'), (log) => {
       return this.service.query(query);
     });
   }
 
-  public find(): Observable<FindResult<T>> {
+  public find(filter?: StatusFilter): Observable<FindResult<T>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'find'), (log) => {
-      return this.service.find();
+      return this.service.find(filter);
     });
   }
 

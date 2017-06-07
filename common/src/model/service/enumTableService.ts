@@ -1,12 +1,13 @@
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
 
-import { Assert, IQuery, NotSupportedException } from '@fluxgate/core';
+import { Assert, NotSupportedException } from '@fluxgate/core';
 
 import { TableMetadata } from '../metadata/tableMetadata';
 import { FindResult } from './find-result';
 import { IService } from './service.interface';
-
+import { StatusFilter } from './status-filter';
+import { IStatusQuery } from './status-query';
 
 /**
  * Virtueller Service: implementiert nur die find-Methode, welche
@@ -29,7 +30,7 @@ export class EnumTableService implements IService<any, any> {
    *
    * @memberOf EnumTableService
    */
-  public find(): Observable<FindResult<any>> {
+  public find(filter: StatusFilter): Observable<FindResult<any>> {
     return Observable.of(new FindResult<any>(this.enumValues, -1));
   }
 
@@ -41,7 +42,7 @@ export class EnumTableService implements IService<any, any> {
     return this._tableMetadata.tableName;
   }
 
-  public query(query: IQuery): any {
+  public query(query: IStatusQuery): any {
     throw new NotSupportedException();
   }
 
