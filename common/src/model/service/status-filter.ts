@@ -36,6 +36,15 @@ export enum FilterBehaviour {
  */
 @Serializable()
 export class StatusFilter {
-  public behaviour: FilterBehaviour;
-  public status: EntityStatus;
+
+  constructor(private _behaviour: FilterBehaviour, private _status: EntityStatus) {
+  }
+
+  public get behaviour(): FilterBehaviour {
+    return this._behaviour;
+  }
+
+  public get status(): EntityStatus {
+    return this._status;
+  }
 }
