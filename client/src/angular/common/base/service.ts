@@ -72,7 +72,7 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
         .map((response: Response) => this.deserialize(response.json()))
         .do((result: CreateResult<T, TId>) => {
           if (log.isInfoEnabled()) {
-            log.log(`Service.create: ${JSON.stringify(result)}`);
+            log.log(`created ${JSON.stringify(result)}`);
           }
         })
         .catch(this.handleError);
@@ -102,7 +102,7 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: UpdateResult<T, TId>) => {
             if (log.isInfoEnabled()) {
-              log.log(`Service.update [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
+              log.log(`updated [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
             }
           })
           .catch(this.handleError);
@@ -127,7 +127,7 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: DeleteResult<TId>) => {
             if (log.isInfoEnabled()) {
-              log.log(`Service.delete [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
+              log.log(`deleted [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
             }
           })
           .catch(this.handleError);

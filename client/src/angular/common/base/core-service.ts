@@ -59,7 +59,7 @@ export abstract class CoreService<T, TId extends IToString> extends ServiceBase<
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: FindResult<T>) => {
             if (log.isInfoEnabled()) {
-              log.log(`find [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
+              log.log(`found [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
             }
           })
           .catch(this.handleError);
@@ -77,23 +77,26 @@ export abstract class CoreService<T, TId extends IToString> extends ServiceBase<
    */
   public query(query: IStatusQuery): Observable<QueryResult<T>> {
     Assert.notNull(query, 'query');
-    return using(new XLog(CoreService.logger, levels.INFO, 'query',
-      `[${this.getModelClassName()}]: query = ${JSON.stringify(query)}`), (log) => {
+    return using(new XLog(CoreService.logger, levels.INFO, 'query', `[${this.getModelClassName()}]`), (log) => {
 
-        const serializedQuery = this.serialize(query);
+      if (log.isDebugEnabled()) {
+        log.debug(`query = ${JSON.stringify(query)}`);
+      }
 
-        return this.http.post(`${this.getUrl()}/${ServiceConstants.QUERY}`, serializedQuery, CoreService.options)
-          .map((response: Response) => this.deserialize(response.json()))
-          .do((result: QueryResult<T>) => {
-            if (log.isInfoEnabled()) {
-              log.log(`result: ${result.items.length} item(s)`);
+      const serializedQuery = this.serialize(query);
 
-              if (log.isDebugEnabled()) {
-                log.debug(`query = ${JSON.stringify(query)} -> ${JSON.stringify(result)}`);
-              }
+      return this.http.post(`${this.getUrl()}/${ServiceConstants.QUERY}`, serializedQuery, CoreService.options)
+        .map((response: Response) => this.deserialize(response.json()))
+        .do((result: QueryResult<T>) => {
+          if (log.isInfoEnabled()) {
+            log.log(`queried [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
+
+            if (log.isDebugEnabled()) {
+              log.debug(`query result: ${JSON.stringify(result)}`);
             }
-          })
-          .catch(this.handleError);
-      });
+          }
+        })
+        .catch(this.handleError);
+    });
   }
 }

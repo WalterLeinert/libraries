@@ -56,7 +56,7 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: FindByIdResult<T, TId>) => {
             if (log.isInfoEnabled()) {
-              log.log(`Service.findById [${this.getModelClassName()}]: id = ${id} -> ${JSON.stringify(result)}`);
+              log.log(`found [${this.getModelClassName()}]: id = ${id} -> ${JSON.stringify(result)}`);
             }
           })
           .catch(this.handleError);
