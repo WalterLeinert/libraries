@@ -85,15 +85,15 @@ class StatusTest extends KnexTest<Role, number> {
       .to.become(4);
   }
 
-  // @test 'should find entities excluding deleted'() {
-  //   return expect(this.service.find(undefined, new StatusFilter(FilterBehaviour.Exclude, EntityStatus.Deleted))
-  //     .then((result) => result.items.length))
-  //     .to.become(2);
-  // }
+  @test 'should find entities excluding deleted'() {
+    return expect(this.service.find(undefined, new StatusFilter(FilterBehaviour.Exclude, EntityStatus.Deleted))
+      .then((result) => result.items.length))
+      .to.become(3);
+  }
 
-  // @test 'should find entities excluding archived'() {
-  //   return expect(this.service.find(undefined, new StatusFilter(FilterBehaviour.Exclude, EntityStatus.Archived))
-  //     .then((result) => result.items.length))
-  //     .to.become(2);
-  // }
+  @test 'should find entities excluding archived'() {
+    return expect(this.service.find(undefined, new StatusFilter(FilterBehaviour.Exclude, EntityStatus.Archived))
+      .then((result) => result.items.length))
+      .to.become(2);
+  }
 }

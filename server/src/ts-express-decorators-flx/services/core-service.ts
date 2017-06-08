@@ -494,8 +494,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
           // items + items without matching status
           case FilterBehaviour.Exclude:
             query = query.andWhere(statusColumn.options.name, EntityStatus.None);   // all with status 0
-            query = query.andWhereNot(
-              query.andWhereRaw(`(${statusColumn.options.name} & ?) = ?`, [status, status]));
+            query = query.orWhereRaw(`(${statusColumn.options.name} & ?) <> ?`, [status, status]);
             break;
 
           default:
