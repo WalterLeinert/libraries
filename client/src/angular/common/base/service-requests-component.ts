@@ -94,13 +94,17 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
    *
    * @memberof ServiceRequestsComponent
    */
-  protected deleteItem(item: T) {
+  protected deleteItem(item: T, action?: () => void) {
     if (!(this._serviceRequests instanceof CrudServiceRequests)) {
       throw new NotSupportedException();
     }
 
     this._serviceRequests.delete(item).subscribe((result) => {
       // -> onStoreUpdated
+
+      if (action) {
+        action();
+      }
     });
   }
 
