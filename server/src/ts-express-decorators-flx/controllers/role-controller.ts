@@ -10,6 +10,10 @@ import { RoleService } from '../services/role.service';
 import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
 import { ControllerBase } from './base/controller-base';
+import { CreateMethod } from './decorator/create-method.decorator';
+import { FindMethod } from './decorator/find-method.decorator';
+import { QueryMethod } from './decorator/query-method.decorator';
+import { UpdateMethod } from './decorator/update-method.decorator';
 
 
 @Controller('/role')
@@ -19,7 +23,7 @@ export class RoleController extends ControllerBase<Role, number> {
   }
 
   @Authenticated({ role: 'admin' })
-  @Post(`/${ServiceConstants.CREATE}`)
+  @CreateMethod()
   public create(
     @Request() request: IBodyRequest<Role>
     ): Promise<CreateResult<Role, number>> {
@@ -27,7 +31,7 @@ export class RoleController extends ControllerBase<Role, number> {
   }
 
   // @Authenticated()
-  @Post(`/${ServiceConstants.FIND}`)
+  @FindMethod()
   public find(
     @Request() request: IBodyRequest<StatusFilter>
     ): Promise<FindResult<Role>> {
@@ -45,7 +49,7 @@ export class RoleController extends ControllerBase<Role, number> {
 
 
   @Authenticated({ role: 'admin' })
-  @Post(`/${ServiceConstants.QUERY}`)
+  @QueryMethod()
   public query(
     @Request() request: IBodyRequest<IStatusQuery>
     ): Promise<QueryResult<Role>> {
@@ -53,7 +57,7 @@ export class RoleController extends ControllerBase<Role, number> {
   }
 
   @Authenticated({ role: 'admin' })
-  @Put(`/${ServiceConstants.UPDATE}`)
+  @UpdateMethod()
   public update(
     @Request() request: IBodyRequest<Role>
     ): Promise<UpdateResult<Role, number>> {
