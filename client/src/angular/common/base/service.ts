@@ -64,6 +64,10 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
     Assert.notNull(item, 'item');
     return using(new XLog(Service.logger, levels.INFO, 'create', `[${this.getModelClassName()}]`), (log) => {
 
+      if (log.isDebugEnabled()) {
+        log.debug(`item = ${JSON.stringify(item)}`);
+      }
+
       return this.http.post(`${this.getUrl()}/${ServiceConstants.CREATE}`, this.serialize(item))
         .map((response: Response) => this.deserialize(response.json()))
         .do((result: CreateResult<T, TId>) => {
@@ -87,17 +91,22 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
    */
   public update(item: T): Observable<UpdateResult<T, TId>> {
     Assert.notNull(item, 'item');
-    return using(new XLog(Service.logger, levels.INFO, 'update', `[${this.getModelClassName()}]`), (log) => {
+    return using(new XLog(Service.logger, levels.INFO, 'update',
+      `[${this.getModelClassName()}]: id ${item.id}`), (log) => {
 
-      return this.http.put(`${this.getUrl()}//${ServiceConstants.UPDATE}`, this.serialize(item))
-        .map((response: Response) => this.deserialize(response.json()))
-        .do((result: UpdateResult<T, TId>) => {
-          if (log.isInfoEnabled()) {
-            log.log(`Service.update [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
-          }
-        })
-        .catch(this.handleError);
-    });
+        if (log.isDebugEnabled()) {
+          log.debug(`item = ${JSON.stringify(item)}`);
+        }
+
+        return this.http.put(`${this.getUrl()}//${ServiceConstants.UPDATE}`, this.serialize(item))
+          .map((response: Response) => this.deserialize(response.json()))
+          .do((result: UpdateResult<T, TId>) => {
+            if (log.isInfoEnabled()) {
+              log.log(`Service.update [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
+            }
+          })
+          .catch(this.handleError);
+      });
   }
 
 

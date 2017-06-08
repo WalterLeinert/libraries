@@ -49,16 +49,17 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
    */
   public findById(id: TId): Observable<FindByIdResult<T, TId>> {
     Assert.notNull(id, 'id');
-    return using(new XLog(ReadonlyService.logger, levels.INFO, 'findById', `[${this.getModelClassName()}]`), (log) => {
+    return using(new XLog(ReadonlyService.logger, levels.INFO, 'findById',
+      `[${this.getModelClassName()}]; id = ${id}`), (log) => {
 
-      return this.http.get(`${this.getUrl()}/${id}`)
-        .map((response: Response) => this.deserialize(response.json()))
-        .do((result: FindByIdResult<T, TId>) => {
-          if (log.isInfoEnabled()) {
-            log.log(`Service.findById [${this.getModelClassName()}]: id = ${id} -> ${JSON.stringify(result)}`);
-          }
-        })
-        .catch(this.handleError);
-    });
+        return this.http.get(`${this.getUrl()}/${id}`)
+          .map((response: Response) => this.deserialize(response.json()))
+          .do((result: FindByIdResult<T, TId>) => {
+            if (log.isInfoEnabled()) {
+              log.log(`Service.findById [${this.getModelClassName()}]: id = ${id} -> ${JSON.stringify(result)}`);
+            }
+          })
+          .catch(this.handleError);
+      });
   }
 }
