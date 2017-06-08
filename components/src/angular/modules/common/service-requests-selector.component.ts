@@ -9,9 +9,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 import { DisplayInfo, MessageService, MetadataService } from '@fluxgate/client';
-import { IEntity } from '@fluxgate/common';
 import {
-  CurrentItemSetCommand, EntityStatus, FilterBehaviour, IExtendedCrudServiceRequests, IExtendedCrudServiceState,
+  CurrentItemSetCommand, EntityStatus, FilterBehaviour, IEntity,
+  IExtendedCrudServiceRequests, IExtendedCrudServiceState,
   ItemsFoundCommand, ServiceCommand, StatusFilter
 } from '@fluxgate/common';
 import { Assert, IToString, Types } from '@fluxgate/core';
@@ -48,10 +48,9 @@ export abstract class ServiceRequestsSelectorComponent<T extends IEntity<TId>, T
 
       this.subscribeToStore(this.serviceRequests.storeId);
 
-      this.serviceRequests.find({
-        behaviour: FilterBehaviour.Add,
-        status: EntityStatus.Deleted
-      }).subscribe((items) => {
+      const filter = new StatusFilter(FilterBehaviour.Add, EntityStatus.Deleted);
+
+      this.serviceRequests.find(filter).subscribe((items) => {
 
         // ok: subscribe muss aufgerufen werden, damit der Call ausgeführt wird und die Items geholt werden!
 
