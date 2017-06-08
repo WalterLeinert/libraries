@@ -41,7 +41,8 @@ export interface ICoreService<T> extends IServiceCore {
    */
   queryKnex(
     request: ISessionRequest,
-    query: Knex.QueryBuilder
+    query: Knex.QueryBuilder,
+    filter?: StatusFilter
   ): Promise<QueryResult<T>>;
 
 

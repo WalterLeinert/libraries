@@ -7,11 +7,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  AppConfig, EntityStatus, EntityVersion, FindResult, IStatusQuery, IUser, ProxyModes, QueryResult,
+  AppConfig, EntityStatus, EntityVersion, FilterBehaviour, FindResult, IStatusQuery, IUser, ProxyModes, QueryResult,
   ServiceResult, StatusFilter, TableMetadata, User
 } from '@fluxgate/common';
 import {
-  Assert, Clone, Funktion, ICtor, Types
+  Assert, Clone, Funktion, ICtor, InvalidOperationException, Types
 } from '@fluxgate/core';
 
 
@@ -82,7 +82,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
           let query = this.createClientSelectorQuery(request, trx);
 
           // ggf. nach Status filtern
-          query = this.createStatusSelectorQuery(request, trx, query);
+          query = this.createStatusSelectorQuery(trx, filter, query);
 
           query
 
@@ -139,7 +139,8 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    */
   public queryKnex(
     request: ISessionRequest,
-    query: Knex.QueryBuilder
+    query: Knex.QueryBuilder,
+    filter?: StatusFilter
   ): Promise<QueryResult<T>> {
 
     return using(new XLog(CoreService.logger, levels.INFO, 'queryKnex', `[${this.tableName}]`), (log) => {
@@ -151,7 +152,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
           query = this.createClientSelectorQuery(request, trx, query);
 
           // ggf. nach Status filtern
-          query = this.createStatusSelectorQuery(request, trx, query);
+          query = this.createStatusSelectorQuery(trx, filter, query);
 
           query
             .transacting(trx)
@@ -211,7 +212,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
       const visitor = new KnexQueryVisitor(knexQuery, this.metadata);
       query.term.accept(visitor);
 
-      return this.queryKnex(request, visitor.query(knexQuery));
+      return this.queryKnex(request, visitor.query(knexQuery), query.filter);
     });
   }
 
@@ -450,22 +451,61 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    *
    * @memberof ReadonlyService
    */
-  protected createStatusSelectorQuery(request: ISessionRequest | IBodyRequest<IUser>, trx: Knex.Transaction,
+  protected createStatusSelectorQuery(trx: Knex.Transaction,
+    filter: StatusFilter,
     query?: Knex.QueryBuilder): Knex.QueryBuilder {
 
-    if (!query) {
-      query = this.fromTable();
-    }
+    return using(new XLog(CoreService.logger, levels.INFO, 'createStatusSelectorQuery'), (log) => {
+      log.log(`filter = ${JSON.stringify(filter)}`);
 
-    if (request && this.metadata.statusColumnKeys.length > 0) {
-      const statusColumn = this.metadata.statusColumn;
+      if (!query) {
+        query = this.fromTable();
+      }
 
-      query = query
-        .andWhere(statusColumn.options.name, EntityStatus.None);
-    }
+      if (this.metadata.statusColumnKeys.length > 0) {
+        const statusColumn = this.metadata.statusColumn;
 
-    return query
-      .transacting(trx);
+        // defaults
+        let behaviour = FilterBehaviour.None;
+        let status = EntityStatus.None;
+
+        if (filter) {
+          behaviour = filter.behaviour;
+          status = filter.status;
+        }
+
+        switch (behaviour) {
+          // items with status 0 (without any status)
+          case FilterBehaviour.None:
+            query = query.andWhere(statusColumn.options.name, status);
+            break;
+
+          // items + items with matching status
+          case FilterBehaviour.Add:
+            query = query.andWhere(statusColumn.options.name, EntityStatus.None);   // all with status 0
+            query = query.orWhereRaw(`(${statusColumn.options.name} & ?) = ?`, [status, status]);
+            break;
+
+          // only items with matching status
+          case FilterBehaviour.Only:
+            query = query.andWhereRaw(`(${statusColumn.options.name} & ?) = ?`, [status, status]);
+            break;
+
+          // items + items without matching status
+          case FilterBehaviour.Exclude:
+            query = query.andWhere(statusColumn.options.name, EntityStatus.None);   // all with status 0
+            query = query.andWhereNot(
+              query.andWhereRaw(`(${statusColumn.options.name} & ?) = ?`, [status, status]));
+            break;
+
+          default:
+            throw new InvalidOperationException(`unsupported filter behaviour: ${behaviour}`);
+        }
+      }
+
+      return query
+        .transacting(trx);
+    });
   }
 
 
