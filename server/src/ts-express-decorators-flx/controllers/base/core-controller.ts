@@ -43,7 +43,8 @@ export abstract class CoreController<T> extends TableController {
     request: IBodyRequest<StatusFilter>
   ): Promise<FindResult<T>> {
     return Promise.resolve()
-      .then(() => this.getService().find(request, request.body))
+      .then(() => this.deserialize<StatusFilter>(request.body))
+      .then((deserializedFilter) => this.getService().find(request, deserializedFilter))
       .then<FindResult<T>>((result) => this.serialize(result));
   }
 
