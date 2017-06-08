@@ -469,7 +469,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
         let behaviour = FilterBehaviour.None;
         let status = EntityStatus.None;
 
-        if (filter) {
+        if (filter && filter instanceof StatusFilter) {
           behaviour = filter.behaviour;
           status = filter.status;
         }
