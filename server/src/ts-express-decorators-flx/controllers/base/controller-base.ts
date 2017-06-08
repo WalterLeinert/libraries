@@ -45,10 +45,12 @@ export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToStri
   protected createInternal(
     request: IBodyRequest<T>
   ): Promise<CreateResult<T, TId>> {
-    return Promise.resolve()
-      .then(() => this.deserialize<T>(request.body))
-      .then((deserializedSubject) => this.service.create(request, deserializedSubject))
-      .then<CreateResult<T, TId>>((result) => this.serialize(result));
+    return using(new XLog(ControllerBase.logger, levels.INFO, 'createInternal'), (log) => {
+      return Promise.resolve()
+        .then(() => this.deserialize<T>(request.body))
+        .then((deserializedSubject) => this.service.create(request, deserializedSubject))
+        .then<CreateResult<T, TId>>((result) => this.serialize(result));
+    });
   }
 
 
@@ -63,10 +65,12 @@ export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToStri
   protected updateInternal(
     request: IBodyRequest<T>
   ): Promise<UpdateResult<T, TId>> {
-    return Promise.resolve()
-      .then(() => this.deserialize<T>(request.body))
-      .then((deserializedSubject) => this.service.update(request, deserializedSubject))
-      .then<UpdateResult<T, TId>>((result) => this.serialize(result));
+    return using(new XLog(ControllerBase.logger, levels.INFO, 'updateInternal'), (log) => {
+      return Promise.resolve()
+        .then(() => this.deserialize<T>(request.body))
+        .then((deserializedSubject) => this.service.update(request, deserializedSubject))
+        .then<UpdateResult<T, TId>>((result) => this.serialize(result));
+    });
   }
 
 
@@ -82,9 +86,11 @@ export abstract class ControllerBase<T extends IEntity<TId>, TId extends IToStri
     request: ISessionRequest,
     id: TId
   ): Promise<DeleteResult<TId>> {
-    return Promise.resolve()
-      .then(() => this.service.delete(request, id))
-      .then<DeleteResult<TId>>((result) => this.serialize(result));
+    return using(new XLog(ControllerBase.logger, levels.INFO, 'deleteInternal'), (log) => {
+      return Promise.resolve()
+        .then(() => this.service.delete(request, id))
+        .then<DeleteResult<TId>>((result) => this.serialize(result));
+    });
   }
 
 
