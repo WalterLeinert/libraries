@@ -44,6 +44,7 @@ class OptimisticLockTest extends KnexTest<QueryTest, number> {
       idGenerator: new NumberIdGenerator(OptimisticLockTest.MAX_ITEMS),
       columns: {
         __version: new ConstantValueGenerator(0),
+        __status: new ConstantValueGenerator(0),
         __test: new ConstantValueGenerator(0),
       },
       tableMetadata: KnexTest.metadataService.findTableMetadata(QueryTest)

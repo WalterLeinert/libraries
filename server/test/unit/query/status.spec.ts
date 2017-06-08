@@ -9,7 +9,7 @@ require('reflect-metadata');
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 
 // Chai mit Promises verwenden (... to.become() ... etc.)
@@ -33,7 +33,7 @@ import { QueryTest } from './query-test';
 import { QueryTestService } from './query-test.service';
 
 
-@suite('Tests für Entity-Status (deleted, archived, ...)') @only
+@suite('Tests für Entity-Status (deleted, archived, ...)')
 class StatusTest extends KnexTest<Role, number> {
   protected static readonly logger = getLogger(StatusTest);
 
