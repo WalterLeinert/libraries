@@ -305,7 +305,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
 
   /**
-   * ermittelt die aktuelle EntityVersion und legt diese zusammen mit dem Query-Ergebnis @param{queryResult}
+   * ermittelt die aktuelle EntityVersion und legt diese zusammen mit dem Query-Ergebnis @param{subject}
    * in einer neuen Instanz vom Typ @see{resultClazz} ab, die im @see{resolve} zurückgeliefert wird.
    *
    * Die Operation ist in die Transaktion @param{trx} eingebunden.
@@ -320,7 +320,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    * @memberof ReadonlyService
    */
   protected findEntityVersionAndResolve<TResult>(trx: Knex.Transaction, resultClazz: ICtor<ServiceResult>,
-    queryResult: TResult, resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void),
+    subject: TResult, resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void),
     reject: ((reason?: any) => void)) {
 
     using(new XLog(CoreService.logger, levels.INFO, 'findEntityVersionAndResolve'), (log) => {
@@ -336,9 +336,9 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
           trx.commit();
 
-          log.debug('queryResult after commit: ', queryResult);
+          log.debug('queryResult after commit: ', subject);
 
-          resolve(new resultClazz(queryResult, entityVersion));
+          resolve(new resultClazz(subject, entityVersion));
         }).catch(reject);
     });
   }
@@ -411,9 +411,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
   protected createClientSelectorQuery(request: ISessionRequest | IBodyRequest<IUser>, trx: Knex.Transaction,
     query?: Knex.QueryBuilder): Knex.QueryBuilder {
 
-    if (!query) {
-      query = this.fromTable();
-    }
+    query = this.createNopQuery(query);
 
     if (request && this.metadata.clientColumn) {
       const userColumnSelector = `${this._userMetadata.clientColumn.options.name}`;
@@ -458,9 +456,8 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
     return using(new XLog(CoreService.logger, levels.INFO, 'createStatusSelectorQuery'), (log) => {
       log.log(`filter = ${JSON.stringify(filter)}`);
 
-      if (!query) {
-        query = this.fromTable();
-      }
+      query = this.createNopQuery(query);
+
 
       if (this.metadata.statusColumnKeys.length > 0) {
         const statusColumn = this.metadata.statusColumn;
@@ -505,6 +502,15 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
       return query
         .transacting(trx);
     });
+  }
+
+
+  protected createNopQuery(query?: Knex.QueryBuilder, tableName?: string): Knex.QueryBuilder {
+    if (!query) {
+      query = this.fromTable(tableName);
+    }
+
+    return query;
   }
 
 
