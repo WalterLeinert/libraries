@@ -26,13 +26,14 @@ export class GlobalErrorHandler implements IMiddlewareError {
     return using(new XLog(GlobalErrorHandler.logger, levels.INFO, 'use'), (log) => {
 
       if (response.headersSent) {
+        log.error(`headersSent: ${error}`);
         return next(error);
       }
 
       const toHTML = (message = '') => message.replace(/\n/gi, '<br />');
 
       if (error instanceof Exception) {
-        log.error(`Error: ${error}`);
+        log.error(`Exception: ${error}`);
 
         const serializedError = GlobalErrorHandler.serializer.serialize(error);
 
@@ -41,19 +42,19 @@ export class GlobalErrorHandler implements IMiddlewareError {
       }
 
       if (error instanceof TsExpressException) {
-        log.error('' + error);
+        log.error(`TsExpressException: ${error}`);
         response.status(error.status).send(toHTML(error.message));
         return next();
       }
 
       if (Types.isString(error)) {
+        log.error(`string: ${error}`);
         response.status(404).send(toHTML(error));
         return next();
       }
 
-      log.error('' + error);
+      log.error(`default: ${error}`);
       response.status(error.status || 500).send('Internal Error');
-
       return next();
     });
   }
