@@ -100,31 +100,30 @@ gulp.task('compile:node', function() {
     ]);
 });
 
-gulp.task('test', ['set-env', 'compile:test'], function () {
-  console.warn('*** echte Tests aktivieren, sobald Tests existieren');
-  // TODO: echte Tests aktivieren, sobald Tests existieren
+
+gulp.task('compile:test-node', ['default'], function () {
+  //find test code - note use of 'base'
+  return gulp.src('./test/**/*.ts', { base: '.' })
+    .pipe(sourcemaps.init())
+    /*transpile*/
+    .pipe(tsc(tscConfig.compilerOptions))
+    /*flush to disk*/
+    .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+    .pipe(gulp.dest('dist/node'));
 });
 
-// /**
-//  * build an run tests
-//  */
-// gulp.task('test', ['set-env'], function () {
-//   //find test code - note use of 'base'
-//   return gulp.src('./test/**/*.spec.ts', { base: '.' })
-//     /*transpile*/
-//     .pipe(tsc(tscConfig.compilerOptions))
-//     /*flush to disk*/
-//     .pipe(gulp.dest('dist/node'))
-//     /*execute tests*/
-//     .pipe(mocha({
-//       reporter: 'spec'
-//     }));
-// });
+
+gulp.task('test-node', ['set-env', 'compile:test-node'], function () {
+  gulp.src('./dist/node/**/*.spec.js', { read: false })
+    .pipe(mocha({
+      reporter: 'spec'
+    }));
+});
+
+gulp.task('test', gulpSequence('test-node'));
 
 
-gulp.task('compile:test', gulpSequence('default'));
-
-gulp.task('publish', ['compile:test'], function (cb) {
+gulp.task('publish', ['test-node'], function (cb) {
   const force = argv.f ? argv.f : '';
   const forceSwitch = (force ? '-f' : '');
 
