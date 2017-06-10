@@ -40,10 +40,10 @@ export class Logging {
       const configPath = LoggingConfiguration.getConfigurationPath(configOptions);
 
       if (FileSystem.fileExists(configPath)) {
-        log.info(`[${packageName}]: logging: systemMode = ${configOptions.systemMode}, configPath = ${configPath}`);
-
         // configure(configPath, { reloadSecs: 10 });
         configure(configPath);
+
+        log.info(`[${packageName}]: logging: systemMode = ${configOptions.systemMode}, configPath = ${configPath}`);
       } else {
         log.warn(`[${packageName}]: logging: cannot read configuration: ${configPath}`);
       }
