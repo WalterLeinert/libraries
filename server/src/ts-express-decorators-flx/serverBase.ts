@@ -244,7 +244,7 @@ export abstract class ServerBase extends ServerLoader {
 
   public $onAuth(request: Express.Request, response: Express.Response, next: Express.NextFunction,
     authorization?: any): boolean | void {
-    return using(new XLog(ServerBase.logger, levels.DEBUG, '$onAuth',
+    using(new XLog(ServerBase.logger, levels.DEBUG, '$onAuth',
       `authorization = ${JSON.stringify(authorization)}`), (log) => {
 
         //
