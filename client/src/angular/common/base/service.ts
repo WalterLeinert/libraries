@@ -98,7 +98,7 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
           log.debug(`item = ${JSON.stringify(item)}`);
         }
 
-        return this.http.put(`${this.getUrl()}//${ServiceConstants.UPDATE}`, this.serialize(item))
+        return this.http.put(`${this.getUrl()}/${ServiceConstants.UPDATE}`, this.serialize(item))
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: UpdateResult<T, TId>) => {
             if (log.isInfoEnabled()) {
