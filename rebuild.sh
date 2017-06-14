@@ -7,5 +7,9 @@ if [[ "$1" == "--clean" ]]; then
 fi
 
 npm install         && \
-gulp npm-install    && \
-gulp
+
+for dir in core platform common server client components; do
+  (
+    cd $dir && npm install && gulp publish -f
+  )
+done
