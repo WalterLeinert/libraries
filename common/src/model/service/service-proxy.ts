@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs/Subscriber';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -34,39 +35,81 @@ export class ServiceProxy<T extends IEntity<TId>, TId extends IToString> impleme
     Assert.notNull(_service);
   }
 
+
   public create(item: T): Observable<CreateResult<T, TId>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'create'), (log) => {
-      return this.service.create(item);
+      return Observable.create((observer: Subscriber<CreateResult<T, TId>>) => {
+        this.service.create(item).subscribe((result) => {
+          observer.next(result);
+        }, (err) => {
+          observer.error(err);
+        });
+      });
     });
   }
+
 
   public query(query: IStatusQuery): Observable<QueryResult<T>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'query'), (log) => {
-      return this.service.query(query);
+      return Observable.create((observer: Subscriber<QueryResult<T>>) => {
+        this.service.query(query).subscribe((result) => {
+          observer.next(result);
+        }, (err) => {
+          observer.error(err);
+        });
+      });
     });
   }
+
 
   public find(filter?: StatusFilter): Observable<FindResult<T>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'find'), (log) => {
-      return this.service.find(filter);
+      return Observable.create((observer: Subscriber<FindResult<T>>) => {
+        this.service.find(filter).subscribe((result) => {
+          observer.next(result);
+        }, (err) => {
+          observer.error(err);
+        });
+      });
     });
   }
+
 
   public findById<T extends IEntity<TId>>(id: TId): Observable<FindByIdResult<T, TId>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'findById'), (log) => {
-      return this.service.findById(id);
+      return Observable.create((observer: Subscriber<FindByIdResult<T, TId>>) => {
+        this.service.findById(id).subscribe((result: FindByIdResult<T, TId>) => {
+          observer.next(result);
+        }, (err) => {
+          observer.error(err);
+        });
+      });
     });
   }
+
 
   public delete(id: TId): Observable<DeleteResult<TId>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'delete'), (log) => {
-      return this.service.delete(id);
+      return Observable.create((observer: Subscriber<DeleteResult<TId>>) => {
+        return this.service.delete(id).subscribe((result) => {
+          observer.next(result);
+        }, (err) => {
+          observer.error(err);
+        });
+      });
     });
   }
 
+
   public update(item: T): Observable<UpdateResult<T, TId>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'update'), (log) => {
-      return this.service.update(item);
+      return Observable.create((observer: Subscriber<UpdateResult<T, TId>>) => {
+        this.service.update(item).subscribe((updateResult: UpdateResult<T, TId>) => {
+          observer.next(updateResult);
+        }, (err) => {
+          observer.error(err);
+        });
+      });
     });
   }
 
