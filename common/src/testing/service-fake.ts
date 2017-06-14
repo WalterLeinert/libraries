@@ -1,5 +1,6 @@
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs/Subscriber';
 
 
 // -------------------------------------- logging --------------------------------------------
@@ -7,7 +8,10 @@ import { Observable } from 'rxjs/Observable';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { Assert, Clone, InvalidOperationException, IQuery, IToString, NotSupportedException } from '@fluxgate/core';
+import {
+  Assert, Clone, IException, InvalidOperationException, IQuery,
+  IToString, NotSupportedException
+} from '@fluxgate/core';
 
 import {
   EntityGenerator, EntityVersion, IEntity, IFlxEntity, IService, TableMetadata, VersionedEntity
@@ -17,6 +21,7 @@ import { DeleteResult } from '../model/service/delete-result';
 import { FindByIdResult } from '../model/service/find-by-id-result';
 import { FindResult } from '../model/service/find-result';
 import { QueryResult } from '../model/service/query-result';
+import { StatusFilter } from '../model/service/status-filter';
 import { UpdateResult } from '../model/service/update-result';
 
 /**
@@ -57,14 +62,21 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
    *
    * @memberOf Service
    */
-  public create<T extends IFlxEntity<TId>>(item: T): Observable<CreateResult<T, TId>> {
+  public create(item: T, exception?: IException): Observable<CreateResult<T, TId>> {
     Assert.notNull(item, 'item');
-    item.id = this._entityGenerator.nextId();
 
-    this.incrementEntityVersion();
+    return Observable.create((observer: Subscriber<CreateResult<T, TId>>) => {
+      if (exception) {
+        observer.error(exception);
+      } else {
+        item.id = this._entityGenerator.nextId();
 
-    this._items.push(item);
-    return Observable.of(new CreateResult<T, TId>(item, this.getEntityVersion()));
+        this.incrementEntityVersion();
+
+        this._items.push(item);
+        observer.next(new CreateResult<T, TId>(item, this.getEntityVersion()));
+      }
+    });
   }
 
 
@@ -76,8 +88,14 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
    *
    * @memberOf Service
    */
-  public find<T extends IFlxEntity<TId>>(): Observable<FindResult<T>> {
-    return Observable.of(new FindResult(this._items, this.getEntityVersion()));
+  public find(filter?: StatusFilter, exception?: IException): Observable<FindResult<T>> {
+    return Observable.create((observer: Subscriber<FindResult<T>>) => {
+      if (exception) {
+        observer.error(exception);
+      } else {
+        observer.next(new FindResult(this._items as any[], this.getEntityVersion()));
+      }
+    });
   }
 
 
@@ -89,11 +107,17 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
    *
    * @memberOf Service
    */
-  public findById<T extends IFlxEntity<TId>>(id: TId): Observable<FindByIdResult<T, TId>> {
+  public findById(id: TId, exception?: IException): Observable<FindByIdResult<T, TId>> {
     Assert.notNull(id, 'id');
 
-    const item = this._items.find((elem) => elem.id === id);
-    return Observable.of(new FindByIdResult(item, this.getEntityVersion()));
+    return Observable.create((observer: Subscriber<FindByIdResult<T, TId>>) => {
+      if (exception) {
+        observer.error(exception);
+      } else {
+        const item = this._items.find((elem) => elem.id === id);
+        observer.next(new FindByIdResult<T, TId>(item as any, this.getEntityVersion()));
+      }
+    });
   }
 
 
@@ -105,15 +129,21 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
    *
    * @memberOf Service
    */
-  public update<T extends IFlxEntity<TId>>(item: T): Observable<UpdateResult<T, TId>> {
+  public update<T extends IFlxEntity<TId>>(item: T, exception?: IException): Observable<UpdateResult<T, TId>> {
     Assert.notNull(item, 'item');
 
-    const itemCloned = Clone.clone(item);
+    return Observable.create((observer: Subscriber<UpdateResult<T, TId>>) => {
+      if (exception) {
+        observer.error(exception);
+      } else {
+        const itemCloned = Clone.clone(item);
 
-    itemCloned.__version++;
-    this.incrementEntityVersion();
+        itemCloned.__version++;
+        this.incrementEntityVersion();
 
-    return Observable.of(new UpdateResult(itemCloned, this.getEntityVersion()));
+        observer.next(new UpdateResult(itemCloned, this.getEntityVersion()));
+      }
+    });
   }
 
 
@@ -125,16 +155,22 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
    *
    * @memberOf Service
    */
-  public delete(id: TId): Observable<DeleteResult<TId>> {
+  public delete(id: TId, exception?: IException): Observable<DeleteResult<TId>> {
     Assert.notNull(id, 'id');
 
-    const index = this._items.findIndex((item) => item.id === id);
-    Assert.that(index >= 0 && index < this._items.length);
-    this._items.splice(index, 1);
+    return Observable.create((observer: Subscriber<DeleteResult<TId>>) => {
+      if (exception) {
+        observer.error(exception);
+      } else {
+        const index = this._items.findIndex((item) => item.id === id);
+        Assert.that(index >= 0 && index < this._items.length);
+        this._items.splice(index, 1);
 
-    this.incrementEntityVersion();
+        this.incrementEntityVersion();
 
-    return Observable.of(new DeleteResult(id, this.getEntityVersion()));
+        observer.next(new DeleteResult(id, this.getEntityVersion()));
+      }
+    });
   }
 
 
@@ -146,12 +182,19 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
    *
    * @memberOf Service
    */
-  public query<T extends IFlxEntity<TId>>(query: IQuery): Observable<QueryResult<T>> {
+  public query(query: IQuery, exception?: IException): Observable<QueryResult<T>> {
     return using(new XLog(ServiceFake.logger, levels.INFO, 'query'), (log) => {
       Assert.notNull(query, 'query');
 
-      log.error(`query terms not used.`);
-      return Observable.of(new QueryResult(this._items, this.getEntityVersion()));
+      return Observable.create((observer: Subscriber<QueryResult<T>>) => {
+        if (exception) {
+          observer.error(exception);
+        } else {
+
+          log.warn(`query terms not used.`);
+          observer.next(new QueryResult(this._items as any[], this.getEntityVersion()));
+        }
+      });
     });
   }
 
