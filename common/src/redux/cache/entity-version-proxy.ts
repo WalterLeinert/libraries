@@ -77,6 +77,8 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
           }
 
           observer.next(createResult);
+        }, (err) => {
+          observer.error(err);
         });
 
       });
@@ -97,7 +99,13 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
    */
   public query(query: IStatusQuery): Observable<QueryResult<T>> {
     return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'query', `[${this.getTableName()}]`), (log) => {
-      return super.query(query);
+      return Observable.create((observer: Subscriber<QueryResult<T>>) => {
+        super.query(query).subscribe((result) => {
+          observer.next(result);
+        }, (err) => {
+          observer.error(err);
+        });
+      });
     });
   }
 
@@ -119,6 +127,8 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
           super.find(filter).subscribe((findResult) => {
             this.updateCache(lg, findResult.entityVersion, findResult.items, message);
             observer.next(findResult);
+          }, (err) => {
+            observer.error(err);
           });
         };
 
@@ -175,7 +185,6 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
   }
 
 
-
   /**
    * Liefert die Entity für die Id @param{id} und aktualisiert den Cache.
    *
@@ -209,6 +218,8 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               }
 
               observer.next(findByIdResult);
+            }, (err) => {
+              observer.error(err);
             });
           };
 
@@ -261,7 +272,6 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
   }
 
 
-
   /**
    * Löscht die Entity mit Id @param{id} und aktualisiert den Cache
    *
@@ -296,6 +306,8 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               // noch nie gecached -> kein cache update
               observer.next(deleteResult);
             }
+          }, (err) => {
+            observer.error(err);
           });
         });
       });
@@ -356,6 +368,8 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               // noch nie gecached -> kein cache update
               observer.next(updateResult);
             }
+          }, (err) => {
+            observer.error(err);
           });
         });
       });
