@@ -134,6 +134,10 @@ gulp.task('update-fluxgate', function (cb) {
   execCommand('npm uninstall --save @fluxgate/core && npm install --save @fluxgate/core', '.', null, cb);
 })
 
+gulp.task('update-fluxgate-yarn', function (cb) {
+  execCommand('yarn remove @fluxgate/core && yarn add @fluxgate/core', '.', null, cb);
+})
+
 
 gulp.task('doc', () => {
   return gulp.src('src/**/*.ts')

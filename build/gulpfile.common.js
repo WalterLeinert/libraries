@@ -89,3 +89,7 @@ gulp.task('build-all:common', gulpSequence('clean:common', 'update-fluxgate:comm
 gulp.task('update-fluxgate:common', function (cb) {
   execCommand('gulp update-fluxgate', 'common', bufferSize, cb);
 })
+
+gulp.task('update-fluxgate-yarn:common', function (cb) {
+  execCommand('gulp update-fluxgate-yarn', 'common', bufferSize, cb);
+})

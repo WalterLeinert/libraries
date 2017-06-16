@@ -89,3 +89,7 @@ gulp.task('build-all:server', gulpSequence('clean:server', 'update-fluxgate:serv
 gulp.task('update-fluxgate:server', function (cb) {
   execCommand('gulp update-fluxgate', 'server', bufferSize, cb);
 })
+
+gulp.task('update-fluxgate-yarn:server', function (cb) {
+  execCommand('gulp update-fluxgate-yarn', 'server', bufferSize, cb);
+})

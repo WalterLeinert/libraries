@@ -104,6 +104,15 @@ gulp.task('test', ['set-env', 'compile:test'], function () {
     }));
 });
 
+gulp.task('update-fluxgate', function () {
+  // ok
+  console.log('update-fluxgate:core');
+})
+
+gulp.task('update-fluxgate-yarn', function () {
+  // ok
+  console.log('update-fluxgate-yarn:core');
+})
 
 
 gulp.task('publish', ['test'], function (cb) {

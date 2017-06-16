@@ -85,3 +85,11 @@ gulp.task('build-all:core', gulpSequence('clean:core', 'build:core', 'test:core'
 //-----------------------------------------------------------------------
 // End: core
 //-----------------------------------------------------------------------
+
+gulp.task('update-fluxgate:core', function (cb) {
+  execCommand('gulp update-fluxgate', 'core', bufferSize, cb);
+})
+
+gulp.task('update-fluxgate-yarn:core', function (cb) {
+  execCommand('gulp update-fluxgate-yarn', 'core', bufferSize, cb);
+})

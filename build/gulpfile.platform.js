@@ -89,3 +89,7 @@ gulp.task('build-all:platform', gulpSequence('clean:platform', 'update-fluxgate:
 gulp.task('update-fluxgate:platform', function (cb) {
   execCommand('gulp update-fluxgate', 'platform', bufferSize, cb);
 })
+
+gulp.task('update-fluxgate-yarn:platform', function (cb) {
+  execCommand('gulp update-fluxgate-yarn', 'platform', bufferSize, cb);
+})
