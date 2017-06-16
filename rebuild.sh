@@ -2,14 +2,20 @@
 
 set -x
 
-if [[ "$1" == "--clean" ]]; then
-	gulp really-clean
-fi
+(
 
-npm install         && \
+	if [[ "$1" == "--clean" ]]; then
+		gulp really-clean
+	fi
 
-for dir in core platform common server client components; do
-  (
-    cd $dir && npm install && gulp publish -f
-  )
-done
+	npm install && \
+
+	for dir in core platform common server client components; do
+	  (
+		  cd $dir                     && \
+      npm install                 && \
+      gulp update-fluxgate       && \
+      gulp publish -f
+	  )
+	done
+) 2>&1 | tee build.log
