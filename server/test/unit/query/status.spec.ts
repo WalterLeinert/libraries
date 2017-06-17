@@ -22,14 +22,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  CreateResult, DeleteResult, EntityStatus, FilterBehaviour, FindByIdResult, IRole,
-  NumberIdGenerator, Role, ServiceResult, StatusFilter, UpdateResult
+  EntityStatus, FilterBehaviour,
+  NumberIdGenerator, Role, StatusFilter
 } from '@fluxgate/common';
-import { Clone, ICtor } from '@fluxgate/core';
 
 
 import { KnexTest } from '../knexTest.spec';
-import { QueryTest } from './query-test';
 import { QueryTestService } from './query-test.service';
 
 

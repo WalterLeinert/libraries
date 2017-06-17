@@ -9,7 +9,6 @@ import { FindResult, IStatusQuery, QueryResult, StatusFilter } from '@fluxgate/c
 
 import { ICoreService } from '../../services/core-service.interface';
 import { IBodyRequest } from '../../session/body-request.interface';
-import { ISessionRequest } from '../../session/session-request.interface';
 import { TableController } from './table-controller';
 
 

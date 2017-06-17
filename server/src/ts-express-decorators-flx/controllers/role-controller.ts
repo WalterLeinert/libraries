@@ -1,9 +1,9 @@
-import { Authenticated, Controller, Delete, Get, PathParams, Post, Put, Request } from 'ts-express-decorators';
+import { Authenticated, Controller, Delete, Get, PathParams, Request } from 'ts-express-decorators';
 
 // Fluxgate
 import {
   CreateResult, DeleteResult, FindByIdResult, FindResult, IStatusQuery, QueryResult,
-  Role, ServiceConstants, StatusFilter, UpdateResult
+  Role, StatusFilter, UpdateResult
 } from '@fluxgate/common';
 
 import { RoleService } from '../services/role.service';
