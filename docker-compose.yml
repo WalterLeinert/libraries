@@ -21,7 +21,6 @@ services:
       volumes:
         - ./server/dist:/var/www/libraries
         - ./server/node_modules:/var/www/libraries/node_modules
-      working_dir: /var/www/libraries/server/src
       env_file:
         - ./.docker/env/app.${APP_ENV}.env
       networks:
