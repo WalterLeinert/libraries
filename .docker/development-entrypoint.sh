@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 set -e
 set -o pipefail
@@ -41,6 +41,8 @@ function prepare_old {
 
 function prepare {
   # ok
+  verdaccio > $HOME/log/verdaccio.log 2>&1 &
+  node index.js
 }
 
 # install / update dependencies if necessary
