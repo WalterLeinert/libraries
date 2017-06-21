@@ -1,4 +1,4 @@
-import { Authenticated, Controller, Delete, Get, PathParams, Post, Put, Request } from 'ts-express-decorators';
+import { Authenticated, Controller, PathParams, Request } from 'ts-express-decorators';
 
 // Fluxgate
 import {
@@ -11,6 +11,12 @@ import { SystemConfigService } from '../services/system-config.service';
 import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
 import { ControllerBase } from './base/controller-base';
+import { CreateMethod } from './decorator/create-method.decorator';
+import { DeleteMethod } from './decorator/delete-method.decorator';
+import { FindByIdMethod } from './decorator/find-by-id-method.decorator';
+import { FindMethod } from './decorator/find-method.decorator';
+import { QueryMethod } from './decorator/query-method.decorator';
+import { UpdateMethod } from './decorator/update-method.decorator';
 
 
 @Controller('/systemconfig')
@@ -20,7 +26,7 @@ export class SystemConfigController extends ControllerBase<SystemConfig, any> {
   }
 
   @Authenticated({ systemconfig: 'admin' })
-  @Post('/')
+  @CreateMethod()
   public create(
     @Request() request: IBodyRequest<SystemConfig>
     ): Promise<CreateResult<SystemConfig, string>> {
@@ -28,7 +34,7 @@ export class SystemConfigController extends ControllerBase<SystemConfig, any> {
   }
 
   @Authenticated()
-  @Get('/')
+  @FindMethod()
   public find(
     @Request() request: ISessionRequest
     ): Promise<FindResult<SystemConfig>> {
@@ -36,7 +42,7 @@ export class SystemConfigController extends ControllerBase<SystemConfig, any> {
   }
 
   @Authenticated()
-  @Get('/:id')
+  @FindByIdMethod()
   public findById(
     @Request() request: ISessionRequest,
     @PathParams('id') id: string
@@ -45,7 +51,7 @@ export class SystemConfigController extends ControllerBase<SystemConfig, any> {
   }
 
   @Authenticated({ systemconfig: 'admin' })
-  @Post('/query')
+  @QueryMethod()
   public query(
     @Request() request: IBodyRequest<IQuery>
     ): Promise<QueryResult<SystemConfig>> {
@@ -53,7 +59,7 @@ export class SystemConfigController extends ControllerBase<SystemConfig, any> {
   }
 
   @Authenticated({ systemconfig: 'admin' })
-  @Put('/')
+  @UpdateMethod()
   public update(
     @Request() request: IBodyRequest<SystemConfig>
     ): Promise<UpdateResult<SystemConfig, string>> {
@@ -61,7 +67,7 @@ export class SystemConfigController extends ControllerBase<SystemConfig, any> {
   }
 
   @Authenticated({ systemconfig: 'admin' })
-  @Delete('/:id')
+  @DeleteMethod()
   public delete(
     @Request() request: ISessionRequest,
     @PathParams('id') id: string

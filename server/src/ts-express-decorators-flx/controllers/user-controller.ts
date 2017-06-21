@@ -1,4 +1,4 @@
-import { Authenticated, Controller, Delete, Get, PathParams, Request } from 'ts-express-decorators';
+import { Authenticated, Controller, PathParams, Request } from 'ts-express-decorators';
 
 // Fluxgate
 import {
@@ -12,6 +12,8 @@ import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
 import { ControllerBase } from './base/controller-base';
 import { CreateMethod } from './decorator/create-method.decorator';
+import { DeleteMethod } from './decorator/delete-method.decorator';
+import { FindByIdMethod } from './decorator/find-by-id-method.decorator';
 import { FindMethod } from './decorator/find-method.decorator';
 import { QueryMethod } from './decorator/query-method.decorator';
 import { UpdateMethod } from './decorator/update-method.decorator';
@@ -42,7 +44,7 @@ export class UserController extends ControllerBase<User, number> {
   }
 
   // @Authenticated()
-  @Get('/:id')
+  @FindByIdMethod()
   public findById(
     @Request() request: ISessionRequest,
     @PathParams('id') id: number
@@ -69,7 +71,7 @@ export class UserController extends ControllerBase<User, number> {
   }
 
   @Authenticated({ role: 'admin' })
-  @Delete('/:id')
+  @DeleteMethod()
   public delete(
     @Request() request: ISessionRequest,
     @PathParams('id') id: number

@@ -1,5 +1,5 @@
 import {
-  Authenticated, Controller, Get, Request
+  Authenticated, Controller, Request
 } from 'ts-express-decorators';
 
 // Fluxgate
@@ -10,7 +10,7 @@ import {
 import { PrintService } from '../services/print.service';
 import { ISessionRequest } from '../session/session-request.interface';
 import { ControllerCore } from './base/controller-core';
-
+import { FindMethod } from './decorator/find-method.decorator';
 
 @Controller('/printer')
 export class PrinterController extends ControllerCore {
@@ -20,7 +20,7 @@ export class PrinterController extends ControllerCore {
   }
 
   @Authenticated()
-  @Get('/')
+  @FindMethod()
   public find(
     @Request() request: ISessionRequest
     ): Promise<FindResult<IPrinter>> {

@@ -1,16 +1,14 @@
 import {
-  Authenticated, Controller, Get, Put, Request
+  Authenticated, Controller, Put, Request
 } from 'ts-express-decorators';
 
 // Fluxgate
 import {
-  FindResult, IMessage, ISystemConfig
+  IMessage
 } from '@fluxgate/common';
 
-import { ISessionRequest } from '../session/session-request.interface';
-import { ControllerCore } from './base/controller-core';
-
 import { SystemConfigService } from '../services/system-config.service';
+import { ISessionRequest } from '../session/session-request.interface';
 import { SystemConfigController } from './systemconfig-controller';
 
 

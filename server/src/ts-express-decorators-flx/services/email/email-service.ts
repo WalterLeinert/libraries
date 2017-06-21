@@ -5,7 +5,7 @@ import { Service } from 'ts-express-decorators';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { IMessage, ISystemConfig } from '@fluxgate/common';
+import { IMessage } from '@fluxgate/common';
 import { Assert } from '@fluxgate/core';
 
 import { ISMTPConfig } from './smtpconfig.interface';

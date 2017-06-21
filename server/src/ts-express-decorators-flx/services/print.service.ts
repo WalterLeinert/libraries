@@ -38,7 +38,7 @@ export class PrintService extends ServiceCore {
   ): Promise<FindResult<IPrinter[]>> {
     return new Promise<FindResult<IPrinter[]>>((resolve) => {
       const http = require('https');
-      const req = http.get(this.options, (res) => {
+      http.get(this.options, (res) => {
         const bodyChunks = [];
         res.on('data', (chunk) => {
           bodyChunks.push(chunk);
