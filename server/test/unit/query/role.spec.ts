@@ -159,13 +159,13 @@ class RoleTest extends KnexTest<Role, number> {
   }
 
 
-  private createRole(id: number): IRole {
+  private createRole(id: number): Role {
     const role: Role = new Role();
     role.id = undefined;
     role.name = `Test-Rolename-${id}`;
     role.description = `Test-Roledescription-${id}`;
 
-    role.deleted = false;
+    role.__deleted = false;
     role.__version = 0;
     role.__client = 1;
 
@@ -174,7 +174,7 @@ class RoleTest extends KnexTest<Role, number> {
 
   private createExpectedRoleResult<T extends ServiceResult>(id: number, resultCtor: ICtor<T>,
     expectedEntityVersion: number): T {
-    const role: Role = this.createRole(id);
+    const role: IRole = this.createRole(id);
     role.id = id;
     return new resultCtor(role, expectedEntityVersion);
   }

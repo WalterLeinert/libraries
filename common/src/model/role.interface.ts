@@ -1,9 +1,9 @@
-import { IFlxEntity } from './flx-entity.interface';
+import { IFlxStatusEntity } from './flx-status-entity.interface';
 
 /**
  * Interface für User Rollen
  */
-export interface IRole extends IFlxEntity<number> {
+export interface IRole extends IFlxStatusEntity<number> {
   /**
    * Rollenname
    */
@@ -14,8 +14,4 @@ export interface IRole extends IFlxEntity<number> {
    */
   description: string;
 
-  /**
-   * liefert true, falls die Entity als gelöscht markiert ist
-   */
-  deleted?: boolean;
 }

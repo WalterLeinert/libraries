@@ -1,18 +1,23 @@
-import { Authenticated, Controller, Delete, Get, PathParams, Post, Put, Request } from 'ts-express-decorators';
+import { Authenticated, Controller, Delete, Get, PathParams, Request } from 'ts-express-decorators';
 
 // Fluxgate
 import {
-  CreateResult, DeleteResult, FindByIdResult, FindResult, QueryResult,
+  CreateResult, DeleteResult, FindByIdResult, FindResult, IStatusQuery, QueryResult,
+  StatusFilter,
   UpdateResult, User
 } from '@fluxgate/common';
-import { IQuery } from '@fluxgate/core';
 
 import { UserService } from '../services/user.service';
 import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
 import { ControllerBase } from './base/controller-base';
+import { CreateMethod } from './decorator/create-method.decorator';
+import { FindMethod } from './decorator/find-method.decorator';
+import { QueryMethod } from './decorator/query-method.decorator';
+import { UpdateMethod } from './decorator/update-method.decorator';
 
 
+// tslint:disable-next-line:max-classes-per-file
 @Controller('/user')
 export class UserController extends ControllerBase<User, number> {
   constructor(service: UserService) {
@@ -20,7 +25,7 @@ export class UserController extends ControllerBase<User, number> {
   }
 
   @Authenticated({ role: 'admin' })
-  @Post('/')
+  @CreateMethod()
   public create(
     @Request() request: IBodyRequest<User>
     ): Promise<CreateResult<User, number>> {
@@ -29,9 +34,9 @@ export class UserController extends ControllerBase<User, number> {
 
 
   // @Authenticated()
-  @Get('/')
+  @FindMethod()
   public find(
-    @Request() request: ISessionRequest
+    @Request() request: IBodyRequest<StatusFilter>
     ): Promise<FindResult<User>> {
     return super.findInternal(request);
   }
@@ -47,16 +52,16 @@ export class UserController extends ControllerBase<User, number> {
 
 
   @Authenticated({ role: 'admin' })
-  @Post('/query')
+  @QueryMethod()
   public query(
-    @Request() request: IBodyRequest<IQuery>
+    @Request() request: IBodyRequest<IStatusQuery>
     ): Promise<QueryResult<User>> {
     return super.queryInternal(request);
   }
 
 
   @Authenticated({ role: 'admin' })
-  @Put('/')
+  @UpdateMethod()
   public update(
     @Request() request: IBodyRequest<User>
     ): Promise<UpdateResult<User, number>> {

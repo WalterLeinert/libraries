@@ -1,5 +1,21 @@
-#!/bin/sh
-gulp really-clean   && \
-npm install         && \
-gulp npm-install    && \
-gulp
+#!/bin/bash
+
+set -x
+
+(
+
+	if [[ "$1" == "--clean" ]]; then
+		gulp really-clean
+	fi
+
+	npm install && \
+
+	for dir in core platform common server client components; do
+	  (
+		  cd $dir                     && \
+      npm install                 && \
+      gulp update-fluxgate       && \
+      gulp publish -f
+	  )
+	done
+) 2>&1 | tee build.log

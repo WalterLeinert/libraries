@@ -100,6 +100,17 @@ export class AppConfig {
   }
 
   /**
+   * Deregistriert die aktuelle AppConfig (v.a. für Ttestzwecke)
+   *
+   * @static
+   *
+   * @memberof AppConfig
+   */
+  public static unregister() {
+    AppRegistry.instance.remove(AppConfig.APP_CONFIG_KEY);
+  }
+
+  /**
    * Liefert die Anwendungskonfiguration
    */
   public static get config(): IAppConfig {

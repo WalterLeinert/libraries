@@ -89,3 +89,7 @@ gulp.task('build-all:components', gulpSequence('clean:components','update-fluxga
 gulp.task('update-fluxgate:components', function (cb) {
   execCommand('gulp update-fluxgate', 'components', bufferSize, cb);
 })
+
+gulp.task('update-fluxgate-yarn:components', function (cb) {
+  execCommand('gulp update-fluxgate-yarn', 'components', bufferSize, cb);
+})

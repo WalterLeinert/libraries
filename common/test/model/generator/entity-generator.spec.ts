@@ -1,3 +1,4 @@
+// tslint:disable:no-unused-expression
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
 
@@ -10,19 +11,20 @@ import { suite, test } from 'mocha-typescript';
 import { Clone, ConfigurationException, InvalidOperationException, ShortTime, Time } from '@fluxgate/core';
 
 import {
-  Column, FlxEntity, MetadataStorage, Table, TableMetadata
+  Column, FlxStatusEntity, MetadataStorage, Table, TableMetadata
 } from '../../../src/model';
 import { ConstantValueGenerator } from '../../../src/model/generator/constant-value-generator';
 import { DateValueGenerator } from '../../../src/model/generator/date-value-generator';
 import { DatetimeValueGenerator } from '../../../src/model/generator/datetime-value-generator';
 import { EntityGenerator } from '../../../src/model/generator/entity-generator';
+import { NopValueGenerator } from '../../../src/model/generator/nop-value-generator';
 import { NumberIdGenerator } from '../../../src/model/generator/number-id-generator';
 import { ShortTimeValueGenerator } from '../../../src/model/generator/shortTime-value-generator';
 import { TimeValueGenerator } from '../../../src/model/generator/time-value-generator';
 
 
 @Table({ name: ArtikelGenerator.TABLE_NAME })
-class ArtikelGenerator extends FlxEntity<number> {
+class ArtikelGenerator extends FlxStatusEntity<number> {
   public static readonly TABLE_NAME = 'artikel';
 
   @Column({ primary: true, generated: true })
@@ -66,9 +68,6 @@ class ArtikelGenerator extends FlxEntity<number> {
 
   @Column({ propertyType: 'shorttime' })
   public shorttimeProperty: ShortTime;
-
-  @Column()
-  public deleted?: boolean;
 }
 
 
@@ -97,8 +96,9 @@ class EntityGeneratorTest {
       idGenerator: new NumberIdGenerator(EntityGeneratorTest.MAX_ITEMS),
       columns: {
         __client: new ConstantValueGenerator(EntityGeneratorTest.MANDANT),
-        deleted: new ConstantValueGenerator(EntityGeneratorTest.DELETED),
         __version: new ConstantValueGenerator(EntityGeneratorTest.VERSION),
+        __deleted: new ConstantValueGenerator(EntityGeneratorTest.DELETED),
+        __status: new NopValueGenerator()     // Property nicht verändern, erfolgt über __deleted
       }
     });
 
@@ -115,6 +115,7 @@ class EntityGeneratorTest {
   }
 
   @test 'should have expected items'() {
+
     expect(this.items).to.be.not.null;
     expect(this.items.length).to.equal(EntityGeneratorTest.ITEMS);
   }
@@ -129,7 +130,7 @@ class EntityGeneratorTest {
   @test 'should have expected constant column values'() {
     this.items.forEach((item) => {
       expect(item.__version).to.equal(EntityGeneratorTest.VERSION);
-      expect(item.deleted).to.equal(EntityGeneratorTest.DELETED);
+      expect(item.__deleted).to.equal(EntityGeneratorTest.DELETED);
       expect(item.__client).to.equal(EntityGeneratorTest.MANDANT);
     });
   }

@@ -53,6 +53,11 @@ gulp.task('update-fluxgate', function (cb) {
     'npm install --save @fluxgate/core @fluxgate/platform @fluxgate/common', '.', null, cb);
 })
 
+gulp.task('update-fluxgate-yarn', function (cb) {
+  execCommand('yarn remove @fluxgate/core @fluxgate/platform @fluxgate/common && ' +
+    'yarn add @fluxgate/core @fluxgate/platform @fluxgate/common', '.', null, cb);
+})
+
 
 gulp.task('really-clean', ['clean'], function (cb) {
   return del('node_modules');

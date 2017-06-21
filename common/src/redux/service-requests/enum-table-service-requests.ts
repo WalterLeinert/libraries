@@ -1,10 +1,12 @@
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
 
-import { Assert, IException, IQuery, NotSupportedException } from '@fluxgate/core';
+import { Assert, IException, NotSupportedException } from '@fluxgate/core';
 
 import { TableMetadata } from '../../model/metadata';
 import { FindResult } from '../../model/service';
+import { StatusFilter } from '../../model/service/status-filter';
+import { IStatusQuery } from '../../model/service/status-query';
 import {
   ErrorCommand, FindingItemsCommand, ItemsFoundCommand
 } from '../command';
@@ -35,7 +37,7 @@ export class EnumTableServiceRequests extends ServiceRequests implements ICrudSe
   }
 
 
-  public find(): Observable<any[]> {
+  public find(filter?: StatusFilter): Observable<any[]> {
     return Observable.create((observer: Subscriber<any[]>) => {
 
       try {
@@ -48,7 +50,7 @@ export class EnumTableServiceRequests extends ServiceRequests implements ICrudSe
           },
           (exc: IException) => {
             this.dispatch(new ErrorCommand(this, exc));
-            throw exc;
+            observer.error(exc);
           });
 
       } catch (exc) {
@@ -58,7 +60,7 @@ export class EnumTableServiceRequests extends ServiceRequests implements ICrudSe
   }
 
 
-  public query(query: IQuery): Observable<any[]> {
+  public query(query: IStatusQuery): Observable<any[]> {
     throw new NotSupportedException();
   }
 
@@ -74,7 +76,11 @@ export class EnumTableServiceRequests extends ServiceRequests implements ICrudSe
     throw new NotSupportedException();
   }
 
-  public delete(id: any): Observable<any> {
+  public deleteById(id: any): Observable<any> {
+    throw new NotSupportedException();
+  }
+
+  public delete(item: any): Observable<any> {
     throw new NotSupportedException();
   }
 

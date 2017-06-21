@@ -5,12 +5,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { FindResult, QueryResult } from '@fluxgate/common';
-import { IQuery } from '@fluxgate/core';
+import { FindResult, IStatusQuery, QueryResult, StatusFilter } from '@fluxgate/common';
 
 import { ICoreService } from '../../services/core-service.interface';
 import { IBodyRequest } from '../../session/body-request.interface';
-import { ISessionRequest } from '../../session/session-request.interface';
 import { TableController } from './table-controller';
 
 
@@ -41,13 +39,12 @@ export abstract class CoreController<T> extends TableController {
    * @memberOf ControllerBase
    */
   protected findInternal(
-    request: ISessionRequest,
+    request: IBodyRequest<StatusFilter>
   ): Promise<FindResult<T>> {
-    return new Promise<FindResult<T>>((resolve, reject) => {
-      this.getService().find(request).then((result) => {
-        resolve(this.serialize(result));
-      });
-    });
+    return Promise.resolve()
+      .then(() => this.deserialize<StatusFilter>(request.body))
+      .then((deserializedFilter) => this.getService().find(request, deserializedFilter))
+      .then<FindResult<T>>((result) => this.serialize(result));
   }
 
 
@@ -61,15 +58,12 @@ export abstract class CoreController<T> extends TableController {
    * @memberof ControllerBase
    */
   protected queryInternal(
-    request: IBodyRequest<IQuery>
+    request: IBodyRequest<IStatusQuery>
   ): Promise<QueryResult<T>> {
-    return new Promise<QueryResult<T>>((resolve, reject) => {
-      const deserializedQuery = this.deserialize<IQuery>(request.body);
-
-      this.getService().query(request, deserializedQuery).then((result) => {
-        resolve(this.serialize(result));
-      });
-    });
+    return Promise.resolve()
+      .then(() => this.deserialize<IStatusQuery>(request.body))
+      .then((deserializedQuery) => this.getService().query(request, deserializedQuery))
+      .then<QueryResult<T>>((result) => this.serialize(result));
   }
 
 

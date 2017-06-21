@@ -10,6 +10,7 @@ import { EnumTableServiceRequests } from '../../redux/service-requests/enum-tabl
 import { Store } from '../../redux/store/store';
 import { EnumTableOptions } from '../decorator/enumTableOptions';
 import { TableOptions } from '../decorator/tableOptions.interface';
+import { EntityStatus, EntityStatusHelper } from '../entity-status';
 import { IEntity } from '../entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { EnumTableService } from '../service/enumTableService';
@@ -31,6 +32,7 @@ export abstract class TableMetadata extends ClassMetadata {
   private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   // private _primaryKeyColumn: ColumnMetadata;
   private _specialColMap: Dictionary<SpecialColumns, ColumnMetadata> = new Dictionary<SpecialColumns, ColumnMetadata>();
+  private _statusColMap: Dictionary<EntityStatus, ColumnMetadata> = new Dictionary<EntityStatus, ColumnMetadata>();
 
 
 
@@ -81,6 +83,21 @@ export abstract class TableMetadata extends ClassMetadata {
 
 
 
+  public setStatusColumn(propertyName: string, status: EntityStatus) {
+    Assert.notNullOrEmpty(propertyName);
+    Assert.that(!this._statusColMap.containsKey(status),
+      `${status} darf nur einmal gesetzt sein: bereits gesetzt für ${propertyName}`);
+
+    const metadata = this.getColumnMetadataByProperty(propertyName);
+    this._statusColMap.set(status, metadata);
+  }
+
+  public getStatusColumn(status: EntityStatus): ColumnMetadata {
+    Assert.notNull(status);
+    return this._statusColMap.get(status);
+  }
+
+
   /**
    * Liefert alle {ColumnMetadata}-Infos.
    *
@@ -94,6 +111,10 @@ export abstract class TableMetadata extends ClassMetadata {
 
   public get specialColumnKeys(): SpecialColumns[] {
     return this._specialColMap.keys;
+  }
+
+  public get statusColumnKeys(): EntityStatus[] {
+    return this._statusColMap.keys;
   }
 
 
@@ -238,6 +259,13 @@ export abstract class TableMetadata extends ClassMetadata {
    */
   public get clientColumn(): ColumnMetadata {
     return this._specialColMap.get(SpecialColumns.CLIENT);
+  }
+
+  /**
+   * Liefert die Status Column oder undefined
+   */
+  public get statusColumn(): ColumnMetadata {
+    return this.getColumnMetadataByProperty(EntityStatusHelper.PROPERTY_NAME_STATUS);
   }
 
   /**

@@ -32,6 +32,10 @@
         "PassportLocalService": "INFO",
         "ArtikelController": "INFO",
         "KollektionController": "INFO",
-        "ControllerBase": "INFO"
+        "ControllerBase": "INFO",
+
+        "EntityVersionTest": "INFO",
+        "KnexTest": "INFO",
+        "BaseTest": "DEBUG"
     }
 }

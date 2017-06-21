@@ -7,12 +7,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  EntityNotFoundException, Funktion, IToString, OptimisticLockException
-} from '@fluxgate/core';
-
-import {
-  CreateResult, DeleteResult, IEntity, UpdateResult
+  AppConfig, CreateResult, DeleteResult, IEntity, ProxyModes, ServiceResult, UpdateResult
 } from '@fluxgate/common';
+import {
+  EntityNotFoundException, Funktion, ICtor, IToString, OptimisticLockException
+} from '@fluxgate/core';
 
 
 import { ISessionRequest } from '../session/session-request.interface';
@@ -88,54 +87,52 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
 
           const query: Knex.QueryBuilder = this.fromTable();
 
-          // query für Inkrement der EntityVersion Tabelle oder nop-query erzeugen
-          const entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
+          query
+            .insert(dbSubject)
+            .transacting(trx)
 
-          entityversionQuery
-            .then((item) => {
+            .then((ids: number[]) => {
 
-              query
-                .insert(dbSubject)
-                .transacting(trx)
+              if (ids.length <= 0) {
+                log.error(`ids empty`);
+                reject(this.createSystemException('create failed: ids empty'));
+              } else if (ids.length > 1) {
+                reject(this.createSystemException('create failed: ids.length > 1'));
+              } else {
+                const id = ids[0];
+                log.debug(`created new ${this.tableName} with id: ${id}`);
 
-                .then((ids: number[]) => {
+                // Id der neuen Instanz zuweisen
+                dbSubject[this.idColumnName] = id;
 
-                  if (ids.length <= 0) {
-                    log.error(`ids empty`);
-                    reject(this.createSystemException('create failed: ids empty'));
-                  } else if (ids.length > 1) {
-                    reject(this.createSystemException('create failed: ids.length > 1'));
-                  } else {
-                    const id = ids[0];
-                    log.debug(`created new ${this.tableName} with id: ${id}`);
+                subject = this.createModelInstance(dbSubject);
 
-                    // Id der neuen Instanz zuweisen
-                    dbSubject[this.idColumnName] = id;
+                // query für Inkrement der EntityVersion Tabelle erzeugen
+                const entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
 
-                    subject = this.createModelInstance(dbSubject);
+                if (entityversionQuery) {
+                  // falls supported -> update in entityversion Tabelle
+                  entityversionQuery
+                    .then((item) => {
+                      this.handleResult(trx, CreateResult, subject, 'subject after commit', resolve, reject);
+                    });
+                } else {
+                  this.handleResult(trx, CreateResult, subject, 'subject after commit', resolve, reject);
+                }
+              }
 
-                    if (this.hasEntityVersionInfo()) {
-                      this.findEntityVersionAndResolve(trx, CreateResult, subject, resolve, reject);
-                    } else {
-                      trx.commit();
+            })
+            .catch((err) => {
+              log.error(err);
 
-                      log.debug('subject after commit: ', subject);
-                      resolve(new CreateResult(subject, -1));
-                    }
-                  }
-                })
-                .catch((err) => {
-                  log.error(err);
-
-                  trx.rollback();
-                  reject(this.createSystemException(err));
-                });
+              trx.rollback();
+              reject(this.createSystemException(err));
             });
+
         });     // transaction
       });     // promise
     });
   }
-
 
 
   /**
@@ -162,79 +159,81 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
           // quer< zur Selektion der Entity und ggf. des Versionsinkrements
           const query: Knex.QueryBuilder = this.createUpdateQuery(request, trx, subject.id, dbSubject);
 
-          // query für increment der entityversion Tabelle oder nop-query erzeugen
-          const entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
 
+          query
+            .update(dbSubject)
+            .transacting(trx)
 
-          log.debug('dbSbject: ', dbSubject);
+            .then((affectedRows: number) => {
+              log.debug(`updated ${this.tableName} with id: ${dbSubject[this.idColumnName]}` +
+                ` (affectedRows: ${affectedRows})`, );
 
-          entityversionQuery
-            .then((item) => {
-
-              query
-                .update(dbSubject)
-                .transacting(trx)
-
-                .then((affectedRows: number) => {
-                  log.debug(`updated ${this.tableName} with id: ${dbSubject[this.idColumnName]}` +
-                    ` (affectedRows: ${affectedRows})`, );
-
-                  if (this.metadata.versionColumn) {
-                    if (affectedRows <= 0) {
-                      trx.rollback();
-
-                      const exc = new OptimisticLockException(
-                        `table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`);
-
-                      log.error(exc);
-                      reject(exc);
-                    } else {
-
-                      const resultSubject = this.createModelInstance(dbSubject);
-
-                      if (this.hasEntityVersionInfo()) {
-                        this.findEntityVersionAndResolve(trx, UpdateResult, resultSubject, resolve, reject);
-                      } else {
-
-                        trx.commit();
-
-                        log.debug('subject after commit (optimistic lock detection): ', resultSubject);
-                        resolve(new UpdateResult(resultSubject, -1));
-                      }
-                    }
-                  } else {
-                    if (affectedRows <= 0) {
-                      trx.rollback();
-
-                      const exc = new EntityNotFoundException(
-                        `table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`);
-                      log.error(exc);
-
-                      reject(exc);
-                    } else {
-                      const resultSubject = this.createModelInstance(dbSubject);
-
-                      if (this.hasEntityVersionInfo()) {
-                        this.findEntityVersionAndResolve(trx, UpdateResult, resultSubject, resolve, reject);
-                      } else {
-
-                        trx.commit();
-
-                        log.debug('subject after commit: ', resultSubject);
-                        resolve(new UpdateResult(resultSubject, -1));
-                      }
-
-                    }
-                  }
-                })
-                .catch((err) => {
-                  log.error(err);
-
+              //
+              // Version-Column vorhanden? -> ggf. optimistic lock exception erzeugen
+              //
+              if (this.metadata.versionColumn) {
+                if (affectedRows <= 0) {
                   trx.rollback();
-                  reject(this.createSystemException(err));
-                });
-            });
 
+                  const exc = new OptimisticLockException(`Data was not up to date.\nReload data and try again.`);
+
+                  log.error(exc);
+                  reject(exc);
+                } else {
+
+                  const resultSubject = this.createModelInstance(dbSubject);
+
+
+                  log.debug('dbSbject: ', dbSubject);
+
+                  // query für Inkrement der EntityVersion Tabelle erzeugen
+                  const entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
+
+                  if (entityversionQuery) {
+                    // falls supported -> update in entityversion Tabelle
+                    entityversionQuery
+                      .then((item) => {
+                        this.handleResult(trx, UpdateResult, resultSubject,
+                          'subject after commit (optimistic lock detection)', resolve, reject);
+                      });
+                  } else {
+                    this.handleResult(trx, UpdateResult, resultSubject, 'subject after commit', resolve, reject);
+                  }
+                }
+              } else {
+                if (affectedRows <= 0) {
+                  trx.rollback();
+
+                  const exc = new EntityNotFoundException(
+                    `table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`);
+                  log.error(exc);
+
+                  reject(exc);
+                } else {
+                  const resultSubject = this.createModelInstance(dbSubject);
+
+                  // query für Inkrement der EntityVersion Tabelle erzeugen
+                  const entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
+
+                  if (entityversionQuery) {
+                    // falls supported -> update in entityversion Tabelle
+                    entityversionQuery
+                      .then((item) => {
+                        this.handleResult(trx, UpdateResult, resultSubject,
+                          'subject after commit', resolve, reject);
+                      });
+                  } else {
+                    this.handleResult(trx, UpdateResult, resultSubject, 'subject after commit', resolve, reject);
+                  }
+                }
+              }
+            })
+            .catch((err) => {
+              log.error(err);
+
+              trx.rollback();
+              reject(this.createSystemException(err));
+            });
         });     // transaction
       });     // promise
     });
@@ -266,43 +265,38 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
             query = this.addClientSelector(query, trx, request.user.__client);
           }
 
-          // query für increment der entityversion Tabelle oder nop-query erzeugen
-          const entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
+          query
+            .del()
+            .transacting(trx)
 
+            .then((affectedRows: number) => {
+              log.debug(`deleted from ${this.tableName} with id: ${id} (affectedRows: ${affectedRows})`);
 
-          entityversionQuery
-            .then((item) => {
+              if (affectedRows <= 0) {
+                trx.rollback();
+                reject(this.createSystemException(
+                  new EntityNotFoundException(`table: ${this.tableName}, id: ${id}`)));
+              } else {
 
-              query
-                .del()
-                .transacting(trx)
+                // query für Inkrement der EntityVersion Tabelle erzeugen
+                const entityversionQuery: Knex.QueryBuilder = this.createEntityVersionIncrement(trx);
 
-                .then((affectedRows: number) => {
-                  log.debug(`deleted from ${this.tableName} with id: ${id} (affectedRows: ${affectedRows})`);
+                if (entityversionQuery) {
+                  // falls supported -> update in entityversion Tabelle
+                  entityversionQuery
+                    .then((item) => {
+                      this.handleResult(trx, DeleteResult, id, 'delete id after commit', resolve, reject);
+                    });
+                } else {
+                  this.handleResult(trx, DeleteResult, id, 'delete id after commit', resolve, reject);
+                }
+              }
+            })
+            .catch((err) => {
+              log.error(err);
 
-                  if (affectedRows <= 0) {
-                    trx.rollback();
-                    reject(this.createSystemException(
-                      new EntityNotFoundException(`table: ${this.tableName}, id: ${id}`)));
-                  } else {
-
-                    if (this.hasEntityVersionInfo()) {
-                      this.findEntityVersionAndResolve(trx, DeleteResult, id, resolve, reject);
-                    } else {
-
-                      trx.commit();
-
-                      log.debug('delete id after commit: ', id);
-                      resolve(new DeleteResult(id, -1));
-                    }
-                  }
-                })
-                .catch((err) => {
-                  log.error(err);
-
-                  trx.rollback();
-                  reject(this.createSystemException(err));
-                });
+              trx.rollback();
+              reject(this.createSystemException(err));
             });
         });     // transaction
       });     // promise
@@ -376,10 +370,19 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    */
   private createEntityVersionIncrement(trx: Knex.Transaction): Knex.QueryBuilder {
     return using(new XLog(BaseService.logger, levels.INFO, 'createEntityVersionIncrement'), (log) => {
-      let rval = this.fromTable();
+      let rval;
 
-      if (this.entityVersionMetadata) {
-
+      //
+      // falls wird mit dem EntityVersionProxy arbeiten und im Schema EntityVersion-Metadaten vorliegen
+      // inkrementieren wir die Version aktuellen Entity.
+      //
+      if (this.entityVersionMetadata &&
+        (
+          (!AppConfig.config) ||
+          (
+            AppConfig.config && AppConfig.config.proxyMode === ProxyModes.ENTITY_VERSION
+          )
+        )) {
         // query zum Inkrement der Version in Tabelle entityversion
 
         rval = this.fromTable(this.entityVersionMetadata.tableName)
@@ -398,6 +401,27 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
       }
 
       return rval;
+    });
+  }
+
+
+
+
+  private handleResult<TResult>(trx: Knex.Transaction, resultClazz: ICtor<ServiceResult>,
+    subject: TResult, logMessage: string, resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void),
+    reject: ((reason?: any) => void)) {
+    using(new XLog(BaseService.logger, levels.INFO, 'handleResult'), (log) => {
+      if (this.hasEntityVersionInfo()) {
+        this.findEntityVersionAndResolve(trx, resultClazz, subject, resolve, reject);
+      } else {
+        trx.commit();
+
+        if (log.isDebugEnabled()) {
+          log.debug(`${logMessage}: `, subject);
+        }
+
+        resolve(new resultClazz(subject, -1));
+      }
     });
   }
 

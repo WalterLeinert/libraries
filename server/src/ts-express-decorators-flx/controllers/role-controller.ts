@@ -1,16 +1,19 @@
-import { Authenticated, Controller, Delete, Get, PathParams, Post, Put, Request } from 'ts-express-decorators';
+import { Authenticated, Controller, Delete, Get, PathParams, Request } from 'ts-express-decorators';
 
 // Fluxgate
 import {
-  CreateResult, DeleteResult, FindByIdResult, FindResult, QueryResult,
-  Role, UpdateResult
+  CreateResult, DeleteResult, FindByIdResult, FindResult, IStatusQuery, QueryResult,
+  Role, StatusFilter, UpdateResult
 } from '@fluxgate/common';
-import { IQuery } from '@fluxgate/core';
 
 import { RoleService } from '../services/role.service';
 import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
 import { ControllerBase } from './base/controller-base';
+import { CreateMethod } from './decorator/create-method.decorator';
+import { FindMethod } from './decorator/find-method.decorator';
+import { QueryMethod } from './decorator/query-method.decorator';
+import { UpdateMethod } from './decorator/update-method.decorator';
 
 
 @Controller('/role')
@@ -20,7 +23,7 @@ export class RoleController extends ControllerBase<Role, number> {
   }
 
   @Authenticated({ role: 'admin' })
-  @Post('/')
+  @CreateMethod()
   public create(
     @Request() request: IBodyRequest<Role>
     ): Promise<CreateResult<Role, number>> {
@@ -28,9 +31,9 @@ export class RoleController extends ControllerBase<Role, number> {
   }
 
   // @Authenticated()
-  @Get('/')
+  @FindMethod()
   public find(
-    @Request() request: ISessionRequest
+    @Request() request: IBodyRequest<StatusFilter>
     ): Promise<FindResult<Role>> {
     return super.findInternal(request);
   }
@@ -46,15 +49,15 @@ export class RoleController extends ControllerBase<Role, number> {
 
 
   @Authenticated({ role: 'admin' })
-  @Post('/query')
+  @QueryMethod()
   public query(
-    @Request() request: IBodyRequest<IQuery>
+    @Request() request: IBodyRequest<IStatusQuery>
     ): Promise<QueryResult<Role>> {
     return super.queryInternal(request);
   }
 
   @Authenticated({ role: 'admin' })
-  @Put('/')
+  @UpdateMethod()
   public update(
     @Request() request: IBodyRequest<Role>
     ): Promise<UpdateResult<Role, number>> {

@@ -5,6 +5,7 @@ export * from './constants';
 export * from './disposable.interface';
 export * from './disposable';
 export * from './enumHelper';
+export * from './flatten-json';
 export * from './message';
 export * from './node';
 export * from './objectType';

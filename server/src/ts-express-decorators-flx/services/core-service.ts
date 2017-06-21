@@ -7,12 +7,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  EntityVersion, FindResult, IUser, QueryResult,
-  ServiceResult, TableMetadata, User
+  AppConfig, EntityStatus, EntityVersion, FilterBehaviour, FindResult, IStatusQuery, IUser, ProxyModes, QueryResult,
+  ServiceResult, StatusFilter, TableMetadata, User
 } from '@fluxgate/common';
 import {
-  Assert, Clone, Funktion, ICtor,
-  IQuery, Types
+  Assert, Clone, Funktion, ICtor, InvalidOperationException, Types
 } from '@fluxgate/core';
 
 
@@ -71,14 +70,19 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    * @memberOf ServiceBase
    */
   public find(
-    request: ISessionRequest
+    request: ISessionRequest,
+    filter?: StatusFilter
   ): Promise<FindResult<T>> {
     return using(new XLog(CoreService.logger, levels.INFO, 'find', `[${this.tableName}]`), (log) => {
 
       return new Promise<FindResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
-          const query = this.createClientSelectorQuery(request, trx);
+          // ggf. nach Mandanten filtern
+          let query = this.createClientSelectorQuery(request, trx);
+
+          // ggf. nach Status filtern
+          query = this.createStatusSelectorQuery(trx, filter, query);
 
           query
 
@@ -135,7 +139,8 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    */
   public queryKnex(
     request: ISessionRequest,
-    query: Knex.QueryBuilder
+    query: Knex.QueryBuilder,
+    filter?: StatusFilter
   ): Promise<QueryResult<T>> {
 
     return using(new XLog(CoreService.logger, levels.INFO, 'queryKnex', `[${this.tableName}]`), (log) => {
@@ -143,7 +148,11 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
       return new Promise<QueryResult<T>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
+          // ggf. nach Mandanten filtern
           query = this.createClientSelectorQuery(request, trx, query);
+
+          // ggf. nach Status filtern
+          query = this.createStatusSelectorQuery(trx, filter, query);
 
           query
             .transacting(trx)
@@ -195,7 +204,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
   public query(
     request: ISessionRequest,
-    query: IQuery
+    query: IStatusQuery
   ): Promise<QueryResult<T>> {
     return using(new XLog(CoreService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
       const knexQuery = this.fromTable();
@@ -203,7 +212,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
       const visitor = new KnexQueryVisitor(knexQuery, this.metadata);
       query.term.accept(visitor);
 
-      return this.queryKnex(request, visitor.query(knexQuery));
+      return this.queryKnex(request, visitor.query(knexQuery), query.filter);
     });
   }
 
@@ -296,7 +305,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
 
   /**
-   * ermittelt die aktuelle EntityVersion und legt diese zusammen mit dem Query-Ergebnis @param{queryResult}
+   * ermittelt die aktuelle EntityVersion und legt diese zusammen mit dem Query-Ergebnis @param{subject}
    * in einer neuen Instanz vom Typ @see{resultClazz} ab, die im @see{resolve} zurückgeliefert wird.
    *
    * Die Operation ist in die Transaktion @param{trx} eingebunden.
@@ -311,7 +320,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    * @memberof ReadonlyService
    */
   protected findEntityVersionAndResolve<TResult>(trx: Knex.Transaction, resultClazz: ICtor<ServiceResult>,
-    queryResult: TResult, resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void),
+    subject: TResult, resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void),
     reject: ((reason?: any) => void)) {
 
     using(new XLog(CoreService.logger, levels.INFO, 'findEntityVersionAndResolve'), (log) => {
@@ -327,9 +336,9 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
           trx.commit();
 
-          log.debug('queryResult after commit: ', queryResult);
+          log.debug('queryResult after commit: ', subject);
 
-          resolve(new resultClazz(queryResult, entityVersion));
+          resolve(new resultClazz(subject, entityVersion));
         }).catch(reject);
     });
   }
@@ -402,9 +411,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
   protected createClientSelectorQuery(request: ISessionRequest | IBodyRequest<IUser>, trx: Knex.Transaction,
     query?: Knex.QueryBuilder): Knex.QueryBuilder {
 
-    if (!query) {
-      query = this.fromTable();
-    }
+    query = this.createNopQuery(query);
 
     if (request && this.metadata.clientColumn) {
       const userColumnSelector = `${this._userMetadata.clientColumn.options.name}`;
@@ -432,8 +439,87 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
 
   /**
-   * Liefert true, falls für das aktuelle Model EntityVersion-Information aktualisiert wird und die letzte Version
-   * geliefert werden kann.
+   * Liefert eine Knex-Query, die für die aktuelle Tabelle alle Rows liefert, bei denen der
+   * Status 0 (EntityStatus.None) ist.
+   *
+   * @protected
+   * @param {ISessionRequest|IBodyRequest<IUser>} request
+   * @param {Knex.Transaction} trx
+   * @returns {Knex.QueryBuilder}
+   *
+   * @memberof ReadonlyService
+   */
+  protected createStatusSelectorQuery(trx: Knex.Transaction,
+    filter: StatusFilter,
+    query?: Knex.QueryBuilder): Knex.QueryBuilder {
+
+    return using(new XLog(CoreService.logger, levels.INFO, 'createStatusSelectorQuery'), (log) => {
+      log.log(`filter = ${JSON.stringify(filter)}`);
+
+      query = this.createNopQuery(query);
+
+
+      if (this.metadata.statusColumnKeys.length > 0) {
+        const statusColumn = this.metadata.statusColumn;
+
+        // defaults
+        let behaviour = FilterBehaviour.None;
+        let status = EntityStatus.None;
+
+        if (filter && filter instanceof StatusFilter) {
+          behaviour = filter.behaviour;
+          status = filter.status;
+        }
+
+        switch (behaviour) {
+          // items with status 0 (without any status)
+          case FilterBehaviour.None:
+            query = query.andWhere(statusColumn.options.name, status);
+            break;
+
+          // items + items with matching status
+          case FilterBehaviour.Add:
+            query = query.andWhere(statusColumn.options.name, EntityStatus.None);   // all with status 0
+            query = query.orWhereRaw(`(${statusColumn.options.name} & ?) = ?`, [status, status]);
+            break;
+
+          // only items with matching status
+          case FilterBehaviour.Only:
+            query = query.andWhereRaw(`(${statusColumn.options.name} & ?) = ?`, [status, status]);
+            break;
+
+          // items + items without matching status
+          case FilterBehaviour.Exclude:
+            query = query.andWhere(statusColumn.options.name, EntityStatus.None);   // all with status 0
+            query = query.orWhereRaw(`(${statusColumn.options.name} & ?) <> ?`, [status, status]);
+            break;
+
+          default:
+            throw new InvalidOperationException(`unsupported filter behaviour: ${behaviour}`);
+        }
+      }
+
+      return query
+        .transacting(trx);
+    });
+  }
+
+
+  protected createNopQuery(query?: Knex.QueryBuilder, tableName?: string): Knex.QueryBuilder {
+    if (!query) {
+      query = this.fromTable(tableName);
+    }
+
+    return query;
+  }
+
+
+
+  /**
+   * Liefert true, falls mit der EntityVersion-Information gearbeitet werden soll, d.h.
+   * - der EntitVersionProxy konfiguriert ist und
+   * - für das aktuelle Model EntityVersion-Metadaten vorliegen und
+   * - kein View vorliegt
    *
    * @private
    * @returns {boolean}
@@ -441,7 +527,14 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    * @memberof ReadonlyService
    */
   protected hasEntityVersionInfo(): boolean {
-    return (this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata &&
+    return (
+      (
+        (!AppConfig.config) ||
+        (
+          AppConfig.config && AppConfig.config.proxyMode === ProxyModes.ENTITY_VERSION
+        )
+      ) &&
+      this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata &&
       !this.metadata.options.isView);
   }
 }

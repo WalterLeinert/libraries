@@ -5,6 +5,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { Assert, Dictionary, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
 
+import { EntityStatus } from './../entity-status';
 import { CompoundValidator } from './../validation/compoundValidator';
 import { Validator } from './../validation/validator';
 
@@ -31,10 +32,15 @@ export class MetadataStorage {
   new Dictionary<string, ValidationMetadata[]>();
 
   private tableColumnDict: Dictionary<string, ColumnMetadata[]> = new Dictionary<string, ColumnMetadata[]>();
+
   private tableEnumDict: Dictionary<string, Array<EnumMetadata<any, any, any>>> =
   new Dictionary<string, Array<EnumMetadata<any, any, any>>>();
+
   private tableSpecialColumnDict: Dictionary<string, Dictionary<string, SpecialColumn>> =
   new Dictionary<string, Dictionary<string, SpecialColumn>>();
+
+  private tableStatusColumnDict: Dictionary<string, Dictionary<string, EntityStatus>> =
+  new Dictionary<string, Dictionary<string, EntityStatus>>();
 
   private tableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
   private dbTableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
@@ -149,6 +155,14 @@ export class MetadataStorage {
               metadata.setSpecialColumn(propertyName, dict.get(propertyName));
             }
           }
+
+          if (this.tableStatusColumnDict.containsKey(targetName)) {
+            const dict = this.tableStatusColumnDict.get(targetName);
+
+            for (const propertyName of dict.keys) {
+              metadata.setStatusColumn(propertyName, dict.get(propertyName));
+            }
+          }
         }
 
 
@@ -163,6 +177,22 @@ export class MetadataStorage {
           // Metadaten der Basisklasse ermitteln
           const baseTableMetadata = this.tableDict.get(baseClazz.name);
 
+
+          //
+          // alle Status-Columns prüfen (wie deleted, archived)
+          //
+          baseTableMetadata.statusColumnKeys.forEach((statusColKey) => {
+            const baseStatusCol = baseTableMetadata.getStatusColumn(statusColKey);
+
+            const statusCol = metadata.getColumnMetadataByDbCol(baseStatusCol.options.name);
+
+            // falls überschrieben, müssen die Namen übereinstimmen
+            if (statusCol) {
+              Assert.that(statusCol.propertyName === baseStatusCol.propertyName,
+                `${metadata.className}/${baseTableMetadata.className}: ` +
+                `${statusCol.propertyName}/${baseStatusCol.propertyName} properties must have same name`);
+            }
+          });
 
           //
           // alle speziellen Columns prüfen (primaryKey, version, client)
@@ -221,6 +251,20 @@ export class MetadataStorage {
               metadata.setSpecialColumn(baseSpecialCol.propertyName, specialColKey);
             }
           });
+
+
+          //
+          // alle vererbten Status-Columns setzen (wie deleted, archived)
+          //
+          baseTableMetadata.statusColumnKeys.forEach((statusColKey) => {
+            const baseStatusCol = baseTableMetadata.getStatusColumn(statusColKey);
+
+            // falls spezial Column noch nicht gesetzt, diese setzen
+            // (Hinweis: die primaryKey-Column wird beim Vererben gesetzt)
+            if (!metadata.getStatusColumn(statusColKey)) {
+              metadata.setStatusColumn(baseStatusCol.propertyName, statusColKey);
+            }
+          });
         }
 
 
@@ -262,6 +306,21 @@ export class MetadataStorage {
     }
 
     dict.set(propertyName, key);
+  }
+
+
+  public setStatusColumn(target: Funktion, propertyName: string, status: EntityStatus) {
+    let dict: Dictionary<string, EntityStatus>;
+
+    const targetName = target.name;
+    if (!this.tableStatusColumnDict.containsKey(targetName)) {
+      dict = new Dictionary<string, EntityStatus>();
+      this.tableStatusColumnDict.set(targetName, dict);
+    } else {
+      dict = this.tableStatusColumnDict.get(targetName);
+    }
+
+    dict.set(propertyName, status);
   }
 
 

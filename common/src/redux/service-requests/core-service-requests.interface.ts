@@ -1,9 +1,8 @@
 import { Observable } from 'rxjs/Observable';
 
-import { IQuery } from '@fluxgate/core';
-
+import { StatusFilter } from '../../model/service/status-filter';
+import { IStatusQuery } from '../../model/service/status-query';
 import { IServiceRequests } from './service-requests.interface';
-
 
 /**
  * Interface für alle ServiceRequests. Die Servicemethoden liefern Entities, die keine
@@ -22,7 +21,7 @@ export interface ICoreServiceRequests<T> extends IServiceRequests {
    * @param {IQuery} query
    * @memberOf ICrudServiceRequests
    */
-  query(query: IQuery): Observable<T[]>;
+  query(query: IStatusQuery): Observable<T[]>;
 
   /**
    * Führt die find-Methode async aus und führt ein dispatch des zugehörigen Kommandos durch.
@@ -30,7 +29,7 @@ export interface ICoreServiceRequests<T> extends IServiceRequests {
    *
    * @memberOf ICrudServiceRequests
    */
-  find(): Observable<T[]>;
+  find(filter?: StatusFilter): Observable<T[]>;
 
   /**
    * Liefert den Namen der zugehörigen Modelklasse der Entity (z.B. User)

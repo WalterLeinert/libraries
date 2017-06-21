@@ -13,7 +13,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 import {
-  CreateResult, DeleteResult, IEntity, UpdateResult
+  CreateResult, DeleteResult, IEntity, ServiceConstants, UpdateResult
 } from '@fluxgate/common';
 
 import { Assert, Funktion, IToString } from '@fluxgate/core';
@@ -64,11 +64,15 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
     Assert.notNull(item, 'item');
     return using(new XLog(Service.logger, levels.INFO, 'create', `[${this.getModelClassName()}]`), (log) => {
 
-      return this.http.post(this.getUrl(), this.serialize(item))
+      if (log.isDebugEnabled()) {
+        log.debug(`item = ${JSON.stringify(item)}`);
+      }
+
+      return this.http.post(`${this.getUrl()}/${ServiceConstants.CREATE}`, this.serialize(item))
         .map((response: Response) => this.deserialize(response.json()))
         .do((result: CreateResult<T, TId>) => {
           if (log.isInfoEnabled()) {
-            log.log(`Service.create: ${JSON.stringify(result)}`);
+            log.log(`created ${JSON.stringify(result)}`);
           }
         })
         .catch(this.handleError);
@@ -87,17 +91,22 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
    */
   public update(item: T): Observable<UpdateResult<T, TId>> {
     Assert.notNull(item, 'item');
-    return using(new XLog(Service.logger, levels.INFO, 'update', `[${this.getModelClassName()}]`), (log) => {
+    return using(new XLog(Service.logger, levels.INFO, 'update',
+      `[${this.getModelClassName()}]: id ${item.id}`), (log) => {
 
-      return this.http.put(`${this.getUrl()}`, this.serialize(item))
-        .map((response: Response) => this.deserialize(response.json()))
-        .do((result: UpdateResult<T, TId>) => {
-          if (log.isInfoEnabled()) {
-            log.log(`Service.update [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
-          }
-        })
-        .catch(this.handleError);
-    });
+        if (log.isDebugEnabled()) {
+          log.debug(`item = ${JSON.stringify(item)}`);
+        }
+
+        return this.http.put(`${this.getUrl()}/${ServiceConstants.UPDATE}`, this.serialize(item))
+          .map((response: Response) => this.deserialize(response.json()))
+          .do((result: UpdateResult<T, TId>) => {
+            if (log.isInfoEnabled()) {
+              log.log(`updated [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
+            }
+          })
+          .catch(this.handleError);
+      });
   }
 
 
@@ -118,7 +127,7 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: DeleteResult<TId>) => {
             if (log.isInfoEnabled()) {
-              log.log(`Service.delete [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
+              log.log(`deleted [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
             }
           })
           .catch(this.handleError);

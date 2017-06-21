@@ -10,10 +10,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
+  CrudServiceRequests,
   IServiceRequests, IServiceState, ItemCreatedCommand,
   ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
-import { Assert, Types } from '@fluxgate/core';
+import { Assert, NotSupportedException, Types } from '@fluxgate/core';
 
 import { MessageService } from '../../services/message.service';
 import { ExtendedCoreComponent } from './extended-core.component';
@@ -78,6 +79,34 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
     return false;
   }
 
+
+  /**
+   * Löscht das Item @param{item}.
+   *
+   * Ist _serviceRequests keine Instanz von CrudServiceRequests, wird eine Exception geworfen.
+   *
+   * Ist _serviceRequests eine Instanz von @see{StatusServiceRequests}, wird nur das deleted-Flag
+   * im Entity-Status gesetzt; ansonsten wird das Item komplett gelöscht.
+   *
+   * @protected
+   * @param {T} item
+   * @param {boolean} setDeleted
+   *
+   * @memberof ServiceRequestsComponent
+   */
+  protected deleteItem(item: T, action?: () => void) {
+    if (!(this._serviceRequests instanceof CrudServiceRequests)) {
+      throw new NotSupportedException();
+    }
+
+    this._serviceRequests.delete(item).subscribe((result) => {
+      // -> onStoreUpdated
+
+      if (action) {
+        action();
+      }
+    });
+  }
 
 
   /**

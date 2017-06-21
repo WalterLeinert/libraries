@@ -17,6 +17,7 @@ import { BooleanValueGenerator } from './boolean-value-generator';
 import { DateValueGenerator } from './date-value-generator';
 import { DatetimeValueGenerator } from './datetime-value-generator';
 import { IEntityGeneratorConfig } from './entity-generator-config.interface';
+import { NopValueGenerator } from './nop-value-generator';
 import { NumberValueGenerator } from './number-value-generator';
 import { SequenceGeneratorStrategy } from './sequence-generator-strategy';
 import { ShortTimeValueGenerator } from './shortTime-value-generator';
@@ -164,7 +165,9 @@ export class EntityGenerator<T extends IEntity<TId>, TId extends IToString> {
       // für alle Spalten ausser der PrimaryKey-Spalte Werte erzeugen
       if (metadata.options.persisted && !metadata.options.primary) {
         const result = this.valueGeneratorDict.get(metadata.propertyName).next();
-        item[metadata.propertyName] = result.value;
+        if (! (result instanceof NopValueGenerator)) {
+          item[metadata.propertyName] = result.value;
+        }
       }
     });
 

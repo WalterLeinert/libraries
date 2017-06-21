@@ -41,6 +41,7 @@ class VersionTest extends KnexTest<QueryTest, number> {
       idGenerator: new NumberIdGenerator(VersionTest.MAX_ITEMS),
       columns: {
         __version: new ConstantValueGenerator(0),
+        __status: new ConstantValueGenerator(0),
         __test: new ConstantValueGenerator(0),
       },
       tableMetadata: KnexTest.metadataService.findTableMetadata(QueryTest)
@@ -67,9 +68,11 @@ class VersionTest extends KnexTest<QueryTest, number> {
     this.service.create(undefined, item1).then((result) => {
       if (result.item.__version !== 0) {
         done(`${result.item.__version} must be 0.`);
+        return;
       }
       if (result.entityVersion !== ev) {
         done(`${result.entityVersion} must be ${ev}`);
+        return;
       }
       done();
     });

@@ -8,11 +8,11 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { AssertionException } from '@fluxgate/core';
-import { FileSystem } from '@fluxgate/platform';
+import { FileSystem } from '../src/util/fileSystem';
 
 
-@suite('FileSystem')
-class LoggingConfigurationTest {
+@suite('platform.util.FileSystem')
+class FileSystemTest {
 
   @test 'should exist file'() {
     const testPath = path.join(process.cwd(), 'package.json');

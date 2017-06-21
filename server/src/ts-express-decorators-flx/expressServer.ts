@@ -36,6 +36,7 @@ const rootDir = path.join(process.cwd());
  */
 
 @ServerSettings({
+  debug: true,
 
   rootDir: rootDir,
   mount: {
@@ -52,6 +53,7 @@ export class ExpressServer extends ServerBase {
 
   public constructor(configuration: IServerConfiguration) {
     super(configuration);
+    // this.settings.set('debug', true);
   }
 
   public $afterRoutesInit() {

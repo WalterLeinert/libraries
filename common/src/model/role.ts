@@ -5,7 +5,7 @@ import { Column } from '../model/decorator/column';
 import { IdColumn } from '../model/decorator/id-column';
 import { Table } from '../model/decorator/table';
 import { Validation } from '../model/decorator/validation';
-import { FlxEntity } from '../model/flx-entity';
+import { FlxStatusEntity } from '../model/flx-status-entity';
 import { Validators } from '../model/validation/validators';
 
 // import { Mandant } from './mandant';
@@ -28,7 +28,7 @@ export enum UserRoleId {
  * Modelliert User Rollen (Defaultimplemetierung)
  */
 @Table({ name: Role.TABLE_NAME })
-export class Role extends FlxEntity<number> implements IRole {
+export class Role extends FlxStatusEntity<number> implements IRole {
   public static readonly TABLE_NAME = 'role';
 
   /**
@@ -58,8 +58,6 @@ export class Role extends FlxEntity<number> implements IRole {
   @Column({ name: 'role_description', displayName: 'Description' })
   public description: string;
 
-  @Column({ name: 'role_deleted', hidden: true })
-  public deleted?: boolean;
 
   /**
    * prüft, ob @param{id} eine gültige Role-Id darstellt.

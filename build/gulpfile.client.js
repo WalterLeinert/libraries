@@ -89,3 +89,7 @@ gulp.task('build-all:client', gulpSequence('clean:client','update-fluxgate:clien
 gulp.task('update-fluxgate:client', function (cb) {
   execCommand('gulp update-fluxgate', 'client', bufferSize, cb);
 })
+
+gulp.task('update-fluxgate-yarn:client', function (cb) {
+  execCommand('gulp update-fluxgate-yarn', 'client', bufferSize, cb);
+})

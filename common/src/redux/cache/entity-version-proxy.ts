@@ -7,8 +7,9 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { Clone, IQuery, IToString, StringBuilder, Types } from '@fluxgate/core';
+import { Clone, IToString, StringBuilder, Types } from '@fluxgate/core';
 
+import { EntityStatusHelper } from '../../model/entity-status';
 import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
 import { IFlxEntity } from '../../model/flx-entity.interface';
@@ -20,6 +21,8 @@ import { QueryResult } from '../../model/service/query-result';
 import { ServiceProxy } from '../../model/service/service-proxy';
 import { ServiceResult } from '../../model/service/service-result';
 import { IService } from '../../model/service/service.interface';
+import { StatusFilter } from '../../model/service/status-filter';
+import { IStatusQuery } from '../../model/service/status-query';
 import { UpdateResult } from '../../model/service/update-result';
 import { EntityVersionCache, EntityVersionCacheEntry } from './entity-version-cache';
 
@@ -74,6 +77,8 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
           }
 
           observer.next(createResult);
+        }, (err) => {
+          observer.error(err);
         });
 
       });
@@ -92,9 +97,15 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
    *
    * @memberof EntityVersionProxy
    */
-  public query(query: IQuery): Observable<QueryResult<T>> {
+  public query(query: IStatusQuery): Observable<QueryResult<T>> {
     return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'query', `[${this.getTableName()}]`), (log) => {
-      return super.query(query);
+      return Observable.create((observer: Subscriber<QueryResult<T>>) => {
+        super.query(query).subscribe((result) => {
+          observer.next(result);
+        }, (err) => {
+          observer.error(err);
+        });
+      });
     });
   }
 
@@ -107,15 +118,17 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
    *
    * @memberof EntityVersionProxy
    */
-  public find(): Observable<FindResult<T>> {
+  public find(filter?: StatusFilter): Observable<FindResult<T>> {
     return using(new XLog(EntityVersionProxy.logger, levels.INFO, 'find', `[${this.getTableName()}]`), (log) => {
 
       return Observable.create((observer: Subscriber<FindResult<T>>) => {
 
         const finder = (lg: XLog, ev: EntityVersion, message: string) => {
-          super.find().subscribe((findResult) => {
+          super.find(filter).subscribe((findResult) => {
             this.updateCache(lg, findResult.entityVersion, findResult.items, message);
             observer.next(findResult);
+          }, (err) => {
+            observer.error(err);
           });
         };
 
@@ -172,7 +185,6 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
   }
 
 
-
   /**
    * Liefert die Entity für die Id @param{id} und aktualisiert den Cache.
    *
@@ -206,6 +218,8 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               }
 
               observer.next(findByIdResult);
+            }, (err) => {
+              observer.error(err);
             });
           };
 
@@ -258,7 +272,6 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
   }
 
 
-
   /**
    * Löscht die Entity mit Id @param{id} und aktualisiert den Cache
    *
@@ -293,6 +306,8 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               // noch nie gecached -> kein cache update
               observer.next(deleteResult);
             }
+          }, (err) => {
+            observer.error(err);
           });
         });
       });
@@ -325,9 +340,19 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
             }
 
             if (cacheEntry) {
+              let itemsFiltered;
 
-              // Item ersetzen
-              const itemsFiltered = cacheEntry.items.map((e) => e.id === updateResult.item.id ? updateResult.item : e);
+              // TODO: eigentlich Test über "instanceof FlxStatusEntity" -> geht aber so nicht wegen
+              // zyklischer Abhängigkeiten!
+              if (Types.hasProperty(updateResult.item, EntityStatusHelper.PROPERTY_NAME_DELETED)
+                && updateResult.item[EntityStatusHelper.PROPERTY_NAME_DELETED] === true) {
+                // Item entfernen
+                itemsFiltered = cacheEntry.items.filter((e) => e.id !== updateResult.item.id);
+              } else {
+                // Item ersetzen
+                itemsFiltered = cacheEntry.items.map((e) => e.id === updateResult.item.id ? updateResult.item : e);
+              }
+
               this.updateCache(log, updateResult.entityVersion, itemsFiltered,
                 `update item[${this.getTableName()}] in cache`);
 
@@ -343,6 +368,8 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               // noch nie gecached -> kein cache update
               observer.next(updateResult);
             }
+          }, (err) => {
+            observer.error(err);
           });
         });
       });

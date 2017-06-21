@@ -42,7 +42,12 @@ export class LoggerRegistry {
   }
 
   public static registerLogger(categoryName: string, logger: ILogger) {
-    logger.setLevel(LoggerRegistry.defaultLevel);
+    if (LoggerRegistry._config) {
+      LoggerRegistry.applyConfigurationToLogger(LoggerRegistry._config, logger);
+    } else {
+      logger.setLevel(LoggerRegistry.defaultLevel);
+    }
+
     LoggerRegistry.loggerDict.set(categoryName, logger);
   }
 
@@ -91,12 +96,17 @@ export class LoggerRegistry {
 
   private static applyConfiguration(config: IConfig) {
     LoggerRegistry.forEachLogger((logger) => {
-      const catLevel = LoggerRegistry._config.levels[logger.category];
-      if (catLevel) {
-        logger.setLevel(Level.toLevel(catLevel));
-      } else {
-        logger.setLevel(LoggerRegistry.defaultLevel);
-      }
+      LoggerRegistry.applyConfigurationToLogger(config, logger);
     });
+  }
+
+
+  private static applyConfigurationToLogger(config: IConfig, logger: ILogger) {
+    const catLevel = LoggerRegistry._config.levels[logger.category];
+    if (catLevel) {
+      logger.setLevel(Level.toLevel(catLevel));
+    } else {
+      logger.setLevel(LoggerRegistry.defaultLevel);
+    }
   }
 }

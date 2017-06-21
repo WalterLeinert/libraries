@@ -11,6 +11,7 @@ export * from './invalidOperationException';
 export * from './notImplementedException';
 export * from './notSupportedException';
 export * from './optimisticLockException';
+export * from './persistenceException';
 export * from './serverBusinessException';
 export * from './serverException';
 export * from './serverSystemException';

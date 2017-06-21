@@ -242,22 +242,23 @@ export abstract class ServerBase extends ServerLoader {
   }
 
 
-  public isAuthenticated(request: Express.Request, response: Express.Response, next?: Express.NextFunction,
-    authorization?: any): boolean {
-    return using(new XLog(ServerBase.logger, levels.DEBUG,
-      `isAuthenticated: authorization = ${JSON.stringify(authorization)}`), (log) => {
+  public $onAuth(request: Express.Request, response: Express.Response, next: Express.NextFunction,
+    authorization?: any): boolean | void {
+    using(new XLog(ServerBase.logger, levels.DEBUG, '$onAuth',
+      `authorization = ${JSON.stringify(authorization)}`), (log) => {
 
         //
         // TODO: AppConfig.config.userCredentials auswerten
         //
         if (AppConfig.config.mode === 'development' && AppConfig.config.userCredentials) {
-          return true;
-        }
+          next(true);
+        } else {
 
-        // Just use passport strategy method to know if the user is Authenticated :)
-        return request.isAuthenticated();
+          // Just use passport strategy method to know if the user is Authenticated :)
+          next(request.isAuthenticated());
+        }
       });
-  };
+  }
 
 
   /**

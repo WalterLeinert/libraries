@@ -1,4 +1,5 @@
 export * from './base/';
+export * from './decorator/';
 export * from './entity-version-controller';
 export * from './passport-controller';
 export * from './role-controller';
