@@ -1,0 +1,1 @@
+INSERT INTO `starter`.`entityversion` (`entityversion_id`, `__version`) VALUES ('systemconfig', '0');
