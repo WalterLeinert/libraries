@@ -10,11 +10,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import { IUser } from '@fluxgate/common';
 
-import { MetadataService, UserService } from '.';
 import { Messages } from '../../resources/messages';
 import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
+import { MetadataService } from './metadata.service';
 import { ServiceCore } from './service-core';
+import { UserService } from './user.service';
 
 
 @Service()
