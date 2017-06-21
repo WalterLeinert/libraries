@@ -29,7 +29,7 @@ export abstract class SystemService<TConfig> {
     this.systemConfigService.findById<ISystemConfig>(null, configKey)
       .then((result) => {
         // ok
-        this._config = JSON.parse(result.item.json) as TConfig;
+        // this._config = JSON.parse(result.item.json) as TConfig;
         // this._config = this.deserialize<TConfig>(JSON.parse(result.item.json));
       });
   }

@@ -14,7 +14,6 @@ import { ServiceCore } from './service-core';
 @Service()
 export class PrintService extends ServiceCore {
 
-
   private options = {
     host: 'localhost',
     path: '/rest/info?GetPrinters',
@@ -36,8 +35,8 @@ export class PrintService extends ServiceCore {
 
   public find(
     request: ISessionRequest
-  ): Promise<FindResult<IPrinter>> {
-    return new Promise<FindResult<IPrinter>>((resolve) => {
+  ): Promise<FindResult<IPrinter[]>> {
+    return new Promise<FindResult<IPrinter[]>>((resolve) => {
       const http = require('https');
       const req = http.get(this.options, (res) => {
         const bodyChunks = [];
@@ -46,7 +45,7 @@ export class PrintService extends ServiceCore {
         }).on('end', () => {
           const body = Buffer.concat(bodyChunks);
           const printers = JSON.parse(body.toString()) as IPrinter[];
-          resolve(new FindResult(printers, undefined));
+          resolve(new FindResult([printers], undefined));
 
         });
       });
