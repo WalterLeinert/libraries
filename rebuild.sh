@@ -1,10 +1,10 @@
 #!/bin/bash
 
+ts=$(date +"%Y-%m-%d-%H-%M-%S")
 
 {
-  set -x
+	set -x
 
-  ts=$(date +"%Y-%m-%d-%H-%M-%S")
 
 	if [[ "$1" == "--clean" ]]; then
 		gulp really-clean
