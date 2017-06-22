@@ -39,7 +39,7 @@
     "yargs": "^7.0.2"
   },
   "dependencies": {
-    "@fluxgate/core": "^2.2.7-beta.0",
+    "@fluxgate/core": "2.2.7-beta.0",
     "tslib": "^1.5.0"
   },
   "directories": {

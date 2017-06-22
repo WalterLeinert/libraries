@@ -81,7 +81,7 @@ gulp.task('doc:server', function (cb) {
   execCommand('gulp doc', 'server', bufferSize, cb);
 })
 
-gulp.task('build-all:server', gulpSequence('clean:server', 'update-fluxgate:server', 'build:server', 'test:server', 'publish:server'))
+gulp.task('build-all:server', gulpSequence('clean:server', 'build:server', 'test:server', 'publish:server'))
 //-----------------------------------------------------------------------
 // End: server
 //-----------------------------------------------------------------------

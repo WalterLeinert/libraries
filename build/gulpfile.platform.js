@@ -81,7 +81,7 @@ gulp.task('doc:platform', function (cb) {
   execCommand('gulp doc', 'platform', bufferSize, cb);
 })
 
-gulp.task('build-all:platform', gulpSequence('clean:platform', 'update-fluxgate:platform', 'build:platform', 'test:platform', 'publish:platform'))
+gulp.task('build-all:platform', gulpSequence('clean:platform', 'build:platform', 'test:platform', 'publish:platform'))
 //-----------------------------------------------------------------------
 // End: platform
 //-----------------------------------------------------------------------

@@ -81,7 +81,7 @@ gulp.task('doc:components', function (cb) {
   execCommand('gulp doc', 'components', bufferSize, cb);
 })
 
-gulp.task('build-all:components', gulpSequence('clean:components','update-fluxgate:components','build:components', 'test:components', 'publish:components'))
+gulp.task('build-all:components', gulpSequence('clean:components', 'build:components', 'test:components', 'publish:components'))
 //-----------------------------------------------------------------------
 // End: components
 //-----------------------------------------------------------------------

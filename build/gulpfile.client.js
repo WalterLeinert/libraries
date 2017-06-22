@@ -81,7 +81,7 @@ gulp.task('doc:client', function (cb) {
   execCommand('gulp doc', 'client', bufferSize, cb);
 })
 
-gulp.task('build-all:client', gulpSequence('clean:client','update-fluxgate:client','build:client', 'test:client', 'publish:client'))
+gulp.task('build-all:client', gulpSequence('clean:client', 'build:client', 'test:client', 'publish:client'))
 //-----------------------------------------------------------------------
 // End: client
 //-----------------------------------------------------------------------
