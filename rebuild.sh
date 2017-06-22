@@ -1,21 +1,22 @@
 #!/bin/bash
 
-set -x
 
-(
+{
+  set -x
+
+  ts=$(date +"%Y-%m-%d-%H-%M-%S")
 
 	if [[ "$1" == "--clean" ]]; then
 		gulp really-clean
 	fi
 
-	npm install && \
+	npm install
 
 	for dir in core platform common server client components; do
-	  (
-		  cd $dir                     && \
-      npm install                 && \
-      gulp update-fluxgate       && \
-      gulp publish -f
-	  )
+	(
+		cd $dir                     && \
+		npm install                 && \
+		gulp publish -f
+	)
 	done
-) 2>&1 | tee build.log
+} >build-${ts}.log 2>&1
