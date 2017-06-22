@@ -1,5 +1,5 @@
+import { PaperOrientation } from './paper-orientation';
 import { IPrinterTray } from './printerTray.interface';
-
 
 /**
  * Druckerinfos
@@ -22,7 +22,7 @@ export interface IPrinter {
    * @type {string}
    * @memberOf IPrinter
    */
-  orientation?: string;
+  orientation?: PaperOrientation;
 
   /**
    * Typ des Druckers "network" oder "local"

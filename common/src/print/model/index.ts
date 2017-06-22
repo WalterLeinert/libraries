@@ -1,4 +1,5 @@
 export * from './fieldInfo.interface';
+export * from './paper-orientation';
 export * from './printer';
 export * from './printer.interface';
 export * from './printerTray.interface';
