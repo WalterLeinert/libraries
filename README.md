@@ -80,6 +80,24 @@ Die Library stellt Komponenten und Module zur Verfügung zur effizienten Impleme
     - flx-role-selector
 
 
+## Entwicklung, Build
+
+Die Softwareentwicklung erfolgt in Visual Code (vscode).
+
+Abhängigkeiten zu @angular-Libraries und @fluxgate/libraries werden absolut angegeben, um Probleme durch automatische Updates bei
+"npm install" zu vermeiden.
+Also hat z.B. common eine Abhängigkeit zu core über: "@fluxgate/core": "2.2.7-beta.0" und nicht wie früher "@fluxgate/core": "^2.2.7-beta.0".
+
+Die internen Abhängigkeiten für alle fluxgate-Libraries zueinander können mit dem Skript bin/update-fluxgate-all.sh (in einer bash) aktualisert werden.
+Dazu wird für jede Library die aktuelle Version aus package.json ermittelt und bei den betroffenen Libraries eingetragen.
+
+Die Aktualisierung erfolgt im Rootverzeichnis (libraries): "bin/update-fluxgate-all.sh"
+
+Ein kompletter Rebuild erfolgt mit dem Skript bin/rebuild.sh; über die Option --clean erfolgt vor dem Build ein really-clean (alle temporären
+und die node_modules Verzeichnisse löschen). Das Skript legt bei jedem Lauf im Verzeichnis logs eine Logdatei an.
+
+Der Rebuild erfolgt im Rootverzeichnis (libraries): "bin/rebuild.sh"
+
 
 ### Release Notes
 

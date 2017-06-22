@@ -2,6 +2,8 @@
 
 ts=$(date +"%Y-%m-%d-%H-%M-%S")
 
+mkdir -p logs
+
 {
 	set -x
 
@@ -19,4 +21,4 @@ ts=$(date +"%Y-%m-%d-%H-%M-%S")
 		gulp publish -f
 	)
 	done
-} >build-${ts}.log 2>&1
+} > logs/build-${ts}.log 2>&1
