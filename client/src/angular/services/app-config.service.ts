@@ -11,7 +11,7 @@ import { AppConfig, IAppConfig } from '@fluxgate/common';
 
 
 @Injectable()
-export class ConfigService {
+export class AppConfigService {
 
   /**
    * Liefert die Anwendungskonfiguration

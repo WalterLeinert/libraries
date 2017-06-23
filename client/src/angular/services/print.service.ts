@@ -13,7 +13,7 @@ import { ColumnTypes, IPrintOptions, IPrintTask, ITableRow, TableMetadata, Table
 import { Assert } from '@fluxgate/core';
 
 import { ServiceCore } from '../common/base/service-core';
-import { ConfigService } from './config.service';
+import { AppConfigService } from './app-config.service';
 import { MetadataService } from './metadata.service';
 
 
@@ -31,7 +31,7 @@ export class PrintService extends ServiceCore {
 
   public options: RequestOptions;
 
-  constructor(http: Http, private metadataService: MetadataService, private configService: ConfigService) {
+  constructor(http: Http, private metadataService: MetadataService, private configService: AppConfigService) {
     super(http, configService.config.printUrl, configService.config.printTopic);
   }
 

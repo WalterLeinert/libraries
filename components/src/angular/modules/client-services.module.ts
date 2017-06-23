@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { ConfirmationService } from 'primeng/components/common/api';
 
 import {
-  ConfigService, MessageService, MetadataService, PipeService, PrintService
+  AppConfigService, MessageService, MetadataService, PipeService, PrintService
 } from '@fluxgate/client';
 
 
@@ -23,7 +23,7 @@ import {
   ],
   providers: [
     ConfirmationService,
-    ConfigService,
+    AppConfigService,
     MessageService,
     MetadataService,
     PipeService,

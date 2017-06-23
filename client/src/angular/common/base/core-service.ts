@@ -15,7 +15,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { FindResult, IStatusQuery, QueryResult, ServiceConstants, StatusFilter } from '@fluxgate/common';
 import { Assert, Funktion, IToString } from '@fluxgate/core';
 
-import { ConfigService } from '../../services/config.service';
+import { AppConfigService } from '../../services/app-config.service';
 import { MetadataService } from '../../services/metadata.service';
 import { ServiceBase } from './service-base';
 
@@ -37,7 +37,7 @@ export abstract class CoreService<T, TId extends IToString> extends ServiceBase<
 
 
   protected constructor(model: Funktion, metadataService: MetadataService,
-    http: Http, configService: ConfigService, topic?: string) {
+    http: Http, configService: AppConfigService, topic?: string) {
     super(model, metadataService, http, configService, topic);
   }
 

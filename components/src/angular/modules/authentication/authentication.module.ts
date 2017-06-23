@@ -8,7 +8,7 @@ import { DropdownModule } from 'primeng/components/dropdown/dropdown';
 import { GrowlModule } from 'primeng/components/growl/growl';
 import { MessagesModule } from 'primeng/components/messages/messages';
 
-import { ConfigService, CurrentUserService, MessageService, MetadataService } from '@fluxgate/client';
+import { AppConfigService, CurrentUserService, MessageService, MetadataService } from '@fluxgate/client';
 
 import { CurrentUserServiceRequestsModule } from '../../redux/current-user-service-requests';
 import { RoleServiceRequestsModule } from '../../redux/role-service-requests';
@@ -52,7 +52,7 @@ import { RegisterComponent } from './register/register.component';
   ],
   providers: [
     CurrentUserService,
-    ConfigService,
+    AppConfigService,
     MessageService,
     MetadataService,
     PassportService

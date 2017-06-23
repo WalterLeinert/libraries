@@ -14,7 +14,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  ConfigService, ServiceCore
+  AppConfigService, ServiceCore
 } from '@fluxgate/client';
 import { IUser, PasswordChange, User } from '@fluxgate/common';
 import { Assert } from '@fluxgate/core';
@@ -35,12 +35,12 @@ export class PassportService extends ServiceCore {
    * Creates an instance of PassportService.
    *
    * @param {Http} http
-   * @param {ConfigService} configService
+   * @param {AppConfigService} configService
    * @param {string} _topic - das Topic des Service
    *
    * @memberOf PassportService
    */
-  constructor(http: Http, configService: ConfigService) {
+  constructor(http: Http, configService: AppConfigService) {
     super(http, configService.config.url, 'passport');
 
     using(new XLog(PassportService.logger, levels.INFO, 'ctor'), (log) => {

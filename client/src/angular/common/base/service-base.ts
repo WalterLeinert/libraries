@@ -10,7 +10,7 @@ import {
   Assert, Funktion, InvalidOperationException
 } from '@fluxgate/core';
 
-import { ConfigService } from '../../services/config.service';
+import { AppConfigService } from '../../services/app-config.service';
 import { MetadataService } from '../../services/metadata.service';
 import { ServiceCore } from './service-core';
 
@@ -36,7 +36,7 @@ export abstract class ServiceBase<T, TId> extends ServiceCore implements IServic
    * @memberOf ServiceBase
    */
   protected constructor(model: Funktion, private metadataService: MetadataService, http: Http,
-    configService: ConfigService, topic: string) {
+    configService: AppConfigService, topic: string) {
     super(http, configService.config.url,
       topic === undefined ? metadataService.findTableMetadata(model).options.name : topic);
 

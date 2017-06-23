@@ -2,7 +2,7 @@ import { inject, TestBed } from '@angular/core/testing';
 // import { BaseRequestOptions, ConnectionBackend, Http, Response, ResponseOptions } from '@angular/http';
 // cd climport { MockBackend } from '@angular/http/testing';
 
-import { ConfigService, MetadataService } from '@fluxgate/client';
+import { AppConfigService, MetadataService } from '@fluxgate/client';
 
 import {
   ENTITY_VERSION_SERVICE_FAKE_PROVIDER, EntityVersionServiceFakeService
@@ -14,7 +14,7 @@ describe('RoleService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        ConfigService,
+        AppConfigService,
         MetadataService,
         EntityVersionServiceFakeService,
         ENTITY_VERSION_SERVICE_FAKE_PROVIDER,

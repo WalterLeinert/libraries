@@ -6,7 +6,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 
 // Fluxgate
-import { ConfigService, MetadataService, ReadonlyService } from '@fluxgate/client';
+import { AppConfigService, MetadataService, ReadonlyService } from '@fluxgate/client';
 import { ENTITY_VERSION_SERVICE, EntityVersion, TableService } from '@fluxgate/common';
 
 
@@ -21,7 +21,7 @@ import { ENTITY_VERSION_SERVICE, EntityVersion, TableService } from '@fluxgate/c
 @TableService(EntityVersion)
 export class EntityVersionService extends ReadonlyService<EntityVersion, string> {
 
-  constructor(metadataService: MetadataService, http: Http, configService: ConfigService) {
+  constructor(metadataService: MetadataService, http: Http, configService: AppConfigService) {
     super(EntityVersion, metadataService, http, configService);
   }
 }

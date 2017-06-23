@@ -3,22 +3,22 @@
 /*
 TODO: Jasmine
 import { TestBed, async, inject } from '@angular/core/testing';
-import { ConfigService } from './config.service';
+import { AppConfigService } from './config.service';
 
-describe('ConfigService', () => {
+describe('AppConfigService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ConfigService]
+      providers: [AppConfigService]
     });
   });
 
-  it('creation and not null', inject([ConfigService], (service: ConfigService) => {
+  it('creation and not null', inject([AppConfigService], (service: AppConfigService) => {
     expect(service).toBeTruthy();
     expect(service.config).toBeTruthy();
   }));
 
   const expected = 'Development';
-  it(`mode should be ${expected}`, inject([ConfigService], (service: ConfigService) => {
+  it(`mode should be ${expected}`, inject([AppConfigService], (service: AppConfigService) => {
     expect(service.config.mode).toBe(expected);
   }));
 });*/

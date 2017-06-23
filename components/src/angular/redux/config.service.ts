@@ -8,7 +8,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
-import { ConfigService, MetadataService, Service } from '@fluxgate/client';
+import { AppConfigService, MetadataService, Service } from '@fluxgate/client';
 import { ConfigBase, SmtpConfig, SystemConfig, TableService } from '@fluxgate/common';
 import { IToString } from '@fluxgate/core';
 
@@ -24,7 +24,7 @@ import { IToString } from '@fluxgate/core';
 @TableService(SmtpConfig)
 export class ConfigSystemService extends Service<ConfigBase, string> {
 
-  constructor(metadataService: MetadataService, http: Http, configService: ConfigService) {
+  constructor(metadataService: MetadataService, http: Http, configService: AppConfigService) {
     super(ConfigBase, metadataService, http, configService);
   }
 
