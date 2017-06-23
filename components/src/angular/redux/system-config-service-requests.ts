@@ -4,20 +4,21 @@ import { Inject, Injectable, NgModule } from '@angular/core';
 import { APP_STORE } from '@fluxgate/client';
 import {
   ENTITY_VERSION_SERVICE,
-  EntityVersion, IRole, IService, SystemConfig, RoleStore, StatusServiceRequests, Store, TableServiceRequests
+  EntityVersion, IService, ISystemConfig, StatusServiceRequests, Store, SystemConfig,
+  SystemConfigStore, TableServiceRequests
 } from '@fluxgate/common';
 
 
-import { RoleService } from './role.service';
+import { SystemConfigService } from './system-config.service';
 
 
 @Injectable()
-@TableServiceRequests(Role)
-export class RoleServiceRequests extends StatusServiceRequests<IRole, number> {
+@TableServiceRequests(SystemConfig)
+export class SystemConfigServiceRequests extends StatusServiceRequests<ISystemConfig, string> {
 
-  constructor(service: RoleService, @Inject(APP_STORE) store: Store,
+  constructor(service: SystemConfigService, @Inject(APP_STORE) store: Store,
     @Inject(ENTITY_VERSION_SERVICE) entityVersionService?: IService<EntityVersion, string>) {
-    super(RoleStore.ID, service, store, entityVersionService);
+    super(SystemConfigStore.ID, service, store, entityVersionService);
   }
 }
 
@@ -31,8 +32,8 @@ export class RoleServiceRequests extends StatusServiceRequests<IRole, number> {
   exports: [
   ],
   providers: [
-    RoleServiceRequests,
-    RoleService
+    SystemConfigServiceRequests,
+    SystemConfigService
   ]
 })
-export class RoleServiceRequestsModule { }
+export class SystemConfigServiceRequestsModule { }

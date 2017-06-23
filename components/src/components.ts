@@ -39,8 +39,10 @@ export {
   CurrentUserServiceRequests, CurrentUserServiceRequestsModule,
   ENTITY_VERSION_SERVICE_PROVIDER, EntityVersionService,
   RoleSelectorServiceRequests, RoleSelectorServiceRequestsModule, RoleSelectorStore,
-  RoleServiceRequests, RoleServiceRequestsModule, UserSelectorServiceRequests,
-  UserSelectorServiceRequestsModule, UserSelectorStore, UserServiceRequests, UserServiceRequestsModule
+  RoleServiceRequests, RoleServiceRequestsModule,
+  SystemConfigService, SystemConfigServiceRequests, SystemConfigServiceRequestsModule,
+  UserSelectorServiceRequests, UserSelectorServiceRequestsModule, UserSelectorStore,
+  UserServiceRequests, UserServiceRequestsModule
 } from './angular/redux';
 
 export {
