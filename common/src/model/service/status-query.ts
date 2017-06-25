@@ -1,4 +1,4 @@
-import { IQuery, Query, Serializable } from '@fluxgate/core';
+import { BooleanTerm, IQuery, Query, Serializable } from '@fluxgate/core';
 
 import { StatusFilter } from './status-filter';
 
@@ -14,5 +14,12 @@ export interface IStatusQuery extends IQuery {
  */
 @Serializable()
 export class StatusQuery extends Query implements IStatusQuery {
-  public status: StatusFilter;
+
+  public constructor(term: BooleanTerm, private _filter: StatusFilter) {
+    super(term);
+  }
+
+  public get filter(): StatusFilter {
+    return this._filter;
+  }
 }
