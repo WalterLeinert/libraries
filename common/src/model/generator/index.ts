@@ -4,6 +4,7 @@ export * from './entity-generator-config.interface';
 export * from './number-id-generator';
 export * from './nop-value-generator';
 export * from './number-value-generator';
+export * from './string-id-generator';
 export * from './string-id-list-generator';
 export * from './string-value-generator';
 export * from './string-value-list-generator';

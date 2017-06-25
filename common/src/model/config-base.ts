@@ -21,7 +21,15 @@ import { IStatusEntity } from './status-entity.interface';
  */
 @Table()
 export abstract class ConfigBase extends FlxEntity<string> {
+  /**
+   * Default-Id für die Konfiguration
+   */
   public static readonly DEFAULT_ID = 'default';
+
+  /**
+   * Name der Typ-Spalte
+   */
+  public static readonly TYPE_COLUMN = 'type';
 
 
   /**

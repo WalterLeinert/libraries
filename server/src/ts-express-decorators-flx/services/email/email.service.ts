@@ -32,13 +32,13 @@ export class EmailService extends ServiceCore {
     super();
   }
 
-  public send(message: IMessage): Promise<any> {
+  public send(message: IMessage, configId: string = SmtpConfig.DEFAULT_ID): Promise<any> {
     Assert.notNull(message);
 
     return using(new XLog(EmailService.logger, levels.INFO, 'Initialize Emailsystem'), (log) => {
 
       return new Promise<any>((resolve, reject) => {
-        this.configService.findById<SmtpConfig>(null, SmtpConfig.TYPE).then((configResult) => {
+        this.configService.findById<SmtpConfig>(null, SmtpConfig.name, configId).then((configResult) => {
 
           log.warn(`configResult = ${JSON.stringify(configResult)}`);
 

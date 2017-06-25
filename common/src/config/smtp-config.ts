@@ -6,6 +6,14 @@ import { Table } from '../model/decorator/table';
 export class SmtpConfig extends ConfigBase {
   public static readonly TYPE = 'smtp';
 
+  /**
+   * Typ der Konfiguration (z.B. 'smtp')
+   *
+   * @type {string}@memberof ConfigBase
+   */
+  @Column({ hidden: true, default: SmtpConfig.TYPE })
+  public type: string = SmtpConfig.TYPE;
+
   @Column({ displayName: 'Hostname' })
   public host: string;
 

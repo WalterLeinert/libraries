@@ -3,6 +3,7 @@ import path = require('path');
 import 'reflect-metadata';
 
 import * as Knex from 'knex';
+import { InjectorService } from 'ts-express-decorators';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -10,14 +11,16 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  BaseTest, EntityGenerator, EntityVersion, IEntity, IEntityGeneratorConfig, TableMetadata, ValueGenerator
+  BaseTest, ConfigBase, EntityGenerator, EntityVersion, IEntity, IEntityGeneratorConfig, TableMetadata, ValueGenerator
 } from '@fluxgate/common';
 import { Activator, Dictionary, fromEnvironment, Funktion, ICtor, IToString, Types } from '@fluxgate/core';
 import { JsonReader } from '@fluxgate/platform';
 
 import { IBaseService, IBaseServiceRaw } from '../../src/ts-express-decorators-flx/services/baseService.interface';
+import { ConfigService } from '../../src/ts-express-decorators-flx/services/config.service';
 import { KnexService } from '../../src/ts-express-decorators-flx/services/knex.service';
 import { MetadataService } from '../../src/ts-express-decorators-flx/services/metadata.service';
+import { SystemConfigService } from '../../src/ts-express-decorators-flx/services/system-config.service';
 
 
 /**
@@ -29,12 +32,14 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
   private static _knexService: KnexService;
   private static _metadataService: MetadataService;
   private static _service: IBaseServiceRaw;
+  private static _configService: ConfigService;
   private static _entityVersionMetadata: TableMetadata;
 
   /**
    * Id der ersten Test-Entity (ab dieser werden am Testende alle Entities gelöscht)
    */
   private static _firstTestId: number = 0;
+  private static _firstConfigTestId: string = '';
 
 
   // tslint:disable-next-line:no-unused-variable
@@ -121,6 +126,54 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
           KnexTest._firstTestId = result.item.id;
 
           KnexTest._service.delete(undefined, KnexTest._firstTestId).then((rowsAffected) => {
+            log.log(`deleted temp. entity: id = ${result.item.id}`);
+
+            done();
+          });
+        });
+      }
+    });
+  }
+
+
+  protected static setupConfig<TModelClass extends ConfigBase>(serviceClass: ICtor<ConfigService>,
+    modelClass: ICtor<ConfigBase>,
+    generatorConfig: IEntityGeneratorConfig | ValueGenerator<any>,
+    done: (err?: any) => void) {
+    using(new XLog(KnexTest.logger, levels.INFO, 'static.setup'), (log) => {
+      KnexTest._configService = InjectorService.get<ConfigService>(serviceClass);
+
+      if (Types.isPresent(generatorConfig)) {
+
+        let config: IEntityGeneratorConfig;
+
+        if (generatorConfig instanceof ValueGenerator) {
+          config = {
+            count: 1,
+            maxCount: 1,
+            idGenerator: generatorConfig,
+            tableMetadata: KnexTest._configService.metadata
+          };
+        } else {
+          config = generatorConfig;
+        }
+
+        /**
+         * eine EntityGenerator erzeugen, der genau ein Item erzeugen kann.
+         */
+        const eg = new EntityGenerator<TModelClass, string>(config);
+
+        /**
+         * ein neues Item erzeugen und wieder löschen, damit wir die Id erhalten (-> _firstTestId),
+         * ab der wir alle Test-Items löschen können
+         */
+        const item = eg.createItem();
+        KnexTest._configService.create(undefined, modelClass.name, item).then((result) => {
+          log.log(`created temp. entity: id = ${result.item.id}`);
+
+          KnexTest._firstConfigTestId = result.item.id;
+
+          KnexTest._service.delete(undefined, KnexTest._firstConfigTestId).then((rowsAffected) => {
             log.log(`deleted temp. entity: id = ${result.item.id}`);
 
             done();
@@ -264,6 +317,10 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
 
   protected get service(): IBaseService<T, TId> {
     return KnexTest._service;
+  }
+
+  protected get configService(): ConfigService {
+    return KnexTest._configService;
   }
 
   protected get firstTestId(): number {

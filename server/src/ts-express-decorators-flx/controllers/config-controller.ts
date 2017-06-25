@@ -29,27 +29,36 @@ import { UpdateMethod } from './decorator/update-method.decorator';
  * @extends {ControllerBase<SystemConfig, string>}
  */
 @Controller('/config')
-export class ConfigController extends ControllerBase<ConfigBase, string> {
+export class ConfigController extends ControllerCore {
 
   constructor(service: ConfigService) {
-    super(service, '-unused-', '-unused-');
+    super(service);
   }
 
 
   @Authenticated({ role: 'admin' })
   @CreateMethod()
   public create(
-    @Request() request: IBodyRequest<ConfigBase>
+    @Request() request: IBodyRequest<ConfigBase>,
+    @PathParams('model') model: string
     ): Promise<CreateResult<ConfigBase, string>> {
-    return super.createInternal(request);
+    return Promise.resolve()
+      .then(() => this.deserialize<ConfigBase>(request.body))
+      .then((deserializedSubject) => this.getService().create(request, model, deserializedSubject))
+      .then<CreateResult<ConfigBase, string>>((result) => this.serialize(result));
   }
+
 
   @Authenticated()
   @FindMethod()
   public find(
-    @Request() request: IBodyRequest<StatusFilter>
+    @Request() request: IBodyRequest<StatusFilter>,
+    @PathParams('model') model: string
     ): Promise<FindResult<ConfigBase>> {
-    return super.findInternal(request);
+    return Promise.resolve()
+      .then(() => this.deserialize<StatusFilter>(request.body))
+      .then((deserializedFilter) => this.getService().find(request, model, deserializedFilter))
+      .then<FindResult<ConfigBase>>((result) => this.serialize(result));
   }
 
 
@@ -57,8 +66,15 @@ export class ConfigController extends ControllerBase<ConfigBase, string> {
   @FindByIdMethod()
   public findById(
     @Request() request: ISessionRequest,
+    @PathParams('model') model: string,
     @PathParams('id') id: string
     ): Promise<FindByIdResult<ConfigBase, string>> {
-    return super.findByIdInternal(request, id);
+    return Promise.resolve()
+      .then(() => this.getService().findById(request, model, id))
+      .then<FindByIdResult<ConfigBase, string>>((result) => this.serialize(result));
+  }
+
+  protected getService(): ConfigService {
+    return super.getService() as ConfigService;
   }
 }

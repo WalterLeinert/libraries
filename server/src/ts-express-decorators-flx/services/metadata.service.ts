@@ -22,7 +22,7 @@ export class MetadataService {
    *
    * @memberOf MetadataService
    */
-  public findTableMetadata(model: Funktion): TableMetadata {
+  public findTableMetadata(model: string | Funktion): TableMetadata {
     return MetadataStorage.instance.findTableMetadata(model);
   }
 
