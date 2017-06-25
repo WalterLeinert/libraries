@@ -1,6 +1,7 @@
 export * from './appRegistry.service';
 export * from './baseService';
 export * from './baseService.interface';
+export * from './config.service';
 export * from './core-service';
 export * from './core-service.interface';
 export * from './entityVersion.service';
@@ -11,8 +12,8 @@ export * from './passportLocal.service';
 export * from './readonly-service';
 export * from './readonly-service.interface';
 export * from './role.service';
-export * from './system-service';
 export * from './user.service';
 export * from './print.service';
+export * from './service-proxy';
 export * from './system-config.service';
 export * from './email';

@@ -7,17 +7,16 @@ import {
   IMessage
 } from '@fluxgate/common';
 
-import { SystemConfigService } from '../services/system-config.service';
+import { EmailService } from '../services/email/email.service';
 import { ISessionRequest } from '../session/session-request.interface';
-import { SystemConfigController } from './systemconfig-controller';
-
+import { ControllerCore } from './base/controller-core';
 
 
 @Controller('/email')
-export class EmailController extends SystemConfigController {
+export class EmailController extends ControllerCore {
 
-  constructor(systemConfigService: SystemConfigService) {
-    super(systemConfigService);
+  constructor(service: EmailService) {
+    super(service);
   }
 
   @Authenticated()

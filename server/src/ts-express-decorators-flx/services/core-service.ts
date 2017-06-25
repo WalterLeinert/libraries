@@ -227,8 +227,10 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    *
    * @memberof ReadonlyService
    */
-  public fromTable(table: string | Funktion = this.tableName): Knex.QueryBuilder {
-    Assert.notNull(table);
+  public fromTable(table?: string | Funktion): Knex.QueryBuilder {
+    if (!Types.isPresent(table)) {
+      table = this.tableName;
+    }
 
     let tableName: string;
 

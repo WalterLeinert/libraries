@@ -4,6 +4,8 @@ import { Table } from '../model/decorator/table';
 
 @Table()
 export class SmtpConfig extends ConfigBase {
+  public static readonly TYPE = 'smtp';
+
   @Column({ displayName: 'Hostname' })
   public host: string;
 

@@ -14,7 +14,7 @@ import { MetadataService } from './metadata.service';
 
 
 @Service()
-export class SystemConfigService extends BaseService<ISystemConfig, any> {
+export class SystemConfigService extends BaseService<ISystemConfig, string> {
   constructor(knexSerice: KnexService, metadataService: MetadataService) {
     super(SystemConfig, knexSerice, metadataService);
   }

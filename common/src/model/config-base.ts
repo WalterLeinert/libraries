@@ -11,7 +11,8 @@ import { IStatusEntity } from './status-entity.interface';
 
 /**
  * Abstrakte Basisklasse für alle Systemkonfigurations-Klassen, die über die Entity SystemConfig
- * und deren Property json gepflegt werden
+ * und deren Property json gepflegt werden.
+ * Die Id einer Entity @see{SystemConfig} besteht aus ConfigBase.Type '-' ConfigBase.Id.
  *
  * @export
  * @abstract
@@ -20,16 +21,51 @@ import { IStatusEntity } from './status-entity.interface';
  */
 @Table()
 export abstract class ConfigBase extends FlxEntity<string> {
+  public static readonly DEFAULT_ID = 'default';
 
+
+  /**
+   * Die Id der Konfiguration. Es kann mehrere Konfigurationen des Typs @see{type} geben
+   *
+   * @type {string}@memberof ConfigBase
+   */
   @IdColumn({ displayName: 'Id' })
-  public id: string;
+  public id: string = ConfigBase.DEFAULT_ID;
 
+
+  /**
+   * Typ der Konfiguration (z.B. 'smtp')
+   *
+   * @type {string}@memberof ConfigBase
+   */
+  @Column({ hidden: true })
+  public type: string;
+
+
+  /**
+   * Die Beschreibung der Konfiguration.
+   *
+   * @type {string}@memberof ConfigBase
+   */
   @Validation([
     Validators.required
   ])
   @Column({ displayName: 'Description' })
   public description: string;
 
+
+  /**
+   * Die Version des Konfigurationsschemas.
+   * Damit lässt sich Kompatibilität prüfen bzw. automatische
+   * Konvertierung durchführen.
+   *
+   * @type {number}@memberof ConfigBase
+   */
   @Column({ displayName: 'Version', nullable: true })
-  public version?: number;
+  public version?: number = 1;
+
+
+  public static createId(type: string, id: string): string {
+    return `${type}-${id}`;
+  }
 }

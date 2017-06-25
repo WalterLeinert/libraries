@@ -2,6 +2,7 @@ import * as Knex from 'knex';
 
 // Fluxgate
 import { FindResult, IStatusQuery, QueryResult, StatusFilter, TableMetadata } from '@fluxgate/common';
+import { Funktion } from '@fluxgate/core';
 
 import { ISessionRequest } from '../session/session-request.interface';
 import { IServiceCore } from './service-core.interface';
@@ -16,6 +17,7 @@ import { IServiceCore } from './service-core.interface';
  */
 export interface ICoreService<T> extends IServiceCore {
 
+  tableName: string;
   metadata: TableMetadata;
 
   /**
@@ -60,6 +62,6 @@ export interface ICoreService<T> extends IServiceCore {
    * @type {Knex.QueryBuilder}
    * @memberOf ServiceBase
    */
-  fromTable(): Knex.QueryBuilder;
+  fromTable(table?: string | Funktion): Knex.QueryBuilder;
 
 }

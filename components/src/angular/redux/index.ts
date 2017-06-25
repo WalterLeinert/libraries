@@ -3,6 +3,7 @@ export * from './entity-version.service';
 export * from './role-selector-service-requests';
 export * from './role-selector-store';
 export * from './role-service-requests';
+export * from './smtp-config.service';
 export * from './system-config.service';
 export * from './system-config-service-requests';
 export * from './user-selector-service-requests';

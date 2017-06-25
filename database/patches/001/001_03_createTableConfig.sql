@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `systemconfig` (
 --
 
 INSERT INTO `systemconfig` (`systemconfig_id`, `systemconfig_description`, `systemconfig_json`, `__client`, `__version`) VALUES
-('smtp', 'SMTP-Konfiguration', '  "mail": {\r\n    "host": "smtp.1und1.de",\r\n    "port": 465,\r\n    "ssl": true,\r\n    "user": "smtp.nodejs@fluxgate.de",\r\n    "password": "Ds43q-Vb5AKpu98-Gbnd",\r\n    "from": "smtp.nodejs@fluxgate.de"\r\n  }', 1, 0);
+('smtp', 'SMTP-Konfiguration', '  "{ mail": {\r\n    "host": "smtp.1und1.de",\r\n    "port": 465,\r\n    "ssl": true,\r\n    "user": "smtp.nodejs@fluxgate.de",\r\n    "password": "Ds43q-Vb5AKpu98-Gbnd",\r\n    "from": "smtp.nodejs@fluxgate.de"\r\n  } }', 1, 0);
 
 --
 -- Indizes der exportierten Tabellen
