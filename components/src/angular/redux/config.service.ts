@@ -56,9 +56,8 @@ export abstract class ConfigService<T extends ConfigBase> extends Service<T, str
         name: 'id',
         operator: '=',
         value: `${type}-%`
-      })
+      }), filter
     );
-    query.status = filter;
 
     return Observable.create((observer: Subscriber<FindResult<ConfigBase>>) => {
       super.query(query).subscribe((result) => {
