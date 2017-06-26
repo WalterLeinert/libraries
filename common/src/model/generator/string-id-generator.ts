@@ -1,12 +1,8 @@
 import { SequenceGeneratorStrategy } from './sequence-generator-strategy';
-import { ValueGenerator } from './value-generator';
+import { StringValueGenerator } from './string-value-generator';
 
-export class StringIdGenerator extends ValueGenerator<string> {
-  constructor(count: number) {
-    super(new SequenceGeneratorStrategy(count, 1, 1));
-  }
-
-  protected formatValue(index: number): string {
-    return `id-${index}`;
+export class StringIdGenerator extends StringValueGenerator {
+  constructor(count: number, private prefix: string = 'id') {
+    super(new SequenceGeneratorStrategy(count, 1, 1), prefix);
   }
 }

@@ -2,7 +2,7 @@ import { ValueGenerator } from './value-generator';
 
 export class StringValueGenerator extends ValueGenerator<string> {
 
-  constructor(private template: string, strategy: Iterator<number>) {
+  constructor(strategy: Iterator<number>, private template: string) {
     super(strategy);
   }
 

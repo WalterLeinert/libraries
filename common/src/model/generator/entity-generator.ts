@@ -165,7 +165,7 @@ export class EntityGenerator<T extends IEntity<TId>, TId extends IToString> {
       // für alle Spalten ausser der PrimaryKey-Spalte Werte erzeugen
       if (metadata.options.persisted && !metadata.options.primary) {
         const result = this.valueGeneratorDict.get(metadata.propertyName).next();
-        if (! (result instanceof NopValueGenerator)) {
+        if (!(result instanceof NopValueGenerator)) {
           item[metadata.propertyName] = result.value;
         }
       }
@@ -238,7 +238,7 @@ export class EntityGenerator<T extends IEntity<TId>, TId extends IToString> {
 
       case 'text':
       case 'string':
-        rval = new StringValueGenerator(metadata.propertyName, strategy);
+        rval = new StringValueGenerator(strategy, metadata.propertyName);
         break;
 
       case 'boolean':
