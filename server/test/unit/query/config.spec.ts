@@ -22,6 +22,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
+  ConstantValueGenerator,
   CreateResult, DeleteResult, EntityStatus, FilterBehaviour, FindByIdResult, IRole,
   Role, ServiceResult, SmtpConfig, StatusFilter, StatusQuery, StringIdGenerator, UpdateResult
 } from '@fluxgate/common';
@@ -36,21 +37,35 @@ import { KnexTest } from '../knexTest.spec';
 class ConfigTest extends KnexTest<Role, number> {
   protected static readonly logger = getLogger(ConfigTest);
 
+  public static readonly ITEMS = 5;
+  public static readonly MAX_ITEMS = 10;
+
   public static before(done: () => void) {
     using(new XLog(ConfigTest.logger, levels.INFO, 'static.before'), (log) => {
       super.before(() => {
 
-        super.setupConfig(ConfigService, SmtpConfig, new StringIdGenerator(1), () => {
-          done();
-        });
+        super.setupConfig(ConfigService, SmtpConfig, {
+          count: ConfigTest.ITEMS,
+          maxCount: ConfigTest.MAX_ITEMS,
+          idGenerator: new StringIdGenerator(ConfigTest.MAX_ITEMS, 'Smtp'),
+          columns: {
+            type: new ConstantValueGenerator('smtp'),
+            __version: new ConstantValueGenerator(0)
+          },
+
+          tableMetadata: KnexTest.metadataService.findTableMetadata(SmtpConfig)
+        },
+          () => {
+            done();
+          });
       });
     });
   }
 
 
-  @test 'should find 1 config entry'() {
+  @test 'should find no config entry (with id "smtp-xxx")'() {
     return expect(this.configService.find(undefined, SmtpConfig.name)
       .then((result) => result.items.length))
-      .to.become(1);
+      .to.become(0);
   }
 }

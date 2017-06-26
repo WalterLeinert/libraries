@@ -24,9 +24,10 @@ import { ServiceProxy } from './service-proxy';
 import { SystemConfigService } from './system-config.service';
 
 /**
- * Klasse zum Ermitteln einer Systemkonfiguration für einen gegebenenn Key und eine Id
+ * Klasse zum Ermitteln einer Systemkonfiguration für einen gegebenen Typ und eine Id
  * Die Konfiguration liegt in der Entity SystemConfig als JSON-String eines
- * serialisierten Objekts vor.
+ * serialisierten Objekts vor. Die Id in SystemConfi ist eine Kombination aus (type-id) der
+ * ConfigBase-Instanz.
  *
  * @export
  * @class ConfigService
@@ -38,8 +39,11 @@ export class ConfigService extends ServiceCore {
   private serializer: JsonSerializer = new JsonSerializer();
 
 
-  public constructor(private systemConfigService: SystemConfigService, private metadataService: MetadataService) {
+  public constructor(private systemConfigService: SystemConfigService,
+    private metadataService: MetadataService) {
     super();
+    Assert.notNull(systemConfigService);
+    Assert.notNull(metadataService);
   }
 
 
@@ -111,21 +115,16 @@ export class ConfigService extends ServiceCore {
     model: string,
     query: IStatusQuery
   ): Promise<QueryResult<ConfigBase>> {
-    return using(new XLog(ConfigService.logger, levels.INFO, 'query', `[${model}]`), (log) => {
-      if (log.isDebugEnabled()) {
-        log.debug(`query = ${JSON.stringify(query)}`);
-      }
+    throw new NotSupportedException();
+  }
 
-      return new Promise<QueryResult<T>>((resolve, reject) => {
-        this.systemConfigService.query(request, query)
-          .then((queryResult) => {
-            const result = queryResult.items.map((item) => {
-              return this.deserialize<T>(JSON.parse(item.json));
-            });
-            resolve(new QueryResult(result, -1));
-          });
-      });
-    });
+
+  public deleteTestdata(
+  ): any {
+    return this.systemConfigService
+      .fromTable()
+      .where(this.systemConfigService.idColumnName, '=', ConfigBase.createId('%', '%'))
+      .delete();
   }
 
 
@@ -191,11 +190,14 @@ export class ConfigService extends ServiceCore {
     id: string
   ): Promise<DeleteResult<string>> {
     return using(new XLog(ConfigService.logger, levels.INFO, 'delete', `[${model}] id = ${id}`), (log) => {
-      return this.systemConfigService.delete(null, id);
+      const type = this.getConfigType(model);
+      return this.systemConfigService.delete(null, ConfigBase.createId(type, id));
     });
   }
 
-
+  public getMetadata(model: string | Funktion): TableMetadata {
+    return this.metadataService.findTableMetadata(model);
+  }
 
   protected deserialize<T>(json: any): T {
     Assert.notNull(json);
@@ -203,8 +205,7 @@ export class ConfigService extends ServiceCore {
   }
 
   private getConfigType(model: string): string {
-    const metadata = this.metadataService.findTableMetadata(model);
-    const typeColumn = metadata.getColumnMetadataByProperty(ConfigBase.TYPE_COLUMN);
+    const typeColumn = this.getMetadata(model).getColumnMetadataByProperty(ConfigBase.TYPE_COLUMN);
     return typeColumn.options.default as string;
   }
 }

@@ -140,8 +140,9 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
     modelClass: ICtor<ConfigBase>,
     generatorConfig: IEntityGeneratorConfig | ValueGenerator<any>,
     done: (err?: any) => void) {
-    using(new XLog(KnexTest.logger, levels.INFO, 'static.setup'), (log) => {
-      KnexTest._configService = InjectorService.get<ConfigService>(serviceClass);
+    using(new XLog(KnexTest.logger, levels.INFO, 'static.setupConfig'), (log) => {
+      const systemConfigService = KnexTest.createService(SystemConfigService);
+      KnexTest._configService = new ConfigService(systemConfigService, KnexTest.metadataService);
 
       if (Types.isPresent(generatorConfig)) {
 
@@ -152,7 +153,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
             count: 1,
             maxCount: 1,
             idGenerator: generatorConfig,
-            tableMetadata: KnexTest._configService.metadata
+            tableMetadata: KnexTest._configService.getMetadata(modelClass)
           };
         } else {
           config = generatorConfig;
@@ -173,11 +174,12 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
 
           KnexTest._firstConfigTestId = result.item.id;
 
-          KnexTest._service.delete(undefined, KnexTest._firstConfigTestId).then((rowsAffected) => {
-            log.log(`deleted temp. entity: id = ${result.item.id}`);
+          KnexTest._configService.delete(undefined, modelClass.name, KnexTest._firstConfigTestId)
+            .then((rowsAffected) => {
+              log.log(`deleted temp. entity: id = ${result.item.id}`);
 
-            done();
-          });
+              done();
+            });
         });
       }
     });
@@ -231,24 +233,42 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
     using(new XLog(KnexTest.logger, levels.INFO, 'static.after'), (log) => {
 
       try {
+        if (KnexTest._service) {
 
-        /**
-         * alle Entities mit ids >= _firstTestId wieder entfernen
-         */
-        KnexTest._service.queryKnex(
-          undefined,
-          KnexTest._service
-            .fromTable()
-            .where(KnexTest._service.idColumnName, '>=', KnexTest._firstTestId)
-            .delete()
-        ).then((rowsAffected) => {
-          log.log(`deleted test data (id >= ${KnexTest._firstTestId}, res = ${JSON.stringify(rowsAffected)}`);
+          /**
+           * alle Entities mit ids >= _firstTestId wieder entfernen
+           */
+          KnexTest._service.queryKnex(
+            undefined,
+            KnexTest._service
+              .fromTable()
+              .where(KnexTest._service.idColumnName, '>=', KnexTest._firstTestId)
+              .delete()
+          ).then((rowsAffected) => {
+            log.log(`deleted test data (id >= ${KnexTest._firstTestId}, res = ${JSON.stringify(rowsAffected)}`);
 
-          KnexTest.knexService.knex.destroy().then(() => {
-            log.log(`knex destroy called`);
-            done();
+            KnexTest.knexService.knex.destroy().then(() => {
+              log.log(`knex destroy called`);
+              done();
+            });
           });
-        });
+        }
+
+        if (KnexTest._configService) {
+
+          /**
+           * alle Entities mit ids >= _firstTestId wieder entfernen
+           */
+          KnexTest._configService.deleteTestdata()
+            .then((rowsAffected: number) => {
+              log.log(`deleted test data (id >= ${KnexTest._firstTestId}, res = ${JSON.stringify(rowsAffected)}`);
+
+              KnexTest.knexService.knex.destroy().then(() => {
+                log.log(`knex destroy called`);
+                done();
+              });
+            });
+        }
 
       } finally {
         super.after(() => {

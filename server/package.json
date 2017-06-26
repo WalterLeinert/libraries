@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/server",
-  "version": "2.2.7-beta.25",
+  "version": "2.2.7-beta.27",
   "description": "Fluxgate Server-Library ",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -55,7 +55,7 @@
     "yargs": "^7.0.2"
   },
   "dependencies": {
-    "@fluxgate/common": "2.2.7-beta.8",
+    "@fluxgate/common": "2.2.7-beta.10",
     "@fluxgate/core": "2.2.7-beta.0",
     "@fluxgate/platform": "2.2.7-beta.0",
     "emailjs": "^1.0.8",
