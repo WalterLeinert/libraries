@@ -8,11 +8,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  AppConfig, CreateResult, DeleteResult, ExceptionWrapper, FindByIdResult, FindResult,
-  IEntity, IStatusQuery, ProxyModes, QueryResult, ServiceResult, StatusFilter, TableMetadata, UpdateResult
+  CreateResult, DeleteResult, ExceptionWrapper, FindByIdResult, FindResult,
+  IEntity, IStatusQuery, QueryResult, StatusFilter, TableMetadata, UpdateResult
 } from '@fluxgate/common';
 import {
-  Assert, EntityNotFoundException, Funktion, ICtor, IException, IToString, OptimisticLockException
+  Assert, Funktion, IException, IToString
 } from '@fluxgate/core';
 
 import { ISessionRequest } from '../session/session-request.interface';

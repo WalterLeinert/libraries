@@ -3,7 +3,6 @@ import path = require('path');
 import 'reflect-metadata';
 
 import * as Knex from 'knex';
-import { InjectorService } from 'ts-express-decorators';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable

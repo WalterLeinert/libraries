@@ -3,22 +3,16 @@ import { Authenticated, Controller, PathParams, Request } from 'ts-express-decor
 // Fluxgate
 import {
   ConfigBase,
-  CreateResult, DeleteResult, FindByIdResult, FindResult, QueryResult, StatusFilter,
-  SystemConfig, UpdateResult
+  CreateResult, FindByIdResult, FindResult, StatusFilter
 } from '@fluxgate/common';
-import { IQuery } from '@fluxgate/core';
 
 import { ConfigService } from '../services/config.service';
 import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
-import { ControllerBase } from './base/controller-base';
 import { ControllerCore } from './base/controller-core';
 import { CreateMethod } from './decorator/create-method.decorator';
-import { DeleteMethod } from './decorator/delete-method.decorator';
 import { FindByIdMethod } from './decorator/find-by-id-method.decorator';
 import { FindMethod } from './decorator/find-method.decorator';
-import { QueryMethod } from './decorator/query-method.decorator';
-import { UpdateMethod } from './decorator/update-method.decorator';
 
 
 /**

@@ -23,10 +23,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import {
   ConstantValueGenerator,
-  CreateResult, DeleteResult, EntityStatus, FilterBehaviour, FindByIdResult, IRole,
-  Role, ServiceResult, SmtpConfig, StatusFilter, StatusQuery, StringIdGenerator, UpdateResult
+  CreateResult,
+  ServiceResult, SmtpConfig, StringIdGenerator, UpdateResult
 } from '@fluxgate/common';
-import { Clone, ICtor, SelectorTerm } from '@fluxgate/core';
+import { ICtor } from '@fluxgate/core';
 
 import { ConfigService } from '../../../src/ts-express-decorators-flx/services/config.service';
 

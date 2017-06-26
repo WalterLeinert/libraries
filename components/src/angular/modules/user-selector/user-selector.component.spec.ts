@@ -7,7 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ConfirmationService } from 'primeng/components/common/api';
 
 import {
-  APP_STORE_PROVIDER, AppInjector, AppConfigService, CurrentUserService, MessageService, MetadataService
+  APP_STORE_PROVIDER, AppConfigService, AppInjector, CurrentUserService, MessageService, MetadataService
 } from '@fluxgate/client';
 
 import {

@@ -1,4 +1,3 @@
-import * as Knex from 'knex';
 import { Service } from 'ts-express-decorators';
 
 // -------------------------------------- logging --------------------------------------------
@@ -7,21 +6,19 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 import {
-  ConfigBase, CreateResult, DeleteResult, EntityStatus, FilterBehaviour, FindByIdResult,
+  ConfigBase, CreateResult, DeleteResult, FindByIdResult,
   FindResult, IStatusQuery, ISystemConfig, QueryResult,
   StatusFilter, StatusQuery, TableMetadata, UpdateResult
 } from '@fluxgate/common';
 import {
-  Assert, Funktion, JsonSerializer, NotImplementedException, NotSupportedException,
-  Query, SelectorTerm
+  Assert, Funktion, JsonSerializer, NotSupportedException,
+  SelectorTerm
 } from '@fluxgate/core';
 
 import { ISessionRequest } from '../session/session-request.interface';
-import { IBaseService } from './baseService.interface';
 import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
 import { ServiceCore } from './service-core';
-import { ServiceProxy } from './service-proxy';
 import { SystemConfigService } from './system-config.service';
 
 /**

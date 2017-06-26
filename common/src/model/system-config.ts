@@ -1,6 +1,3 @@
-import { EnumHelper, Funktion } from '@fluxgate/core';
-
-import { AppRegistry } from '../base/appRegistry';
 import { Column } from '../model/decorator/column';
 import { IdColumn } from '../model/decorator/id-column';
 import { Table } from '../model/decorator/table';
@@ -9,7 +6,7 @@ import { FlxEntity } from '../model/flx-entity';
 import { Validators } from '../model/validation/validators';
 
 // import { Mandant } from './mandant';
-import { ISystemConfig } from './systemconfig.interface';
+import { ISystemConfig } from './system-config.interface';
 
 
 /**

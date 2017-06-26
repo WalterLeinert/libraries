@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -13,10 +12,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import { AppConfigService, MetadataService, Service } from '@fluxgate/client';
 import {
-  ConfigBase, FindResult, QueryResult, SmtpConfig, StatusFilter,
-  StatusQuery, SystemConfig, TableService
+  ConfigBase, FindResult, StatusFilter,
+  StatusQuery
 } from '@fluxgate/common';
-import { Funktion, IToString, NotSupportedException, Query, SelectorTerm } from '@fluxgate/core';
+import { Funktion, NotSupportedException, SelectorTerm } from '@fluxgate/core';
 
 
 /**

@@ -15,7 +15,6 @@ import { ISMTPConfig } from './smtpconfig.interface';
 
 import { ConfigService } from '../config.service';
 import { ServiceCore } from '../service-core';
-import { SystemConfigService } from '../system-config.service';
 
 
 /**

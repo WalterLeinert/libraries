@@ -10,12 +10,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
-import { AppConfigService, MetadataService, Service } from '@fluxgate/client';
+import { AppConfigService, MetadataService } from '@fluxgate/client';
 import {
-  ConfigBase, FindResult, FindByIdResult, SmtpConfig, StatusFilter,
-  SystemConfig, TableService
+  ConfigBase, FindByIdResult, FindResult, SmtpConfig, StatusFilter, TableService
 } from '@fluxgate/common';
-import { IToString } from '@fluxgate/core';
 
 import { ConfigService } from './config.service';
 

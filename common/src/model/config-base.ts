@@ -1,12 +1,9 @@
 import { Column } from '../model/decorator/column';
 import { IdColumn } from '../model/decorator/id-column';
-import { StatusColumn } from '../model/decorator/status-column';
 import { Table } from '../model/decorator/table';
 import { Validation } from '../model/decorator/validation';
 import { Validators } from '../model/validation/validators';
-import { EntityStatus, EntityStatusHelper } from './entity-status';
 import { FlxEntity } from './flx-entity';
-import { IStatusEntity } from './status-entity.interface';
 
 
 /**
