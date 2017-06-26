@@ -71,13 +71,14 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    */
   public find(
     request: ISessionRequest,
-    filter?: StatusFilter
+    filter?: StatusFilter,
+    trxExisting?: Knex.Transaction
   ): Promise<FindResult<T>> {
     return using(new XLog(CoreService.logger, levels.INFO, 'find', `[${this.tableName}]`), (log) => {
 
       return new Promise<FindResult<T>>((resolve, reject) => {
-        this.knexService.knex.transaction((trx) => {
 
+        const finder = (trx: Knex.Transaction, useExistingTransaction: boolean) => {
           // ggf. nach Mandanten filtern
           let query = this.createClientSelectorQuery(request, trx);
 
@@ -109,9 +110,11 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
                 // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
                 if (this.hasEntityVersionInfo()) {
-                  this.findEntityVersionAndResolve(trx, FindResult, result, resolve, reject);
+                  this.findEntityVersionAndResolve(trx, useExistingTransaction, FindResult, result, resolve, reject);
                 } else {
-                  trx.commit();
+                  if (!useExistingTransaction) {
+                    trx.commit();
+                  }
                   resolve(new FindResult(result, -1));
                 }
               }
@@ -119,10 +122,24 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
             .catch((err) => {
               log.error(err);
 
-              trx.rollback();
+              if (!useExistingTransaction) {
+                trx.rollback();
+              }
               reject(this.createSystemException(err));
             });
-        });     // transaction
+        };
+
+        //
+        // an existierender Transaktion teilnehmen bzw. neue Transaktion starten
+        //
+        if (trxExisting) {
+          finder(trxExisting, true);
+        } else {
+          this.knexService.knex.transaction((trx) => {
+            finder(trx, false);
+          });     // transaction
+        }
+
       });     // promise
     });
   }
@@ -140,14 +157,15 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
   public queryKnex(
     request: ISessionRequest,
     query: Knex.QueryBuilder,
-    filter?: StatusFilter
+    filter?: StatusFilter,
+    trxExisting?: Knex.Transaction
   ): Promise<QueryResult<T>> {
 
     return using(new XLog(CoreService.logger, levels.INFO, 'queryKnex', `[${this.tableName}]`), (log) => {
 
       return new Promise<QueryResult<T>>((resolve, reject) => {
-        this.knexService.knex.transaction((trx) => {
 
+        const queryier = (trx: Knex.Transaction, useExistingTransaction: boolean) => {
           // ggf. nach Mandanten filtern
           query = this.createClientSelectorQuery(request, trx, query);
 
@@ -161,7 +179,9 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
               if (rows.length <= 0) {
                 log.debug('result: no item found');
 
-                trx.commit();
+                if (!useExistingTransaction) {
+                  trx.commit();
+                }
                 resolve(new QueryResult([], undefined));
               } else {
                 const result = this.createModelInstances(rows);
@@ -182,9 +202,11 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
                 // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
                 if (this.hasEntityVersionInfo()) {
-                  this.findEntityVersionAndResolve(trx, QueryResult, result, resolve, reject);
+                  this.findEntityVersionAndResolve(trx, useExistingTransaction, QueryResult, result, resolve, reject);
                 } else {
-                  trx.commit();
+                  if (!useExistingTransaction) {
+                    trx.commit();
+                  }
                   resolve(new QueryResult(result, -1));
                 }
               }
@@ -192,11 +214,25 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
             .catch((err) => {
               log.error(err);
 
-              trx.rollback();
+              if (!useExistingTransaction) {
+                trx.rollback();
+              }
               reject(this.createSystemException(err));
             });
+        };
 
-        });     // transaction
+
+        //
+        // an existierender Transaktion teilnehmen bzw. neue Transaktion starten
+        //
+        if (trxExisting) {
+          queryier(trxExisting, true);
+        } else {
+          this.knexService.knex.transaction((trx) => {
+            queryier(trx, false);
+          });     // transaction
+        }
+
       });     // promise
     });
   }
@@ -204,7 +240,8 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
   public query(
     request: ISessionRequest,
-    query: IStatusQuery
+    query: IStatusQuery,
+    trxExisting?: Knex.Transaction
   ): Promise<QueryResult<T>> {
     return using(new XLog(CoreService.logger, levels.INFO, 'query', `[${this.tableName}]`), (log) => {
       const knexQuery = this.fromTable();
@@ -212,7 +249,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
       const visitor = new KnexQueryVisitor(knexQuery, this.metadata);
       query.term.accept(visitor);
 
-      return this.queryKnex(request, visitor.query(knexQuery), query.filter);
+      return this.queryKnex(request, visitor.query(knexQuery), query.filter, trxExisting);
     });
   }
 
@@ -321,7 +358,8 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    *
    * @memberof ReadonlyService
    */
-  protected findEntityVersionAndResolve<TResult>(trx: Knex.Transaction, resultClazz: ICtor<ServiceResult>,
+  protected findEntityVersionAndResolve<TResult>(trx: Knex.Transaction, useExistingTransaction: boolean,
+    resultClazz: ICtor<ServiceResult>,
     subject: TResult, resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void),
     reject: ((reason?: any) => void)) {
 
@@ -336,9 +374,10 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
           const entityVersionRow = entityVersions[0];
           const entityVersion = entityVersionRow[this.entityVersionMetadata.versionColumn.options.name] as number;
 
-          trx.commit();
-
-          log.debug('queryResult after commit: ', subject);
+          if (!useExistingTransaction) {
+            trx.commit();
+            log.debug('queryResult after commit: ', subject);
+          }
 
           resolve(new resultClazz(subject, entityVersion));
         }).catch(reject);

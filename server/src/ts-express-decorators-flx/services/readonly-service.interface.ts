@@ -1,3 +1,5 @@
+import * as Knex from 'knex';
+
 // Fluxgate
 import { FindByIdResult, IEntity } from '@fluxgate/common';
 import { IToString } from '@fluxgate/core';
@@ -35,7 +37,8 @@ export interface IReadonlyService<T extends IEntity<TId>, TId extends IToString>
    */
   findById(
     request: ISessionRequest,
-    id: TId
+    id: TId,
+    trxExisting?: Knex.Transaction
   ): Promise<FindByIdResult<T, TId>>;
 
 }

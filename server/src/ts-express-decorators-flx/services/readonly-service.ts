@@ -55,24 +55,28 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
   /**
    * Liefert eine Entity-Instanz vom Typ {T} aus der DB als @see{Promise}
    *
+   * @param {ISessionRequest} request - der Request des REST-Calls
    * @param {TId} id
+   * @param {Knex.Transaction} [trxExisting] - bereits existierende Transaction, an der die
+   * DB-Operationen teilnehmen sollen
    * @returns {Promise<T>}
    *
    * @memberOf ServiceBase
    */
   public findById<T extends IEntity<TId>>(
     request: ISessionRequest,
-    id: TId
+    id: TId,
+    trxExisting?: Knex.Transaction
   ): Promise<FindByIdResult<T, TId>> {
 
     return using(new XLog(ReadonlyService.logger, levels.INFO, 'findById', `[${this.tableName}] id = ${id}`), (log) => {
 
       return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {
-        this.knexService.knex.transaction((trx) => {
 
+        const finder = (transaction: Knex.Transaction, useExistingTransaction: boolean) => {
           this.fromTable()
             .where(this.idColumnName, id.toString())
-            .transacting(trx)
+            .transacting(transaction)
 
             .then((rows: any[]) => {
               if (rows.length <= 0) {
@@ -100,21 +104,37 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
 
                 // entityVersionMetadata vorhanden und wir suchen nicht entityVersionMetadata
                 if (this.hasEntityVersionInfo()) {
-                  this.findEntityVersionAndResolve(trx, FindByIdResult, result, resolve, reject);
+                  this.findEntityVersionAndResolve(transaction, useExistingTransaction, FindByIdResult, result,
+                    resolve, reject);
                 } else {
-                  trx.commit();
+                  if (!useExistingTransaction) {
+                    transaction.commit();
+                  }
+
                   resolve(new FindByIdResult<T, TId>(result, -1));
                 }
               }
             })
             .catch((err) => {
               log.error(err);
-
-              trx.rollback();
+              if (!useExistingTransaction) {
+                transaction.rollback();
+              }
               reject(this.createSystemException(err));
             });
+        };
 
-        });     // transaction
+        //
+        // an existierender Transaktion teilnehmen bzw. neue Transaktion starten
+        //
+        if (trxExisting) {
+          finder(trxExisting, true);
+        } else {
+          this.knexService.knex.transaction((trx) => {
+            finder(trx, false);
+          });     // transaction
+        }
+
       });     // promise
     });
   }

@@ -1,3 +1,5 @@
+import * as Knex from 'knex';
+
 // Fluxgate
 import {
   CreateResult, DeleteResult, IEntity, UpdateResult
@@ -51,7 +53,8 @@ export interface IBaseService<T extends IEntity<TId>, TId extends IToString> ext
    */
   create(
     request: ISessionRequest,
-    subject: T
+    subject: T,
+    trxExisting?: Knex.Transaction
   ): Promise<CreateResult<T, TId>>;
 
 
@@ -65,7 +68,8 @@ export interface IBaseService<T extends IEntity<TId>, TId extends IToString> ext
    */
   update(
     request: ISessionRequest,
-    subject: T
+    subject: T,
+    trxExisting?: Knex.Transaction
   ): Promise<UpdateResult<T, TId>>;
 
 
@@ -79,7 +83,8 @@ export interface IBaseService<T extends IEntity<TId>, TId extends IToString> ext
    */
   delete(
     request: ISessionRequest,
-    id: TId
+    id: TId,
+    trxExisting?: Knex.Transaction
   ): Promise<DeleteResult<TId>>;
 
 }

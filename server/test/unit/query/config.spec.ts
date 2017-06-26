@@ -9,7 +9,7 @@ require('reflect-metadata');
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 
 // Chai mit Promises verwenden (... to.become() ... etc.)
@@ -33,7 +33,10 @@ import { ConfigService } from '../../../src/ts-express-decorators-flx/services/c
 import { KnexTest } from '../knexTest.spec';
 
 
-@suite('erste Config Tests') @only
+// declare function pick<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K>;
+
+
+@suite('erste Config Tests')
 class ConfigTest extends KnexTest<SmtpConfig, string> {
   protected static readonly logger = getLogger(ConfigTest);
 
@@ -73,8 +76,14 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
   @test 'should create new config'() {
     const id = 'test1';
     const config = this.createConfig(id);
-    const expectedRoleResult = this.createExpectedConfigResult(id, CreateResult, -1);
-    return expect(this.configService.create(undefined, SmtpConfig.name, config)).to.become(expectedRoleResult);
+
+    // updateResult.entityVersion ist für den Test nicht relevant -> vom Ergebnis übernehmen
+    const expectedConfigResult = this.createExpectedConfigResult<CreateResult<SmtpConfig, string>>(id, CreateResult,
+      undefined);
+
+    return expect(this.configService.create(undefined, SmtpConfig.name, config)
+      .then((createResult) => createResult.item))
+      .to.become(expectedConfigResult.item);
   }
 
 
@@ -82,6 +91,37 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
     return expect(this.configService.find(undefined, SmtpConfig.name)
       .then((result) => result.items.length))
       .to.become(1);
+  }
+
+
+  @test 'should update config'() {
+    const id = 'test1';
+
+    const result = this.createExpectedConfigResult<UpdateResult<SmtpConfig, string>>(id, UpdateResult, -1);
+    result.item.description = result.item.description + '-updated';
+
+    return expect(this.configService.update(undefined, SmtpConfig.name, result.item)
+      .then((updateResult) => updateResult.item))
+      .to.become(result.item);
+  }
+
+
+  @test 'should delete config'() {
+    const id = 'test1';
+
+    const result = this.createExpectedConfigResult<UpdateResult<SmtpConfig, string>>(id, UpdateResult, -1);
+    result.item.description = result.item.description + '-updated';
+
+    return expect(this.configService.delete(undefined, SmtpConfig.name, id)
+      .then((deleteResult) => deleteResult.id))
+      .to.become(id);
+  }
+
+
+  @test 'should find no config entry (after deletion)'() {
+    return expect(this.configService.find(undefined, SmtpConfig.name)
+      .then((result) => result.items.length))
+      .to.become(0);
   }
 
 

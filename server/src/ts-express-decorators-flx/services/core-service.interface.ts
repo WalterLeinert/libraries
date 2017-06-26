@@ -29,7 +29,8 @@ export interface ICoreService<T> extends IServiceCore {
    */
   find(
     request: ISessionRequest,
-    filter?: StatusFilter
+    filter?: StatusFilter,
+    trxExisting?: Knex.Transaction
   ): Promise<FindResult<T>>;
 
 
@@ -44,13 +45,15 @@ export interface ICoreService<T> extends IServiceCore {
   queryKnex(
     request: ISessionRequest,
     query: Knex.QueryBuilder,
-    filter?: StatusFilter
+    filter?: StatusFilter,
+    trxExisting?: Knex.Transaction
   ): Promise<QueryResult<T>>;
 
 
   query(
     request: ISessionRequest,
-    query: IStatusQuery
+    query: IStatusQuery,
+    trxExisting?: Knex.Transaction
   ): Promise<QueryResult<T>>;
 
 

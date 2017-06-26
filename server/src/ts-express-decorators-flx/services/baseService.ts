@@ -58,7 +58,8 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    */
   public create(
     request: ISessionRequest,
-    subject: T
+    subject: T,
+    trxExisting?: Knex.Transaction
   ): Promise<CreateResult<T, TId>> {
 
     return using(new XLog(BaseService.logger, levels.INFO, 'create', `[${this.tableName}]`), (log) => {
@@ -83,8 +84,8 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
       }
 
       return new Promise<CreateResult<T, TId>>((resolve, reject) => {
-        this.knexService.knex.transaction((trx) => {
 
+        const creater = (trx: Knex.Transaction, useExistingTransaction: boolean) => {
           const query: Knex.QueryBuilder = this.fromTable();
 
           query
@@ -114,10 +115,12 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                   // falls supported -> update in entityversion Tabelle
                   entityversionQuery
                     .then((item) => {
-                      this.handleResult(trx, CreateResult, subject, 'subject after commit', resolve, reject);
+                      this.handleResult(trx, useExistingTransaction, CreateResult, subject, 'subject after commit',
+                        resolve, reject);
                     });
                 } else {
-                  this.handleResult(trx, CreateResult, subject, 'subject after commit', resolve, reject);
+                  this.handleResult(trx, useExistingTransaction, CreateResult, subject, 'subject after commit',
+                    resolve, reject);
                 }
               }
 
@@ -125,11 +128,27 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
             .catch((err) => {
               log.error(err);
 
-              trx.rollback();
+              if (!useExistingTransaction) {
+                trx.rollback();
+              }
+
               reject(this.createSystemException(err));
             });
 
-        });     // transaction
+        };
+
+
+        //
+        // an existierender Transaktion teilnehmen bzw. neue Transaktion starten
+        //
+        if (trxExisting) {
+          creater(trxExisting, true);
+        } else {
+          this.knexService.knex.transaction((trx) => {
+            creater(trx, false);
+          });     // transaction
+        }
+
       });     // promise
     });
   }
@@ -145,7 +164,8 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    */
   public update(
     request: ISessionRequest,
-    subject: T
+    subject: T,
+    trxExisting?: Knex.Transaction
   ): Promise<UpdateResult<T, TId>> {
 
     return using(new XLog(BaseService.logger, levels.INFO, 'update', `[${this.tableName}]`), (log) => {
@@ -154,11 +174,10 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
       const dbSubject = this.createDatabaseInstance(subject);
 
       return new Promise<UpdateResult<T, TId>>((resolve, reject) => {
-        this.knexService.knex.transaction((trx) => {
 
+        const updater = (trx: Knex.Transaction, useExistingTransaction: boolean) => {
           // quer< zur Selektion der Entity und ggf. des Versionsinkrements
           const query: Knex.QueryBuilder = this.createUpdateQuery(request, trx, subject.id, dbSubject);
-
 
           query
             .update(dbSubject)
@@ -173,7 +192,9 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
               //
               if (this.metadata.versionColumn) {
                 if (affectedRows <= 0) {
-                  trx.rollback();
+                  if (!useExistingTransaction) {
+                    trx.rollback();
+                  }
 
                   const exc = new OptimisticLockException(`Data was not up to date.\nReload data and try again.`);
 
@@ -193,16 +214,19 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                     // falls supported -> update in entityversion Tabelle
                     entityversionQuery
                       .then((item) => {
-                        this.handleResult(trx, UpdateResult, resultSubject,
+                        this.handleResult(trx, useExistingTransaction, UpdateResult, resultSubject,
                           'subject after commit (optimistic lock detection)', resolve, reject);
                       });
                   } else {
-                    this.handleResult(trx, UpdateResult, resultSubject, 'subject after commit', resolve, reject);
+                    this.handleResult(trx, useExistingTransaction, UpdateResult, resultSubject, 'subject after commit',
+                      resolve, reject);
                   }
                 }
               } else {
                 if (affectedRows <= 0) {
-                  trx.rollback();
+                  if (!useExistingTransaction) {
+                    trx.rollback();
+                  }
 
                   const exc = new EntityNotFoundException(
                     `table: ${this.tableName}, id: ${dbSubject[this.idColumnName]}`);
@@ -219,11 +243,12 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                     // falls supported -> update in entityversion Tabelle
                     entityversionQuery
                       .then((item) => {
-                        this.handleResult(trx, UpdateResult, resultSubject,
+                        this.handleResult(trx, useExistingTransaction, UpdateResult, resultSubject,
                           'subject after commit', resolve, reject);
                       });
                   } else {
-                    this.handleResult(trx, UpdateResult, resultSubject, 'subject after commit', resolve, reject);
+                    this.handleResult(trx, useExistingTransaction, UpdateResult, resultSubject, 'subject after commit',
+                      resolve, reject);
                   }
                 }
               }
@@ -231,10 +256,27 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
             .catch((err) => {
               log.error(err);
 
-              trx.rollback();
+              if (!useExistingTransaction) {
+                trx.rollback();
+              }
+
               reject(this.createSystemException(err));
             });
-        });     // transaction
+
+        };
+
+
+        //
+        // an existierender Transaktion teilnehmen bzw. neue Transaktion starten
+        //
+        if (trxExisting) {
+          updater(trxExisting, true);
+        } else {
+          this.knexService.knex.transaction((trx) => {
+            updater(trx, false);
+          });     // transaction
+        }
+
       });     // promise
     });
   }
@@ -251,13 +293,14 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
    */
   public delete(
     request: ISessionRequest,
-    id: TId
+    id: TId,
+    trxExisting?: Knex.Transaction
   ): Promise<DeleteResult<TId>> {
 
     return using(new XLog(BaseService.logger, levels.INFO, 'delete', `[${this.tableName}] id = ${id}`), (log) => {
       return new Promise<DeleteResult<TId>>((resolve, reject) => {
-        this.knexService.knex.transaction((trx) => {
 
+        const deleter = (trx: Knex.Transaction, useExistingTransaction: boolean) => {
           let query = this.fromTable();
           query = this.addIdSelector(query, trx, id);
 
@@ -273,7 +316,10 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
               log.debug(`deleted from ${this.tableName} with id: ${id} (affectedRows: ${affectedRows})`);
 
               if (affectedRows <= 0) {
-                trx.rollback();
+                if (!useExistingTransaction) {
+                  trx.rollback();
+                }
+
                 reject(this.createSystemException(
                   new EntityNotFoundException(`table: ${this.tableName}, id: ${id}`)));
               } else {
@@ -285,20 +331,37 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                   // falls supported -> update in entityversion Tabelle
                   entityversionQuery
                     .then((item) => {
-                      this.handleResult(trx, DeleteResult, id, 'delete id after commit', resolve, reject);
+                      this.handleResult(trx, useExistingTransaction, DeleteResult, id, 'delete id after commit',
+                        resolve, reject);
                     });
                 } else {
-                  this.handleResult(trx, DeleteResult, id, 'delete id after commit', resolve, reject);
+                  this.handleResult(trx, useExistingTransaction, DeleteResult, id, 'delete id after commit',
+                    resolve, reject);
                 }
               }
             })
             .catch((err) => {
               log.error(err);
 
-              trx.rollback();
+              if (!useExistingTransaction) {
+                trx.rollback();
+              }
               reject(this.createSystemException(err));
             });
-        });     // transaction
+        };
+
+
+        //
+        // an existierender Transaktion teilnehmen bzw. neue Transaktion starten
+        //
+        if (trxExisting) {
+          deleter(trxExisting, true);
+        } else {
+          this.knexService.knex.transaction((trx) => {
+            deleter(trx, false);
+          });     // transaction
+        }
+
       });     // promise
     });
   }
@@ -407,14 +470,17 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
 
 
 
-  private handleResult<TResult>(trx: Knex.Transaction, resultClazz: ICtor<ServiceResult>,
+  private handleResult<TResult>(trx: Knex.Transaction, useExistingTransaction: boolean,
+    resultClazz: ICtor<ServiceResult>,
     subject: TResult, logMessage: string, resolve: ((result: ServiceResult | PromiseLike<ServiceResult>) => void),
     reject: ((reason?: any) => void)) {
     using(new XLog(BaseService.logger, levels.INFO, 'handleResult'), (log) => {
       if (this.hasEntityVersionInfo()) {
-        this.findEntityVersionAndResolve(trx, resultClazz, subject, resolve, reject);
+        this.findEntityVersionAndResolve(trx, useExistingTransaction, resultClazz, subject, resolve, reject);
       } else {
-        trx.commit();
+        if (!useExistingTransaction) {
+          trx.commit();
+        }
 
         if (log.isDebugEnabled()) {
           log.debug(`${logMessage}: `, subject);

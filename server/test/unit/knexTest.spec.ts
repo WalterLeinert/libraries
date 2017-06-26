@@ -142,7 +142,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
     done: (err?: any) => void) {
     using(new XLog(KnexTest.logger, levels.INFO, 'static.setupConfig'), (log) => {
       const systemConfigService = KnexTest.createService(SystemConfigService);
-      KnexTest._configService = new ConfigService(systemConfigService, KnexTest.metadataService);
+      KnexTest._configService = new ConfigService(systemConfigService, KnexTest.knexService, KnexTest.metadataService);
 
       if (Types.isPresent(generatorConfig)) {
 

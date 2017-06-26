@@ -18,6 +18,7 @@ import {
 
 import { ISessionRequest } from '../session/session-request.interface';
 import { IBaseService } from './baseService.interface';
+import { KnexService } from './knex.service';
 import { MetadataService } from './metadata.service';
 import { ServiceCore } from './service-core';
 import { ServiceProxy } from './service-proxy';
@@ -40,9 +41,10 @@ export class ConfigService extends ServiceCore {
 
 
   public constructor(private systemConfigService: SystemConfigService,
-    private metadataService: MetadataService) {
+    private knexService: KnexService, private metadataService: MetadataService) {
     super();
     Assert.notNull(systemConfigService);
+    Assert.notNull(knexService);
     Assert.notNull(metadataService);
   }
 
@@ -140,17 +142,11 @@ export class ConfigService extends ServiceCore {
       }
 
       return new Promise<CreateResult<ConfigBase, string>>((resolve, reject) => {
-        const systemConfig: ISystemConfig = {
-          id: ConfigBase.createId(subject.type, subject.id),
-          __client: undefined,    // set by systemConfigService
-          __version: 0,
-          description: subject.description,
-          json: JSON.stringify(subject)
-        };
+        const systemConfig: ISystemConfig = this.createSystemConfigFromConfig(subject);
 
         this.systemConfigService.create(request, systemConfig)
           .then((result) => {
-            resolve(new CreateResult(subject, -1));
+            resolve(new CreateResult(subject, result.entityVersion));
           });
       });
     });
@@ -168,18 +164,28 @@ export class ConfigService extends ServiceCore {
       }
 
       return new Promise<UpdateResult<ConfigBase, string>>((resolve, reject) => {
-        const systemConfig: ISystemConfig = {
-          id: ConfigBase.createId(subject.type, subject.id),
-          __client: subject.__client,     // set by systemConfigService
-          __version: undefined,           // TODO
-          description: subject.description,
-          json: JSON.stringify(subject)
-        };
+        this.knexService.knex.transaction((trx) => {
 
-        this.systemConfigService.update(request, systemConfig)
-          .then((result) => {
-            resolve(new UpdateResult(subject, -1));
-          });
+          const systemConfig: ISystemConfig = this.createSystemConfigFromConfig(subject);
+
+          this.systemConfigService.findById<ISystemConfig>(request, systemConfig.id, trx)
+            .then((findByIdResult) => {
+              systemConfig.__version = findByIdResult.item.__version;
+
+              this.updateSystemConfigFromConfig(systemConfig, subject);
+
+              this.systemConfigService.update(request, systemConfig, trx)
+                .then((result) => {
+                  subject.__version = result.item.__version;    // Version übernehmen
+
+                  trx.commit();
+                  resolve(new UpdateResult(subject, result.entityVersion));
+                });
+            }).catch((err) => {
+              trx.rollback();
+            });
+
+        });
       });
     });
   }
@@ -192,9 +198,17 @@ export class ConfigService extends ServiceCore {
   ): Promise<DeleteResult<string>> {
     return using(new XLog(ConfigService.logger, levels.INFO, 'delete', `[${model}] id = ${id}`), (log) => {
       const type = this.getConfigType(model);
-      return this.systemConfigService.delete(null, ConfigBase.createId(type, id));
+
+      return new Promise<DeleteResult<string>>((resolve, reject) => {
+        return this.systemConfigService.delete(null, ConfigBase.createId(type, id))
+          .then((deleteResult) => {
+            const configId = deleteResult.id.replace(ConfigBase.createId(type, ''), '');
+            resolve(new DeleteResult(configId, deleteResult.entityVersion));
+          });
+      });
     });
   }
+
 
   public getMetadata(model: string | Funktion): TableMetadata {
     return this.metadataService.findTableMetadata(model);
@@ -208,5 +222,25 @@ export class ConfigService extends ServiceCore {
   private getConfigType(model: string): string {
     const typeColumn = this.getMetadata(model).getColumnMetadataByProperty(ConfigBase.TYPE_COLUMN);
     return typeColumn.options.default as string;
+  }
+
+
+  private createSystemConfigFromConfig(config: ConfigBase): ISystemConfig {
+    const systemConfig: ISystemConfig = {
+      id: ConfigBase.createId(config.type, config.id),
+      __client: config.__client,
+      __version: undefined,
+      description: config.description,
+      json: JSON.stringify(config)
+    };
+
+    return systemConfig;
+  }
+
+
+
+  private updateSystemConfigFromConfig(systemConfig: ISystemConfig, config: ConfigBase) {
+    systemConfig.description = config.description;
+    systemConfig.json = JSON.stringify(config);
   }
 }
