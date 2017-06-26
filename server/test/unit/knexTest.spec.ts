@@ -232,42 +232,51 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
     using(new XLog(KnexTest.logger, levels.INFO, 'static.after'), (log) => {
 
       try {
-        if (KnexTest._service) {
 
-          /**
-           * alle Entities mit ids >= _firstTestId wieder entfernen
-           */
-          KnexTest._service.queryKnex(
-            undefined,
-            KnexTest._service
-              .fromTable()
-              .where(KnexTest._service.idColumnName, '>=', KnexTest._firstTestId)
-              .delete()
-          ).then((rowsAffected) => {
-            log.log(`deleted test data (id >= ${KnexTest._firstTestId}, res = ${JSON.stringify(rowsAffected)}`);
+        const p1 = new Promise<any>((resolve, reject) => {
+          if (KnexTest._service) {
 
-            KnexTest.knexService.knex.destroy().then(() => {
-              log.log(`knex destroy called`);
-              done();
-            });
-          });
-        }
-
-        if (KnexTest._configService) {
-
-          /**
-           * alle Entities mit ids >= _firstTestId wieder entfernen
-           */
-          KnexTest._configService.deleteTestdata()
-            .then((rowsAffected: number) => {
+            /**
+             * alle Entities mit ids >= _firstTestId wieder entfernen
+             */
+            KnexTest._service.queryKnex(
+              undefined,
+              KnexTest._service
+                .fromTable()
+                .where(KnexTest._service.idColumnName, '>=', KnexTest._firstTestId)
+                .delete()
+            ).then((rowsAffected) => {
               log.log(`deleted test data (id >= ${KnexTest._firstTestId}, res = ${JSON.stringify(rowsAffected)}`);
-
-              KnexTest.knexService.knex.destroy().then(() => {
-                log.log(`knex destroy called`);
-                done();
-              });
+              resolve();
             });
-        }
+          } else {
+            resolve();
+          }
+        });
+
+        const p2 = new Promise<any>((resolve, reject) => {
+          if (KnexTest._configService) {
+
+            /**
+             * alle Entities mit ids >= _firstTestId wieder entfernen
+             */
+            KnexTest._configService.deleteTestdata()
+              .then((rowsAffected: number) => {
+                log.log(`deleted test data, res = ${JSON.stringify(rowsAffected)}`);
+                resolve();
+              });
+          } else {
+            resolve();
+          }
+        });
+
+
+        Promise.all([p1, p2]).then((res) => {
+          KnexTest.knexService.knex.destroy().then(() => {
+            log.log(`knex destroy called`);
+            done();
+          });
+        });
 
       } finally {
         super.after(() => {
