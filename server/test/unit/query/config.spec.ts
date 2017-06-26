@@ -34,7 +34,7 @@ import { KnexTest } from '../knexTest.spec';
 
 
 @suite('erste Config Tests') @only
-class ConfigTest extends KnexTest<Role, number> {
+class ConfigTest extends KnexTest<SmtpConfig, string> {
   protected static readonly logger = getLogger(ConfigTest);
 
   public static readonly ITEMS = 5;
@@ -68,4 +68,46 @@ class ConfigTest extends KnexTest<Role, number> {
       .then((result) => result.items.length))
       .to.become(0);
   }
+
+
+  @test 'should create new config'() {
+    const id = 'test1';
+    const config = this.createConfig(id);
+    const expectedRoleResult = this.createExpectedConfigResult(id, CreateResult, -1);
+    return expect(this.configService.create(undefined, SmtpConfig.name, config)).to.become(expectedRoleResult);
+  }
+
+
+  @test 'should find 1 config entry (with id "smtp-xxx")'() {
+    return expect(this.configService.find(undefined, SmtpConfig.name)
+      .then((result) => result.items.length))
+      .to.become(1);
+  }
+
+
+  private createConfig(id: string): SmtpConfig {
+    const config: SmtpConfig = new SmtpConfig();
+    config.id = id;
+    config.type = 'smtp';
+    config.description = `Test-Configdescription-${id}`;
+    config.host = 'localhost';
+    config.from = 'walter';
+    config.user = 'christian';
+    config.password = 'password';
+    config.port = 4711;
+    config.ssl = false;
+
+    config.__version = 0;
+    config.__client = 1;
+
+    return config;
+  }
+
+  private createExpectedConfigResult<T extends ServiceResult>(id: string, resultCtor: ICtor<T>,
+    expectedEntityVersion: number): T {
+    const config = this.createConfig(id);
+    config.id = id;
+    return new resultCtor(config, expectedEntityVersion);
+  }
+
 }

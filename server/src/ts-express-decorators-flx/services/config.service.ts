@@ -94,8 +94,8 @@ export class ConfigService extends ServiceCore {
 
         const query = new StatusQuery(new SelectorTerm({
           name: 'id',
-          operator: '=',
-          value: `${ConfigBase.createId(type, '')}%`
+          operator: 'like',
+          value: ConfigBase.createId(type, '%')
         }), filter);
 
         this.systemConfigService.query(request, query)
@@ -120,10 +120,11 @@ export class ConfigService extends ServiceCore {
 
 
   public deleteTestdata(
+    prefix: string = '%'
   ): any {
     return this.systemConfigService
       .fromTable()
-      .where(this.systemConfigService.idColumnName, '=', ConfigBase.createId('%', '%'))
+      .where(this.systemConfigService.idColumnName, 'like', ConfigBase.createId(prefix, '%'))
       .delete();
   }
 
