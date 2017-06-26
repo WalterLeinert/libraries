@@ -66,7 +66,7 @@ export class ConfigService extends ServiceCore {
       return new Promise<FindByIdResult<T, string>>((resolve, reject) => {
         const type = this.getConfigType(model);
 
-        this.systemConfigService.findById<ISystemConfig>(request, id)
+        this.systemConfigService.findById<ISystemConfig>(request, ConfigBase.createId(type, id))
           .then((result) => {
             resolve(new FindByIdResult(this.deserialize<T>(JSON.parse(result.item.json)), -1));
           });

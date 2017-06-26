@@ -93,6 +93,13 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
       .to.become(1);
   }
 
+  @test 'should find 1 config entry (findById)'() {
+    const id = 'test1';
+    return expect(this.configService.findById(undefined, SmtpConfig.name, id)
+      .then((result) => result.item.id))
+      .to.become(id);
+  }
+
 
   @test 'should update config'() {
     const id = 'test1';
