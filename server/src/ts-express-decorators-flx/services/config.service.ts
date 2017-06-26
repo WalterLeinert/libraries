@@ -216,6 +216,11 @@ export class ConfigService extends ServiceCore {
     return this.serializer.deserialize<T>(json);
   }
 
+  protected serialize<T>(item: T): any {
+    Assert.notNull(item);
+    return this.serializer.serialize(item);
+  }
+
   private getConfigType(model: string): string {
     const typeColumn = this.getMetadata(model).getColumnMetadataByProperty(ConfigBase.TYPE_COLUMN);
     return typeColumn.options.default as string;
@@ -228,7 +233,7 @@ export class ConfigService extends ServiceCore {
       __client: config.__client,
       __version: undefined,
       description: config.description,
-      json: JSON.stringify(config)
+      json: JSON.stringify(this.serialize(config))
     };
 
     return systemConfig;
@@ -238,6 +243,6 @@ export class ConfigService extends ServiceCore {
 
   private updateSystemConfigFromConfig(systemConfig: ISystemConfig, config: ConfigBase) {
     systemConfig.description = config.description;
-    systemConfig.json = JSON.stringify(config);
+    systemConfig.json = JSON.stringify(this.serialize(config));
   }
 }
