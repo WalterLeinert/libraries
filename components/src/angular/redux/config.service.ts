@@ -17,8 +17,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import { AppConfigService, CoreService, MetadataService, Service } from '@fluxgate/client';
 import {
-  ConfigBase, FindByIdResult, FindResult, ServiceConstants, StatusFilter,
-  StatusQuery, TableService
+  ConfigBase, CreateResult, DeleteResult, FindByIdResult, FindResult, ServiceConstants, StatusFilter,
+  StatusQuery, TableService, UpdateResult
 } from '@fluxgate/common';
 import { Assert, Funktion, IToString, NotSupportedException, SelectorTerm } from '@fluxgate/core';
 
@@ -48,12 +48,9 @@ export class ConfigService<T extends ConfigBase> extends Service<T, string> {
 
         const serializedFilter = this.serialize(filter);
 
-        const params = new URLSearchParams();
-        params.set('model', this.getModelClassName());
-
         return this.http.post(`${this.getUrl()}/${ServiceConstants.FIND}`, serializedFilter, {
           ...CoreService.OPTIONS,
-          params: params
+          params: this.createParams()
         })
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: FindResult<T>) => {
@@ -66,25 +63,98 @@ export class ConfigService<T extends ConfigBase> extends Service<T, string> {
   }
 
 
-  // public findById(id: string): Observable<FindByIdResult<T, string>> {
-  //   Assert.notNull(id, 'id');
-  //   return using(new XLog(ConfigService.logger, levels.INFO, 'findById',
-  //     `[${this.getModelClassName()}]; id = ${id}`), (log) => {
+  public findById(id: string): Observable<FindByIdResult<T, string>> {
+    Assert.notNull(id, 'id');
+    return using(new XLog(ConfigService.logger, levels.INFO, 'findById',
+      `[${this.getModelClassName()}]; id = ${id}`), (log) => {
 
-  //       return this.http.get(`${this.getUrl()}/${id}`)
-  //         .map((response: Response) => this.deserialize(response.json()))
-  //         .do((result: FindByIdResult<T, string>) => {
-  //           if (log.isInfoEnabled()) {
-  //             log.log(`found [${this.getModelClassName()}]: id = ${id} -> ${JSON.stringify(result)}`);
-  //           }
-  //         })
-  //         .catch(this.handleError);
-  //     });
-  // }
+        return this.http.get(`${this.getUrl()}/${id}`, {
+          params: this.createParams()
+        })
+          .map((response: Response) => this.deserialize(response.json()))
+          .do((result: FindByIdResult<T, string>) => {
+            if (log.isInfoEnabled()) {
+              log.log(`found [${this.getModelClassName()}]: id = ${id} -> ${JSON.stringify(result)}`);
+            }
+          })
+          .catch(this.handleError);
+      });
+  }
+
+
+  public create(item: T): Observable<CreateResult<T, string>> {
+    Assert.notNull(item, 'item');
+    return using(new XLog(ConfigService.logger, levels.INFO, 'create', `[${this.getModelClassName()}]`), (log) => {
+
+      if (log.isDebugEnabled()) {
+        log.debug(`item = ${JSON.stringify(item)}`);
+      }
+
+      return this.http.post(`${this.getUrl()}/${ServiceConstants.CREATE}`, this.serialize(item), {
+        params: this.createParams()
+      })
+        .map((response: Response) => this.deserialize(response.json()))
+        .do((result: CreateResult<T, string>) => {
+          if (log.isInfoEnabled()) {
+            log.log(`created ${JSON.stringify(result)}`);
+          }
+        })
+        .catch(this.handleError);
+    });
+  }
+
+
+  public update(item: T): Observable<UpdateResult<T, string>> {
+    Assert.notNull(item, 'item');
+    return using(new XLog(Service.logger, levels.INFO, 'update',
+      `[${this.getModelClassName()}]: id ${item.id}`), (log) => {
+
+        if (log.isDebugEnabled()) {
+          log.debug(`item = ${JSON.stringify(item)}`);
+        }
+
+        return this.http.put(`${this.getUrl()}/${ServiceConstants.UPDATE}`, this.serialize(item), {
+          params: this.createParams()
+        })
+          .map((response: Response) => this.deserialize(response.json()))
+          .do((result: UpdateResult<T, string>) => {
+            if (log.isInfoEnabled()) {
+              log.log(`updated [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
+            }
+          })
+          .catch(this.handleError);
+      });
+  }
+
+  public delete(id: string): Observable<DeleteResult<string>> {
+    Assert.notNull(id, 'id');
+    return using(new XLog(Service.logger, levels.INFO, 'delete', `[${this.getModelClassName()}]: id = ${id}`),
+      (log) => {
+
+        return this.http.delete(`${this.getUrl()}/${id}`, {
+          params: this.createParams()
+        })
+          .map((response: Response) => this.deserialize(response.json()))
+          .do((result: DeleteResult<string>) => {
+            if (log.isInfoEnabled()) {
+              log.log(`deleted [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
+            }
+          })
+          .catch(this.handleError);
+      });
+  }
+
 
 
   private getConfigType(): string {
     const typeColumn = this.tableMetadata.getColumnMetadataByProperty(ConfigBase.TYPE_COLUMN);
     return typeColumn.options.default as string;
   }
+
+  private createParams(): URLSearchParams {
+    const params = new URLSearchParams();
+    params.set('model', this.getModelClassName());
+    return params;
+  }
+
 }
