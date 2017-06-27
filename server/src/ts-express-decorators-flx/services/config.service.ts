@@ -68,7 +68,9 @@ export class ConfigService extends ServiceCore {
 
         this.systemConfigService.findById<ISystemConfig>(request, ConfigBase.createId(type, id))
           .then((result) => {
-            resolve(new FindByIdResult(this.deserialize<T>(JSON.parse(result.item.json)), -1));
+            const config = this.deserialize<T>(JSON.parse(result.item.json));
+            this.updateConfigFromSystemConfig(config, result.item);
+            resolve(new FindByIdResult(config, result.entityVersion));
           });
       });
     });
@@ -107,7 +109,9 @@ export class ConfigService extends ServiceCore {
         this.systemConfigService.query(request, query)
           .then((queryResult) => {
             const result = queryResult.items.map((item) => {
-              return this.deserialize<T>(JSON.parse(item.json));
+              const config = this.deserialize<T>(JSON.parse(item.json));
+              this.updateConfigFromSystemConfig(config, item);
+              return config;
             });
             resolve(new FindResult(result, queryResult.entityVersion));
           });
@@ -155,7 +159,9 @@ export class ConfigService extends ServiceCore {
 
         this.systemConfigService.create(request, systemConfig)
           .then((result) => {
-            resolve(new CreateResult(subject, result.entityVersion));
+            const config = this.deserialize<T>(JSON.parse(result.item.json));
+            this.updateConfigFromSystemConfig(config, result.item);
+            resolve(new CreateResult(config, result.entityVersion));
           });
       });
     });
@@ -185,10 +191,11 @@ export class ConfigService extends ServiceCore {
 
               this.systemConfigService.update(request, systemConfig, trx)
                 .then((result) => {
-                  subject.__version = result.item.__version;    // Version übernehmen
+                  const config = this.deserialize<T>(JSON.parse(result.item.json));
+                  this.updateConfigFromSystemConfig(config, result.item);
 
                   trx.commit();
-                  resolve(new UpdateResult(subject, result.entityVersion));
+                  resolve(new UpdateResult(config, result.entityVersion));
                 });
             }).catch((err) => {
               trx.rollback();
@@ -209,7 +216,7 @@ export class ConfigService extends ServiceCore {
       const type = this.getConfigType(model);
 
       return new Promise<DeleteResult<string>>((resolve, reject) => {
-        return this.systemConfigService.delete(null, ConfigBase.createId(type, id))
+        return this.systemConfigService.delete(request, ConfigBase.createId(type, id))
           .then((deleteResult) => {
             const configId = deleteResult.id.replace(ConfigBase.createId(type, ''), '');
             resolve(new DeleteResult(configId, deleteResult.entityVersion));
@@ -252,9 +259,13 @@ export class ConfigService extends ServiceCore {
   }
 
 
-
   private updateSystemConfigFromConfig(systemConfig: ISystemConfig, config: ConfigBase) {
     systemConfig.description = config.description;
     systemConfig.json = JSON.stringify(this.serialize(config));
+  }
+
+  private updateConfigFromSystemConfig(config: ConfigBase, systemConfig: ISystemConfig) {
+    config.__version = systemConfig.__version;
+    config.__client = systemConfig.__client;
   }
 }

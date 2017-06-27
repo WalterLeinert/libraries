@@ -26,7 +26,7 @@ import {
   CreateResult,
   ServiceResult, SmtpConfig, StringIdGenerator, UpdateResult
 } from '@fluxgate/common';
-import { ICtor } from '@fluxgate/core';
+import { Clone, ICtor } from '@fluxgate/core';
 
 import { ConfigService } from '../../../src/ts-express-decorators-flx/services/config.service';
 
@@ -36,7 +36,7 @@ import { KnexTest } from '../knexTest.spec';
 // declare function pick<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K>;
 
 
-@suite('erste Config Tests')
+@suite('SmtpConfig Tests')
 class ConfigTest extends KnexTest<SmtpConfig, string> {
   protected static readonly logger = getLogger(ConfigTest);
 
@@ -108,9 +108,12 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
     const result = this.createExpectedConfigResult<UpdateResult<SmtpConfig, string>>(id, UpdateResult, -1);
     result.item.description = result.item.description + '-updated';
 
+    const resultCloned = Clone.clone(result);
+    resultCloned.item.__version++;
+
     return expect(this.configService.update(undefined, SmtpConfig.name, result.item)
       .then((updateResult) => updateResult.item))
-      .to.become(result.item);
+      .to.become(resultCloned.item);
   }
 
 
