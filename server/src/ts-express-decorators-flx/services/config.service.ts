@@ -125,12 +125,17 @@ export class ConfigService extends ServiceCore {
   }
 
 
+  /**
+   * Entfernt alle Testdaten (Id beginnt mit '@')
+   *
+   * @param prefix
+   */
   public deleteTestdata(
     prefix: string = '%'
   ): any {
     return this.systemConfigService
       .fromTable()
-      .where(this.systemConfigService.idColumnName, 'like', ConfigBase.createId(prefix, '%'))
+      .where(this.systemConfigService.idColumnName, 'like', ConfigBase.createId(prefix, '@%'))
       .delete();
   }
 

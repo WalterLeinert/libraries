@@ -40,7 +40,38 @@ CREATE TABLE IF NOT EXISTS `systemconfig` (
 --
 
 INSERT INTO `systemconfig` (`systemconfig_id`, `systemconfig_description`, `systemconfig_json`, `__client`, `__version`) VALUES
-('smtp', 'SMTP-Konfiguration', '  "{ mail": {\r\n    "host": "smtp.1und1.de",\r\n    "port": 465,\r\n    "ssl": true,\r\n    "user": "smtp.nodejs@fluxgate.de",\r\n    "password": "Ds43q-Vb5AKpu98-Gbnd",\r\n    "from": "smtp.nodejs@fluxgate.de"\r\n  } }', 1, 0);
+('smtp-default', 'SMTP-Konfiguration', '{
+    "__type__":"SmtpConfig",
+    "id":"default",
+    "version":0,
+    "type":"smtp",
+    "host":"smtp.1und1.de",
+    "port":465,
+    "ssl":true,
+    "user":"smtp.nodejs@fluxgate.de",
+    "password":"Ds43q-Vb5AKpu98-Gbnd",
+    "from":"smtp.nodejs@fluxgate.de",
+    "description":"SMTP-Konfiguration",
+    "__client":0,
+    "__version":0
+}', 1, 0);
+
+  INSERT INTO `systemconfig` (`systemconfig_id`, `systemconfig_description`, `systemconfig_json`, `__client`, `__version`) VALUES
+('smtp-test', 'weitere SMTP-Konfiguration', '{
+    "__type__":"SmtpConfig",
+    "id":"test",
+    "version":0,
+    "type":"smtp",
+    "host":"host-2",
+    "port":0,
+    "ssl":true,
+    "user":"user-2",
+    "password":"password-2",
+    "from":"from-1",
+    "description":"description-2",
+    "__client":0,
+    "__version":0
+}', 1, 0);
 
 --
 -- Indizes der exportierten Tabellen
