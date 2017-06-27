@@ -40,6 +40,7 @@ export abstract class Exception implements IException {
   private _nativeError: Error;
   private _message: string;
   private _innerException: IException;
+  private _displayed: boolean;
 
   protected constructor(private _kind: string, message: string, innerException?: IException | Error) {
     if (message === undefined) {
@@ -95,6 +96,14 @@ export abstract class Exception implements IException {
 
   public get innerException(): IException {
     return this._innerException;
+  }
+
+  public get displayed(): boolean {
+    return this._displayed;
+  }
+
+  public set displayed(value: boolean) {
+    this._displayed = value;
   }
 
 }

@@ -7,7 +7,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { MessageService } from '@fluxgate/client';
-import { MessageSeverity, ServerBusinessException } from '@fluxgate/core';
+import { Exception, MessageSeverity, ServerBusinessException } from '@fluxgate/core';
 
 
 export interface ILoggingErrorHandlerOptions {
@@ -34,6 +34,12 @@ export class ApplicationErrorHandler extends ErrorHandler {
     using(new XLog(ApplicationErrorHandler.logger, levels.INFO, 'handleError'), (log) => {
       if (log.isDebugEnabled()) {
         log.debug(error as any);
+      }
+
+      if (error instanceof Exception) {
+        if (error.displayed) {
+          return;
+        }
       }
 
       this.messageService.addMessage({
