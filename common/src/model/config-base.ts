@@ -1,3 +1,5 @@
+import { StringBuilder } from '@fluxgate/core';
+
 import { Column } from '../model/decorator/column';
 import { IdColumn } from '../model/decorator/id-column';
 import { Table } from '../model/decorator/table';
@@ -69,6 +71,14 @@ export abstract class ConfigBase extends FlxEntity<string> {
   @Column({ displayName: 'Version', nullable: true })
   public version?: number = 1;
 
+
+  @Column({ displayName: 'Name', persisted: false })
+  public get name(): string {
+    const sb = new StringBuilder(this.type);
+    sb.append(', ');
+    sb.append(this.id);
+    return sb.toString();
+  }
 
   public static createId(type: string, id: string): string {
     return `${type}-${id}`;
