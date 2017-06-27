@@ -32,13 +32,4 @@ export class SmtpConfigService extends ConfigService<SmtpConfig> {
     super(metadataService, http, configService, SmtpConfig);
   }
 
-
-  public findById(id: string): Observable<FindByIdResult<SmtpConfig, string>> {
-    return super.findById(ConfigBase.createId(SmtpConfig.TYPE, id));
-  }
-
-  public find(filter?: StatusFilter): Observable<FindResult<ConfigBase>> {
-    return super.findByType(SmtpConfig.TYPE, filter);
-  }
-
 }

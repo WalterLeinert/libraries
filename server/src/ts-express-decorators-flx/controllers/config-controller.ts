@@ -1,4 +1,4 @@
-import { Authenticated, Controller, PathParams, Request } from 'ts-express-decorators';
+import { Authenticated, Controller, PathParams, QueryParams, Request } from 'ts-express-decorators';
 
 // Fluxgate
 import {
@@ -34,7 +34,7 @@ export class ConfigController extends ControllerCore {
   @CreateMethod()
   public create(
     @Request() request: IBodyRequest<ConfigBase>,
-    @PathParams('model') model: string
+    @QueryParams('model') model: string
     ): Promise<CreateResult<ConfigBase, string>> {
     return Promise.resolve()
       .then(() => this.deserialize<ConfigBase>(request.body))
@@ -47,7 +47,7 @@ export class ConfigController extends ControllerCore {
   @FindMethod()
   public find(
     @Request() request: IBodyRequest<StatusFilter>,
-    @PathParams('model') model: string
+    @QueryParams('model') model: string
     ): Promise<FindResult<ConfigBase>> {
     return Promise.resolve()
       .then(() => this.deserialize<StatusFilter>(request.body))
@@ -60,7 +60,7 @@ export class ConfigController extends ControllerCore {
   @FindByIdMethod()
   public findById(
     @Request() request: ISessionRequest,
-    @PathParams('model') model: string,
+    @QueryParams('model') model: string,
     @PathParams('id') id: string
     ): Promise<FindByIdResult<ConfigBase, string>> {
     return Promise.resolve()

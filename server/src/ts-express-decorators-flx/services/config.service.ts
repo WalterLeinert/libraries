@@ -89,7 +89,14 @@ export class ConfigService extends ServiceCore {
     Promise<FindResult<T>> {
     return using(new XLog(ConfigService.logger, levels.INFO, 'find', `[${model}]`), (log) => {
       return new Promise<FindResult<T>>((resolve, reject) => {
-        const type = this.getConfigType(model);
+        let type = this.getConfigType(model);
+
+        // falls die übergebene Modelklasse 'ConfigBase' (Basisklasse) ist, sollen alle
+        // Configurationseinträge geliefert werden -> type = '%' -> Suche '... like %-% ...'
+        const metadata = this.getMetadata(model);
+        if (metadata.className === ConfigBase.name) {
+          type = '%';
+        }
 
         const query = new StatusQuery(new SelectorTerm({
           name: 'id',
