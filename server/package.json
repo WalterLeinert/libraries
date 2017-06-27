@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/server",
-  "version": "2.2.7-beta.36",
+  "version": "2.2.7",
   "description": "Fluxgate Server-Library ",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -49,15 +49,15 @@
     "morgan": "^1.8.1",
     "ts-loader": "2.0.3",
     "tslint": "^4.5.1",
-    "typescript": "^2.2.2",
+    "typescript": "2.3.3",
     "webpack": "^2.2.1",
     "webpack-fail-plugin": "^1.0.5",
     "yargs": "^7.0.2"
   },
   "dependencies": {
-    "@fluxgate/common": "2.2.7-beta.15",
-    "@fluxgate/core": "2.2.7-beta.1",
-    "@fluxgate/platform": "2.2.7-beta.1",
+    "@fluxgate/common": "2.2.7",
+    "@fluxgate/core": "2.2.7",
+    "@fluxgate/platform": "2.2.7",
     "emailjs": "^1.0.8",
     "express": "^4.15.2",
     "js-shortid": "^0.1.1",
@@ -72,9 +72,9 @@
     "ts-express-decorators": "1.4.6"
   },
   "peerDependencies": {
-    "@fluxgate/common": ">=2.2.7-beta.0",
-    "@fluxgate/core": ">=2.2.7-beta.0",
-    "@fluxgate/platform": ">=2.2.7-beta.0"
+    "@fluxgate/common": ">=2.2.7",
+    "@fluxgate/core": ">=2.2.7",
+    "@fluxgate/platform": ">=2.2.7"
   },
   "directories": {
     "lib": "lib"

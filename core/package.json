@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/core",
-  "version": "2.2.7-beta.1",
+  "version": "2.2.7",
   "description": "Fluxgate Library Core",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -37,7 +37,7 @@
     "mocha-typescript": "^1.0.18",
     "ts-loader": "^2.0.1",
     "tslint": "^4.5.1",
-    "typescript": "^2.2.2",
+    "typescript": "2.3.3",
     "yargs": "^7.0.2"
   },
   "dependencies": {
