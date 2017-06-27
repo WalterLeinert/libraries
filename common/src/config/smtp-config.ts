@@ -1,5 +1,6 @@
 import { ConfigBase } from '../model/config-base';
 import { Column } from '../model/decorator/column';
+import { Secret } from '../model/decorator/secret';
 import { Table } from '../model/decorator/table';
 
 @Table()
@@ -26,6 +27,7 @@ export class SmtpConfig extends ConfigBase {
   @Column({ displayName: 'User' })
   public user: string;
 
+  @Secret()
   @Column({ displayName: 'Password' })
   public password: string;
 

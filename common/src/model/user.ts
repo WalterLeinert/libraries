@@ -4,6 +4,7 @@ import { AppRegistry } from '../base/appRegistry';
 import { Column } from '../model/decorator/column';
 import { Enum } from '../model/decorator/enum';
 import { IdColumn } from '../model/decorator/id-column';
+import { Secret } from '../model/decorator/secret';
 import { Table } from '../model/decorator/table';
 import { Validation } from '../model/decorator/validation';
 import { FlxStatusEntity } from '../model/flx-status-entity';
@@ -64,12 +65,13 @@ export class User extends FlxStatusEntity<number> implements IUser {
     Validators.required,
     Validators.range({ min: 8 })
   ])
+  @Secret()
   @Column({ name: 'user_password', displayName: 'Password' })
   public password: string;
 
+  // @Secret(): TODO: muss für mehr als eine Spalte zulässig sein.
   @Column({ name: 'user_password_salt' })
   public password_salt: string;
-
 
 
   @Column({ displayName: 'Name', persisted: false })

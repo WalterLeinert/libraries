@@ -67,7 +67,7 @@ export abstract class TableMetadata extends ClassMetadata {
   }
 
 
-  public setSpecialColumn(propertyName: string, key: SpecialColumns) {
+  public   setSpecialColumn(propertyName: string, key: SpecialColumns) {
     Assert.notNullOrEmpty(propertyName);
     Assert.that(!this._specialColMap.containsKey(key),
       `${key} darf nur einmal gesetzt sein: bereits gesetzt für ${propertyName}`);
@@ -266,6 +266,13 @@ export abstract class TableMetadata extends ClassMetadata {
    */
   public get statusColumn(): ColumnMetadata {
     return this.getColumnMetadataByProperty(EntityStatusHelper.PROPERTY_NAME_STATUS);
+  }
+
+  /**
+   * Liefert die Secret Column oder undefined
+   */
+  public get secretColumn(): ColumnMetadata {
+    return this._specialColMap.get(SpecialColumns.SECRET);
   }
 
   /**

@@ -5,6 +5,7 @@ export * from './enum';
 export * from './enumTable';
 export * from './enumTableOptions.interface';
 export * from './id-column';
+export * from './secret';
 export * from './status-column';
 export * from './table';
 export * from './tableOptions.interface';
