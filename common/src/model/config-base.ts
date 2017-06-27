@@ -74,10 +74,7 @@ export abstract class ConfigBase extends FlxEntity<string> {
 
   @Column({ displayName: 'Name', persisted: false })
   public get name(): string {
-    const sb = new StringBuilder(this.type);
-    sb.append(', ');
-    sb.append(this.id);
-    return sb.toString();
+    return ConfigBase.createId(this.type, this.id);
   }
 
   public static createId(type: string, id: string): string {
