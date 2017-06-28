@@ -25,117 +25,107 @@ import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/
 @Component({
   selector: 'flx-autoform',
   template: `
-<p-dialog [(visible)]="dataItem" [header]="pageTitle" (onHide)="onBeforeDialogHide($event)" [responsive]="true" showEffect="fade"
-  [modal]="true" width="600">
-  <div class="container-fluid">
-    <form *ngIf="dataItem" class="form-horizontal" [formGroup]="getForm()">
+<div class="container-fluid">
+  <form *ngIf="dataItem" class="form-horizontal" [formGroup]="getForm()">
 
-      <div *ngIf="configInternal && configInternal.columnInfos">
-        <ul *ngFor="let info of configInternal.columnInfos">
+    <div *ngIf="configInternal && configInternal.columnInfos">
+      <ul *ngFor="let info of configInternal.columnInfos">
 
-          <!--
-          normale Text-/Eingabefelder
-          -->
-          <div *ngIf="info.controlType === controlType.Input">
-            <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+        <!--
+        normale Text-/Eingabefelder
+        -->
+        <div *ngIf="info.controlType === controlType.Input">
+          <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+            <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
-              <div class="col-sm-10">
-                <input flxAutofocus type="text" class="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
-                  [required]="info.required" [readonly]="isReadonly(info)"
-                  [style.color]="getColor(dataItem, info)"
-                >
-              </div>
-
-              <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-                {{ getFormErrors(info.valueField) }}
-              </div>
-
+            <div class="col-sm-10">
+              <input flxAutofocus type="text" class="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
+                [required]="info.required" [readonly]="isReadonly(info)"
+                [style.color]="getColor(dataItem, info)"
+              >
             </div>
-          </div>
 
-          <!--
-          Datumsfelder
-          -->
-          <div *ngIf="info.controlType === controlType.Date">
-            <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
-
-              <div class="col-sm-10">
-                <p-calendar inputStyleClass="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
-                  [required]="info.required" [readonlyInput]="isReadonly(info)"
-                  dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
-                </p-calendar>
-              </div>
-
-              <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-                {{ getFormErrors(info.valueField) }}
-              </div>
-
+            <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+              {{ getFormErrors(info.valueField) }}
             </div>
+
           </div>
-
-          <!--
-          Zeitfelder:
-          -->
-          <div *ngIf="info.controlType === controlType.Time">
-            <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
-
-              <div class="col-sm-10">
-                <flx-time-selector inputStyleClass="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
-                  [required]="info.required" [readonly]="isReadonly(info)"
-                  [style.color]="getColor(dataItem, info)">
-                </flx-time-selector>
-              </div>
-
-              <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-                {{ getFormErrors(info.valueField) }}
-              </div>
-
-            </div>
-          </div>
-
-
-          <!--
-          Dropdown/Wertelisten:
-          -->
-          <div *ngIf="info.controlType === controlType.DropdownSelector">
-            <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-              <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
-
-              <div class="col-sm-10">
-                <flx-dropdown-selector inputStyleClass="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
-                  [required]="info.required" [readonly]="isReadonly(info)"
-                  [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
-                  [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
-                  [style]="{'width':'100%'}"
-                  [style.color]="getColor(dataItem, info)"
-                  [debug]="false">
-                </flx-dropdown-selector>
-              </div>
-
-              <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-                {{ getFormErrors(info.valueField) }}
-              </div>
-
-            </div>
-          </div>
-
-        </ul>
-      </div>
-
-      <p-footer>
-        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-            <button type="button" class="btn btn-primary" (click)='cancel()'>Cancel</button>
-            <button type="button" class="btn btn-primary" [disabled]="isSaveDisabled()" (click)='submit()'>Save</button>
-            <button type="button" class="btn btn-primary" (click)='confirmDelete()'>Delete</button>
         </div>
-      </p-footer>
-    </form>
-  </div>
-  <flx-confirmation-dialog></flx-confirmation-dialog>
-</p-dialog>
+
+        <!--
+        Datumsfelder
+        -->
+        <div *ngIf="info.controlType === controlType.Date">
+          <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+            <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+
+            <div class="col-sm-10">
+              <p-calendar inputStyleClass="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
+                [required]="info.required" [readonlyInput]="isReadonly(info)"
+                dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
+              </p-calendar>
+            </div>
+
+            <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+              {{ getFormErrors(info.valueField) }}
+            </div>
+
+          </div>
+        </div>
+
+        <!--
+        Zeitfelder:
+        -->
+        <div *ngIf="info.controlType === controlType.Time">
+          <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+            <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+
+            <div class="col-sm-10">
+              <flx-time-selector inputStyleClass="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
+                [required]="info.required" [readonly]="isReadonly(info)"
+                [style.color]="getColor(dataItem, info)">
+              </flx-time-selector>
+            </div>
+
+            <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+              {{ getFormErrors(info.valueField) }}
+            </div>
+
+          </div>
+        </div>
+
+
+        <!--
+        Dropdown/Wertelisten:
+        -->
+        <div *ngIf="info.controlType === controlType.DropdownSelector">
+          <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+            <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+
+            <div class="col-sm-10">
+              <flx-dropdown-selector inputStyleClass="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
+                [required]="info.required" [readonly]="isReadonly(info)"
+                [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
+                [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
+                [style]="{'width':'100%'}"
+                [style.color]="getColor(dataItem, info)"
+                [debug]="false">
+              </flx-dropdown-selector>
+            </div>
+
+            <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+              {{ getFormErrors(info.valueField) }}
+            </div>
+
+          </div>
+        </div>
+
+      </ul>
+    </div>
+
+
+  </form>
+</div>
 `,
   styles: [`
 .ng-valid[required], .ng-valid.required  {
@@ -151,8 +141,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   protected static readonly logger = getLogger(AutoformComponent);
 
   public static DETAILS = 'Details';
-
-  public pageTitle: string = AutoformComponent.DETAILS;
 
 
   /**
@@ -178,11 +166,16 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
 
   /**
-   * Name der Klasse des angebundenen Objekts (z.B. 'Artikel')
+   * Die durchzuführende Aktion (creae, edit, etc.)
    *
-   * @type {string}
+   * @private
+   * @type {FormAction}
+   * @memberOf AutoformComponent
    */
-  @Input() public entityName: string = '';
+  @Input() public action: FormAction;
+
+
+  @Input() public skipNgOnInit: boolean = false;
 
 
   // >> Konfiguration
@@ -216,15 +209,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
    */
   public dataItem: any;
 
-  /**
-   * Die durchzuführende Aktion (creae, edit, etc.)
-   *
-   * @private
-   * @type {FormAction}
-   * @memberOf AutoformComponent
-   */
-  private action: FormAction;
-
 
   constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService, private injector: Injector,
     private metadataService: MetadataService) {
@@ -243,92 +227,41 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     using(new XLog(AutoformComponent.logger, levels.INFO, 'ctor'), (log) => {
       super.ngOnInit();
 
-      this.route.data.subscribe((data: IDataFormAction) => {
-        log.log(`data = ${JSON.stringify(data)}`);
+      if (!this.skipNgOnInit) {
 
-        Assert.notNull(data);
+        this.route.data.subscribe((data: IDataFormAction) => {
+          log.log(`data = ${JSON.stringify(data)}`);
 
-        if (Utility.isNullOrEmpty(data.action) || Utility.isNullOrEmpty(data.resolverKey)) {
-          if (Utility.isNullOrEmpty(data.action)) {
-            log.warn(`data.action is empty`);
+          Assert.notNull(data);
+
+          if (Utility.isNullOrEmpty(data.action) || Utility.isNullOrEmpty(data.resolverKey)) {
+            if (Utility.isNullOrEmpty(data.action)) {
+              log.warn(`data.action is empty`);
+            }
+            if (Utility.isNullOrEmpty(data.resolverKey)) {
+              log.warn(`data.resolverKey is empty`);
+            }
+
+          } else {
+            Assert.notNullOrEmpty(data.action);
+            Assert.notNullOrEmpty(data.resolverKey);
+
+            this.action = data.action;
+
+            const value = data[data.resolverKey];
+            Assert.notNull(value);
+
+            this.value = value;
+
+            this.initForm(this.value);
           }
-          if (Utility.isNullOrEmpty(data.resolverKey)) {
-            log.warn(`data.resolverKey is empty`);
-          }
-
-        } else {
-          Assert.notNullOrEmpty(data.action);
-          Assert.notNullOrEmpty(data.resolverKey);
-
-          this.action = data.action;
-
-          const value = data[data.resolverKey];
-          Assert.notNull(value);
-
-          this.value = value;
-
-          Assert.notNull(value.constructor);
-          this.entityName = value.constructor.name;
-
-          this.setupProxy(this.entityName);
-
-          // FormBuilder erzeugen
-          this.buildForm(this.fb, this.value, this.configInternal.columnInfos, this.metadataService.findTableMetadata(this.entityName));
-        }
-      });
-    });
-  }
-
-
-  /**
-   * Handler für das Schliessen über ESC oder close-icon
-   */
-  public onBeforeDialogHide() {
-    this.closePopup();
-  }
-
-
-  /**
-   * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
-   */
-  public cancel(): void {
-    this.closePopup();
-  }
-
-
-  /**
-   * Speichert Änderungen an der Entity
-   */
-  public submit() {
-    if (this.action === FormActions.UPDATE) {
-      this.registerSubscription(this.serviceRequests.update(this.value).subscribe(
-        (value: any) => {
-          // -> onStoreUpdated
-        }));
-    } else if (this.action === FormActions.CREATE) {
-      this.registerSubscription(this.serviceRequests.create(this.value).subscribe(
-        (value: any) => {
-          // -> onStoreUpdated
-        }));
-    } else {
-      throw new NotSupportedException(`invalid action: ${this.action}`);
-    }
-  }
-
-
-  public confirmDelete() {
-    using(new XLog(AutoformComponent.logger, levels.INFO, 'confirmDelete'), (log) => {
-
-      if (confirm('Do you want to delete this record?')) {
-        this.deleteItem(this.value);
+        });
+      } else {
+        this.initForm(this.value);
       }
-
-      // this.confirmAction({
-      //   header: 'Delete',
-      //   message: 'Do you want to delete this record?'
-      // }, () => this.delete());
     });
   }
+
 
 
   /**
@@ -372,10 +305,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     return undefined;
   }
 
-  public isSaveDisabled(): boolean {
-    return !(this.hasChanges() && this.isValid());
-  }
-
 
   // -------------------------------------------------------------------------------------
   // Property config
@@ -388,24 +317,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     this._config = config;
     this.initBoundData(this.dataItem, this.getMetadataForValue(this.value));
   }
-
-
-  protected onStoreUpdated<T>(command: ServiceCommand<T>): void {
-    using(new XLog(AutoformComponent.logger, levels.INFO, 'onStoreUpdated'), (log) => {
-      super.onStoreUpdated(command);
-
-      const state = super.getStoreState(command.storeId);
-      if (state.error) {
-        this.doClose(true);
-      } else {
-        if (command instanceof ItemCreatedCommand || command instanceof ItemDeletedCommand || command instanceof ItemUpdatedCommand) {
-          this.resetFormGroup(this.value);
-          this.doClose(false);
-        }
-      }
-    });
-  }
-
 
 
   // -------------------------------------------------------------------------------------
@@ -448,70 +359,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       const store = this.injector.get(APP_STORE) as Store;
       const serviceRequests = tableMetadata.getServiceRequestsInstance(this.injector, store);
       this.setServiceRequests(serviceRequests);
-    });
-  }
-
-
-  /**
-   * Schliesst Autoform, falls keine ungespeicherten Änderungen vorliegen bzw. das Schliessen bestätigt wurde.
-   *
-   * @private
-   *
-   * @memberof AutoformComponent
-   */
-  private closePopup() {
-    if (this.hasChanges()) {
-
-      if (confirm('You have unsaved changes: OK to discard?')) {
-        this.doClose(true);
-      }
-
-      // this.confirmAction({
-      //   header: 'Unsaved Changes',
-      //   message: 'You have unsaved changes: OK to discard?'
-      // }, () =>
-      //     this.doClose(true)
-      // );
-    } else {
-      this.doClose(false);
-    }
-  }
-
-
-  /**
-   * Schliesst Autoform, indem auf die vorherige Seite navigiert wird.
-   *
-   * @private
-   * @param {boolean} formResetRequired - falls true, wird ein resetFormGroup durchgeführt,
-   * damit nicht ein GuardService die Navigation verhindert.
-   *
-   * @memberof AutoformComponent
-   */
-  private doClose(formResetRequired: boolean) {
-    using(new XLog(AutoformComponent.logger, levels.INFO, 'doClose', `formResetRequired = ${formResetRequired}, action = ${this.action}`), (log) => {
-      let navigationPath: string;
-
-      if (formResetRequired) {
-        // weitere Abfragen unterdrücken
-        this.resetFormGroup(this.value);
-      }
-
-      switch (this.action) {
-        // die Navigation für create hat keine Id im Pfad (.../create)
-        case FormActions.CREATE:
-          navigationPath = '..';
-          break;
-
-        case FormActions.UPDATE:
-          // die Navigation für update hat eine Id im Pfad (.../update/:id)
-          navigationPath = '../..';
-          break;
-
-        default:
-          throw new NotSupportedException(`unsupported action ${this.action}`);
-      }
-
-      this.navigate([navigationPath, { refresh: !formResetRequired }], { relativeTo: this.route });
     });
   }
 
@@ -572,6 +419,17 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       }
 
     });
+  }
+
+  private initForm(value: any) {
+    Assert.notNull(value);
+    Assert.notNull(value.constructor);
+    const entityName = value.constructor.name;
+
+    this.setupProxy(entityName);
+
+    // FormBuilder erzeugen
+    this.buildForm(this.fb, this.value, this.configInternal.columnInfos, this.metadataService.findTableMetadata(entityName));
   }
 
 }

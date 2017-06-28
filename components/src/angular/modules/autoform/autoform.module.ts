@@ -16,6 +16,7 @@ import { ConfirmationDialogModule } from '../common/confirmation-dialog/confirma
 import { AutofocusModule } from '../directives/autofocus.directive';
 import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
 import { TimeSelectorModule } from '../time-selector/time-selector.module';
+import { AutoformDialogComponent } from './autoform-dialog.component';
 import { AutoformComponent } from './autoform.component';
 
 
@@ -40,10 +41,12 @@ import { AutoformComponent } from './autoform.component';
     ConfirmationDialogModule
   ],
   exports: [
-    AutoformComponent
+    AutoformComponent,
+    AutoformDialogComponent
   ],
   declarations: [
-    AutoformComponent
+    AutoformComponent,
+    AutoformDialogComponent
   ],
   providers: [
     MessageService,

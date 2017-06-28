@@ -6,7 +6,7 @@ export {
   LoginComponent, LogoffComponent, PassportService, RegisterComponent
 } from './angular/modules/authentication';
 
-export { AutoformComponent, AutoformModule } from './angular/modules/autoform';
+export { AutoformComponent, AutoformDialogComponent, AutoformModule } from './angular/modules/autoform';
 
 export {
   ApplicationErrorHandler, ConfirmationDialogComponent, ILoggingErrorHandlerOptions,
