@@ -3,9 +3,10 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, Dictionary, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
+import { Assert, Dictionary, Funktion, InvalidOperationException, IToString, Types } from '@fluxgate/core';
 
 import { EntityStatus } from './../entity-status';
+import { IEntity } from './../entity.interface';
 import { CompoundValidator } from './../validation/compoundValidator';
 import { Validator } from './../validation/validator';
 
@@ -198,7 +199,7 @@ export class MetadataStorage {
           // alle speziellen Columns prüfen (primaryKey, version, client)
           //
           baseTableMetadata.specialColumnKeys.forEach((specialColKey) => {
-            const baseSpecialCol = baseTableMetadata.getSpecialColumn(specialColKey);
+            const baseSpecialCol = baseTableMetadata.getSpecialColumn(specialColKey.item1, specialColKey.item2);
 
             const specialCol = metadata.getColumnMetadataByDbCol(baseSpecialCol.options.name);
 
@@ -243,12 +244,12 @@ export class MetadataStorage {
           // alle speziellen vererbten Columns setzen (primaryKey, version, client)
           //
           baseTableMetadata.specialColumnKeys.forEach((specialColKey) => {
-            const baseSpecialCol = baseTableMetadata.getSpecialColumn(specialColKey);
+            const baseSpecialCol = baseTableMetadata.getSpecialColumn(specialColKey.item1, specialColKey.item2);
 
             // falls spezial Column noch nicht gesetzt, diese setzen
             // (Hinweis: die primaryKey-Column wird beim Vererben gesetzt)
-            if (!metadata.getSpecialColumn(specialColKey)) {
-              metadata.setSpecialColumn(baseSpecialCol.propertyName, specialColKey);
+            if (!metadata.getSpecialColumn(specialColKey.item1, specialColKey.item2)) {
+              metadata.setSpecialColumn(baseSpecialCol.propertyName, specialColKey.item1);
             }
           });
 
@@ -386,6 +387,40 @@ export class MetadataStorage {
   public findTableMetadataByDbTable(tableName: string): TableMetadata {
     Assert.notNullOrEmpty(tableName);
     return this.dbTableDict.get(tableName);
+  }
+
+
+  /**
+   * Setzt in der Entity @param{subject} alle secret Properties auf den Wert @param{value} (default: undefined).
+   * Ist subject keine @see{Entity} (d.h. nicht beim MetadataStorage registriert), wird eine Warnung ausgegeben.
+   *
+   * @template T
+   * @template TId
+   * @param {T} entity
+   * @memberof MetadataStorage
+   */
+  public resetSecrets(subject: any, value?: any) {
+    using(new XLog(MetadataStorage.logger, levels.INFO, 'resetSecrets', `value = ${value}`), (log) => {
+      Assert.notNull(subject);
+
+      const ctor = Types.getConstructor(subject);
+      const metadata = this.findTableMetadata(ctor);
+
+      if (metadata) {
+        metadata.columnMetadata.forEach((colMetadata) => {
+          if (metadata.getSecretColumn(colMetadata.propertyName)) {
+            subject[colMetadata.propertyName] = value;
+          }
+        });
+
+        if (log.isDebugEnabled()) {
+          log.debug(`subject after resetSecrets: ${JSON.stringify(subject)}`);
+        }
+
+      } else {
+        log.warn(`subject no registered entity: ${ctor.name} -> ${JSON.stringify(subject)}`);
+      }
+    });
   }
 
 

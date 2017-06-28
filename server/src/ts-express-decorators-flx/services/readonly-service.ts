@@ -91,9 +91,7 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
                   // die Passwort-Info zurückgesetzt
                   //
                   const logResult = this.createModelInstance(Clone.clone(rows[0]));
-                  if (Types.hasMethod(logResult, 'resetCredentials')) {
-                    (logResult as any as IUser).resetCredentials();
-                  }
+                  this.metadataService.resetSecrets(logResult);
 
                   log.debug('result = ', logResult);
                 }

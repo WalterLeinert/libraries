@@ -53,4 +53,18 @@ export class MetadataService {
   public findConverter<T1, T2>(type: string | Funktion): IConverter<T1, T2> {
     return ConverterRegistry.get<T1, T2>(type);
   }
+
+  /**
+   * Setzt in der Entity @param{subject} alle secret Properties auf den Wert @param{value} (default: undefined).
+   * Ist subject keine @see{Entity} (d.h. nicht beim MetadataStorage registriert), wird eine Warnung ausgegeben.
+   *
+   * @template T
+   * @template TId
+   * @param {any} subject
+   * @param {any} [value]
+   * @memberof MetadataStorage
+   */
+  public resetSecrets(subject: any, value?: any) {
+    return MetadataStorage.instance.resetSecrets(subject, value);
+  }
 }

@@ -7,7 +7,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  AppConfig, EntityStatus, EntityVersion, FilterBehaviour, FindResult, IStatusQuery, IUser, ProxyModes, QueryResult,
+  AppConfig, Entity, EntityStatus, EntityVersion, FilterBehaviour, FindResult, IStatusQuery,
+  IUser, ProxyModes, QueryResult,
   ServiceResult, StatusFilter, TableMetadata, User
 } from '@fluxgate/common';
 import {
@@ -49,15 +50,15 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    *
    * @memberOf ServiceBase
    */
-  constructor(table: Funktion, private _knexService: KnexService, metadataService: MetadataService) {
+  constructor(table: Funktion, private _knexService: KnexService, private _metadataService: MetadataService) {
     super();
     Assert.notNull(table);
     Assert.notNull(_knexService);
-    Assert.notNull(metadataService);
+    Assert.notNull(_metadataService);
 
-    this._metadata = metadataService.findTableMetadata(table);
-    this._entityVersionMetadata = metadataService.findTableMetadata(EntityVersion);
-    this._userMetadata = metadataService.findTableMetadata(User);
+    this._metadata = _metadataService.findTableMetadata(table);
+    this._entityVersionMetadata = _metadataService.findTableMetadata(EntityVersion);
+    this._userMetadata = _metadataService.findTableMetadata(User);
   }
 
 
@@ -101,9 +102,10 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
                   // die Passwort-Info zurückgesetzt
                   //
                   if (logResult.length > 0) {
-                    if (Types.hasMethod(logResult[0], 'resetCredentials')) {
-                      logResult.forEach((item) => (item as any as IUser).resetCredentials());
+                    if (logResult[0] instanceof Entity) {
+                      logResult.forEach((item) => this._metadataService.resetSecrets(item));
                     }
+
                   }
                   log.debug('result = ', logResult);
                 }
@@ -194,7 +196,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
                   //
                   if (logResult.length > 0) {
                     if (Types.hasMethod(logResult[0], 'resetCredentials')) {
-                      logResult.forEach((item) => (item as any as IUser).resetCredentials());
+                      logResult.forEach((item) => this._metadataService.resetSecrets(item));
                     }
                   }
                   log.debug('result = ', logResult);
@@ -326,6 +328,10 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    */
   public get tableName(): string {
     return this.metadata.tableName;
+  }
+
+  public get metadataService(): MetadataService {
+    return this._metadataService;
   }
 
   public get metadata(): TableMetadata {

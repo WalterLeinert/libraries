@@ -36,7 +36,7 @@ export class UserService extends BaseService<IUser, number> {
     return new Promise<FindByIdResult<IUser, number>>((resolve, reject) => {
       super.findById<IUser>(request, id)
         .then((result) => {
-          result.item.resetCredentials();
+          this.metadataService.resetSecrets(result.item);
           resolve(result);
         })
         .catch((err) => {
@@ -50,7 +50,7 @@ export class UserService extends BaseService<IUser, number> {
       super.find(request)
         .then((result) => {
           result.items.forEach((user) => {
-            user.resetCredentials();
+            this.metadataService.resetSecrets(user);
           });
           resolve(result);
         })
@@ -67,7 +67,7 @@ export class UserService extends BaseService<IUser, number> {
     return new Promise<UpdateResult<IUser, number>>((resolve, reject) => {
       super.update(request, user)
         .then((result) => {
-          result.item.resetCredentials();
+          this.metadataService.resetSecrets(result.item);
           resolve(result);
         })
         .catch((err) => {
@@ -100,7 +100,7 @@ export class UserService extends BaseService<IUser, number> {
         user.password = encryptedPassword;
 
         super.create(request, user).then((result) => {
-          result.item.resetCredentials();
+          this.metadataService.resetSecrets(result.item);
           resolve(result);
         });
       });
@@ -130,7 +130,7 @@ export class UserService extends BaseService<IUser, number> {
         user.password = encryptedPassword;
 
         super.update(request, user).then((result) => {
-          result.item.resetCredentials();
+          this.metadataService.resetSecrets(result.item);
           resolve(result);
         });
       });
@@ -199,7 +199,7 @@ export class UserService extends BaseService<IUser, number> {
                     }
 
                     if (encryptedPassword === user.password) {
-                      user.resetCredentials();
+                      this.metadataService.resetSecrets(user);
                       log.log('user: ', user);
                       resolve(user);
                     } else {
@@ -249,7 +249,7 @@ export class UserService extends BaseService<IUser, number> {
               resolve(undefined);
             } else {
               const user = result.items[0];
-              user.resetCredentials();
+              this.metadataService.resetSecrets(user);
               log.log('user: ', user);
               resolve(user);
             }
@@ -342,7 +342,7 @@ export class UserService extends BaseService<IUser, number> {
               }
 
               if (encryptedPassword === user.password) {
-                user.resetCredentials();
+                this.metadataService.resetSecrets(user);
 
                 log.log('user: ', user);
                 resolve(user);

@@ -69,7 +69,7 @@ export class User extends FlxStatusEntity<number> implements IUser {
   @Column({ name: 'user_password', displayName: 'Password' })
   public password: string;
 
-  // @Secret(): TODO: muss für mehr als eine Spalte zulässig sein.
+  @Secret()
   @Column({ name: 'user_password_salt' })
   public password_salt: string;
 
@@ -92,17 +92,6 @@ export class User extends FlxStatusEntity<number> implements IUser {
     this.username = username;
     this.role = role;
     this.lastname = lastname;
-  }
-
-
-  /**
-   * Setzt Passwort und Salt zurück
-   *
-   * @memberOf User
-   */
-  public resetCredentials() {
-    this.password = undefined;
-    this.password_salt = undefined;
   }
 
 

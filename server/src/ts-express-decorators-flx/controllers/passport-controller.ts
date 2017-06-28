@@ -8,10 +8,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { ExceptionWrapper, IUser, User } from '@fluxgate/common';
+import { ExceptionWrapper, IUser, TableMetadata, User } from '@fluxgate/common';
 import { IException } from '@fluxgate/core';
 
 import { Messages } from '../../resources/messages';
+import { MetadataService } from '../services/metadata.service';
 import { PassportLocalService } from '../services/passportLocal.service';
 import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
@@ -28,8 +29,7 @@ export class PassportController extends ControllerCore {
   protected static logger = getLogger(PassportController);
 
 
-
-  constructor(passportLocalService: PassportLocalService) {
+  constructor(passportLocalService: PassportLocalService, private metadataService: MetadataService) {
     super(passportLocalService);
 
     passportLocalService.initLocalSignup();
@@ -73,7 +73,7 @@ export class PassportController extends ControllerCore {
                   return reject(loginErr);
                 }
 
-                user.resetCredentials();
+                this.metadataService.resetSecrets(user);
                 resolve(this.serialize(user));
               });
 

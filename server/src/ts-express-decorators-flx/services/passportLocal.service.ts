@@ -8,7 +8,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IUser } from '@fluxgate/common';
+import { IUser, TableMetadata, User } from '@fluxgate/common';
 
 import { Messages } from '../../resources/messages';
 import { IBodyRequest } from '../session/body-request.interface';
@@ -164,7 +164,7 @@ export class PassportLocalService extends ServiceCore {
           // Create new User
           this.userService.create(request, request.body as IUser)
             .then((result) => {
-              result.item.resetCredentials();
+              this.metadataService.resetSecrets(result.item);
 
               log.log(`user created: ${result}`);
               done(null, result);
@@ -200,7 +200,7 @@ export class PassportLocalService extends ServiceCore {
                 // Create new User
                 this.userService.changePassword(request, user)
                   .then((result) => {
-                    result.item.resetCredentials();
+                    this.metadataService.resetSecrets(result.item);
 
                     log.log(`user updated: ${result}`);
                     done(null, result);

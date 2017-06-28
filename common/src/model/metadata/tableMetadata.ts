@@ -3,19 +3,23 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { Assert, ClassMetadata, Dictionary, Funktion, IToString } from '@fluxgate/core';
+import { Assert, ClassMetadata, Dictionary, Funktion, IToString, Tuple, Types } from '@fluxgate/core';
 
 import { ICrudServiceRequests } from '../../redux/service-requests/crud-service-requests.interface';
 import { EnumTableServiceRequests } from '../../redux/service-requests/enum-table-service-requests';
 import { Store } from '../../redux/store/store';
 import { EnumTableOptions } from '../decorator/enumTableOptions';
 import { TableOptions } from '../decorator/tableOptions.interface';
+import { Entity } from '../entity';
 import { EntityStatus, EntityStatusHelper } from '../entity-status';
 import { IEntity } from '../entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { EnumTableService } from '../service/enumTableService';
 import { IReadonlyService } from '../service/readonly-service.interface';
 import { SpecialColumns } from './specialColumns';
+
+// Der Key für SpecialColumns ist ein Tupel aus (SpecialColumns, Propertyname)
+export type SpecialColumnKey = Tuple<SpecialColumns, string>;
 
 /**
  *  Modelliert Metadaten für Modellklasse/DB-Tabelle
@@ -31,7 +35,9 @@ export abstract class TableMetadata extends ClassMetadata {
   private propertyMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   // private _primaryKeyColumn: ColumnMetadata;
-  private _specialColMap: Dictionary<SpecialColumns, ColumnMetadata> = new Dictionary<SpecialColumns, ColumnMetadata>();
+  private _specialColMap: Dictionary<SpecialColumnKey, ColumnMetadata> =
+  new Dictionary<SpecialColumnKey, ColumnMetadata>();
+
   private _statusColMap: Dictionary<EntityStatus, ColumnMetadata> = new Dictionary<EntityStatus, ColumnMetadata>();
 
 
@@ -67,8 +73,16 @@ export abstract class TableMetadata extends ClassMetadata {
   }
 
 
-  public   setSpecialColumn(propertyName: string, key: SpecialColumns) {
+  public setSpecialColumn(propertyName: string, specialColumnKey: SpecialColumns) {
     Assert.notNullOrEmpty(propertyName);
+    let key: SpecialColumnKey;
+
+    if (specialColumnKey === SpecialColumns.SECRET) {
+      key = new Tuple(specialColumnKey, propertyName);
+    } else {
+      key = new Tuple(specialColumnKey, '');
+    }
+
     Assert.that(!this._specialColMap.containsKey(key),
       `${key} darf nur einmal gesetzt sein: bereits gesetzt für ${propertyName}`);
 
@@ -76,9 +90,10 @@ export abstract class TableMetadata extends ClassMetadata {
     this._specialColMap.set(key, metadata);
   }
 
-  public getSpecialColumn(key: SpecialColumns): ColumnMetadata {
+  public getSpecialColumn(key: SpecialColumns, propertyName: string = ''): ColumnMetadata {
     Assert.notNull(key);
-    return this._specialColMap.get(key);
+
+    return this._specialColMap.get(new Tuple(key, propertyName));
   }
 
 
@@ -109,7 +124,7 @@ export abstract class TableMetadata extends ClassMetadata {
     return this._columnMetadata;
   }
 
-  public get specialColumnKeys(): SpecialColumns[] {
+  public get specialColumnKeys(): SpecialColumnKey[] {
     return this._specialColMap.keys;
   }
 
@@ -244,22 +259,37 @@ export abstract class TableMetadata extends ClassMetadata {
    * Liefert die Primary Key Column oder undefined
    */
   public get primaryKeyColumn(): ColumnMetadata {
-    return this._specialColMap.get(SpecialColumns.PRIMARY_KEY);
+    return this.getSpecialColumn(SpecialColumns.PRIMARY_KEY);
   }
 
   /**
    * Liefert die Version Column oder undefined
    */
   public get versionColumn(): ColumnMetadata {
-    return this._specialColMap.get(SpecialColumns.VERSION);
+    return this.getSpecialColumn(SpecialColumns.VERSION);
   }
 
   /**
    * Liefert die Client Column oder undefined
    */
   public get clientColumn(): ColumnMetadata {
-    return this._specialColMap.get(SpecialColumns.CLIENT);
+    return this.getSpecialColumn(SpecialColumns.CLIENT);
   }
+
+  /**
+   * Liefert die Secret Column oder undefined
+   */
+  public getSecretColumn(propertyName: string): ColumnMetadata {
+    return this.getSpecialColumn(SpecialColumns.SECRET, propertyName);
+  }
+
+  /**
+   * Liefert die Test Column oder undefined
+   */
+  public get testColumn(): ColumnMetadata {
+    return this.getSpecialColumn(SpecialColumns.TEST);
+  }
+
 
   /**
    * Liefert die Status Column oder undefined
@@ -267,21 +297,6 @@ export abstract class TableMetadata extends ClassMetadata {
   public get statusColumn(): ColumnMetadata {
     return this.getColumnMetadataByProperty(EntityStatusHelper.PROPERTY_NAME_STATUS);
   }
-
-  /**
-   * Liefert die Secret Column oder undefined
-   */
-  public get secretColumn(): ColumnMetadata {
-    return this._specialColMap.get(SpecialColumns.SECRET);
-  }
-
-  /**
-   * Liefert die Test Column oder undefined
-   */
-  public get testColumn(): ColumnMetadata {
-    return this._specialColMap.get(SpecialColumns.TEST);
-  }
-
 
 
   /**

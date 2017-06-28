@@ -32,12 +32,4 @@ export interface IUser extends IFlxStatusEntity<number> {
    * @memberOf User
    */
   isAdmin: boolean;
-
-
-  /**
-   * Setzt Passwort und Salt zurück
-   *
-   * @memberOf User
-   */
-  resetCredentials();
 }
