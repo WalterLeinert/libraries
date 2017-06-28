@@ -7,9 +7,16 @@ mkdir -p logs
 {
 	set -x
 
-
 	if [[ "$1" == "--clean" ]]; then
+    shift
 		gulp really-clean
+	fi
+
+  if [[ "$1" == "--no-publish" ]]; then
+    shift
+		publish_cmd=""
+  else
+  	publish_cmd="publish -f"
 	fi
 
 	npm install
@@ -18,7 +25,7 @@ mkdir -p logs
 	(
 		cd $dir                     && \
 		npm install                 && \
-		gulp publish -f
+		gulp ${publish_cmd}
 	)
 	done
 } > logs/build-${ts}.log 2>&1 &

@@ -21,4 +21,6 @@ cache:
 
 test:all:
   script:
-    - bash bin/rebuild.sh
+    # für erste Tests ohne publish (da die Unittests für server noch nicht laufen: docker container/services fehlen noch)
+    - bash bin/rebuild.sh --no-publish
+    - gulp tslint
