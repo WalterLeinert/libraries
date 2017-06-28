@@ -21,4 +21,6 @@ mkdir -p logs
 		gulp publish -f
 	)
 	done
-} > logs/build-${ts}.log 2>&1
+} > logs/build-${ts}.log 2>&1 &
+
+tail -f logs/build-${ts}.log

@@ -5,9 +5,8 @@ image: node:6
 
 before_script:
   - npm install --global gulp-cli
-  - npm install --global tslint
+  # - npm install --global tslint
   - npm install
-  # - bash bin/rebuild.sh
 
 # Pick zero or more services to be used on all builds.
 # Only needed when using a docker container to run your tests in.
@@ -19,8 +18,7 @@ services:
 cache:
   paths:
   - node_modules/
-test:core:
+
+test:all:
   script:
-    - cd core
-    - npm install
-    - gulp test
+    - bash bin/rebuild.sh
