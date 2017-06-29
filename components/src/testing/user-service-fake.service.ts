@@ -12,7 +12,7 @@ import { EntityVersionServiceFakeService } from './entity-version-service-fake.s
  *
  * @export
  * @class UserServiceFake
- * @extends {ServiceFake<IUser, number>}
+ * extends {ServiceFake<IUser, number>}
  */
 @Injectable()
 export class UserServiceFakeService extends UserServiceFake {
