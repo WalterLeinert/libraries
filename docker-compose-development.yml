@@ -10,18 +10,23 @@ version: "2"
 services:
     development:
       container_name: development-libraries
+
       build:
         context: .
         dockerfile: .docker/docker-development.dockerfile
+
       hostname: "libraries-development"
-      volumes:
-        - .:/home/node/libraries
+
+      # volumes:
+        # - .:/home/node/libraries
+
       working_dir: /home/node/
+
       env_file:
         - ./.docker/env/app.development.env
+
       networks:
         - libraries-network
-
 
 networks:
     libraries-network:
