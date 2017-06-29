@@ -1,3 +1,4 @@
+export * from './config-store';
 export * from './command-store';
 export * from './current-user-store';
 export * from './generic-store';

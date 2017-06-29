@@ -1,4 +1,5 @@
 export * from './config.service';
+export * from './config-service-requests';
 export * from './current-user-service-requests';
 export * from './entity-version.service';
 export * from './role-selector-service-requests';

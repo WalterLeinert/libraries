@@ -17,10 +17,13 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import { AppConfigService, CoreService, MetadataService, ServiceCore } from '@fluxgate/client';
 import {
-  ConfigBase, CreateResult, DeleteResult, FindByIdResult, FindResult, ServiceConstants, StatusFilter,
-  StatusQuery, TableService, UpdateResult
+  ConfigBase, CreateResult, DeleteResult, FindByIdResult, FindResult, IServiceBase, ServiceConstants, StatusFilter,
+  StatusQuery, TableMetadata, TableService, UpdateResult
 } from '@fluxgate/common';
-import { Assert, Funktion, IToString, NotSupportedException, SelectorTerm, Types } from '@fluxgate/core';
+import {
+  Assert, Funktion, InvalidOperationException, IToString, NotSupportedException,
+  SelectorTerm, Types
+} from '@fluxgate/core';
 
 
 /**
@@ -32,10 +35,12 @@ import { Assert, Funktion, IToString, NotSupportedException, SelectorTerm, Types
  */
 @Injectable()
 @TableService(ConfigBase)
-export class ConfigService<T extends ConfigBase> extends ServiceCore {
+export class ConfigService<T extends ConfigBase> extends ServiceCore implements IServiceBase<ConfigBase, string> {
   protected static readonly logger = getLogger(ConfigService);
 
-  public constructor(metadataService: MetadataService, http: Http, private configService: AppConfigService,
+  private _tableMetadata: TableMetadata;
+
+  public constructor(private metadataService: MetadataService, http: Http, private configService: AppConfigService,
     @Optional() private model: Funktion) {
     // Hinweis: hier muss ein fixes Topic unabhängig von der Modelklasse gesetzt werden,
     // da der entsprechende Server-Controller auf diesem Endpoint horcht!
@@ -156,6 +161,65 @@ export class ConfigService<T extends ConfigBase> extends ServiceCore {
   }
 
 
+  /**
+   * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
+   *
+   * @type {string}
+   */
+  public getModelClassName(): string {
+    return this._tableMetadata.className;
+  }
+
+  public getTableName(): string {
+    return this._tableMetadata.tableName;
+  }
+
+
+  /**
+   * Liefert die zugehörige @see{TableMetadata}
+   *
+   * @readonly
+   * @protected
+   * @type {TableMetadata}
+   * @memberOf Service
+   */
+  public get tableMetadata(): TableMetadata {
+    return this._tableMetadata;
+  }
+
+
+
+  /**
+   * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
+   * Sonst wird ein Error geworfen.
+   *
+   * @type {any}
+   * @memberOf Service
+   */
+  public getEntityId(item: T): string {
+    if (!this.tableMetadata.primaryKeyColumn) {
+      throw new InvalidOperationException(`Table ${this.tableMetadata.options.name}: no primary key column`);
+    }
+    return item[this.tableMetadata.primaryKeyColumn.propertyName];
+  }
+
+
+  /**
+   * Setzt die Id der Entity @param{item} über die Metainformation, falls vorhanden.
+   * Sonst wird ein Error geworfen.
+   *
+   * @type {any}
+   * @memberOf Service
+   */
+  public setEntityId(item: T, id: string) {
+    if (!this.tableMetadata.primaryKeyColumn) {
+      throw new InvalidOperationException(`Table ${this.tableMetadata.options.name}: no primary key column`);
+    }
+    item[this.tableMetadata.primaryKeyColumn.propertyName] = id;
+  }
+
+
+
   private createParams(model: string): URLSearchParams {
     const params = new URLSearchParams();
     params.set('model', model);
@@ -183,6 +247,12 @@ export class ConfigService<T extends ConfigBase> extends ServiceCore {
       } else {
         Assert.that(this.model.name === modelString);
       }
+    }
+
+    if (!this._tableMetadata) {
+      this._tableMetadata = this.metadataService.findTableMetadata(modelString);
+    } else {
+      Assert.that(this._tableMetadata.className === modelString);
     }
 
     return modelString;

@@ -26,7 +26,7 @@ export function Table(options?: TableOptions) {
       options.isView = false;
     }
 
-    MetadataStorage.instance.addTableMetadata(new TableMetadataInternal(target, options));
+    MetadataStorage.instance.addTableMetadata(new TableMetadataInternal(MetadataStorage.instance, target, options));
 
     //
     // alle Modelklassen sind serialisierbar

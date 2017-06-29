@@ -2,6 +2,7 @@ import { Funktion } from '@fluxgate/core';
 
 import { EnumTableOptions } from '../decorator/enumTableOptions';
 import { TableOptions } from '../decorator/tableOptions.interface';
+import { MetadataStorage } from './metadataStorage';
 import { TableMetadata } from './tableMetadata';
 
 
@@ -15,8 +16,8 @@ export class TableMetadataInternal extends TableMetadata {
   private _serviceClazz: Funktion;
   private _serviceRequestsClazz: Funktion;
 
-  constructor(target: Funktion, options: TableOptions | EnumTableOptions) {
-    super(target, options);
+  constructor(metadataStorage: MetadataStorage, target: Funktion, options: TableOptions | EnumTableOptions) {
+    super(metadataStorage, target, options);
   }
 
   /**

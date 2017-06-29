@@ -40,7 +40,7 @@ export {
   ENTITY_VERSION_SERVICE_PROVIDER, EntityVersionService,
   RoleSelectorServiceRequests, RoleSelectorServiceRequestsModule, RoleSelectorStore,
   RoleServiceRequests, RoleServiceRequestsModule,
-  ConfigService, SmtpConfigService,
+  ConfigService, ConfigServiceRequests, ConfigServiceRequestsModule, SmtpConfigService,
   SystemConfigService, SystemConfigServiceRequests, SystemConfigServiceRequestsModule,
   UserSelectorServiceRequests, UserSelectorServiceRequestsModule, UserSelectorStore,
   UserServiceRequests, UserServiceRequestsModule

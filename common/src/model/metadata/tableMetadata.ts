@@ -17,6 +17,8 @@ import { ColumnMetadata } from '../metadata/columnMetadata';
 import { EnumTableService } from '../service/enumTableService';
 import { IReadonlyService } from '../service/readonly-service.interface';
 import { SpecialColumns } from './specialColumns';
+import { MetadataStorage } from './metadataStorage';
+
 
 // Der Key für SpecialColumns ist ein Tupel aus (SpecialColumns, Propertyname)
 export type SpecialColumnKey = Tuple<SpecialColumns, string>;
@@ -51,7 +53,8 @@ export abstract class TableMetadata extends ClassMetadata {
    *
    * @memberOf TableMetadata
    */
-  protected constructor(target: Funktion, public options: TableOptions | EnumTableOptions) {
+  protected constructor(private _metadataStorage: MetadataStorage, target: Funktion,
+    public options: TableOptions | EnumTableOptions) {
     super(target, target.name);
   }
 
@@ -335,7 +338,17 @@ export abstract class TableMetadata extends ClassMetadata {
     if (this.options instanceof EnumTableOptions) {
       return new EnumTableServiceRequests(this, store, this.options.enumValues);
     } else {
-      return injector.get(this.serviceRequestsClazz);
+      let serviceRequestsClazz = this.serviceRequestsClazz;
+
+      if (!Types.isPresent(serviceRequestsClazz)) {
+        const baseClazz = Types.getBaseClass(this.target);
+        if (baseClazz) {
+          const baseMetadata = this._metadataStorage.findTableMetadata(baseClazz);
+          serviceRequestsClazz = baseMetadata.serviceRequestsClazz;
+          TableMetadata.logger.warn(`über rekursive Methode lösen.`);
+        }
+      }
+      return injector.get(serviceRequestsClazz);
     }
   }
 

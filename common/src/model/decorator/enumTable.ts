@@ -33,6 +33,6 @@ export function EnumTable(options: IEnumTableOptions) {
     tableOptions.isView = options.isView;
     tableOptions.enumValues = options.enumValues;
 
-    MetadataStorage.instance.addTableMetadata(new EnumTableMetadata(target, tableOptions));
+    MetadataStorage.instance.addTableMetadata(new EnumTableMetadata(MetadataStorage.instance, target, tableOptions));
   };
 }
