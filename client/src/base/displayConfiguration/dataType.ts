@@ -4,7 +4,7 @@ import { NotSupportedException } from '@fluxgate/core';
 
 import { ControlType } from '../../angular/common/base/controlType';
 
-export type DataType = 'string' | 'number' | 'date' | 'time' | 'enum';
+export type DataType = 'string' | 'number' | 'date' | 'time' | 'enum' | 'boolean';
 
 export class DataTypes {
   public static readonly STRING: DataType = 'string';
@@ -12,6 +12,7 @@ export class DataTypes {
   public static readonly DATE: DataType = 'date';
   public static readonly TIME: DataType = 'time';
   public static readonly ENUM: DataType = 'enum';
+  public static readonly BOOLEAN: DataType = 'boolean';
 
 
   /**
@@ -36,6 +37,10 @@ export class DataTypes {
 
     if (ColumnTypes.isTime(columnType)) {
       return DataTypes.TIME;
+    }
+
+    if (columnType === ColumnTypes.BOOLEAN) {
+      return DataTypes.BOOLEAN;
     }
 
     switch (columnType) {
@@ -70,6 +75,9 @@ export class DataTypes {
 
       case DataTypes.TIME:
         return ControlType.Time;
+
+      case DataTypes.BOOLEAN:
+        return ControlType.Checkbox;
 
       case DataTypes.ENUM:
         return ControlType.DropdownSelector;

@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 // PrimeNG
 import { ButtonModule } from 'primeng/components/button/button';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
+import { CheckboxModule } from 'primeng/components/checkbox/checkbox';
 import { SharedModule } from 'primeng/components/common/shared';
 import { ConfirmDialogModule } from 'primeng/components/confirmdialog/confirmdialog';
 import { DialogModule } from 'primeng/components/dialog/dialog';
@@ -28,6 +29,7 @@ import { AutoformComponent } from './autoform.component';
 
     // PrimeNG
     ButtonModule,
+    CheckboxModule,
     SharedModule,
     MessagesModule,
     DialogModule,

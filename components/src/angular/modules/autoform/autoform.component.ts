@@ -53,6 +53,27 @@ import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/
         </div>
 
         <!--
+        Checkbox-Controls für boolean Werte
+        -->
+        <div *ngIf="info.controlType === controlType.Checkbox">
+          <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+            <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+
+            <div class="col-sm-10">
+              <p-checkbox binary="true" class="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
+                [required]="info.required" [disabled]="isReadonly(info)"
+                [style.color]="getColor(dataItem, info)" >
+              </p-checkbox>
+            </div>
+
+            <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+              {{ getFormErrors(info.valueField) }}
+            </div>
+
+          </div>
+        </div>
+
+        <!--
         Datumsfelder
         -->
         <div *ngIf="info.controlType === controlType.Date">
