@@ -19,3 +19,4 @@ export * from './service';
 export * from './service-base';
 export * from './service-core';
 export * from './service-requests-component';
+export * from './service-resolver';

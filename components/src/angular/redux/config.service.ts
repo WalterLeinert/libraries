@@ -15,12 +15,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
-import { AppConfigService, CoreService, MetadataService, Service } from '@fluxgate/client';
+import { AppConfigService, CoreService, MetadataService, ServiceCore } from '@fluxgate/client';
 import {
   ConfigBase, CreateResult, DeleteResult, FindByIdResult, FindResult, ServiceConstants, StatusFilter,
   StatusQuery, TableService, UpdateResult
 } from '@fluxgate/common';
-import { Assert, Funktion, IToString, NotSupportedException, SelectorTerm } from '@fluxgate/core';
+import { Assert, Funktion, IToString, NotSupportedException, SelectorTerm, Types } from '@fluxgate/core';
 
 
 /**
@@ -32,30 +32,33 @@ import { Assert, Funktion, IToString, NotSupportedException, SelectorTerm } from
  */
 @Injectable()
 @TableService(ConfigBase)
-export class ConfigService<T extends ConfigBase> extends Service<T, string> {
+export class ConfigService<T extends ConfigBase> extends ServiceCore {
+  protected static readonly logger = getLogger(ConfigService);
 
-  public constructor(metadataService: MetadataService, http: Http, configService: AppConfigService,
-    @Optional() model: Funktion) {
+  public constructor(metadataService: MetadataService, http: Http, private configService: AppConfigService,
+    @Optional() private model: Funktion) {
     // Hinweis: hier muss ein fixes Topic unabhängig von der Modelklasse gesetzt werden,
     // da der entsprechende Server-Controller auf diesem Endpoint horcht!
-    super(model ? model : ConfigBase, metadataService, http, configService, 'config');
+    super(http, configService.config.url, 'config');
   }
 
 
-  public find(filter?: StatusFilter): Observable<FindResult<T>> {
+  public find(model: string | Funktion, filter?: StatusFilter): Observable<FindResult<T>> {
     return using(new XLog(ConfigService.logger, levels.INFO, 'find',
-      `[${this.getModelClassName()}]: filter = ${JSON.stringify(filter)}`), (log) => {
+      `[${model}]: filter = ${JSON.stringify(filter)}`), (log) => {
+
+        model = this.getModelString(log, model);
 
         const serializedFilter = this.serialize(filter);
 
         return this.http.post(`${this.getUrl()}/${ServiceConstants.FIND}`, serializedFilter, {
           ...CoreService.OPTIONS,
-          params: this.createParams()
+          params: this.createParams(model)
         })
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: FindResult<T>) => {
             if (log.isInfoEnabled()) {
-              log.log(`found [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
+              log.log(`found [${model}]: -> ${result.items.length} item(s)`);
             }
           })
           .catch(this.handleError);
@@ -63,18 +66,20 @@ export class ConfigService<T extends ConfigBase> extends Service<T, string> {
   }
 
 
-  public findById(id: string): Observable<FindByIdResult<T, string>> {
+  public findById(model: string | Funktion, id: string): Observable<FindByIdResult<T, string>> {
     Assert.notNull(id, 'id');
     return using(new XLog(ConfigService.logger, levels.INFO, 'findById',
-      `[${this.getModelClassName()}]; id = ${id}`), (log) => {
+      `[${model}]; id = ${id}`), (log) => {
+
+        model = this.getModelString(log, model);
 
         return this.http.get(`${this.getUrl()}/${id}`, {
-          params: this.createParams()
+          params: this.createParams(model)
         })
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: FindByIdResult<T, string>) => {
             if (log.isInfoEnabled()) {
-              log.log(`found [${this.getModelClassName()}]: id = ${id} -> ${JSON.stringify(result)}`);
+              log.log(`found [${model}]: id = ${id} -> ${JSON.stringify(result)}`);
             }
           })
           .catch(this.handleError);
@@ -82,16 +87,18 @@ export class ConfigService<T extends ConfigBase> extends Service<T, string> {
   }
 
 
-  public create(item: T): Observable<CreateResult<T, string>> {
+  public create(model: string | Funktion, item: T): Observable<CreateResult<T, string>> {
     Assert.notNull(item, 'item');
-    return using(new XLog(ConfigService.logger, levels.INFO, 'create', `[${this.getModelClassName()}]`), (log) => {
+    return using(new XLog(ConfigService.logger, levels.INFO, 'create', `[${model}]`), (log) => {
+
+      model = this.getModelString(log, model);
 
       if (log.isDebugEnabled()) {
         log.debug(`item = ${JSON.stringify(item)}`);
       }
 
       return this.http.post(`${this.getUrl()}/${ServiceConstants.CREATE}`, this.serialize(item), {
-        params: this.createParams()
+        params: this.createParams(model)
       })
         .map((response: Response) => this.deserialize(response.json()))
         .do((result: CreateResult<T, string>) => {
@@ -104,40 +111,44 @@ export class ConfigService<T extends ConfigBase> extends Service<T, string> {
   }
 
 
-  public update(item: T): Observable<UpdateResult<T, string>> {
+  public update(model: string | Funktion, item: T): Observable<UpdateResult<T, string>> {
     Assert.notNull(item, 'item');
-    return using(new XLog(Service.logger, levels.INFO, 'update',
-      `[${this.getModelClassName()}]: id ${item.id}`), (log) => {
+    return using(new XLog(ConfigService.logger, levels.INFO, 'update',
+      `[${model}]: id ${item.id}`), (log) => {
+
+        model = this.getModelString(log, model);
 
         if (log.isDebugEnabled()) {
           log.debug(`item = ${JSON.stringify(item)}`);
         }
 
         return this.http.put(`${this.getUrl()}/${ServiceConstants.UPDATE}`, this.serialize(item), {
-          params: this.createParams()
+          params: this.createParams(model)
         })
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: UpdateResult<T, string>) => {
             if (log.isInfoEnabled()) {
-              log.log(`updated [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
+              log.log(`updated [${model}]: ${JSON.stringify(result)}`);
             }
           })
           .catch(this.handleError);
       });
   }
 
-  public delete(id: string): Observable<DeleteResult<string>> {
+  public delete(model: string | Funktion, id: string): Observable<DeleteResult<string>> {
     Assert.notNull(id, 'id');
-    return using(new XLog(Service.logger, levels.INFO, 'delete', `[${this.getModelClassName()}]: id = ${id}`),
+    return using(new XLog(ConfigService.logger, levels.INFO, 'delete', `[${model}]: id = ${id}`),
       (log) => {
 
+        model = this.getModelString(log, model);
+
         return this.http.delete(`${this.getUrl()}/${id}`, {
-          params: this.createParams()
+          params: this.createParams(model)
         })
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: DeleteResult<string>) => {
             if (log.isInfoEnabled()) {
-              log.log(`deleted [${this.getModelClassName()}]: ${JSON.stringify(result)}`);
+              log.log(`deleted [${model}]: ${JSON.stringify(result)}`);
             }
           })
           .catch(this.handleError);
@@ -145,16 +156,36 @@ export class ConfigService<T extends ConfigBase> extends Service<T, string> {
   }
 
 
-
-  private getConfigType(): string {
-    const typeColumn = this.tableMetadata.getColumnMetadataByProperty(ConfigBase.TYPE_COLUMN);
-    return typeColumn.options.default as string;
+  private createParams(model: string): URLSearchParams {
+    const params = new URLSearchParams();
+    params.set('model', model);
+    return params;
   }
 
-  private createParams(): URLSearchParams {
-    const params = new URLSearchParams();
-    params.set('model', this.getModelClassName());
-    return params;
+
+  /**
+   * Liefert für das angebene @param{model} das Model als String bzw. falls ein Model über den Konstruktor
+   * übergeben wurde dessen Name.
+   *
+   * @param log
+   * @param model
+   */
+  private getModelString(log: XLog, model: string | Funktion): string {
+    let modelString = typeof model === 'string' ? model : model.name;
+
+    if (this.model) {
+      if (!Types.isPresent(model)) {
+        modelString = this.model.name;
+
+        if (log.isDebugEnabled()) {
+          log.debug(`set model to: ${modelString}`);
+        }
+      } else {
+        Assert.that(this.model.name === modelString);
+      }
+    }
+
+    return modelString;
   }
 
 }
