@@ -1,6 +1,6 @@
 // tslint:disable:member-access
 
-// import { expect } from 'chai';
+import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 
@@ -22,6 +22,16 @@ const data = {
   }
 };
 
+const expectedResult = `description: "Fluxgate Library Core"
+main: "dist/src/index.js"
+name: "@fluxgate/core"
+repository.type: "git"
+repository.url: "http://server.fluxgate.de:89/fluxgate/libraries.git"
+scripts.tslint: "tslint ./src/**/*.ts"
+typings: "dist/dts/index.d.ts"
+version: "2.2.6-beta.2"
+`;
+
 
 @suite('core.base.FlattenJson')
 class Test {
@@ -32,11 +42,11 @@ class Test {
     flattener.flatten();
     const result = flattener.result;
     // tslint:disable-next-line:no-console
-    console.log(`result = ${JSON.stringify(result)}`);
+    // console.log(`result = ${JSON.stringify(result)}`);
 
     // tslint:disable-next-line:no-console
-    console.log(`toString: ${flattener.toString()}`);
+    // console.log(`toString: ${flattener.toString()}`);
 
-    // return expect(flattener.flatten()).to.not.throw;
+    return expect(flattener.toString()).to.equals(expectedResult);
   }
 }

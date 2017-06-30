@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/common",
-  "version": "2.2.8-beta.7",
+  "version": "2.2.8-beta.8",
   "description": "Fluxgate Library client/server übergreifend",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -44,8 +44,8 @@
     "yargs": "^7.0.2"
   },
   "dependencies": {
-    "@fluxgate/core": "2.2.8-beta.0",
-    "@fluxgate/platform": "2.2.8-beta.0",
+    "@fluxgate/core": "2.2.8-beta.1",
+    "@fluxgate/platform": "2.2.8-beta.1",
     "lru-cache": "^4.0.2",
     "moment": "^2.17.1",
     "object.entries": "^1.0.4",
