@@ -20,7 +20,8 @@ export class SmtpConfig extends ConfigBase {
 
   @Validation([
     Validators.required,
-    Validators.positiveInteger
+    // TODO: geht so nicht -- vom Control kommt der Wert vom Typ number und nicht string
+    // Validators.positiveInteger
   ])
   @Column({ displayName: 'Port' })
   public port: number;
