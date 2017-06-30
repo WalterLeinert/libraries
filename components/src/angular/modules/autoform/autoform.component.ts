@@ -144,7 +144,13 @@ import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/
       </ul>
     </div>
 
-
+    <p-footer *ngIf="showButtons">
+      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <button type="button" class="btn btn-primary" (click)='cancel()'>Cancel</button>
+          <button type="button" class="btn btn-primary" [disabled]="isSaveDisabled()" (click)='submit()'>Save</button>
+          <button type="button" class="btn btn-primary" (click)='confirmDelete()'>Delete</button>
+      </div>
+    </p-footer>
   </form>
 </div>
 `,
@@ -195,8 +201,14 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
    */
   @Input() public action: FormAction;
 
+  @Input() public inputTest: string;
 
+
+  @Input() public showButtons: boolean = false;
   @Input() public skipNgOnInit: boolean = false;
+
+  @Output() public cancelChange = new EventEmitter<any>();
+  @Output() public closeChange = new EventEmitter<any>();
 
 
   // >> Konfiguration
@@ -268,6 +280,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
             Assert.notNullOrEmpty(data.resolverKey);
 
             this.action = data.action;
+            this.showButtons = data.showButtons;
 
             const value = data[data.resolverKey];
             Assert.notNull(value);
@@ -281,6 +294,54 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
         this.initForm(this.value);
       }
     });
+  }
+
+
+  /**
+   * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
+   */
+  public cancel(): void {
+    this.onCancelChange();
+  }
+
+
+  /**
+   * Speichert Änderungen an der Entity
+   */
+  public submit() {
+    if (this.action === FormActions.UPDATE) {
+      this.registerSubscription(this.serviceRequests.update(this.value).subscribe(
+        (value: any) => {
+          // -> onStoreUpdated
+        }));
+    } else if (this.action === FormActions.CREATE) {
+      this.registerSubscription(this.serviceRequests.create(this.value).subscribe(
+        (value: any) => {
+          // -> onStoreUpdated
+        }));
+    } else {
+      throw new NotSupportedException(`invalid action: ${this.action}`);
+    }
+  }
+
+
+  public confirmDelete() {
+    using(new XLog(AutoformComponent.logger, levels.INFO, 'confirmDelete'), (log) => {
+
+      if (confirm('Do you want to delete this record?')) {
+        this.deleteItem(this.value);
+      }
+
+      // this.confirmAction({
+      //   header: 'Delete',
+      //   message: 'Do you want to delete this record?'
+      // }, () => this.delete());
+    });
+  }
+
+
+  public isSaveDisabled(): boolean {
+    return !(this.hasChanges() && this.isValid());
   }
 
 
@@ -372,6 +433,48 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       this.onValueChange(value);
     }
   }
+
+
+
+  protected onStoreUpdated<T>(command: ServiceCommand<T>): void {
+    using(new XLog(AutoformComponent.logger, levels.INFO, 'onStoreUpdated'), (log) => {
+      super.onStoreUpdated(command);
+
+      const state = super.getStoreState(command.storeId);
+      if (state.error) {
+        this.onCloseChange(true);
+      } else {
+        if (command instanceof ItemCreatedCommand || command instanceof ItemDeletedCommand || command instanceof ItemUpdatedCommand) {
+          this.resetFormGroup(this.value);
+          this.onCloseChange(false);
+        }
+      }
+    });
+  }
+
+
+  /**
+   *
+   *
+   * @protected
+   * @param {boolean} formResetRequired
+   * @memberof AutoformComponent
+   */
+  protected onCloseChange(formResetRequired: boolean) {
+    this.closeChange.emit(formResetRequired);
+  }
+
+
+  /**
+   *
+   *
+   * @protected
+   * @memberof AutoformComponent
+   */
+  protected onCancelChange() {
+    this.cancelChange.emit();
+  }
+
 
 
   /**

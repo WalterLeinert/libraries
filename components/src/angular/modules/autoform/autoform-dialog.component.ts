@@ -29,17 +29,10 @@ import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/
   [modal]="true" width="600">
 
   <div>
-    <flx-autoform [value]="value" [config]="config" [action]="action" [skipNgOnInit]="'true'" >
+    <flx-autoform [value]="value" [config]="config" [action]="action" [showButtons]="'true'" [skipNgOnInit]="'true'"
+    (close)="onClose($event)" (cancel)="onCancel()">
     </flx-autoform>
-
-    <p-footer>
-      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-          <button type="button" class="btn btn-primary" (click)='cancel()'>Cancel</button>
-          <button type="button" class="btn btn-primary" [disabled]="isSaveDisabled()" (click)='submit()'>Save</button>
-          <button type="button" class="btn btn-primary" (click)='confirmDelete()'>Delete</button>
-      </div>
-    </p-footer>
-  </div>
+ </div>
 
   <flx-confirmation-dialog></flx-confirmation-dialog>
 </p-dialog>
@@ -68,14 +61,7 @@ export class AutoformDialogComponent extends ServiceRequestsComponent<any, ICrud
    *
    * @type {*}
    */
-  private _value: any;
-
-  /**
-   * dataChange Event: wird bei jeder SelektionÄänderung von data gefeuert.
-   *
-   * Eventdaten: @type{any} - selektiertes Objekt.
-   */
-  @Output() public valueChange = new EventEmitter<any>();
+  @Input() public value: any;
   // << Value Property
 
 
@@ -157,89 +143,12 @@ export class AutoformDialogComponent extends ServiceRequestsComponent<any, ICrud
     this.closePopup();
   }
 
-
-  /**
-   * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
-   */
-  public cancel(): void {
+  public onCancel() {
     this.closePopup();
   }
 
-
-  /**
-   * Speichert Änderungen an der Entity
-   */
-  public submit() {
-    if (this.action === FormActions.UPDATE) {
-      this.registerSubscription(this.serviceRequests.update(this.value).subscribe(
-        (value: any) => {
-          // -> onStoreUpdated
-        }));
-    } else if (this.action === FormActions.CREATE) {
-      this.registerSubscription(this.serviceRequests.create(this.value).subscribe(
-        (value: any) => {
-          // -> onStoreUpdated
-        }));
-    } else {
-      throw new NotSupportedException(`invalid action: ${this.action}`);
-    }
-  }
-
-
-  public confirmDelete() {
-    using(new XLog(AutoformDialogComponent.logger, levels.INFO, 'confirmDelete'), (log) => {
-
-      if (confirm('Do you want to delete this record?')) {
-        this.deleteItem(this.value);
-      }
-
-      // this.confirmAction({
-      //   header: 'Delete',
-      //   message: 'Do you want to delete this record?'
-      // }, () => this.delete());
-    });
-  }
-
-
-  public isSaveDisabled(): boolean {
-    return !(this.hasChanges() && this.isValid());
-  }
-
-
-  protected onStoreUpdated<T>(command: ServiceCommand<T>): void {
-    using(new XLog(AutoformDialogComponent.logger, levels.INFO, 'onStoreUpdated'), (log) => {
-      super.onStoreUpdated(command);
-
-      const state = super.getStoreState(command.storeId);
-      if (state.error) {
-        this.doClose(true);
-      } else {
-        if (command instanceof ItemCreatedCommand || command instanceof ItemDeletedCommand || command instanceof ItemUpdatedCommand) {
-          this.resetFormGroup(this.value);
-          this.doClose(false);
-        }
-      }
-    });
-  }
-
-
-
-  // -------------------------------------------------------------------------------------
-  // Property value und der Change Event
-  // -------------------------------------------------------------------------------------
-  protected onValueChange(value: any) {
-    this.valueChange.emit(value);
-  }
-
-  public get value(): any {
-    return this._value;
-  }
-
-  @Input() public set value(value: any) {
-    if (this._value !== value) {
-      this._value = value;
-      this.onValueChange(value);
-    }
+  public onClose(formResetRequired: boolean) {
+    this.doClose(formResetRequired);
   }
 
 
@@ -305,6 +214,5 @@ export class AutoformDialogComponent extends ServiceRequestsComponent<any, ICrud
       this.navigate([navigationPath, { refresh: !formResetRequired }], { relativeTo: this.route });
     });
   }
-
 
 }
