@@ -8,8 +8,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 // Fluxgate
-import { Store, TableMetadata } from '@fluxgate/common';
-import { Assert, InvalidOperationException } from '@fluxgate/core';
+import { ColumnMetadata, Store, TableMetadata } from '@fluxgate/common';
+import { Assert, InvalidOperationException, Types } from '@fluxgate/core';
 
 import { ControlType } from '../../angular/common/base/controlType';
 import { APP_STORE } from '../../angular/redux/app-store';
@@ -68,6 +68,9 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
       displayInfo.editable = colMetaData.options.persisted;
 
       displayInfo.required = !colMetaData.options.nullable;
+
+      // ist die Spalte mit @Secret annotiert?
+      displayInfo.isSecret = this.isSecretColumn(colMetaData);
 
       displayInfo.controlType = DataTypes.mapDataTypeToControlType(displayInfo.dataType);
 
@@ -131,6 +134,7 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
               dataType: dataType,
               style: undefined,
               textAlignment: (ControlDisplayInfo.isRightAligned(dataType)) ? TextAlignments.RIGHT : TextAlignments.LEFT,
+              isSecret: this.isSecretColumn(metaData),
               controlType: DataTypes.mapDataTypeToControlType(dataType),
               enumInfo: enumInfo
             }
@@ -142,4 +146,8 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
     return columnInfos;
   }
 
+  private isSecretColumn(colMetadata: ColumnMetadata): boolean {
+    const secretColumn = this.tableMetadata.getSecretColumn(colMetadata.propertyName);
+    return Types.isPresent(secretColumn);
+  }
 }

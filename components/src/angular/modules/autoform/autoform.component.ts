@@ -39,7 +39,7 @@ import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/
             <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
             <div class="col-sm-10">
-              <input flxAutofocus type="text" class="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
+              <input flxAutofocus [type]="getInputType(info)" class="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
                 [required]="info.required" [readonly]="isReadonly(info)"
                 [style.color]="getColor(dataItem, info)"
               >
@@ -61,7 +61,7 @@ import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/
 
             <div class="col-sm-10">
               <p-checkbox binary="true" class="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
-                [required]="info.required" [disabled]="isReadonly(info)"
+                [required]="info.required"
                 [style.color]="getColor(dataItem, info)" >
               </p-checkbox>
             </div>
@@ -324,6 +324,15 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       }
     }
     return undefined;
+  }
+
+
+  public getInputType(info: IControlDisplayInfo): string {
+    if (info.isSecret) {
+      return 'password';
+    } else {
+      return 'text';
+    }
   }
 
 

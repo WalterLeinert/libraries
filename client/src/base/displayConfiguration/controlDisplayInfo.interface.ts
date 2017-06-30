@@ -33,6 +33,14 @@ export interface IControlDisplayInfo extends IDisplayInfo {
   textAlignment?: TextAlignment;
 
   /**
+   * Liefert true, falls das Control geheime Information (wie Passwort) anzeigen soll
+   *
+   * @type {boolean}
+   * @memberof IControlDisplayInfo
+   */
+  isSecret?: boolean;
+
+  /**
    * Der Type des Controls für die Anzeige/Eingabe
    *
    * @type {ControlType}

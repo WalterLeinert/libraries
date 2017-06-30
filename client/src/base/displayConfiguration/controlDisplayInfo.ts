@@ -19,6 +19,7 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
       editable: DisplayInfo.DEFAULT.editable,
       required: DisplayInfo.DEFAULT.required,
       textAlignment: TextAlignments.LEFT,
+      isSecret: false,
       controlType: ControlType.Input
     }
   );
@@ -61,6 +62,10 @@ export class ControlDisplayInfo extends DisplayInfo implements IControlDisplayIn
 
   public get textAlignment(): TextAlignment {
     return this.controlOptions.textAlignment;
+  }
+
+  public get isSecret(): boolean {
+    return this.controlOptions.isSecret;
   }
 
   public get pipe(): PipeType | PipeTransform {
