@@ -6,7 +6,7 @@
 require('reflect-metadata');
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { Column, ColumnTypes, IdColumn, MetadataStorage, Secret, Table, TableMetadata } from '../../../../src/model';
 
@@ -33,7 +33,7 @@ class NoEntity {
 }
 
 
-@suite('model.decorator.Secret') @only
+@suite('model.decorator.Secret')
 class SecretTest {
   private tableMetadata: TableMetadata;
 
