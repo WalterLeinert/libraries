@@ -207,10 +207,17 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
    * @memberof ServiceRequestsComponent
    */
   protected setServiceRequests(serviceRequests: TServiceRequests) {
-    Assert.that(!Types.isPresent(this._serviceRequests));
+    Assert.notNull(serviceRequests);
 
-    this._serviceRequests = serviceRequests;
-    this.setupServiceRequests();
+    // Hinweis: Test nicht sinnvoll, wenn Komponente wiederverwendet wird
+    // Assert.that(!Types.isPresent(this._serviceRequests));
+
+    if (serviceRequests !== this._serviceRequests) {
+      this._serviceRequests = serviceRequests;
+      this.setupServiceRequests();
+    } else {
+      ServiceRequestsComponent.logger.warn(`serviceRequests already set: storeId = ${this._serviceRequests.storeId}`);
+    }
   }
 
 
