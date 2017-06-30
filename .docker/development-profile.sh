@@ -24,3 +24,8 @@ fi
 verdaccio > log/verdaccio.log 2>&1 &
 
 echo "started verdaccio ..."
+
+echo "samples:"
+echo "verdaccio > log/verdaccio.log 2>&1 &"
+echo "npm adduser (node/node/node@node.com)"
+echo "git clone http://server.fluxgate.de:90/fluxgate/libraries.git"

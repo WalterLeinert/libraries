@@ -21,6 +21,7 @@ COPY ./.docker/development-entrypoint.sh /home/node/entrypoint.sh
 COPY ./.docker/index.js /home/node
 COPY ./.docker/npm-login.sh /home/node
 COPY ./.docker/development-profile.sh /home/node/.profile
+COPY ./.docker/setup-development.sh /home/node/setup-development.sh
 
 RUN chown -R node.node /home/node/* && \
     chown -R node.node /home/node/.*
