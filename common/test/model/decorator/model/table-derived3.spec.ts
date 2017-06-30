@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 // tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
@@ -17,10 +18,13 @@ class ArtikelDerivedDerived3 extends ArtikelDerived {
 
   @Column({ name: 'artikelderived_name', displayName: 'Name-Derived' })
   public name: string;
+
+  @Column({ name: 'artikelderived_price', displayName: 'Price' })
+  public price: number;
 }
 
 
-@suite('model.decorator.Table: derived (id column inherited)')
+@suite('model.decorator.Table: derived (id column inherited, new column)')
 class TableDerived2Test {
   private derivedTableMetadata: TableMetadata;
 
@@ -67,6 +71,16 @@ class TableDerived2Test {
     const propertyName = 'id';
     const colMetaData = this.derivedTableMetadata.getColumnMetadataByProperty(propertyName);
     expect(colMetaData).to.equal(this.derivedTableMetadata.primaryKeyColumn);
+  }
+
+  @test 'should have inherited columns in right order'() {
+    expect(this.derivedTableMetadata.columnMetadata.length).to.equal(3);
+
+    expect(this.derivedTableMetadata.columnMetadata.map((item) => item.propertyName)).to.deep.equal([
+      'id',
+      'name',
+      'price'
+    ]);
   }
 
 

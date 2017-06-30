@@ -212,6 +212,8 @@ export class MetadataStorage {
           });
 
 
+          const columnsInherited = [];
+
           //
           // alle Properties der Basisklasse prüfen bzw. vererben
           //
@@ -235,9 +237,12 @@ export class MetadataStorage {
               // Metadaten vererben
               const colInherited = new ColumnMetadata(
                 metadata.target, baseCol.propertyName, baseCol.propertyType, baseCol.options);
-              metadata.add(colInherited);
+              columnsInherited.push(colInherited);
             }
           });
+
+          // geerbte Metadaten aktuelle eintragen
+          metadata.insert(columnsInherited);
 
 
           //

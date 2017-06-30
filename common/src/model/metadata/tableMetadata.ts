@@ -16,8 +16,8 @@ import { IEntity } from '../entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { EnumTableService } from '../service/enumTableService';
 import { IReadonlyService } from '../service/readonly-service.interface';
-import { SpecialColumns } from './specialColumns';
 import { MetadataStorage } from './metadataStorage';
+import { SpecialColumns } from './specialColumns';
 
 
 // Der Key für SpecialColumns ist ein Tupel aus (SpecialColumns, Propertyname)
@@ -67,12 +67,18 @@ export abstract class TableMetadata extends ClassMetadata {
    */
   public add(metadata: ColumnMetadata) {
     this._columnMetadata.push(metadata);
-    this.propertyMap.set(metadata.propertyName, metadata);
-    this.dbColMap.set(metadata.options.name, metadata);
+    this.addInternal(metadata);
+  }
 
-    if (metadata.options.primary) {
-      this.setSpecialColumn(metadata.propertyName, SpecialColumns.PRIMARY_KEY);
-    }
+
+  /**
+   * Fügt die Metadaten @param{metadata} vor die bisherigen Metadaten ein.
+   *
+   * @param metadatas
+   */
+  public insert(metadatas: ColumnMetadata[]) {
+    this._columnMetadata.unshift(...metadatas);
+    metadatas.forEach((item) => this.addInternal(item));
   }
 
 
@@ -394,5 +400,16 @@ export abstract class TableMetadata extends ClassMetadata {
    * Registriert die zugehörigen ServiceRequests-Klasse (Class/Constructor Function)
    */
   protected abstract registerServiceRequestsClazz(serviceRequestsClazz: Funktion);
+
+
+
+  private addInternal(metadata: ColumnMetadata) {
+    this.propertyMap.set(metadata.propertyName, metadata);
+    this.dbColMap.set(metadata.options.name, metadata);
+
+    if (metadata.options.primary) {
+      this.setSpecialColumn(metadata.propertyName, SpecialColumns.PRIMARY_KEY);
+    }
+  }
 
 }

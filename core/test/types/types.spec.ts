@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
@@ -102,7 +103,7 @@ class TypesTest {
     expect(Types.isArray([1, 2])).to.be.true;
     expect(Types.isFunction(
       // tslint:disable-next-line:only-arrow-functions
-      function () {
+      function() {
         // ok
       })).to.be.true;
     expect(Types.isBoolean(true)).to.be.true;
