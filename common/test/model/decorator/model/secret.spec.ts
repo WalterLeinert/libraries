@@ -9,6 +9,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Column, ColumnTypes, IdColumn, MetadataStorage, Secret, Table, TableMetadata } from '../../../../src/model';
+import { CommonTest } from '../../../common.spec';
 
 
 @Table({ name: ArtikelSecret.TABLE_NAME })
@@ -34,7 +35,7 @@ class NoEntity {
 
 
 @suite('model.decorator.Secret')
-class SecretTest {
+class SecretTest extends CommonTest {
   private tableMetadata: TableMetadata;
 
   @test 'should exist tableMetadata'() {
@@ -66,8 +67,12 @@ class SecretTest {
   }
 
 
-  protected before() {
-    this.tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelSecret);
+  protected before(done?: (err?: any) => void) {
+    super.before(() => {
+      this.tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelSecret);
+      done();
+    });
   }
+
 
 }

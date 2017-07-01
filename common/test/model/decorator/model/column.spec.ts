@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 // tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
@@ -8,6 +9,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Column, ColumnTypes, IdColumn, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
+import { CommonTest } from '../../../common.spec';
 
 
 @Table({ name: Artikel.TABLE_NAME })
@@ -23,7 +25,7 @@ class Artikel {
 
 
 @suite('model.decorator.Column')
-class ColumnTest {
+class ColumnTest extends CommonTest {
   private tableMetadata: TableMetadata;
 
   @test 'should exist tableMetadata'() {
@@ -57,9 +59,11 @@ class ColumnTest {
   }
 
 
-
-  protected before() {
-    this.tableMetadata = MetadataStorage.instance.findTableMetadata(Artikel);
+  protected before(done?: (err?: any) => void) {
+    super.before(() => {
+      this.tableMetadata = MetadataStorage.instance.findTableMetadata(Artikel);
+      done();
+    });
   }
 
 }

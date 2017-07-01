@@ -1,7 +1,9 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
+// tslint:disable:no-unused-expression
 
 import { getLogger, ILevel, levels, using, XLog } from '@fluxgate/platform';
+
 import { expect } from 'chai';
 import { /*only,*/ suite, test } from 'mocha-typescript';
 
@@ -78,6 +80,13 @@ class LoggerConfigFileTest extends CommonTest {
 
   @test 'should test log level for Test3'() {
     expect(Test3.logger.level.isEqualTo(levels.ERROR)).to.be.true;
+  }
+
+
+  protected before(done?: (err?: any) => void) {
+    super.before(() => {
+      done();
+    });
   }
 
 }

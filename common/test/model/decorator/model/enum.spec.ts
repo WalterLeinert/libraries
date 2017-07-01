@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 // tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
@@ -8,6 +9,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Column, ColumnTypes, Enum, IdColumn, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
+import { CommonTest } from '../../../common.spec';
 
 
 @Table({ name: ArtikelEnum.TABLE_NAME })
@@ -42,7 +44,7 @@ class KollektionEnum {
 
 
 @suite('model.decorator.Enum')
-class EnumTest {
+class EnumTest extends CommonTest {
   private tableMetadata: TableMetadata;
 
   @test 'should exist tableMetadata'() {
@@ -81,10 +83,11 @@ class EnumTest {
   }
 
 
-
-
-  protected before() {
-    this.tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelEnum);
+  protected before(done?: (err?: any) => void) {
+    super.before(() => {
+      this.tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelEnum);
+      done();
+    });
   }
 
 }

@@ -1,10 +1,13 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
+// tslint:disable:no-unused-expression
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { configure, getLogger, IConfig, ILevel, levels, using, XLog } from '@fluxgate/platform';
+
+import { CommonTest } from '../common.spec';
 
 
 class Test {
@@ -60,7 +63,7 @@ class Test3 {
 
 
 @suite('Logger')
-class LoggerTest {
+class LoggerTest extends CommonTest {
 
   @test 'should create logger'() {
     const logger = getLogger('test');
@@ -94,7 +97,7 @@ class LoggerTest {
 }
 
 @suite('Logger config')
-class LoggerConfigTest {
+class LoggerConfigTest extends CommonTest {
 
   config: IConfig = {
     appenders: [
@@ -131,15 +134,18 @@ class LoggerConfigTest {
     expect(Test3.logger.level.toString()).to.equal(levels.WARN.toString());
   }
 
-  protected before() {
-    configure(this.config);
+  protected before(done?: (err?: any) => void) {
+    super.before(() => {
+      configure(this.config);
+      done();
+    });
   }
 
 }
 
 
 @suite('Logger extended')
-class LoggerExtendedTest {
+class LoggerExtendedTest extends CommonTest {
 
   @test 'should create Test instance'() {
     const test = new Test('hugo');

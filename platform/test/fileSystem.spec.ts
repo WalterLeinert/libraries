@@ -7,12 +7,12 @@ import process = require('process');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { AssertionException } from '@fluxgate/core';
+import { AssertionException, UnitTest } from '@fluxgate/core';
 import { FileSystem } from '../src/util/fileSystem';
 
 
 @suite('platform.util.FileSystem')
-class FileSystemTest {
+class FileSystemTest extends UnitTest {
 
   @test 'should exist file'() {
     const testPath = path.join(process.cwd(), 'package.json');

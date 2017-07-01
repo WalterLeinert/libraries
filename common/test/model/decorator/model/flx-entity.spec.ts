@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 // tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
@@ -8,6 +9,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Column, FlxEntity, IdColumn, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
+import { CommonTest } from '../../../common.spec';
 
 
 @Table({ name: FlxEntityClass.TABLE_NAME })
@@ -23,7 +25,7 @@ class FlxEntityClass extends FlxEntity<number> {
 
 
 @suite('model.decorator.Table: Entity derived from FlxEntity')
-class FlxEntityTest {
+class FlxEntityTest extends CommonTest {
   private tableMetadata: TableMetadata;
 
   @test 'should exist tableMetadata'() {
@@ -56,8 +58,12 @@ class FlxEntityTest {
     expect(this.tableMetadata.clientColumn.target).to.equal(FlxEntityClass);
   }
 
-  protected before() {
-    this.tableMetadata = MetadataStorage.instance.findTableMetadata(FlxEntityClass);
+
+  protected before(done?: (err?: any) => void) {
+    super.before(() => {
+      this.tableMetadata = MetadataStorage.instance.findTableMetadata(FlxEntityClass);
+      done();
+    });
   }
 
 }

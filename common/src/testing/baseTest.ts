@@ -3,7 +3,7 @@
 import { configure, getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { fromEnvironment, Types } from '@fluxgate/core';
+import { fromEnvironment, Types, UnitTest } from '@fluxgate/core';
 
 import { Logging } from '../util/logging';
 import { ILoggingConfigurationOptions } from '../util/loggingConfiguration';
@@ -12,7 +12,7 @@ import { ILoggingConfigurationOptions } from '../util/loggingConfiguration';
 /**
  * Basisklasse für alle Unit-Tests
  */
-export abstract class BaseTest {
+export abstract class BaseTest extends UnitTest {
   protected static readonly logger = getLogger(BaseTest);
 
 
@@ -21,7 +21,6 @@ export abstract class BaseTest {
    */
   protected static before(done?: (err?: any) => void) {
     using(new XLog(BaseTest.logger, levels.DEBUG, 'static.before'), (log) => {
-      BaseTest.initializeLogging();
       done();
     });
   }
@@ -53,8 +52,10 @@ export abstract class BaseTest {
 
 
   protected before(done?: (err?: any) => void) {
+    super.before();
     // tslint:disable-next-line:no-empty
     using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
+      BaseTest.initializeLogging();
       done();
     });
   }

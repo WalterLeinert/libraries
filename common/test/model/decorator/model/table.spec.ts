@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 // tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
@@ -10,6 +11,7 @@ import { suite, test } from 'mocha-typescript';
 import { InvalidOperationException } from '@fluxgate/core';
 
 import { Column, MetadataStorage, Table, TableMetadata } from '../../../../src/model';
+import { CommonTest } from '../../../common.spec';
 
 
 @Table({ name: ArtikelTable.TABLE_NAME })
@@ -33,7 +35,7 @@ const duplicateTableTester = () => {
 
 
 @suite('model.decorator.Table')
-class TableTest {
+class TableTest extends CommonTest {
   private tableMetadata: TableMetadata;
 
   @test 'should exist tableMetadata'() {
@@ -50,8 +52,12 @@ class TableTest {
     return expect(() => duplicateTableTester()).to.Throw(InvalidOperationException);
   }
 
-  protected before() {
-    this.tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelTable);
+
+  protected before(done?: (err?: any) => void) {
+    super.before(() => {
+      this.tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelTable);
+      done();
+    });
   }
 
 }

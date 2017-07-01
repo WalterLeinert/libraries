@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 // tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
@@ -12,6 +13,7 @@ import { Types } from '@fluxgate/core';
 import {
   Column, ColumnTypes, Enum, EnumTable, IdColumn, MetadataStorage, Table, TableMetadata
 } from '../../../../src/model';
+import { CommonTest } from '../../../common.spec';
 
 
 @Table({ name: ArtikelEnumTable.TABLE_NAME })
@@ -61,7 +63,7 @@ class KollektionEnumTable {
 
 
 @suite('model.decorator.EnumTable')
-class EnumTableTest {
+class EnumTableTest extends CommonTest {
   private tableMetadata: TableMetadata;
 
   @test 'should exist tableMetadata'() {
@@ -111,8 +113,11 @@ class EnumTableTest {
   }
 
 
-  protected before() {
-    this.tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelEnumTable);
+  protected before(done?: (err?: any) => void) {
+    super.before(() => {
+      this.tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelEnumTable);
+      done();
+    });
   }
 
 }

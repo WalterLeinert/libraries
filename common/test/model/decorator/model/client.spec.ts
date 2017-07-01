@@ -10,6 +10,7 @@ import { suite, test } from 'mocha-typescript';
 import {
   ClientColumn, Column, ColumnTypes, IdColumn, IEntity, MetadataStorage, Table, TableMetadata
 } from '../../../../src/model';
+import { CommonTest } from '../../../common.spec';
 
 
 @Table({ name: ArtikelClient.TABLE_NAME })
@@ -42,7 +43,7 @@ class ArtikelClient2 implements IEntity<number> {
 
 
 @suite('model.decorator.Client')
-class ColumnTest {
+class ColumnTest extends CommonTest {
   private tableMetadata: TableMetadata;
   private tableMetadata2: TableMetadata;
 
@@ -71,9 +72,14 @@ class ColumnTest {
     expect(clientMetadata.options.hidden).to.be.false;
   }
 
-  protected before() {
-    this.tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelClient);
-    this.tableMetadata2 = MetadataStorage.instance.findTableMetadata(ArtikelClient2);
+
+
+  protected before(done?: (err?: any) => void) {
+    super.before(() => {
+      this.tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelClient);
+      this.tableMetadata2 = MetadataStorage.instance.findTableMetadata(ArtikelClient2);
+      done();
+    });
   }
 
 }
