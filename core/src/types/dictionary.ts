@@ -41,6 +41,15 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
   private keyType = KeyType.Undefined;
 
 
+  public static isValidKey(key: any): boolean {
+    if (Types.isString(key) || Types.isNumber(key) || (key instanceof Identifiable)) {
+      return true;
+    }
+    return false;
+  }
+
+
+
   /**
    * Fügt unter dem Key @param{key} einen neuen Wert @param{value} hinzu.
    *

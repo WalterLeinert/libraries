@@ -15,14 +15,14 @@ import { Assert } from '../util/assert';
 import { UniqueIdentifiable } from './uniqueIdentifiable';
 
 
-class ReferenceFixup<T> {
+export class ReferenceFixup<T> {
   constructor(public clonedObj: T, public valueSetter: InstanceSetter<T, any>, public clonedValue: T) {
     // ok
   }
 }
 
 
-abstract class ClonerBase<T> {
+export abstract class ClonerBase<T> {
   private static predefinedCloners: Dictionary<string, InstanceCreator<any>> =
   new Dictionary<string, InstanceCreator<any>>();
 
@@ -35,7 +35,7 @@ abstract class ClonerBase<T> {
     return true;
   })();
 
-  private cloneDict: Dictionary<any, any> = new Dictionary<any, any>();
+  private objectDict: Dictionary<any, any> = new Dictionary<any, any>();
 
 
   public constructor(private _checkCycles: boolean) {
@@ -51,25 +51,26 @@ abstract class ClonerBase<T> {
     return ClonerBase.predefinedCloners.get(typeName);
   }
 
-  protected getCloneFor(value: any): any {
+  protected getRegisteredObject(value: any): any {
     let rval;
 
     if (Types.isObject(value) && !Types.isArray(value)) {
-      rval = this.cloneDict.get(value);
+      rval = this.objectDict.get(value);
     }
 
     return rval;
   }
 
 
-  protected registerClonFor(value, clonedObj) {
+  protected registerObjectFor(value, clonedObj) {
     if (!Types.isArray(value)) {
-      this.cloneDict.set(value, clonedObj);
+      this.objectDict.set(value, clonedObj);
     }
   }
 
-  protected iterateOnEntries(value: any, clonedValue: any, cb: (entryName: string, entryValue: any,
-    clonedEntryName?: string, clonedEntryValue?: any) => void) {
+  protected iterateOnEntries(value: any, clonedValue: any,
+    cb: (count: number, index: number, entryName: string, entryValue: any,
+      clonedEntryName?: string, clonedEntryValue?: any) => void) {
 
     const valueIsUniqueIdentifiable = value instanceof UniqueIdentifiable;
 
@@ -101,7 +102,7 @@ abstract class ClonerBase<T> {
 
       // instanceId wird nicht geklont!
       if (!valueIsUniqueIdentifiable || (valueIsUniqueIdentifiable && entryName !== '_instanceId')) {
-        cb(entryName, entryValue, clonedEntryName, clonedEntryValue);
+        cb(valueEntries.length, i, entryName, entryValue, clonedEntryName, clonedEntryValue);
       }
 
     }
@@ -158,7 +159,7 @@ class Cloner<T> extends ClonerBase<T> {
 
     if (this.checkCycles) {
       // clone bereits erzeugt und registriert?
-      const clone = super.getCloneFor(value);
+      const clone = super.getRegisteredObject(value);
       if (clone) {
         return clone;
       }
@@ -171,7 +172,7 @@ class Cloner<T> extends ClonerBase<T> {
 
     if (this.checkCycles) {
       // für Objekte clone registrieren
-      super.registerClonFor(value, clonedObj);
+      super.registerObjectFor(value, clonedObj);
     }
 
 
@@ -229,30 +230,31 @@ class Verifier<T> extends ClonerBase<T> {
 
     if (this.checkCycles) {
       // clone bereits erzeugt und registriert?
-      const clone = super.getCloneFor(value);
+      const clone = super.getRegisteredObject(value);
       if (clone) {
         return;
       }
 
 
       // für Objekte clone registrieren
-      super.registerClonFor(value, clonedValue);
+      super.registerObjectFor(value, clonedValue);
     }
 
 
-    super.iterateOnEntries(value, clonedValue, (entryName, entryValue, clonedEntryName, clonedEntryValue) => {
-      Assert.that(entryName === clonedEntryName);
+    super.iterateOnEntries(value, clonedValue,
+      (count, index, entryName, entryValue, clonedEntryName, clonedEntryValue) => {
+        Assert.that(entryName === clonedEntryName);
 
-      Assert.that(typeof entryValue === typeof clonedEntryValue);
+        Assert.that(typeof entryValue === typeof clonedEntryValue);
 
-      if (Types.isObject(entryValue)) {
-        if (entryValue === clonedEntryValue) {
-          throw new InvalidOperationException(`value[${entryName}] identical to clonedValue[${clonedEntryName}]`);
+        if (Types.isObject(entryValue)) {
+          if (entryValue === clonedEntryValue) {
+            throw new InvalidOperationException(`value[${entryName}] identical to clonedValue[${clonedEntryName}]`);
+          }
+
+          this.verifyClone(entryValue, clonedEntryValue, entryName);   // Rekursion
         }
-
-        this.verifyClone(entryValue, clonedEntryValue, entryName);   // Rekursion
-      }
-    });
+      });
 
   }
 }
@@ -293,33 +295,34 @@ class Differ<T> extends ClonerBase<T> {
 
     if (this.checkCycles) {
       // clone bereits erzeugt und registriert?
-      const clone = super.getCloneFor(value);
+      const clone = super.getRegisteredObject(value);
       if (clone) {
         return;
       }
 
 
       // für Objekte clone registrieren
-      super.registerClonFor(value, clonedValue);
+      super.registerObjectFor(value, clonedValue);
     }
 
 
-    super.iterateOnEntries(value, clonedValue, (entryName, entryValue, clonedEntryName, clonedEntryValue) => {
-      if (entryName !== clonedEntryName) {
-        Differ.logger.error(`entryName (${entryName}) !== clonedEntryName (${clonedEntryName})`);
-      }
-
-      Assert.that(typeof entryValue === typeof clonedEntryValue);
-
-      if (Types.isObject(entryValue)) {
-        if (entryValue === clonedEntryValue) {
-          Differ.logger.error(`value[${entryName}] identical to clonedValue[${clonedEntryName}]`);
-          return;
+    super.iterateOnEntries(value, clonedValue,
+      (count, index, entryName, entryValue, clonedEntryName, clonedEntryValue) => {
+        if (entryName !== clonedEntryName) {
+          Differ.logger.error(`entryName (${entryName}) !== clonedEntryName (${clonedEntryName})`);
         }
 
-        this.diff(entryValue, clonedEntryValue, entryName);   // Rekursion
-      }
-    });
+        Assert.that(typeof entryValue === typeof clonedEntryValue);
+
+        if (Types.isObject(entryValue)) {
+          if (entryValue === clonedEntryValue) {
+            Differ.logger.error(`value[${entryName}] identical to clonedValue[${clonedEntryName}]`);
+            return;
+          }
+
+          this.diff(entryValue, clonedEntryValue, entryName);   // Rekursion
+        }
+      });
 
   }
 }
