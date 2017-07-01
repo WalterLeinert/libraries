@@ -4,6 +4,7 @@ import { expect } from 'chai';
 // let jsondiff = require('json-diff-patch');
 
 import { Clone } from '../../src/base/clone';
+import { Differ } from '../../src/base/differ';
 import { JsonSerializer } from '../../src/serialization';
 import { UnitTest } from '../../src/testing/unit-test';
 
@@ -24,7 +25,7 @@ export abstract class SerializerBaseTest extends UnitTest {
 
     // tslint:disable-next-line:no-console
     // console.log(JSON.stringify(diff));
-    Clone.diff(value, valueDeserialized);
+    Differ.diff(value, valueDeserialized);
 
     expect(value).to.eql(valueDeserialized);
   }
