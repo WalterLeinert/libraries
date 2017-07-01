@@ -1,13 +1,17 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
+// tslint:disable:no-unused-expression
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 
 import { Clone } from '../../src/base/clone';
+import { CloneVerifier } from '../../src/base/clone-verifier';
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
+import { UnitTest } from '../../src/testing/unit-test';
 import { Types } from '../../src/types/types';
+
 
 class Test extends UniqueIdentifiable {
   // tslint:disable-next-line:no-unused-variable
@@ -75,7 +79,7 @@ const primitiveTests = [
 
 
 @suite('core.base.Clone primitives')
-class ClonePrimitivesTest {
+class ClonePrimitivesTest extends UnitTest {
 
   @test 'should clone all primitives'() {
     primitiveTests.forEach((primitiveTest) => {
@@ -86,7 +90,7 @@ class ClonePrimitivesTest {
 
       const testCloned = Clone.clone(test);
       expect(testCloned).to.deep.equal(test);
-      expect(() => Clone.verifyClone(test, testCloned)).not.to.Throw();
+      expect(() => CloneVerifier.verifyClone(test, testCloned)).not.to.Throw();
     });
 
   }
@@ -94,7 +98,7 @@ class ClonePrimitivesTest {
 
 
 @suite('core.base.Clone')
-class CloneTest {
+class CloneTest extends UnitTest {
 
   @test 'should check TestDerived properties'() {
     const test = new TestDerived('Walter', 4711, new Date());
@@ -107,14 +111,14 @@ class CloneTest {
     const test = null;
     const testCloned = Clone.clone<TestDerived>(test);
     expect(testCloned).to.deep.equal(test);
-    expect(() => Clone.verifyClone(test, testCloned)).not.to.Throw();
+    expect(() => CloneVerifier.verifyClone(test, testCloned)).not.to.Throw();
   }
 
   @test 'should clone undefined'() {
     const test = null;
     const testCloned = Clone.clone<TestDerived>(test);
     expect(testCloned).to.deep.equal(test);
-    expect(() => Clone.verifyClone(test, testCloned)).not.to.Throw();
+    expect(() => CloneVerifier.verifyClone(test, testCloned)).not.to.Throw();
   }
 
 
@@ -144,12 +148,12 @@ class CloneTest {
     // expect(testCloned).to.deep.equal(test);
 
     expect(test === testCloned).to.be.not.true;
-    expect(() => Clone.verifyClone(test, testCloned)).not.to.Throw();
+    expect(() => CloneVerifier.verifyClone(test, testCloned)).not.to.Throw();
   }
 
   @test 'should verifyClone'() {
     const test = new TestDerived('Walter', 4711, new Date());
-    expect(() => Clone.verifyClone(test, test)).to.Throw();
+    expect(() => CloneVerifier.verifyClone(test, test)).to.Throw();
   }
 
 }
@@ -170,7 +174,7 @@ class TestWithClone {
 
 
 @suite('core.base.Clone by clone()')
-class CloneByCloneTest {
+class CloneByCloneTest extends UnitTest {
 
   @test 'should clone'() {
     const test = new TestWithClone(4711, false);
@@ -179,7 +183,7 @@ class CloneByCloneTest {
 
     // TestWithClone ist kein UniqueIdentifiable -> es darf nicht auf Zyklen getestet werden,
     // da sonst Error in Dictionary
-    expect(() => Clone.verifyClone(test, testCloned, false)).not.to.Throw();
+    expect(() => CloneVerifier.verifyClone(test, testCloned, false)).not.to.Throw();
   }
 
 }

@@ -1,12 +1,15 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
+// tslint:disable:no-unused-expression
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 
 import { Clone } from '../../src/base/clone';
+import { CloneVerifier } from '../../src/base/clone-verifier';
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
+import { UnitTest } from '../../src/testing/unit-test';
 
 class TreeNode extends UniqueIdentifiable {
   constructor(private _id: number, private _name: string, private _child?: TreeNode) {
@@ -33,7 +36,7 @@ class TreeNode extends UniqueIdentifiable {
 
 
 @suite('core.base.Clone: cyclic graphs')
-class CloneRecursiveTest {
+class CloneRecursiveTest extends UnitTest {
 
   @test 'should check graph without cycle'() {
     const tree = new TreeNode(1, 'root', new TreeNode(2, 'child'));
@@ -47,7 +50,7 @@ class CloneRecursiveTest {
     // expect(treeCloned).to.deep.equal(tree);
 
     expect(tree === treeCloned).to.be.not.true;
-    expect(() => Clone.verifyClone(tree, treeCloned, true)).not.to.Throw();
+    expect(() => CloneVerifier.verifyClone(tree, treeCloned, true)).not.to.Throw();
   }
 
   @test 'should check graph with cycle'() {
@@ -55,6 +58,6 @@ class CloneRecursiveTest {
     tree.child = tree;    // self reference
     const treeCloned = Clone.clone(tree, true);
     expect(treeCloned.child).to.equal(treeCloned);
-    expect(() => Clone.verifyClone(tree, treeCloned, true)).not.to.Throw();
+    expect(() => CloneVerifier.verifyClone(tree, treeCloned, true)).not.to.Throw();
   }
 }

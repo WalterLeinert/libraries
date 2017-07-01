@@ -39,10 +39,21 @@ export function assert(condition: boolean, message?: string): void {
 export abstract class Exception implements IException {
   protected static readonly logger = new ConsoleLogger(Exception.name);
 
+  /**
+   * steuert, ob die Exception gelogged wird
+   *
+   * @static
+   * @type {boolean}
+   * @memberof Exception
+   */
+  public static logException: boolean = true;
+
   private _nativeError: Error;
   private _message: string;
   private _innerException: IException;
   private _displayed: boolean;
+
+
 
   protected constructor(private _kind: string, message: string, innerException?: IException | Error) {
     if (message === undefined) {
@@ -70,8 +81,11 @@ export abstract class Exception implements IException {
 
     this._message = sb.toString();
 
-    Exception.logger.error(`kind: ${this.kind}, message: ${this.message}, stack: ${this.stack}`);
+    if (Exception.logException) {
+      Exception.logger.error(`kind: ${this.kind}, message: ${this.message}, stack: ${this.stack}`);
+    }
   }
+
 
 
   public toString(): string {

@@ -2,7 +2,7 @@
 // tslint:disable:max-classes-per-file
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
 import { Dumper } from '../../src/diagnostics/dumper';
@@ -48,7 +48,7 @@ class TreeNode extends UniqueIdentifiable {
 
 
 
-@suite('core.diagnostics.Dumper') @only
+@suite('core.diagnostics.Dumper')
 class DumperTest {
 
   @test 'should dump empty json'() {

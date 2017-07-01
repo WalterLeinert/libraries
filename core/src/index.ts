@@ -11,5 +11,6 @@ export * from './pattern';
 export * from './reflection';
 export * from './serialization';
 export * from './suspendable';
+export * from './testing';
 export * from './types';
 export * from './util';

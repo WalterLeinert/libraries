@@ -1,5 +1,6 @@
 export * from './activator';
 export * from './clone';
+export * from './clone-verifier';
 export * from './ctor';
 export * from './constants';
 export * from './disposable.interface';

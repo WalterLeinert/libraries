@@ -176,7 +176,7 @@ class Cloner<T> extends ClonerBase<T> {
     }
 
 
-    super.iterateOnEntries(value, undefined, (entryName, entryValue) => {
+    super.iterateOnEntries(value, undefined, (count, index, entryName, entryValue) => {
       if (typeof entryValue === 'object') {
         // rekursiv clonen
 
@@ -198,67 +198,6 @@ class Cloner<T> extends ClonerBase<T> {
     return clonedObj;
   }
 }
-
-
-
-class Verifier<T> extends ClonerBase<T> {
-
-  /**
-   * Verifiziert, dass @param{clonedValue} wirklich ein deep clone von @param{value} ist.
-   */
-  public verifyClone<T>(value: T, clonedValue: T, attrName?: string) {
-    if (value === clonedValue) {
-      // undefined und null werden wie reguläre Primitive behandelt
-      if (value === undefined || value == null) {
-        return;
-      }
-      if (!Types.isPrimitive(value)) {
-        throw new InvalidOperationException(`value identical to clonedValue: attrName = ${attrName}`);
-      }
-    }
-
-    // primitive Typen sind ok
-    if (Types.isPrimitive(value)) {
-      return;
-    }
-
-    // geklonte vordefinierte Typen sind ok
-    const predefCloner = ClonerBase.getPredefinedClonerFor(value.constructor.name);
-    if (predefCloner !== undefined) {
-      return;
-    }
-
-    if (this.checkCycles) {
-      // clone bereits erzeugt und registriert?
-      const clone = super.getRegisteredObject(value);
-      if (clone) {
-        return;
-      }
-
-
-      // für Objekte clone registrieren
-      super.registerObjectFor(value, clonedValue);
-    }
-
-
-    super.iterateOnEntries(value, clonedValue,
-      (count, index, entryName, entryValue, clonedEntryName, clonedEntryValue) => {
-        Assert.that(entryName === clonedEntryName);
-
-        Assert.that(typeof entryValue === typeof clonedEntryValue);
-
-        if (Types.isObject(entryValue)) {
-          if (entryValue === clonedEntryValue) {
-            throw new InvalidOperationException(`value[${entryName}] identical to clonedValue[${clonedEntryName}]`);
-          }
-
-          this.verifyClone(entryValue, clonedEntryValue, entryName);   // Rekursion
-        }
-      });
-
-  }
-}
-
 
 
 class Differ<T> extends ClonerBase<T> {
@@ -350,14 +289,6 @@ export class Clone {
     return clonedValue;
   }
 
-
-  /**
-   * Verifiziert, dass @param{clonedValue} wirklich ein deep clone von @param{value} ist.
-   */
-  public static verifyClone<T>(value: T, clonedValue: T, checkCycles: boolean = false) {
-    const verifier = new Verifier<T>(checkCycles);
-    verifier.verifyClone<T>(value, clonedValue);
-  }
 
   public static diff<T>(value: T, clonedValue: T, checkCycles: boolean = false) {
     const verifier = new Differ<T>(checkCycles);

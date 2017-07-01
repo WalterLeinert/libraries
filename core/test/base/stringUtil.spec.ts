@@ -6,10 +6,11 @@ import { suite, test } from 'mocha-typescript';
 
 import { StringUtil } from '../../src/base/stringUtil';
 import { AssertionException } from '../../src/exceptions/assertionException';
+import { UnitTest } from '../../src/testing/unit-test';
 
 
 @suite('core.base.StringUtil')
-class StringUtilTest {
+class StringUtilTest extends UnitTest {
 
 
   @test 'should insert Text at 0'() {

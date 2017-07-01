@@ -1,11 +1,13 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Disposable, using } from '../../src/base/disposable';
 import { NotImplementedException } from '../../src/exceptions/notImplementedException';
+import { UnitTest } from '../../src/testing/unit-test';
 
 class Test extends Disposable {
 
@@ -31,7 +33,7 @@ class Test extends Disposable {
 
 
 @suite('core.base.Disposable')
-class DisposableTest {
+class DisposableTest extends UnitTest {
 
   @test 'should create instance of class Test'() {
     const messages = [];
