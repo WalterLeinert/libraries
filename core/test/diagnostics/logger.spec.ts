@@ -1,10 +1,22 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
+// tslint:disable:no-unused-expression
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { configure, getLogger, IConfig, ILevel, levels, using, XLog } from '../../src/diagnostics/';
+// -------------------------------------- logging --------------------------------------------
+import { using } from '../../src/base/disposable';
+import { IConfig } from '../../src/diagnostics/config.interface';
+import { levels } from '../../src/diagnostics/level';
+import { ILevel } from '../../src/diagnostics/level.interface';
+// tslint:disable-next-line:no-unused-variable
+import { ILogger } from '../../src/diagnostics/logger.interface';
+import { configure, getLogger } from '../../src/diagnostics/logging-core';
+import { XLog } from '../../src/diagnostics/xlog';
+// -------------------------------------- logging --------------------------------------------
+
+import { UnitTest } from '../../src/testing/unit-test';
 
 
 class Test {
@@ -60,7 +72,7 @@ class Test3 {
 
 
 @suite('core.diagnostics.Logger')
-class LoggerTest {
+class LoggerTest extends UnitTest {
 
   @test 'should create logger'() {
     const logger = getLogger('test');
@@ -94,7 +106,7 @@ class LoggerTest {
 }
 
 @suite('core.diagnostics.Logger config')
-class LoggerConfigTest {
+class LoggerConfigTest extends UnitTest {
 
   config: IConfig = {
     appenders: [
@@ -131,6 +143,7 @@ class LoggerConfigTest {
   }
 
   protected before() {
+    super.before();
     configure(this.config);
   }
 
@@ -138,7 +151,7 @@ class LoggerConfigTest {
 
 
 @suite('Logger extended')
-class LoggerExtendedTest {
+class LoggerExtendedTest extends UnitTest {
 
   @test 'should create Test instance'() {
     const test = new Test('hugo');
