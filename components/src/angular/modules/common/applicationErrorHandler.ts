@@ -7,7 +7,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { MessageService } from '@fluxgate/client';
-import { Exception, MessageSeverity, ServerBusinessException } from '@fluxgate/core';
+import { Exception, JsonDumper, MessageSeverity, ServerBusinessException } from '@fluxgate/core';
 
 interface INgDebugContext {
   component: any;
@@ -40,7 +40,7 @@ export class ApplicationErrorHandler extends ErrorHandler {
       // tslint:disable-next-line:no-string-literal
       const debugContext = error['ngDebugContext'] as INgDebugContext;
       if (debugContext) {
-        log.error(`ngDebugContext.component: ${JSON.stringify(debugContext.component)}`);
+        log.error(`ngDebugContext.component: ${JsonDumper.stringify(debugContext.component)}`);
       }
 
       if (error instanceof Exception) {
