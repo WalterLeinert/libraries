@@ -199,75 +199,6 @@ class Cloner<T> extends ClonerBase<T> {
 }
 
 
-class Differ<T> extends ClonerBase<T> {
-  protected static readonly logger = getLogger(Differ);
-
-  /**
-   * Verifiziert, dass @param{clonedValue} wirklich ein deep clone von @param{value} ist.
-   */
-  public diff<T>(value: T, clonedValue: T, attrName?: string) {
-    if (value === clonedValue) {
-      // undefined und null werden wie reguläre Primitive behandelt
-      if (value === undefined || value == null) {
-        return;
-      }
-      if (!Types.isPrimitive(value)) {
-        Differ.logger.error(`value identical to clonedValue: attrName = ${attrName}`);
-      }
-    }
-
-    // primitive Typen sind ok
-    if (Types.isPrimitive(value)) {
-      if (value !== clonedValue) {
-        Differ.logger.error(
-          `values different for attrName ${attrName}: value (${value}), clonedValue (${clonedValue}) `);
-      }
-      return;
-    }
-
-    // geklonte vordefinierte Typen sind ok
-    const predefCloner = ClonerBase.getPredefinedClonerFor(value.constructor.name);
-    if (predefCloner !== undefined) {
-      return;
-    }
-
-    if (this.checkCycles) {
-      // clone bereits erzeugt und registriert?
-      const clone = super.getRegisteredObject(value);
-      if (clone) {
-        return;
-      }
-
-
-      // für Objekte clone registrieren
-      super.registerObjectFor(value, clonedValue);
-    }
-
-
-    super.iterateOnEntries(value, clonedValue,
-      (count, index, entryName, entryValue, clonedEntryName, clonedEntryValue) => {
-        if (entryName !== clonedEntryName) {
-          Differ.logger.error(`entryName (${entryName}) !== clonedEntryName (${clonedEntryName})`);
-        }
-
-        Assert.that(typeof entryValue === typeof clonedEntryValue);
-
-        if (Types.isObject(entryValue)) {
-          if (entryValue === clonedEntryValue) {
-            Differ.logger.error(`value[${entryName}] identical to clonedValue[${clonedEntryName}]`);
-            return;
-          }
-
-          this.diff(entryValue, clonedEntryValue, entryName);   // Rekursion
-        }
-      });
-
-  }
-}
-
-
-
-
 export class Clone {
 
   /**
@@ -286,11 +217,5 @@ export class Clone {
     cloner.resolveFixups();
 
     return clonedValue;
-  }
-
-
-  public static diff<T>(value: T, clonedValue: T, checkCycles: boolean = false) {
-    const verifier = new Differ<T>(checkCycles);
-    verifier.diff<T>(value, clonedValue);
   }
 }
