@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
-import { Dumper } from '../../src/diagnostics/dumper';
+import { JsonDumper } from '../../src/diagnostics/json-dumper';
 
 
 const json = {
@@ -52,14 +52,14 @@ class TreeNode extends UniqueIdentifiable {
 class DumperTest {
 
   @test 'should dump empty json'() {
-    const dump = Dumper.dump({});
+    const dump = JsonDumper.stringify({});
     return expect(dump).to.be.equal(`{
 }`);
   }
 
 
   @test 'should dump json without cyclic reference'() {
-    const dump = Dumper.dump(json);
+    const dump = JsonDumper.stringify(json);
     return expect(dump).to.be.equal(`{
   name: 'Walter',
   id: 4711,
@@ -81,7 +81,7 @@ class DumperTest {
     const tree = new TreeNode(1, 'root');
     tree.child = tree;    // self reference
 
-    const dump = Dumper.dump(tree);
+    const dump = JsonDumper.stringify(tree);
     return expect(dump).to.be.equal(`{
   _id: 1,
   _name: 'root',

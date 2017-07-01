@@ -115,10 +115,10 @@ class DumperInternal<T> extends ClonerBase<T> {
 
 
 // tslint:disable-next-line:max-classes-per-file
-export class Dumper {
+export class JsonDumper {
 
   /**
-   * Liefert einen Clone von @param{value}
+   * Gibt das Objekt @param{value} als String aus.
    *
    * @static
    * @template T
@@ -127,7 +127,7 @@ export class Dumper {
    *
    * @memberOf Clone
    */
-  public static dump<T>(value: T, allowCycles: boolean = true): string {
+  public static stringify<T>(value: T, allowCycles: boolean = true): string {
     const dumper = new DumperInternal<T>(allowCycles);
     dumper.dump<T>(value);
 

@@ -1,6 +1,6 @@
 export * from './consoleLogger';
 export * from './config.interface';
-export * from './dumper';
+export * from './json-dumper';
 export * from './level';
 export * from './level.interface';
 export * from './logger';
