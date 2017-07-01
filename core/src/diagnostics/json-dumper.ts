@@ -21,7 +21,7 @@ class DumperInternal<T> extends ClonerBase<T> {
     }
 
     if (Types.isObject(value)) {
-      this.sb.appendLine('{');
+      this.sb.appendLine(`{    // ${value.constructor.name}`);
 
       // geklonte vordefinierte Typen sind ok
       const predefCloner = ClonerBase.getPredefinedClonerFor(((value.constructor) as any as Funktion).name);

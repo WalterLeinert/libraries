@@ -53,24 +53,24 @@ class DumperTest {
 
   @test 'should dump empty json'() {
     const dump = JsonDumper.stringify({});
-    return expect(dump).to.be.equal(`{
+    return expect(dump).to.be.equal(`{    // Object
 }`);
   }
 
 
   @test 'should dump json without cyclic reference'() {
     const dump = JsonDumper.stringify(json);
-    return expect(dump).to.be.equal(`{
+    return expect(dump).to.be.equal(`{    // Object
   name: 'Walter',
   id: 4711,
   valid: true,
-  inner1: {
+  inner1: {    // Object
     no: 1,
-    inner: {
+    inner: {    // Object
       hallo: 'du'
     }
   },
-  inner2: {
+  inner2: {    // Object
     no: 1
   }
 }`);
@@ -82,10 +82,10 @@ class DumperTest {
     tree.child = tree;    // self reference
 
     const dump = JsonDumper.stringify(tree);
-    return expect(dump).to.be.equal(`{
+    return expect(dump).to.be.equal(`{    // TreeNode
   _id: 1,
   _name: 'root',
-  _child: {
+  _child: {    // TreeNode
     ----> cycle detected: type = TreeNode
   }
 }`);
