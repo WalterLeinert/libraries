@@ -7,9 +7,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { configure, IConfig } from '../../src/diagnostics';
 
-import {
-  OptimisticLockException
-} from '../../src/exceptions';
+import { OptimisticLockException } from '../../src/exceptions/optimisticLockException';
 import { SerializerBaseTest } from './serializer-base-test';
 
 

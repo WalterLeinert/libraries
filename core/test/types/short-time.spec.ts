@@ -1,13 +1,14 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
-
-// require('reflect-metadata');
+// tslint:disable:no-unused-expression
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { AssertionException } from '../../src/exceptions/assertionException';
+import { UnitTest } from '../../src/testing/unit-test';
 import { ShortTime, Types } from '../../src/types';
+
 
 const expedtedTimes = [
   {
@@ -30,7 +31,7 @@ const expedtedTimes = [
 
 
 @suite('core.types.ShortTime (HH:mm)')
-class ShortTimeTest {
+class ShortTimeTest extends UnitTest {
 
   @test 'should create instance of class ShortTime (default ctor)'() {
     return expect(Types.construct(ShortTime)).to.be.not.null;
@@ -107,7 +108,7 @@ function timeToMinute(time: ShortTime): number {
 
 
 @suite('core.types.ShortTime (add, subtract)')
-class ShortTimeOperationsTest {
+class ShortTimeOperationsTest extends UnitTest {
 
   @test 'should get minutes from hour'() {
     const time = new ShortTime(8, 0);

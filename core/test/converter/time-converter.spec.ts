@@ -1,11 +1,13 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
+// tslint:disable:no-unused-expression
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 
 import { ConverterRegistry } from '../../src/converter';
+import { UnitTest } from '../../src/testing/unit-test';
 import { Time } from '../../src/types/time';
 import { Types } from '../../src/types/types';
 
@@ -20,7 +22,7 @@ class Test {
 
 
 @suite('core.converter (Time converter)')
-class TimeConverterTest {
+class TimeConverterTest extends UnitTest {
 
   @test 'should test Time property'() {
     const test = new Test();

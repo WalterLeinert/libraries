@@ -1,11 +1,13 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
+// tslint:disable:no-unused-expression
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Deprecated } from '../../src/decorator/';
 import { configure, IConfig } from '../../src/diagnostics/';
+import { UnitTest } from '../../src/testing/unit-test';
 
 const tester = (doTest: (test: any, test2: any, test3: any) => void) => {
   @Deprecated()
@@ -35,7 +37,7 @@ const tester = (doTest: (test: any, test2: any, test3: any) => void) => {
 
 
 @suite('core.decorator.Deprecated')
-class DeprecatedTest {
+class DeprecatedTest extends UnitTest {
   config: IConfig = {
     appenders: [
     ],

@@ -5,7 +5,9 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { UnitTest } from '../../src/testing/unit-test';
 import { Types } from '../../src/types';
+
 
 // von @fluxgate/common kopiert
 interface IUser {
@@ -85,7 +87,7 @@ class TestUserDerived extends TestUser {
 
 
 @suite('core.types.Types')
-class TypesTest {
+class TypesTest extends UnitTest {
 
 
   @test 'should test derived classes'() {

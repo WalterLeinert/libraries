@@ -9,7 +9,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { TypeReflector } from '../../src/reflection/typeReflector';
-
+import { UnitTest } from '../../src/testing/unit-test';
 
 class BaseClass {
   constructor(public name: string) {
@@ -24,7 +24,7 @@ class DerivedClass extends BaseClass {
 
 
 @suite('core.reflection.TypeReflector')
-class ReflectionTest {
+class ReflectionTest extends UnitTest {
 
   @test 'should create instance of TypeReflector'() {
     const tr = new TypeReflector(BaseClass);

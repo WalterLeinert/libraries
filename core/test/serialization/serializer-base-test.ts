@@ -5,11 +5,14 @@ import { expect } from 'chai';
 
 import { Clone } from '../../src/base/clone';
 import { JsonSerializer } from '../../src/serialization';
+import { UnitTest } from '../../src/testing/unit-test';
 
-export abstract class SerializerBaseTest {
+
+export abstract class SerializerBaseTest extends UnitTest {
   protected formatter: JsonSerializer;
 
   public before() {
+    super.before();
     this.formatter = new JsonSerializer();
   }
 

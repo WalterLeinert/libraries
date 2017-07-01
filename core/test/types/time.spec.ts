@@ -5,7 +5,9 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { AssertionException } from '../../src/exceptions/assertionException';
+import { UnitTest } from '../../src/testing/unit-test';
 import { Time } from '../../src/types/time';
+
 
 const expedtedTimes = [
   {
@@ -28,7 +30,7 @@ const expedtedTimes = [
 
 
 @suite('core.types.Time (HH:mm:ss)')
-class TimeTest {
+class TimeTest extends UnitTest {
 
   @test 'should create instance of class Time'() {
     return expect(new Time(8, 0, 0)).to.be.not.null;
@@ -100,7 +102,7 @@ function timeToSecond(time: Time): number {
 
 
 @suite('core.types.Time (add, subtract)')
-class TimeOperationsTest {
+class TimeOperationsTest extends UnitTest {
 
   @test 'should get seconds from hour'() {
     const time = new Time(8, 0, 0);

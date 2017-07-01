@@ -5,11 +5,13 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { ConverterRegistry } from '../../src/converter';
+import { Funktion } from '../../src/base/objectType';
+import { ConverterRegistry } from '../../src/converter/converter-registry';
+import { UnitTest } from '../../src/testing/unit-test';
 
 
 @suite('core.converter (Error converter)')
-class ErrorConverterTest {
+class ErrorConverterTest extends UnitTest {
 
   @test 'should test empty instance'() {
     const test = new Error();
@@ -21,8 +23,9 @@ class ErrorConverterTest {
     this.testConversion(test, Error);
   }
 
-  private testConversion<T1, T2>(value: T1, type: Function) {
+  private testConversion<T1, T2>(value: T1, type: Funktion) {
     const converter = ConverterRegistry.get<T1, T2>(type);
+    // tslint:disable-next-line:no-unused-expression
     expect(converter).to.exist;
 
     const valueConverted = converter.convert(value);

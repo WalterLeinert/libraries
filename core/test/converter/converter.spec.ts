@@ -7,6 +7,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { ConverterRegistry } from '../../src/converter';
 import { InvalidOperationException } from '../../src/exceptions';
+import { UnitTest } from '../../src/testing/unit-test';
 import { ShortTime } from '../../src/types/shortTime';
 import { Time } from '../../src/types/time';
 
@@ -96,7 +97,7 @@ const tests = [
 
 
 @suite('core.converter')
-class ConverterTest {
+class ConverterTest extends UnitTest {
 
   @test 'should convert null/undefined'() {
     nullUndefinedTests.forEach((type) => {
@@ -121,7 +122,7 @@ class ConverterTest {
 
 
 @suite('core.converter (expected exceptions)')
-class ConverterFailureTest {
+class ConverterFailureTest extends UnitTest {
 
   @test 'should convert and throw exceptions'() {
 

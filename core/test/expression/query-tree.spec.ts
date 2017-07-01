@@ -12,6 +12,7 @@ import { using } from '../../src/diagnostics';
 import { AndTerm, BinaryTerm, NotTerm, OrTerm, Query, SelectorTerm, UnaryTerm } from '../../src/expression';
 import { IVisitor, VisitableNode } from '../../src/pattern/visitor';
 import { Indenter, Suspender } from '../../src/suspendable';
+import { UnitTest } from '../../src/testing/unit-test';
 
 
 class TermVisitor implements IVisitor<VisitableNode> {
@@ -98,7 +99,7 @@ class TermVisitor implements IVisitor<VisitableNode> {
 
 
 @suite('core.expresssion')
-class QueryTreeTest {
+class QueryTreeTest extends UnitTest {
 
   @test 'should create simple query'() {
     const term = new SelectorTerm({ name: 'firstname', operator: '=', value: 'hugo' });

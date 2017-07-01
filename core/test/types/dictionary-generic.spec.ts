@@ -1,11 +1,15 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
+
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
+import { UnitTest } from '../../src/testing/unit-test';
 import { Dictionary } from '../../src/types/dictionary';
+
 
 class KeyClass extends UniqueIdentifiable {
   constructor(public id: number) {
@@ -219,7 +223,7 @@ class DictionaryTester<TKey, TValue> {
 
 
 @suite('core.types.Dictionary-generic')
-class DictionaryGenericTest {
+class DictionaryGenericTest extends UnitTest {
 
   @test 'should perform tests on Dictionary<string, string>'() {
     const tester = new DictionaryTester<string, string>();

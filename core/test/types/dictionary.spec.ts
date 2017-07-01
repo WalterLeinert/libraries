@@ -1,10 +1,13 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { UnitTest } from '../../src/testing/unit-test';
 import { Dictionary } from '../../src/types/dictionary';
+
 
 class BaseClass {
   constructor(public name: string) {
@@ -27,7 +30,7 @@ const expectedDict = [
 
 
 @suite('core.types.Dictionary<string, string>')
-class DictionaryStringStringTest<TKey, TValue> {
+class DictionaryStringStringTest<TKey, TValue> extends UnitTest {
   @test 'should create instance of Dictionary'() {
     return expect(new Dictionary<string, string>()).to.be.not.null;
   }
@@ -91,7 +94,7 @@ class DictionaryStringStringTest<TKey, TValue> {
 
 
 @suite('core.types.Dictionary')
-class DictionaryTest {
+class DictionaryTest extends UnitTest {
 
   @test 'validate keys vs values'() {
     expectedDict.forEach((test) => {
@@ -245,7 +248,7 @@ class NotSupportedKey {
 }
 
 @suite('core.types.Dictionary: not supported Keys')
-class DictionaryNotSupportedTest {
+class DictionaryNotSupportedTest extends UnitTest {
 
   @test 'should create instance of Dictionary'() {
     return expect(new Dictionary<NotSupportedKey, string>()).to.be.not.null;

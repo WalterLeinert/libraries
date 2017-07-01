@@ -6,6 +6,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { Funktion } from '../../src/base/objectType';
 import { ClassMetadata, Metadata, PropertyMetadata } from '../../src/metadata/';
+import { UnitTest } from '../../src/testing/unit-test';
 
 
 const metadatas: Array<Metadata<any>> = new Array<Metadata<any>>();
@@ -17,8 +18,8 @@ class TestClassMetadata extends ClassMetadata {
   }
 }
 
-class TestPropertyMetadataObject extends PropertyMetadata<Object> {
-  constructor(target: Object, propertyName: string) {
+class TestPropertyMetadataObject extends PropertyMetadata<object> {
+  constructor(target: object, propertyName: string) {
     super(target, propertyName);
   }
 }
@@ -42,14 +43,14 @@ export function ClazzDecorator() {
 
 export function PropertyDecoratorObject() {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: Object, propertyName: string) {
+  return function (target: object, propertyName: string) {
     metadatas.push(new TestPropertyMetadataObject(target, propertyName));
   };
 }
 
 export function PropertyDecoratorFunktion() {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: Object, propertyName: string) {
+  return function (target: object, propertyName: string) {
     metadatas.push(new TestPropertyMetadataFunktion(target.constructor, propertyName));
   };
 }
@@ -74,7 +75,7 @@ class TestClass {
 
 
 @suite('core.metadata')
-class MetadataTest {
+class MetadataTest extends UnitTest {
 
   @test 'should test no of metadata'() {
     expect(metadatas.length).to.equal(4);

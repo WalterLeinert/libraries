@@ -1,10 +1,12 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { UnitTest } from '../../src/testing/unit-test';
 import { Utility } from '../../src/util/utility';
 
 
@@ -17,7 +19,7 @@ const numberData: number[] = [1, 2, 3];
 const stringData: string[] = ['a', 'b', 'c'];
 
 @suite('core.util.utility')
-class UtilityTest {
+class UtilityTest extends UnitTest {
 
 
   @test 'should test for not null or empty (string)'() {

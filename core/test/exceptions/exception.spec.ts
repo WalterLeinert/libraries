@@ -1,11 +1,13 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { ExceptionFactory } from '../../src/exceptions';
 import { JsonSerializer } from '../../src/serialization/json-serializer';
+import { UnitTest } from '../../src/testing/unit-test';
 
 
 const errorText = 'user not found';
@@ -36,7 +38,7 @@ const innerExceptionTestCases = [
 
 
 @suite('core.exceptions: simple exceptions')
-class SimpleExceptionTests {
+class SimpleExceptionTests extends UnitTest {
   private serializer = new JsonSerializer();
 
   @test 'should create, serialize and deserialize simple exception'() {

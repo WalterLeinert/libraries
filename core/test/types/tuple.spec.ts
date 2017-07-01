@@ -4,11 +4,12 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { UnitTest } from '../../src/testing/unit-test';
 import { Tuple, Tuple3, Tuple4 } from '../../src/types';
 
 
 @suite('core.types.Tuple')
-class TupleTest {
+class TupleTest extends UnitTest {
 
   @test 'should test Tuple'() {
     const t = new Tuple<string, number>('hugo', 4711);
