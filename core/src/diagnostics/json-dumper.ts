@@ -20,7 +20,50 @@ class DumperInternal<T> extends ClonerBase<T> {
       this.indent(`${attrName}: `);
     }
 
-    if (Types.isObject(value)) {
+    // primitive Typen
+
+    // undefined und null werden wie reguläre Primitive behandelt
+    if (value === undefined || value == null) {
+      this.sb.append(`${value}`);
+      return;
+    }
+
+    // primitive Typen sind ok
+    if (Types.isPrimitive(value)) {
+      if (Types.isString(value)) {
+        this.sb.append('\'');
+      }
+
+      this.sb.append(`${value}`);
+
+      if (Types.isString(value)) {
+        this.sb.append('\'');
+      }
+
+      return;
+    } else if (Types.isArray(value)) {
+      const arr = value as any as any[];
+      this.sb.appendLine(`[`);
+
+      using(new Suspender([this.indenter]), () => {
+
+        // tslint:disable-next-line:prefer-for-of
+        for (let i = 0; i < arr.length; i++) {
+          this.indent();
+
+          this.dump(arr[i]);
+
+          if (i < arr.length - 1) {
+            this.sb.appendLine(',');
+          } else {
+            this.sb.appendLine();
+          }
+        }
+
+      });
+
+      this.indent(`]`);
+    } else if (Types.isObject(value)) {
       this.sb.appendLine(`{    // ${value.constructor.name}`);
 
       // geklonte vordefinierte Typen sind ok
@@ -66,31 +109,6 @@ class DumperInternal<T> extends ClonerBase<T> {
       }
 
       this.indent('}');
-
-    } else {
-
-      // primitive Typen
-
-      // undefined und null werden wie reguläre Primitive behandelt
-      if (value === undefined || value == null) {
-        this.sb.append(`${value}`);
-        return;
-      }
-
-      // primitive Typen sind ok
-      if (Types.isPrimitive(value)) {
-        if (Types.isString(value)) {
-          this.sb.append('\'');
-        }
-
-        this.sb.append(`${value}`);
-
-        if (Types.isString(value)) {
-          this.sb.append('\'');
-        }
-
-        return;
-      }
     }
   }
 

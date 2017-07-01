@@ -10,6 +10,12 @@ import { UnitTest } from '../../src/testing/unit-test';
 
 
 const json = {
+  null: null,
+  undefined: undefined,
+  items: [
+    'name1',
+    4711
+  ],
   name: 'Walter',
   id: 4711,
   valid: true,
@@ -49,7 +55,7 @@ class TreeNode extends UniqueIdentifiable {
 
 
 
-@suite('core.diagnostics.Dumper')
+@suite('core.diagnostics.JsonDumper')
 class DumperTest extends UnitTest {
 
   @test 'should dump empty json'() {
@@ -62,6 +68,12 @@ class DumperTest extends UnitTest {
   @test 'should dump json without cyclic reference'() {
     const dump = JsonDumper.stringify(json);
     return expect(dump).to.be.equal(`{    // Object
+  null: null,
+  undefined: undefined,
+  items: [
+    'name1',
+    4711
+  ],
   name: 'Walter',
   id: 4711,
   valid: true,
