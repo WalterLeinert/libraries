@@ -1,5 +1,7 @@
 // tslint:disable:max-classes-per-file
 
+import { getLogger } from '../diagnostics/logging-core';
+
 import { Types } from '../types/types';
 import { Assert } from '../util/assert';
 
