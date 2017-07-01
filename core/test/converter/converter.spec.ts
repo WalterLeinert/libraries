@@ -111,7 +111,7 @@ class ConverterTest {
     tests.forEach((test) => {
       const converter = ConverterRegistry.get(test.type);
 
-      for (let data of test.success) {
+      for (const data of test.success) {
         expect(converter.convert(data.value)).to.eql(data.expectedValue);
         expect(converter.convertBack(data.expectedValue)).to.eql(data.value);
       }
@@ -128,7 +128,7 @@ class ConverterFailureTest {
     tests.forEach((test) => {
       const converter = ConverterRegistry.get(test.type);
 
-      for (let data of test.failure) {
+      for (const data of test.failure) {
         if (data.back && data.back === true) {
           expect(() => converter.convertBack(data.value)).to.throw(data.expectedException);
         } else {

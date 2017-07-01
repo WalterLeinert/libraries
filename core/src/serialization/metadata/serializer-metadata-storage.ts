@@ -31,7 +31,7 @@ export class SerializerMetadataStorage {
 
 
   constructor() {
-    for (let exc of ExceptionFactory.exceptions) {
+    for (const exc of ExceptionFactory.exceptions) {
       this.addClassMetadata(new ClassSerializerMetadata(exc));
     }
 

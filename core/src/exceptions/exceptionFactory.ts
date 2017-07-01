@@ -21,7 +21,7 @@ export class ExceptionFactory {
 
   public static get exceptions(): Array<ICtor<IException>> {
     const excs = [];
-    for (let key in ExceptionFactory.exceptionDict) {
+    for (const key in ExceptionFactory.exceptionDict) {
       if (key) {
         excs.push(ExceptionFactory.exceptionDict[key]);
       }
