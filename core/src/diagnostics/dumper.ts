@@ -1,18 +1,11 @@
+import { ClonerBase } from '../base/clone';
 import { using } from '../base/disposable';
-import { ILogger } from '../diagnostics/logger.interface';
-import { getLogger } from '../diagnostics/logging-core';
-
-import { ClonerBase, ReferenceFixup } from '../base/clone';
 import { Funktion } from '../base/objectType';
 import { StringBuilder } from '../base/stringBuilder';
-import { UniqueIdentifiable } from '../base/uniqueIdentifiable';
-import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { Indenter } from '../suspendable/indenter';
 import { Suspender } from '../suspendable/suspender';
 import { Dictionary } from '../types/dictionary';
-import { InstanceCreator, InstanceSetter } from '../types/instanceAccessor';
 import { Types } from '../types/types';
-import { Assert } from '../util/assert';
 
 
 class DumperInternal<T> extends ClonerBase<T> {

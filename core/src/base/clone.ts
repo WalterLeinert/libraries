@@ -7,7 +7,6 @@ const entries = require('object.entries');
 import { ILogger } from '../diagnostics/logger.interface';
 import { getLogger } from '../diagnostics/logging-core';
 
-import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { Dictionary } from '../types/dictionary';
 import { InstanceCreator, InstanceSetter } from '../types/instanceAccessor';
 import { Types } from '../types/types';

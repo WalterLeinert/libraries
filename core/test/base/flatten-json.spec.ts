@@ -40,7 +40,7 @@ class Test extends UnitTest {
   @test 'should flatten json'() {
     const flattener = new FlattenJson(data);
     flattener.flatten();
-    const result = flattener.result;
+    // const result = flattener.result;
     // tslint:disable-next-line:no-console
     // console.log(`result = ${JSON.stringify(result)}`);
 

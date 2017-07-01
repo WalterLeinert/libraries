@@ -1,20 +1,9 @@
-
 // tslint:disable:max-classes-per-file
-// tslint:disable-next-line:no-var-requires
-const entries = require('object.entries');
 
-// tslint:disable-next-line:no-unused-variable
-import { ILogger } from '../diagnostics/logger.interface';
-import { getLogger } from '../diagnostics/logging-core';
-
-import { InvalidOperationException } from '../exceptions/invalidOperationException';
-import { Dictionary } from '../types/dictionary';
-import { InstanceCreator, InstanceSetter } from '../types/instanceAccessor';
 import { Types } from '../types/types';
 import { Assert } from '../util/assert';
 
 import { ClonerBase } from './clone';
-import { UniqueIdentifiable } from './uniqueIdentifiable';
 
 
 
