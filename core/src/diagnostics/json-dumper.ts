@@ -41,7 +41,30 @@ class DumperInternal<T> extends ClonerBase<T> {
       }
 
       return;
-    } else if (Types.isArray(value)) {
+    }
+
+
+    let cycleDetected = false;
+
+    if (this.checkCycles) {
+      if (Dictionary.isValidKey(value)) {
+        // clone bereits erzeugt und registriert?
+        const obj = super.getRegisteredObject(value);
+        if (obj) {
+          cycleDetected = true;
+
+          this.indent(`  ----> cycle detected: type = ${obj.constructor.name}`);
+
+          return;
+        }
+
+        // Objekt für Zykluserkennung registrieren, aber nur falls unser Dictionary dies unterstützt
+        super.registerObjectFor(value, value);
+      }
+    }
+
+
+    if (Types.isArray(value)) {
       const arr = value as any as any[];
       this.sb.appendLine(`[`);
 
@@ -63,6 +86,7 @@ class DumperInternal<T> extends ClonerBase<T> {
       });
 
       this.indent(`]`);
+
     } else if (Types.isObject(value)) {
       this.sb.appendLine(`{    // ${value.constructor.name}`);
 
@@ -72,41 +96,19 @@ class DumperInternal<T> extends ClonerBase<T> {
         return;
       }
 
-      let cycleDetected = false;
+      super.iterateOnEntries(value, undefined,
+        (count, index, entryName, entryValue, clonedEntryName, clonedEntryValue) => {
+          using(new Suspender([this.indenter]), () => {
+            this.dump(entryValue, entryName);   // Rekursion
 
-      if (this.checkCycles) {
-        if (Dictionary.isValidKey(value)) {
-          // clone bereits erzeugt und registriert?
-          const obj = super.getRegisteredObject(value);
-          if (obj) {
-            cycleDetected = true;
+            if (index < count - 1) {
+              this.sb.appendLine(',');
+            } else {
+              this.sb.appendLine();
+            }
 
-            this.indentLine(`  ----> cycle detected: type = ${obj.constructor.name}`);
-          } else {
-
-            // Objekt für Zykluserkennung registrieren, aber nur falls unser Dictionary dies unterstützt
-            super.registerObjectFor(value, value);
-          }
-        }
-      }
-
-
-      if (!cycleDetected) {
-
-        super.iterateOnEntries(value, undefined,
-          (count, index, entryName, entryValue, clonedEntryName, clonedEntryValue) => {
-            using(new Suspender([this.indenter]), () => {
-              this.dump(entryValue, entryName);   // Rekursion
-
-              if (index < count - 1) {
-                this.sb.appendLine(',');
-              } else {
-                this.sb.appendLine();
-              }
-
-            });
           });
-      }
+        });
 
       this.indent('}');
     }

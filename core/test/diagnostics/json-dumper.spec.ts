@@ -98,9 +98,7 @@ class DumperTest extends UnitTest {
     return expect(dump).to.be.equal(`{    // TreeNode
   _id: 1,
   _name: 'root',
-  _child: {    // TreeNode
-    ----> cycle detected: type = TreeNode
-  }
+  _child:     ----> cycle detected: type = TreeNode
 }`);
   }
 }
