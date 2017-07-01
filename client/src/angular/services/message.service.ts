@@ -30,26 +30,30 @@ export class MessageService {
 
       this.pubSub.publish(MessageService.TOPIC, message);
 
-      switch (message.severity) {
-        case MessageSeverity.Success:
-        case MessageSeverity.Info:
-          log.info(`message: ${JSON.stringify(message)}`);
-          break;
+      // Exceptions werden bereits in Exception gelogged
+      // hier nur bei Level Debug für Diagnose
+      if (log.isDebugEnabled()) {
+        switch (message.severity) {
+          case MessageSeverity.Success:
+          case MessageSeverity.Info:
+            log.info(`message: ${JSON.stringify(message)}`);
+            break;
 
-        case MessageSeverity.Warn:
-          log.warn(`message: ${JSON.stringify(message)}`);
-          break;
+          case MessageSeverity.Warn:
+            log.warn(`message: ${JSON.stringify(message)}`);
+            break;
 
-        case MessageSeverity.Error:
-          log.error(`message: ${JSON.stringify(message)}`);
-          break;
+          case MessageSeverity.Error:
+            log.error(`message: ${JSON.stringify(message)}`);
+            break;
 
-        case MessageSeverity.Fatal:
-          log.fatal(`message: ${JSON.stringify(message)}`);
-          break;
+          case MessageSeverity.Fatal:
+            log.fatal(`message: ${JSON.stringify(message)}`);
+            break;
 
-        default:
-          throw new NotSupportedException();
+          default:
+            throw new NotSupportedException();
+        }
       }
     });
   }

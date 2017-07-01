@@ -682,7 +682,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
         const state = this.getStoreState(command.storeId);
         if (state.error) {
-          log.error(`${state.error}`);
+          // Exceptions werden bereits in Exception gelogged
+          // log.error(`${state.error}`);
         }
 
         if (command.storeId === CurrentUserStore.ID && command instanceof CurrentItemSetCommand) {

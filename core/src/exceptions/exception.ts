@@ -1,4 +1,5 @@
 import { StringBuilder } from '../base/stringBuilder';
+import { ConsoleLogger } from '../diagnostics/consoleLogger';
 import { Utility } from '../util/utility';
 import { IException } from './exception.interface';
 import { WrappedException } from './wrappedException';
@@ -36,6 +37,7 @@ export function assert(condition: boolean, message?: string): void {
  * @extends {Error}
  */
 export abstract class Exception implements IException {
+  protected static readonly logger = new ConsoleLogger(Exception.name);
 
   private _nativeError: Error;
   private _message: string;
@@ -67,6 +69,8 @@ export abstract class Exception implements IException {
     }
 
     this._message = sb.toString();
+
+    Exception.logger.error(`kind: ${this.kind}, message: ${this.message}, stack: ${this.stack}`);
   }
 
 

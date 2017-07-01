@@ -9,6 +9,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { MessageService } from '@fluxgate/client';
 import { Exception, MessageSeverity, ServerBusinessException } from '@fluxgate/core';
 
+interface INgDebugContext {
+  component: any;
+}
+
 
 export interface ILoggingErrorHandlerOptions {
   rethrowError: boolean;
@@ -32,8 +36,11 @@ export class ApplicationErrorHandler extends ErrorHandler {
 
   public handleError(error: Error) {
     using(new XLog(ApplicationErrorHandler.logger, levels.INFO, 'handleError'), (log) => {
-      if (log.isDebugEnabled()) {
-        log.debug(error as any);
+      log.error(`name: ${error.name}, message: ${error.message}, stack: ${error.stack}`);
+      // tslint:disable-next-line:no-string-literal
+      const debugContext = error['ngDebugContext'] as INgDebugContext;
+      if (debugContext) {
+        log.error(`ngDebugContext.component: ${JSON.stringify(debugContext.component)}`);
       }
 
       if (error instanceof Exception) {

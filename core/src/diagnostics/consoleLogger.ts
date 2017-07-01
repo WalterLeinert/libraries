@@ -1,7 +1,8 @@
 import * as moment from 'moment';
 
+import { Funktion } from '../base/objectType';
 import { StringBuilder } from '../base/stringBuilder';
-import { InvalidOperationException } from '../exceptions/invalidOperationException';
+// import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { Types } from '../types/types';
 
 
@@ -12,8 +13,10 @@ import { ILogger } from './logger.interface';
 
 export class ConsoleLogger implements ILogger {
   private _level: ILevel = levels.WARN;
+  private _category: string;
 
-  private constructor(private _category: string) {
+  public constructor(category: string | Funktion) {
+    this._category = (typeof category === 'string' ? category : category.name);
   }
 
   /**
@@ -110,7 +113,7 @@ export class ConsoleLogger implements ILogger {
     if (!Types.isString(level)) {
       lev = level as ILevel;
     } else {
-      throw new InvalidOperationException(`Level string ${level} currently not supported`);
+      throw new Error(`Level string ${level} currently not supported`);
     }
     this._level = lev;
   }
