@@ -3,6 +3,7 @@ export * from './base';
 export * from './collection';
 export * from './converter';
 export * from './decorator';
+export * from './di';
 export * from './diagnostics';
 export * from './exceptions';
 export * from './expression';

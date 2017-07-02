@@ -1,3 +1,5 @@
+import { Injectable } from 'injection-js';
+
 import { Types } from '../types/types';
 import { Level } from './level';
 import { ILevel } from './level.interface';
@@ -6,6 +8,7 @@ import { ILogger } from './logger.interface';
 /**
  * Proxy für log4js bzw. @see{BrowserLogger}.
  */
+@Injectable()
 export class Logger implements ILogger {
 
   public constructor(private logger: ILogger) {

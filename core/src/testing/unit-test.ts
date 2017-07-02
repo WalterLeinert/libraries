@@ -1,6 +1,8 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
 
+import 'reflect-metadata';
+
 // -------------------------------------- logging --------------------------------------------
 import { IConfig } from '../diagnostics/config.interface';
 // tslint:disable-next-line:no-unused-variable
