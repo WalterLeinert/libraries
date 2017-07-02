@@ -1,5 +1,9 @@
+import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
+
 import { StringBuilder } from '../base/stringBuilder';
-import { ConsoleLogger } from '../diagnostics/consoleLogger';
+import { CoreInjector } from '../di/core-injector';
+import { ILogger } from '../diagnostics/logger.interface';
+import { LOGGER } from '../diagnostics/logger.token';
 import { Utility } from '../util/utility';
 import { IException } from './exception.interface';
 import { WrappedException } from './wrappedException';
@@ -37,7 +41,6 @@ export function assert(condition: boolean, message?: string): void {
  * @extends {Error}
  */
 export abstract class Exception implements IException {
-  protected static readonly logger = new ConsoleLogger(Exception.name);
 
   /**
    * steuert, ob die Exception gelogged wird
@@ -82,10 +85,12 @@ export abstract class Exception implements IException {
     this._message = sb.toString();
 
     if (Exception.logException) {
-      Exception.logger.error(`kind: ${this.kind}, message: ${this.message}, stack: ${this.stack}`);
+      const logger = CoreInjector.instance.getInstance<ILogger>(LOGGER);
+      if (logger) {
+        logger.error(`kind: ${this.kind}, message: ${this.message}, stack: ${this.stack}`);
+      }
     }
   }
-
 
 
   public toString(): string {

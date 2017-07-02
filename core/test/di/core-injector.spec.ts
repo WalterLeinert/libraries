@@ -41,13 +41,31 @@ export class DateLogger extends Logger {
 
 
 
-class LoggingTest {
+class LoggerTest {
   public logger: ILogger = CoreInjector.instance.getInstance<ILogger>(LOGGER);
 
   public doLog(message: string) {
     this.logger.log(message);
   }
 }
+
+
+
+const staticInjector = ReflectiveInjector.resolveAndCreate([
+  { provide: LOGGER, useClass: ConsoleLogger }
+]);
+
+CoreInjector.instance.setInjector(staticInjector);
+
+
+class StaticLoggerTest {
+  public static readonly logger: ILogger = CoreInjector.instance.getInstance<ILogger>(LOGGER);
+
+  public doLog(message: string) {
+    StaticLoggerTest.logger.log(message);
+  }
+}
+
 
 
 
@@ -61,7 +79,7 @@ class CoreInjectorTest extends UnitTest {
 
     CoreInjector.instance.setInjector(injector);
 
-    const test = new LoggingTest();
+    const test = new LoggerTest();
     test.doLog('hallo');
 
     expect(test.logger).to.be.instanceof(ConsoleLogger);
@@ -75,10 +93,18 @@ class CoreInjectorTest extends UnitTest {
 
     CoreInjector.instance.setInjector(injector);
 
-    const test = new LoggingTest();
+    const test = new LoggerTest();
     test.doLog('hallo');
 
     expect(test.logger).to.be.instanceof(DateLogger);
+  }
+
+
+  @test 'should create static ConsoleLogger by token'() {
+    const test = new StaticLoggerTest();
+    test.doLog('hallo');
+
+    expect(StaticLoggerTest.logger).to.be.instanceof(ConsoleLogger);
   }
 }
 

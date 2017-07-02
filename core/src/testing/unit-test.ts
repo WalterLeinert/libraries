@@ -1,7 +1,9 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
 
+import { ReflectiveInjector } from 'injection-js';
 import 'reflect-metadata';
+
 
 // -------------------------------------- logging --------------------------------------------
 import { IConfig } from '../diagnostics/config.interface';
@@ -9,6 +11,13 @@ import { IConfig } from '../diagnostics/config.interface';
 import { ILogger } from '../diagnostics/logger.interface';
 import { configure } from '../diagnostics/logging-core';
 // -------------------------------------- logging --------------------------------------------
+
+
+import { CoreInjector } from '../di/core-injector';
+import { ConsoleLogger } from '../diagnostics/consoleLogger';
+import { DEFAULT_CATEGORY, LOGGER } from '../diagnostics/logger.token';
+
+
 
 import { Exception } from '../exceptions/exception';
 
@@ -30,6 +39,14 @@ export abstract class UnitTest {
     configure(this.config);
 
     Exception.logException = false;
+
+
+    const injector = ReflectiveInjector.resolveAndCreate([
+      { provide: DEFAULT_CATEGORY, useValue: '-unknown-' },
+      { provide: LOGGER, useClass: ConsoleLogger }
+    ]);
+
+    CoreInjector.instance.setInjector(injector);
   }
 
 }

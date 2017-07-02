@@ -1,21 +1,24 @@
 import * as moment from 'moment';
 
+import { Inject, Injectable, Optional } from 'injection-js';
+
 import { Funktion } from '../base/objectType';
 import { StringBuilder } from '../base/stringBuilder';
 // import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { Types } from '../types/types';
 
-
 import { levels } from './level';
 import { ILevel } from './level.interface';
 import { ILogger } from './logger.interface';
+import { DEFAULT_CATEGORY } from './logger.token';
 
 
+@Injectable()
 export class ConsoleLogger implements ILogger {
   private _level: ILevel = levels.WARN;
   private _category: string;
 
-  public constructor(category: string | Funktion) {
+  public constructor( @Inject(DEFAULT_CATEGORY) category: string | Funktion) {
     this._category = (typeof category === 'string' ? category : category.name);
   }
 
