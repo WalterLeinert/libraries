@@ -10,7 +10,6 @@ import { getLogger } from '../diagnostics/logging-core';
 import { Dictionary } from '../types/dictionary';
 import { InstanceCreator, InstanceSetter } from '../types/instanceAccessor';
 import { Types } from '../types/types';
-import { Assert } from '../util/assert';
 import { UniqueIdentifiable } from './uniqueIdentifiable';
 
 

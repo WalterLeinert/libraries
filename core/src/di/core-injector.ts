@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken, Injector, OpaqueToken, Provider, ReflectiveInjector } from 'injection-js';
+import { Injectable, Injector, OpaqueToken } from 'injection-js';
 
 import { Funktion } from '../base/objectType';
 

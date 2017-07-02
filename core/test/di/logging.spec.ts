@@ -2,12 +2,11 @@
 // tslint:disable:member-access
 // tslint:disable:no-unused-expression
 
-import { Inject, Injectable, InjectionToken, Injector, OpaqueToken, Provider, ReflectiveInjector } from 'injection-js';
+import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Funktion } from '../../src/base/objectType';
 import { UnitTest } from '../../src/testing/unit-test';
 
 export const LOGGER = new InjectionToken<ILogger>('logger');
@@ -44,8 +43,6 @@ export class DateLogger extends Logger {
 class InjectionTest extends UnitTest {
 
   @test 'should create loggers'() {
-    const inj = ReflectiveInjector.resolveAndCreate([Logger]);
-
     const injector = ReflectiveInjector.resolveAndCreate([ConsoleLogger, DateLogger]);
     const consoleLogger = injector.get(ConsoleLogger);
     const dateLogger = injector.get(DateLogger);

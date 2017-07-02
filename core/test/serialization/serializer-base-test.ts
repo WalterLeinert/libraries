@@ -3,7 +3,6 @@ import { expect } from 'chai';
 // tslint:disable-next-line:no-var-requires
 // let jsondiff = require('json-diff-patch');
 
-import { Clone } from '../../src/base/clone';
 import { Differ } from '../../src/base/differ';
 import { JsonSerializer } from '../../src/serialization';
 import { UnitTest } from '../../src/testing/unit-test';

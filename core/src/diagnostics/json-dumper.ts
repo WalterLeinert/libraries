@@ -125,11 +125,6 @@ class DumperInternal<T> extends ClonerBase<T> {
     this.sb.append(this.indenter.getIndentation());
     this.sb.append(text);
   }
-
-  private indentLine(text: string) {
-    this.indent(text);
-    this.sb.appendLine();
-  }
 }
 
 
