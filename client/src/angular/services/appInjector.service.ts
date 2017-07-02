@@ -1,6 +1,24 @@
+import { ReflectiveInjector } from 'injection-js';
+import 'reflect-metadata';
+
+
 import { Injectable, Injector, OpaqueToken } from '@angular/core';
 
-import { Funktion, UniqueIdentifiable } from '@fluxgate/core';
+import { CoreInjector, DEFAULT_CATEGORY, Funktion, LOGGER, UniqueIdentifiable } from '@fluxgate/core';
+import { getLogger } from '@fluxgate/platform';
+
+
+/**
+ * einen Defaultlogger ermitteln und für DI registrieren
+ */
+const defaulLogger = getLogger('default-logger');
+
+const injector = ReflectiveInjector.resolveAndCreate([
+  { provide: DEFAULT_CATEGORY, useValue: defaulLogger.category },
+  { provide: LOGGER, useValue: defaulLogger }
+]);
+
+CoreInjector.instance.setInjector(injector);
 
 
 /**

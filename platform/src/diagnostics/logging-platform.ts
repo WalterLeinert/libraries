@@ -2,6 +2,20 @@ import { Funktion, NotSupportedException } from '@fluxgate/core';
 import { getLogger as getConsoleLogger, IConfig, ILogger, Logger, LoggerRegistry, Types } from '@fluxgate/core';
 
 import { JsonReader } from '../util/jsonReader';
+import { LoggerFacade } from './logger-facade';
+
+let loggerFacade;
+
+// removeIf(node)
+import { BrowserLoggerFacade } from './browser-logger-facade';
+loggerFacade = new BrowserLoggerFacade();
+// endRemoveIf(node)
+
+// removeIf(browser)
+import { NodeLoggerFacade } from './node-logger-facade';
+loggerFacade = new NodeLoggerFacade();
+// endRemoveIf(browser)
+
 
 /**
  * Liefert den Logger für die angegebene Kategorie
@@ -11,31 +25,7 @@ import { JsonReader } from '../util/jsonReader';
  * @returns {ILogger}
  */
 export function getLogger(category: string | Funktion): ILogger {
-  let categoryName: string;
-  if (Types.isString(category)) {
-    categoryName = category as string;
-  } else {
-    categoryName = (category as Funktion).name;
-  }
-
-  let logger: ILogger;
-
-  if (!LoggerRegistry.hasLogger(categoryName)) {
-    // removeIf(node)
-    logger = getConsoleLogger(categoryName);
-    // endRemoveIf(node)
-
-    // removeIf(browser)
-    const log4js = require('log4js');
-    logger = new Logger(log4js.getLogger(categoryName));
-
-    LoggerRegistry.registerLogger(categoryName, logger);
-    // endRemoveIf(browser)
-  } else {
-    logger = LoggerRegistry.getLogger(categoryName);
-  }
-
-  return logger;
+  return loggerFacade.getLogger(category);
 }
 
 
@@ -47,24 +37,5 @@ export function getLogger(category: string | Funktion): ILogger {
  * @param {*} [options]
  */
 export function configure(config: string | IConfig, options?: any): void {
-
-  // removeIf(browser)
-  const log4js = require('log4js');
-  log4js.configure(config, options);
-
-  if (Types.isString(config)) {
-    const conf = JsonReader.readJsonSync<IConfig>(config as string);
-    LoggerRegistry.configure(conf as IConfig, options);
-  } else {
-    LoggerRegistry.configure(config as IConfig, options);
-  }
-  // endRemoveIf(browser)
-
-  // removeIf(node)
-  if (Types.isString(config)) {
-    throw new NotSupportedException('only supported on node platforms');
-  }
-  LoggerRegistry.configure(config as IConfig, options);
-  // endRemoveIf(node)
-
+  return loggerFacade.configure(config, options);
 }

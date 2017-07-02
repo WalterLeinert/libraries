@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { BaseTest } from '../src/testing/baseTest';
 
 /**

@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
-
+import 'reflect-metadata';
 import path = require('path');
 import process = require('process');
 
