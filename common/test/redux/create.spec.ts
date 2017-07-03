@@ -2,13 +2,15 @@
 // tslint:disable:member-access
 
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
+import { only, suite, test } from 'mocha-typescript';
 
 import { Clone } from '@fluxgate/core';
 
-import { IUser } from '../../src/model';
+import { IUser } from '../../src/model/user.interface';
 import { ICrudServiceState, ServiceRequestStates } from '../../src/redux';
-import { CreatingItemCommand, ItemCreatedCommand, ItemsFoundCommand } from '../../src/redux';
+import { CreatingItemCommand } from '../../src/redux/command/creating-item-command';
+import { ItemCreatedCommand } from '../../src/redux/command/item-created-command';
+import { ItemsFoundCommand } from '../../src/redux/command/items-found-command';
 import { UserStore } from '../../src/redux/store';
 
 import { UserServiceFake } from '../../src/testing/user-service-fake';

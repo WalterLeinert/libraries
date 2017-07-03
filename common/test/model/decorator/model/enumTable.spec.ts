@@ -10,9 +10,15 @@ import { suite, test } from 'mocha-typescript';
 
 import { Types } from '@fluxgate/core';
 
-import {
-  Column, ColumnTypes, Enum, EnumTable, IdColumn, MetadataStorage, Table, TableMetadata
-} from '../../../../src/model';
+import { Column } from '../../../../src/model/decorator/column';
+import { Enum } from '../../../../src/model/decorator/enum';
+import { EnumTable } from '../../../../src/model/decorator/enumTable';
+import { IdColumn } from '../../../../src/model/decorator/id-column';
+import { Table } from '../../../../src/model/decorator/table';
+import { IEntity } from '../../../../src/model/entity.interface';
+import { ColumnTypes } from '../../../../src/model/metadata/columnTypes';
+import { MetadataStorage } from '../../../../src/model/metadata/metadataStorage';
+import { TableMetadata } from '../../../../src/model/metadata/tableMetadata';
 import { CommonTest } from '../../../common.spec';
 
 
