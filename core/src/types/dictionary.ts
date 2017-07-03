@@ -1,9 +1,6 @@
-import { InvalidOperationException } from '../exceptions/invalidOperationException';
-import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Identifiable } from './../base/uniqueIdentifiable';
 import { Assert } from './../util/assert';
 import { IDictionary } from './dictionary.interface';
-import { Types } from './types';
 
 
 /**
@@ -13,14 +10,10 @@ import { Types } from './types';
  * @enum {number}
  */
 enum KeyType {
-  String,
-  Number,
-  Object,
+  Other,
   Identifiable,
   Undefined
 }
-
-export type KeyTypes = number | string | Identifiable | any;
 
 
 /**
@@ -32,23 +25,21 @@ export type KeyTypes = number | string | Identifiable | any;
  * @template TKey
  * @template TValue
  */
-export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TKey, TValue> {
-  private stringDict: { [key: string]: any } = {};
-  private numberDict: { [key: number]: any } = {};
-  private idToObjectMapper: { [id: number]: any } = {};
+export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
+  private _map: Map<TKey, TValue> = new Map<TKey, TValue>();
+
+  /**
+   * Dictionary für die Zuordnung von Identifiable-Id zu Value
+   */
+  private idValueDict: { [key: number]: any } = {};
+
+  /**
+   * Dictionary für die Zuordnung von Identifiable-Id zu Key
+   */
+  private idKeyDict: { [id: number]: any } = {};
 
   private isInitialized: boolean = false;
   private keyType = KeyType.Undefined;
-
-
-  public static isValidKey(key: any): boolean {
-    if (Types.isString(key) || Types.isNumber(key) || (key instanceof Identifiable)) {
-      return true;
-    }
-    return false;
-  }
-
-
 
   /**
    * Fügt unter dem Key @param{key} einen neuen Wert @param{value} hinzu.
@@ -60,30 +51,19 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
    * @memberOf Dictionary
    */
   public set(key: TKey, value: TValue) {
-    if (Types.isString(key)) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.String);
-      this.stringDict[(key as any as string)] = value;
-      this.initialize(KeyType.String);
-      return;
-    }
-
-    if (Types.isNumber(key)) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.Number);
-      this.numberDict[(key as any as number)] = value;
-      this.initialize(KeyType.Number);
-      return;
-    }
+    Assert.notNull(key);
 
     if (key instanceof Identifiable) {
       Assert.that(!this.isInitialized || this.keyType === KeyType.Identifiable);
-      this.idToObjectMapper[key.instanceId] = key;
-      this.numberDict[key.instanceId] = value;
+      this.idKeyDict[key.instanceId] = key;
+      this.idValueDict[key.instanceId] = value;
       this.initialize(KeyType.Identifiable);
-      return;
+    } else {
+      this._map.set(key, value);
+      this.initialize(KeyType.Other);
     }
-
-    throw new NotSupportedException(`Unsupported key: ${JSON.stringify(key)}`);
   }
+
 
   /**
    * Liefert den Wert zum Key @param{key} oder undefined.
@@ -94,22 +74,14 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
    * @memberOf Dictionary
    */
   public get(key: TKey): TValue {
-    if (Types.isString(key)) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.String);
-      return this.stringDict[(key as any as string)];
-    }
-
-    if (Types.isNumber(key)) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.Number);
-      return this.numberDict[(key as any as number)];
-    }
+    Assert.notNull(key);
 
     if (key instanceof Identifiable) {
       Assert.that(!this.isInitialized || this.keyType === KeyType.Identifiable);
-      return this.numberDict[key.instanceId];
+      return this.idValueDict[key.instanceId];
+    } else {
+      return this._map.get(key);
     }
-
-    throw new NotSupportedException(`Unsupported key: ${JSON.stringify(key)}`);
   }
 
 
@@ -122,26 +94,15 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
    * @memberOf Dictionary
    */
   public remove(key: TKey) {
-    if (Types.isString(key)) {
-      Assert.that(this.keyType === KeyType.String);
-      delete this.stringDict[(key as any as string)];
-      return;
-    }
-
-    if (Types.isNumber(key)) {
-      Assert.that(this.keyType === KeyType.Number);
-      delete this.numberDict[(key as any as number)];
-      return;
-    }
+    Assert.notNull(key);
 
     if (key instanceof Identifiable) {
       Assert.that(!this.isInitialized || this.keyType === KeyType.Identifiable);
-      delete this.idToObjectMapper[key.instanceId];
-      delete this.numberDict[key.instanceId];
-      return;
+      delete this.idKeyDict[key.instanceId];
+      delete this.idValueDict[key.instanceId];
+    } else {
+      this._map.delete(key);
     }
-
-    throw new NotSupportedException(`Unsupported key: ${JSON.stringify(key)}`);
   }
 
 
@@ -154,22 +115,14 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
    * @memberOf Dictionary
    */
   public containsKey(key: TKey): boolean {
-    if (Types.isString(key)) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.String);
-      return this.stringDict[(key as any as string)] !== undefined;
-    }
-
-    if (Types.isNumber(key)) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.Number);
-      return this.numberDict[(key as any as number)] !== undefined;
-    }
+    Assert.notNull(key);
 
     if (key instanceof Identifiable) {
       Assert.that(!this.isInitialized || this.keyType === KeyType.Identifiable);
-      return this.numberDict[key.instanceId] !== undefined;
+      return this.idKeyDict[key.instanceId] !== undefined;
+    } else {
+      return this._map.has(key);
     }
-
-    throw new NotSupportedException(`Unsupported key: ${JSON.stringify(key)}`);
   }
 
 
@@ -181,23 +134,19 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
    * @memberOf Dictionary
    */
   public get keys(): TKey[] {
-    let keys: TKey[] = new Array<TKey>();
+    const keys: TKey[] = new Array<TKey>();
 
     if (this.isInitialized) {
-      if (this.keyType === KeyType.String) {
-        keys = Object.keys(this.stringDict) as any as TKey[];
-      } else if (this.keyType === KeyType.Number) {
-        keys = Object.keys(this.numberDict).map((item) => {
-          return parseInt(item, 10) as any as TKey;
-        });
-      } else if (this.keyType === KeyType.Identifiable) {
-        for (const k in this.idToObjectMapper) {
+      if (this.keyType === KeyType.Identifiable) {
+        for (const k in this.idKeyDict) {
           if (k) {
-            keys.push(this.idToObjectMapper[k]);
+            keys.push(this.idKeyDict[k]);
           }
         }
       } else {
-        throw new NotSupportedException(`Unsupported keyType: ${this.keyType}`);
+        this._map.forEach((v, k) => {
+          keys.push(k);
+        });
       }
     }
 
@@ -213,23 +162,19 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
    * @memberOf Dictionary
    */
   public get values(): TValue[] {
-    const values: TValue[] = [];
+    const values: TValue[] = new Array<TValue>();
 
     if (this.isInitialized) {
-      if (this.keyType === KeyType.String) {
-        for (const k in this.stringDict) {
+      if (this.keyType === KeyType.Identifiable) {
+        for (const k in this.idValueDict) {
           if (k) {
-            values.push(this.stringDict[k]);
-          }
-        }
-      } else if (this.keyType === KeyType.Number || this.keyType === KeyType.Identifiable) {
-        for (const k in this.numberDict) {
-          if (k) {
-            values.push(this.numberDict[k]);
+            values.push(this.idValueDict[k]);
           }
         }
       } else {
-        throw new NotSupportedException(`Unsupported keyType: ${this.keyType}`);
+        this._map.forEach((v, k) => {
+          values.push(v);
+        });
       }
     }
 
@@ -243,9 +188,9 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
    * @memberOf Dictionary
    */
   public clear() {
-    this.stringDict = {};
-    this.numberDict = {};
-    this.idToObjectMapper = {};
+    this.idValueDict = {};
+    this.idKeyDict = {};
+    this._map.clear();
   }
 
 
@@ -261,14 +206,11 @@ export class Dictionary<TKey extends KeyTypes, TValue> implements IDictionary<TK
       return 0;
     }
 
-    if (this.keyType === KeyType.String || this.keyType === KeyType.Object) {
-      return Object.keys(this.stringDict).length;
+    if (this.keyType === KeyType.Identifiable) {
+      return Object.keys(this.idValueDict).length;
+    } else {
+      return this._map.size;
     }
-    if (this.keyType === KeyType.Number || this.keyType === KeyType.Identifiable) {
-      return Object.keys(this.numberDict).length;
-    }
-
-    throw new InvalidOperationException(`Invalid Operation`);
   }
 
 

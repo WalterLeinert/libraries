@@ -243,35 +243,35 @@ class DictionaryTest extends UnitTest {
 
 
 
-class NotSupportedKey {
+class ObjectKey {
   public id: number;
 }
 
-@suite('core.types.Dictionary: not supported Keys')
+@suite('core.types.Dictionary: object keys')
 class DictionaryNotSupportedTest extends UnitTest {
 
   @test 'should create instance of Dictionary'() {
-    return expect(new Dictionary<NotSupportedKey, string>()).to.be.not.null;
+    return expect(new Dictionary<ObjectKey, string>()).to.be.not.null;
   }
 
   @test 'should set an item'() {
-    const d = new Dictionary<NotSupportedKey, string>();
-    const key = new NotSupportedKey();
-    expect(() => d.set(key, 'bbb')).to.Throw();
-    expect(d.count).to.be.equal(0);
+    const d = new Dictionary<ObjectKey, string>();
+    const key = new ObjectKey();
+    expect(() => d.set(key, 'bbb')).not.to.Throw();
+    expect(d.count).to.be.equal(1);
   }
 
   @test 'should remove an item'() {
-    const d = new Dictionary<NotSupportedKey, string>();
-    const key = new NotSupportedKey();
-    expect(() => d.remove(key)).to.Throw();
+    const d = new Dictionary<ObjectKey, string>();
+    const key = new ObjectKey();
+    expect(() => d.remove(key)).not.to.Throw();
     expect(d.count).to.be.equal(0);
   }
 
   @test 'should test for existence'() {
-    const d = new Dictionary<NotSupportedKey, string>();
-    const key = new NotSupportedKey();
-    expect(() => d.containsKey(key)).to.Throw();
+    const d = new Dictionary<ObjectKey, string>();
+    const key = new ObjectKey();
+    expect(() => d.containsKey(key)).not.to.Throw();
   }
 
 }

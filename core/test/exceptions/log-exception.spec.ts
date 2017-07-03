@@ -19,6 +19,8 @@ class LogExceptionTests extends UnitTest {
     try {
       Exception.logException = true;
       throw new AssertionException('should be an assertion');
+    } catch (exc) {
+      // ok
     } finally {
       Exception.logException = logException;
     }
