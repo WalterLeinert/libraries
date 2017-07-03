@@ -13,6 +13,8 @@ class BootstrapPlatform {
 
   // tslint:disable-next-line:no-unused-variable
   private static initialized = (() => {
+    BootstrapPlatform.logger.setLevel(levels.INFO);
+
     using(new XLog(BootstrapPlatform.logger, levels.INFO, 'initialized'), (log) => {
       log.log(`initializing @fluxgate/platform`);
     });

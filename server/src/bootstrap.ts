@@ -7,7 +7,7 @@ import { ReflectiveInjector } from 'injection-js';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { CoreInjector, DEFAULT_CATEGORY, LOGGER } from '@fluxgate/core';
+import { CoreInjector, DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER } from '@fluxgate/core';
 
 
 class BootstrapServer {
@@ -15,6 +15,8 @@ class BootstrapServer {
 
   // tslint:disable-next-line:no-unused-variable
   private static initialized = (() => {
+    BootstrapServer.logger.setLevel(levels.INFO);
+
     using(new XLog(BootstrapServer.logger, levels.INFO, 'initialized'), (log) => {
       log.log(`initializing @fluxgate/server`);
 
@@ -24,7 +26,8 @@ class BootstrapServer {
 
       CoreInjector.instance.resolveAndCreate([
         { provide: DEFAULT_CATEGORY, useValue: BootstrapServer.logger.category },
-        { provide: LOGGER, useValue: BootstrapServer.logger }
+        { provide: LOGGER, useValue: BootstrapServer.logger },
+        { provide: LOG_EXCEPTIONS, useValue: true }
       ]);
 
       log.log(`registered injector and logger providers`);

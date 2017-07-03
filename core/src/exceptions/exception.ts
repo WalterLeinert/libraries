@@ -1,7 +1,7 @@
 import { StringBuilder } from '../base/stringBuilder';
 import { CoreInjector } from '../di/core-injector';
 import { ILogger } from '../diagnostics/logger.interface';
-import { LOGGER } from '../diagnostics/logger.token';
+import { LOG_EXCEPTIONS, LOGGER } from '../diagnostics/logger.token';
 import { Utility } from '../util/utility';
 import { IException } from './exception.interface';
 import { WrappedException } from './wrappedException';
@@ -39,21 +39,10 @@ export function assert(condition: boolean, message?: string): void {
  * @extends {Error}
  */
 export abstract class Exception implements IException {
-
-  /**
-   * steuert, ob die Exception gelogged wird
-   *
-   * @static
-   * @type {boolean}
-   * @memberof Exception
-   */
-  public static logException: boolean = true;
-
   private _nativeError: Error;
   private _message: string;
   private _innerException: IException;
   private _displayed: boolean;
-
 
 
   protected constructor(private _kind: string, message: string, innerException?: IException | Error) {
@@ -82,7 +71,10 @@ export abstract class Exception implements IException {
 
     this._message = sb.toString();
 
-    if (Exception.logException) {
+    const logException: boolean = this.isPresent(CoreInjector.instance.getInstance<boolean>(LOG_EXCEPTIONS))  ?
+      CoreInjector.instance.getInstance<boolean>(LOG_EXCEPTIONS) : true;
+
+    if (logException) {
       const logger = CoreInjector.instance.getInstance<ILogger>(LOGGER);
       if (logger) {
         logger.error(`kind: ${this.kind}, message: ${this.message}, stack: ${this.stack}`);
@@ -125,6 +117,10 @@ export abstract class Exception implements IException {
 
   public set displayed(value: boolean) {
     this._displayed = value;
+  }
+
+  private isPresent(value: any) {
+    return ! (value === undefined || value === null);
   }
 
 }

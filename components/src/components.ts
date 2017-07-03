@@ -1,3 +1,5 @@
+export { BootstrapComponents } from './bootstrap';
+
 export { ClientServicesModule } from './angular/modules';
 
 export {

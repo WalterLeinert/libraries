@@ -15,7 +15,7 @@ import { configure } from '../diagnostics/logging-core';
 
 import { CoreInjector } from '../di/core-injector';
 import { ConsoleLogger } from '../diagnostics/consoleLogger';
-import { DEFAULT_CATEGORY, LOGGER } from '../diagnostics/logger.token';
+import { DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER } from '../diagnostics/logger.token';
 
 
 
@@ -38,15 +38,11 @@ export abstract class UnitTest {
   protected before() {
     configure(this.config);
 
-    Exception.logException = false;
-
-
     const injector = CoreInjector.instance.resolveAndCreate([
       { provide: DEFAULT_CATEGORY, useValue: '-unknown-' },
-      { provide: LOGGER, useClass: ConsoleLogger }
+      { provide: LOGGER, useClass: ConsoleLogger },
+      { provide: LOG_EXCEPTIONS, useValue: false }
     ]);
-
-    // CoreInjector.instance.setInjector(injector);
   }
 
 }

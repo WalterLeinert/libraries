@@ -11,6 +11,8 @@ class BootstrapCommon {
 
   // tslint:disable-next-line:no-unused-variable
   private static initialized = (() => {
+    BootstrapCommon.logger.setLevel(levels.INFO);
+
     using(new XLog(BootstrapCommon.logger, levels.INFO, 'initialized'), (log) => {
       log.log(`initializing @fluxgate/common`);
     });
