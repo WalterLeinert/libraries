@@ -14,7 +14,7 @@ import {
   IServiceRequests, IServiceState, ItemCreatedCommand,
   ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand
 } from '@fluxgate/common';
-import { Assert, NotSupportedException, Types } from '@fluxgate/core';
+import { Assert, NotSupportedException } from '@fluxgate/core';
 
 import { MessageService } from '../../services/message.service';
 import { ExtendedCoreComponent } from './extended-core.component';
