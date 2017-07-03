@@ -8,7 +8,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { IUser, TableMetadata, User } from '@fluxgate/common';
+import { IUser } from '@fluxgate/common';
 
 import { Messages } from '../../resources/messages';
 import { IBodyRequest } from '../session/body-request.interface';

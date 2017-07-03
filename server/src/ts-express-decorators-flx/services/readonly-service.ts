@@ -6,8 +6,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { ColumnMetadata, FindByIdResult, IEntity, IUser } from '@fluxgate/common';
-import { Assert, Clone, Funktion, InvalidOperationException, IToString, Types } from '@fluxgate/core';
+import { ColumnMetadata, FindByIdResult, IEntity } from '@fluxgate/common';
+import { Assert, Clone, Funktion, InvalidOperationException, IToString } from '@fluxgate/core';
 
 import { ISessionRequest } from '../session/session-request.interface';
 import { CoreService } from './core-service';
