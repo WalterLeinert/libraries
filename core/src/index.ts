@@ -1,3 +1,8 @@
+(() => {
+  require('./bootstrap');
+})();
+
+
 export * from './adapter';
 export * from './base';
 export * from './collection';

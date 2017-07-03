@@ -46,7 +46,7 @@ describe('RoleSelectorComponent', () => {
       ]
     }).compileComponents();
 
-    AppInjector.instance.setInjector(TestBed.get(Injector, Injector));
+    AppInjector.instance.setInjectorForTest(TestBed.get(Injector, Injector));
 
     fixture = TestBed.createComponent(RoleSelectorComponent);
     comp = fixture.debugElement.componentInstance;

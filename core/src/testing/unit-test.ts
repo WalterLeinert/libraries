@@ -41,12 +41,12 @@ export abstract class UnitTest {
     Exception.logException = false;
 
 
-    const injector = ReflectiveInjector.resolveAndCreate([
+    const injector = CoreInjector.instance.resolveAndCreate([
       { provide: DEFAULT_CATEGORY, useValue: '-unknown-' },
       { provide: LOGGER, useClass: ConsoleLogger }
     ]);
 
-    CoreInjector.instance.setInjector(injector);
+    // CoreInjector.instance.setInjector(injector);
   }
 
 }

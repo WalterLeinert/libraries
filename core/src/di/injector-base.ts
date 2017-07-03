@@ -18,15 +18,22 @@ export abstract class InjectorBase<T extends IGetter<any, TToken>, TToken> {
   private injector: T;
 
   /**
-   * Setzt den globalen Injector.
+   * Der erste Aufruf erzeugt einen Injector, der in der Singleton-Instanz als Root-Injector gehalten wird.
    *
-   * @param {Injector} injector
+   * Bei weiteren Aufrufen wird entweder der Root-Injector vewendet oder @param{parent},
+   * falls dieser angegeben wurde.
    *
-   * @memberOf AppInjector
+   * @protected
+   * @param {any[]} providers
+   * @param {T} [parent]
+   * @returns {T}
+   * @memberof InjectorBase
    */
-  public setInjector(injector: T) {
-    this.injector = injector;
+  public resolveAndCreate(providers: any[], parent?: T): T {
+    const injector = parent ? parent : this.getInjector();
+    return this.onResolveAndCreate(providers, parent);
   }
+
 
   public getInjector(): T {
     return this.injector;
@@ -44,4 +51,31 @@ export abstract class InjectorBase<T extends IGetter<any, TToken>, TToken> {
   public getInstance<T>(token: Funktion | TToken | any): T {
     return this.injector.get(token) as T;
   }
+
+  public setInjectorForTest(injector: T) {
+    this.clearInjector();
+    this.injector = injector;
+  }
+
+  /**
+   * Setzt den globalen Injector.
+   *
+   * @param {Injector} injector
+   *
+   * @memberOf AppInjector
+   */
+  protected setInjector(injector: T) {
+    if (this.injector) {
+      throw new Error(`injector already set`);
+    }
+    this.injector = injector;
+  }
+
+  protected clearInjector() {
+    this.injector = undefined;
+  }
+
+
+
+  protected abstract onResolveAndCreate(providers: any[], parent?: T): T;
 }

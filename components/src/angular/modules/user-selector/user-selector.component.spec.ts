@@ -59,7 +59,7 @@ describe('UserSelectorComponent', () => {
       ]
     }).compileComponents();
 
-    AppInjector.instance.setInjector(TestBed.get(Injector, Injector));
+    AppInjector.instance.setInjectorForTest(TestBed.get(Injector, Injector));
 
     fixture = TestBed.createComponent(UserSelectorComponent);
     comp = fixture.debugElement.componentInstance;

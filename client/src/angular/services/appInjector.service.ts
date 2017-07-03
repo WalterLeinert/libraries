@@ -1,41 +1,39 @@
-import { ReflectiveInjector } from 'injection-js';
-import 'reflect-metadata';
+import { Injectable, Injector, OpaqueToken, Provider, ReflectiveInjector } from '@angular/core';
 
-
-import { Injectable, Injector, OpaqueToken } from '@angular/core';
-
-import { CoreInjector, DEFAULT_CATEGORY, Funktion, InjectorBase, LOGGER, UniqueIdentifiable } from '@fluxgate/core';
-import { getLogger } from '@fluxgate/platform';
+import { InjectorBase } from '@fluxgate/core';
 
 
 /**
- * einen Defaultlogger ermitteln und für DI registrieren
- */
-const defaulLogger = getLogger('default-logger');
-
-const injector = ReflectiveInjector.resolveAndCreate([
-  { provide: DEFAULT_CATEGORY, useValue: defaulLogger.category },
-  { provide: LOGGER, useValue: defaulLogger }
-]);
-
-CoreInjector.instance.setInjector(injector);
-
-
-/**
- * Hilfsklasse als Singleton für dependency injection über den Injector der AppComponent; in AppComponent
- * muss der Injector mittels @see{setInjector} gesetzt werden.
+ * Hilfsklasse als Singleton mit root injector für dependency injection.
  *
- * Instanzen können dann über @see{getInstance} erhalten werden.
+ * Erst nach mindestens einem Aufruf von resolveAndCreate können Instanzen
+ * dann über @see{getInstance} erhalten werden.
  *
  * @export
  * @class AppInjector
  */
 @Injectable()
-export class AppInjector extends InjectorBase<Injector, OpaqueToken> {
+export class AppInjector extends InjectorBase<ReflectiveInjector, OpaqueToken> {
   public static readonly instance = new AppInjector();
 
   private constructor() {
     super();
     // ok
   }
+
+
+  protected onResolveAndCreate(providers: Provider[], injector?: ReflectiveInjector): ReflectiveInjector {
+    if (!injector) {
+      injector = ReflectiveInjector.resolveAndCreate(providers);
+      this.clearInjector();
+
+      // console.warn(`cleared existing injector`);
+      this.setInjector(injector);
+    } else {
+      injector = (injector as ReflectiveInjector).resolveAndCreateChild(providers);
+    }
+
+    return injector as ReflectiveInjector;
+  }
+
 }

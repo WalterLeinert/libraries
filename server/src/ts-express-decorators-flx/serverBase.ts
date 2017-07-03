@@ -1,6 +1,3 @@
-import { ReflectiveInjector } from 'injection-js';
-import 'reflect-metadata';
-
 import * as Express from 'express';
 import * as Knex from 'knex';
 import * as path from 'path';
@@ -15,27 +12,13 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { AppConfig } from '@fluxgate/common';
-import {
-  Assert, Clone, ConfigurationException, CoreInjector, DEFAULT_CATEGORY, LOGGER,
-  StringBuilder, Types, Utility
-} from '@fluxgate/core';
+import { Assert, Clone, ConfigurationException, StringBuilder, Types, Utility } from '@fluxgate/core';
 import { FileSystem } from '@fluxgate/platform';
 
 
 // lokale Komponenten
 import { Messages } from '../resources/messages';
 import { KnexService } from './services/knex.service';
-
-
-const defaulLogger = getLogger('default-logger');
-
-const injector = ReflectiveInjector.resolveAndCreate([
-  { provide: DEFAULT_CATEGORY, useValue: defaulLogger.category },
-  { provide: LOGGER, useValue: defaulLogger }
-]);
-
-CoreInjector.instance.setInjector(injector);
-
 
 
 /**

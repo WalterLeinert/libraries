@@ -51,11 +51,9 @@ class LoggerTest {
 
 
 
-const staticInjector = ReflectiveInjector.resolveAndCreate([
+CoreInjector.instance.resolveAndCreate([
   { provide: LOGGER, useClass: ConsoleLogger }
 ]);
-
-CoreInjector.instance.setInjector(staticInjector);
 
 
 class StaticLoggerTest {
@@ -73,11 +71,9 @@ class StaticLoggerTest {
 class CoreInjectorTest extends UnitTest {
 
   @test 'should create ConsoleLogger by token'() {
-    const injector = ReflectiveInjector.resolveAndCreate([
+    CoreInjector.instance.resolveAndCreate([
       { provide: LOGGER, useClass: ConsoleLogger }
     ]);
-
-    CoreInjector.instance.setInjector(injector);
 
     const test = new LoggerTest();
     test.doLog('hallo');
@@ -87,11 +83,9 @@ class CoreInjectorTest extends UnitTest {
 
 
   @test 'should create DateLogger by token'() {
-    const injector = ReflectiveInjector.resolveAndCreate([
+    CoreInjector.instance.resolveAndCreate([
       { provide: LOGGER, useClass: DateLogger }
     ]);
-
-    CoreInjector.instance.setInjector(injector);
 
     const test = new LoggerTest();
     test.doLog('hallo');
