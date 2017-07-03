@@ -1,6 +1,5 @@
 import { Injectable, Injector, OpaqueToken } from 'injection-js';
 
-import { Funktion } from '../base/objectType';
 import { InjectorBase } from './injector-base';
 
 

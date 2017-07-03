@@ -1,4 +1,4 @@
-import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
+import { InjectionToken } from 'injection-js';
 
 import { ILogger } from './logger.interface';
 

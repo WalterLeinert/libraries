@@ -1,4 +1,3 @@
-import { ICtor } from '../base/ctor';
 import { Funktion } from '../base/objectType';
 
 export interface IGetter<TReturn, T> {

@@ -1,5 +1,3 @@
-import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
-
 import { StringBuilder } from '../base/stringBuilder';
 import { CoreInjector } from '../di/core-injector';
 import { ILogger } from '../diagnostics/logger.interface';

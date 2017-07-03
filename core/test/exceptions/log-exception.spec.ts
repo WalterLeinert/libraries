@@ -2,12 +2,10 @@
 // tslint:disable:member-access
 // tslint:disable:no-unused-expression
 
-import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { AssertionException } from '../../src/exceptions/assertionException';
 import { Exception } from '../../src/exceptions/exception';
-import { JsonSerializer } from '../../src/serialization/json-serializer';
 import { UnitTest } from '../../src/testing/unit-test';
 
 
@@ -20,7 +18,7 @@ class LogExceptionTests extends UnitTest {
 
     try {
       Exception.logException = true;
-      const exc = new AssertionException('should be an assertion');
+      throw new AssertionException('should be an assertion');
     } finally {
       Exception.logException = logException;
     }

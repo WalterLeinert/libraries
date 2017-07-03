@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 
-import { Inject, Injectable, Optional } from 'injection-js';
+import { Inject, Injectable } from 'injection-js';
 
 import { Funktion } from '../base/objectType';
 import { StringBuilder } from '../base/stringBuilder';

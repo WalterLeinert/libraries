@@ -4,7 +4,6 @@ import { Funktion } from '../base/objectType';
 import { StringBuilder } from '../base/stringBuilder';
 import { Indenter } from '../suspendable/indenter';
 import { Suspender } from '../suspendable/suspender';
-import { Dictionary } from '../types/dictionary';
 import { Types } from '../types/types';
 
 
@@ -47,20 +46,19 @@ class DumperInternal<T> extends ClonerBase<T> {
     let cycleDetected = false;
 
     if (this.checkCycles) {
-      if (Dictionary.isValidKey(value)) {
-        // clone bereits erzeugt und registriert?
-        const obj = super.getRegisteredObject(value);
-        if (obj) {
-          cycleDetected = true;
 
-          this.indent(`  ----> cycle detected: type = ${obj.constructor.name}`);
+      // clone bereits erzeugt und registriert?
+      const obj = super.getRegisteredObject(value);
+      if (obj) {
+        cycleDetected = true;
 
-          return;
-        }
+        this.indent(`  ----> cycle detected: type = ${obj.constructor.name}`);
 
-        // Objekt für Zykluserkennung registrieren, aber nur falls unser Dictionary dies unterstützt
-        super.registerObjectFor(value, value);
+        return;
       }
+
+      // Objekt für Zykluserkennung registrieren, aber nur falls unser Dictionary dies unterstützt
+      super.registerObjectFor(value, value);
     }
 
 
