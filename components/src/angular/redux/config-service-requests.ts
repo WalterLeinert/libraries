@@ -5,11 +5,10 @@ import { APP_STORE } from '@fluxgate/client';
 import {
   ConfigBase,
   ConfigStore,
-  ENTITY_VERSION_SERVICE, EntityVersion, IService, IUser, StatusServiceRequests, Store, TableServiceRequests
+  ENTITY_VERSION_SERVICE, EntityVersion, IService, StatusServiceRequests, Store, TableServiceRequests
 } from '@fluxgate/common';
 
 import { ConfigServiceProxy } from './config-service-proxy';
-import { ConfigService } from './config.service';
 
 @Injectable()
 @TableServiceRequests(ConfigBase)

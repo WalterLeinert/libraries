@@ -9,10 +9,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 import {
-  ConfigBase, CreateResult, DeleteResult, FindByIdResult, FindResult, IEntity, IService,
+  ConfigBase, CreateResult, DeleteResult, FindByIdResult, FindResult, IService,
   IStatusQuery, QueryResult, StatusFilter, TableMetadata, TableService, UpdateResult
 } from '@fluxgate/common';
-import { Assert, IToString, NotSupportedException, StringBuilder, StringUtil, Types } from '@fluxgate/core';
+import { Assert, NotSupportedException } from '@fluxgate/core';
 
 
 import { ConfigService } from './config.service';

@@ -10,7 +10,6 @@ import { EnumTableServiceRequests } from '../../redux/service-requests/enum-tabl
 import { Store } from '../../redux/store/store';
 import { EnumTableOptions } from '../decorator/enumTableOptions';
 import { TableOptions } from '../decorator/tableOptions.interface';
-import { Entity } from '../entity';
 import { EntityStatus, EntityStatusHelper } from '../entity-status';
 import { IEntity } from '../entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';

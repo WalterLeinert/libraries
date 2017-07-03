@@ -8,7 +8,6 @@ import { CoreInjector } from '../../src/di/core-injector';
 import { ConsoleLogger } from '../../src/diagnostics/consoleLogger';
 import { DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER } from '../../src/diagnostics/logger.token';
 import { AssertionException } from '../../src/exceptions/assertionException';
-import { Exception } from '../../src/exceptions/exception';
 import { UnitTest } from '../../src/testing/unit-test';
 
 
@@ -27,7 +26,7 @@ class LogExceptionTests extends UnitTest {
   public before() {
     super.before();
 
-    const injector = CoreInjector.instance.resolveAndCreate([
+    CoreInjector.instance.resolveAndCreate([
       { provide: DEFAULT_CATEGORY, useValue: '-unknown-' },
       { provide: LOGGER, useClass: ConsoleLogger },
       { provide: LOG_EXCEPTIONS, useValue: true }

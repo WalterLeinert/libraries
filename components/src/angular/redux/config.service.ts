@@ -1,12 +1,11 @@
 import { Injectable, Optional } from '@angular/core';
-import { Http, RequestOptionsArgs, Response, URLSearchParams } from '@angular/http';
+import { Http, Response, URLSearchParams } from '@angular/http';
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
-import { Subscriber } from 'rxjs/Subscriber';
 
 
 // -------------------------------------- logging --------------------------------------------
@@ -18,12 +17,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { AppConfigService, CoreService, MetadataService, ServiceCore } from '@fluxgate/client';
 import {
   ConfigBase, CreateResult, DeleteResult, FindByIdResult, FindResult, IServiceBase, ServiceConstants, StatusFilter,
-  StatusQuery, TableMetadata, TableService, UpdateResult
+  TableMetadata, TableService, UpdateResult
 } from '@fluxgate/common';
-import {
-  Assert, Funktion, InvalidOperationException, IToString, NotSupportedException,
-  SelectorTerm, Types
-} from '@fluxgate/core';
+import { Assert, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
 
 
 /**

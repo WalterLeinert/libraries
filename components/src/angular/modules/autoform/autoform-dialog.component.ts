@@ -1,6 +1,6 @@
 // tslint:disable:max-line-length
 
-import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -12,14 +12,11 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  APP_STORE,
-  AutoformConfiguration, ControlType, FormAction, FormActions, IAutoformConfig,
-  IControlDisplayInfo, IDataFormAction, MessageService, MetadataService, ServiceRequestsComponent
+  FormAction, FormActions, IAutoformConfig,
+  IDataFormAction, MessageService, MetadataService, ServiceRequestsComponent
 } from '@fluxgate/client';
-import {
-  ICrudServiceRequests, ItemCreatedCommand, ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand, Store, TableMetadata
-} from '@fluxgate/common';
-import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/core';
+import { ICrudServiceRequests } from '@fluxgate/common';
+import { Assert, NotSupportedException, Utility } from '@fluxgate/core';
 
 
 @Component({

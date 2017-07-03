@@ -3,8 +3,6 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { CoreInjector, DEFAULT_CATEGORY, LOGGER } from '@fluxgate/core';
-
 
 export class BootstrapComponents {
   protected static readonly logger = getLogger(BootstrapComponents);

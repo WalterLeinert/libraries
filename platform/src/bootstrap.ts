@@ -1,11 +1,7 @@
-
-
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from './diagnostics';
 // -------------------------------------- logging --------------------------------------------
-
-import { CoreInjector, DEFAULT_CATEGORY, LOGGER } from '@fluxgate/core';
 
 
 class BootstrapPlatform {

@@ -3,10 +3,9 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, Dictionary, Funktion, InvalidOperationException, IToString, Types } from '@fluxgate/core';
+import { Assert, Dictionary, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
 
 import { EntityStatus } from './../entity-status';
-import { IEntity } from './../entity.interface';
 import { CompoundValidator } from './../validation/compoundValidator';
 import { Validator } from './../validation/validator';
 

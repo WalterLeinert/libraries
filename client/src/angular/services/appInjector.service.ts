@@ -1,4 +1,4 @@
-import { Injectable, Injector, OpaqueToken, Provider, ReflectiveInjector } from '@angular/core';
+import { Injectable, OpaqueToken, Provider, ReflectiveInjector } from '@angular/core';
 
 import { InjectorBase } from '@fluxgate/core';
 

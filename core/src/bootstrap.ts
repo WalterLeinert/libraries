@@ -1,7 +1,5 @@
 import 'reflect-metadata';
 
-import { ReflectiveInjector } from 'injection-js';
-
 // -------------------------------------- logging --------------------------------------------
 import { using } from './base/disposable';
 import { levels } from './diagnostics/level';

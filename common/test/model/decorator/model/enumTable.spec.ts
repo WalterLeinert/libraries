@@ -15,7 +15,6 @@ import { Enum } from '../../../../src/model/decorator/enum';
 import { EnumTable } from '../../../../src/model/decorator/enumTable';
 import { IdColumn } from '../../../../src/model/decorator/id-column';
 import { Table } from '../../../../src/model/decorator/table';
-import { IEntity } from '../../../../src/model/entity.interface';
 import { ColumnTypes } from '../../../../src/model/metadata/columnTypes';
 import { MetadataStorage } from '../../../../src/model/metadata/metadataStorage';
 import { TableMetadata } from '../../../../src/model/metadata/tableMetadata';

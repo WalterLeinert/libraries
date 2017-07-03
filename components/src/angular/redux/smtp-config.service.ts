@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 
-import { Observable } from 'rxjs/Observable';
-
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -11,9 +9,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { AppConfigService, MetadataService } from '@fluxgate/client';
-import {
-  ConfigBase, FindByIdResult, FindResult, SmtpConfig, StatusFilter, TableService
-} from '@fluxgate/common';
+import { ConfigBase, SmtpConfig, TableService } from '@fluxgate/common';
 
 import { ConfigService } from './config.service';
 

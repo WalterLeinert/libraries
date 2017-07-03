@@ -1,8 +1,5 @@
-import { Funktion, NotSupportedException } from '@fluxgate/core';
-import { getLogger as getConsoleLogger, IConfig, ILogger, Logger, LoggerRegistry, Types } from '@fluxgate/core';
-
-import { JsonReader } from '../util/jsonReader';
-import { LoggerFacade } from './logger-facade';
+import { Funktion } from '@fluxgate/core';
+import { IConfig, ILogger } from '@fluxgate/core';
 
 let loggerFacade;
 

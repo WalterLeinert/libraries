@@ -1,7 +1,5 @@
 import 'reflect-metadata';
 
-import { ReflectiveInjector } from 'injection-js';
-
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';

@@ -1,5 +1,5 @@
-import { CoreInjector, Funktion, NotSupportedException } from '@fluxgate/core';
-import { getLogger as getConsoleLogger, IConfig, ILogger, Logger, LoggerRegistry, Types } from '@fluxgate/core';
+import { Funktion } from '@fluxgate/core';
+import { IConfig, ILogger, LoggerRegistry, Types } from '@fluxgate/core';
 
 
 // tslint:disable-next-line:max-classes-per-file

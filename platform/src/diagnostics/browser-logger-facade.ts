@@ -1,12 +1,12 @@
-import { CoreInjector, Funktion, NotSupportedException } from '@fluxgate/core';
-import { getLogger as getConsoleLogger, IConfig, ILogger, Logger, LoggerRegistry, Types } from '@fluxgate/core';
+import { Funktion, NotSupportedException } from '@fluxgate/core';
+import { getLogger as getConsoleLogger, IConfig, ILogger, LoggerRegistry, Types } from '@fluxgate/core';
 
 import { LoggerFacade } from './logger-facade';
 
 
 // removeIf(node)
 export class BrowserLoggerFacade extends LoggerFacade {
- 
+
   public getLogger(category: string | Funktion): ILogger {
     const categoryName = this.getCategoryName(category);
 
