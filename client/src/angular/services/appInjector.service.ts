@@ -4,7 +4,7 @@ import 'reflect-metadata';
 
 import { Injectable, Injector, OpaqueToken } from '@angular/core';
 
-import { CoreInjector, DEFAULT_CATEGORY, Funktion, LOGGER, UniqueIdentifiable } from '@fluxgate/core';
+import { CoreInjector, DEFAULT_CATEGORY, Funktion, InjectorBase, LOGGER, UniqueIdentifiable } from '@fluxgate/core';
 import { getLogger } from '@fluxgate/platform';
 
 
@@ -29,44 +29,13 @@ CoreInjector.instance.setInjector(injector);
  *
  * @export
  * @class AppInjector
- * @extends {UniqueIdentifiable}
  */
 @Injectable()
-export class AppInjector extends UniqueIdentifiable {
+export class AppInjector extends InjectorBase<Injector, OpaqueToken> {
   public static readonly instance = new AppInjector();
-  private injector: Injector;
 
   private constructor() {
     super();
+    // ok
   }
-
-
-  /**
-   * Setzt den globalen Injector.
-   *
-   * @param {Injector} injector
-   *
-   * @memberOf AppInjector
-   */
-  public setInjector(injector: Injector) {
-    this.injector = injector;
-  }
-
-  public getInjector(): Injector {
-    return this.injector;
-  }
-
-  /**
-   * Liefert für das Token @param{token} eine entsprechende Instanz.
-   *
-   * @template T
-   * @param {(Funktion | OpaqueToken)} token
-   * @returns {T}
-   *
-   * @memberOf AppInjector
-   */
-  public getInstance<T>(token: Funktion | OpaqueToken | any): T {
-    return this.injector.get(token) as T;
-  }
-
 }

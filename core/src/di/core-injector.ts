@@ -1,6 +1,8 @@
 import { Injectable, Injector, OpaqueToken } from 'injection-js';
 
 import { Funktion } from '../base/objectType';
+import { InjectorBase } from './injector-base';
+
 
 /**
  * Hilfsklasse als Singleton für dependency injection über den Injector der Hauptkomponente/Anwendung; dort
@@ -10,42 +12,13 @@ import { Funktion } from '../base/objectType';
  *
  * @export
  * @class CoreInjector
- * @extends {UniqueIdentifiable}
  */
 @Injectable()
-export class CoreInjector {
+export class CoreInjector extends InjectorBase<Injector, OpaqueToken> {
   public static readonly instance = new CoreInjector();
-  private injector: Injector;
 
   private constructor() {
-  }
-
-
-  /**
-   * Setzt den globalen Injector.
-   *
-   * @param {Injector} injector
-   *
-   * @memberOf AppInjector
-   */
-  public setInjector(injector: Injector) {
-    this.injector = injector;
-  }
-
-  public getInjector(): Injector {
-    return this.injector;
-  }
-
-  /**
-   * Liefert für das Token @param{token} eine entsprechende Instanz.
-   *
-   * @template T
-   * @param {(Funktion | OpaqueToken)} token
-   * @returns {T}
-   *
-   * @memberOf AppInjector
-   */
-  public getInstance<T>(token: Funktion | OpaqueToken | any): T {
-    return this.injector.get(token) as T;
+    super();
+    // ok
   }
 }
