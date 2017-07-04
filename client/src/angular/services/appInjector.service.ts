@@ -13,7 +13,7 @@ import { InjectorBase } from '@fluxgate/core';
  * @class AppInjector
  */
 @Injectable()
-export class AppInjector extends InjectorBase<ReflectiveInjector, OpaqueToken> {
+export class AppInjector extends InjectorBase<Injector, OpaqueToken> {
   public static readonly instance = new AppInjector();
 
   private constructor() {
@@ -23,7 +23,7 @@ export class AppInjector extends InjectorBase<ReflectiveInjector, OpaqueToken> {
 
 
   public setInjector(injector: Injector) {
-    super.setInjectorInternal(injector as ReflectiveInjector);
+    super.setInjectorInternal(injector);
   }
 
 
