@@ -40,7 +40,7 @@ export class ApplicationErrorHandler extends ErrorHandler {
       // tslint:disable-next-line:no-string-literal
       const debugContext = error['ngDebugContext'] as INgDebugContext;
       if (debugContext) {
-        log.error(`ngDebugContext.component: ${JsonDumper.stringify(debugContext.component)}`);
+        log.error(`ngDebugContext.component: ${JsonDumper.stringify(debugContext.component, 2)}`);
       }
 
       if (error instanceof Exception) {
