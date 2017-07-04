@@ -86,7 +86,7 @@ Die Softwareentwicklung erfolgt in Visual Code (vscode).
 
 Abhängigkeiten zu @angular-Libraries und @fluxgate/libraries werden absolut angegeben, um Probleme durch automatische Updates bei
 "npm install" zu vermeiden.
-Also hat z.B. common eine Abhängigkeit zu core über: "@fluxgate/core": "2.2.7-beta.0" und nicht wie früher "@fluxgate/core": "^2.2.7-beta.0".
+Also hat z.B. common eine Abhängigkeit zu core über: "@fluxgate/core": "2.2.7-beta.0" und nicht wie früher "@fluxgate/core": "\^2.2.7-beta.0".
 
 Die internen Abhängigkeiten für alle fluxgate-Libraries zueinander können mit dem Skript bin/update-fluxgate-all.sh (in einer bash) aktualisert werden.
 Dazu wird für jede Library die aktuelle Version aus package.json ermittelt und bei den betroffenen Libraries eingetragen.
