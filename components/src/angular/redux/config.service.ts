@@ -248,7 +248,11 @@ export class ConfigService<T extends ConfigBase> extends ServiceCore implements 
     if (!this._tableMetadata) {
       this._tableMetadata = this.metadataService.findTableMetadata(modelString);
     } else {
-      Assert.that(this._tableMetadata.className === modelString);
+      if (!Types.isNullOrEmpty(modelString)) {
+        Assert.that(this._tableMetadata.className === modelString);
+      } else {
+        modelString = this._tableMetadata.className;
+      }
     }
 
     return modelString;
