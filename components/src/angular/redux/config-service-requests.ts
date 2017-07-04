@@ -5,14 +5,14 @@ import { APP_STORE } from '@fluxgate/client';
 import {
   ConfigBase,
   ConfigStore,
-  ENTITY_VERSION_SERVICE, EntityVersion, IService, StatusServiceRequests, Store, TableServiceRequests
+  ENTITY_VERSION_SERVICE, EntityVersion, ExtendedCrudServiceRequests, IService, Store, TableServiceRequests
 } from '@fluxgate/common';
 
 import { ConfigServiceProxy } from './config-service-proxy';
 
 @Injectable()
 @TableServiceRequests(ConfigBase)
-export class ConfigServiceRequests extends StatusServiceRequests<ConfigBase, string> {
+export class ConfigServiceRequests extends ExtendedCrudServiceRequests<ConfigBase, string> {
 
   constructor(service: ConfigServiceProxy, @Inject(APP_STORE) store: Store,
     @Inject(ENTITY_VERSION_SERVICE) entityVersionService?: IService<EntityVersion, string>) {

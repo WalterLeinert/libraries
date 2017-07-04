@@ -4,7 +4,7 @@ import { Inject, Injectable, NgModule } from '@angular/core';
 import { APP_STORE } from '@fluxgate/client';
 import {
   ENTITY_VERSION_SERVICE,
-  EntityVersion, IService, ISystemConfig, StatusServiceRequests, Store, SystemConfig,
+  EntityVersion, ExtendedCrudServiceRequests, IService, ISystemConfig, Store, SystemConfig,
   SystemConfigStore, TableServiceRequests
 } from '@fluxgate/common';
 
@@ -14,7 +14,7 @@ import { SystemConfigService } from './system-config.service';
 
 @Injectable()
 @TableServiceRequests(SystemConfig)
-export class SystemConfigServiceRequests extends StatusServiceRequests<ISystemConfig, string> {
+export class SystemConfigServiceRequests extends ExtendedCrudServiceRequests<ISystemConfig, string> {
 
   constructor(service: SystemConfigService, @Inject(APP_STORE) store: Store,
     @Inject(ENTITY_VERSION_SERVICE) entityVersionService?: IService<EntityVersion, string>) {
