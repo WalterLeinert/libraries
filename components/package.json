@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/components",
-  "version": "2.2.8-beta.57",
+  "version": "2.2.8-beta.59",
   "description": "Fluxgate Angular Component-Library ",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -62,8 +62,8 @@
     "@angular/platform-browser-dynamic": "4.1.3",
     "@angular/platform-server": "4.1.3",
     "@angular/router": "4.1.3",
-    "@fluxgate/client": "2.2.8-beta.42",
-    "@fluxgate/common": "2.2.8-beta.35",
+    "@fluxgate/client": "2.2.8-beta.44",
+    "@fluxgate/common": "2.2.8-beta.36",
     "@fluxgate/core": "2.2.8-beta.33",
     "@fluxgate/platform": "2.2.8-beta.26",
     "bootstrap": "^3.3.7",

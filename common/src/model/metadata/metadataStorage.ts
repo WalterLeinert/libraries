@@ -3,12 +3,14 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, Dictionary, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
+import { Assert, Dictionary, Funktion, InvalidOperationException, Tuple, Types } from '@fluxgate/core';
 
 import { EntityStatus } from './../entity-status';
 import { CompoundValidator } from './../validation/compoundValidator';
 import { Validator } from './../validation/validator';
 
+import { IColumnGroupOptions } from '../decorator/column-group';
+import { ColumnGroupMetadata } from './column-group-metadata';
 import { ColumnMetadata } from './columnMetadata';
 import { EnumMetadata } from './enumMetadata';
 import { SpecialColumn } from './specialColumns';
@@ -42,8 +44,12 @@ export class MetadataStorage {
   private tableStatusColumnDict: Dictionary<string, Dictionary<string, EntityStatus>> =
   new Dictionary<string, Dictionary<string, EntityStatus>>();
 
+  private tableColumnGroupDict: Dictionary<string, Dictionary<string, ColumnGroupMetadata>> =
+  new Dictionary<string, Dictionary<string, ColumnGroupMetadata>>();
+
   private tableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
   private dbTableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
+
 
   /**
    * fügt eine neue {TableMetadata} hinzu.
@@ -165,6 +171,28 @@ export class MetadataStorage {
           }
         }
 
+
+        /**
+         * ColumnGroupMetadata anlegen
+         */
+        if (this.tableColumnGroupDict.containsKey(targetName)) {
+          const colGroupDict = this.tableColumnGroupDict.get(targetName);
+
+          // über alle Properties der Table ...
+          colGroupDict.keys.forEach((groupName) => {
+            const colGroupMetadata = colGroupDict.get(groupName);
+
+            // ColumnGroupMetadata erzeugen/erweitern
+            colGroupMetadata.resolveColumns((name: string) => {
+              return metadata.getColumnMetadataByProperty(name);
+            });
+          });
+
+          // ... und in Tablemetadata übernehmen
+          colGroupDict.values.forEach((item) => {
+            metadata.addGroupMetadata(item);
+          });
+        }
 
 
         //
@@ -359,6 +387,61 @@ export class MetadataStorage {
     }
     enumMetadata.push(metadata);
   }
+
+
+  /**
+   * ColumnGroup-Info (groupName, options) für eine Property @param{propertyName} ablegen für das angebene Target.
+   *
+   * @param {Funktion} target
+   * @param {string} propertyName
+   * @param {string} groupName
+   * @param {number} order
+   * @memberof MetadataStorage
+   */
+  public addColumnGroup(target: Funktion, propertyName: string, groupName: string, options: IColumnGroupOptions) {
+    Assert.notNull(target);
+
+    let colGroupDict: Dictionary<string, ColumnGroupMetadata> =
+      this.tableColumnGroupDict.get(target.name);
+
+    if (!colGroupDict) {
+      colGroupDict = new Dictionary<string, ColumnGroupMetadata>();
+      this.tableColumnGroupDict.set(target.name, colGroupDict);
+    }
+
+
+    let colGroupMetadata: ColumnGroupMetadata = colGroupDict.get(groupName);
+    if (!colGroupMetadata) {
+      colGroupMetadata = new ColumnGroupMetadata(groupName, [], options);
+      colGroupDict.set(groupName, colGroupMetadata);
+    }
+    colGroupMetadata.addColumnName(propertyName);
+  }
+
+
+  /**
+   * ColumnGroup-Info (groupName, options) für die columns @param{columnNames} ablegen für das angebene Target.
+   *
+   * @param target
+   * @param groupName
+   * @param columnNames
+   * @param options
+   */
+  public addColumnGroups(target: Funktion, groupName: string,
+    columnNames: string[], options: IColumnGroupOptions) {
+    Assert.notNull(target);
+
+    let colGroupDict: Dictionary<string, ColumnGroupMetadata> =
+      this.tableColumnGroupDict.get(target.name);
+
+    if (!colGroupDict) {
+      colGroupDict = new Dictionary<string, ColumnGroupMetadata>();
+      this.tableColumnGroupDict.set(target.name, colGroupDict);
+    }
+
+    colGroupDict.set(groupName, new ColumnGroupMetadata(groupName, columnNames, options));
+  }
+
 
 
   /**

@@ -15,6 +15,7 @@ import { IEntity } from '../entity.interface';
 import { ColumnMetadata } from '../metadata/columnMetadata';
 import { EnumTableService } from '../service/enumTableService';
 import { IReadonlyService } from '../service/readonly-service.interface';
+import { ColumnGroupMetadata } from './column-group-metadata';
 import { MetadataStorage } from './metadataStorage';
 import { SpecialColumns } from './specialColumns';
 
@@ -33,6 +34,8 @@ export abstract class TableMetadata extends ClassMetadata {
 
 
   private _columnMetadata: ColumnMetadata[] = [];
+  private _columnGroupMetadata: ColumnGroupMetadata[] = [];
+
   private propertyMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   private dbColMap: Dictionary<string, ColumnMetadata> = new Dictionary<string, ColumnMetadata>();
   // private _primaryKeyColumn: ColumnMetadata;
@@ -69,6 +72,9 @@ export abstract class TableMetadata extends ClassMetadata {
     this.addInternal(metadata);
   }
 
+  public addGroupMetadata(colGroupMetadata: ColumnGroupMetadata) {
+    this._columnGroupMetadata.push(colGroupMetadata);
+  }
 
   /**
    * Fügt die Metadaten @param{metadata} vor die bisherigen Metadaten ein.
@@ -131,6 +137,11 @@ export abstract class TableMetadata extends ClassMetadata {
   public get columnMetadata(): ColumnMetadata[] {
     return this._columnMetadata;
   }
+
+  public get columnGroupMetadata(): ColumnGroupMetadata[] {
+    return this._columnGroupMetadata;
+  }
+
 
   public get specialColumnKeys(): SpecialColumnKey[] {
     return this._specialColMap.keys;

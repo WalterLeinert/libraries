@@ -1,5 +1,6 @@
 export * from './client-column';
 export * from './column';
+export * from './column-group';
 export * from './columnOptions';
 export * from './enum';
 export * from './enumTable';
