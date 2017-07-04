@@ -7,7 +7,7 @@ const entries = require('object.entries');
 import { ILogger } from '../diagnostics/logger.interface';
 import { getLogger } from '../diagnostics/logging-core';
 
-import { Dictionary } from '../types/dictionary';
+import { Dictionary, KeyType } from '../types/dictionary';
 import { InstanceCreator, InstanceSetter } from '../types/instanceAccessor';
 import { Types } from '../types/types';
 import { UniqueIdentifiable } from './uniqueIdentifiable';
@@ -33,7 +33,7 @@ export abstract class ClonerBase<T> {
     return true;
   })();
 
-  private objectDict: Dictionary<any, any> = new Dictionary<any, any>();
+  private objectDict: Dictionary<any, any> = new Dictionary<any, any>(KeyType.Any);
 
 
   public constructor(private _checkCycles: boolean) {

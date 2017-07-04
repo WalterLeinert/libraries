@@ -9,10 +9,9 @@ import { IDictionary } from './dictionary.interface';
  *
  * @enum {number}
  */
-enum KeyType {
-  Other,
-  Identifiable,
-  Undefined
+export enum KeyType {
+  Any,
+  Identifiable
 }
 
 
@@ -39,7 +38,12 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
   private idKeyDict: { [id: number]: any } = {};
 
   private isInitialized: boolean = false;
-  private keyType = KeyType.Undefined;
+  private keyType;
+
+
+  constructor(keyType?: KeyType) {
+    this.keyType = keyType;
+  }
 
 
   /**
@@ -61,7 +65,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
       this.initialize(KeyType.Identifiable);
     } else {
       this._map.set(key, value);
-      this.initialize(KeyType.Other);
+      this.initialize(KeyType.Any);
     }
   }
 
@@ -227,13 +231,31 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
   }
 
 
+  /**
+   * Intialisierung mit dem keyType. Aber nur, falls noch nicht intialisiert und falls der keyType Undefined ist.
+   * Sonst wir der im Konstruktor angegebene Typ verwendet.
+   *
+   * @param keyType
+   */
   private initialize(keyType: KeyType) {
-    this.keyType = keyType;
-    this.isInitialized = true;
+    if (!this.isInitialized) {
+      if (this.keyType === undefined) {
+        this.keyType = keyType;
+      }
+
+      this.isInitialized = true;
+    }
   }
+
 
   private assertValidKey(key: TKey) {
     if (this.isInitialized) {
+      // bei jedem Typ ausser KeyType.Identifiable ist jeder Key erlaubt ?!?
+      // -> ebenso Runtime-Check wie bei Identifiable?
+      if (this.keyType === KeyType.Any) {
+        return;
+      }
+
       if (this.keyType === KeyType.Identifiable) {
         Assert.that(this.keyType === KeyType.Identifiable && (key instanceof Identifiable),
           `key is no instance of Identifiable`);
