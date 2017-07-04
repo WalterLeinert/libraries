@@ -38,7 +38,7 @@ describe('TimeSelectorComponent', () => {
       ]
     }).compileComponents();
 
-    AppInjector.instance.setInjectorForTest(TestBed.get(Injector, Injector));
+    AppInjector.instance.setInjector(TestBed.get(Injector, Injector));
 
     fixture = TestBed.createComponent(TimeSelectorComponent);
     comp = fixture.debugElement.componentInstance;

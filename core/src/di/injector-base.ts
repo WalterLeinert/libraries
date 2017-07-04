@@ -52,13 +52,18 @@ export abstract class InjectorBase<T extends IGetter<any, TToken>, TToken> {
     return this.injector.get(token) as T;
   }
 
-  public setInjectorForTest(injector: T) {
+  /**
+   * Setzt einen neuen Injector.
+   *
+   * @param injector
+   */
+  protected setInjectorInternal(injector: T) {
     this.clearInjector();
     this.injector = injector;
   }
 
   /**
-   * Setzt den globalen Injector.
+   * Setzt den globalen Injector und prüft, ob noch keiner registriert ist.
    *
    * @param {Injector} injector
    *

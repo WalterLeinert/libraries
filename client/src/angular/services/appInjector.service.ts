@@ -1,4 +1,4 @@
-import { Injectable, OpaqueToken, Provider, ReflectiveInjector } from '@angular/core';
+import { Injectable, Injector, OpaqueToken, Provider, ReflectiveInjector } from '@angular/core';
 
 import { InjectorBase } from '@fluxgate/core';
 
@@ -19,6 +19,11 @@ export class AppInjector extends InjectorBase<ReflectiveInjector, OpaqueToken> {
   private constructor() {
     super();
     // ok
+  }
+
+
+  public setInjector(injector: Injector) {
+    super.setInjectorInternal(injector as ReflectiveInjector);
   }
 
 
