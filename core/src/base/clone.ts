@@ -37,7 +37,6 @@ export abstract class ClonerBase<T> {
 
 
   public constructor(private _checkCycles: boolean) {
-
   }
 
   protected get checkCycles(): boolean {

@@ -41,12 +41,37 @@ class DictionaryStringStringTest<TKey, TValue> extends UnitTest {
     expect(d.count).to.be.equal(1);
   }
 
+  @test 'should set an item twice'() {
+    const d = new Dictionary<string, string>();
+    expect(() => d.set('aaa', 'bbb')).not.to.Throw();
+    expect(() => d.set('aaa', 'ccc')).not.to.Throw();
+  }
+
+  @test 'should get an item'() {
+    const d = new Dictionary<string, string>();
+    d.set('aaa', 'bbb');
+    expect(d.get('aaa')).to.be.equal('bbb');
+  }
+
+  @test 'should get a non existing item'() {
+    const d = new Dictionary<string, string>();
+    expect(d.get('aaa')).to.be.undefined;
+  }
+
   @test 'should remove an item'() {
     const d = new Dictionary<string, string>();
     const key = 'aaa';
     d.set(key, 'bbb');
     expect(() => d.remove(key)).not.to.Throw();
     expect(d.count).to.be.equal(0);
+  }
+
+  @test 'should remove an item twice'() {
+    const d = new Dictionary<string, string>();
+    const key = 'aaa';
+    d.set(key, 'bbb');
+    expect(() => d.remove(key)).not.to.Throw();
+    expect(() => d.remove(key)).not.to.Throw();
   }
 
   @test 'should test for existence'() {

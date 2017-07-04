@@ -11,10 +11,25 @@ class DumperInternal<T> extends ClonerBase<T> {
   private indenter: Indenter = new Indenter();
   private sb: StringBuilder = new StringBuilder();
 
+
+  public constructor(private maxDepth: number) {
+    super(true);
+  }
+
+  public dump<T>(value: T) {
+    this.dumpRec(value);
+  }
+
+
+  public toString(): string {
+    return this.sb.toString();
+  }
+
+
   /**
-   * Verifiziert, dass @param{clonedValue} wirklich ein deep clone von @param{value} ist.
+   * gibt die Objektstruktur @param{value} rekursiv aus
    */
-  public dump<T>(value: T, attrName?: string) {
+  private dumpRec<T>(value: T, attrName?: string) {
     if (!Types.isNullOrEmpty(attrName)) {
       this.indent(`${attrName}: `);
     }
@@ -52,7 +67,11 @@ class DumperInternal<T> extends ClonerBase<T> {
       if (obj) {
         cycleDetected = true;
 
-        this.indent(`  ----> cycle detected: type = ${obj.constructor.name}`);
+        if (!Types.isPresent(obj.constructor)) {
+          this.indent(`  ----> cycle detected: obj.constructor === null`);
+        } else {
+          this.indent(`  ----> cycle detected: type = ${obj.constructor.name}`);
+        }
 
         return;
       }
@@ -66,62 +85,61 @@ class DumperInternal<T> extends ClonerBase<T> {
       const arr = value as any as any[];
       this.sb.appendLine(`[`);
 
-      using(new Suspender([this.indenter]), () => {
+      if (this.indenter.Counter <= this.maxDepth) {
 
-        // tslint:disable-next-line:prefer-for-of
-        for (let i = 0; i < arr.length; i++) {
-          this.indent();
+        using(new Suspender([this.indenter]), () => {
 
-          this.dump(arr[i]);
+          // tslint:disable-next-line:prefer-for-of
+          for (let i = 0; i < arr.length; i++) {
+            this.indent();
 
-          if (i < arr.length - 1) {
-            this.sb.appendLine(',');
-          } else {
-            this.sb.appendLine();
+            this.dumpRec(arr[i]);
+
+            if (i < arr.length - 1) {
+              this.sb.appendLine(',');
+            } else {
+              this.sb.appendLine();
+            }
           }
-        }
 
-      });
+        });
+      } else {
+        this.indent(`  ...    // ${arr.length} items`);
+        this.sb.appendLine();
+      }
 
       this.indent(`]`);
 
     } else if (Types.isObject(value)) {
-      if (value.constructor === null) {
+      if (!Types.isPresent(value.constructor)) {
         this.sb.appendLine(`{    // value.constructor === null`);
       } else {
         this.sb.appendLine(`{    // ${value.constructor.name}`);
       }
 
 
-      // geklonte vordefinierte Typen sind ok
-      const predefCloner = ClonerBase.getPredefinedClonerFor(((value.constructor) as any as Funktion).name);
-      if (predefCloner !== undefined) {
-        return;
-      }
+      if (this.indenter.Counter <= this.maxDepth) {
+        super.iterateOnEntries(value, undefined,
+          (count, index, entryName, entryValue, clonedEntryName, clonedEntryValue) => {
+            using(new Suspender([this.indenter]), () => {
+              this.dumpRec(entryValue, entryName);   // Rekursion
 
-      super.iterateOnEntries(value, undefined,
-        (count, index, entryName, entryValue, clonedEntryName, clonedEntryValue) => {
-          using(new Suspender([this.indenter]), () => {
-            this.dump(entryValue, entryName);   // Rekursion
+              if (index < count - 1) {
+                this.sb.appendLine(',');
+              } else {
+                this.sb.appendLine();
+              }
 
-            if (index < count - 1) {
-              this.sb.appendLine(',');
-            } else {
-              this.sb.appendLine();
-            }
-
+            });
           });
-        });
+      } else {
+        this.indent('  ...');
+        this.sb.appendLine();
+      }
 
       this.indent('}');
     }
   }
-
-
-  public toString(): string {
-    return this.sb.toString();
-  }
-
 
   private indent(text: string = '') {
     // this.sb.appendLine();
@@ -141,12 +159,13 @@ export class JsonDumper {
    * @static
    * @template T
    * @param {T} value
-   * @returns {T}
+   * @param {number} maxDepth - max. Rekursionstiefe für die Ausgabe [default: unbegrenzt]
+   * @returns {T} allowCycles -
    *
    * @memberOf Clone
    */
-  public static stringify<T>(value: T, allowCycles: boolean = true): string {
-    const dumper = new DumperInternal<T>(allowCycles);
+  public static stringify<T>(value: T, maxDepth: number = Number.MAX_VALUE): string {
+    const dumper = new DumperInternal<T>(maxDepth);
     dumper.dump<T>(value);
 
     return dumper.toString();

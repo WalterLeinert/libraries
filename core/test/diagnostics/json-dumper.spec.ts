@@ -26,7 +26,7 @@ const json = {
     }
   },
   inner2: {
-    no: 1
+    no: 2
   }
 };
 
@@ -84,10 +84,57 @@ class DumperTest extends UnitTest {
     }
   },
   inner2: {    // Object
-    no: 1
+    no: 2
   }
 }`);
   }
+
+
+  @test 'should dump json with maxDepth 1'() {
+    const dump = JsonDumper.stringify(json, 1);
+    return expect(dump).to.be.equal(`{    // Object
+  null: null,
+  undefined: undefined,
+  items: [
+    'name1',
+    4711
+  ],
+  name: 'Walter',
+  id: 4711,
+  valid: true,
+  inner1: {    // Object
+    no: 1,
+    inner: {    // Object
+      ...
+    }
+  },
+  inner2: {    // Object
+    no: 2
+  }
+}`);
+  }
+
+
+  @test 'should dump json with maxDepth 0'() {
+    const dump = JsonDumper.stringify(json, 0);
+    return expect(dump).to.be.equal(`{    // Object
+  null: null,
+  undefined: undefined,
+  items: [
+    ...    // 2 items
+  ],
+  name: 'Walter',
+  id: 4711,
+  valid: true,
+  inner1: {    // Object
+    ...
+  },
+  inner2: {    // Object
+    ...
+  }
+}`);
+  }
+
 
 
   @test 'should dump json with cyclic reference'() {

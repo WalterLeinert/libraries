@@ -41,6 +41,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
   private isInitialized: boolean = false;
   private keyType = KeyType.Undefined;
 
+
   /**
    * Fügt unter dem Key @param{key} einen neuen Wert @param{value} hinzu.
    *
@@ -52,9 +53,9 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
    */
   public set(key: TKey, value: TValue) {
     Assert.notNull(key);
+    this.assertValidKey(key);
 
     if (key instanceof Identifiable) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.Identifiable);
       this.idKeyDict[key.instanceId] = key;
       this.idValueDict[key.instanceId] = value;
       this.initialize(KeyType.Identifiable);
@@ -75,9 +76,9 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
    */
   public get(key: TKey): TValue {
     Assert.notNull(key);
+    this.assertValidKey(key);
 
     if (key instanceof Identifiable) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.Identifiable);
       return this.idValueDict[key.instanceId];
     } else {
       return this._map.get(key);
@@ -95,9 +96,9 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
    */
   public remove(key: TKey) {
     Assert.notNull(key);
+    this.assertValidKey(key);
 
     if (key instanceof Identifiable) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.Identifiable);
       delete this.idKeyDict[key.instanceId];
       delete this.idValueDict[key.instanceId];
     } else {
@@ -116,9 +117,9 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
    */
   public containsKey(key: TKey): boolean {
     Assert.notNull(key);
+    this.assertValidKey(key);
 
     if (key instanceof Identifiable) {
-      Assert.that(!this.isInitialized || this.keyType === KeyType.Identifiable);
       return this.idKeyDict[key.instanceId] !== undefined;
     } else {
       return this._map.has(key);
@@ -229,5 +230,14 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
   private initialize(keyType: KeyType) {
     this.keyType = keyType;
     this.isInitialized = true;
+  }
+
+  private assertValidKey(key: TKey) {
+    if (this.isInitialized) {
+      if (this.keyType === KeyType.Identifiable) {
+        Assert.that(this.keyType === KeyType.Identifiable && (key instanceof Identifiable),
+          `key is no instance of Identifiable`);
+      }
+    }
   }
 }
