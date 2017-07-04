@@ -98,6 +98,16 @@ und die node_modules Verzeichnisse löschen). Das Skript legt bei jedem Lauf im 
 
 Der Rebuild erfolgt im Rootverzeichnis (libraries): "bin/rebuild.sh"
 
+```bash
+# rebuild (ohne really clean): nur sinnvoll, wenn alle package-Versionen erhöht wurden!
+cd .../libraries
+bin/rebuild.sh
+
+# rebuild mit really clean: geht immer, räumt vorher komplett auf, dauert länger
+bin/rebuild.sh --clean
+
+```
+
 
 ### Release Notes
 
