@@ -13,9 +13,9 @@ export interface IColumnGroupOptions {
 /**
  * Decorator: definiert die Property der Client-Id (Mandantenfähigkeit)
  */
-export function ColumnGroup(groupName: string, options?: IColumnGroupOptions) {
+export function ColumnGroup1(groupName: string, options?: IColumnGroupOptions) {
   // tslint:disable-next-line:only-arrow-functions
-  return function(target: object, propertyName: string) {
+  return function (target: object, propertyName: string) {
     MetadataStorage.instance.addColumnGroup(target.constructor, propertyName, groupName, options);
   };
 }
@@ -29,21 +29,14 @@ export function ColumnGroup2<T>(
   order?: number
 ) {
   // tslint:disable-next-line:only-arrow-functions
-  return function(target: object) {
+  return function (target: object) {
     // TODO
   };
 }
 
-export function ColumnGroup3<T>(
-  groupName: string,
-  columnNames: string[],
-  options?: {
-    order?: number,
-    displayName?: string
-  }
-) {
+export function ColumnGroup<T>(groupName: string, columnNames: string[], options?: IColumnGroupOptions) {
   // tslint:disable-next-line:only-arrow-functions
-  return function(target: object) {
-    // TODO
+  return function (target: object) {
+    MetadataStorage.instance.addColumnGroups(target.constructor, groupName, columnNames, options);
   };
 }
