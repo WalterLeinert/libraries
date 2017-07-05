@@ -30,7 +30,7 @@ export abstract class InjectorBase<T extends IGetter<any, TToken>, TToken> {
    * @memberof InjectorBase
    */
   public resolveAndCreate(providers: any[], parent?: T): T {
-    const injector = parent ? parent : this.getInjector();
+    // TODO: const injector = parent ? parent : this.getInjector();
     return this.onResolveAndCreate(providers, parent /*TODO: injector*/);
   }
 

@@ -1,6 +1,5 @@
 import { ClonerBase } from '../base/clone';
 import { using } from '../base/disposable';
-import { Funktion } from '../base/objectType';
 import { StringBuilder } from '../base/stringBuilder';
 import { Indenter } from '../suspendable/indenter';
 import { Suspender } from '../suspendable/suspender';
