@@ -7,13 +7,11 @@ require('reflect-metadata');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { ClientColumn } from '../../../../src/model/decorator/client-column';
 import { Column } from '../../../../src/model/decorator/column';
 import { ColumnGroup, ColumnGroup1 } from '../../../../src/model/decorator/column-group';
 import { IdColumn } from '../../../../src/model/decorator/id-column';
 import { Table } from '../../../../src/model/decorator/table';
 import { IEntity } from '../../../../src/model/entity.interface';
-import { ColumnTypes } from '../../../../src/model/metadata/columnTypes';
 import { MetadataStorage } from '../../../../src/model/metadata/metadataStorage';
 import { TableMetadata } from '../../../../src/model/metadata/tableMetadata';
 import { CommonTest } from '../../../common.spec';

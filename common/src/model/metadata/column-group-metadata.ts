@@ -1,5 +1,4 @@
 import { IColumnGroupOptions } from '../decorator/column-group';
-import { ColumnMetadata } from './columnMetadata';
 import { GroupMetadata } from './group-metadata';
 
 // tslint:disable-next-line:max-classes-per-file
@@ -16,5 +15,4 @@ export class ColumnGroupMetadata extends GroupMetadata {
   public get options(): IColumnGroupOptions {
     return this._options;
   }
-
 }

@@ -1,9 +1,6 @@
-import { Assert, ICtor, InstanceAccessor } from '@fluxgate/core';
+import { InstanceAccessor } from '@fluxgate/core';
 
 import { MetadataStorage } from '../metadata/metadataStorage';
-import { SpecialColumns } from '../metadata/specialColumns';
-import { registerColumn } from './column';
-import { ColumnOptions } from './columnOptions';
 
 export interface IColumnGroupOptions {
   displayName: string;
