@@ -86,7 +86,7 @@ Die Softwareentwicklung erfolgt in Visual Code (vscode).
 
 Abhängigkeiten zu @angular-Libraries und @fluxgate/libraries werden absolut angegeben, um Probleme durch automatische Updates bei
 "npm install" zu vermeiden.
-Also hat z.B. common eine Abhängigkeit zu core über: "@fluxgate/core": "2.2.7-beta.0" und nicht wie früher "@fluxgate/core": "^2.2.7-beta.0".
+Also hat z.B. common eine Abhängigkeit zu core über: "@fluxgate/core": "2.2.7-beta.0" und nicht wie früher "@fluxgate/core": "\^2.2.7-beta.0".
 
 Die internen Abhängigkeiten für alle fluxgate-Libraries zueinander können mit dem Skript bin/update-fluxgate-all.sh (in einer bash) aktualisert werden.
 Dazu wird für jede Library die aktuelle Version aus package.json ermittelt und bei den betroffenen Libraries eingetragen.
@@ -97,6 +97,16 @@ Ein kompletter Rebuild erfolgt mit dem Skript bin/rebuild.sh; über die Option -
 und die node_modules Verzeichnisse löschen). Das Skript legt bei jedem Lauf im Verzeichnis logs eine Logdatei an.
 
 Der Rebuild erfolgt im Rootverzeichnis (libraries): "bin/rebuild.sh"
+
+```bash
+# rebuild (ohne really clean): nur sinnvoll, wenn alle package-Versionen erhöht wurden!
+cd .../libraries
+bin/rebuild.sh
+
+# rebuild mit really clean: geht immer, räumt vorher komplett auf, dauert länger
+bin/rebuild.sh --clean
+
+```
 
 
 ### Release Notes
