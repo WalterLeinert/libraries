@@ -60,7 +60,7 @@ echo "running rebuild, logging to ${logfile}"
 	(
 		cd $dir                     && \
 		npm install                 && \
-		gulp ${publish_cmd}
+		gulp publish -f
 	)
 	done
 } | ${log_redirection}
