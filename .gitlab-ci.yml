@@ -22,5 +22,5 @@ cache:
 test:all:
   script:
     # build muss vor tslint laufen
-    - bash bin/rebuild.sh
+    - bash bin/rebuild.sh -o
     - gulp tslint
