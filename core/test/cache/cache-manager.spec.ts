@@ -11,7 +11,7 @@ import { configure } from '../../src/diagnostics/logging-core';
 import { UnitTest } from '../../src/testing/unit-test';
 
 import { CacheManager } from '../../src/cache/cache-manager';
-import { CacheType, CacheTypes } from '../../src/cache/cache-type';
+import { CacheTypes } from '../../src/cache/cache-type';
 import { LruCache } from '../../src/cache/lru-cache';
 
 

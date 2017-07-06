@@ -11,7 +11,7 @@ import { XLog } from '../diagnostics/xlog';
 import { Funktion } from '../base/objectType';
 import { Types } from '../types/types';
 import { Assert } from '../util/assert';
-import { CacheFactoryFactory, ICacheFactory } from './cache-factory';
+import { CacheFactoryFactory } from './cache-factory';
 import { ICacheManagerConfiguration } from './cache-manager-configuration.interface';
 import { ICache } from './cache.interface';
 

@@ -3,9 +3,9 @@
 import { configure, getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { fromEnvironment, ICacheManagerConfiguration, Types, UnitTest } from '@fluxgate/core';
+import { fromEnvironment, Types, UnitTest } from '@fluxgate/core';
 
-import { AppConfig, IAppConfig } from '../base/appConfig';
+import { AppConfig } from '../base/appConfig';
 import { Logging } from '../util/logging';
 import { ILoggingConfigurationOptions } from '../util/loggingConfiguration';
 

@@ -2,6 +2,7 @@ export * from './client-entity.interface';
 export * from './config-base';
 export * from './decorator';
 export * from './entity';
+export * from './entity-dumper';
 export * from './entity-status';
 export * from './entityVersion';
 export * from './entity.interface';

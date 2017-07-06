@@ -8,7 +8,7 @@ import {
   AppConfig, AppRegistry, IEntity
 } from '@fluxgate/common';
 
-import { Clone, ICtor, IToString } from '@fluxgate/core';
+import { IToString } from '@fluxgate/core';
 
 
 import { KnexTest } from './knex-test';

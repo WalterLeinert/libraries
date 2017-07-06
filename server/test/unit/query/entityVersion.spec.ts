@@ -20,7 +20,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  AppConfig, AppRegistry, ConstantValueGenerator, EntityVersion,
+  ConstantValueGenerator, EntityVersion,
   NumberIdGenerator
 } from '@fluxgate/common';
 

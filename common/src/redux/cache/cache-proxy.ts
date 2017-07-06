@@ -8,7 +8,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { Assert, CacheManager, ICacheManagerConfiguration, IToString, Types } from '@fluxgate/core';
+import { Assert, CacheManager, IToString, Types } from '@fluxgate/core';
 
 import { AppConfig, IAppConfig } from '../../base/appConfig';
 import { AppRegistry } from '../../base/appRegistry';

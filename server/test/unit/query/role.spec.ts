@@ -32,7 +32,6 @@ import { Clone, ICtor } from '@fluxgate/core';
 import { RoleService } from '../../../src/ts-express-decorators-flx/services/role.service';
 
 import { EntityVersionTestBase } from '../entity-version-test-base';
-import { KnexTest } from '../knex-test';
 
 
 @suite('erste Role Tests')
