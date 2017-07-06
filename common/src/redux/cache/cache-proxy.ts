@@ -169,6 +169,8 @@ export class CacheProxy<T extends IEntity<TId>, TId extends IToString> extends S
             }, (err) => {
               observer.error(err);
             });
+          } else {
+            observer.next(new FindByIdResult(item, -1));
           }
         });
       });
