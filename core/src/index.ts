@@ -5,6 +5,7 @@
 
 export * from './adapter';
 export * from './base';
+export * from './cache';
 export * from './collection';
 export * from './converter';
 export * from './decorator';

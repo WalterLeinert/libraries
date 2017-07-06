@@ -3,8 +3,9 @@
 import { configure, getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { fromEnvironment, Types, UnitTest } from '@fluxgate/core';
+import { fromEnvironment, ICacheManagerConfiguration, Types, UnitTest } from '@fluxgate/core';
 
+import { AppConfig, IAppConfig } from '../base/appConfig';
 import { Logging } from '../util/logging';
 import { ILoggingConfigurationOptions } from '../util/loggingConfiguration';
 
@@ -56,6 +57,49 @@ export abstract class BaseTest extends UnitTest {
     // tslint:disable-next-line:no-empty
     using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
       BaseTest.initializeLogging();
+
+
+      if (AppConfig.config) {
+        AppConfig.config.cacheManagerConfiguration = {
+          cacheType: 'lru',
+          configurations: [
+            {
+              model: '',
+              options: {
+                maxItems: 1
+              }
+            }
+
+          ]
+        };
+
+      } else {
+
+        //
+        // Konfiguration für Tests registrieren
+        // hier nur wichtig: cacheManagerConfiguration
+        //
+        AppConfig.register({
+          url: '',
+          printTopic: '',
+          mode: 'development',
+          printUrl: '',
+          proxyMode: 'nop',
+          cacheManagerConfiguration: {
+            cacheType: 'lru',
+            configurations: [
+              {
+                model: '',
+                options: {
+                  maxItems: 1
+                }
+              }
+
+            ]
+          }
+        });
+      }
+
       done();
     });
   }
@@ -63,6 +107,7 @@ export abstract class BaseTest extends UnitTest {
   protected after(done?: (err?: any) => void) {
     // tslint:disable-next-line:no-empty
     using(new XLog(BaseTest.logger, levels.DEBUG, 'after'), (log) => {
+      AppConfig.unregister();
       done();
     });
   }

@@ -58,7 +58,7 @@ export class ProxyFactory {
         return new EntityVersionProxy<T, TId>(service as IService<T, TId>, entityVersionService);
 
       default:
-        throw new NotSupportedException(`strategy not supported: ${proxyMode}`);
+        throw new NotSupportedException(`proxyMode not supported: ${proxyMode}`);
     }
   }
 

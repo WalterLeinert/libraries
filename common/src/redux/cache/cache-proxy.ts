@@ -8,8 +8,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { IToString } from '@fluxgate/core';
+import { Assert, CacheManager, ICacheManagerConfiguration, IToString, Types } from '@fluxgate/core';
 
+import { AppConfig, IAppConfig } from '../../base/appConfig';
+import { AppRegistry } from '../../base/appRegistry';
 import { IEntity } from '../../model/entity.interface';
 import { CreateResult } from '../../model/service/create-result';
 import { DeleteResult } from '../../model/service/delete-result';
@@ -22,10 +24,6 @@ import { StatusFilter } from '../../model/service/status-filter';
 import { IStatusQuery } from '../../model/service/status-query';
 import { UpdateResult } from '../../model/service/update-result';
 
-import { CacheManager } from './cache-manager';
-
-const cacheManager = new CacheManager<IEntity<any>>();
-
 
 /**
  * ServiceProxy, der einen Entity-Cache implementiert.
@@ -34,11 +32,22 @@ const cacheManager = new CacheManager<IEntity<any>>();
  * @class CacheProxy
  */
 export class CacheProxy<T extends IEntity<TId>, TId extends IToString> extends ServiceProxy<T, TId> {
-  private static _cacheManager = cacheManager;
-
+  private static _cacheManager: CacheManager;
 
   constructor(service: IService<any, any>) {
     super(service);
+
+    if (!CacheProxy._cacheManager) {
+      const config = AppRegistry.instance.get<IAppConfig>(AppConfig.APP_CONFIG_KEY);
+
+      Assert.notNull(config,
+        `application configuration not available"`);
+
+      Assert.notNull(config.cacheManagerConfiguration,
+        `application configuration contains no section "cacheManagerConfiguration"`);
+
+      CacheProxy._cacheManager = new CacheManager(config.cacheManagerConfiguration);
+    }
   }
 
 
@@ -57,7 +66,9 @@ export class CacheProxy<T extends IEntity<TId>, TId extends IToString> extends S
       return Observable.create((observer: Subscriber<CreateResult<T, TId>>) => {
         super.create(item).subscribe((createResult: CreateResult<T, TId>) => {
 
-          CacheProxy._cacheManager.setItem(this.tableMetadata.className, item.id, item);
+          if (CacheProxy._cacheManager.containsCache(this.tableMetadata.className)) {
+            CacheProxy._cacheManager.setItem(this.tableMetadata.className, item.id, item);
+          }
 
           observer.next(createResult);
         }, (err) => {
@@ -83,8 +94,15 @@ export class CacheProxy<T extends IEntity<TId>, TId extends IToString> extends S
   public query(query: IStatusQuery): Observable<QueryResult<T>> {
     return using(new XLog(CacheProxy.logger, levels.INFO, 'query', `[${this.getTableName()}]`), (log) => {
       return Observable.create((observer: Subscriber<QueryResult<T>>) => {
-        super.query(query).subscribe((result) => {
-          observer.next(result);
+        super.query(query).subscribe((queryResult) => {
+
+          if (CacheProxy._cacheManager.containsCache(this.tableMetadata.className)) {
+            queryResult.items.forEach((item) => {
+              CacheProxy._cacheManager.setItem(this.tableMetadata.className, item.id, item);
+            });
+          }
+
+          observer.next(queryResult);
         }, (err) => {
           observer.error(err);
         });
@@ -107,9 +125,11 @@ export class CacheProxy<T extends IEntity<TId>, TId extends IToString> extends S
       return Observable.create((observer: Subscriber<FindResult<T>>) => {
         super.find(filter).subscribe((findResult) => {
 
-          findResult.items.forEach((item) => {
-            CacheProxy._cacheManager.setItem(this.tableMetadata.className, item.id, item);
-          });
+          if (CacheProxy._cacheManager.containsCache(this.tableMetadata.className)) {
+            findResult.items.forEach((item) => {
+              CacheProxy._cacheManager.setItem(this.tableMetadata.className, item.id, item);
+            });
+          }
 
           observer.next(findResult);
         }, (err) => {
@@ -135,8 +155,21 @@ export class CacheProxy<T extends IEntity<TId>, TId extends IToString> extends S
       (log) => {
 
         return Observable.create((observer: Subscriber<FindByIdResult<T, TId>>) => {
-          const item = CacheProxy._cacheManager.getItem<TId>(this.tableMetadata.className, id);
-          observer.next(new FindByIdResult<T, TId>(item as T, -1));
+          const item = CacheProxy._cacheManager.getItem<T, TId>(this.tableMetadata.className, id);
+
+          if (!Types.isPresent(item)) {
+            super.findById(id).subscribe((findByIdResult: FindByIdResult<T, TId>) => {
+
+              if (CacheProxy._cacheManager.containsCache(this.tableMetadata.className)) {
+                CacheProxy._cacheManager.setItem(this.tableMetadata.className, findByIdResult.item.id,
+                  findByIdResult.item);
+              }
+
+              observer.next(findByIdResult);
+            }, (err) => {
+              observer.error(err);
+            });
+          }
         });
       });
   }
@@ -158,7 +191,10 @@ export class CacheProxy<T extends IEntity<TId>, TId extends IToString> extends S
 
         return Observable.create((observer: Subscriber<DeleteResult<TId>>) => {
           super.delete(id).subscribe((deleteResult) => {
-            CacheProxy._cacheManager.removeItem<TId>(this.tableMetadata.className, id);
+
+            if (CacheProxy._cacheManager.containsCache(this.tableMetadata.className)) {
+              CacheProxy._cacheManager.removeItem<TId>(this.tableMetadata.className, id);
+            }
 
             observer.next(deleteResult);
           }, (err) => {
@@ -184,7 +220,10 @@ export class CacheProxy<T extends IEntity<TId>, TId extends IToString> extends S
 
         return Observable.create((observer: Subscriber<UpdateResult<T, TId>>) => {
           super.update(item).subscribe((updateResult: UpdateResult<T, TId>) => {
-            CacheProxy._cacheManager.setItem(this.tableMetadata.className, updateResult.item.id, updateResult.item);
+
+            if (CacheProxy._cacheManager.containsCache(this.tableMetadata.className)) {
+              CacheProxy._cacheManager.setItem(this.tableMetadata.className, updateResult.item.id, updateResult.item);
+            }
 
             observer.next(updateResult);
 

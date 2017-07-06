@@ -26,7 +26,7 @@ import { AndTerm, OrTerm, SelectorTerm } from '@fluxgate/core';
 
 import { KnexQueryVisitor } from '../../../src/ts-express-decorators-flx/services/knex-query-visitor';
 import { UserService } from '../../../src/ts-express-decorators-flx/services/user.service';
-import { KnexTest } from '../knexTest.spec';
+import { KnexTest } from '../knex-test';
 
 
 

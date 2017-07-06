@@ -1,12 +1,21 @@
 // -------------------------------------- logging --------------------------------------------
+import { using } from '../base/disposable';
+import { levels } from '../diagnostics/level';
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+import { ILogger } from '../diagnostics/logger.interface';
+import { getLogger } from '../diagnostics/logging-core';
+import { XLog } from '../diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { Funktion } from '@fluxgate/core';
-
+import { Funktion } from '../base/objectType';
+import { Types } from '../types/types';
+import { Assert } from '../util/assert';
+import { CacheFactoryFactory, ICacheFactory } from './cache-factory';
+import { ICacheManagerConfiguration } from './cache-manager-configuration.interface';
 import { ICache } from './cache.interface';
+
+
 
 
 /**
@@ -14,12 +23,25 @@ import { ICache } from './cache.interface';
  *
  * @export
  * @class CacheManager
- * @template T - ache item type
  */
-export class CacheManager<T> {
+export class CacheManager {
   protected static readonly logger = getLogger(CacheManager);
 
-  private cacheMap = new Map<string, ICache<T, any>>();
+  private cacheMap = new Map<string, ICache<any, any>>();
+
+  public constructor(managerConfiguration: ICacheManagerConfiguration) {
+    Assert.notNull(managerConfiguration);
+
+    let cacheType = managerConfiguration.cacheType;
+
+    managerConfiguration.configurations.forEach((configuration) => {
+      cacheType = Types.isNullOrEmpty(configuration.cacheType) ? cacheType : configuration.cacheType;
+
+      const cacheFactory = CacheFactoryFactory.instance.create(cacheType);
+      const cache = cacheFactory.create(configuration.options);
+      this.addCache(configuration.model, cache);
+    });
+  }
 
 
   /**
@@ -29,10 +51,21 @@ export class CacheManager<T> {
    * @param {ICache<CacheItem, any>} cache
    * @memberof CacheManager
    */
-  public add(model: string | Funktion, cache: ICache<T, any>) {
+  public addCache<T>(model: string | Funktion, cache: ICache<T, any>) {
     using(new XLog(CacheManager.logger, levels.INFO, 'add'), (log) => {
       this.cacheMap.set(this.createKey(model), cache);
     });
+  }
+
+  /**
+   * returns true, if a cache is registered for the given @param{model}.
+   *
+   * @param {(string | Funktion)} model
+   * @returns {boolean}
+   * @memberof CacheManager
+   */
+  public containsCache(model: string | Funktion): boolean {
+    return this.cacheMap.has(this.createKey(model));
   }
 
 
@@ -45,7 +78,7 @@ export class CacheManager<T> {
    * @returns {CacheItem}
    * @memberof CacheManager
    */
-  public getItem<TKey>(model: string | Funktion, key: TKey): T {
+  public getItem<T, TKey>(model: string | Funktion, key: TKey): T {
     return using(new XLog(CacheManager.logger, levels.INFO, 'getItem', `key = ${key}`), (log) => {
       const cache = this.cacheMap.get(this.createKey(model));
       const item = cache.get(key);
@@ -68,7 +101,7 @@ export class CacheManager<T> {
    * @param {CacheItem} item
    * @memberof CacheManager
    */
-  public setItem<TKey>(model: string | Funktion, key: TKey, item: T) {
+  public setItem<T, TKey>(model: string | Funktion, key: TKey, item: T) {
     using(new XLog(CacheManager.logger, levels.INFO, 'setItem', `key = ${key}`), (log) => {
       const cache = this.cacheMap.get(this.createKey(model));
 
@@ -85,6 +118,10 @@ export class CacheManager<T> {
       const cache = this.cacheMap.get(this.createKey(model));
       cache.remove(key);
     });
+  }
+
+  public get count(): number {
+    return this.cacheMap.size;
   }
 
   private createKey(model: string | Funktion): string {

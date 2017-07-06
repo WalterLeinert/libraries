@@ -21,13 +21,14 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { ConstantValueGenerator, NumberIdGenerator } from '@fluxgate/common';
 
-import { KnexTest } from '../knexTest.spec';
+import { EntityVersionTestBase } from '../entity-version-test-base';
+import { KnexTest } from '../knex-test';
 import { QueryTest } from './query-test';
 import { QueryTestService } from './query-test.service';
 
 
 @suite('test entity versioning')
-class VersionTest extends KnexTest<QueryTest, number> {
+class VersionTest extends EntityVersionTestBase<QueryTest, number> {
   protected static readonly logger = getLogger(VersionTest);
 
   public static readonly ITEMS = 5;

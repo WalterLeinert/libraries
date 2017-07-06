@@ -22,18 +22,21 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  CreateResult, DeleteResult, FindByIdResult, IRole, NumberIdGenerator, Role,
+  AppConfig, AppRegistry, CreateResult, DeleteResult, FindByIdResult, IRole, NumberIdGenerator, Role,
   ServiceResult, UpdateResult
 } from '@fluxgate/common';
+
 import { Clone, ICtor } from '@fluxgate/core';
+
 
 import { RoleService } from '../../../src/ts-express-decorators-flx/services/role.service';
 
-import { KnexTest } from '../knexTest.spec';
+import { EntityVersionTestBase } from '../entity-version-test-base';
+import { KnexTest } from '../knex-test';
 
 
 @suite('erste Role Tests')
-class RoleTest extends KnexTest<Role, number> {
+class RoleTest extends EntityVersionTestBase<Role, number> {
   protected static readonly logger = getLogger(RoleTest);
 
   public static before(done: () => void) {
@@ -158,6 +161,24 @@ class RoleTest extends KnexTest<Role, number> {
       .to.become(4);
   }
 
+
+  public before(done?: (err?: any) => void) {
+    super.before(() => {
+
+      // für Tests eine App-Config simulieren
+      AppRegistry.instance.add(AppConfig.APP_CONFIG_KEY,
+        {
+          url: 'dummy',
+          printUrl: 'dummy',
+          printTopic: '',
+          mode: 'local',
+          proxyMode: 'entityVersion'    // wichtig
+        }, true
+      );
+
+      done();
+    });
+  }
 
   private createRole(id: number): Role {
     const role: Role = new Role();

@@ -3,6 +3,7 @@
 import { getLogger, ILogger } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
+import { ICacheManagerConfiguration } from '@fluxgate/core';
 import { IConfig } from '@fluxgate/platform';
 
 import { AppRegistry } from '../base';
@@ -77,6 +78,11 @@ export interface IAppConfig {
    * @memberof IAppConfig
    */
   proxyMode?: ProxyMode;
+
+  /**
+   * die Konfiguration des CacheManagers (z.B. 'lru')
+   */
+  cacheManagerConfiguration?: ICacheManagerConfiguration;
 
   /**
    * zum Testen mit SystemMode == 'development': ist @see{userCredentials} gesetzt,

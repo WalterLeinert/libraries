@@ -30,7 +30,7 @@ import { Clone, ICtor } from '@fluxgate/core';
 
 import { ConfigService } from '../../../src/ts-express-decorators-flx/services/config.service';
 
-import { KnexTest } from '../knexTest.spec';
+import { KnexTest } from '../knex-test';
 
 
 // declare function pick<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K>;

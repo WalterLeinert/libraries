@@ -19,10 +19,14 @@ chai.should();
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { AppConfig, ConstantValueGenerator, EntityVersion, NumberIdGenerator } from '@fluxgate/common';
+import {
+  AppConfig, AppRegistry, ConstantValueGenerator, EntityVersion,
+  NumberIdGenerator
+} from '@fluxgate/common';
 
 import { EntityVersionService } from '../../../src/ts-express-decorators-flx/services/entityVersion.service';
-import { KnexTest } from '../knexTest.spec';
+import { EntityVersionTestBase } from '../entity-version-test-base';
+import { KnexTest } from '../knex-test';
 import { QueryTest } from './query-test';
 import { QueryTestService } from './query-test.service';
 
@@ -35,7 +39,7 @@ import { QueryTestService } from './query-test.service';
  * @extends {KnexTest<QueryTest, number>}
  */
 @suite('test entityversion table')
-class EntityVersionTest extends KnexTest<QueryTest, number> {
+class EntityVersionTest extends EntityVersionTestBase<QueryTest, number> {
   protected static readonly logger = getLogger(EntityVersionTest);
 
   public static readonly ITEMS = 5;
@@ -67,32 +71,6 @@ class EntityVersionTest extends KnexTest<QueryTest, number> {
           done();
         });
       });
-    });
-  }
-
-
-  public before(done?: (err?: any) => void) {
-    super.before(() => {
-
-      // für Tests eine App-Config simulieren
-      AppConfig.register(
-        {
-          url: 'dummy',
-          printUrl: 'dummy',
-          printTopic: '',
-          mode: 'local',
-          proxyMode: 'entityVersion'
-        }
-      );
-
-      done();
-    });
-  }
-
-  public after(done?: (err?: any) => void) {
-    super.after(() => {
-      AppConfig.unregister();
-      done();
     });
   }
 

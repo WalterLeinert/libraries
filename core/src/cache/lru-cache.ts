@@ -1,14 +1,26 @@
 import * as LRU from 'lru-cache';
 
 // -------------------------------------- logging --------------------------------------------
+import { using } from '../base/disposable';
+import { levels } from '../diagnostics/level';
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+import { ILogger } from '../diagnostics/logger.interface';
+import { getLogger } from '../diagnostics/logging-core';
+import { XLog } from '../diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { Assert, Clone } from '@fluxgate/core';
+import { Clone } from '../base/clone';
+import { Types } from '../types/types';
+import { Assert } from '../util/assert';
 
 import { ICache } from './cache.interface';
+
+
+export interface ILruCacheOptions {
+  maxItems?: number;
+  maxAgeMilliSeconds?: number;
+}
 
 
 /**
@@ -49,7 +61,9 @@ export class LruCache<T, TKey> implements ICache<T, TKey> {
      * The item is passed as the first argument, and the key is passed as the second argumnet.
      */
     length: (value) => {
-      return 1;
+      return using(new XLog(LruCache.logger, levels.INFO, 'length'), (log) => {
+        return 1;
+      });
     },
 
     /**
@@ -60,7 +74,9 @@ export class LruCache<T, TKey> implements ICache<T, TKey> {
      * put it back in, you'll have to do that in a nextTick or setTimeout callback or it won't do anything.
      */
     dispose: (key: any, value: any) => {
-      // TODO
+      return using(new XLog(LruCache.logger, levels.INFO, 'dispose', `key = ${key}`), (log) => {
+        log.log(`value = ${JSON.stringify(value)}`);
+      });
     },
 
     /**
@@ -75,16 +91,26 @@ export class LruCache<T, TKey> implements ICache<T, TKey> {
 
   private _cache: LRU.Cache<T>;
 
-  public constructor(options?: LRU.Options<T>) {
+  public constructor(options?: ILruCacheOptions) {
     using(new XLog(LruCache.logger, levels.INFO, 'ctor'), (log) => {
-      if (!options) {
-        options = Clone.clone(LruCache.DEFAULT_OPTIONS);
+
+      const cacheOptions = Clone.clone(LruCache.DEFAULT_OPTIONS);
+
+      if (options) {
+        if (Types.isPresent(options.maxItems)) {
+          cacheOptions.max = options.maxItems;
+        }
+
+        if (Types.isPresent(options.maxAgeMilliSeconds)) {
+          cacheOptions.maxAge = options.maxAgeMilliSeconds;
+        }
+      } else {
         log.log(`no options given: taking defaults`);
       }
 
-      log.log(`options = ${JSON.stringify(options)}`);
+      log.log(`cacheOptions = ${JSON.stringify(cacheOptions)}`);
 
-      this._cache = LRU<T>(options);
+      this._cache = LRU<T>(cacheOptions);
     });
   }
 
@@ -112,7 +138,7 @@ export class LruCache<T, TKey> implements ICache<T, TKey> {
         log.debug(`item = ${JSON.stringify(item)}`);
       }
 
-      return this._cache.set(key, item);
+      this._cache.set(key, item);
     });
   }
 

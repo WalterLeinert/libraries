@@ -23,7 +23,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { ConstantValueGenerator, NumberIdGenerator } from '@fluxgate/common';
 import { Clone, OptimisticLockException } from '@fluxgate/core';
 
-import { KnexTest } from '../knexTest.spec';
+import { KnexTest } from '../knex-test';
 import { QueryTest } from './query-test';
 import { QueryTestService } from './query-test.service';
 

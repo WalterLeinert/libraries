@@ -27,7 +27,7 @@ import {
 } from '@fluxgate/common';
 
 
-import { KnexTest } from '../knexTest.spec';
+import { KnexTest } from '../knex-test';
 import { QueryTestService } from './query-test.service';
 
 
