@@ -3,6 +3,11 @@
 ts=$(date +"%Y-%m-%d-%H-%M-%S")
 
 mkdir -p logs
+logfile="logs/build-${ts}.log"
+
+
+echo "running rebuild, logging to ${logfile}"
+
 
 {
 	set -x
@@ -28,6 +33,6 @@ mkdir -p logs
 		gulp ${publish_cmd}
 	)
 	done
-} > logs/build-${ts}.log 2>&1 &
+} > logs/build-${ts}.log 2>&1
 
-tail -f logs/build-${ts}.log
+# tail -f logs/build-${ts}.log
