@@ -32,6 +32,6 @@ export class EntityStringifyer implements IStringifyer {
       entity = clone;
     }
 
-    return JsonDumper.stringify(MetadataStorage.instance.resetSecrets(entity));
+    return JsonDumper.stringify(MetadataStorage.instance.resetSecrets(entity, '*****'));
   }
 }
