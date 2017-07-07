@@ -4,24 +4,30 @@
 # Usage info
 show_help() {
 cat << EOF
-Usage: ${0##*/} [-c] [-o]
+Usage: ${0##*/} [-c] [-o] [-x]
 Control the rebuild.
 
     -c          do a really clean before the rebuild
     -o          write the result to stdout instead of writing to an logfile.
+    -x          remove all logfiles before rebuild
 EOF
 }
 
+
+remove_logfiles=0
 really_clean=0
 write_logfile=1
 
-while getopts "co" opt; do
+while getopts "cox" opt; do
   case $opt in
     c)
       really_clean=1
       ;;
     o)
       write_logfile=0
+      ;;
+    x)
+      remove_logfiles=1
       ;;
     *)
       show_help >&2
@@ -31,26 +37,32 @@ while getopts "co" opt; do
 done
 shift "$((OPTIND-1))"   # Discard the options and sentinel --
 
+
 if (($write_logfile)); then
   ts=$(date +"%Y-%m-%d-%H-%M-%S")
-
-  mkdir -p logs
   logfile="logs/build-${ts}.log"
-
-  log_redirection="tee logs/build-${ts}.log 2>&1"
-else
-  logfile="-stdout-"
-  log_redirection="tee"
 fi
 
 
-echo "running rebuild, logging to ${logfile}"
+function rebuild() {
+  # set -x
+  local really_clean=${1:-0}
+  local remove_logfiles=${2:-0}
+  local logfile=${3:-stdout}
 
-{
+  mkdir -p logs
+
+  if (($remove_logfiles)); then
+    echo "removing logfiles ..."
+    rm -f $(ls -1 logs/build* | grep -v "${logfile}")
+  fi
+
+  echo "running rebuild, logging to ${logfile} ..."
+
 	set -x
 
-
   if (($really_clean)); then
+      echo "really clean ..."
       gulp really-clean
   fi
 
@@ -63,6 +75,10 @@ echo "running rebuild, logging to ${logfile}"
 		gulp publish -f
 	)
 	done
-} | ${log_redirection}
+}
 
-# tail -f logs/build-${ts}.log
+if (($write_logfile)); then
+  rebuild $really_clean $remove_logfiles ${logfile} 2>&1 | tee ${logfile}
+else
+  rebuild $really_clean $remove_logfiles
+fi
