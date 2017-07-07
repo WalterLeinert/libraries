@@ -13,7 +13,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 import { FindByIdResult, IEntity } from '@fluxgate/common';
-import { Assert, Funktion, IToString } from '@fluxgate/core';
+import { Assert, Core, Funktion, IToString } from '@fluxgate/core';
 
 import { AppConfigService } from '../../services/app-config.service';
 import { MetadataService } from '../../services/metadata.service';
@@ -56,7 +56,7 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: FindByIdResult<T, TId>) => {
             if (log.isInfoEnabled()) {
-              log.log(`found [${this.getModelClassName()}]: id = ${id} -> ${JSON.stringify(result)}`);
+              log.log(`found [${this.getModelClassName()}]: id = ${id} -> ${Core.stringify(result)}`);
             }
           })
           .catch(this.handleError);

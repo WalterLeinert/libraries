@@ -13,6 +13,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 import { ExtendedCoreComponent, MessageService } from '@fluxgate/client';
+import { Core } from '@fluxgate/core';
 
 // commands
 import { CurrentUserServiceRequests } from '../../../redux/current-user-service-requests';
@@ -104,7 +105,7 @@ export class LoginComponent extends ExtendedCoreComponent {
 
       this.registerSubscription(this.service.login(this.username, this.password, clientId)
         .subscribe((result) => {
-          log.log(JSON.stringify(result));
+          log.log(Core.stringify(result));
 
           this.serviceRequests.setCurrent(result).subscribe((user) => {
             this.navigate([

@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { ICrudServiceRequests, IEntity } from '@fluxgate/common';
-import { Assert, ConverterRegistry, Funktion, IToString } from '@fluxgate/core';
+import { Assert, ConverterRegistry, Core, Funktion, IToString } from '@fluxgate/core';
 
 
 /**
@@ -54,7 +54,7 @@ export abstract class ResolverBase<T extends IEntity<TId>, TId extends IToString
       return this.serviceRequests.findById(idConverted)
         .do((item) => {
           if (log.isDebugEnabled()) {
-            log.debug(`item = ${JSON.stringify(item)}`);
+            log.debug(`item = ${Core.stringify(item)}`);
           }
         })
         .first()

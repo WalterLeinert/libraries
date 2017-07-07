@@ -28,7 +28,7 @@ export class EntityStringifyer implements IStringifyer {
    */
   public stringify<TId>(value: IEntity<TId>, resetSecrets: boolean = true): string {
     if (!Types.isPresent(value) || Types.isPrimitive(value)) {
-      return JSON.stringify(value);
+      return JSON.stringify(value);             // muss JSON.stringify bleiben
     }
 
     try {
@@ -37,11 +37,11 @@ export class EntityStringifyer implements IStringifyer {
       // if no entity, use JSON.stringify
       const metadata = MetadataStorage.instance.findTableMetadata(ctor);
       if (!metadata) {
-        return JSON.stringify(value);
+        return JSON.stringify(value);         // muss JSON.stringify bleiben
       }
     } catch (exc) {
       // no type with constructor
-      return JSON.stringify(value);
+      return JSON.stringify(value);           // muss JSON.stringify bleiben
     }
 
     if (resetSecrets) {
@@ -50,6 +50,6 @@ export class EntityStringifyer implements IStringifyer {
       value = clone;
     }
 
-    return JSON.stringify(value);
+    return JSON.stringify(value);           // muss JSON.stringify bleiben
   }
 }

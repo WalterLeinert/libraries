@@ -5,8 +5,8 @@ import { ILogger } from '../../diagnostics/logger.interface';
 import { getLogger } from '../../diagnostics/logging-core';
 import { XLog } from '../../diagnostics/xlog';
 
-
 import { Funktion } from '../../base/objectType';
+import { Core } from '../../diagnostics/core';
 import { ExceptionFactory } from '../../exceptions/exceptionFactory';
 import { InvalidOperationException } from '../../exceptions/invalidOperationException';
 import { Dictionary } from '../../types/dictionary';
@@ -70,10 +70,10 @@ export class SerializerMetadataStorage {
       targetProperties.forEach((prop) => {
         const pd = Reflect.getOwnPropertyDescriptor(prototype, prop);
 
-        log.debug(`prop = ${prop}, pd = ${JSON.stringify(pd)}`);
+        log.debug(`prop = ${prop}, pd = ${Core.stringify(pd)}`);
 
         if (!propertyDict.containsKey(prop.toString())) {
-          metadata.add(new PropertySerializerMetadata(metadata.target, prop.toString(),  true));
+          metadata.add(new PropertySerializerMetadata(metadata.target, prop.toString(), true));
         }
       });
 

@@ -4,7 +4,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  Assert, Clone, CustomSubject, Dictionary, PublisherSubscriber, StringBuilder, Types, UniqueIdentifiable
+  Assert, Clone, Core, CustomSubject, Dictionary, PublisherSubscriber, StringBuilder, Types, UniqueIdentifiable
 } from '@fluxgate/core';
 
 import { ICommand } from '../command/command.interface';
@@ -57,7 +57,7 @@ export class CommandStore<TState extends IServiceState> extends UniqueIdentifiab
       if (this._parent) {
         sb.append(` -> ${this._parent.name}`);
       }
-      sb.append(`, initialState = ${JSON.stringify(_initialState)}`);
+      sb.append(`, initialState = ${Core.stringify(_initialState)}`);
 
       log.log(sb.toString());
     });

@@ -9,9 +9,7 @@ export class Core {
 
   public static stringify(value: any): string {
     if (!Core._stringifyer) {
-      Core._stringifyer =
-        CoreInjector.instance.getInstance<IStringifyer>(STRINGIFYER) ?
-        CoreInjector.instance.getInstance<IStringifyer>(STRINGIFYER) : new SimpleStringifyer();
+      Core._stringifyer = CoreInjector.instance.getInstance<IStringifyer>(STRINGIFYER, new SimpleStringifyer());
     }
 
     return Core._stringifyer.stringify(value);

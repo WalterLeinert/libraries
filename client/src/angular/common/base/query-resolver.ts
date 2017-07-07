@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { ICoreServiceRequests } from '@fluxgate/common';
-import { Assert, Query, SelectorTerm } from '@fluxgate/core';
+import { Assert, Core, Query, SelectorTerm } from '@fluxgate/core';
 
 
 /**
@@ -58,7 +58,7 @@ export abstract class QueryResolver<T> implements Resolve<T> {
       );
 
       if (log.isDebugEnabled()) {
-        log.debug(`entity: ${this.serviceRequests.getModelClassName()}: query = ${JSON.stringify(query)}`);
+        log.debug(`entity: ${this.serviceRequests.getModelClassName()}: query = ${Core.stringify(query)}`);
       }
 
       /**
@@ -69,7 +69,7 @@ export abstract class QueryResolver<T> implements Resolve<T> {
       return this.serviceRequests.query(query)
         .do((items) => {
           if (log.isDebugEnabled()) {
-            log.debug(`items = ${JSON.stringify(items)}`);
+            log.debug(`items = ${Core.stringify(items)}`);
           }
         })
         .map((items) => items[0])

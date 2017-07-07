@@ -4,7 +4,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  ConfigurationException, Dictionary, Funktion, InvalidOperationException, IToString,
+  ConfigurationException, Core, Dictionary, Funktion, InvalidOperationException, IToString,
   NotSupportedException, Types, Utility
 } from '@fluxgate/core';
 
@@ -194,7 +194,7 @@ export class EntityGenerator<T extends IEntity<TId>, TId extends IToString> {
         items.push(item);
       }
 
-      log.log(`${JSON.stringify(items)}`);
+      log.log(`${Core.stringify(items)}`);
 
       return items;
     });

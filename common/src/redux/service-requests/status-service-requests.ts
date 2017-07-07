@@ -2,7 +2,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
 
 // fluxgate
-import { IException, InvalidOperationException, IToString } from '@fluxgate/core';
+import { Core, IException, InvalidOperationException, IToString } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
@@ -40,7 +40,7 @@ export abstract class StatusServiceRequests<T extends IEntity<TId>, TId extends 
   public delete(item: T): Observable<TId> {
     if (!(item instanceof FlxStatusEntity)) {
       throw new InvalidOperationException(
-        `item ${JSON.stringify(item)} is no FlxStatusEntity`);
+        `item ${Core.stringify(item)} is no FlxStatusEntity`);
     }
 
     return Observable.create((observer: Subscriber<TId>) => {
@@ -78,7 +78,7 @@ export abstract class StatusServiceRequests<T extends IEntity<TId>, TId extends 
   public archive(item: T): Observable<TId> {
     if (!(item instanceof FlxStatusEntity)) {
       throw new InvalidOperationException(
-        `item ${JSON.stringify(item)} is no FlxStatusEntity`);
+        `item ${Core.stringify(item)} is no FlxStatusEntity`);
     }
 
     return Observable.create((observer: Subscriber<TId>) => {

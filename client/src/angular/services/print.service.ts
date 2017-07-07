@@ -10,7 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 import { ColumnTypes, IPrintOptions, IPrintTask, ITableRow, TableMetadata, TableType } from '@fluxgate/common';
-import { Assert } from '@fluxgate/core';
+import { Assert, Core } from '@fluxgate/core';
 
 import { ServiceCore } from '../common/base/service-core';
 import { AppConfigService } from './app-config.service';
@@ -49,7 +49,7 @@ export class PrintService extends ServiceCore {
       const options = new RequestOptions({ headers: PrintService.JSON_HEADERS });
 
       // const printData = printTask;
-      const printData = JSON.stringify(printTask);
+      const printData = Core.stringify(printTask);
 
       return this.http
         .post(this.getUrl(), printData, options)
@@ -89,7 +89,7 @@ export class PrintService extends ServiceCore {
     Assert.notNull(details);
 
     return using(new XLog(PrintService.logger, levels.INFO, 'createPrintTask',
-      `formName = ${formName}, printOptions = ${JSON.stringify(printOptions)}`), (log) => {
+      `formName = ${formName}, printOptions = ${Core.stringify(printOptions)}`), (log) => {
 
         const masterMetadata = this.metadataService.findTableMetadata(master.constructor);
         const detailMetadata = this.metadataService.findTableMetadata(details[0].constructor);
@@ -150,7 +150,7 @@ export class PrintService extends ServiceCore {
         };
 
         if (log.isDebugEnabled()) {
-          log.debug(`printTask = ${JSON.stringify(printTask)}`);
+          log.debug(`printTask = ${Core.stringify(printTask)}`);
         }
 
         return printTask;

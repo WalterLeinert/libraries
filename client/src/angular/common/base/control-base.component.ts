@@ -6,6 +6,7 @@ import { AbstractControl, ControlValueAccessor, NgModel, Validator } from '@angu
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
+import { Core } from '@fluxgate/core';
 
 import { CoreComponent } from './core.component';
 
@@ -71,8 +72,8 @@ export abstract class ControlBaseComponent<T> extends CoreComponent implements C
   public set value(value: T) {
     using(new XLog(ControlBaseComponent.logger, levels.DEBUG, 'set value'), (log) => {
       if (log.isDebugEnabled()) {
-        log.log(`class: ${this.constructor.name}: old value = ${JSON.stringify(this._value)},` +
-          ` value = ${JSON.stringify(value)}`);
+        log.log(`class: ${this.constructor.name}: old value = ${Core.stringify(this._value)},` +
+          ` value = ${Core.stringify(value)}`);
       }
 
       if (this._value !== value) {
@@ -90,7 +91,7 @@ export abstract class ControlBaseComponent<T> extends CoreComponent implements C
   public writeValue(value: T) {
     using(new XLog(ControlBaseComponent.logger, levels.DEBUG, 'writeValue'), (log) => {
       if (log.isDebugEnabled()) {
-        log.log(`class: ${this.constructor.name}: value = ${JSON.stringify(value)}`);
+        log.log(`class: ${this.constructor.name}: value = ${Core.stringify(value)}`);
       }
 
       if (this._value !== value) {
@@ -143,7 +144,7 @@ export abstract class ControlBaseComponent<T> extends CoreComponent implements C
   protected onValueChange(value: T) {
     using(new XLog(ControlBaseComponent.logger, levels.DEBUG, 'onValueChange'), (log) => {
       if (log.isDebugEnabled()) {
-        log.log(`class: ${this.constructor.name}: value = ${JSON.stringify(value)}`);
+        log.log(`class: ${this.constructor.name}: value = ${Core.stringify(value)}`);
       }
       this.valueChange.emit(value);
     });

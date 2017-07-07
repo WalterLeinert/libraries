@@ -4,7 +4,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 // Fluxgate
-import { Assert } from '@fluxgate/core';
+import { Assert, Core } from '@fluxgate/core';
 
 import { ControlDisplayInfo } from './controlDisplayInfo';
 import { IControlDisplayInfo } from './controlDisplayInfo.interface';
@@ -69,7 +69,7 @@ export abstract class DisplayInfoConfiguration implements IDisplayInfoConfigurat
   private setupConfig(displayInfos?: IControlDisplayInfo[], item?: any): IControlDisplayInfo[] {
     return using(new XLog(DisplayInfoConfiguration.logger, levels.DEBUG, 'setupConfig'), (log) => {
       if (log.isDebugEnabled()) {
-        log.log(`item = ${item ? JSON.stringify(item) : 'undefined'}`);
+        log.log(`item = ${item ? Core.stringify(item) : 'undefined'}`);
       }
 
       if (displayInfos) {
@@ -85,7 +85,7 @@ export abstract class DisplayInfoConfiguration implements IDisplayInfoConfigurat
       }
 
       if (log.isDebugEnabled()) {
-        log.log(`displayInfos : ${JSON.stringify(displayInfos)}`);
+        log.log(`displayInfos : ${Core.stringify(displayInfos)}`);
       }
 
       return displayInfos;

@@ -1,7 +1,7 @@
 import { Funktion } from '../base/objectType';
 
 export interface IGetter<TReturn, T> {
-  get(t: T): TReturn;
+  get(t: T, optional?: any): TReturn;
 }
 
 
@@ -42,14 +42,15 @@ export abstract class InjectorBase<T extends IGetter<any, TToken>, TToken> {
   /**
    * Liefert für das Token @param{token} eine entsprechende Instanz.
    *
-   * @template T
+   * @template TInstance
    * @param {(Funktion | OpaqueToken)} token
-   * @returns {T}
+   * @param {any} notFoundValue
+   * @returns {TInstance}
    *
    * @memberOf AppInjector
    */
-  public getInstance<T>(token: Funktion | TToken | any): T {
-    return this.injector.get(token) as T;
+  public getInstance<TInstance>(token: Funktion | TToken | any, notFoundValue?: any): TInstance {
+    return this.injector.get(token, notFoundValue) as TInstance;
   }
 
   /**

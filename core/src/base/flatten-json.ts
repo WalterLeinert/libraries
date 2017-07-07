@@ -1,6 +1,6 @@
 import entries = require('object.entries');
 
-
+import { Core } from '../diagnostics/core';
 import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Dictionary } from '../types/dictionary';
 import { Types } from '../types/types';
@@ -50,14 +50,14 @@ export class FlattenJson {
       const key = Types.isNullOrEmpty(prefix) ? propName : prefix + '.' + propName;
 
       // tslint:disable-next-line:no-console
-      // console.log(`prop = ${JSON.stringify(prop)}`);
+      // console.log(`prop = ${Core.stringify(prop)}`);
 
       if (Types.isPrimitive(propValue)) {
         this._result.set(key, propValue);
       } else if (Types.isObject(propValue)) {
         this.flattenRec(key, propValue);
       } else {
-        throw new NotSupportedException(`propName: ${propName}, propValue: ${JSON.stringify(propValue)}`);
+        throw new NotSupportedException(`propName: ${propName}, propValue: ${Core.stringify(propValue)}`);
       }
     }
   }

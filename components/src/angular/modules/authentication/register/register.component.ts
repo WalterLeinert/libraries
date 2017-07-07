@@ -15,7 +15,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // fluxgate
 import { ExtendedCoreComponent, MessageService, MetadataService } from '@fluxgate/client';
 import { IRole, User, UserRoleId } from '@fluxgate/common';
-import { Assert, Types } from '@fluxgate/core';
+import { Assert, Core, Types } from '@fluxgate/core';
 import { AuthenticationNavigation, AuthenticationNavigationToken } from '../authenticationNavigation';
 import { PassportService } from '../passport.service';
 
@@ -116,7 +116,7 @@ export class RegisterComponent extends ExtendedCoreComponent {
     using(new XLog(RegisterComponent.logger, levels.INFO, 'signup'), (log) => {
       this.registerSubscription(this.service.signup(this.user)
         .subscribe((result) => {
-          log.log(JSON.stringify(result));
+          log.log(Core.stringify(result));
           this.addSuccessMessage('User created.');
 
           this.resetForm();
@@ -133,7 +133,7 @@ export class RegisterComponent extends ExtendedCoreComponent {
   }
 
   public onSelectedRoleChanged(item: IRole) {
-    RegisterComponent.logger.info(`RegisterComponent.onSelectedRoleChanged: item = ${JSON.stringify(item)}`);
+    RegisterComponent.logger.info(`RegisterComponent.onSelectedRoleChanged: item = ${Core.stringify(item)}`);
   }
 
   public isRegisterDisabled() {

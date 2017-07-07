@@ -3,7 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, Dictionary, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
+import { Assert, Core, Dictionary, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
 
 import { EntityStatus } from './../entity-status';
 import { CompoundValidator } from './../validation/compoundValidator';
@@ -503,11 +503,11 @@ export class MetadataStorage {
         });
 
         if (log.isDebugEnabled()) {
-          log.debug(`subject after resetSecrets: ${JSON.stringify(subject)}`);
+          log.debug(`subject after resetSecrets: ${Core.stringify(subject)}`);
         }
 
       } else {
-        log.warn(`subject no registered entity: ${ctor.name} -> ${JSON.stringify(subject)}`);
+        log.warn(`subject no registered entity: ${ctor.name} -> ${Core.stringify(subject)}`);
       }
     });
   }

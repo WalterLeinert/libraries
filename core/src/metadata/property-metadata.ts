@@ -1,3 +1,4 @@
+import { Core } from '../diagnostics/core';
 import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Metadata } from './metadata';
 
@@ -22,6 +23,6 @@ export abstract class PropertyMetadata<T> extends Metadata<T> {
     if (this.target instanceof Object) {
       return (this.target as Object).constructor.name;
     }
-    throw new NotSupportedException(`name = ${this.name}: not supported target ${JSON.stringify(this.target)}`);
+    throw new NotSupportedException(`name = ${this.name}: not supported target ${Core.stringify(this.target)}`);
   }
 }

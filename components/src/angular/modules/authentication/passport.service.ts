@@ -17,7 +17,7 @@ import {
   AppConfigService, ServiceCore
 } from '@fluxgate/client';
 import { IUser, PasswordChange, User } from '@fluxgate/common';
-import { Assert } from '@fluxgate/core';
+import { Assert, Core } from '@fluxgate/core';
 
 
 @Injectable()
@@ -70,7 +70,7 @@ export class PassportService extends ServiceCore {
       return this.http.post(this.getUrl() + PassportService.LOGIN, this.serialize(user))
         .map((response: Response) => this.deserialize(response.json()))
         .do((u) => {
-          log.log('user: ' + JSON.stringify(u));
+          log.log('user: ' + Core.stringify(u));
         })
         .catch(this.handleError);
     });
@@ -88,11 +88,11 @@ export class PassportService extends ServiceCore {
   public signup(user: User): Observable<User> {
     Assert.notNull(user, 'user');
     return using(new XLog(PassportService.logger, levels.INFO, 'signup',
-      `username =  ${JSON.stringify(user)}`), (log) => {
+      `username =  ${Core.stringify(user)}`), (log) => {
         return this.http.post(this.getUrl() + PassportService.SIGNUP, this.serialize(user))
           .map((response: Response) => this.deserialize(response.json()))
           .do((u) => {
-            log.log(`user = ${JSON.stringify(u)}`);
+            log.log(`user = ${Core.stringify(u)}`);
           })
           .catch(this.handleError);
       });
@@ -112,9 +112,9 @@ export class PassportService extends ServiceCore {
         .map((response: Response) => {
           // ok
         }).do((user) => {
-          log.log(`user = ${JSON.stringify(user)}`);
+          log.log(`user = ${Core.stringify(user)}`);
         })
-        .do((data) => PassportService.logger.info('result: ' + JSON.stringify(data)))
+        .do((data) => PassportService.logger.info('result: ' + Core.stringify(data)))
         .catch(this.handleError);
     });
   }
@@ -138,7 +138,7 @@ export class PassportService extends ServiceCore {
       return this.http.post(this.getUrl() + PassportService.CHANGE_PASSWORD, this.serialize(passwordChange))
         .map((response: Response) => this.deserialize(response.json()))
         .do((user) => {
-          log.log(`user = ${JSON.stringify(user)}`);
+          log.log(`user = ${Core.stringify(user)}`);
         })
         .catch(this.handleError);
     });

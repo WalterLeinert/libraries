@@ -5,9 +5,11 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { UnitTest } from '../../src/testing/unit-test';
+
 import { ExceptionFactory } from '../../src/exceptions';
 import { JsonSerializer } from '../../src/serialization/json-serializer';
-import { UnitTest } from '../../src/testing/unit-test';
+
 
 
 const errorText = 'user not found';

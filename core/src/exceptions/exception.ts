@@ -71,8 +71,7 @@ export abstract class Exception implements IException {
 
     this._message = sb.toString();
 
-    const logException: boolean = this.isPresent(CoreInjector.instance.getInstance<boolean>(LOG_EXCEPTIONS))  ?
-      CoreInjector.instance.getInstance<boolean>(LOG_EXCEPTIONS) : true;
+    const logException: boolean = this.isPresent(CoreInjector.instance.getInstance<boolean>(LOG_EXCEPTIONS, true));
 
     if (logException) {
       const logger = CoreInjector.instance.getInstance<ILogger>(LOGGER);
@@ -120,7 +119,7 @@ export abstract class Exception implements IException {
   }
 
   private isPresent(value: any) {
-    return ! (value === undefined || value === null);
+    return !(value === undefined || value === null);
   }
 
 }

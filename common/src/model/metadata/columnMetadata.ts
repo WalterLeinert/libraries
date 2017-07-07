@@ -1,6 +1,9 @@
 import * as moment from 'moment';
 
-import { Assert, Funktion, InvalidOperationException, PropertyMetadata, ShortTime, Time, Types } from '@fluxgate/core';
+import {
+  Assert, Core, Funktion, InvalidOperationException, PropertyMetadata,
+  ShortTime, Time, Types
+} from '@fluxgate/core';
 
 import { ColumnOptions } from '../decorator/columnOptions';
 import { IValidation } from './../validation/validation.interface';
@@ -53,7 +56,7 @@ export class ColumnMetadata extends PropertyMetadata<Funktion> {
           rval = (value as number) !== 0;
         } else {
           throw new InvalidOperationException(`Column ${this.propertyName}: Konvertierung von Boolean-Wert` +
-            ` ${JSON.stringify(value)} nicht möglich.`);
+            ` ${Core.stringify(value)} nicht möglich.`);
         }
         break;
 
@@ -65,7 +68,7 @@ export class ColumnMetadata extends PropertyMetadata<Funktion> {
           rval = new Date(value);
         } else {
           throw new InvalidOperationException(`Column ${this.propertyName}: Konvertierung von Datumswert` +
-            ` ${JSON.stringify(value)} nicht möglich.`);
+            ` ${Core.stringify(value)} nicht möglich.`);
         }
         break;
 
@@ -136,7 +139,7 @@ export class ColumnMetadata extends PropertyMetadata<Funktion> {
         return '0000-00-00 00:00:00';
 
       case ColumnTypes.JSON:
-        return JSON.stringify(value);
+        return Core.stringify(value);
 
       default:
         return value;

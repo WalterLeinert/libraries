@@ -7,8 +7,9 @@ require('reflect-metadata');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { using } from '../../src/base/disposable';
 import { StringBuilder } from '../../src/base/stringBuilder';
-import { using } from '../../src/diagnostics';
+import { Core } from '../../src/diagnostics/core';
 import { AndTerm, BinaryTerm, NotTerm, OrTerm, Query, SelectorTerm, UnaryTerm } from '../../src/expression';
 import { IVisitor, VisitableNode } from '../../src/pattern/visitor';
 import { Indenter, Suspender } from '../../src/suspendable';
@@ -109,7 +110,7 @@ class QueryTreeTest extends UnitTest {
     const visitor = new TermVisitor(sb);
     term.accept(visitor);
 
-    expect(JSON.stringify(term)).to.equal(
+    expect(Core.stringify(term)).to.equal(
       `{"_selector":{"name":"firstname","operator":"=","value":"hugo"}}`);
 
     expect(visitor.toString()).to.equal(`
@@ -141,7 +142,7 @@ class QueryTreeTest extends UnitTest {
       `"_right":{"_left":{"_selector":{"name":"age","operator":"<=","value":6}},` +
       `"_right":{"_left":{"_selector":{"name":"gender","operator":"=","value":"male"}}}}}}`;
 
-    expect(JSON.stringify(term)).to.equal(exprString);
+    expect(Core.stringify(term)).to.equal(exprString);
 
     expect(visitor.toString()).to.equal(`
 (
@@ -189,7 +190,7 @@ class QueryTreeTest extends UnitTest {
       `"_right":{"_left":{"_selector":{"name":"age","operator":"<=","value":6}},` +
       `"_right":{"_left":{"_selector":{"name":"gender","operator":"=","value":"male"}}}}}}`;
 
-    expect(JSON.stringify(query.term)).to.equal(exprString);
+    expect(Core.stringify(query.term)).to.equal(exprString);
 
     expect(visitor.toString()).to.equal(`
 (

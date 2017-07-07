@@ -42,7 +42,7 @@ class Test extends UnitTest {
     flattener.flatten();
     // const result = flattener.result;
     // tslint:disable-next-line:no-console
-    // console.log(`result = ${JSON.stringify(result)}`);
+    // console.log(`result = ${Core.stringify(result)}`);
 
     // tslint:disable-next-line:no-console
     // console.log(`toString: ${flattener.toString()}`);

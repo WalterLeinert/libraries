@@ -19,7 +19,7 @@ import {
   ConfigBase, CreateResult, DeleteResult, FindByIdResult, FindResult, IServiceBase, ServiceConstants, StatusFilter,
   TableMetadata, TableService, UpdateResult
 } from '@fluxgate/common';
-import { Assert, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
+import { Assert, Core, Funktion, InvalidOperationException, Types } from '@fluxgate/core';
 
 
 /**
@@ -46,7 +46,7 @@ export class ConfigService<T extends ConfigBase> extends ServiceCore implements 
 
   public find(model: string | Funktion, filter?: StatusFilter): Observable<FindResult<T>> {
     return using(new XLog(ConfigService.logger, levels.INFO, 'find',
-      `[${model}]: filter = ${JSON.stringify(filter)}`), (log) => {
+      `[${model}]: filter = ${Core.stringify(filter)}`), (log) => {
 
         model = this.getModelString(log, model);
 
@@ -80,7 +80,7 @@ export class ConfigService<T extends ConfigBase> extends ServiceCore implements 
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: FindByIdResult<T, string>) => {
             if (log.isInfoEnabled()) {
-              log.log(`found [${model}]: id = ${id} -> ${JSON.stringify(result)}`);
+              log.log(`found [${model}]: id = ${id} -> ${Core.stringify(result)}`);
             }
           })
           .catch(this.handleError);
@@ -95,7 +95,7 @@ export class ConfigService<T extends ConfigBase> extends ServiceCore implements 
       model = this.getModelString(log, model);
 
       if (log.isDebugEnabled()) {
-        log.debug(`item = ${JSON.stringify(item)}`);
+        log.debug(`item = ${Core.stringify(item)}`);
       }
 
       return this.http.post(`${this.getUrl()}/${ServiceConstants.CREATE}`, this.serialize(item), {
@@ -104,7 +104,7 @@ export class ConfigService<T extends ConfigBase> extends ServiceCore implements 
         .map((response: Response) => this.deserialize(response.json()))
         .do((result: CreateResult<T, string>) => {
           if (log.isInfoEnabled()) {
-            log.log(`created ${JSON.stringify(result)}`);
+            log.log(`created ${Core.stringify(result)}`);
           }
         })
         .catch(this.handleError);
@@ -120,7 +120,7 @@ export class ConfigService<T extends ConfigBase> extends ServiceCore implements 
         model = this.getModelString(log, model);
 
         if (log.isDebugEnabled()) {
-          log.debug(`item = ${JSON.stringify(item)}`);
+          log.debug(`item = ${Core.stringify(item)}`);
         }
 
         return this.http.put(`${this.getUrl()}/${ServiceConstants.UPDATE}`, this.serialize(item), {
@@ -129,7 +129,7 @@ export class ConfigService<T extends ConfigBase> extends ServiceCore implements 
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: UpdateResult<T, string>) => {
             if (log.isInfoEnabled()) {
-              log.log(`updated [${model}]: ${JSON.stringify(result)}`);
+              log.log(`updated [${model}]: ${Core.stringify(result)}`);
             }
           })
           .catch(this.handleError);
@@ -149,7 +149,7 @@ export class ConfigService<T extends ConfigBase> extends ServiceCore implements 
           .map((response: Response) => this.deserialize(response.json()))
           .do((result: DeleteResult<string>) => {
             if (log.isInfoEnabled()) {
-              log.log(`deleted [${model}]: ${JSON.stringify(result)}`);
+              log.log(`deleted [${model}]: ${Core.stringify(result)}`);
             }
           })
           .catch(this.handleError);

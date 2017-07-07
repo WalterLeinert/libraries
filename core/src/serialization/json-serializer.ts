@@ -10,6 +10,7 @@ import { XLog } from '../diagnostics/xlog';
 
 import { Funktion } from '../base/objectType';
 import { ConverterRegistry } from '../converter/converter-registry';
+import { Core } from '../diagnostics/core';
 import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Types } from '../types/types';
@@ -108,7 +109,7 @@ export class JsonSerializer {
           if (clazzMetadata) {
             JsonSerializer.addSerializedType(json, clazzMetadata.name);   // Typ für Deserialiserung hinterlegen
             if (log.isDebugEnabled()) {
-              log.debug(`setting type = ${clazzMetadata.name}: obj = ${JSON.stringify(obj)}`);
+              log.debug(`setting type = ${clazzMetadata.name}: obj = ${Core.stringify(obj)}`);
             }
           }
 
@@ -143,7 +144,7 @@ export class JsonSerializer {
 
                 if (log.isDebugEnabled()) {
                   log.debug(`converting property ${propertyKey.toString()}: type = ${propertyType}, ` +
-                    `value = ${JSON.stringify(propertyValue)}`);
+                    `value = ${Core.stringify(propertyValue)}`);
                 }
 
                 //
@@ -166,7 +167,7 @@ export class JsonSerializer {
         } else if (Types.isPrimitive(obj)) {
           json = obj;
         } else {
-          throw new NotSupportedException(`Unsupported object: ${JSON.stringify(obj)}`);
+          throw new NotSupportedException(`Unsupported object: ${Core.stringify(obj)}`);
         }
 
         return json;
@@ -217,7 +218,7 @@ export class JsonSerializer {
 
           if (log.isInfoEnabled()) {
             if (log.isDebugEnabled()) {
-              log.debug(`type = ${type}, json = ${JSON.stringify(json)}`);
+              log.debug(`type = ${type}, json = ${Core.stringify(json)}`);
             } else {
               log.info(`type = ${type}`);
             }
@@ -275,7 +276,7 @@ export class JsonSerializer {
 
                   if (log.isDebugEnabled()) {
                     log.debug(`converting property ${propertyKey.toString()}: type = ${propertyType}, ` +
-                      `value = ${JSON.stringify(propertyValue)}`);
+                      `value = ${Core.stringify(propertyValue)}`);
                   }
 
                   //
@@ -299,7 +300,7 @@ export class JsonSerializer {
       } else if (Types.isPrimitive(json)) {
         rval = json as T;
       } else {
-        throw new NotSupportedException(`Unsupported json: ${JSON.stringify(json)}`);
+        throw new NotSupportedException(`Unsupported json: ${Core.stringify(json)}`);
       }
 
       return rval;

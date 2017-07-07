@@ -11,7 +11,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import { CoreComponent, DisplayInfo, MessageService } from '@fluxgate/client';
 import { EntityStatus, FilterBehaviour, ICrudServiceRequests, IEntity, StatusFilter } from '@fluxgate/common';
-
+import { Core } from '@fluxgate/core';
 
 
 /**
@@ -169,7 +169,7 @@ export class EnumValueComponent extends CoreComponent {
   protected onItemChange(value: any) {
     using(new XLog(EnumValueComponent.logger, levels.INFO, 'onItemChange'), (log) => {
       if (log.isInfoEnabled()) {
-        log.log(`value = ${JSON.stringify(value)}`);
+        log.log(`value = ${Core.stringify(value)}`);
       }
       this.itemChange.emit(value);
     });
@@ -194,7 +194,7 @@ export class EnumValueComponent extends CoreComponent {
   protected onItemSelectorChange(value: any) {
     using(new XLog(EnumValueComponent.logger, levels.INFO, 'onItemSelectorChange'), (log) => {
       if (log.isInfoEnabled()) {
-        log.log(`value = ${JSON.stringify(value)}`);
+        log.log(`value = ${Core.stringify(value)}`);
       }
       this.itemSelectorChange.emit(value);
 

@@ -3,7 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { Assert, Dictionary } from '@fluxgate/core';
+import { Assert, Core, Dictionary } from '@fluxgate/core';
 
 export class EntityVersionCache {
   protected static readonly logger = getLogger(EntityVersionCache);
@@ -19,7 +19,7 @@ export class EntityVersionCache {
       Assert.notNull(cacheEntry);
 
       if (log.isDebugEnabled()) {
-        log.debug(`entity = ${entity}: ${JSON.stringify(cacheEntry)}`);
+        log.debug(`entity = ${entity}: ${Core.stringify(cacheEntry)}`);
       }
 
       this.entityDict.set(entity, cacheEntry);
@@ -33,7 +33,7 @@ export class EntityVersionCache {
       const cacheEntry = this.entityDict.get(entity);
 
       if (log.isDebugEnabled()) {
-        log.debug(`entity = ${entity}: ${JSON.stringify(cacheEntry)}`);
+        log.debug(`entity = ${entity}: ${Core.stringify(cacheEntry)}`);
       }
 
       return cacheEntry;

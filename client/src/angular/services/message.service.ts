@@ -5,7 +5,10 @@ import { Injectable } from '@angular/core';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { CustomSubject, IMessage, MessageSeverity, NotSupportedException, PublisherSubscriber } from '@fluxgate/core';
+import {
+  Core, CustomSubject, IMessage, MessageSeverity, NotSupportedException,
+  PublisherSubscriber
+} from '@fluxgate/core';
 
 
 /**
@@ -36,19 +39,19 @@ export class MessageService {
         switch (message.severity) {
           case MessageSeverity.Success:
           case MessageSeverity.Info:
-            log.info(`message: ${JSON.stringify(message)}`);
+            log.info(`message: ${Core.stringify(message)}`);
             break;
 
           case MessageSeverity.Warn:
-            log.warn(`message: ${JSON.stringify(message)}`);
+            log.warn(`message: ${Core.stringify(message)}`);
             break;
 
           case MessageSeverity.Error:
-            log.error(`message: ${JSON.stringify(message)}`);
+            log.error(`message: ${Core.stringify(message)}`);
             break;
 
           case MessageSeverity.Fatal:
-            log.fatal(`message: ${JSON.stringify(message)}`);
+            log.fatal(`message: ${Core.stringify(message)}`);
             break;
 
           default:

@@ -3,7 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert } from '@fluxgate/core';
+import { Assert, Core } from '@fluxgate/core';
 
 import { ColumnTypes } from '../model/metadata/columnTypes';
 import { MetadataStorage } from '../model/metadata/metadataStorage';
@@ -38,7 +38,7 @@ export class Printing {
     Assert.notNull(details);
 
     return using(new XLog(Printing.logger, levels.INFO, 'createPrintTask',
-      `formName = ${formName}, printOptions = ${JSON.stringify(printOptions)}`), (log) => {
+      `formName = ${formName}, printOptions = ${Core.stringify(printOptions)}`), (log) => {
 
         const masterMetadata = MetadataStorage.instance.findTableMetadata(master.constructor);
         const detailMetadata = MetadataStorage.instance.findTableMetadata(details[0].constructor);
@@ -99,7 +99,7 @@ export class Printing {
         };
 
         if (log.isDebugEnabled()) {
-          log.debug(`printTask = ${JSON.stringify(printTask)}`);
+          log.debug(`printTask = ${Core.stringify(printTask)}`);
         }
 
         return printTask;

@@ -18,7 +18,7 @@ import {
   DataTypes, DisplayInfo, MessageService, MetadataService
 } from '@fluxgate/client';
 import { IService, TableMetadata } from '@fluxgate/common';
-import { Assert, Clone, Types, Utility } from '@fluxgate/core';
+import { Assert, Clone, Core, Types, Utility } from '@fluxgate/core';
 
 import { ListSelectorComponent } from '../common';
 import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
@@ -209,7 +209,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
     this.changeDetectorRef.detectChanges();
     if (this.debug) {
       DropdownSelectorComponent.logger.info(`DropdownSelectorComponent.onChange: selectedIndex =` +
-        ` ${this.selectedIndex}, value = ${JSON.stringify(value)}`);
+        ` ${this.selectedIndex}, value = ${Core.stringify(value)}`);
     }
   }
 
@@ -307,7 +307,7 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
         }
 
         if (log.isDebugEnabled()) {
-          log.log(`configInternal : ${JSON.stringify(this.configInternal)}`);
+          log.log(`configInternal : ${Core.stringify(this.configInternal)}`);
         }
       }
 

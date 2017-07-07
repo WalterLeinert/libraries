@@ -7,6 +7,8 @@ import { suite, test } from 'mocha-typescript';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
+import { Core } from '@fluxgate/core';
+
 enum TableType {
   Master,
   Detail
@@ -107,6 +109,6 @@ class ReflectionTest {
   @test 'should stringify doc'() {
     ReflectionTest.logger.setLevel(levels.INFO);
     // tslint:disable-next-line:no-console
-    ReflectionTest.logger.info(JSON.stringify(doc));
+    ReflectionTest.logger.info(Core.stringify(doc));
   }
 }

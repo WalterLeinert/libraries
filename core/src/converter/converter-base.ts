@@ -1,3 +1,4 @@
+import { Core } from '../../src/diagnostics/core';
 import { InvalidOperationException } from '../../src/exceptions/invalidOperationException';
 import { Assert } from './../util/assert';
 
@@ -37,7 +38,7 @@ export abstract class ConverterBase {
       Assert.notNull(value);
 
       if (!(value instanceof this.type)) {
-        throw new Error(`invalid type ${this.type.name}: ${JSON.stringify(value)}`);
+        throw new Error(`invalid type ${this.type.name}: ${Core.stringify(value)}`);
       }
 
       rval = convert(value);

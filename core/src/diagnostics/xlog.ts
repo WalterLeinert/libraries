@@ -2,6 +2,7 @@ import * as moment from 'moment';
 
 import { Disposable } from '../base/disposable';
 import { StringBuilder } from '../base/stringBuilder';
+import { Core } from '../diagnostics/core';
 import { NotSupportedException } from '../exceptions/notSupportedException';
 import { Types } from '../types/types';
 import { levels } from './level';
@@ -290,7 +291,7 @@ export class XLog extends Disposable implements ILogger {
     if (!Types.isString(message)) {
       const err = message as Error;
 
-      sb.append(JSON.stringify(err));
+      sb.append(Core.stringify(err));
       sb.append(err.stack);
 
       message = sb.toString();

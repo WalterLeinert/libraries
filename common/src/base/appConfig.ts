@@ -3,7 +3,7 @@
 import { getLogger, ILogger } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { ICacheManagerConfiguration } from '@fluxgate/core';
+import { Core, ICacheManagerConfiguration } from '@fluxgate/core';
 import { IConfig } from '@fluxgate/platform';
 
 import { AppRegistry } from '../base';
@@ -102,7 +102,7 @@ export class AppConfig {
     const key = AppConfig.APP_CONFIG_KEY;
     AppRegistry.instance.add<IAppConfig>(key, config);
 
-    AppConfig.logger.info(`configured: key = ${key} -> ${JSON.stringify(config)}`);
+    AppConfig.logger.info(`configured: key = ${key} -> ${Core.stringify(config)}`);
   }
 
   /**

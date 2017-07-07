@@ -17,7 +17,7 @@ import {
   ControlType, IControlDisplayInfo, MessageService, MetadataService, PipeService, PipeType
 } from '@fluxgate/client';
 import { TableMetadata } from '@fluxgate/common';
-import { Assert, Clone, Color, InstanceAccessor, Types } from '@fluxgate/core';
+import { Assert, Clone, Color, Core, InstanceAccessor, Types } from '@fluxgate/core';
 
 import { ListSelectorComponent } from '../common/list-selector.component';
 import { IDataTableSelectorConfig } from './datatable-selectorConfig.interface';
@@ -534,7 +534,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent<any> {
       }
 
       if (log.isDebugEnabled) {
-        log.log(`configInternal : ${JSON.stringify(this.configInternal)}`);
+        log.log(`configInternal : ${Core.stringify(this.configInternal)}`);
       }
 
     });

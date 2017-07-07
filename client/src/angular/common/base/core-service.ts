@@ -13,7 +13,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 import { FindResult, IStatusQuery, QueryResult, ServiceConstants, StatusFilter } from '@fluxgate/common';
-import { Assert, Funktion, IToString } from '@fluxgate/core';
+import { Assert, Core, Funktion, IToString } from '@fluxgate/core';
 
 import { AppConfigService } from '../../services/app-config.service';
 import { MetadataService } from '../../services/metadata.service';
@@ -51,7 +51,7 @@ export abstract class CoreService<T, TId extends IToString> extends ServiceBase<
    */
   public find(filter?: StatusFilter): Observable<FindResult<T>> {
     return using(new XLog(CoreService.logger, levels.INFO, 'find',
-      `[${this.getModelClassName()}]: filter = ${JSON.stringify(filter)}`), (log) => {
+      `[${this.getModelClassName()}]: filter = ${Core.stringify(filter)}`), (log) => {
 
         const serializedFilter = this.serialize(filter);
 
@@ -80,7 +80,7 @@ export abstract class CoreService<T, TId extends IToString> extends ServiceBase<
     return using(new XLog(CoreService.logger, levels.INFO, 'query', `[${this.getModelClassName()}]`), (log) => {
 
       if (log.isDebugEnabled()) {
-        log.debug(`query = ${JSON.stringify(query)}`);
+        log.debug(`query = ${Core.stringify(query)}`);
       }
 
       const serializedQuery = this.serialize(query);
@@ -92,7 +92,7 @@ export abstract class CoreService<T, TId extends IToString> extends ServiceBase<
             log.log(`queried [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
 
             if (log.isDebugEnabled()) {
-              log.debug(`query result: ${JSON.stringify(result)}`);
+              log.debug(`query result: ${Core.stringify(result)}`);
             }
           }
         })

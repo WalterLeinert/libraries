@@ -14,7 +14,7 @@ import {
   IExtendedCrudServiceRequests, IExtendedCrudServiceState,
   ItemsFoundCommand, ServiceCommand, StatusFilter
 } from '@fluxgate/common';
-import { Assert, IToString, Types } from '@fluxgate/core';
+import { Assert, Core, IToString, Types } from '@fluxgate/core';
 
 
 import { SelectorBaseComponent } from '../common/selectorBase.component';
@@ -61,7 +61,7 @@ export abstract class ServiceRequestsSelectorComponent<T extends IEntity<TId>, T
 
         // this.serviceRequests.setCurrent(itemToSelect).subscribe((item) => {
         //   if (log.isDebugEnabled()) {
-        //     log.log(`class: ${this.constructor.name}: item = ${JSON.stringify(item)}`);
+        //     log.log(`class: ${this.constructor.name}: item = ${Core.stringify(item)}`);
         //   }
         // });
       });
@@ -106,7 +106,7 @@ export abstract class ServiceRequestsSelectorComponent<T extends IEntity<TId>, T
       if (this.items) {
         this.serviceRequests.setCurrent(this.getItemForValue(value)).subscribe((item) => {
           if (log.isDebugEnabled()) {
-            log.log(`class: ${this.constructor.name}: item = ${JSON.stringify(item)}`);
+            log.log(`class: ${this.constructor.name}: item = ${Core.stringify(item)}`);
           }
         });
       }

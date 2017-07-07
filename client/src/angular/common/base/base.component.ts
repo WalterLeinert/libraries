@@ -18,7 +18,10 @@ import {
   CreateResult, DeleteResult, IEntity, IService,
   IServiceBase, UpdateResult
 } from '@fluxgate/common';
-import { Assert, Deprecated, InstanceAccessor, InstanceSetter, NotSupportedException, Utility } from '@fluxgate/core';
+import {
+  Assert, Core, Deprecated, InstanceAccessor, InstanceSetter,
+  NotSupportedException, Utility
+} from '@fluxgate/core';
 
 
 import { IRefreshHelper, IRouterNavigationAction } from '../../common/routing';
@@ -72,7 +75,7 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
     const navigationConfig: IAutoformNavigation = {
       entityId: this.service.getEntityId(item),
       entity: this.service.getModelClassName(),
-      autoformConfig: JSON.stringify(config)
+      autoformConfig: Core.stringify(config)
     };
 
     return this.navigate([AutoformConstants.GENERIC_TOPIC, navigationConfig]);

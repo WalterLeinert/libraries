@@ -16,7 +16,7 @@ import {
   IDataFormAction, MessageService, MetadataService, ServiceRequestsComponent
 } from '@fluxgate/client';
 import { ICrudServiceRequests } from '@fluxgate/common';
-import { Assert, NotSupportedException, Utility } from '@fluxgate/core';
+import { Assert, Core, NotSupportedException, Utility } from '@fluxgate/core';
 
 
 @Component({
@@ -93,7 +93,7 @@ export class AutoformDialogComponent extends ServiceRequestsComponent<any, ICrud
 
     using(new XLog(AutoformDialogComponent.logger, levels.INFO, 'ctor'), (log) => {
       this.route.params.subscribe((p) => {
-        log.log(`params = ${JSON.stringify(p)}`);
+        log.log(`params = ${Core.stringify(p)}`);
       });
     });
   }
@@ -105,7 +105,7 @@ export class AutoformDialogComponent extends ServiceRequestsComponent<any, ICrud
       super.ngOnInit();
 
       this.route.data.subscribe((data: IDataFormAction) => {
-        log.log(`data = ${JSON.stringify(data)}`);
+        log.log(`data = ${Core.stringify(data)}`);
 
         Assert.notNull(data);
 

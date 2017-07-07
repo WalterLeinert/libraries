@@ -252,7 +252,7 @@ export class ConfigService extends ServiceCore {
       __client: config.__client,
       __version: undefined,
       description: config.description,
-      json: JSON.stringify(this.serialize(config))
+      json: JSON.stringify(this.serialize(config))                // muss JSON.stringify bleiben
     };
 
     return systemConfig;
@@ -261,7 +261,7 @@ export class ConfigService extends ServiceCore {
 
   private updateSystemConfigFromConfig(systemConfig: ISystemConfig, config: ConfigBase) {
     systemConfig.description = config.description;
-    systemConfig.json = JSON.stringify(this.serialize(config));
+    systemConfig.json = JSON.stringify(this.serialize(config));    // muss JSON.stringify bleiben
   }
 
   private updateConfigFromSystemConfig(config: ConfigBase, systemConfig: ISystemConfig) {

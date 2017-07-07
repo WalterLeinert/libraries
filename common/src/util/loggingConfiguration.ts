@@ -6,7 +6,7 @@ import process = require('process');
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { fromEnvironment, StringBuilder, Types, Utility } from '@fluxgate/core';
+import { Core, fromEnvironment, StringBuilder, Types, Utility } from '@fluxgate/core';
 
 
 /**
@@ -84,7 +84,7 @@ export class LoggingConfiguration {
       }
 
       if (fromEnvironment('LOG4JS_DEBUG', '-not-set-') !== '-not-set-') {
-        log.info(`options = ${JSON.stringify(options)}`);
+        log.info(`options = ${Core.stringify(options)}`);
       }
 
       if (!options.filename) {

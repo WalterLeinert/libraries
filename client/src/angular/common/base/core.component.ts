@@ -16,7 +16,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  Assert, CustomSubject, Dictionary, Exception, Funktion, IMessage,
+  Assert, Core, CustomSubject, Dictionary, Exception, Funktion, IMessage,
   MessageSeverity, ServerBusinessException, Types, UniqueIdentifiable, Utility
 } from '@fluxgate/core';
 
@@ -415,7 +415,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
                       }
 
                       if (lg.isDebugEnabled()) {
-                        lg.debug(`errors: ${JSON.stringify(result.messages)}`);
+                        lg.debug(`errors: ${Core.stringify(result.messages)}`);
                       }
                       return {
                         [metadata.propertyName]: result.messages
@@ -455,7 +455,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
       });
 
       if (log.isDebugEnabled()) {
-        log.debug('validatorDict: ', JSON.stringify(validatorDict));
+        log.debug('validatorDict: ', Core.stringify(validatorDict));
       }
 
       formInfo.setFormGroup(formBuilder.group(validatorDict));
@@ -481,7 +481,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     using(new XLog(CoreComponent.logger, levels.INFO, 'buildForm', `groupName = ${groupName}`), (log) => {
 
       if (log.isDebugEnabled()) {
-        log.debug('validatorDict: ', JSON.stringify(validatorDict));
+        log.debug('validatorDict: ', Core.stringify(validatorDict));
       }
 
       const formInfo = new FormGroupInfo();
@@ -494,7 +494,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
       }
 
       if (log.isDebugEnabled()) {
-        log.debug('validatorDict: ', JSON.stringify(validatorDict));
+        log.debug('validatorDict: ', Core.stringify(validatorDict));
       }
 
       formInfo.setFormGroup(formBuilder.group(validatorDict));

@@ -1,3 +1,4 @@
+import { Core } from '../diagnostics/core';
 import { Nullable } from '../types/nullable';
 import { Types } from '../types/types';
 import { ConverterBase } from './converter-base';
@@ -6,7 +7,7 @@ import { IConverter } from './converter.interface';
 
 
 // @Converter(Error)
-export class ErrorConverter extends ConverterBase implements IConverter<Error, String> {
+export class ErrorConverter extends ConverterBase implements IConverter<Error, string> {
 
   constructor() {
     super(Error);
@@ -24,7 +25,7 @@ export class ErrorConverter extends ConverterBase implements IConverter<Error, S
       for (const propertyKey of propertyKeys) {
         rval[propertyKey.toString()] = value[propertyKey.toString()];
       }
-      return JSON.stringify(rval);
+      return Core.stringify(rval);
     });
   }
 

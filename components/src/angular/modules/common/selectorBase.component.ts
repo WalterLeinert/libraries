@@ -10,6 +10,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import { ControlBaseComponent, MessageService, MetadataService } from '@fluxgate/client';
+import { Core } from '@fluxgate/core';
 
 
 /**
@@ -83,7 +84,7 @@ export abstract class SelectorBaseComponent<T> extends ControlBaseComponent<T> {
    */
   protected onEditableChange(value: boolean) {
     using(new XLog(SelectorBaseComponent.logger, levels.INFO,
-      'onEditableChange', `value = ${JSON.stringify(value)}`), (log) => {
+      'onEditableChange', `value = ${Core.stringify(value)}`), (log) => {
         // ok
       });
   }
