@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken } from 'injection-js';
+import { Injectable } from 'injection-js';
 
 import { JsonDumper } from './json-dumper';
 import { IStringifyer } from './stringifyer.interface';

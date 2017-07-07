@@ -9,10 +9,10 @@ import { getLogger } from './diagnostics/logging-core';
 import { XLog } from './diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
-import { STRINGIFYER } from './diagnostics/stringifyer.token';
-import { SimpleStringifyer } from './diagnostics/simple-stringifyer';
 import { CoreInjector } from './di/core-injector';
 import { DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER } from './diagnostics/logger.token';
+import { SimpleStringifyer } from './diagnostics/simple-stringifyer';
+import { STRINGIFYER } from './diagnostics/stringifyer.token';
 
 
 class BootstrapCore {

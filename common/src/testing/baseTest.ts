@@ -5,7 +5,7 @@ import { configure, getLogger, ILogger, levels, using, XLog } from '@fluxgate/pl
 
 
 import {
-  CoreInjector, DEFAULT_CATEGORY, LOGGER, LOG_EXCEPTIONS, fromEnvironment,
+  CoreInjector, DEFAULT_CATEGORY, fromEnvironment, LOG_EXCEPTIONS, LOGGER,
   STRINGIFYER, Types, UnitTest
 } from '@fluxgate/core';
 

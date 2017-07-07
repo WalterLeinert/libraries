@@ -10,8 +10,8 @@ import { XLog } from '../diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { Core } from '../diagnostics/core';
 import { Clone } from '../base/clone';
+import { Core } from '../diagnostics/core';
 import { Types } from '../types/types';
 import { Assert } from '../util/assert';
 

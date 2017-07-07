@@ -7,8 +7,8 @@ import { getLogger } from '../diagnostics/logging-core';
 import { XLog } from '../diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
-import { Core } from '../diagnostics/core';
 import { Funktion } from '../base/objectType';
+import { Core } from '../diagnostics/core';
 import { Types } from '../types/types';
 import { Assert } from '../util/assert';
 import { CacheFactoryFactory } from './cache-factory';

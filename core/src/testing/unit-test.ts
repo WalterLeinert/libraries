@@ -11,11 +11,11 @@ import { configure } from '../diagnostics/logging-core';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { STRINGIFYER } from '../diagnostics/stringifyer.token';
-import { SimpleStringifyer } from '../diagnostics/simple-stringifyer';
 import { CoreInjector } from '../di/core-injector';
 import { ConsoleLogger } from '../diagnostics/consoleLogger';
 import { DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER } from '../diagnostics/logger.token';
+import { SimpleStringifyer } from '../diagnostics/simple-stringifyer';
+import { STRINGIFYER } from '../diagnostics/stringifyer.token';
 
 
 export abstract class UnitTest {
