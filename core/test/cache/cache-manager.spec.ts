@@ -72,8 +72,8 @@ class ConverterTest extends UnitTest {
 
       levels: {
         '[all]': 'WARN',
-        'CacheManager': 'DEBUG',
-        'LruCache': 'DEBUG'
+        // 'CacheManager': 'DEBUG',
+        // 'LruCache': 'DEBUG'
       }
     };
 
