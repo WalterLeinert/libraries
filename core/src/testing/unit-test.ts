@@ -10,6 +10,9 @@ import { ILogger } from '../diagnostics/logger.interface';
 import { configure } from '../diagnostics/logging-core';
 // -------------------------------------- logging --------------------------------------------
 
+
+import { STRINGIFYER } from '../diagnostics/stringifyer.token';
+import { SimpleStringifyer } from '../diagnostics/simple-stringifyer';
 import { CoreInjector } from '../di/core-injector';
 import { ConsoleLogger } from '../diagnostics/consoleLogger';
 import { DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER } from '../diagnostics/logger.token';
@@ -34,7 +37,8 @@ export abstract class UnitTest {
     CoreInjector.instance.resolveAndCreate([
       { provide: DEFAULT_CATEGORY, useValue: '-unknown-' },
       { provide: LOGGER, useClass: ConsoleLogger },
-      { provide: LOG_EXCEPTIONS, useValue: false }
+      { provide: LOG_EXCEPTIONS, useValue: false },
+      { provide: STRINGIFYER, useClass: SimpleStringifyer }   // default
     ]);
   }
 

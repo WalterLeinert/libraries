@@ -7,7 +7,7 @@ import { getLogger } from '../diagnostics/logging-core';
 import { XLog } from '../diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
-
+import { Core } from '../diagnostics/core';
 import { Funktion } from '../base/objectType';
 import { Types } from '../types/types';
 import { Assert } from '../util/assert';
@@ -84,7 +84,7 @@ export class CacheManager {
       const item = cache.get(key);
 
       if (log.isDebugEnabled()) {
-        log.debug(`item = ${JSON.stringify(item)}`);
+        log.debug(`item = ${Core.stringify(item)}`);
       }
 
       return item;
@@ -106,7 +106,7 @@ export class CacheManager {
       const cache = this.cacheMap.get(this.createKey(model));
 
       if (log.isDebugEnabled()) {
-        log.debug(`item = ${JSON.stringify(item)}`);
+        log.debug(`item = ${Core.stringify(item)}`);
       }
       cache.set(key, item);
     });

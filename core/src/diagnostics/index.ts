@@ -1,5 +1,6 @@
 export * from './consoleLogger';
 export * from './config.interface';
+export * from './core';
 export * from './json-dumper';
 export * from './level';
 export * from './level.interface';
@@ -8,5 +9,8 @@ export * from './logger.interface';
 export * from './logger.token';
 export * from './loggerRegistry';
 export * from './logging-core';
+export * from './simple-stringifyer';
+export * from './stringifyer.interface';
+export * from './stringifyer.token';
 export * from './xlog';
 export { using } from '../base/disposable';

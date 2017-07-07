@@ -9,6 +9,8 @@ import { getLogger } from './diagnostics/logging-core';
 import { XLog } from './diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
+import { STRINGIFYER } from './diagnostics/stringifyer.token';
+import { SimpleStringifyer } from './diagnostics/simple-stringifyer';
 import { CoreInjector } from './di/core-injector';
 import { DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER } from './diagnostics/logger.token';
 
@@ -29,7 +31,8 @@ class BootstrapCore {
       CoreInjector.instance.resolveAndCreate([
         { provide: DEFAULT_CATEGORY, useValue: BootstrapCore.logger.category },
         { provide: LOGGER, useValue: BootstrapCore.logger },
-        { provide: LOG_EXCEPTIONS, useValue: true }
+        { provide: LOG_EXCEPTIONS, useValue: true },
+        { provide: STRINGIFYER, useClass: SimpleStringifyer }   // default
       ]);
 
       log.log(`registered injector and logger providers`);

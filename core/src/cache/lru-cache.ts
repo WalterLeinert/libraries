@@ -10,6 +10,7 @@ import { XLog } from '../diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
 
+import { Core } from '../diagnostics/core';
 import { Clone } from '../base/clone';
 import { Types } from '../types/types';
 import { Assert } from '../util/assert';
@@ -75,7 +76,7 @@ export class LruCache<T, TKey> implements ICache<T, TKey> {
      */
     dispose: (key: any, value: any) => {
       return using(new XLog(LruCache.logger, levels.INFO, 'dispose', `key = ${key}`), (log) => {
-        log.log(`value = ${JSON.stringify(value)}`);
+        log.log(`value = ${Core.stringify(value)}`);
       });
     },
 
@@ -108,7 +109,7 @@ export class LruCache<T, TKey> implements ICache<T, TKey> {
         log.log(`no options given: taking defaults`);
       }
 
-      log.log(`cacheOptions = ${JSON.stringify(cacheOptions)}`);
+      log.log(`cacheOptions = ${Core.stringify(cacheOptions)}`);
 
       this._cache = LRU<T>(cacheOptions);
     });
@@ -121,7 +122,7 @@ export class LruCache<T, TKey> implements ICache<T, TKey> {
     return using(new XLog(LruCache.logger, levels.INFO, 'get', `key = ${key}`), (log) => {
       const item = this._cache.get(key);
       if (log.isDebugEnabled()) {
-        log.debug(`item = ${JSON.stringify(item)}`);
+        log.debug(`item = ${Core.stringify(item)}`);
       }
 
       return item;
@@ -135,7 +136,7 @@ export class LruCache<T, TKey> implements ICache<T, TKey> {
 
     using(new XLog(LruCache.logger, levels.INFO, 'set', `key = ${key}`), (log) => {
       if (log.isDebugEnabled()) {
-        log.debug(`item = ${JSON.stringify(item)}`);
+        log.debug(`item = ${Core.stringify(item)}`);
       }
 
       this._cache.set(key, item);
