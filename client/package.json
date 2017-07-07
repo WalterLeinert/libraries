@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/client",
-  "version": "2.2.8-beta.58",
+  "version": "2.2.8-beta.59",
   "description": "Fluxgate Client-Library ",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -38,7 +38,6 @@
     "karma-coverage-istanbul-reporter": "^1.0.0",
     "karma-jasmine": "^1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "karma-phantomjs-launcher": "^1.0.4",
     "log4js": "^1.1.1",
     "merge2": "^1.0.3",
     "rollup": "^0.41.6",
