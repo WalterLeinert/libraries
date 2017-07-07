@@ -78,7 +78,7 @@ function rebuild() {
 }
 
 if (($write_logfile)); then
-  rebuild $really_clean $remove_logfiles ${logfile} 2>&1 | tee ${logfile}
+  rebuild $really_clean $remove_logfiles ${logfile} > ${logfile} 2>&1
 else
   rebuild $really_clean $remove_logfiles
 fi
