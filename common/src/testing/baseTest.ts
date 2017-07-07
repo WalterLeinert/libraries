@@ -3,9 +3,14 @@
 import { configure, getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { fromEnvironment, Types, UnitTest } from '@fluxgate/core';
+
+import {
+  CoreInjector, DEFAULT_CATEGORY, LOGGER, LOG_EXCEPTIONS, fromEnvironment,
+  STRINGIFYER, Types, UnitTest
+} from '@fluxgate/core';
 
 import { AppConfig } from '../base/appConfig';
+import { EntityStringifyer } from '../model/entity-stringifyer';
 import { Logging } from '../util/logging';
 import { ILoggingConfigurationOptions } from '../util/loggingConfiguration';
 
@@ -57,6 +62,13 @@ export abstract class BaseTest extends UnitTest {
     // tslint:disable-next-line:no-empty
     using(new XLog(BaseTest.logger, levels.DEBUG, 'before'), (log) => {
       BaseTest.initializeLogging();
+
+      CoreInjector.instance.resolveAndCreate([
+        { provide: DEFAULT_CATEGORY, useValue: BaseTest.logger.category },
+        { provide: LOGGER, useValue: BaseTest.logger },
+        { provide: LOG_EXCEPTIONS, useValue: false },
+        { provide: STRINGIFYER, useClass: EntityStringifyer }   // -> resetSecrets
+      ]);
 
 
       if (AppConfig.config) {

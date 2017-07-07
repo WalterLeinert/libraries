@@ -1,4 +1,4 @@
-import { Clone, JsonDumper } from '@fluxgate/core';
+import { Clone, IStringifyer, JsonDumper } from '@fluxgate/core';
 
 import { IEntity } from './entity.interface';
 import { MetadataStorage } from './metadata/metadataStorage';
@@ -9,9 +9,9 @@ import { MetadataStorage } from './metadata/metadataStorage';
  * in the result string.
  *
  * @export
- * @class EntityDumper
+ * @class EntityStringifyer
  */
-export class EntityDumper {
+export class EntityStringifyer implements IStringifyer {
 
   /**
    * Creates an json string for the given entity @param{entity}. If @param{resetSecrets} is true,
@@ -25,7 +25,7 @@ export class EntityDumper {
    * @returns {string}
    * @memberof EntityDumper
    */
-  public static stringify<TId>(entity: IEntity<TId>, resetSecrets: boolean = true): string {
+  public stringify<TId>(entity: IEntity<TId>, resetSecrets: boolean = true): string {
     if (resetSecrets) {
       const clone = Clone.clone(entity);
       MetadataStorage.instance.resetSecrets(clone);

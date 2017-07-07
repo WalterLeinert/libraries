@@ -5,7 +5,8 @@ import 'reflect-metadata';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { CoreInjector, DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER } from '@fluxgate/core';
+import { EntityStringifyer } from '@fluxgate/common';
+import { CoreInjector, DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER, STRINGIFYER } from '@fluxgate/core';
 
 
 class BootstrapServer {
@@ -25,7 +26,8 @@ class BootstrapServer {
       CoreInjector.instance.resolveAndCreate([
         { provide: DEFAULT_CATEGORY, useValue: BootstrapServer.logger.category },
         { provide: LOGGER, useValue: BootstrapServer.logger },
-        { provide: LOG_EXCEPTIONS, useValue: true }
+        { provide: LOG_EXCEPTIONS, useValue: true },
+        { provide: STRINGIFYER, useClass: EntityStringifyer }   // -> resetSecrets
       ]);
 
       log.log(`registered injector and logger providers`);
