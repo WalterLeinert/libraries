@@ -488,7 +488,9 @@ export class MetadataStorage {
    */
   public resetSecrets(subject: any, value?: any) {
     using(new XLog(MetadataStorage.logger, levels.INFO, 'resetSecrets', `value = ${value}`), (log) => {
-      Assert.notNull(subject);
+      if (!Types.isPresent(subject)) {
+        return;
+      }
 
       const ctor = Types.getConstructor(subject);
       const metadata = this.findTableMetadata(ctor);
