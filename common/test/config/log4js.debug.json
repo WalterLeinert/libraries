@@ -29,6 +29,7 @@
         "[all]": "ERROR",
         "Test": "TRACE",
         "Test2": "INFO",
-        "ReduxBaseTest": "WARN"
+        "ReduxBaseTest": "WARN",
+        "MetadataStorage": "WARN"
     }
 }

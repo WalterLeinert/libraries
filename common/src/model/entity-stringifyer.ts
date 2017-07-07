@@ -12,6 +12,7 @@ import { MetadataStorage } from './metadata/metadataStorage';
  * @class EntityStringifyer
  */
 export class EntityStringifyer implements IStringifyer {
+  public static readonly DEFAULT_SECRET_RESET = '*****';
 
   /**
    * Creates an json string for the given entity @param{entity}. If @param{resetSecrets} is true,
@@ -28,10 +29,10 @@ export class EntityStringifyer implements IStringifyer {
   public stringify<TId>(entity: IEntity<TId>, resetSecrets: boolean = true): string {
     if (resetSecrets) {
       const clone = Clone.clone(entity);
-      MetadataStorage.instance.resetSecrets(clone);
+      MetadataStorage.instance.resetSecrets(clone, EntityStringifyer.DEFAULT_SECRET_RESET);
       entity = clone;
     }
 
-    return JsonDumper.stringify(MetadataStorage.instance.resetSecrets(entity, '*****'));
+    return JSON.stringify(entity);
   }
 }
