@@ -12,7 +12,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { AppConfig } from '@fluxgate/common';
-import { Assert, Clone, ConfigurationException, StringBuilder, Types, Utility } from '@fluxgate/core';
+import { Assert, Clone, ConfigurationException, Core, StringBuilder, Types, Utility } from '@fluxgate/core';
 import { FileSystem } from '@fluxgate/platform';
 
 
@@ -244,7 +244,7 @@ export abstract class ServerBase extends ServerLoader {
   public $onAuth(request: Express.Request, response: Express.Response, next: Express.NextFunction,
     authorization?: any): boolean | void {
     using(new XLog(ServerBase.logger, levels.DEBUG, '$onAuth',
-      `authorization = ${JSON.stringify(authorization)}`), (log) => {
+      `authorization = ${Core.stringify(authorization)}`), (log) => {
 
         //
         // TODO: AppConfig.config.userCredentials auswerten

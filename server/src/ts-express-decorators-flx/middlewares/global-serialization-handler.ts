@@ -9,7 +9,7 @@ import {
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { ServerSystemException } from '@fluxgate/core';
+import { Core, ServerSystemException } from '@fluxgate/core';
 
 import { MetadataService } from '../services/metadata.service';
 
@@ -25,7 +25,7 @@ export class GlobalSerializationRequestHandler implements IMiddleware {
   ): any {
     return using(new XLog(GlobalSerializationRequestHandler.logger, levels.INFO, 'use'), (log) => {
       if (request) {
-        log.info(`request.body = ${JSON.stringify(request.body)}`);
+        log.info(`request.body = ${Core.stringify(request.body)}`);
       }
     });
 
@@ -50,7 +50,7 @@ export class GlobalSerializationResponsetHandler implements IMiddleware {
 
       const type = typeof data;
 
-      log.info(`data = ${JSON.stringify(data)}`);
+      log.info(`data = ${Core.stringify(data)}`);
 
 
       if (data === undefined) {
@@ -75,7 +75,7 @@ export class GlobalSerializationResponsetHandler implements IMiddleware {
 
       return new Promise((resolve, reject) => {
         if (response) {
-          log.info(`response.status = ${JSON.stringify(response.status)}`);
+          log.info(`response.status = ${Core.stringify(response.status)}`);
         }
 
 

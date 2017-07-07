@@ -19,7 +19,7 @@ import {
 import {
   ICrudServiceRequests, ItemCreatedCommand, ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand, Store, TableMetadata
 } from '@fluxgate/common';
-import { Assert, Clone, Color, NotSupportedException, Utility } from '@fluxgate/core';
+import { Assert, Clone, Color, Core, NotSupportedException, Utility } from '@fluxgate/core';
 
 
 @Component({
@@ -249,7 +249,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
     using(new XLog(AutoformComponent.logger, levels.INFO, 'ctor'), (log) => {
       this.route.params.subscribe((p) => {
-        log.log(`params = ${JSON.stringify(p)}`);
+        log.log(`params = ${Core.stringify(p)}`);
       });
     });
   }
@@ -263,7 +263,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       if (!this.skipNgOnInit) {
 
         this.route.data.subscribe((data: IDataFormAction) => {
-          log.log(`data = ${JSON.stringify(data)}`);
+          log.log(`data = ${Core.stringify(data)}`);
 
           Assert.notNull(data);
 
@@ -529,7 +529,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   private setupConfig(item: any, tableMetadata: TableMetadata): void {
     using(new XLog(AutoformComponent.logger, levels.DEBUG, 'setupConfig'), (log) => {
       if (log.isDebugEnabled) {
-        log.log(`item = ${JSON.stringify(item)},` +
+        log.log(`item = ${Core.stringify(item)},` +
           ` tableMetadata = ${tableMetadata ? tableMetadata.className : 'undefined'}`);
       }
 
@@ -548,7 +548,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       }
 
       if (log.isDebugEnabled()) {
-        log.log(`configInternal : ${JSON.stringify(this.configInternal)}`);
+        log.log(`configInternal : ${Core.stringify(this.configInternal)}`);
       }
 
     });

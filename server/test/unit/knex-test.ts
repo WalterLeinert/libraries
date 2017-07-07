@@ -12,7 +12,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import {
   BaseTest, ConfigBase, EntityGenerator, EntityVersion, IEntity, IEntityGeneratorConfig, TableMetadata, ValueGenerator
 } from '@fluxgate/common';
-import { Activator, Dictionary, fromEnvironment, Funktion, ICtor, IToString, Types } from '@fluxgate/core';
+import { Activator, Core, Dictionary, fromEnvironment, Funktion, ICtor, IToString, Types } from '@fluxgate/core';
 import { JsonReader } from '@fluxgate/platform';
 
 import { IBaseService, IBaseServiceRaw } from '../../src/ts-express-decorators-flx/services/baseService.interface';
@@ -246,7 +246,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
                 .where(KnexTest._service.idColumnName, '>=', KnexTest._firstTestId)
                 .delete()
             ).then((rowsAffected) => {
-              log.log(`deleted test data (id >= ${KnexTest._firstTestId}, res = ${JSON.stringify(rowsAffected)}`);
+              log.log(`deleted test data (id >= ${KnexTest._firstTestId}, res = ${Core.stringify(rowsAffected)}`);
               resolve();
             });
           } else {
@@ -262,7 +262,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
              */
             KnexTest._configService.deleteTestdata()
               .then((rowsAffected: number) => {
-                log.log(`deleted test data, res = ${JSON.stringify(rowsAffected)}`);
+                log.log(`deleted test data, res = ${Core.stringify(rowsAffected)}`);
                 resolve();
               });
           } else {

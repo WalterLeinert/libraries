@@ -1,4 +1,4 @@
-import { Clone, IStringifyer, JsonDumper } from '@fluxgate/core';
+import { Clone, IStringifyer, Types } from '@fluxgate/core';
 
 import { IEntity } from './entity.interface';
 import { MetadataStorage } from './metadata/metadataStorage';
@@ -26,13 +26,30 @@ export class EntityStringifyer implements IStringifyer {
    * @returns {string}
    * @memberof EntityDumper
    */
-  public stringify<TId>(entity: IEntity<TId>, resetSecrets: boolean = true): string {
-    if (resetSecrets) {
-      const clone = Clone.clone(entity);
-      MetadataStorage.instance.resetSecrets(clone, EntityStringifyer.DEFAULT_SECRET_RESET);
-      entity = clone;
+  public stringify<TId>(value: IEntity<TId>, resetSecrets: boolean = true): string {
+    if (!Types.isPresent(value) || Types.isPrimitive(value)) {
+      return JSON.stringify(value);
     }
 
-    return JSON.stringify(entity);
+    try {
+      const ctor = Types.getConstructor(value);
+
+      // if no entity, use JSON.stringify
+      const metadata = MetadataStorage.instance.findTableMetadata(ctor);
+      if (!metadata) {
+        return JSON.stringify(value);
+      }
+    } catch (exc) {
+      // no type with constructor
+      return JSON.stringify(value);
+    }
+
+    if (resetSecrets) {
+      const clone = Clone.clone(value);
+      MetadataStorage.instance.resetSecrets(clone, EntityStringifyer.DEFAULT_SECRET_RESET);
+      value = clone;
+    }
+
+    return JSON.stringify(value);
   }
 }

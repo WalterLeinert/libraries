@@ -9,7 +9,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 import { IMessage, SmtpConfig } from '@fluxgate/common';
-import { Assert } from '@fluxgate/core';
+import { Assert, Core } from '@fluxgate/core';
 
 import { ISMTPConfig } from './smtpconfig.interface';
 
@@ -39,7 +39,7 @@ export class EmailService extends ServiceCore {
       return new Promise<any>((resolve, reject) => {
         this.configService.findById<SmtpConfig>(null, SmtpConfig.name, configId).then((configResult) => {
 
-          log.warn(`configResult = ${JSON.stringify(configResult)}`);
+          log.warn(`configResult = ${Core.stringify(configResult)}`);
 
 
           const smtpConfig: ISMTPConfig = {

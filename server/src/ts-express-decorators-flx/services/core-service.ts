@@ -12,7 +12,7 @@ import {
   ServiceResult, StatusFilter, TableMetadata, User
 } from '@fluxgate/common';
 import {
-  Assert, Clone, Funktion, ICtor, InvalidOperationException, Types
+  Assert, Clone, Core, Funktion, ICtor, InvalidOperationException, Types
 } from '@fluxgate/core';
 
 
@@ -501,7 +501,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
     query?: Knex.QueryBuilder): Knex.QueryBuilder {
 
     return using(new XLog(CoreService.logger, levels.INFO, 'createStatusSelectorQuery'), (log) => {
-      log.log(`filter = ${JSON.stringify(filter)}`);
+      log.log(`filter = ${Core.stringify(filter)}`);
 
       query = this.createNopQuery(query);
 
