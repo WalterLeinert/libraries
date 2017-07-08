@@ -129,8 +129,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
         if (log.isDebugEnabled()) {
           log.debug(`components registered with subscriptions: ${CoreComponent.subscriptionMap.count}`);
           CoreComponent.subscriptionMap.keys.forEach((key) => {
-            const subscriptions = CoreComponent.subscriptionMap.get(key);
-            log.debug(`  key = ${key.constructor.name}: ${subscriptions.length} subscriptions`);
+            const subscriptionsDebug = CoreComponent.subscriptionMap.get(key);
+            log.debug(`  key = ${key.constructor.name}: ${subscriptionsDebug.length} subscriptions`);
           });
         }
 

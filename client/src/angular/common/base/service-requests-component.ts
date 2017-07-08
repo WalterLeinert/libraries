@@ -133,7 +133,7 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
   }
 
 
-  protected onStoreUpdatedGlobal<T>(command: ServiceCommand<T>): void {
+  protected onStoreUpdatedGlobal<TUpdateGlobal>(command: ServiceCommand<TUpdateGlobal>): void {
     using(new XLog(ServiceRequestsComponent.logger, levels.INFO, 'onStoreUpdatedGlobal',
       `class: ${this.constructor.name}`), (log) => {
         super.onStoreUpdatedGlobal(command);
@@ -153,7 +153,7 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
       });
   }
 
-  protected onStoreUpdated<T>(command: ServiceCommand<T>): void {
+  protected onStoreUpdated<TUpdate>(command: ServiceCommand<TUpdate>): void {
     super.onStoreUpdated(command);
   }
 
