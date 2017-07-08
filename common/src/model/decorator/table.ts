@@ -14,7 +14,7 @@ import { TableOptions } from './tableOptions.interface';
  */
 export function Table(options?: TableOptions) {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: Funktion) {
+  return (target: Funktion) => {
     if (!options) {
       options = {} as TableOptions;
     }

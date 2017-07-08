@@ -1,8 +1,11 @@
 // tslint:disable:max-classes-per-file
+// tslint:disable:no-unused-expression
 // tslint:disable:member-access
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
+
+import { Assert, Funktion } from '@fluxgate/core';
 
 import { IRole } from '../../src/model';
 import {
@@ -14,7 +17,7 @@ import { ReduxBaseTest } from './redux-base-test.spec';
 
 
 
-@ReduxParentStore(() => RoleStore)
+@ReduxParentStore((f: Funktion) => RoleStore)
 export class RoleSelectorStore1 extends CommandStore<IServiceState> {
   public static ID = 'roleSelector1';
 
@@ -50,6 +53,7 @@ class ChildStoreTest extends ReduxBaseTest<IRole, number, any> {
 
   @test 'should have stores with parent/child relationship'() {
     const userStore = this.store.getCommandStore(RoleStore.ID);
+
     expect(userStore.containsChild(RoleSelectorStore1.ID)).to.be.true;
     expect(userStore.containsChild(RoleSelectorStore2.ID)).to.be.true;
 

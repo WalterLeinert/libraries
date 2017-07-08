@@ -114,11 +114,14 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
       if (exception) {
         observer.error(exception);
       } else {
-        const item = this._items.find((elem) => elem.id === id);
-        observer.next(new FindByIdResult<T, TId>(item as any, this.getEntityVersion()));
+        const items = this._items.filter((elem) => elem.id === id);
+
+        observer.next(new FindByIdResult<T, TId>(
+          (items.length === 1 ? items[0] as any : undefined), this.getEntityVersion()));
       }
     });
   }
+
 
 
   /**
@@ -129,10 +132,10 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
    *
    * @memberOf Service
    */
-  public update<T extends IFlxEntity<TId>>(item: T, exception?: IException): Observable<UpdateResult<T, TId>> {
+  public update<TFlx extends IFlxEntity<TId>>(item: TFlx, exception?: IException): Observable<UpdateResult<TFlx, TId>> {
     Assert.notNull(item, 'item');
 
-    return Observable.create((observer: Subscriber<UpdateResult<T, TId>>) => {
+    return Observable.create((observer: Subscriber<UpdateResult<TFlx, TId>>) => {
       if (exception) {
         observer.error(exception);
       } else {

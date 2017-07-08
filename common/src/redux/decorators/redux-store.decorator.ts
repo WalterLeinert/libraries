@@ -11,7 +11,7 @@ import { CommandStoreStorage } from './command-store-storage';
  */
 export function ReduxStore() {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: Funktion) {
+  return (target: Funktion) => {
     CommandStoreStorage.instance.addStoreMetadata(new CommandStoreMetadata(target));
   };
 }

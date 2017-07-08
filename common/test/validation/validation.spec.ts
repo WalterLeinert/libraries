@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 // require('reflect-metadata');
 

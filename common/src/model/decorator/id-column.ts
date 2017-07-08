@@ -8,7 +8,7 @@ import { IdColumnOptions } from './idColumnOptions';
  */
 export function IdColumn(options?: IdColumnOptions) {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: Object, propertyName: string) {
+  return (target: object, propertyName: string) => {
     let columnOptions = options as ColumnOptions;
 
     //

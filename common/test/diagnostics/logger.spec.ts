@@ -115,7 +115,7 @@ class LoggerConfigTest extends CommonTest {
 
   @test 'should test log level for Test'() {
     // tslint:disable-next-line:no-unused-variable
-    const test = new Test('hirsch');
+    const tester = new Test('hirsch');
 
     // Hinweis: die Level-Instanzen sind unterschiedlich (Level <-> log4js.Level)
     expect(Test.logger.level.isEqualTo(levels.DEBUG)).to.be.true;
@@ -123,13 +123,13 @@ class LoggerConfigTest extends CommonTest {
 
   @test 'should test log level for Test2'() {
     // tslint:disable-next-line:no-unused-variable
-    const test = new Test2('hirsch');
+    const tester = new Test2('hirsch');
     expect(Test2.logger.level.isEqualTo(levels.INFO)).to.be.true;
   }
 
   @test 'should test log level for Test3'() {
     // tslint:disable-next-line:no-unused-variable
-    const test = new Test3('hirsch');
+    const tester = new Test3('hirsch');
     // expect(Test3.logger.level.isEqualTo(levels.WARN)).to.be.true;
     expect(Test3.logger.level.toString()).to.equal(levels.WARN.toString());
   }
@@ -148,17 +148,17 @@ class LoggerConfigTest extends CommonTest {
 class LoggerExtendedTest extends CommonTest {
 
   @test 'should create Test instance'() {
-    const test = new Test('hugo');
-    expect(test).to.be.not.null;
+    const tester = new Test('hugo');
+    expect(tester).to.be.not.null;
   }
 
   @test 'should create Test2 instance'() {
-    const test = new Test2('hirsch');
-    expect(test).to.be.not.null;
+    const tester = new Test2('hirsch');
+    expect(tester).to.be.not.null;
   }
 
   @test 'should test Test2.getLogLevel'() {
-    const test = new Test2('hirsch');
-    expect(test.getLogLevel()).to.be.equal(levels.INFO);
+    const tester = new Test2('hirsch');
+    expect(tester.getLogLevel()).to.be.equal(levels.INFO);
   }
 }

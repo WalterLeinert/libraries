@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 // tslint:disable-next-line:no-var-requires
 require('reflect-metadata');

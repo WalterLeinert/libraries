@@ -28,6 +28,7 @@ class ArtikelTable {
 
 const duplicateTableTester = () => {
   @Table({ name: ArtikelTable.TABLE_NAME })
+  // tslint:disable-next-line:no-shadowed-variable
   class ArtikelTable {
     public static readonly TABLE_NAME = 'user';
   }

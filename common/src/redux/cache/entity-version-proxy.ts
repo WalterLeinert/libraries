@@ -379,7 +379,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
   /**
    * Liefert true, falls die aktuelle EntityVersion neuer als die im Cache ist -> update des Caches.
    */
-  private isNewer<T>(version: EntityVersion, chachedVersion: EntityVersionCacheEntry<T>): boolean {
+  private isNewer<TTest>(version: EntityVersion, chachedVersion: EntityVersionCacheEntry<TTest>): boolean {
     return version.__version > chachedVersion.version;
   }
 

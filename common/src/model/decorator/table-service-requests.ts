@@ -14,7 +14,7 @@ import { TableMetadataInternal } from '../metadata/tableMetadataInternal';
  */
 export function TableServiceRequests(modelClazz: Funktion) {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: Funktion) {
+  return (target: Funktion) => {
     Assert.notNull(modelClazz);
 
     const tableMetadata = MetadataStorage.instance.findTableMetadata(modelClazz) as TableMetadataInternal;

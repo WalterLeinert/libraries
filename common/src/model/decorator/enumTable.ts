@@ -18,7 +18,7 @@ const logger = getLogger(EnumTable);
  */
 export function EnumTable(options: IEnumTableOptions) {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: Funktion) {
+  return (target: Funktion) => {
 
     if (!options.name) {
       options.name = target.name.toLowerCase();

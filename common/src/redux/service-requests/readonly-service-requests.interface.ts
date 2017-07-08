@@ -26,7 +26,7 @@ export interface IReadonlyServiceRequests<T extends IEntity<TId>, TId extends IT
    *
    * @memberOf ICrudServiceRequests
    */
-  findById<T>(id: TId): Observable<T>;
+  findById(id: TId): Observable<T>;
 
   /**
    * Liefert die Id der Entity @param{item}

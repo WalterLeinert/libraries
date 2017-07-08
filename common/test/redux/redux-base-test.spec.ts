@@ -72,7 +72,7 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TServi
   }
 
 
-  protected subscribeToStore<T, TId>(storeId: string): Subscription {
+  protected subscribeToStore(storeId: string): Subscription {
     const subscription = this.getStoreSubject(storeId).subscribe((command) => {
       this.onStoreUpdated(command);
     });
@@ -80,7 +80,7 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TServi
     return subscription;
   }
 
-  protected subscribeToParentStore<T, TId>(parentStoreId: string): Subscription {
+  protected subscribeToParentStore(parentStoreId: string): Subscription {
     const subscription = this.getStoreSubject(parentStoreId).subscribe((command) => {
       this.onParentStoreUpdated(command);
     });

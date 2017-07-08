@@ -50,16 +50,16 @@ class ModelSerializationTest {
 
 
   @test 'should serialize entity'() {
-    const test = new ArtikelSerialization();
-    test.id = 1;
-    test.name = 'Hemd';
-    test.id_client = 2;
-    test.created = new Date('2017-05-10');
-    test.start = new ShortTime(8, 30);
+    const tester = new ArtikelSerialization();
+    tester.id = 1;
+    tester.name = 'Hemd';
+    tester.id_client = 2;
+    tester.created = new Date('2017-05-10');
+    tester.start = new ShortTime(8, 30);
 
-    const testSerialized = this.formatter.serialize(test);
+    const testSerialized = this.formatter.serialize(tester);
     const testDeserialized = this.formatter.deserialize(testSerialized);
-    expect(test).to.eql(testDeserialized);
+    expect(tester).to.eql(testDeserialized);
   }
 
   public before() {

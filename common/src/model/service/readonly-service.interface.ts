@@ -19,5 +19,5 @@ export interface IReadonlyService<T, TId extends IToString> extends ICoreService
    * @returns {Observable<FindByIdResult<T, TId>>}
    *
    */
-  findById<T extends IEntity<TId>>(id: TId): Observable<FindByIdResult<T, TId>>;
+  findById<TFindById extends IEntity<TId>>(id: TId): Observable<FindByIdResult<TFindById, TId>>;
 }

@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:no-unused-expression
 
 // tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
@@ -35,13 +36,13 @@ class ArtikelService {
 
 const noValidEntityTester = () => {
   @TableService(NoValidEntity)
-  class ArtikelService {
+  class ArtikelServiceNoValidEntity {
   }
 };
 
 const nullEntityTester = () => {
   @TableService(null)
-  class ArtikelService {
+  class ArtikelServiceNull {
   }
 };
 

@@ -24,13 +24,13 @@ const logger = getLogger(Column);
 export function Column(options?: ColumnOptions) {
 
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: Object, propertyName: string) {
+  return (target: object, propertyName: string) => {
     registerColumn(target, propertyName, options);
   };
 }
 
 
-export function registerColumn(target: Object, propertyName: string, options?: ColumnOptions) {
+export function registerColumn(target: object, propertyName: string, options?: ColumnOptions) {
   let propertyType: Funktion = (Reflect as any).getMetadata('design:type', target, propertyName);
 
   //

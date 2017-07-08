@@ -115,14 +115,15 @@ export class EntityGenerator<T extends IEntity<TId>, TId extends IToString> {
    * @param metadataStorage
    * @param idGenerator
    */
-  public static create<T extends IEntity<TId>, TId extends IToString>(
+  public static create<TEntity extends IEntity<TEntityId>, TEntityId extends IToString>(
     count: number,
     maxCount: number,
     model: Funktion,
     metadataStorage: MetadataStorage,
-    idGenerator: ValueGenerator<TId>
-  ): EntityGenerator<T, TId> {
-    return new EntityGenerator<T, TId>(count, maxCount, metadataStorage.findTableMetadata(model), idGenerator);
+    idGenerator: ValueGenerator<TEntityId>
+  ): EntityGenerator<TEntity, TEntityId> {
+    return new EntityGenerator<TEntity, TEntityId>(count, maxCount,
+      metadataStorage.findTableMetadata(model), idGenerator);
   }
 
 
@@ -144,8 +145,8 @@ export class EntityGenerator<T extends IEntity<TId>, TId extends IToString> {
   }
 
 
-  public createEntity<T>(): T {
-    return this.config.tableMetadata.createEntity<T>();
+  public createEntity<TEntity>(): TEntity {
+    return this.config.tableMetadata.createEntity<TEntity>();
   }
 
 

@@ -62,7 +62,7 @@ export class ReadonlyServiceRequests<T extends IEntity<TId>, TId extends IToStri
    *
    * @memberOf ReadonlyServiceRequests
    */
-  public findById<T>(id: TId): Observable<T> {
+  public findById(id: TId): Observable<T> {
     return Observable.create((observer: Subscriber<IEntity<TId>>) => {
       try {
         this.dispatch(new FindingItemByIdCommand(this, id));

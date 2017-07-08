@@ -57,12 +57,12 @@ class ModelSerializationTest {
     model.created = new Date('2017-05-10');
     model.start = new ShortTime(8, 30);
 
-    const test = new FindByIdResult(model, 1);
+    const tester = new FindByIdResult(model, 1);
 
 
-    const testSerialized = this.formatter.serialize(test);
+    const testSerialized = this.formatter.serialize(tester);
     const testDeserialized = this.formatter.deserialize(testSerialized);
-    expect(test).to.eql(testDeserialized);
+    expect(tester).to.eql(testDeserialized);
   }
 
 
