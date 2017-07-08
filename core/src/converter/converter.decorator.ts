@@ -16,8 +16,7 @@ import { IConverter } from './converter.interface';
  * @returns
  */
 export function Converter<T1, T2>(type: Funktion) {
-  // tslint:disable-next-line:only-arrow-functions
-  return function (converterType: ICtor<IConverter<T1, T2>>) {
+  return (converterType: ICtor<IConverter<T1, T2>>) => {
     ConverterRegistry.register(type, new converterType());
   };
 }

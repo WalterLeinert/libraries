@@ -6,7 +6,7 @@ import { Assert } from '../util/assert';
 import { ClonerBase } from './clone';
 
 
-class Verifier<T> extends ClonerBase<T> {
+class Verifier extends ClonerBase {
 
   /**
    * Verifiziert, dass @param{clonedValue} wirklich ein deep clone von @param{value} ist.
@@ -71,7 +71,7 @@ export class CloneVerifier {
    * Verifiziert, dass @param{clonedValue} wirklich ein deep clone von @param{value} ist.
    */
   public static verifyClone<T>(value: T, clonedValue: T, checkCycles: boolean = false) {
-    const verifier = new Verifier<T>(checkCycles);
+    const verifier = new Verifier(checkCycles);
     verifier.verifyClone<T>(value, clonedValue);
   }
 }

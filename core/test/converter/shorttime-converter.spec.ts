@@ -25,16 +25,16 @@ class Test {
 class TimeConverterTest extends UnitTest {
 
   @test 'should test ShortTime property'() {
-    const test = new Test();
-    expect(Types.isObject(test.now)).to.be.true;
+    const value = new Test();
+    expect(Types.isObject(value.now)).to.be.true;
 
-    const typeName = Types.getClassName(test.now);
+    const typeName = Types.getClassName(value.now);
 
     const converter = ConverterRegistry.get(typeName);
     expect(converter).to.exist;
 
-    expect(converter.convert(test.now)).to.eql('19:15');
-    expect(converter.convertBack('19:15')).to.eql(test.now);
+    expect(converter.convert(value.now)).to.eql('19:15');
+    expect(converter.convertBack('19:15')).to.eql(value.now);
   }
 
 }

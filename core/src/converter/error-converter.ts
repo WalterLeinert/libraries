@@ -20,7 +20,7 @@ export class ErrorConverter extends ConverterBase implements IConverter<Error, s
     }
 
     return this.doConvert(value, () => {
-      let rval = {};
+      const rval = {};
       const propertyKeys = Reflect.ownKeys(value);
       for (const propertyKey of propertyKeys) {
         rval[propertyKey.toString()] = value[propertyKey.toString()];

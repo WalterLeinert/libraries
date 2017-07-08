@@ -14,13 +14,13 @@ import { UnitTest } from '../../src/testing/unit-test';
 class ErrorConverterTest extends UnitTest {
 
   @test 'should test empty instance'() {
-    const test = new Error();
-    this.testConversion(test, Error);
+    const value = new Error();
+    this.testConversion(value, Error);
   }
 
   @test 'should test instance'() {
-    const test = new Error('error message');
-    this.testConversion(test, Error);
+    const value = new Error('error message');
+    this.testConversion(value, Error);
   }
 
   private testConversion<T1, T2>(value: T1, type: Funktion) {

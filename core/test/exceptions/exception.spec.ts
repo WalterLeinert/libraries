@@ -75,9 +75,9 @@ class SimpleExceptionTests extends UnitTest {
 
   @test 'should create, serialize and deserialize exception with inner exception'() {
 
-    innerExceptionTestCases.forEach((test) => {
-      const excInner = ExceptionFactory.create(test.innerType, innerErrorText);
-      const exc = ExceptionFactory.create(test.type, errorText, excInner);
+    innerExceptionTestCases.forEach((tst) => {
+      const excInner = ExceptionFactory.create(tst.innerType, innerErrorText);
+      const exc = ExceptionFactory.create(tst.type, errorText, excInner);
 
       const excSerialized = this.serializer.serialize(exc);
       const excDeserialized = this.serializer.deserialize(excSerialized);

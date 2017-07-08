@@ -75,10 +75,10 @@ class CoreInjectorTest extends UnitTest {
       { provide: LOGGER, useClass: ConsoleLogger }
     ]);
 
-    const test = new LoggerTest();
-    test.doLog('hallo');
+    const tester = new LoggerTest();
+    tester.doLog('hallo');
 
-    expect(test.logger).to.be.instanceof(ConsoleLogger);
+    expect(tester.logger).to.be.instanceof(ConsoleLogger);
   }
 
 
@@ -87,16 +87,16 @@ class CoreInjectorTest extends UnitTest {
       { provide: LOGGER, useClass: DateLogger }
     ]);
 
-    const test = new LoggerTest();
-    test.doLog('hallo');
+    const tester = new LoggerTest();
+    tester.doLog('hallo');
 
-    expect(test.logger).to.be.instanceof(DateLogger);
+    expect(tester.logger).to.be.instanceof(DateLogger);
   }
 
 
   @test 'should create static ConsoleLogger by token'() {
-    const test = new StaticLoggerTest();
-    test.doLog('hallo');
+    const tester = new StaticLoggerTest();
+    tester.doLog('hallo');
 
     expect(StaticLoggerTest.logger).to.be.instanceof(ConsoleLogger);
   }

@@ -53,6 +53,7 @@ export class StringUtil {
    *
    * @memberof StringUtil
    */
+  // tslint:disable-next-line:ban-types
   public static enclose(obj: Object | string, ...args: any[]) {
     const sb = new StringBuilder('{ ');
     if (Types.isString(obj)) {

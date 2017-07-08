@@ -42,14 +42,14 @@ class ShortTimeTest extends UnitTest {
   }
 
   @test 'should format times'() {
-    expedtedTimes.forEach((test) => {
-      expect(test.time.toString()).to.equal(test.text);
+    expedtedTimes.forEach((tst) => {
+      expect(tst.time.toString()).to.equal(tst.text);
     });
   }
 
   @test 'should parse times'() {
-    expedtedTimes.forEach((test) => {
-      expect(ShortTime.parse(test.text)).to.deep.equal(test.time);
+    expedtedTimes.forEach((tst) => {
+      expect(ShortTime.parse(tst.text)).to.deep.equal(tst.time);
     });
   }
 

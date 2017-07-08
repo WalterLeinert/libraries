@@ -39,11 +39,11 @@ class TestConverter {
 class SerializerConverterTest extends SerializerBaseTest {
 
   @test 'should serialize null/undefined'() {
-    const test = new TestConverter(11);
+    const value = new TestConverter(11);
 
-    const testSerialized = this.formatter.serialize(test);
+    const testSerialized = this.formatter.serialize(value);
     const testDeserialized = this.formatter.deserialize(testSerialized);
-    expect(test).to.eql(testDeserialized);
+    expect(value).to.eql(testDeserialized);
   }
 
 }

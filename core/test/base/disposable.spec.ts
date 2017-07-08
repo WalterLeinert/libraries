@@ -48,7 +48,7 @@ class DisposableTest extends UnitTest {
 
   @test 'should have 3 messages'() {
     const messages = [];
-    using(new Test(messages), (test) => {
+    using(new Test(messages), () => {
       // ok
     });
 
@@ -61,8 +61,8 @@ class DisposableTest extends UnitTest {
     const messages = [];
 
     expect(() => {
-      using(new Test(messages), (test) => {
-        test.throwException();
+      using(new Test(messages), (tst) => {
+        tst.throwException();
       });
 
     }).to.throw(NotImplementedException);

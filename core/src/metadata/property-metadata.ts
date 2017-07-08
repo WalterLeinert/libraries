@@ -21,6 +21,7 @@ export abstract class PropertyMetadata<T> extends Metadata<T> {
       return this.target.name;
     }
     if (this.target instanceof Object) {
+      // tslint:disable-next-line:ban-types
       return (this.target as Object).constructor.name;
     }
     throw new NotSupportedException(`name = ${this.name}: not supported target ${Core.stringify(this.target)}`);

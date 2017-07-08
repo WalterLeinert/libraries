@@ -4,4 +4,5 @@
  * (z.Zt. noch nicht verwendet; z.B. für culture, Formate)
  */
 export interface IConverterOptions {
+  unused: boolean;
 }

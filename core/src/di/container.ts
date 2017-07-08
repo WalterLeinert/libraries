@@ -1,8 +1,7 @@
-import { Injectable, OpaqueToken, Provider, ReflectiveInjector } from 'injection-js';
+import { OpaqueToken, ReflectiveInjector } from 'injection-js';
 
 import { Funktion } from '../base/objectType';
 import { InvalidOperationException } from '../exceptions/invalidOperationException';
-import { IGetter, InjectorBase } from './injector-base';
 
 
 export class Container {

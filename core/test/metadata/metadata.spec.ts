@@ -34,7 +34,7 @@ class TestPropertyMetadataFunktion extends PropertyMetadata<Funktion> {
 
 export function ClazzDecorator() {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: Funktion) {
+  return (target: Funktion) => {
     metadatas.push(new TestClassMetadata(target, target.name));
   };
 }
@@ -43,14 +43,14 @@ export function ClazzDecorator() {
 
 export function PropertyDecoratorObject() {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: object, propertyName: string) {
+  return (target: object, propertyName: string) => {
     metadatas.push(new TestPropertyMetadataObject(target, propertyName));
   };
 }
 
 export function PropertyDecoratorFunktion() {
   // tslint:disable-next-line:only-arrow-functions
-  return function (target: object, propertyName: string) {
+  return (target: object, propertyName: string) => {
     metadatas.push(new TestPropertyMetadataFunktion(target.constructor, propertyName));
   };
 }

@@ -1,7 +1,7 @@
 import { Core } from '../../src/diagnostics/core';
 import { InvalidOperationException } from '../../src/exceptions/invalidOperationException';
+import { Funktion } from './../base/objectType';
 import { Assert } from './../util/assert';
-
 
 /**
  * Basisklasse für alle Converter
@@ -12,7 +12,7 @@ import { Assert } from './../util/assert';
  */
 export abstract class ConverterBase {
 
-  constructor(private type: Function) {
+  constructor(private type: Funktion) {
     Assert.notNull(type);
   }
 
@@ -37,7 +37,7 @@ export abstract class ConverterBase {
     try {
       Assert.notNull(value);
 
-      if (!(value instanceof this.type)) {
+      if (!(value.constructor && (value.constructor === this.type))) {
         throw new Error(`invalid type ${this.type.name}: ${Core.stringify(value)}`);
       }
 

@@ -246,7 +246,7 @@ export class JsonSerializer {
         //
         // falls wir Metadaten haben, können wir eine konkrete Instanz erzeugen, sonst ein native Json-Object
         //
-        let instance = (clazzMetadata ? clazzMetadata.createInstance() : {});
+        const instance = (clazzMetadata ? clazzMetadata.createInstance() : {});
 
         // ... und dann die Werte der Zielentity zuweisen
         const propertyKeys = Reflect.ownKeys(json);

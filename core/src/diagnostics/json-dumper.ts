@@ -6,7 +6,7 @@ import { Suspender } from '../suspendable/suspender';
 import { Types } from '../types/types';
 
 
-class DumperInternal<T> extends ClonerBase<T> {
+class DumperInternal extends ClonerBase {
   private indenter: Indenter = new Indenter();
   private sb: StringBuilder = new StringBuilder();
 
@@ -164,7 +164,7 @@ export class JsonDumper {
    * @memberOf Clone
    */
   public static stringify<T>(value: T, maxDepth: number = Number.MAX_VALUE): string {
-    const dumper = new DumperInternal<T>(maxDepth);
+    const dumper = new DumperInternal(maxDepth);
     dumper.dump<T>(value);
 
     return dumper.toString();

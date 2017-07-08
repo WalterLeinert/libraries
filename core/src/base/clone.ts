@@ -20,7 +20,7 @@ export class ReferenceFixup<T> {
 }
 
 
-export abstract class ClonerBase<T> {
+export abstract class ClonerBase {
   private static predefinedCloners: Dictionary<string, InstanceCreator<any>> =
   new Dictionary<string, InstanceCreator<any>>();
 
@@ -107,7 +107,7 @@ export abstract class ClonerBase<T> {
 }
 
 
-class Cloner<T> extends ClonerBase<T> {
+class Cloner extends ClonerBase {
   private fixups: Array<ReferenceFixup<any>> = [];
 
 
@@ -210,7 +210,7 @@ export class Clone {
    * @memberOf Clone
    */
   public static clone<T>(value: T, allowCycles: boolean = false): T {
-    const cloner = new Cloner<T>(allowCycles);
+    const cloner = new Cloner(allowCycles);
     const clonedValue = cloner.clone<T>(value);
     cloner.resolveFixups();
 

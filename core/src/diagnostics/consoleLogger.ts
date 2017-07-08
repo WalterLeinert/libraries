@@ -1,3 +1,5 @@
+// tslint:disable:no-console
+
 import * as moment from 'moment';
 
 import { Inject, Injectable } from 'injection-js';
@@ -34,7 +36,6 @@ export class ConsoleLogger implements ILogger {
     if (this.isTraceEnabled()) {
       const sb = this.createLogPrefix(levels.TRACE);
       sb.append(message);
-      // tslint:disable-next-line:no-console
       console.trace(sb.toString(), ...args);
     }
   }
@@ -43,7 +44,6 @@ export class ConsoleLogger implements ILogger {
     if (this.isDebugEnabled()) {
       const sb = this.createLogPrefix(levels.DEBUG);
       sb.append(message);
-      // tslint:disable-next-line:no-console
       console.log(sb.toString(), ...args);
     }
   }
@@ -52,7 +52,6 @@ export class ConsoleLogger implements ILogger {
     if (this.isInfoEnabled()) {
       const sb = this.createLogPrefix(levels.INFO);
       sb.append(message);
-      // tslint:disable-next-line:no-console
       console.info(sb.toString(), ...args);
     }
   }

@@ -39,18 +39,18 @@ class DictionaryTester<TKey, TValue> {
 
   public doTest(expected: Array<ITestData<TKey, TValue>>) {
     // @test 'validate keys vs values'() {
-    expected.forEach((test) => {
-      expect(test.keys.length).to.be.equal(test.values.length);
+    expected.forEach((tst) => {
+      expect(tst.keys.length).to.be.equal(tst.values.length);
     });
 
 
     // @test 'should set an item'() {
-    expected.forEach((test) => {
+    expected.forEach((tst) => {
       const dict = new Dictionary<TKey, TValue>();
 
-      for (let i = 0; i < test.keys.length; i++) {
-        const key = test.keys[i];
-        const value = test.values[i];
+      for (let i = 0; i < tst.keys.length; i++) {
+        const key = tst.keys[i];
+        const value = tst.values[i];
 
         expect(() => dict.set(key, value)).not.to.Throw();
         expect(dict.count).to.be.equal(i + 1);
@@ -58,21 +58,21 @@ class DictionaryTester<TKey, TValue> {
     });
 
     // @test 'should get an item'() {
-    expected.forEach((test) => {
+    expected.forEach((tst) => {
       const dict = new Dictionary<TKey, TValue>();
 
       // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < test.keys.length; i++) {
-        const key = test.keys[i];
-        const value = test.values[i];
+      for (let i = 0; i < tst.keys.length; i++) {
+        const key = tst.keys[i];
+        const value = tst.values[i];
 
         expect(() => dict.set(key, value)).not.to.Throw();
       }
 
       // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < test.keys.length; i++) {
-        const key = test.keys[i];
-        const value = test.values[i];
+      for (let i = 0; i < tst.keys.length; i++) {
+        const key = tst.keys[i];
+        const value = tst.values[i];
 
         expect(dict.get(key)).to.deep.equal(value);
       }
@@ -80,118 +80,118 @@ class DictionaryTester<TKey, TValue> {
 
 
     // @test 'should remove an item'() {
-    expected.forEach((test) => {
+    expected.forEach((tst) => {
       const dict = new Dictionary<TKey, TValue>();
 
       // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < test.keys.length; i++) {
-        const key = test.keys[i];
-        const value = test.values[i];
+      for (let i = 0; i < tst.keys.length; i++) {
+        const key = tst.keys[i];
+        const value = tst.values[i];
 
         dict.set(key, value);
       }
 
-      for (let i = 0; i < test.keys.length; i++) {
-        const key = test.keys[i];
+      for (let i = 0; i < tst.keys.length; i++) {
+        const key = tst.keys[i];
 
         expect(() => dict.remove(key)).not.to.Throw();
-        expect(dict.count).to.be.equal(test.keys.length - (i + 1));
+        expect(dict.count).to.be.equal(tst.keys.length - (i + 1));
       }
     });
 
 
 
     // @test 'should test for existence'() {
-    expected.forEach((test) => {
+    expected.forEach((tst) => {
       const dict = new Dictionary<TKey, TValue>();
 
       // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < test.keys.length; i++) {
-        const key = test.keys[i];
-        const value = test.values[i];
+      for (let i = 0; i < tst.keys.length; i++) {
+        const key = tst.keys[i];
+        const value = tst.values[i];
 
         dict.set(key, value);
       }
 
       // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < test.keys.length; i++) {
-        const key = test.keys[i];
+      for (let i = 0; i < tst.keys.length; i++) {
+        const key = tst.keys[i];
         expect(dict.containsKey(key)).to.be.true;
       }
     });
 
 
     // @test 'should test for non existence'() {
-    expected.forEach((test) => {
+    expected.forEach((tst) => {
       const dict = new Dictionary<TKey, TValue>();
 
       // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < test.keys.length; i++) {
-        const key = test.keys[i];
-        const value = test.values[i];
+      for (let i = 0; i < tst.keys.length; i++) {
+        const key = tst.keys[i];
+        const value = tst.values[i];
 
         dict.set(key, value);
       }
 
-      expect(dict.containsKey(test.noSuchKey)).to.be.false;
+      expect(dict.containsKey(tst.noSuchKey)).to.be.false;
     });
 
 
     // @test 'should test empty keys'() {
-    expected.forEach((test) => {
+    expected.forEach((tst) => {
       const dict = new Dictionary<TKey, TValue>();
       expect(dict.keys.length).to.be.equal(0);
     });
 
 
     // @test 'should test empty values'() {
-    expected.forEach((test) => {
+    expected.forEach((tst) => {
       const dict = new Dictionary<TKey, TValue>();
       expect(dict.values.length).to.be.equal(0);
     });
 
 
     // @test 'should test keys'() {
-    expected.forEach((test) => {
+    expected.forEach((tst) => {
       const dict = new Dictionary<TKey, TValue>();
 
       // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < test.keys.length; i++) {
-        const key = test.keys[i];
-        const value = test.values[i];
+      for (let i = 0; i < tst.keys.length; i++) {
+        const key = tst.keys[i];
+        const value = tst.values[i];
 
         dict.set(key, value);
       }
 
-      expect(dict.keys.length).to.be.equal(test.keys.length);
-      expect(dict.keys).to.be.deep.equal(test.keys);
+      expect(dict.keys.length).to.be.equal(tst.keys.length);
+      expect(dict.keys).to.be.deep.equal(tst.keys);
     });
 
     // @test 'should test values'() {
-    expected.forEach((test) => {
+    expected.forEach((tst) => {
       const dict = new Dictionary<TKey, TValue>();
 
       // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < test.keys.length; i++) {
-        const key = test.keys[i];
-        const value = test.values[i];
+      for (let i = 0; i < tst.keys.length; i++) {
+        const key = tst.keys[i];
+        const value = tst.values[i];
 
         dict.set(key, value);
       }
 
-      expect(dict.values.length).to.be.equal(test.values.length);
-      expect(dict.values).to.be.deep.equal(test.values);
+      expect(dict.values.length).to.be.equal(tst.values.length);
+      expect(dict.values).to.be.deep.equal(tst.values);
     });
 
 
     // @test 'should test clear'() {
-    expected.forEach((test) => {
+    expected.forEach((tst) => {
       const dict = new Dictionary<TKey, TValue>();
 
       // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < test.keys.length; i++) {
-        const key = test.keys[i];
-        const value = test.values[i];
+      for (let i = 0; i < tst.keys.length; i++) {
+        const key = tst.keys[i];
+        const value = tst.values[i];
 
         dict.set(key, value);
       }
@@ -202,15 +202,15 @@ class DictionaryTester<TKey, TValue> {
 
 
     // @test 'should test isEmpty'() {
-    expected.forEach((test) => {
+    expected.forEach((tst) => {
       const dict = new Dictionary<TKey, TValue>();
 
       expect(dict.isEmpty).to.be.true;
 
       // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < test.keys.length; i++) {
-        const key = test.keys[i];
-        const value = test.values[i];
+      for (let i = 0; i < tst.keys.length; i++) {
+        const key = tst.keys[i];
+        const value = tst.values[i];
 
         dict.set(key, value);
       }

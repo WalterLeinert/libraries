@@ -109,10 +109,10 @@ class ConverterTest extends UnitTest {
 
 
   @test 'should convert from'() {
-    tests.forEach((test) => {
-      const converter = ConverterRegistry.get(test.type);
+    tests.forEach((tst) => {
+      const converter = ConverterRegistry.get(tst.type);
 
-      for (const data of test.success) {
+      for (const data of tst.success) {
         expect(converter.convert(data.value)).to.eql(data.expectedValue);
         expect(converter.convertBack(data.expectedValue)).to.eql(data.value);
       }
@@ -126,10 +126,10 @@ class ConverterFailureTest extends UnitTest {
 
   @test 'should convert and throw exceptions'() {
 
-    tests.forEach((test) => {
-      const converter = ConverterRegistry.get(test.type);
+    tests.forEach((tst) => {
+      const converter = ConverterRegistry.get(tst.type);
 
-      for (const data of test.failure) {
+      for (const data of tst.failure) {
         if (data.back && data.back === true) {
           expect(() => converter.convertBack(data.value)).to.throw(data.expectedException);
         } else {

@@ -24,12 +24,12 @@ class Test extends UniqueIdentifiable {
   private valueSymbol = Symbol(12);
 
 
-  constructor(public id: number, private _test: boolean) {
+  constructor(public id: number, private _testFlag: boolean) {
     super();
   }
 
-  public get test(): boolean {
-    return this._test;
+  public get testFlag(): boolean {
+    return this._testFlag;
   }
 
   // tslint:disable-next-line:no-unused-variable
@@ -43,8 +43,8 @@ class TestDerived extends Test {
   // tslint:disable-next-line:no-unused-variable
   private names: string[] = ['a', 'b', 'c'];
 
-  constructor(public name: string, id: number, private _today: Date, test: boolean = true) {
-    super(id, test);
+  constructor(public name: string, id: number, private _today: Date, dotest: boolean = true) {
+    super(id, dotest);
     // ok
   }
 
@@ -83,14 +83,14 @@ class ClonePrimitivesTest extends UnitTest {
 
   @test 'should clone all primitives'() {
     primitiveTests.forEach((primitiveTest) => {
-      const test = primitiveTest.value;
+      const value = primitiveTest.value;
 
-      expect(Types.isPrimitive(test)).to.be.true;
-      expect(typeof test).to.equal(primitiveTest.type);
+      expect(Types.isPrimitive(value)).to.be.true;
+      expect(typeof value).to.equal(primitiveTest.type);
 
-      const testCloned = Clone.clone(test);
-      expect(testCloned).to.deep.equal(test);
-      expect(() => CloneVerifier.verifyClone(test, testCloned)).not.to.Throw();
+      const testCloned = Clone.clone(value);
+      expect(testCloned).to.deep.equal(value);
+      expect(() => CloneVerifier.verifyClone(value, testCloned)).not.to.Throw();
     });
 
   }
@@ -101,33 +101,33 @@ class ClonePrimitivesTest extends UnitTest {
 class CloneTest extends UnitTest {
 
   @test 'should check TestDerived properties'() {
-    const test = new TestDerived('Walter', 4711, new Date());
-    expect(test.id).to.equal(4711);
-    expect(test.name).to.equal('Walter');
+    const value = new TestDerived('Walter', 4711, new Date());
+    expect(value.id).to.equal(4711);
+    expect(value.name).to.equal('Walter');
   }
 
 
   @test 'should clone null'() {
-    const test = null;
-    const testCloned = Clone.clone<TestDerived>(test);
-    expect(testCloned).to.deep.equal(test);
-    expect(() => CloneVerifier.verifyClone(test, testCloned)).not.to.Throw();
+    const value = null;
+    const testCloned = Clone.clone<TestDerived>(value);
+    expect(testCloned).to.deep.equal(value);
+    expect(() => CloneVerifier.verifyClone(value, testCloned)).not.to.Throw();
   }
 
   @test 'should clone undefined'() {
-    const test = null;
-    const testCloned = Clone.clone<TestDerived>(test);
-    expect(testCloned).to.deep.equal(test);
-    expect(() => CloneVerifier.verifyClone(test, testCloned)).not.to.Throw();
+    const value = null;
+    const testCloned = Clone.clone<TestDerived>(value);
+    expect(testCloned).to.deep.equal(value);
+    expect(() => CloneVerifier.verifyClone(value, testCloned)).not.to.Throw();
   }
 
 
 
   @test 'should test instance identity'() {
-    const test = new TestDerived('Walter', 4711, new Date());
-    expect(test).to.deep.equal(test);
-    expect(test).to.equal(test);
-    expect(test === test).to.be.true;
+    const value = new TestDerived('Walter', 4711, new Date());
+    expect(value).to.deep.equal(value);
+    expect(value).to.equal(value);
+    expect(value === value).to.be.true;
   }
 
 
@@ -141,19 +141,19 @@ class CloneTest extends UnitTest {
 
 
   @test 'should clone'() {
-    const test = new TestDerived('Walter', 4711, new Date());
-    const testCloned = Clone.clone<TestDerived>(test);
+    const value = new TestDerived('Walter', 4711, new Date());
+    const testCloned = Clone.clone<TestDerived>(value);
 
     // Test so nicht möglich, da sich die Instanzen in der instanceId unterscheiden (UniqueIdentifiable)!
     // expect(testCloned).to.deep.equal(test);
 
-    expect(test === testCloned).to.be.not.true;
-    expect(() => CloneVerifier.verifyClone(test, testCloned)).not.to.Throw();
+    expect(value === testCloned).to.be.not.true;
+    expect(() => CloneVerifier.verifyClone(value, testCloned)).not.to.Throw();
   }
 
   @test 'should verifyClone'() {
-    const test = new TestDerived('Walter', 4711, new Date());
-    expect(() => CloneVerifier.verifyClone(test, test)).to.Throw();
+    const value = new TestDerived('Walter', 4711, new Date());
+    expect(() => CloneVerifier.verifyClone(value, value)).to.Throw();
   }
 
 }
@@ -177,13 +177,13 @@ class TestWithClone {
 class CloneByCloneTest extends UnitTest {
 
   @test 'should clone'() {
-    const test = new TestWithClone(4711, false);
-    const testCloned = Clone.clone(test);
-    expect(testCloned).to.deep.equal(test);
+    const value = new TestWithClone(4711, false);
+    const valueCloned = Clone.clone(value);
+    expect(valueCloned).to.deep.equal(value);
 
     // TestWithClone ist kein UniqueIdentifiable -> es darf nicht auf Zyklen getestet werden,
     // da sonst Error in Dictionary
-    expect(() => CloneVerifier.verifyClone(test, testCloned, false)).not.to.Throw();
+    expect(() => CloneVerifier.verifyClone(value, valueCloned, false)).not.to.Throw();
   }
 
 }

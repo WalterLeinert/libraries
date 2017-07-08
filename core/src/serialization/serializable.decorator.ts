@@ -16,8 +16,8 @@ import { SerializerMetadataStorage } from './metadata/serializer-metadata-storag
  * @returns
  */
 export function Serializable(serializable: boolean = true) {
-  // tslint:disable-next-line:only-arrow-functions
-  return function (target: any, propertyName?: string, descriptor?: PropertyDescriptor) {
+
+  return (target: any, propertyName?: string, descriptor?: PropertyDescriptor) => {
 
     if (Utility.isNullOrEmpty(propertyName)) {
       Assert.that(serializable === true, `serialiable may not be set to false for classes`);

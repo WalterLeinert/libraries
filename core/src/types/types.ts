@@ -145,7 +145,7 @@ export class Types {
   public static hasConstructor(clazz: any): boolean {
     Assert.notNull(clazz);
     try {
-      // tslint:disable-next-line:no-unused-new
+      // tslint:disable-next-line:no-unused-expression
       new clazz();
       return true;
     } catch (exc) {

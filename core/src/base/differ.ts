@@ -9,7 +9,7 @@ import { ClonerBase } from './clone';
 
 
 
-class DifferInternal<T> extends ClonerBase<T> {
+class DifferInternal extends ClonerBase {
   protected static readonly logger = getLogger(DifferInternal);
 
   /**
@@ -95,7 +95,7 @@ export class Differ {
    * @memberof Differ
    */
   public static diff<T>(obj1: T, obj2: T, checkCycles: boolean = false) {
-    const differ = new DifferInternal<T>(checkCycles);
+    const differ = new DifferInternal(checkCycles);
     differ.diff<T>(obj1, obj2);
   }
 }

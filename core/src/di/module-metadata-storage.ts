@@ -1,26 +1,11 @@
-import { Injectable, OpaqueToken, Provider, ReflectiveInjector } from 'injection-js';
-
-
-// -------------------------------------- logging --------------------------------------------
-import { using } from '../base/disposable';
-import { levels } from '../diagnostics/level';
-// tslint:disable-next-line:no-unused-variable
-import { ILogger } from '../diagnostics/logger.interface';
-import { getLogger } from '../diagnostics/logging-core';
-import { XLog } from '../diagnostics/xlog';
-// -------------------------------------- logging --------------------------------------------
-
-
 import { Funktion } from '../base/objectType';
 import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { Metadata } from '../metadata/metadata';
 import { Dictionary } from '../types/dictionary';
-import { Types } from '../types/types';
 import { Assert } from '../util/assert';
 
 import { ComponentMetadata } from './component-metadata';
 import { ModuleMetadata } from './module-metadata';
-import { IModuleOptions } from './module-options.interface';
 
 export class ModuleMetadataStorage {
   private static _instance = new ModuleMetadataStorage();

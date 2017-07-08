@@ -49,8 +49,8 @@ class DeprecatedTest extends UnitTest {
 
   @test 'should initiate deprecated warnings by diagnostics logging'() {
 
-    tester((test, test2, test3) => {
-      const t = new test();
+    tester((test1, test2, test3) => {
+      const t = new test1();
       const level = t.getLogLevel();
       expect(level).to.equal(0);
 

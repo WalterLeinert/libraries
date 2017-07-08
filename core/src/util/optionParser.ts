@@ -98,9 +98,8 @@ export class Option<T> implements IOption {
  * Interface für Funktion zum Parsen von Custom-Types
  */
 // tslint:disable-next-line:callable-types
-export interface IParseFunc {
-  (option: any, optstr: string, arg: string): any;
-}
+export type IParseFunc = (option: any, optstr: string, arg: string) => any;
+
 
 /**
  * Interface für Custom-Options

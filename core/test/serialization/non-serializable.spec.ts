@@ -37,14 +37,14 @@ class TestNonSerializable {
 class NonSerializableTest extends SerializerBaseTest {
 
   @test 'should skip non serializable property'() {
-    const test = new TestNonSerializable('hugo', 'hirsch');
+    const value = new TestNonSerializable('hugo', 'hirsch');
 
-    const testSerialized = this.formatter.serialize(test);
+    const testSerialized = this.formatter.serialize(value);
     const testDeserialized = this.formatter.deserialize(testSerialized);
 
-    expect(test.firstname).to.equal((testDeserialized as any).firstname);
-    expect(test.lastname).to.equal((testDeserialized as any).lastname);
-    expect(test.internal).to.exist;
+    expect(value.firstname).to.equal((testDeserialized as any).firstname);
+    expect(value.lastname).to.equal((testDeserialized as any).lastname);
+    expect(value.internal).to.exist;
     expect((testDeserialized as any).internal).to.not.exist;
   }
 
