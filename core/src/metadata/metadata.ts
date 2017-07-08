@@ -1,3 +1,7 @@
+import { Funktion } from '../base/objectType';
+import { Types } from '../types/types';
+import { Assert } from '../util/assert';
+
 
 /**
  * abstrakte Basisklasse zur Modellierung von Metadaten
@@ -35,5 +39,17 @@ export abstract class Metadata<T> {
   }
 
   public abstract get targetName(): string;
+
+
+  public static getTargetName(target: string | Funktion) {
+    Assert.notNull(target);
+
+    if (Types.isString(target)) {
+      const targetName = target as string;
+      Assert.notNullOrEmpty(targetName);
+      return targetName;
+    }
+    return (target as Funktion).name;
+  }
 }
 

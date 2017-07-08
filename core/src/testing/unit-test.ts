@@ -4,10 +4,14 @@
 import 'reflect-metadata';
 
 // -------------------------------------- logging --------------------------------------------
+import { using } from '../base/disposable';
 import { IConfig } from '../diagnostics/config.interface';
+import { levels } from '../diagnostics/level';
 // tslint:disable-next-line:no-unused-variable
 import { ILogger } from '../diagnostics/logger.interface';
+import { getLogger } from '../diagnostics/logging-core';
 import { configure } from '../diagnostics/logging-core';
+import { XLog } from '../diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
 
@@ -41,5 +45,4 @@ export abstract class UnitTest {
       { provide: STRINGIFYER, useClass: SimpleStringifyer }   // default
     ]);
   }
-
 }

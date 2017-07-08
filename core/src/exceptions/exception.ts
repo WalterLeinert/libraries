@@ -1,5 +1,6 @@
 import { StringBuilder } from '../base/stringBuilder';
 import { CoreInjector } from '../di/core-injector';
+import { ConsoleLogger } from '../diagnostics/consoleLogger';
 import { ILogger } from '../diagnostics/logger.interface';
 import { LOG_EXCEPTIONS, LOGGER } from '../diagnostics/logger.token';
 import { Utility } from '../util/utility';
@@ -39,6 +40,8 @@ export function assert(condition: boolean, message?: string): void {
  * @extends {Error}
  */
 export abstract class Exception implements IException {
+  protected static readonly logger = new ConsoleLogger(Exception);
+
   private _nativeError: Error;
   private _message: string;
   private _innerException: IException;
@@ -74,7 +77,7 @@ export abstract class Exception implements IException {
     const logException: boolean = this.isPresent(CoreInjector.instance.getInstance<boolean>(LOG_EXCEPTIONS, true));
 
     if (logException) {
-      const logger = CoreInjector.instance.getInstance<ILogger>(LOGGER);
+      const logger = CoreInjector.instance.getInstance<ILogger>(LOGGER, Exception.logger);
       if (logger) {
         logger.error(`kind: ${this.kind}, message: ${this.message}, stack: ${this.stack}`);
       }
