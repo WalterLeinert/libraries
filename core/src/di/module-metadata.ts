@@ -23,9 +23,9 @@ import { IModuleOptions } from './module-options.interface';
 export class ModuleMetadata extends ClassMetadata {
   protected static readonly logger = getLogger(ModuleMetadata);
 
-  private importsDict: Dictionary<string, ModuleMetadata> = new Dictionary<string, ModuleMetadata>();
-  private declarationsDict: Dictionary<string, ComponentMetadata> = new Dictionary<string, ComponentMetadata>();
-  private exportsDict: Dictionary<string, ComponentMetadata> = new Dictionary<string, ComponentMetadata>();
+  private importsDict: Dictionary<Funktion, ModuleMetadata> = new Dictionary<Funktion, ModuleMetadata>();
+  private declarationsDict: Dictionary<Funktion, ComponentMetadata> = new Dictionary<Funktion, ComponentMetadata>();
+  private exportsDict: Dictionary<Funktion, ComponentMetadata> = new Dictionary<Funktion, ComponentMetadata>();
   private _providers: Provider[] = [];
 
 
@@ -47,7 +47,7 @@ export class ModuleMetadata extends ClassMetadata {
               `imports: module ${item.name} already registered`);
 
             duplicates.add(item);
-            this.importsDict.set(imprt.name, imprt);
+            this.importsDict.set(imprt.target, imprt);
           });
         }
 
@@ -56,7 +56,7 @@ export class ModuleMetadata extends ClassMetadata {
             const declaration = this.metadataStorage.findComponentMetadata(item);
             Assert.notNull(declaration, `declarations: component ${item.name} not registered`);
 
-            this.declarationsDict.set(declaration.name, declaration);
+            this.declarationsDict.set(declaration.target, declaration);
           });
         }
 
@@ -65,7 +65,7 @@ export class ModuleMetadata extends ClassMetadata {
             const exprt = this.metadataStorage.findComponentMetadata(item);
             Assert.notNull(exprt, `exports: component ${item.name} not registered`);
 
-            this.exportsDict.set(exprt.name, exprt);
+            this.exportsDict.set(exprt.target, exprt);
           });
 
         }
@@ -77,24 +77,24 @@ export class ModuleMetadata extends ClassMetadata {
   }
 
 
-  public getImport(target: string | Funktion) {
-    return this.importsDict.get(Metadata.getTargetName(target));
+  public getImport(target: Funktion) {
+    return this.importsDict.get(target);
   }
 
   public getImportMetadata(target: string | Funktion) {
     return this.metadataStorage.findModuleMetadata(target);
   }
 
-  public getDeclaration(target: string | Funktion) {
-    return this.declarationsDict.get(Metadata.getTargetName(target));
+  public getDeclaration(target: Funktion) {
+    return this.declarationsDict.get(target);
   }
 
   public getDeclarationMetadata(target: string | Funktion) {
     return this.metadataStorage.findModuleMetadata(target);
   }
 
-  public getExport(target: string | Funktion) {
-    return this.exportsDict.get(Metadata.getTargetName(target));
+  public getExport(target: Funktion) {
+    return this.exportsDict.get(target);
   }
 
   public get imports(): ModuleMetadata[] {
