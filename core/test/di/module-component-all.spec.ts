@@ -60,25 +60,27 @@ export class TestModuleComponentAll {
 class ModuleAllTest extends UnitTest {
   private metadata: ModuleMetadata;
 
+
+
+  @test 'should check imports'() {
+    expect(this.metadata.imports.length).to.equal(1);
+    expect(this.metadata.imports[0].name).to.equal(ChildModule.name);
+  }
+
   @test 'should have one declaration'() {
     expect(this.metadata.declarations.length).to.equal(1);
     expect(this.metadata.declarations[0].name).to.equal(TestAllComponent.name);
   }
 
 
-  @test 'should check imports'() {
-    expect(this.metadata.imports).to.exist;
-    expect(this.metadata.imports.length).to.equal(1);
-  }
-
   @test 'should check exports'() {
-    expect(this.metadata.exports).to.exist;
     expect(this.metadata.exports.length).to.equal(1);
+    expect(this.metadata.exports[0].name).to.equal(TestAllComponent.name);
   }
 
   @test 'should check providers'() {
-    expect(this.metadata.providers).to.exist;
     expect(this.metadata.providers.length).to.equal(1);
+    expect(this.metadata.providers[0]).to.equal(ProviderClass);
   }
 
   protected before() {
