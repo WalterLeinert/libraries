@@ -80,10 +80,10 @@ export abstract class ServiceRequestsSelectorComponent<T extends IEntity<TId>, T
     this.changeDetectorRef.markForCheck();
   }
 
-  protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T>): void {
+  protected onStoreUpdated<TUpdate extends IEntity<TUpdateId>, TUpdateId>(command: ServiceCommand<TUpdate>): void {
     super.onStoreUpdated(command);
 
-    const state = this.getStoreState<IExtendedCrudServiceState<T, TId>>(this.serviceRequests.storeId);
+    const state = this.getStoreState<IExtendedCrudServiceState<TUpdate, TUpdateId>>(this.serviceRequests.storeId);
 
     if (command.storeId === this.serviceRequests.storeId) {
       if (command instanceof CurrentItemSetCommand) {
@@ -119,7 +119,7 @@ export abstract class ServiceRequestsSelectorComponent<T extends IEntity<TId>, T
    *
    * @param item TODO: in Basisklasse (ggf. abstrakt) verschieben
    */
-  protected getValueForItem<T extends IEntity<TId>, TId>(item: T): any {
+  protected getValueForItem<TItem extends IEntity<TItemId>, TItemId>(item: TItem): any {
     let rval: any;
 
     if (!Types.isPresent(item)) {

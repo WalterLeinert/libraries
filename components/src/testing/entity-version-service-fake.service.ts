@@ -15,4 +15,6 @@ import { ENTITY_VERSION_SERVICE, EntityVersionServiceFake } from '@fluxgate/comm
 export class EntityVersionServiceFakeService extends EntityVersionServiceFake {
 }
 
-export const ENTITY_VERSION_SERVICE_FAKE_PROVIDER = { provide: ENTITY_VERSION_SERVICE, useClass: EntityVersionServiceFakeService };
+export const ENTITY_VERSION_SERVICE_FAKE_PROVIDER = {
+  provide: ENTITY_VERSION_SERVICE, useClass: EntityVersionServiceFakeService
+};
