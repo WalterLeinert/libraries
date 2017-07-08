@@ -49,6 +49,7 @@ export class JsonReader {
           const config = JSON.parse(data.toString()) as T;
           cb(null, config);
         } catch (err) {
+          // tslint:disable-next-line:no-console
           console.error(`Die Json-Konfiguration ${jsonPath} ist kein gültiges JSON-Format.`);
           cb(err, null);
         }
