@@ -24,15 +24,6 @@ import { Module } from '../../src/di/module.decorator';
 
 import { UnitTest } from '../../src/testing/unit-test';
 
-const init = (() => {
-  CoreInjector.instance.resolveAndCreate([
-    { provide: DEFAULT_CATEGORY, useValue: 'test' },
-    { provide: LOGGER, useClass: ConsoleLogger },
-    { provide: LOG_EXCEPTIONS, useValue: true },
-    { provide: STRINGIFYER, useClass: SimpleStringifyer }
-  ]);
-});
-
 
 @Module({
 })

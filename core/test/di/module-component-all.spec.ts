@@ -27,46 +27,62 @@ import { UnitTest } from '../../src/testing/unit-test';
 
 @Component({
 })
-export class TestComponent {
+export class TestAllComponent {
 }
-
 
 @Module({
+})
+export class ChildModule {
+}
+
+class ProviderClass {
+}
+
+@Module({
+  imports: [
+    ChildModule
+  ],
   declarations: [
-    TestComponent
+    TestAllComponent
+  ],
+  exports: [
+    TestAllComponent
+  ],
+  providers: [
+    ProviderClass
   ]
 })
-export class TestModuleComponent {
+export class TestModuleComponentAll {
 }
 
 
-@suite('core.di.Module: declarations')
-class ModuleTest extends UnitTest {
+@suite('core.di.Module: imports, declarations, exports, providers')
+class ModuleAllTest extends UnitTest {
   private metadata: ModuleMetadata;
 
   @test 'should have one declaration'() {
     expect(this.metadata.declarations.length).to.equal(1);
-    expect(this.metadata.declarations[0].name).to.equal(TestComponent.name);
+    expect(this.metadata.declarations[0].name).to.equal(TestAllComponent.name);
   }
 
 
   @test 'should check imports'() {
     expect(this.metadata.imports).to.exist;
-    expect(this.metadata.imports.length).to.equal(0);
+    expect(this.metadata.imports.length).to.equal(1);
   }
 
   @test 'should check exports'() {
     expect(this.metadata.exports).to.exist;
-    expect(this.metadata.exports.length).to.equal(0);
+    expect(this.metadata.exports.length).to.equal(1);
   }
 
   @test 'should check providers'() {
     expect(this.metadata.providers).to.exist;
-    expect(this.metadata.providers.length).to.equal(0);
+    expect(this.metadata.providers.length).to.equal(1);
   }
 
   protected before() {
     super.before();
-    this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(TestModuleComponent);
+    this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(TestModuleComponentAll);
   }
 }
