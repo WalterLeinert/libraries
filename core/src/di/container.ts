@@ -1,9 +1,11 @@
 import { OpaqueToken, ReflectiveInjector } from 'injection-js';
 
 import { Funktion } from '../base/objectType';
+import { Deprecated } from '../decorator/deprecated.decorator';
 import { InvalidOperationException } from '../exceptions/invalidOperationException';
 
 
+@Deprecated(`wird durch @Module/Component abgelöst`)
 export class Container {
   private _injector: ReflectiveInjector;
   private _parent: Container;
