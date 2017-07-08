@@ -34,42 +34,49 @@ const init = (() => {
 });
 
 
-@Module({
+
+@Component({
 })
-export class TestModule {
+export class TestComponent {
 }
 
 
 @Module({
-  imports: [
-    TestModule,
-    // TestModule -> assertion: module already registered
-  ],
-  providers: [
+  declarations: [
+    TestComponent
   ]
 })
-export class CoreModule {
-
+export class TestModuleComponent {
 }
 
 
-@suite('core.di.Module')
+@suite('core.di.Module: declarations')
 class ModuleTest extends UnitTest {
   private metadata: ModuleMetadata;
 
-  @test 'should annotate and register module'() {
-    expect(this.metadata).to.be.not.null;
-    expect(this.metadata.name).to.equal(CoreModule.name);
+  @test 'should have one declaration'() {
+    expect(this.metadata.declarations.length).to.equal(1);
+    expect(this.metadata.declarations[0].name).to.equal(TestComponent.name);
   }
 
-  @test 'should have one import'() {
-    expect(this.metadata.imports.length).to.equal(1);
-    expect(this.metadata.imports[0].name).to.equal(TestModule.name);
+
+  @test 'should check imports'() {
+    expect(this.metadata.imports).to.exist;
+    expect(this.metadata.imports.length).to.equal(0);
   }
 
+  @test 'should check exports'() {
+    expect(this.metadata.exports).to.exist;
+    expect(this.metadata.exports.length).to.equal(0);
+  }
+
+  @test 'should check providers'() {
+    expect(this.metadata.providers).to.exist;
+    expect(this.metadata.providers.length).to.equal(0);
+  }
 
   protected before() {
     super.before();
-    this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(CoreModule);
+    this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(TestModuleComponent);
   }
 }

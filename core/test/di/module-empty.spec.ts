@@ -21,55 +21,56 @@ import { Component } from '../../src/di/component.decorator';
 import { ModuleMetadata } from '../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../src/di/module-metadata-storage';
 import { Module } from '../../src/di/module.decorator';
-
 import { UnitTest } from '../../src/testing/unit-test';
-
-const init = (() => {
-  CoreInjector.instance.resolveAndCreate([
-    { provide: DEFAULT_CATEGORY, useValue: 'test' },
-    { provide: LOGGER, useClass: ConsoleLogger },
-    { provide: LOG_EXCEPTIONS, useValue: true },
-    { provide: STRINGIFYER, useClass: SimpleStringifyer }
-  ]);
-});
-
-
-@Module({
-})
-export class TestModule {
-}
 
 
 @Module({
   imports: [
-    TestModule,
-    // TestModule -> assertion: module already registered
+  ],
+  declarations: [
+  ],
+  exports: [
   ],
   providers: [
   ]
 })
-export class CoreModule {
-
+export class TestModuleEmpty {
 }
 
 
-@suite('core.di.Module')
+@suite('core.di.Module: no imports, declarations, etc.')
 class ModuleTest extends UnitTest {
   private metadata: ModuleMetadata;
 
   @test 'should annotate and register module'() {
     expect(this.metadata).to.be.not.null;
-    expect(this.metadata.name).to.equal(CoreModule.name);
+    expect(this.metadata.name).to.equal(TestModuleEmpty.name);
   }
 
-  @test 'should have one import'() {
-    expect(this.metadata.imports.length).to.equal(1);
-    expect(this.metadata.imports[0].name).to.equal(TestModule.name);
+
+  @test 'should check imports'() {
+    expect(this.metadata.imports).to.exist;
+    expect(this.metadata.imports.length).to.equal(0);
+  }
+
+  @test 'should check declarations'() {
+    expect(this.metadata.declarations).to.exist;
+    expect(this.metadata.declarations.length).to.equal(0);
+  }
+
+  @test 'should check exports'() {
+    expect(this.metadata.exports).to.exist;
+    expect(this.metadata.exports.length).to.equal(0);
+  }
+
+  @test 'should check providers'() {
+    expect(this.metadata.providers).to.exist;
+    expect(this.metadata.providers.length).to.equal(0);
   }
 
 
   protected before() {
     super.before();
-    this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(CoreModule);
+    this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(TestModuleEmpty);
   }
 }

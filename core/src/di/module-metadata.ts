@@ -26,7 +26,7 @@ export class ModuleMetadata extends ClassMetadata {
   private importsDict: Dictionary<string, ModuleMetadata> = new Dictionary<string, ModuleMetadata>();
   private declarationsDict: Dictionary<string, ComponentMetadata> = new Dictionary<string, ComponentMetadata>();
   private exportsDict: Dictionary<string, ComponentMetadata> = new Dictionary<string, ComponentMetadata>();
-  private _providers: Provider[];
+  private _providers: Provider[] = [];
 
 
 
@@ -97,7 +97,19 @@ export class ModuleMetadata extends ClassMetadata {
     return this.exportsDict.get(Metadata.getTargetName(target));
   }
 
-  public get providers(): Provider {
+  public get imports(): ModuleMetadata[] {
+    return this.importsDict.values;
+  }
+
+  public get declarations(): ComponentMetadata[] {
+    return this.declarationsDict.values;
+  }
+
+  public get exports(): ComponentMetadata[] {
+    return this.exportsDict.values;
+  }
+
+  public get providers(): Provider[] {
     return this._providers;
   }
 
