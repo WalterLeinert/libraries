@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/client",
-  "version": "2.2.8-beta.61",
+  "version": "2.2.8-beta.62",
   "description": "Fluxgate Client-Library ",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -19,7 +19,7 @@
     "@types/http-status-codes": "^1.0.29",
     "@types/jasmine": "^2.5.43",
     "@types/node": "7.0.14",
-    "codelyzer": "^3.0.0",
+    "codelyzer": "^3.1.2",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-env": "^0.4.0",
