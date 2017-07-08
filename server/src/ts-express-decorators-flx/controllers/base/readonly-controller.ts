@@ -43,7 +43,7 @@ export abstract class ReadonlyController<T extends IEntity<TId>, TId extends ITo
    *
    * @memberOf ControllerBase
    */
-  protected findByIdInternal<T extends IEntity<TId>>(
+  protected findByIdInternal(
     request: ISessionRequest,
     id: TId
   ): Promise<FindByIdResult<T, TId>> {

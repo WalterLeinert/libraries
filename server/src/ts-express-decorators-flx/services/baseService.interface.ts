@@ -17,8 +17,8 @@ import { IReadonlyService } from './readonly-service.interface';
  * @interface IBaseServiceRaw
  * @extends {IBaseService<any, any>}
  */
+// tslint:disable-next-line:no-empty-interface
 export interface IBaseServiceRaw extends IBaseService<any, any> {
-
 }
 
 

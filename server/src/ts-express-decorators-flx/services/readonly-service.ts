@@ -63,15 +63,15 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
    *
    * @memberOf ServiceBase
    */
-  public findById<T extends IEntity<TId>>(
+  public findById<TFindById extends IEntity<TId>>(
     request: ISessionRequest,
     id: TId,
     trxExisting?: Knex.Transaction
-  ): Promise<FindByIdResult<T, TId>> {
+  ): Promise<FindByIdResult<TFindById, TId>> {
 
     return using(new XLog(ReadonlyService.logger, levels.INFO, 'findById', `[${this.tableName}] id = ${id}`), (log) => {
 
-      return new Promise<FindByIdResult<T, TId>>((resolve, reject) => {
+      return new Promise<FindByIdResult<TFindById, TId>>((resolve, reject) => {
 
         const finder = (transaction: Knex.Transaction, useExistingTransaction: boolean) => {
           this.fromTable()
@@ -83,7 +83,7 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
                 log.info('result: no item found');
                 reject(this.createBusinessException(`table ${this.tableName}: item with id ${id} not found.`));
               } else {
-                const result = this.createModelInstance(rows[0]) as any as T;
+                const result = this.createModelInstance(rows[0]) as any as TFindById;
 
                 if (log.isDebugEnabled) {
                   //
@@ -109,7 +109,7 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
                     transaction.commit();
                   }
 
-                  resolve(new FindByIdResult<T, TId>(result, -1));
+                  resolve(new FindByIdResult<TFindById, TId>(result, -1));
                 }
               }
             })

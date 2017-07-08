@@ -88,7 +88,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
    *
    * @memberOf KnexTest
    */
-  protected static setup<TId>(serviceClass: ICtor<IBaseServiceRaw>,
+  protected static setup<TSetupId>(serviceClass: ICtor<IBaseServiceRaw>,
     generatorConfig: IEntityGeneratorConfig | ValueGenerator<any>,
     done: (err?: any) => void) {
     using(new XLog(KnexTest.logger, levels.INFO, 'static.setup'), (log) => {
@@ -335,8 +335,8 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
   /**
    * Helpermethode zum Erzeugen von Service-Klassen
    */
-  protected static createService<T>(model: ICtor<T>): T {
-    return Activator.createInstance<T>(model, KnexTest.knexService, KnexTest.metadataService);
+  protected static createService<TService>(model: ICtor<TService>): TService {
+    return Activator.createInstance<TService>(model, KnexTest.knexService, KnexTest.metadataService);
   }
 
   protected static get knexService(): KnexService {
