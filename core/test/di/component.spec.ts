@@ -17,50 +17,31 @@ import { STRINGIFYER } from '../../src/diagnostics/stringifyer.token';
 
 
 
+import { ComponentMetadata } from '../../src/di/component-metadata';
 import { Component } from '../../src/di/component.decorator';
-import { ModuleMetadata } from '../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../src/di/module-metadata-storage';
-import { Module } from '../../src/di/module.decorator';
+
 
 import { UnitTest } from '../../src/testing/unit-test';
 
 
-@Module({
+@Component({
 })
-export class TestModule {
+export class TestSingleComponent {
 }
 
+@suite('core.di.Component')
+class ComponentTest extends UnitTest {
+  private metadata: ComponentMetadata;
 
-@Module({
-  imports: [
-    TestModule,
-    // TestModule -> assertion: module already registered
-  ],
-  providers: [
-  ]
-})
-export class CoreModule {
-
-}
-
-
-@suite('core.di.Module')
-class ModuleTest extends UnitTest {
-  private metadata: ModuleMetadata;
-
-  @test 'should annotate and register module'() {
+  @test 'should annotate and register component'() {
     expect(this.metadata).to.be.not.null;
-    expect(this.metadata.target).to.equal(CoreModule);
-  }
-
-  @test 'should have one import'() {
-    expect(this.metadata.imports.length).to.equal(1);
-    expect(this.metadata.imports[0].target).to.equal(TestModule);
+    expect(this.metadata.target).to.equal(TestSingleComponent);
   }
 
 
   protected before() {
     super.before();
-    this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(CoreModule);
+    this.metadata = ModuleMetadataStorage.instance.findComponentMetadata(TestSingleComponent);
   }
 }

@@ -64,18 +64,18 @@ class ModuleAllTest extends UnitTest {
 
   @test 'should check imports'() {
     expect(this.metadata.imports.length).to.equal(1);
-    expect(this.metadata.imports[0].name).to.equal(ChildModule.name);
+    expect(this.metadata.imports[0].target).to.equal(ChildModule);
   }
 
   @test 'should have one declaration'() {
     expect(this.metadata.declarations.length).to.equal(1);
-    expect(this.metadata.declarations[0].name).to.equal(TestAllComponent.name);
+    expect(this.metadata.declarations[0].target).to.equal(TestAllComponent);
   }
 
 
   @test 'should check exports'() {
     expect(this.metadata.exports.length).to.equal(1);
-    expect(this.metadata.exports[0].name).to.equal(TestAllComponent.name);
+    expect(this.metadata.exports[0].target).to.equal(TestAllComponent);
   }
 
   @test 'should check providers'() {

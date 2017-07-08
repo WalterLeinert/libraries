@@ -46,7 +46,7 @@ class ModuleTest extends UnitTest {
 
   @test 'should have one declaration'() {
     expect(this.metadata.declarations.length).to.equal(1);
-    expect(this.metadata.declarations[0].name).to.equal(TestComponent.name);
+    expect(this.metadata.declarations[0].target).to.equal(TestComponent);
   }
 
 

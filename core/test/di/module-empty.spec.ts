@@ -44,7 +44,7 @@ class ModuleTest extends UnitTest {
 
   @test 'should annotate and register module'() {
     expect(this.metadata).to.be.not.null;
-    expect(this.metadata.name).to.equal(TestModuleEmpty.name);
+    expect(this.metadata.target).to.equal(TestModuleEmpty);
   }
 
 
