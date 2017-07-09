@@ -7,4 +7,6 @@ export interface IModuleOptions {
   declarations?: Funktion[];
   exports?: Funktion[];
   providers?: Provider[];
+
+  bootstrap?: Funktion;
 }

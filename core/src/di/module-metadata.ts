@@ -23,10 +23,13 @@ import { IModuleOptions } from './module-options.interface';
 export class ModuleMetadata extends ClassMetadata {
   protected static readonly logger = getLogger(ModuleMetadata);
 
+  private _parent: ModuleMetadata;
+
   private importsDict: Dictionary<Funktion, ModuleMetadata> = new Dictionary<Funktion, ModuleMetadata>();
   private declarationsDict: Dictionary<Funktion, ComponentMetadata> = new Dictionary<Funktion, ComponentMetadata>();
   private exportsDict: Dictionary<Funktion, ComponentMetadata> = new Dictionary<Funktion, ComponentMetadata>();
   private _providers: Provider[] = [];
+  private _bootstrap: ComponentMetadata;
 
 
 
@@ -48,6 +51,8 @@ export class ModuleMetadata extends ClassMetadata {
 
             duplicates.add(item);
             this.importsDict.set(imprt.target, imprt);
+
+            imprt.setParent(this);
           });
         }
 
@@ -67,10 +72,16 @@ export class ModuleMetadata extends ClassMetadata {
 
             this.exportsDict.set(exprt.target, exprt);
           });
-
         }
+
         if (this._options.providers) {
           this._providers = [...this._options.providers];
+        }
+
+        if (this._options.bootstrap) {
+          const bootstrap = this.metadataStorage.findComponentMetadata(this._options.bootstrap);
+          Assert.notNull(bootstrap, `bootstrap: component ${bootstrap.name} not registered`);
+          this._bootstrap = bootstrap;
         }
       }
     });
@@ -113,8 +124,21 @@ export class ModuleMetadata extends ClassMetadata {
     return this._providers;
   }
 
+  public get bootstrap(): ComponentMetadata {
+    return this._bootstrap;
+  }
+
+
   public get options(): IModuleOptions {
     return this._options;
+  }
+
+  protected get parent(): ModuleMetadata {
+    return this._parent;
+  }
+
+  private setParent(module: ModuleMetadata) {
+    this._parent = module;
   }
 
 }

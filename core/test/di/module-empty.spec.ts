@@ -68,6 +68,9 @@ class ModuleTest extends UnitTest {
     expect(this.metadata.providers.length).to.equal(0);
   }
 
+  @test 'should check bootstrap'() {
+    expect(this.metadata.bootstrap).to.not.exist;
+  }
 
   protected before() {
     super.before();
