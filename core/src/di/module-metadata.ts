@@ -16,9 +16,9 @@ import { Metadata } from '../metadata/metadata';
 import { Dictionary } from '../types/dictionary';
 import { Assert } from '../util/assert';
 import { ComponentMetadata } from './component-metadata';
+import { DiMetadata } from './di-metadata';
 import { ModuleMetadataStorage } from './module-metadata-storage';
 import { IModuleOptions } from './module-options.interface';
-import { DiMetadata } from './di-metadata';
 
 
 export class ModuleMetadata extends DiMetadata<ReflectiveInjector, OpaqueToken> {
@@ -121,11 +121,13 @@ export class ModuleMetadata extends DiMetadata<ReflectiveInjector, OpaqueToken> 
     return this._parent;
   }
 
-  private setParent(module: ModuleMetadata) {
-    this._parent = module;
-  }
 
   protected onCreateInjector(providers: Provider[]): ReflectiveInjector {
     return ReflectiveInjector.resolveAndCreate(providers);
   }
+
+  private setParent(module: ModuleMetadata) {
+    this._parent = module;
+  }
+
 }

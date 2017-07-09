@@ -24,13 +24,13 @@ class CarTest {
 
 
   @test 'should create car by ReflectiveInjector.resolveAndCreate'() {
-    var injector = ReflectiveInjector.resolveAndCreate([Car, Engine]);
+    const injector = ReflectiveInjector.resolveAndCreate([Car, Engine]);
     expect(injector.get(Car) instanceof Car).to.be.true;
   }
 
 
   @test 'should test engine'() {
-    var injector = ReflectiveInjector.resolveAndCreate([Car, Engine]);
+    const injector = ReflectiveInjector.resolveAndCreate([Car, Engine]);
     const car = injector.get(Car);
     expect(car.engine).to.be.instanceof(Engine);
   }

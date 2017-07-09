@@ -6,8 +6,6 @@ import 'reflect-metadata';
 
 import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
 
-import { } from 'injection-js/metadata';
-
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
@@ -18,7 +16,7 @@ import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 import { Module } from '../../../src/di/module.decorator';
 
 import { UnitTest } from '../../../src/testing/unit-test';
-import { Logger } from './logger.service'
+import { Logger } from './logger.service';
 
 
 @Injectable()

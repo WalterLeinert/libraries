@@ -1,7 +1,7 @@
 import { ReflectiveInjector } from 'injection-js';
 
-import { Car, Engine, Tires } from './car';
 import { Logger } from '../logger.service';
+import { Car, Engine, Tires } from './car';
 
 export function useInjector() {
   let injector: ReflectiveInjector;
@@ -10,11 +10,11 @@ export function useInjector() {
   let injector = new ReflectiveInjector([Car, Engine, Tires]);
   */
   injector = ReflectiveInjector.resolveAndCreate([Car, Engine, Tires]);
-  let car = injector.get(Car);
+  const car = injector.get(Car);
   car.description = 'Injector';
 
   injector = ReflectiveInjector.resolveAndCreate([Logger]);
-  let logger = injector.get(Logger);
+  const logger = injector.get(Logger);
   logger.log('Injector car.drive() said: ' + car.drive());
   return car;
 }

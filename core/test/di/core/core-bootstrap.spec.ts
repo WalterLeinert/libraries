@@ -6,8 +6,6 @@ import 'reflect-metadata';
 
 import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
 
-import { } from 'injection-js/metadata';
-
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
@@ -17,7 +15,7 @@ import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 import { Module } from '../../../src/di/module.decorator';
 
-import { Logger } from './logger.service'
+import { Logger } from './logger.service';
 
 
 @Injectable()
@@ -60,5 +58,4 @@ class CoreTest {
   @test 'should boostrap and create root instance'() {
     const rootInstance = ModuleMetadataStorage.instance.bootstrapModule(CoreBootstrapModule);
   }
-
 }

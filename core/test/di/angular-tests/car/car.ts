@@ -1,8 +1,11 @@
+// tslint:disable:max-classes-per-file
+
 import { Injectable } from 'injection-js';
 
 export class Engine {
   public cylinders = 4;
 }
+
 
 export class Tires {
   public make = 'Flintstone';
@@ -16,7 +19,7 @@ export class Car {
   constructor(public engine: Engine, public tires: Tires) { }
 
   // Method using the engine and tires
-  drive() {
+  public drive() {
     return `${this.description} car with ` +
       `${this.engine.cylinders} cylinders and ${this.tires.make} tires.`;
   }

@@ -2,10 +2,11 @@ import { Injectable } from 'injection-js';
 
 @Injectable()
 export class Logger {
-  logs: string[] = []; // capture logs for testing
+  public logs: string[] = []; // capture logs for testing
 
-  log(message: string) {
+  public log(message: string) {
     this.logs.push(message);
+    // tslint:disable-next-line:no-console
     console.log(message);
   }
 }
