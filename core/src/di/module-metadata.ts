@@ -1,4 +1,4 @@
-import { Provider } from 'injection-js';
+import { OpaqueToken, Provider, ReflectiveInjector } from 'injection-js';
 
 
 // -------------------------------------- logging --------------------------------------------
@@ -18,24 +18,23 @@ import { Assert } from '../util/assert';
 import { ComponentMetadata } from './component-metadata';
 import { ModuleMetadataStorage } from './module-metadata-storage';
 import { IModuleOptions } from './module-options.interface';
+import { DiMetadata } from './di-metadata';
 
 
-export class ModuleMetadata extends ClassMetadata {
+export class ModuleMetadata extends DiMetadata<ReflectiveInjector, OpaqueToken> {
   protected static readonly logger = getLogger(ModuleMetadata);
-
   private _parent: ModuleMetadata;
 
   private importsDict: Dictionary<Funktion, ModuleMetadata> = new Dictionary<Funktion, ModuleMetadata>();
   private declarationsDict: Dictionary<Funktion, ComponentMetadata> = new Dictionary<Funktion, ComponentMetadata>();
   private exportsDict: Dictionary<Funktion, ComponentMetadata> = new Dictionary<Funktion, ComponentMetadata>();
-  private _providers: Provider[] = [];
   private _bootstrap: ComponentMetadata;
 
 
 
   public constructor(private metadataStorage: ModuleMetadataStorage, target: Funktion,
     private _options: IModuleOptions) {
-    super(target, target.name);
+    super(target, _options.providers);
 
     using(new XLog(ModuleMetadata.logger, levels.INFO, 'ctor'), (log) => {
 
@@ -74,39 +73,28 @@ export class ModuleMetadata extends ClassMetadata {
           });
         }
 
-        if (this._options.providers) {
-          this._providers = [...this._options.providers];
-        }
-
         if (this._options.bootstrap) {
           const bootstrap = this.metadataStorage.findComponentMetadata(this._options.bootstrap);
           Assert.notNull(bootstrap, `bootstrap: component ${bootstrap.name} not registered`);
           this._bootstrap = bootstrap;
+
+          const componentProviders = this.declarations.map((item) => item.target);
+          if (!this.declarationsDict.containsKey(this.bootstrap.target)) {
+            componentProviders.push(this.bootstrap.target);
+          }
+
+          // root injector erzeugen über Provider aus
+          // - components declarations + bootstrap component
+          // - providers
+          this.createInjector([
+            componentProviders,
+            ...this.providers
+          ]);
         }
       }
     });
   }
 
-
-  public getImport(target: Funktion) {
-    return this.importsDict.get(target);
-  }
-
-  public getImportMetadata(target: string | Funktion) {
-    return this.metadataStorage.findModuleMetadata(target);
-  }
-
-  public getDeclaration(target: Funktion) {
-    return this.declarationsDict.get(target);
-  }
-
-  public getDeclarationMetadata(target: string | Funktion) {
-    return this.metadataStorage.findModuleMetadata(target);
-  }
-
-  public getExport(target: Funktion) {
-    return this.exportsDict.get(target);
-  }
 
   public get imports(): ModuleMetadata[] {
     return this.importsDict.values;
@@ -118,10 +106,6 @@ export class ModuleMetadata extends ClassMetadata {
 
   public get exports(): ComponentMetadata[] {
     return this.exportsDict.values;
-  }
-
-  public get providers(): Provider[] {
-    return this._providers;
   }
 
   public get bootstrap(): ComponentMetadata {
@@ -141,4 +125,7 @@ export class ModuleMetadata extends ClassMetadata {
     this._parent = module;
   }
 
+  protected onCreateInjector(providers: Provider[]): ReflectiveInjector {
+    return ReflectiveInjector.resolveAndCreate(providers);
+  }
 }
