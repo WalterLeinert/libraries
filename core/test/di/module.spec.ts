@@ -27,19 +27,19 @@ import { UnitTest } from '../../src/testing/unit-test';
 
 @Module({
 })
-export class TestModule {
+export class TestChildModule {
 }
 
 
 @Module({
   imports: [
-    TestModule,
+    TestChildModule,
     // TestModule -> assertion: module already registered
   ],
   providers: [
   ]
 })
-export class CoreModule {
+export class TestParentModule {
 
 }
 
@@ -50,17 +50,17 @@ class ModuleTest extends UnitTest {
 
   @test 'should annotate and register module'() {
     expect(this.metadata).to.be.not.null;
-    expect(this.metadata.target).to.equal(CoreModule);
+    expect(this.metadata.target).to.equal(TestParentModule);
   }
 
   @test 'should have one import'() {
     expect(this.metadata.imports.length).to.equal(1);
-    expect(this.metadata.imports[0].target).to.equal(TestModule);
+    expect(this.metadata.imports[0].target).to.equal(TestChildModule);
   }
 
 
   protected before() {
     super.before();
-    this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(CoreModule);
+    this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(TestParentModule);
   }
 }
