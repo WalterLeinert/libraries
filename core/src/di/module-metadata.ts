@@ -15,13 +15,15 @@ import { ClassMetadata } from '../metadata/class-metadata';
 import { Metadata } from '../metadata/metadata';
 import { Dictionary } from '../types/dictionary';
 import { Assert } from '../util/assert';
+
 import { ComponentMetadata } from './component-metadata';
 import { DiMetadata } from './di-metadata';
+import { MetadataVisitor } from './metadata-visitor';
 import { ModuleMetadataStorage } from './module-metadata-storage';
 import { IModuleOptions } from './module-options.interface';
 
 
-export class ModuleMetadata extends DiMetadata<ReflectiveInjector, OpaqueToken> {
+export class ModuleMetadata extends DiMetadata {
   protected static readonly logger = getLogger(ModuleMetadata);
   private _parent: ModuleMetadata;
 
@@ -109,12 +111,33 @@ export class ModuleMetadata extends DiMetadata<ReflectiveInjector, OpaqueToken> 
     return this._options;
   }
 
-  public getAllProviders(): Provider[] {
-    const providers: Provider[] = [];
-    this.getProvidersRec(providers);
-    return providers;
+
+  /**
+   * Liefert alle Provider der kompletten Hierarchie als flache Liste
+   *
+   * @returns {Provider[]}
+   * @memberof ModuleMetadata
+   */
+  public getProvidersFlat(): Provider[] {
+    const importsFlat = this.getImportsFlat();
+    const providersFlat: Provider[] = [];
+    importsFlat.map((item) => providersFlat.push(item.providers));
+    return providersFlat;
   }
 
+
+
+  /**
+   * Liefert alle Import-Module der kompletten Hierarchie als flache Liste
+   *
+   * @returns {ModuleMetadata[]}
+   * @memberof ModuleMetadata
+   */
+  public getImportsFlat(): ModuleMetadata[] {
+    const visitor = new MetadataVisitor<ModuleMetadata>((item) => item.imports);
+    this.accept(visitor);
+    return visitor.items;
+  }
 
   protected get parent(): ModuleMetadata {
     return this._parent;
@@ -125,24 +148,6 @@ export class ModuleMetadata extends DiMetadata<ReflectiveInjector, OpaqueToken> 
     return ReflectiveInjector.resolveAndCreate(providers, parentInjector);
   }
 
-  /**
-   * Rekursive die Provider aller importierten Module sammeln
-   *
-   * @private
-   * @param {Provider[]} providers
-   * @memberof ModuleMetadata
-   */
-  private getProvidersRec(providers: Provider[]) {
-    providers.push(this.providers);
-
-    this.imports.forEach((item) => {
-      providers.push(item.providers);
-    });
-
-    this.imports.forEach((item) => {
-      this.getProvidersRec(providers);
-    });
-  }
 
   private setParent(module: ModuleMetadata) {
     this._parent = module;

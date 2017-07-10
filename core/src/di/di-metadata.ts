@@ -1,7 +1,9 @@
-import { Provider, ReflectiveInjector } from 'injection-js';
+import { OpaqueToken, Provider, ReflectiveInjector } from 'injection-js';
 
 import { Funktion } from '../base/objectType';
 import { ClassMetadata } from '../metadata/class-metadata';
+import { IVisitable } from '../pattern/visitor/visitable.interface';
+import { IVisitor } from '../pattern/visitor/visitor.interface';
 import { IComponentOptions } from './component-options.interface';
 
 export interface IGetter<TReturn, T> {
@@ -9,7 +11,8 @@ export interface IGetter<TReturn, T> {
 }
 
 
-export abstract class DiMetadata<T extends IGetter<any, TToken>, TToken> extends ClassMetadata {
+export abstract class DiMetadata extends ClassMetadata
+  implements IVisitable<DiMetadata> {
   private _providers: Provider[] = [];
   private _injector: ReflectiveInjector;
 
@@ -19,7 +22,6 @@ export abstract class DiMetadata<T extends IGetter<any, TToken>, TToken> extends
 
     if (providers) {
       this._providers = [...providers];
-      // this._injector = ReflectiveInjector.resolveAndCreate(this._providers);
     }
   }
 
@@ -37,8 +39,12 @@ export abstract class DiMetadata<T extends IGetter<any, TToken>, TToken> extends
     this._injector = this.onCreateInjector(providers, parentInjector);
   }
 
-  public getInstance<TInstance>(token: Funktion | TToken | any, notFoundValue?: any): TInstance {
+  public getInstance<TInstance>(token: Funktion | OpaqueToken | any, notFoundValue?: any): TInstance {
     return this.injector.get(token, notFoundValue) as TInstance;
+  }
+
+  public accept(visitor: IVisitor<DiMetadata>) {
+    visitor.visit(this);
   }
 
   protected abstract onCreateInjector(providers: Provider[], parentInjector?: ReflectiveInjector): ReflectiveInjector;

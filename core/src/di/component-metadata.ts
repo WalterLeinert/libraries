@@ -5,7 +5,7 @@ import { IComponentOptions } from './component-options.interface';
 import { DiMetadata } from './di-metadata';
 
 
-export class ComponentMetadata extends DiMetadata<ReflectiveInjector, OpaqueToken> {
+export class ComponentMetadata extends DiMetadata {
   private _parent: ComponentMetadata;
 
   public constructor(target: Funktion, private _options: IComponentOptions) {

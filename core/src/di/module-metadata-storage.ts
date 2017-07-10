@@ -78,19 +78,28 @@ export class ModuleMetadataStorage {
     Assert.notNull(bootstrapMod, `bootstrap: module ${bootstrapMod.name} not registered`);
 
     const componentProviders = bootstrapMod.declarations.map((item) => item.target);
-    if (componentProviders.indexOf(bootstrapMod.bootstrap.target) < 0) {
-      componentProviders.push(bootstrapMod.bootstrap.target);
+
+    if (bootstrapMod.bootstrap) {
+      if (componentProviders.indexOf(bootstrapMod.bootstrap.target) < 0) {
+        componentProviders.push(bootstrapMod.bootstrap.target);
+      }
     }
 
-    const allProviders = bootstrapMod.getAllProviders();
+
+    const importsFlat = bootstrapMod.getImportsFlat();
+    const providersFlat = bootstrapMod.getProvidersFlat();
 
     // root injector erzeugen über Provider aus
     // - components declarations + bootstrap component
-    // - providers
+    // - alle import modules
+    // - providers des bootstrapModules
+    // - providers aller importierten Module
     bootstrapMod.createInjector([
       mod as any,
-      ...componentProviders,
-      ...allProviders
+      ...componentProviders, ,
+      importsFlat.map((item) => item.target),
+      ...bootstrapMod.providers,
+      ...providersFlat
     ]);
 
     return bootstrapMod.getInstance<T>(mod);
