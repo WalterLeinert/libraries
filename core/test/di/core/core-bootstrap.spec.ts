@@ -10,16 +10,16 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 
-import { Component } from '../../../src/di/component.decorator';
+import { FlxComponent } from '../../../src/di/flx-component.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-import { Module } from '../../../src/di/module.decorator';
+import { FlxModule } from '../../../src/di/flx-module.decorator';
 
 import { Logger } from './logger.service';
 
 
 @Injectable()
-@Component({
+@FlxComponent({
 })
 export class CoreBootstrapComponent {
   constructor(public logger: Logger) {
@@ -33,7 +33,7 @@ export class CoreBootstrapComponent {
 
 
 
-@Module({
+@FlxModule({
   imports: [
   ],
   declarations: [

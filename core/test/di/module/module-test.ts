@@ -9,9 +9,9 @@ import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Component } from '../../../src/di/component.decorator';
+import { FlxComponent } from '../../../src/di/flx-component.decorator';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-import { Module } from '../../../src/di/module.decorator';
+import { FlxModule } from '../../../src/di/flx-module.decorator';
 
 
 // missing @Module decorator
@@ -19,7 +19,7 @@ class NoModule {
 }
 
 
-@Module({
+@FlxModule({
   imports: [
     NoModule    // -> assertion: no module
   ]

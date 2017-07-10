@@ -6,7 +6,7 @@ import { ModuleMetadata } from './module-metadata';
 import { ModuleMetadataStorage } from './module-metadata-storage';
 import { IModuleOptions } from './module-options.interface';
 
-export function Module<T>(options: IModuleOptions) {
+export function FlxModule<T>(options: IModuleOptions) {
   return (target: Funktion) => {
     ModuleMetadataStorage.instance.addModuleMetadata(
       new ModuleMetadata(ModuleMetadataStorage.instance, target, options));

@@ -9,14 +9,14 @@ import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Component } from '../../../src/di/component.decorator';
+import { FlxComponent } from '../../../src/di/flx-component.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-import { Module } from '../../../src/di/module.decorator';
+import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { UnitTest } from '../../../src/testing/unit-test';
 
 
-@Module({
+@FlxModule({
   imports: [
   ],
   declarations: [

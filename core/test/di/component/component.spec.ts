@@ -11,11 +11,11 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { ComponentMetadata } from '../../../src/di/component-metadata';
-import { Component } from '../../../src/di/component.decorator';
+import { FlxComponent } from '../../../src/di/flx-component.decorator';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 
 
-@Component({
+@FlxComponent({
 })
 export class TestSingleComponent {
 }
