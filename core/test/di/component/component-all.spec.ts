@@ -10,9 +10,9 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 
-import { ComponentMetadata } from '../../src/di/component-metadata';
-import { Component } from '../../src/di/component.decorator';
-import { ModuleMetadataStorage } from '../../src/di/module-metadata-storage';
+import { ComponentMetadata } from '../../../src/di/component-metadata';
+import { Component } from '../../../src/di/component.decorator';
+import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 
 class ProviderClass {
 }
