@@ -58,6 +58,19 @@ export class ModuleMetadataStorage {
   }
 
 
+  /**
+   * DI-Boostrap über das Modul @param{mod}.
+   *
+   * Es wird ein Root-Injector erzeugt mit den Providern
+   * - mod
+   * - den Komponenten aus declarations
+   * - den globalen Modul-Providern (gesammelte Provider alle Module)
+   *
+   * @template T
+   * @param {T} mod
+   * @returns {T}
+   * @memberof ModuleMetadataStorage
+   */
   public bootstrapModule<T>(mod: T): T {
     Assert.notNull(mod);
 
@@ -69,16 +82,18 @@ export class ModuleMetadataStorage {
       componentProviders.push(bootstrapMod.bootstrap.target);
     }
 
+    const allProviders = bootstrapMod.getAllProviders();
+
     // root injector erzeugen über Provider aus
     // - components declarations + bootstrap component
     // - providers
     bootstrapMod.createInjector([
       mod as any,
       ...componentProviders,
-      ...bootstrapMod.providers
+      ...allProviders
     ]);
 
-    return bootstrapMod.getInstance<T>(bootstrapMod.bootstrap.target);
+    return bootstrapMod.getInstance<T>(mod);
   }
 
   public static get instance(): ModuleMetadataStorage {

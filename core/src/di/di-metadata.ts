@@ -28,15 +28,20 @@ export abstract class DiMetadata<T extends IGetter<any, TToken>, TToken> extends
     return this._providers;
   }
 
-  public createInjector(providers: Provider[]) {
-    this._injector = this.onCreateInjector(providers);
+  // public resolveAndCreate(providers: any[], parent?: T): T {
+  //   // TODO: const injector = parent ? parent : this.getInjector();
+  //   return this.onResolveAndCreate(providers, parent /*TODO: injector*/);
+  // }
+
+  public createInjector(providers: Provider[], parentInjector?: ReflectiveInjector) {
+    this._injector = this.onCreateInjector(providers, parentInjector);
   }
 
   public getInstance<TInstance>(token: Funktion | TToken | any, notFoundValue?: any): TInstance {
     return this.injector.get(token, notFoundValue) as TInstance;
   }
 
-  protected abstract onCreateInjector(providers: Provider[]): ReflectiveInjector;
+  protected abstract onCreateInjector(providers: Provider[], parentInjector?: ReflectiveInjector): ReflectiveInjector;
 
   protected get injector(): ReflectiveInjector {
     return this._injector;

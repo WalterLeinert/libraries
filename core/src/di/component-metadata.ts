@@ -10,8 +10,6 @@ export class ComponentMetadata extends DiMetadata<ReflectiveInjector, OpaqueToke
 
   public constructor(target: Funktion, private _options: IComponentOptions) {
     super(target, _options.providers);
-
-    // this.createInjector(this.providers);
   }
 
   protected get options(): IComponentOptions {
@@ -22,7 +20,7 @@ export class ComponentMetadata extends DiMetadata<ReflectiveInjector, OpaqueToke
     return this._parent;
   }
 
-  protected onCreateInjector(providers: Provider[]): ReflectiveInjector {
-    return ReflectiveInjector.resolveAndCreate(providers);
+  protected onCreateInjector(providers: Provider[], parentInjector?: ReflectiveInjector): ReflectiveInjector {
+    return ReflectiveInjector.resolveAndCreate(providers, parentInjector);
   }
 }

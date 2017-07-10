@@ -82,14 +82,6 @@ export class ModuleMetadata extends DiMetadata<ReflectiveInjector, OpaqueToken> 
           if (!this.declarationsDict.containsKey(this.bootstrap.target)) {
             componentProviders.push(this.bootstrap.target);
           }
-
-          // root injector erzeugen über Provider aus
-          // - components declarations + bootstrap component
-          // - providers
-          this.createInjector([
-            componentProviders,
-            ...this.providers
-          ]);
         }
       }
     });
@@ -117,13 +109,39 @@ export class ModuleMetadata extends DiMetadata<ReflectiveInjector, OpaqueToken> 
     return this._options;
   }
 
+  public getAllProviders(): Provider[] {
+    const providers: Provider[] = [];
+    this.getProvidersRec(providers);
+    return providers;
+  }
+
+
   protected get parent(): ModuleMetadata {
     return this._parent;
   }
 
 
-  protected onCreateInjector(providers: Provider[]): ReflectiveInjector {
-    return ReflectiveInjector.resolveAndCreate(providers);
+  protected onCreateInjector(providers: Provider[], parentInjector?: ReflectiveInjector): ReflectiveInjector {
+    return ReflectiveInjector.resolveAndCreate(providers, parentInjector);
+  }
+
+  /**
+   * Rekursive die Provider aller importierten Module sammeln
+   *
+   * @private
+   * @param {Provider[]} providers
+   * @memberof ModuleMetadata
+   */
+  private getProvidersRec(providers: Provider[]) {
+    providers.push(this.providers);
+
+    this.imports.forEach((item) => {
+      providers.push(item.providers);
+    });
+
+    this.imports.forEach((item) => {
+      this.getProvidersRec(providers);
+    });
   }
 
   private setParent(module: ModuleMetadata) {

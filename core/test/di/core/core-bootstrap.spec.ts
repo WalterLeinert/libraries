@@ -55,7 +55,8 @@ export class CoreBootstrapModule {
 class CoreTest {
 
 
-  @test 'should boostrap and create root instance'() {
+  @test 'should boostrap and create root module instance'() {
     const rootInstance = ModuleMetadataStorage.instance.bootstrapModule(CoreBootstrapModule);
+    expect(rootInstance).to.be.instanceof(CoreBootstrapModule);
   }
 }
