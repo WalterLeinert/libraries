@@ -10,8 +10,8 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { FlxComponent } from '../../../src/di/flx-component.decorator';
-import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 import { FlxModule } from '../../../src/di/flx-module.decorator';
+import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 
 
 // missing @Module decorator

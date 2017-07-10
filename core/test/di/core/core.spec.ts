@@ -11,9 +11,10 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { FlxComponent } from '../../../src/di/flx-component.decorator';
+import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-import { FlxModule } from '../../../src/di/flx-module.decorator';
+
 
 import { UnitTest } from '../../../src/testing/unit-test';
 import { Logger } from './logger.service';
