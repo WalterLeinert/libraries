@@ -4,7 +4,7 @@
 
 import 'reflect-metadata';
 
-import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
+import { Injectable, InjectionToken, Injector, ReflectiveInjector } from 'injection-js';
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
@@ -48,6 +48,12 @@ export class CoreBootstrapComponent {
   bootstrap: CoreBootstrapComponent
 })
 export class CoreBootstrapModule {
+  constructor(public injector: Injector) {
+    // tslint:disable-next-line:no-console
+    console.log(`injector: ` + injector);
+
+    this.injector = injector;
+  }
 }
 
 
@@ -56,7 +62,20 @@ class CoreTest {
 
 
   @test 'should boostrap and create root module instance'() {
-    const rootInstance = ModuleMetadataStorage.instance.bootstrapModule(CoreBootstrapModule);
+    const rootInstance = ModuleMetadataStorage.instance.bootstrapModule<CoreBootstrapModule>(CoreBootstrapModule);
     expect(rootInstance).to.be.instanceof(CoreBootstrapModule);
+  }
+
+
+  @test 'should test injector'() {
+    const rootInstance = ModuleMetadataStorage.instance.bootstrapModule<CoreBootstrapModule>(CoreBootstrapModule);
+
+    expect(rootInstance.injector).to.exist;
+
+    expect(rootInstance.injector.get<CoreBootstrapComponent>(CoreBootstrapComponent)).to.be.instanceof(
+      CoreBootstrapComponent
+    );
+
+    expect(rootInstance.injector.get<Logger>(Logger)).to.be.instanceof(Logger);
   }
 }

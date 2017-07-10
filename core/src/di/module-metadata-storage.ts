@@ -71,7 +71,7 @@ export class ModuleMetadataStorage {
    * @returns {T}
    * @memberof ModuleMetadataStorage
    */
-  public bootstrapModule<T>(mod: T): T {
+  public bootstrapModule<T>(mod: Funktion): T {
     Assert.notNull(mod);
 
     const bootstrapMod = this.findModuleMetadata(mod as any as Funktion);
@@ -97,12 +97,12 @@ export class ModuleMetadataStorage {
     bootstrapMod.createInjector([
       mod as any,
       ...componentProviders, ,
-      importsFlat.map((item) => item.target),
+      ...importsFlat.map((item) => item.target),
       ...bootstrapMod.providers,
       ...providersFlat
     ]);
 
-    return bootstrapMod.getInstance<T>(mod);
+    return bootstrapMod.getInstance<T>(mod) as T;
   }
 
   public static get instance(): ModuleMetadataStorage {

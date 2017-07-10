@@ -4,7 +4,7 @@
 
 import 'reflect-metadata';
 
-import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
+import { Injectable, InjectionToken, Injector, ReflectiveInjector } from 'injection-js';
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
