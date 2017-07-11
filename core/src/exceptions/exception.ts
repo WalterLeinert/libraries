@@ -74,7 +74,7 @@ export abstract class Exception implements IException {
 
     this._message = sb.toString();
 
-    const logException: boolean = CoreInjector.instance.getInstance<boolean>(LOG_EXCEPTIONS, true);
+    const logException: boolean = CoreInjector.instance.getInstance<boolean>(LOG_EXCEPTIONS);
 
     if (logException) {
       const logger = CoreInjector.instance.getInstance<ILogger>(LOGGER, Exception.logger);

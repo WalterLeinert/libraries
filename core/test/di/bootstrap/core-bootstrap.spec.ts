@@ -10,12 +10,14 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 
+import { DiMetadata } from '../../../src/di/di-metadata';
 import { FlxComponent } from '../../../src/di/flx-component.decorator';
+import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-import { FlxModule } from '../../../src/di/flx-module.decorator';
+import { Types } from '../../../src/types/types';
 
-import { Logger } from './logger.service';
+import { Logger } from '../logger.service';
 
 
 @Injectable()
@@ -57,25 +59,26 @@ export class CoreBootstrapModule {
 }
 
 
-@suite('core.di.core: bootstrap')
+@suite('core.di.core: bootstrap:')
 class CoreTest {
+  private rootInjector: Injector;
 
 
-  @test 'should boostrap and create root module instance'() {
-    const rootInstance = ModuleMetadataStorage.instance.bootstrapModule<CoreBootstrapModule>(CoreBootstrapModule);
-    expect(rootInstance).to.be.instanceof(CoreBootstrapModule);
+  @test 'should boostrap and create root injector'() {
+    expect(this.rootInjector).to.exist;
+    expect(Types.getClassName(this.rootInjector)).to.equal(DiMetadata.INJECTOR_CLASSNAME);
   }
 
 
-  @test 'should test injector'() {
-    const rootInstance = ModuleMetadataStorage.instance.bootstrapModule<CoreBootstrapModule>(CoreBootstrapModule);
-
-    expect(rootInstance.injector).to.exist;
-
-    expect(rootInstance.injector.get<CoreBootstrapComponent>(CoreBootstrapComponent)).to.be.instanceof(
+  @test 'should test component creation'() {
+    expect(this.rootInjector.get<CoreBootstrapComponent>(CoreBootstrapComponent)).to.be.instanceof(
       CoreBootstrapComponent
     );
 
-    expect(rootInstance.injector.get<Logger>(Logger)).to.be.instanceof(Logger);
+    expect(this.rootInjector.get<Logger>(Logger)).to.be.instanceof(Logger);
+  }
+
+  public before() {
+    this.rootInjector = ModuleMetadataStorage.instance.bootstrapModule(CoreBootstrapModule);
   }
 }

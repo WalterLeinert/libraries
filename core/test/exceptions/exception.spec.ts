@@ -2,14 +2,53 @@
 // tslint:disable:member-access
 // tslint:disable:no-unused-expression
 
+
+// tslint:disable-next-line:no-var-requires
+require('reflect-metadata');
+
+import { Injectable, InjectionToken, Injector } from 'injection-js';
+
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { CoreInjector } from '../../src/di/core-injector';
+import { FlxComponent } from '../../src/di/flx-component.decorator';
+import { FlxModule } from '../../src/di/flx-module.decorator';
+import { ModuleMetadataStorage } from '../../src/di/module-metadata-storage';
 import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTestModule } from '../../src/testing/unit-test';
 
 import { ExceptionFactory } from '../../src/exceptions';
 import { JsonSerializer } from '../../src/serialization/json-serializer';
 
+// ---------------------------------------------------------------------------------------------------
+@Injectable()
+@FlxComponent({
+  providers: [
+  ]
+})
+class ExceptionTestComponent {
+}
+
+
+@Injectable()
+@FlxModule({
+  imports: [
+    CoreUnitTestModule
+  ],
+  declarations: [
+    ExceptionTestComponent
+  ],
+  bootstrap: ExceptionTestComponent
+})
+class ExceptionTestModule {
+  constructor(comp: ExceptionTestComponent) {
+    CoreInjector.instance.setRootComponent(comp, true);
+  }
+}
+
+const rootInjector = ModuleMetadataStorage.instance.bootstrapModule(ExceptionTestModule);
+// ---------------------------------------------------------------------------------------------------
 
 
 const errorText = 'user not found';

@@ -1,5 +1,5 @@
+import { Assertion } from './../base/assertion';
 import { Identifiable } from './../base/uniqueIdentifiable';
-import { Assert } from './../util/assert';
 import { IDictionary } from './dictionary.interface';
 
 
@@ -56,7 +56,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
    * @memberOf Dictionary
    */
   public set(key: TKey, value: TValue) {
-    Assert.notNull(key);
+    Assertion.notNull(key);
     this.assertValidKey(key);
 
     if (key instanceof Identifiable) {
@@ -79,7 +79,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
    * @memberOf Dictionary
    */
   public get(key: TKey): TValue {
-    Assert.notNull(key);
+    Assertion.notNull(key);
     this.assertValidKey(key);
 
     if (key instanceof Identifiable) {
@@ -99,7 +99,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
    * @memberOf Dictionary
    */
   public remove(key: TKey) {
-    Assert.notNull(key);
+    Assertion.notNull(key);
     this.assertValidKey(key);
 
     if (key instanceof Identifiable) {
@@ -120,7 +120,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
    * @memberOf Dictionary
    */
   public containsKey(key: TKey): boolean {
-    Assert.notNull(key);
+    Assertion.notNull(key);
     this.assertValidKey(key);
 
     if (key instanceof Identifiable) {
@@ -257,7 +257,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
       }
 
       if (this.keyType === KeyType.Identifiable) {
-        Assert.that(this.keyType === KeyType.Identifiable && (key instanceof Identifiable),
+        Assertion.that(this.keyType === KeyType.Identifiable && (key instanceof Identifiable),
           `key is no instance of Identifiable`);
       }
     }

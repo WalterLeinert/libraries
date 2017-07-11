@@ -1,4 +1,3 @@
-export * from './container';
 export * from './flx-component.decorator';
 export * from './component-metadata';
 export * from './component-options.interface';

@@ -2,13 +2,15 @@
 // tslint:disable:member-access
 // tslint:disable:no-unused-expression
 
-import { Injectable, InjectionToken } from 'injection-js';
+import { Injectable, InjectionToken, Injector } from 'injection-js';
 
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
+import { only, suite, test } from 'mocha-typescript';
 
-import { CoreInjector } from '../../src/di/core-injector';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreInjector } from '../../../src/di/core-injector';
+import { FlxModule } from '../../../src/di/flx-module.decorator';
+import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
+import { UnitTest } from '../../../src/testing/unit-test';
 
 export const LOGGER = new InjectionToken<ILogger>('logger');
 
@@ -50,12 +52,6 @@ class LoggerTest {
 }
 
 
-
-CoreInjector.instance.resolveAndCreate([
-  { provide: LOGGER, useClass: ConsoleLogger }
-]);
-
-
 class StaticLoggerTest {
   public static readonly logger: ILogger = CoreInjector.instance.getInstance<ILogger>(LOGGER);
 
@@ -65,10 +61,24 @@ class StaticLoggerTest {
 }
 
 
+@FlxModule({
+  providers: [
+    { provide: LOGGER, useClass: ConsoleLogger }
+  ]
+
+})
+class CoreInjectorTestModule {
+
+  constructor(injector: Injector) {
+    CoreInjector.instance.setInjector(injector);
+  }
+}
+
 
 
 @suite('core.exceptions.di: test CoreInjector')
 class CoreInjectorTest extends UnitTest {
+  private rootInstance: CoreInjectorTestModule;
 
   @test 'should create ConsoleLogger by token'() {
     CoreInjector.instance.resolveAndCreate([
@@ -99,6 +109,11 @@ class CoreInjectorTest extends UnitTest {
     tester.doLog('hallo');
 
     expect(StaticLoggerTest.logger).to.be.instanceof(ConsoleLogger);
+  }
+
+
+  protected before() {
+    this.rootInstance = ModuleMetadataStorage.instance.bootstrapModule(CoreInjectorTestModule);
   }
 }
 

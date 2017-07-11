@@ -1,4 +1,5 @@
 export * from './activator';
+export * from './assertion';
 export * from './clone';
 export * from './clone-verifier';
 export * from './ctor';

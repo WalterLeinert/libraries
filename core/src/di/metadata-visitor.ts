@@ -6,7 +6,7 @@ import { ModuleMetadata } from './module-metadata';
 
 
 /**
- * Visitor zum Absuchen einer Hierarchie von Di-Metadaten (Component-/ModuleMetadata)
+ * Visitor zum Ablaufen einer Hierarchie von Di-Metadaten (Component-/ModuleMetadata)
  *
  * @export
  * @class MetadataVisitor

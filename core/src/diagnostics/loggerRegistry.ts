@@ -1,5 +1,5 @@
+import { Assertion } from '../base/assertion';
 import { Dictionary } from '../types/dictionary';
-import { Assert } from '../util/assert';
 
 import { IConfig } from './config.interface';
 import { levels } from './level';
@@ -30,7 +30,7 @@ export class LoggerRegistry {
 
 
   private static registerConfiguration(config: IConfig) {
-    Assert.notNull(config);
+    Assertion.notNull(config);
     LoggerRegistry._config = config;
 
     const level = LoggerRegistry._config.levels['[all]'];
@@ -52,8 +52,8 @@ export class LoggerRegistry {
   }
 
   public static getLogger(categoryName: string): ILogger {
-    Assert.notNullOrEmpty(categoryName);
-    Assert.that(LoggerRegistry.hasLogger(categoryName));
+    Assertion.notNullOrEmpty(categoryName);
+    Assertion.that(LoggerRegistry.hasLogger(categoryName));
 
     const logger = LoggerRegistry.loggerDict.get(categoryName);
     logger.setLevel(LoggerRegistry.defaultLevel);

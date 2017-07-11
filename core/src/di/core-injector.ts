@@ -1,7 +1,20 @@
-import { Injectable, OpaqueToken, Provider, ReflectiveInjector } from 'injection-js';
+import { Injectable, Injector, OpaqueToken, Provider, ReflectiveInjector } from 'injection-js';
 
+
+// -------------------------------------- logging --------------------------------------------
+import { using } from '../base/disposable';
+import { levels } from '../diagnostics/level';
+import { ILogger } from '../diagnostics/logger.interface';
+import { getLogger } from '../diagnostics/logging-core';
+import { XLog } from '../diagnostics/xlog';
+// -------------------------------------- logging --------------------------------------------
+
+import { Assertion } from '../base/assertion';
+import { Funktion } from '../base/objectType';
 import { Types } from '../types/types';
+import { ComponentMetadata } from './component-metadata';
 import { InjectorBase } from './injector-base';
+import { ModuleMetadataStorage } from './module-metadata-storage';
 
 
 /**
@@ -14,26 +27,57 @@ import { InjectorBase } from './injector-base';
  * @class CoreInjector
  */
 @Injectable()
-export class CoreInjector extends InjectorBase<ReflectiveInjector, OpaqueToken> {
+export class CoreInjector extends InjectorBase<Injector, OpaqueToken> {
+  protected static readonly logger = getLogger(CoreInjector);
+
   public static readonly instance = new CoreInjector();
+
+  private compMetadata: ComponentMetadata;
 
   private constructor() {
     super();
     // ok
   }
 
+  public setRootComponent(component: object, clearInjector: boolean = false) {
+    using(new XLog(CoreInjector.logger, levels.INFO, 'setRootComponent',
+      `component = ${component}, cleanInjector = ${clearInjector}`), (log) => {
+        const ctor = Types.getConstructor(component);
+        this.compMetadata = ModuleMetadataStorage.instance.findComponentMetadata(ctor);
+        Assertion.notNull(this.compMetadata, `component ist keine registrierte Komponente`);
 
-  protected onResolveAndCreate(providers: Provider[], injector?: ReflectiveInjector): ReflectiveInjector {
+        const injector = this.compMetadata.createInjector(this.compMetadata.providers,
+          this.compMetadata.module.injector);
+
+        this.setInjector(injector, clearInjector);
+      });
+  }
+
+
+  public getInstance<TInstance>(token: Funktion | OpaqueToken | any, notFoundValue?: any): TInstance {
+    return using(new XLog(CoreInjector.logger, levels.INFO, 'getInstance',
+      `token = ${token}, notFoundValue = ${notFoundValue}`), (log) => {
+        // const injector = this.getInjector().resolveAndCreateChild(this.compMetadata.providers);
+        return this.getInjector().get(token, notFoundValue) as TInstance;
+      });
+  }
+
+  public getInjector(): ReflectiveInjector {
+    return super.getInjector() as ReflectiveInjector;
+  }
+
+  protected onResolveAndCreate(providers: Provider[], parent?: Injector): Injector {
+    let injector = parent;
+
     if (!Types.isPresent(injector)) {
-      injector = ReflectiveInjector.resolveAndCreate(providers);
-      this.clearInjector();
-
-      // console.warn(`cleared existing injector`);
-      this.setInjector(injector);
+      injector = this.getInjector();
+      if (!injector) {
+        throw new Error(`injector is null`);
+      }
     } else {
       injector = (injector as ReflectiveInjector).resolveAndCreateChild(providers);
     }
 
-    return injector as ReflectiveInjector;
+    return injector;
   }
 }

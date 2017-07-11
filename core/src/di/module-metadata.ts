@@ -10,11 +10,13 @@ import { XLog } from '../diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
 
+import { Assertion } from '../base/assertion';
 import { Funktion } from '../base/objectType';
+import { Core } from '../diagnostics/core';
+import { JsonDumper } from '../diagnostics/json-dumper';
 import { ClassMetadata } from '../metadata/class-metadata';
 import { Metadata } from '../metadata/metadata';
 import { Dictionary } from '../types/dictionary';
-import { Assert } from '../util/assert';
 
 import { ComponentMetadata } from './component-metadata';
 import { DiMetadata } from './di-metadata';
@@ -23,8 +25,16 @@ import { ModuleMetadataStorage } from './module-metadata-storage';
 import { IModuleOptions } from './module-options.interface';
 
 
+/**
+ * Modelliert Metadaten für DI-Module
+ *
+ * @export
+ * @class ModuleMetadata
+ * @extends {DiMetadata}
+ */
 export class ModuleMetadata extends DiMetadata {
   protected static readonly logger = getLogger(ModuleMetadata);
+
   private _parent: ModuleMetadata;
 
   private importsDict: Dictionary<Funktion, ModuleMetadata> = new Dictionary<Funktion, ModuleMetadata>();
@@ -38,16 +48,22 @@ export class ModuleMetadata extends DiMetadata {
     private _options: IModuleOptions) {
     super(target, _options.providers);
 
-    using(new XLog(ModuleMetadata.logger, levels.INFO, 'ctor'), (log) => {
+    using(new XLog(ModuleMetadata.logger, levels.INFO, 'ctor', `target = ${target.name}`), (log) => {
 
       if (this._options) {
+
+        if (log.isDebugEnabled()) {
+          log.debug(`options: ${JsonDumper.stringify(this._options, 2)}`);
+        }
+
+
         if (this._options.imports) {
           const duplicates = new Set<Funktion>();
           this._options.imports.forEach((item) => {
             const imprt = this.metadataStorage.findModuleMetadata(item);
-            Assert.notNull(imprt, `imports: module ${item.name} not registered`);
+            Assertion.notNull(imprt, `imports: module ${item.name} not registered`);
 
-            Assert.that(!duplicates.has(item),
+            Assertion.that(!duplicates.has(item),
               `imports: module ${item.name} already registered`);
 
             duplicates.add(item);
@@ -60,16 +76,17 @@ export class ModuleMetadata extends DiMetadata {
         if (this._options.declarations) {
           this._options.declarations.forEach((item) => {
             const declaration = this.metadataStorage.findComponentMetadata(item);
-            Assert.notNull(declaration, `declarations: component ${item.name} not registered`);
+            Assertion.notNull(declaration, `declarations: component ${item.name} not registered`);
 
             this.declarationsDict.set(declaration.target, declaration);
+            declaration.setModule(this);
           });
         }
 
         if (this._options.exports) {
           this._options.exports.forEach((item) => {
             const exprt = this.metadataStorage.findComponentMetadata(item);
-            Assert.notNull(exprt, `exports: component ${item.name} not registered`);
+            Assertion.notNull(exprt, `exports: component ${item.name} not registered`);
 
             this.exportsDict.set(exprt.target, exprt);
           });
@@ -77,7 +94,7 @@ export class ModuleMetadata extends DiMetadata {
 
         if (this._options.bootstrap) {
           const bootstrap = this.metadataStorage.findComponentMetadata(this._options.bootstrap);
-          Assert.notNull(bootstrap, `bootstrap: component ${bootstrap.name} not registered`);
+          Assertion.notNull(bootstrap, `bootstrap: component ${bootstrap.name} not registered`);
           this._bootstrap = bootstrap;
 
           const componentProviders = this.declarations.map((item) => item.target);
@@ -142,12 +159,6 @@ export class ModuleMetadata extends DiMetadata {
   protected get parent(): ModuleMetadata {
     return this._parent;
   }
-
-
-  protected onCreateInjector(providers: Provider[], parentInjector?: ReflectiveInjector): ReflectiveInjector {
-    return ReflectiveInjector.resolveAndCreate(providers, parentInjector);
-  }
-
 
   private setParent(module: ModuleMetadata) {
     this._parent = module;

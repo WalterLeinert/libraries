@@ -4,16 +4,53 @@
 // tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
 
+import { Injectable, InjectionToken, Injector } from 'injection-js';
+
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { using } from '../../src/base/disposable';
 import { StringBuilder } from '../../src/base/stringBuilder';
+import { CoreInjector } from '../../src/di/core-injector';
+import { FlxComponent } from '../../src/di/flx-component.decorator';
+import { FlxModule } from '../../src/di/flx-module.decorator';
+import { ModuleMetadataStorage } from '../../src/di/module-metadata-storage';
 import { Core } from '../../src/diagnostics/core';
 import { AndTerm, BinaryTerm, NotTerm, OrTerm, Query, SelectorTerm, UnaryTerm } from '../../src/expression';
 import { IVisitor, VisitableNode } from '../../src/pattern/visitor';
 import { Indenter, Suspender } from '../../src/suspendable';
+import { CoreUnitTestModule } from '../../src/testing/unit-test';
 import { UnitTest } from '../../src/testing/unit-test';
+
+
+// ---------------------------------------------------------------------------------------------------
+@Injectable()
+@FlxComponent({
+  providers: [
+  ]
+})
+class QueryTreeTestComponent {
+}
+
+
+@Injectable()
+@FlxModule({
+  imports: [
+    CoreUnitTestModule
+  ],
+  declarations: [
+    QueryTreeTestComponent
+  ],
+  bootstrap: QueryTreeTestComponent
+})
+class QueryTreeTestModule {
+  constructor(comp: QueryTreeTestComponent) {
+    CoreInjector.instance.setRootComponent(comp, true);
+  }
+}
+
+const rootInjector = ModuleMetadataStorage.instance.bootstrapModule(QueryTreeTestModule);
+// ---------------------------------------------------------------------------------------------------
 
 
 class TermVisitor implements IVisitor<VisitableNode> {

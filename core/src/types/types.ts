@@ -1,5 +1,5 @@
+import { Assertion } from '../base/assertion';
 import { Funktion, ObjectType } from '../base/objectType';
-import { Assert } from '../util/assert';
 import { Utility } from '../util/utility';
 
 
@@ -65,14 +65,14 @@ export class Types {
 
 
   public static hasMethod(obj: any, methodName: string): boolean {
-    Assert.notNull(obj);
-    Assert.notNullOrEmpty(methodName);
+    Assertion.notNull(obj);
+    Assertion.notNullOrEmpty(methodName);
     return !Types.isUndefined(obj[methodName]) && Types.isFunction(obj[methodName]);
   }
 
   public static hasProperty(obj: any, propertyName: string): boolean {
-    Assert.notNull(obj);
-    Assert.notNullOrEmpty(propertyName);
+    Assertion.notNull(obj);
+    Assertion.notNullOrEmpty(propertyName);
     return !Types.isUndefined(obj[propertyName]);
   }
 
@@ -88,8 +88,8 @@ export class Types {
    * @memberof Types
    */
   public static getConstructor(obj: any): Funktion {
-    Assert.notNull(obj);
-    Assert.that(Types.isObject(obj));
+    Assertion.notNull(obj);
+    Assertion.that(Types.isObject(obj));
     return obj.constructor;
   }
 
@@ -143,7 +143,7 @@ export class Types {
    * @memberof Types
    */
   public static hasConstructor(clazz: any): boolean {
-    Assert.notNull(clazz);
+    Assertion.notNull(clazz);
     try {
       // tslint:disable-next-line:no-unused-expression
       new clazz();

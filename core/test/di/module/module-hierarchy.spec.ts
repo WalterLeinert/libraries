@@ -4,15 +4,15 @@
 
 import 'reflect-metadata';
 
-import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
-
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { DiMetadata } from '../../../src/di/di-metadata';
 import { FlxComponent } from '../../../src/di/flx-component.decorator';
+import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-import { FlxModule } from '../../../src/di/flx-module.decorator';
+import { Types } from '../../../src/types/types';
 
 import { UnitTest } from '../../../src/testing/unit-test';
 
@@ -77,13 +77,14 @@ class ModuleTest extends UnitTest {
 
 
   @test 'should boostrap and create root module instance'() {
-    const rootInstance = ModuleMetadataStorage.instance.bootstrapModule(ImportParentModule);
-    expect(rootInstance).to.be.instanceof(ImportParentModule);
+    const rootInjector = ModuleMetadataStorage.instance.bootstrapModule(ImportParentModule);
+    const name = Types.getClassName(rootInjector);
+    expect(name).to.equal(DiMetadata.INJECTOR_CLASSNAME);
   }
 
   @test 'should verify root module instance'() {
-    const rootInstance = ModuleMetadataStorage.instance.bootstrapModule(ImportParentModule);
-    expect(this.metadata.getInstance<ImportParentModule>(ImportParentModule)).to.equal(rootInstance);
+    const rootInjector = ModuleMetadataStorage.instance.bootstrapModule(ImportParentModule);
+    expect(this.metadata.injector).to.equal(rootInjector);
   }
 
   @test 'should create ImportChildModule instance'() {

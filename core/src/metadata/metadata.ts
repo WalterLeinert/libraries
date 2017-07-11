@@ -1,6 +1,6 @@
+import { Assertion } from '../base/assertion';
 import { Funktion } from '../base/objectType';
 import { Types } from '../types/types';
-import { Assert } from '../util/assert';
 
 
 /**
@@ -42,11 +42,11 @@ export abstract class Metadata<T> {
 
 
   public static getTargetName(target: string | Funktion) {
-    Assert.notNull(target);
+    Assertion.notNull(target);
 
     if (Types.isString(target)) {
       const targetName = target as string;
-      Assert.notNullOrEmpty(targetName);
+      Assertion.notNullOrEmpty(targetName);
       return targetName;
     }
     return (target as Funktion).name;

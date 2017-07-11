@@ -1,5 +1,6 @@
 import { ClonerBase } from '../base/clone';
 import { using } from '../base/disposable';
+import { Funktion } from '../base/objectType';
 import { StringBuilder } from '../base/stringBuilder';
 import { Indenter } from '../suspendable/indenter';
 import { Suspender } from '../suspendable/suspender';
@@ -53,6 +54,14 @@ class DumperInternal extends ClonerBase {
         this.sb.append('\'');
       }
 
+      return;
+    }
+
+    if (Types.isFunction(value)) {
+
+      const f = value as any as Funktion;
+
+      this.sb.append(`${f.name}()`);
       return;
     }
 

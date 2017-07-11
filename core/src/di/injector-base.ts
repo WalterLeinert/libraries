@@ -35,9 +35,37 @@ export abstract class InjectorBase<T extends IGetter<any, TToken>, TToken> {
   }
 
 
+  /**
+   * Liefert den aktuellen Injector.
+   *
+   * @returns {T}
+   * @memberof InjectorBase
+   */
   public getInjector(): T {
     return this.injector;
   }
+
+
+  /**
+   * Setzt den globalen Injector und prüft, ob noch keiner registriert ist. Ist das Flag clear auf true gesetzt,
+   * wird der aktuelle Injector vor dem Setzen eines neuen zurückgesetzt.
+   *
+   * @param {Injector} injector
+   * @param {boolean} clear
+   * (v.a. für Testzwecke)
+   *
+   * @memberOf AppInjector
+   */
+  public setInjector(injector: T, clear: boolean = false) {
+    if (clear) {
+      this.injector = undefined;
+    }
+    if (this.injector) {
+      throw new Error(`injector already set`);
+    }
+    this.injector = injector;
+  }
+
 
   /**
    * Liefert für das Token @param{token} eine entsprechende Instanz.
@@ -52,35 +80,6 @@ export abstract class InjectorBase<T extends IGetter<any, TToken>, TToken> {
   public getInstance<TInstance>(token: Funktion | TToken | any, notFoundValue?: any): TInstance {
     return this.injector.get(token, notFoundValue) as TInstance;
   }
-
-  /**
-   * Setzt einen neuen Injector.
-   *
-   * @param injector
-   */
-  protected setInjectorInternal(injector: T) {
-    this.clearInjector();
-    this.injector = injector;
-  }
-
-  /**
-   * Setzt den globalen Injector und prüft, ob noch keiner registriert ist.
-   *
-   * @param {Injector} injector
-   *
-   * @memberOf AppInjector
-   */
-  protected setInjector(injector: T) {
-    if (this.injector) {
-      throw new Error(`injector already set`);
-    }
-    this.injector = injector;
-  }
-
-  protected clearInjector() {
-    this.injector = undefined;
-  }
-
 
 
   protected abstract onResolveAndCreate(providers: any[], parent?: T): T;

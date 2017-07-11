@@ -1,5 +1,8 @@
 import 'reflect-metadata';
 
+import { Injectable, Injector } from 'injection-js';
+
+
 // -------------------------------------- logging --------------------------------------------
 import { using } from './base/disposable';
 import { levels } from './diagnostics/level';
@@ -10,32 +13,35 @@ import { XLog } from './diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
 import { CoreInjector } from './di/core-injector';
+import { FlxModule } from './di/flx-module.decorator';
 import { DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER } from './diagnostics/logger.token';
 import { SimpleStringifyer } from './diagnostics/simple-stringifyer';
 import { STRINGIFYER } from './diagnostics/stringifyer.token';
 
 
-class BootstrapCore {
-  protected static readonly logger = getLogger(BootstrapCore);
+@Injectable()
+@FlxModule({
+  providers: [
+    { provide: DEFAULT_CATEGORY, useValue: CoreModule.logger.category },
+    { provide: LOGGER, useValue: CoreModule.logger },
+    { provide: LOG_EXCEPTIONS, useValue: true },
+    { provide: STRINGIFYER, useClass: SimpleStringifyer }   // default
+  ]
+})
+export class CoreModule {
+  protected static readonly logger = getLogger(CoreModule);
 
   // tslint:disable-next-line:no-unused-variable
   private static initialized = (() => {
-    BootstrapCore.logger.setLevel(levels.INFO);
-
-    using(new XLog(BootstrapCore.logger, levels.INFO, 'initialized'), (log) => {
-      log.log(`initializing @fluxgate/core`);
-
-      /**
-       * logger für DI registrieren
-       */
-      CoreInjector.instance.resolveAndCreate([
-        { provide: DEFAULT_CATEGORY, useValue: BootstrapCore.logger.category },
-        { provide: LOGGER, useValue: BootstrapCore.logger },
-        { provide: LOG_EXCEPTIONS, useValue: true },
-        { provide: STRINGIFYER, useClass: SimpleStringifyer }   // default
-      ]);
-
-      log.log(`registered injector and logger providers`);
-    });
+    CoreModule.logger.setLevel(levels.INFO);
   })();
+
+
+  constructor(injector: Injector) {
+    using(new XLog(CoreModule.logger, levels.INFO, 'ctor'), (log) => {
+      log.log(`initializing @fluxgate/core, setting injector`);
+      CoreInjector.instance.setInjector(injector);
+    });
+  }
+
 }
