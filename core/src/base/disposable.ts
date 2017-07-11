@@ -3,8 +3,6 @@
 import { ILogger } from '../diagnostics/logger.interface';
 import { getLogger } from '../diagnostics/logging-core';
 
-import { Core } from '../diagnostics/core';
-import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { IDisposable } from './disposable.interface';
 
 
@@ -36,7 +34,8 @@ export abstract class Disposable implements IDisposable {
 
       if (this.disposed) {
         if (Disposable.throwExceptionOnAlreadyDisposed) {
-          throw new InvalidOperationException('Instance already disposed: ' + Core.stringify(this));
+          // Hinweis: hier nicht Core.stringify wegen Abhängigkeitsproblemen!
+          throw new Error('InvalidOperationException: Instance already disposed: ' + JSON.stringify(this));
         } else {
           Disposable.logger.debug('Instance already disposed: ', this);
         }

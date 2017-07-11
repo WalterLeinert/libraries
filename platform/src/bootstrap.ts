@@ -1,18 +1,29 @@
+import { Injectable, Injector } from 'injection-js';
+
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from './diagnostics';
 // -------------------------------------- logging --------------------------------------------
 
+import { CoreInjector, CoreModule, FlxComponent, FlxModule } from '@fluxgate/core';
 
-class BootstrapPlatform {
-  protected static readonly logger = getLogger(BootstrapPlatform);
 
-  // tslint:disable-next-line:no-unused-variable
-  private static initialized = (() => {
-    BootstrapPlatform.logger.setLevel(levels.INFO);
+@Injectable()
+@FlxModule({
+  imports: [
+    CoreModule
+  ]
+})
+export class PlatformModule {
+  protected static readonly logger = getLogger(PlatformModule);
 
-    using(new XLog(BootstrapPlatform.logger, levels.INFO, 'initialized'), (log) => {
-      log.log(`initializing @fluxgate/platform`);
+  constructor(injector: Injector) {
+    PlatformModule.logger.setLevel(levels.INFO);
+
+    using(new XLog(PlatformModule.logger, levels.INFO, 'ctor'), (log) => {
+      log.log(`initializing @fluxgate/platform, setting injector`);
+      CoreInjector.instance.setInjector(injector);
     });
-  })();
+  }
+
 }

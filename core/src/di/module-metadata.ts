@@ -138,7 +138,7 @@ export class ModuleMetadata extends DiMetadata {
   public getProvidersFlat(): Provider[] {
     const importsFlat = this.getImportsFlat();
     const providersFlat: Provider[] = [];
-    importsFlat.map((item) => providersFlat.push(item.providers));
+    importsFlat.map((item) => providersFlat.push(...item.providers));
     return providersFlat;
   }
 

@@ -7,12 +7,15 @@ import process = require('process');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { AssertionException, UnitTest } from '@fluxgate/core';
+import { PlatformUnitTest } from '../src/testing/unit-test';
+
+// import { AssertionException } from '@fluxgate/core/exceptions/assertion';
+// import { PlatformUnitTest } from '../src/testing/unit-test';
 import { FileSystem } from '../src/util/fileSystem';
 
 
 @suite('platform.util.FileSystem')
-class FileSystemTest extends UnitTest {
+class FileSystemTest extends PlatformUnitTest {
 
   @test 'should exist file'() {
     const testPath = path.join(process.cwd(), 'package.json');
@@ -31,7 +34,7 @@ class FileSystemTest extends UnitTest {
   }
 
   @test 'should throw error for null file path'() {
-    return expect(() => FileSystem.fileExists(null)).to.throw(AssertionException, 'value is null');
+    return expect(() => FileSystem.fileExists(null)).to.throw('value is null');
   }
 
 
@@ -53,6 +56,6 @@ class FileSystemTest extends UnitTest {
   }
 
   @test 'should throw error for null directory path'() {
-    return expect(() => FileSystem.directoryExists(null)).to.throw(AssertionException, 'value is null');
+    return expect(() => FileSystem.directoryExists(null)).to.throw('value is null');
   }
 }

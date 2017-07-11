@@ -2,8 +2,8 @@
   require('./bootstrap');
 })();
 
-
 export * from './adapter';
+export * from './bootstrap';
 export * from './base';
 export * from './cache';
 export * from './collection';

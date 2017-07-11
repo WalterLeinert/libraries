@@ -11,6 +11,7 @@ import { XLog } from '../diagnostics/xlog';
 
 import { Assertion } from '../base/assertion';
 import { Funktion } from '../base/objectType';
+import { JsonDumper } from '../diagnostics/json-dumper';
 import { Types } from '../types/types';
 import { ComponentMetadata } from './component-metadata';
 import { InjectorBase } from './injector-base';
@@ -57,7 +58,13 @@ export class CoreInjector extends InjectorBase<Injector, OpaqueToken> {
   public getInstance<TInstance>(token: Funktion | OpaqueToken | any, notFoundValue?: any): TInstance {
     return using(new XLog(CoreInjector.logger, levels.INFO, 'getInstance',
       `token = ${token}, notFoundValue = ${notFoundValue}`), (log) => {
-        // const injector = this.getInjector().resolveAndCreateChild(this.compMetadata.providers);
+
+        if (!this.getInjector() && Types.isPresent(notFoundValue)) {
+          // tslint:disable-next-line:no-console
+          console.warn(
+            `CoreInjector.getInstance: token = ${token}: using notFoundValue = ${JsonDumper.stringify(notFoundValue)}`);
+          return notFoundValue;     // v.a. für Unittests und deren Initialisierung
+        }
         return this.getInjector().get(token, notFoundValue) as TInstance;
       });
   }
