@@ -10,7 +10,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  BaseTest, ConfigBase, EntityGenerator, EntityVersion, IEntity, IEntityGeneratorConfig, TableMetadata, ValueGenerator
+  ConfigBase, EntityGenerator, EntityVersion, IEntity,
+  IEntityGeneratorConfig, TableMetadata, ValueGenerator
 } from '@fluxgate/common';
 import { Activator, Core, Dictionary, fromEnvironment, Funktion, ICtor, IToString, Types } from '@fluxgate/core';
 import { JsonReader } from '@fluxgate/platform';
@@ -21,11 +22,13 @@ import { KnexService } from '../../src/ts-express-decorators-flx/services/knex.s
 import { MetadataService } from '../../src/ts-express-decorators-flx/services/metadata.service';
 import { SystemConfigService } from '../../src/ts-express-decorators-flx/services/system-config.service';
 
+import { ServerUnitTest } from '../unit-test';
+
 
 /**
  * Basisklasse für alle Service-Klassen, die mit Knex auf die DB zugreifen.
  */
-export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> extends BaseTest {
+export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> extends ServerUnitTest {
   protected static readonly logger = getLogger(KnexTest);
 
   private static _knexService: KnexService;
