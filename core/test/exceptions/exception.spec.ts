@@ -39,11 +39,13 @@ class ExceptionTestComponent {
   declarations: [
     ExceptionTestComponent
   ],
-  bootstrap: ExceptionTestComponent
+  bootstrap: [
+    ExceptionTestComponent
+  ]
 })
 class ExceptionTestModule {
-  constructor(comp: ExceptionTestComponent) {
-    CoreInjector.instance.setRootComponent(comp, true);
+  constructor(injector: Injector) {
+    CoreInjector.instance.setInjector(injector, true);
   }
 }
 

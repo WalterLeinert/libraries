@@ -41,11 +41,13 @@ class QueryTreeTestComponent {
   declarations: [
     QueryTreeTestComponent
   ],
-  bootstrap: QueryTreeTestComponent
+  bootstrap: [
+    QueryTreeTestComponent
+  ]
 })
 class QueryTreeTestModule {
-  constructor(comp: QueryTreeTestComponent) {
-    CoreInjector.instance.setRootComponent(comp, true);
+  constructor(injector: Injector) {
+    CoreInjector.instance.setInjector(injector, true);
   }
 }
 

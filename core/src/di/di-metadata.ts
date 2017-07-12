@@ -34,7 +34,7 @@ export abstract class DiMetadata extends ClassMetadata
 
 
   protected constructor(target: Funktion, providers: Provider[]) {
-    super(target );
+    super(target);
 
     if (providers) {
       this._providers = [...providers];
@@ -84,7 +84,7 @@ export abstract class DiMetadata extends ClassMetadata
    * @memberof DiMetadata
    */
   public getInstance<TInstance>(token: Funktion | OpaqueToken | any, notFoundValue?: any): TInstance {
-    return this.injector.get(token, notFoundValue) as TInstance;
+    return this.__injector.get(token, notFoundValue) as TInstance;
   }
 
   /**
@@ -112,12 +112,13 @@ export abstract class DiMetadata extends ClassMetadata
 
   /**
    * Liefert den zugehörigen Injector.
+   * Hinweis: public nur für Testzwecke.
    *
    * @readonly
    * @type {ReflectiveInjector}
    * @memberof DiMetadata
    */
-  public get injector(): ReflectiveInjector {
+  public get __injector(): ReflectiveInjector {
     return this._injector;
   }
 }

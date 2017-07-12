@@ -61,11 +61,16 @@ class ModuleTest extends CoreUnitTest {
   }
 
   @test 'should check bootstrap'() {
-    expect(this.metadata.bootstrap).to.not.exist;
+    expect(this.metadata.bootstrap).to.be.empty;
   }
 
   protected before() {
     super.before();
     this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(TestModuleEmpty);
+  }
+
+  protected static before() {
+    // kein bootstrap in Basisklasse
+    // ModuleMetadataStorage.instance.bootstrapModule(TestModuleEmpty);
   }
 }

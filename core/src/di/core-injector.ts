@@ -40,19 +40,19 @@ export class CoreInjector extends InjectorBase<Injector, OpaqueToken> {
     // ok
   }
 
-  public setRootComponent(component: object, clearInjector: boolean = false) {
-    using(new XLog(CoreInjector.logger, levels.INFO, 'setRootComponent',
-      `component = ${component}, cleanInjector = ${clearInjector}`), (log) => {
-        const ctor = Types.getConstructor(component);
-        this.compMetadata = ModuleMetadataStorage.instance.findComponentMetadata(ctor);
-        Assertion.notNull(this.compMetadata, `component ist keine registrierte Komponente`);
+  // public setRootComponent(component: object, clearInjector: boolean = false) {
+  //   using(new XLog(CoreInjector.logger, levels.INFO, 'setRootComponent',
+  //     `component = ${component}, cleanInjector = ${clearInjector}`), (log) => {
+  //       const ctor = Types.getConstructor(component);
+  //       this.compMetadata = ModuleMetadataStorage.instance.findComponentMetadata(ctor);
+  //       Assertion.notNull(this.compMetadata, `component ist keine registrierte Komponente`);
 
-        const injector = this.compMetadata.createInjector(this.compMetadata.providers,
-          this.compMetadata.module.injector);
+  //       const injector = this.compMetadata.createInjector(this.compMetadata.providers,
+  //         this.compMetadata.module.injector);
 
-        this.setInjector(injector, clearInjector);
-      });
-  }
+  //       this.setInjector(injector, clearInjector);
+  //     });
+  // }
 
 
   public getInstance<TInstance>(token: Funktion | OpaqueToken | any, notFoundValue?: any): TInstance {

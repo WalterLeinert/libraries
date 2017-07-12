@@ -34,7 +34,6 @@ export class CoreBootstrapComponent {
 }
 
 
-
 @FlxModule({
   imports: [
   ],
@@ -47,38 +46,40 @@ export class CoreBootstrapComponent {
   providers: [
     Logger
   ],
-  bootstrap: CoreBootstrapComponent
+  bootstrap: [
+    CoreBootstrapComponent
+  ]
 })
 export class CoreBootstrapModule {
-  constructor(public injector: Injector) {
+  public static injector: Injector;
+
+  constructor(injector: Injector) {
     // tslint:disable-next-line:no-console
     console.log(`injector: ` + injector);
 
-    this.injector = injector;
+    CoreBootstrapModule.injector = injector;
   }
 }
 
 
 @suite('core.di.core: bootstrap:')
 class CoreTest {
-  private rootInjector: Injector;
-
 
   @test 'should boostrap and create root injector'() {
-    expect(this.rootInjector).to.exist;
-    expect(Types.getClassName(this.rootInjector)).to.equal(DiMetadata.INJECTOR_CLASSNAME);
+    expect(CoreBootstrapModule.injector).to.exist;
+    expect(Types.getClassName(CoreBootstrapModule.injector)).to.equal(DiMetadata.INJECTOR_CLASSNAME);
   }
 
 
   @test 'should test component creation'() {
-    expect(this.rootInjector.get<CoreBootstrapComponent>(CoreBootstrapComponent)).to.be.instanceof(
+    expect(CoreBootstrapModule.injector.get<CoreBootstrapComponent>(CoreBootstrapComponent)).to.be.instanceof(
       CoreBootstrapComponent
     );
 
-    expect(this.rootInjector.get<Logger>(Logger)).to.be.instanceof(Logger);
+    expect(CoreBootstrapModule.injector.get<Logger>(Logger)).to.be.instanceof(Logger);
   }
 
   public before() {
-    this.rootInjector = ModuleMetadataStorage.instance.bootstrapModule(CoreBootstrapModule);
+    ModuleMetadataStorage.instance.bootstrapModule(CoreBootstrapModule);
   }
 }

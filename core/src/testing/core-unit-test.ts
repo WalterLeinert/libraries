@@ -10,6 +10,9 @@ import { IConfig } from '../diagnostics/config.interface';
 import { configure } from '../diagnostics/logging-core';
 // -------------------------------------- logging --------------------------------------------
 
+import { CoreTestModule } from './core-test.module';
+import { ModuleMetadataStorage } from '../di/module-metadata-storage';
+
 
 /**
  * abstrakte Basisklasse für alle Unittests.
@@ -36,5 +39,9 @@ export abstract class CoreUnitTest {
 
   protected before() {
     configure(this.config);
+  }
+
+  protected static before() {
+    ModuleMetadataStorage.instance.bootstrapModule(CoreTestModule);
   }
 }

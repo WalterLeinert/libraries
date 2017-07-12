@@ -40,8 +40,7 @@ export class ModuleMetadata extends DiMetadata {
   private importsDict: Dictionary<Funktion, ModuleMetadata> = new Dictionary<Funktion, ModuleMetadata>();
   private declarationsDict: Dictionary<Funktion, ComponentMetadata> = new Dictionary<Funktion, ComponentMetadata>();
   private exportsDict: Dictionary<Funktion, ComponentMetadata> = new Dictionary<Funktion, ComponentMetadata>();
-  private _bootstrap: ComponentMetadata;
-
+  private bootstrapDict: Dictionary<Funktion, ComponentMetadata> = new Dictionary<Funktion, ComponentMetadata>();
 
 
   public constructor(private metadataStorage: ModuleMetadataStorage, target: Funktion,
@@ -58,49 +57,27 @@ export class ModuleMetadata extends DiMetadata {
 
 
         if (this._options.imports) {
-          const duplicates = new Set<Funktion>();
-          this._options.imports.forEach((item) => {
-            const imprt = this.metadataStorage.findModuleMetadata(item);
-            Assertion.notNull(imprt, `imports: module ${item.name} not registered`);
-
-            Assertion.that(!duplicates.has(item),
-              `imports: module ${item.name} already registered`);
-
-            duplicates.add(item);
-            this.importsDict.set(imprt.target, imprt);
-
-            imprt.setParent(this);
-          });
+          this.createDict('imports', 'module',
+            (metadataStorage: ModuleMetadataStorage, target: Funktion) => metadataStorage.findModuleMetadata(target),
+            this._options.imports, this.importsDict, (component) => component.setParent(this));
         }
 
         if (this._options.declarations) {
-          this._options.declarations.forEach((item) => {
-            const declaration = this.metadataStorage.findComponentMetadata(item);
-            Assertion.notNull(declaration, `declarations: component ${item.name} not registered`);
-
-            this.declarationsDict.set(declaration.target, declaration);
-            declaration.setModule(this);
-          });
+          this.createDict('declarations', 'component',
+            (metadataStorage: ModuleMetadataStorage, target: Funktion) => metadataStorage.findComponentMetadata(target),
+            this._options.declarations, this.declarationsDict, (component) => component.setModule(this));
         }
 
         if (this._options.exports) {
-          this._options.exports.forEach((item) => {
-            const exprt = this.metadataStorage.findComponentMetadata(item);
-            Assertion.notNull(exprt, `exports: component ${item.name} not registered`);
-
-            this.exportsDict.set(exprt.target, exprt);
-          });
+          this.createDict('exports', 'component',
+            (metadataStorage: ModuleMetadataStorage, target: Funktion) => metadataStorage.findComponentMetadata(target),
+            this._options.exports, this.exportsDict);
         }
 
         if (this._options.bootstrap) {
-          const bootstrap = this.metadataStorage.findComponentMetadata(this._options.bootstrap);
-          Assertion.notNull(bootstrap, `bootstrap: component ${bootstrap.targetName} not registered`);
-          this._bootstrap = bootstrap;
-
-          const componentProviders = this.declarations.map((item) => item.target);
-          if (!this.declarationsDict.containsKey(this.bootstrap.target)) {
-            componentProviders.push(this.bootstrap.target);
-          }
+          this.createDict('bootstrap', 'component',
+            (metadataStorage: ModuleMetadataStorage, target: Funktion) => metadataStorage.findComponentMetadata(target),
+            this._options.bootstrap, this.bootstrapDict);
         }
       }
     });
@@ -119,8 +96,8 @@ export class ModuleMetadata extends DiMetadata {
     return this.exportsDict.values;
   }
 
-  public get bootstrap(): ComponentMetadata {
-    return this._bootstrap;
+  public get bootstrap(): ComponentMetadata[] {
+    return this.bootstrapDict.values;
   }
 
 
@@ -164,4 +141,31 @@ export class ModuleMetadata extends DiMetadata {
     this._parent = module;
   }
 
+
+  private createDict<T extends DiMetadata>(
+    name: string,
+    type: string,
+    finder: (metadataStorage: ModuleMetadataStorage, target: Funktion) => T,
+    targets: Funktion[],
+    itemsDict: Dictionary<Funktion, T>,
+    moduleSetter?: (item: T) => void) {
+
+    const duplicates = new Set<Funktion>();
+
+    targets.forEach((target) => {
+      const metadata = finder(ModuleMetadataStorage.instance, target);
+      Assertion.notNull(metadata, `${name}: ${type} ${target.name} not registered`);
+
+      Assertion.that(!duplicates.has(target),
+        `${name}: ${type} ${target.name} already registered`);
+
+      duplicates.add(target);
+
+      itemsDict.set(target, metadata);
+
+      if (moduleSetter) {
+        moduleSetter(metadata);
+      }
+    });
+  }
 }

@@ -44,10 +44,10 @@ export interface IModuleOptions {
   providers?: Provider[];
 
   /**
-   * Komponentenklasse für Bootstrap
+   * Komponentenklassen für Bootstrap
    *
    * @type {Funktion}
    * @memberof IModuleOptions
    */
-  bootstrap?: Funktion;
+  bootstrap?: Funktion[];
 }

@@ -46,7 +46,9 @@ export class CoreComponent {
   providers: [
     Logger
   ],
-  bootstrap: CoreComponent
+  bootstrap: [
+    CoreComponent
+  ]
 })
 export class CoreModule {
 }
@@ -79,7 +81,7 @@ class CoreTest extends CoreUnitTest {
 
   @test 'should check bootstrap'() {
     expect(this.metadata.bootstrap).to.exist;
-    expect(this.metadata.bootstrap.target).to.equal(CoreComponent);
+    expect(this.metadata.bootstrap[0].target).to.equal(CoreComponent);
   }
 
 
@@ -94,7 +96,7 @@ class CoreTest extends CoreUnitTest {
 
   @test 'should create CoreComponent instance by metadata'() {
     const injector = ReflectiveInjector.resolveAndCreate([
-      { provide: this.metadata.bootstrap.target as any, useClass: this.metadata.bootstrap.target as any },
+      { provide: this.metadata.bootstrap[0].target, useClass: this.metadata.bootstrap[0].target as any },
       ...this.metadata.providers
     ]);
     const instance: CoreComponent = injector.get(CoreComponent);
@@ -105,7 +107,7 @@ class CoreTest extends CoreUnitTest {
 
   @test 'should create CoreComponent instance by metadata and log message'() {
     const injector = ReflectiveInjector.resolveAndCreate([
-      { provide: this.metadata.bootstrap.target as any, useClass: this.metadata.bootstrap.target as any },
+      { provide: this.metadata.bootstrap[0].target, useClass: this.metadata.bootstrap[0].target as any },
       ...this.metadata.providers
     ]);
     const instance: CoreComponent = injector.get(CoreComponent);

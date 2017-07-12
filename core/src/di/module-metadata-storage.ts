@@ -12,6 +12,7 @@ import { Assertion } from '../base/assertion';
 import { Funktion } from '../base/objectType';
 import { Metadata } from '../metadata/metadata';
 import { Dictionary } from '../types/dictionary';
+import { Types } from '../types/types';
 
 import { ComponentMetadata } from './component-metadata';
 import { ModuleMetadata } from './module-metadata';
@@ -111,42 +112,74 @@ export class ModuleMetadataStorage {
    * @returns {Injector} - der zugehörige Injector
    * @memberof ModuleMetadataStorage
    */
-  public bootstrapModule(module: Funktion): Injector {
-    return using(new XLog(ModuleMetadataStorage.logger, levels.INFO, 'bootstrapModule',
+  public bootstrapModule(module: Funktion) {
+    using(new XLog(ModuleMetadataStorage.logger, levels.INFO, 'bootstrapModule',
       `model = ${module.name}`), (log) => {
         Assertion.notNull(module);
 
-        const moduleMetadata = this.findModuleMetadata(module as any as Funktion);
+        const moduleMetadata = this.findModuleMetadata(module);
         Assertion.notNull(moduleMetadata, `bootstrap: module ${moduleMetadata.targetName} not registered`);
 
-        const declaredComponents = moduleMetadata.declarations.map((item) => item.target);
+        Assertion.that(!Types.isNullOrEmpty(moduleMetadata.bootstrap), `bootstrap: module ${moduleMetadata.targetName} no bootstrap components defined`);
+
+        // nun alle Provider der Moduls sammeln zum Erzeugen des Module-Injectors
+        const declaredComponents = new Set(moduleMetadata.declarations);
+
+        // bootstrap Components, die nicht bereits in declaredComponents enthalten sind
+        const additionalBootstrapComponents = new Set<ComponentMetadata>();
 
         if (moduleMetadata.bootstrap) {
-          if (declaredComponents.indexOf(moduleMetadata.bootstrap.target) < 0) {
-            declaredComponents.push(moduleMetadata.bootstrap.target);
-          }
+          moduleMetadata.bootstrap.forEach((item) => {
+            if (!declaredComponents.has(item)) {
+              additionalBootstrapComponents.add(item);
+            }
+          });
         }
 
 
         const importsFlat = moduleMetadata.getImportsFlat();
         const moduleProvidersFlat = moduleMetadata.getProvidersFlat();
 
+
+        //
         // root injector erzeugen über Provider aus
-        // - components declarations + bootstrap component
+        // - components declarations + bootstrap components (nicht in declarations)
         // - alle import modules
         // - providers des bootstrapModules
         // - providers aller importierten Module
-        moduleMetadata.createInjector([
+        //
+        const rootInjector = moduleMetadata.createInjector([
           module as any,
-          ...declaredComponents,
+          ...Array.from(declaredComponents).map((item) => item.target),
+          ...Array.from(additionalBootstrapComponents).map((item) => item.target),
           ...importsFlat.map((item) => item.target),
           ...moduleMetadata.providers,
           ...moduleProvidersFlat
         ]);
 
-        const moduleInstance = moduleMetadata.injector.get(moduleMetadata.target);
 
-        return moduleMetadata.injector;
+        //
+        // ... dann für alle bootstrap Komponenten injectors erzeugen
+        // TODO: vermutlich rekursiv für alle Komponenten der importierten Module
+        //
+        moduleMetadata.bootstrap.forEach((item) => {
+          item.createInjector([
+            item.target as any,
+            ...item.providers
+          ], rootInjector);
+        });
+
+
+        // Instanzen erzeugen, damit die entsprechenden Konstruktoren aufgerufen werden
+        // - das Modul selbst
+        // - für alle bootstrap components
+
+        if (moduleMetadata.bootstrap) {
+          moduleMetadata.bootstrap.forEach((item) => {
+            const bootstrapInstance = item.getInstance(item.target);
+          });
+        }
+        const moduleInstance = moduleMetadata.getInstance(moduleMetadata.target);
       });
   }
 

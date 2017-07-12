@@ -69,7 +69,9 @@ class ConsoleLoggerTestComponent {
   providers: [
     { provide: LOGGER, useClass: ConsoleLogger }
   ],
-  bootstrap: ConsoleLoggerTestComponent
+  bootstrap: [
+    ConsoleLoggerTestComponent
+  ]
 })
 class ConsoleLoggerTestModule {
   constructor(comp: ConsoleLoggerTestComponent, injector: Injector) {

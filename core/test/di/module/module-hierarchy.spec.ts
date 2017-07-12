@@ -4,6 +4,8 @@
 
 import 'reflect-metadata';
 
+import { Injector } from 'injection-js';
+
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
@@ -48,15 +50,29 @@ export class ImportChildModule {
 }
 
 
+@FlxComponent({
+})
+export class ImportParentComponent {
+}
+
+
 @FlxModule({
   imports: [
     ImportChildModule
   ],
   providers: [
     ParentProvider
+  ],
+  bootstrap: [
+    ImportParentComponent
   ]
 })
 export class ImportParentModule {
+  public static injector: Injector;
+
+  constructor(injector: Injector) {
+    ImportParentModule.injector = injector;
+  }
 }
 
 
@@ -75,16 +91,9 @@ class ModuleTest extends CoreUnitTest {
     expect(this.metadata.imports[0].target).to.equal(ImportChildModule);
   }
 
-
-  @test 'should boostrap and create root module instance'() {
-    const rootInjector = ModuleMetadataStorage.instance.bootstrapModule(ImportParentModule);
-    const name = Types.getClassName(rootInjector);
-    expect(name).to.equal(DiMetadata.INJECTOR_CLASSNAME);
-  }
-
   @test 'should verify root module instance'() {
-    const rootInjector = ModuleMetadataStorage.instance.bootstrapModule(ImportParentModule);
-    expect(this.metadata.injector).to.equal(rootInjector);
+    ModuleMetadataStorage.instance.bootstrapModule(ImportParentModule);
+    expect(this.metadata.__injector).to.equal(ImportParentModule.injector);
   }
 
   @test 'should create ImportChildModule instance'() {
@@ -101,5 +110,10 @@ class ModuleTest extends CoreUnitTest {
   protected before() {
     super.before();
     this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(ImportParentModule);
+  }
+
+  protected static before() {
+    // kein bootstrap in Basisklasse
+    ModuleMetadataStorage.instance.bootstrapModule(ImportParentModule);
   }
 }
