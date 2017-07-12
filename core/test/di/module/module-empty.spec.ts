@@ -13,7 +13,7 @@ import { FlxComponent } from '../../../src/di/flx-component.decorator';
 import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-import { UnitTest } from '../../../src/testing/unit-test';
+import { CoreUnitTest } from '../../../src/testing/unit-test';
 
 
 @FlxModule({
@@ -31,7 +31,7 @@ export class TestModuleEmpty {
 
 
 @suite('core.di.Module: no imports, declarations, etc.')
-class ModuleTest extends UnitTest {
+class ModuleTest extends CoreUnitTest {
   private metadata: ModuleMetadata;
 
   @test 'should annotate and register module'() {

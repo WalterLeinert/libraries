@@ -9,7 +9,7 @@ import { suite, test } from 'mocha-typescript';
 import { Clone } from '../../src/base/clone';
 import { CloneVerifier } from '../../src/base/clone-verifier';
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 
 class TreeNode extends UniqueIdentifiable {
 
@@ -49,7 +49,7 @@ class Tree extends UniqueIdentifiable {
 
 
 @suite('core.base.Clone: external class reference')
-class CloneExtTest extends UnitTest  {
+class CloneExtTest extends CoreUnitTest  {
 
   @test 'should check Tree properties'() {
     const tree = new Tree('my tree');

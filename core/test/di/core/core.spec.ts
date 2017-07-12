@@ -15,7 +15,7 @@ import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 
-import { UnitTest } from '../../../src/testing/unit-test';
+import { CoreUnitTest } from '../../../src/testing/unit-test';
 import { Logger } from '../logger.service';
 
 
@@ -53,7 +53,7 @@ export class CoreModule {
 
 
 @suite('core.di.core: CoreModule/-Component')
-class CoreTest extends UnitTest {
+class CoreTest extends CoreUnitTest {
   private metadata: ModuleMetadata;
 
 

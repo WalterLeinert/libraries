@@ -5,7 +5,7 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { FlattenJson } from '../../src/base/flatten-json';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 
 const data = {
   name: '@fluxgate/core',
@@ -34,7 +34,7 @@ version: "2.2.6-beta.2"
 
 
 @suite('core.base.FlattenJson')
-class Test extends UnitTest {
+class Test extends CoreUnitTest {
 
 
   @test 'should flatten json'() {

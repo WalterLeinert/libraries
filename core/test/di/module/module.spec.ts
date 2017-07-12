@@ -14,7 +14,7 @@ import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 
-import { UnitTest } from '../../../src/testing/unit-test';
+import { CoreUnitTest } from '../../../src/testing/unit-test';
 
 // tslint:disable-next-line:no-namespace
 namespace Di {
@@ -40,7 +40,7 @@ namespace Di {
 
 
 @suite('core.di.Module')
-class ModuleTest extends UnitTest {
+class ModuleTest extends CoreUnitTest {
   private metadata: ModuleMetadata;
 
   @test 'should annotate and register module'() {

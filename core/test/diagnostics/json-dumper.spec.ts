@@ -6,7 +6,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
 import { JsonDumper } from '../../src/diagnostics/json-dumper';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 
 
 const json = {
@@ -56,7 +56,7 @@ class TreeNode extends UniqueIdentifiable {
 
 
 @suite('core.diagnostics.JsonDumper')
-class DumperTest extends UnitTest {
+class DumperTest extends CoreUnitTest {
 
   @test 'should dump empty json'() {
     const dump = JsonDumper.stringify({});

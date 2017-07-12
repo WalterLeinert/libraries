@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 import { Dictionary } from '../../src/types/dictionary';
 
 class KeyClass extends UniqueIdentifiable {
@@ -27,7 +27,7 @@ class ValueClass {
 
 
 @suite('core.types.Dictionary: Dictionary<KeyClass, ValueClass>, type checks')
-class IdentifiableTest extends UnitTest {
+class IdentifiableTest extends CoreUnitTest {
 
   @test 'should set an item of wrong type -> exception'() {
     const d = new Dictionary<KeyClass, ValueClass>();

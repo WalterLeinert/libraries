@@ -8,7 +8,7 @@ import { suite, test } from 'mocha-typescript';
 import { IConfig } from '../../src/diagnostics/config.interface';
 import { configure } from '../../src/diagnostics/logging-core';
 
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 
 import { CacheManager } from '../../src/cache/cache-manager';
 import { CacheTypes } from '../../src/cache/cache-type';
@@ -21,7 +21,7 @@ class CacheItem {
 
 
 @suite('core.cache.CacheManager')
-class ConverterTest extends UnitTest {
+class ConverterTest extends CoreUnitTest {
   private cacheManager: CacheManager;
 
   @test 'should create cacheManager'() {

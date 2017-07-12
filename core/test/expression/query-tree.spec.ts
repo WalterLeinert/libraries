@@ -19,8 +19,8 @@ import { Core } from '../../src/diagnostics/core';
 import { AndTerm, BinaryTerm, NotTerm, OrTerm, Query, SelectorTerm, UnaryTerm } from '../../src/expression';
 import { IVisitor, VisitableNode } from '../../src/pattern/visitor';
 import { Indenter, Suspender } from '../../src/suspendable';
-import { CoreUnitTestModule } from '../../src/testing/unit-test';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreTestModule } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 
 
 // ---------------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ class QueryTreeTestComponent {
 @Injectable()
 @FlxModule({
   imports: [
-    CoreUnitTestModule
+    // CoreUnitTestModule
   ],
   declarations: [
     QueryTreeTestComponent
@@ -137,7 +137,7 @@ class TermVisitor implements IVisitor<VisitableNode> {
 
 
 @suite('core.expresssion')
-class QueryTreeTest extends UnitTest {
+class QueryTreeTest extends CoreUnitTest {
 
   @test 'should create simple query'() {
     const term = new SelectorTerm({ name: 'firstname', operator: '=', value: 'hugo' });

@@ -8,11 +8,11 @@ import { CoreInjector } from '../../src/di/core-injector';
 import { ConsoleLogger } from '../../src/diagnostics/consoleLogger';
 import { DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER } from '../../src/diagnostics/logger.token';
 import { AssertionException } from '../../src/exceptions/assertionException';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 
 
 @suite('core.exceptions: should log exception')
-class LogExceptionTests extends UnitTest {
+class LogExceptionTests extends CoreUnitTest {
 
   @test 'should log exception'() {
     try {

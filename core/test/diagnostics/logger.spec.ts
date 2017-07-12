@@ -16,7 +16,7 @@ import { configure, getLogger } from '../../src/diagnostics/logging-core';
 import { XLog } from '../../src/diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 
 
 class Test {
@@ -72,7 +72,7 @@ class Test3 {
 
 
 @suite('core.diagnostics.Logger')
-class LoggerTest extends UnitTest {
+class LoggerTest extends CoreUnitTest {
 
   @test 'should create logger'() {
     const logger = getLogger('test');
@@ -106,7 +106,7 @@ class LoggerTest extends UnitTest {
 }
 
 @suite('core.diagnostics.Logger config')
-class LoggerConfigTest extends UnitTest {
+class LoggerConfigTest extends CoreUnitTest {
 
   config: IConfig = {
     appenders: [
@@ -151,7 +151,7 @@ class LoggerConfigTest extends UnitTest {
 
 
 @suite('Logger extended')
-class LoggerExtendedTest extends UnitTest {
+class LoggerExtendedTest extends CoreUnitTest {
 
   @test 'should create Test instance'() {
     const value = new Test('hugo');

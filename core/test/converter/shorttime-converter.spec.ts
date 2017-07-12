@@ -7,7 +7,7 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { ConverterRegistry } from '../../src/converter';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 import { ShortTime } from '../../src/types/shortTime';
 import { Types } from '../../src/types/types';
 
@@ -22,7 +22,7 @@ class Test {
 
 
 @suite('core.converter (ShortTime converter)')
-class TimeConverterTest extends UnitTest {
+class TimeConverterTest extends CoreUnitTest {
 
   @test 'should test ShortTime property'() {
     const value = new Test();

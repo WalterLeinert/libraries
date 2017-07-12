@@ -14,7 +14,7 @@ import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 import { Types } from '../../../src/types/types';
 
-import { UnitTest } from '../../../src/testing/unit-test';
+import { CoreUnitTest } from '../../../src/testing/unit-test';
 
 
 class ChildProvider {
@@ -62,7 +62,7 @@ export class ImportParentModule {
 
 
 @suite('core.di.Module: module hierarchy and providers')
-class ModuleTest extends UnitTest {
+class ModuleTest extends CoreUnitTest {
   private metadata: ModuleMetadata;
 
   @test 'should annotate and register modules'() {

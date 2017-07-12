@@ -5,7 +5,7 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 import { Dictionary } from '../../src/types/dictionary';
 
 
@@ -30,7 +30,7 @@ const expectedDict = [
 
 
 @suite('core.types.Dictionary<string, string>')
-class DictionaryStringStringTest<TKey, TValue> extends UnitTest {
+class DictionaryStringStringTest<TKey, TValue> extends CoreUnitTest {
   @test 'should create instance of Dictionary'() {
     return expect(new Dictionary<string, string>()).to.be.not.null;
   }
@@ -119,7 +119,7 @@ class DictionaryStringStringTest<TKey, TValue> extends UnitTest {
 
 
 @suite('core.types.Dictionary')
-class DictionaryTest extends UnitTest {
+class DictionaryTest extends CoreUnitTest {
 
   @test 'validate keys vs values'() {
     expectedDict.forEach((tst) => {
@@ -273,7 +273,7 @@ class ObjectKey {
 }
 
 @suite('core.types.Dictionary: object keys')
-class DictionaryNotSupportedTest extends UnitTest {
+class DictionaryNotSupportedTest extends CoreUnitTest {
 
   @test 'should create instance of Dictionary'() {
     return expect(new Dictionary<ObjectKey, string>()).to.be.not.null;

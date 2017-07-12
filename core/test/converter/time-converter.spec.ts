@@ -7,7 +7,7 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { ConverterRegistry } from '../../src/converter';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 import { Time } from '../../src/types/time';
 import { Types } from '../../src/types/types';
 
@@ -22,7 +22,7 @@ class Test {
 
 
 @suite('core.converter (Time converter)')
-class TimeConverterTest extends UnitTest {
+class TimeConverterTest extends CoreUnitTest {
 
   @test 'should test Time property'() {
     const value = new Test();

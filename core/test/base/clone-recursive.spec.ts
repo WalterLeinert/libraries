@@ -9,7 +9,7 @@ import { suite, test } from 'mocha-typescript';
 import { Clone } from '../../src/base/clone';
 import { CloneVerifier } from '../../src/base/clone-verifier';
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 
 class TreeNode extends UniqueIdentifiable {
   constructor(private _id: number, private _name: string, private _child?: TreeNode) {
@@ -36,7 +36,7 @@ class TreeNode extends UniqueIdentifiable {
 
 
 @suite('core.base.Clone: cyclic graphs')
-class CloneRecursiveTest extends UnitTest {
+class CloneRecursiveTest extends CoreUnitTest {
 
   @test 'should check graph without cycle'() {
     const tree = new TreeNode(1, 'root', new TreeNode(2, 'child'));

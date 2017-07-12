@@ -6,7 +6,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { Funktion } from '../../src/base/objectType';
 import { ClassMetadata, Metadata, PropertyMetadata } from '../../src/metadata/';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 
 
 const metadatas: Array<Metadata<any>> = new Array<Metadata<any>>();
@@ -75,7 +75,7 @@ class TestClass {
 
 
 @suite('core.metadata')
-class MetadataTest extends UnitTest {
+class MetadataTest extends CoreUnitTest {
 
   @test 'should test no of metadata'() {
     expect(metadatas.length).to.equal(4);

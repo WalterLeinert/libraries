@@ -5,10 +5,10 @@ import { expect } from 'chai';
 
 import { Differ } from '../../src/base/differ';
 import { JsonSerializer } from '../../src/serialization';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 
 
-export abstract class SerializerBaseTest extends UnitTest {
+export abstract class SerializerBaseTest extends CoreUnitTest {
   protected formatter: JsonSerializer;
 
   public before() {

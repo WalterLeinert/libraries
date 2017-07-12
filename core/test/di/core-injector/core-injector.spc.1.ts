@@ -10,7 +10,7 @@ import { only, suite, test } from 'mocha-typescript';
 import { CoreInjector } from '../../../src/di/core-injector';
 import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-import { UnitTest } from '../../../src/testing/unit-test';
+import { CoreUnitTest } from '../../../src/testing/unit-test';
 
 export const LOGGER = new InjectionToken<ILogger>('logger');
 
@@ -77,7 +77,7 @@ class CoreInjectorTestModule {
 
 
 @suite('core.exceptions.di: test CoreInjector')
-class CoreInjectorTest extends UnitTest {
+class CoreInjectorTest extends CoreUnitTest {
   private rootInstance: CoreInjectorTestModule;
 
   @test 'should create ConsoleLogger by token'() {

@@ -5,7 +5,7 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 import { Types } from '../../src/types';
 
 
@@ -87,7 +87,7 @@ class TestUserDerived extends TestUser {
 
 
 @suite('core.types.Types')
-class TypesTest extends UnitTest {
+class TypesTest extends CoreUnitTest {
 
 
   @test 'should test derived classes'() {

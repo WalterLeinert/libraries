@@ -14,7 +14,7 @@ import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 
-import { UnitTest } from '../../../src/testing/unit-test';
+import { CoreUnitTest } from '../../../src/testing/unit-test';
 
 
 @FlxComponent({
@@ -49,7 +49,7 @@ export class TestModuleComponentAll {
 
 
 @suite('core.di.Module: imports, declarations, exports, providers')
-class ModuleAllTest extends UnitTest {
+class ModuleAllTest extends CoreUnitTest {
   private metadata: ModuleMetadata;
 
 

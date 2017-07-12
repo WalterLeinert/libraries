@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { AssertionException } from '../../src/exceptions/assertionException';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 import { ShortTime, Types } from '../../src/types';
 
 
@@ -31,7 +31,7 @@ const expedtedTimes = [
 
 
 @suite('core.types.ShortTime (HH:mm)')
-class ShortTimeTest extends UnitTest {
+class ShortTimeTest extends CoreUnitTest {
 
   @test 'should create instance of class ShortTime (default ctor)'() {
     return expect(Types.construct(ShortTime)).to.be.not.null;
@@ -108,7 +108,7 @@ function timeToMinute(time: ShortTime): number {
 
 
 @suite('core.types.ShortTime (add, subtract)')
-class ShortTimeOperationsTest extends UnitTest {
+class ShortTimeOperationsTest extends CoreUnitTest {
 
   @test 'should get minutes from hour'() {
     const time = new ShortTime(8, 0);

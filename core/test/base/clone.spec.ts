@@ -9,7 +9,7 @@ import { suite, test } from 'mocha-typescript';
 import { Clone } from '../../src/base/clone';
 import { CloneVerifier } from '../../src/base/clone-verifier';
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 import { Types } from '../../src/types/types';
 
 
@@ -79,7 +79,7 @@ const primitiveTests = [
 
 
 @suite('core.base.Clone primitives')
-class ClonePrimitivesTest extends UnitTest {
+class ClonePrimitivesTest extends CoreUnitTest {
 
   @test 'should clone all primitives'() {
     primitiveTests.forEach((primitiveTest) => {
@@ -98,7 +98,7 @@ class ClonePrimitivesTest extends UnitTest {
 
 
 @suite('core.base.Clone')
-class CloneTest extends UnitTest {
+class CloneTest extends CoreUnitTest {
 
   @test 'should check TestDerived properties'() {
     const value = new TestDerived('Walter', 4711, new Date());
@@ -174,7 +174,7 @@ class TestWithClone {
 
 
 @suite('core.base.Clone by clone()')
-class CloneByCloneTest extends UnitTest {
+class CloneByCloneTest extends CoreUnitTest {
 
   @test 'should clone'() {
     const value = new TestWithClone(4711, false);

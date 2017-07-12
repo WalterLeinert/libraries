@@ -6,12 +6,12 @@ import { suite, test } from 'mocha-typescript';
 
 import { using } from '../../src/diagnostics/';
 import { CountingSuspendable, Suspender } from '../../src/suspendable/';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 
 
 
 @suite('core.suspendable.CountingSuspendable')
-class SuspedableTest extends UnitTest {
+class SuspedableTest extends CoreUnitTest {
   private suspendable: CountingSuspendable = new CountingSuspendable();
 
   @test 'should create test increment and counter (increment = 1)'() {

@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Activator } from '../../src/base/activator';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 
 class Test {
     constructor(public name: string, public id: number) {
@@ -20,7 +20,7 @@ class Test2 {
 }
 
 @suite('core.base.Activator')
-class ActivatorTest extends UnitTest {
+class ActivatorTest extends CoreUnitTest {
 
     @test 'should create instance of class Test'() {
         const expectedTest = new Test('hugo', 4711);

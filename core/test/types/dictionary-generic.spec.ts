@@ -7,7 +7,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 import { Dictionary } from '../../src/types/dictionary';
 
 
@@ -223,7 +223,7 @@ class DictionaryTester<TKey, TValue> {
 
 
 @suite('core.types.Dictionary-generic')
-class DictionaryGenericTest extends UnitTest {
+class DictionaryGenericTest extends CoreUnitTest {
 
   @test 'should perform tests on Dictionary<string, string>'() {
     const tester = new DictionaryTester<string, string>();

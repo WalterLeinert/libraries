@@ -1,1 +1,1 @@
-export * from './unit-test';
+export * from './core-unit-test';

@@ -9,12 +9,12 @@ import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 import { Reflection } from '../../src/util';
 
 
 @suite('core.util.Reflection')
-class ReflectionTest extends UnitTest {
+class ReflectionTest extends CoreUnitTest {
 
   @test 'should test copyProperties'() {
     // todo

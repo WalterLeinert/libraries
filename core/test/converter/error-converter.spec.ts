@@ -7,11 +7,11 @@ import { suite, test } from 'mocha-typescript';
 
 import { Funktion } from '../../src/base/objectType';
 import { ConverterRegistry } from '../../src/converter/converter-registry';
-import { UnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../../src/testing/unit-test';
 
 
 @suite('core.converter (Error converter)')
-class ErrorConverterTest extends UnitTest {
+class ErrorConverterTest extends CoreUnitTest {
 
   @test 'should test empty instance'() {
     const value = new Error();

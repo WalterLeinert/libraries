@@ -14,7 +14,7 @@ import { CoreInjector } from '../../../src/di/core-injector';
 import { FlxComponent } from '../../../src/di/flx-component.decorator';
 import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-import { CoreUnitTestModule } from '../../../src/testing/unit-test';
+import { CoreTestModule } from '../../../src/testing/unit-test';
 
 import { InvalidOperationException } from '../../../src/exceptions/invalidOperationException';
 
@@ -33,7 +33,7 @@ configure(config);
 
 
 
-import { UnitTest } from '../../../src/testing/unit-test';
+import { CoreUnitTest } from '../../../src/testing/unit-test';
 
 import { ConsoleLogger, DateLogger, ILogger, LOGGER } from '../logger';
 
@@ -61,7 +61,7 @@ class ConsoleLoggerTestComponent {
 @Injectable()
 @FlxModule({
   imports: [
-    CoreUnitTestModule
+    // CoreTestModule
   ],
   declarations: [
     ConsoleLoggerTestComponent
@@ -91,7 +91,7 @@ class LoggerTest {
 
 
 @suite('core.di.CoreInjector')
-class CoreInjectorTest extends UnitTest {
+class CoreInjectorTest extends CoreUnitTest {
 
   @test 'should create ConsoleLogger by token'() {
     const tester = new LoggerTest();
