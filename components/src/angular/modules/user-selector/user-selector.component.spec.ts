@@ -63,13 +63,18 @@ describe('UserSelectorComponent', () => {
       ]
     }).compileComponents().then((reason) => {
 
-      TestHelperModule.initialize();
+      TestHelperModule.initialize({
+        appenders: [
+        ],
+        levels: {
+          '[all]': 'INFO',
+          'Test': 'DEBUG',
+          'Test2': 'INFO'
+        }
+      });
+
 
       fixture = TestBed.createComponent(UserSelectorComponent);
-
-      // helper = TestBed.get(Injector);
-      //  console.log(helper.injector.displayName);
-
       comp = fixture.debugElement.componentInstance;
       de = fixture.debugElement;
       el = de.nativeElement;

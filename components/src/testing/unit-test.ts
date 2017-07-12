@@ -1,7 +1,7 @@
 // tslint:disable:member-access
 // tslint:disable:max-classes-per-file
 
-import { Injectable, Injector, NgModule } from '@angular/core';
+import { Injectable, Injector, NgModule, Optional } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import 'reflect-metadata';
@@ -97,8 +97,9 @@ export class InjectorHelper {
 })
 export class TestHelperModule {
 
-  constructor(injector: Injector) {
+  constructor(private injector: Injector) {
   }
+
 
   /**
    * Testinitialisierung
@@ -125,15 +126,12 @@ export class TestHelperModule {
     }
     configure(config);
 
+    const testHelper: TestHelperModule = TestBed.get(TestHelperModule);
+
     // boostrap für das Testmodul
     ModuleMetadataStorage.instance.bootstrapModule(testModule);
 
-    //
-    // über TestBed eine Instanz von InjectionHelper erzeugen -> injector
-    //
-    const helper: InjectorHelper = TestBed.get(InjectorHelper);
-
     // ... und als globalen Injector setzen
-    AppInjector.instance.setInjector(helper.injector, true);
+    AppInjector.instance.setInjector(testHelper.injector, true);
   }
 }

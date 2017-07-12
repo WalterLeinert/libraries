@@ -49,7 +49,16 @@ describe('RoleSelectorComponent', () => {
       ]
     }).compileComponents().then((reason) => {
 
-      TestHelperModule.initialize();
+      TestHelperModule.initialize({
+        appenders: [
+        ],
+        levels: {
+          '[all]': 'INFO',
+          'Test': 'DEBUG',
+          'Test2': 'INFO'
+        }
+      });
+
 
       fixture = TestBed.createComponent(RoleSelectorComponent);
       comp = fixture.debugElement.componentInstance;

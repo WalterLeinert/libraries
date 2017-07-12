@@ -43,9 +43,16 @@ describe('TimeSelectorComponent', () => {
       ]
     }).compileComponents().then((reason) => {
 
-      const thm = TestBed.get(TestHelperModule);
+      TestHelperModule.initialize({
+        appenders: [
+        ],
+        levels: {
+          '[all]': 'INFO',
+          'Test': 'DEBUG',
+          'Test2': 'INFO'
+        }
+      });
 
-      TestHelperModule.initialize();
 
       fixture = TestBed.createComponent(TimeSelectorComponent);
       comp = fixture.debugElement.componentInstance;
