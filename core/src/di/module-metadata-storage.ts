@@ -117,7 +117,7 @@ export class ModuleMetadataStorage {
         Assertion.notNull(module);
 
         const moduleMetadata = this.findModuleMetadata(module as any as Funktion);
-        Assertion.notNull(moduleMetadata, `bootstrap: module ${moduleMetadata.name} not registered`);
+        Assertion.notNull(moduleMetadata, `bootstrap: module ${moduleMetadata.targetName} not registered`);
 
         const declaredComponents = moduleMetadata.declarations.map((item) => item.target);
 

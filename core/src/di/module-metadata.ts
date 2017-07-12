@@ -94,7 +94,7 @@ export class ModuleMetadata extends DiMetadata {
 
         if (this._options.bootstrap) {
           const bootstrap = this.metadataStorage.findComponentMetadata(this._options.bootstrap);
-          Assertion.notNull(bootstrap, `bootstrap: component ${bootstrap.name} not registered`);
+          Assertion.notNull(bootstrap, `bootstrap: component ${bootstrap.targetName} not registered`);
           this._bootstrap = bootstrap;
 
           const componentProviders = this.declarations.map((item) => item.target);

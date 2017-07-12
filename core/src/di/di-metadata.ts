@@ -34,7 +34,7 @@ export abstract class DiMetadata extends ClassMetadata
 
 
   protected constructor(target: Funktion, providers: Provider[]) {
-    super(target, target.name);
+    super(target );
 
     if (providers) {
       this._providers = [...providers];

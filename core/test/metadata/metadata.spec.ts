@@ -13,8 +13,8 @@ const metadatas: Array<Metadata<any>> = new Array<Metadata<any>>();
 
 
 class TestClassMetadata extends ClassMetadata {
-  constructor(target: Funktion, name: string) {
-    super(target, name);
+  constructor(target: Funktion) {
+    super(target);
   }
 }
 
@@ -35,7 +35,7 @@ class TestPropertyMetadataFunktion extends PropertyMetadata<Funktion> {
 export function ClazzDecorator() {
   // tslint:disable-next-line:only-arrow-functions
   return (target: Funktion) => {
-    metadatas.push(new TestClassMetadata(target, target.name));
+    metadatas.push(new TestClassMetadata(target));
   };
 }
 
@@ -108,7 +108,7 @@ class MetadataTest extends CoreUnitTest {
 
   @test 'should test TestClassMetadata'() {
     const metadata = metadatas[3] as TestClassMetadata;
-    expect(metadata.name).to.equal(TestClass.name);
+    expect(metadata.targetName).to.equal(TestClass.name);
     expect(metadata).to.be.instanceof(TestClassMetadata);
     expect(metadata.target).to.equal(TestClass);
     expect(metadata.targetName).to.equal(TestClass.name);

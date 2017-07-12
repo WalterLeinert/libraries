@@ -1,7 +1,4 @@
 import { Assertion } from '../base/assertion';
-import { Funktion } from '../base/objectType';
-import { Types } from '../types/types';
-
 
 /**
  * abstrakte Basisklasse zur Modellierung von Metadaten
@@ -13,19 +10,18 @@ import { Types } from '../types/types';
  */
 export abstract class Metadata<T> {
 
-  protected constructor(private _target: T, private _name: string) {
+  protected constructor(private _target: T) {
+    Assertion.notNull(_target);
   }
 
   /**
-   * Liefert den Namen
+   * Liefert den Namen des Targets
    *
    * @readonly
    * @type {string}
    * @memberof Metadata
    */
-  public get name(): string {
-    return this._name;
-  }
+  public abstract get targetName(): string;
 
   /**
    * Liefert das Target (Klasse, Object, etc.)
@@ -36,20 +32,6 @@ export abstract class Metadata<T> {
    */
   public get target(): T {
     return this._target;
-  }
-
-  public abstract get targetName(): string;
-
-
-  public static getTargetName(target: string | Funktion) {
-    Assertion.notNull(target);
-
-    if (Types.isString(target)) {
-      const targetName = target as string;
-      Assertion.notNullOrEmpty(targetName);
-      return targetName;
-    }
-    return (target as Funktion).name;
   }
 }
 

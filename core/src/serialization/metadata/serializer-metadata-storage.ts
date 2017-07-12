@@ -42,13 +42,13 @@ export class SerializerMetadataStorage {
     Assert.notNull(metadata);
 
     using(new XLog(SerializerMetadataStorage.logger, levels.INFO, 'addClassMetadata'), (log) => {
-      log.info(`metadata = ${metadata.name}`);
+      log.info(`metadata = ${metadata.targetName}`);
 
-      if (this.classDict.containsKey(metadata.name)) {
-        throw new InvalidOperationException(`Class ${metadata.name} already registered.`);
+      if (this.classDict.containsKey(metadata.targetName)) {
+        throw new InvalidOperationException(`Class ${metadata.targetName} already registered.`);
       }
 
-      const propertyMetadata: PropertySerializerMetadata[] = this.classPropertyDict.get(metadata.name);
+      const propertyMetadata: PropertySerializerMetadata[] = this.classPropertyDict.get(metadata.targetName);
 
       const propertyDict: Dictionary<string, PropertySerializerMetadata> =
         new Dictionary<string, PropertySerializerMetadata>();
@@ -77,7 +77,7 @@ export class SerializerMetadataStorage {
         }
       });
 
-      this.classDict.set(metadata.name, metadata);
+      this.classDict.set(metadata.targetName, metadata);
     });
   }
 

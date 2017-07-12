@@ -12,10 +12,21 @@ import { Metadata } from './metadata';
  */
 export abstract class PropertyMetadata<T> extends Metadata<T> {
 
-  protected constructor(target: T, name: string) {
-    super(target, name);
+  protected constructor(target: T, private _name: string) {
+    super(target);
   }
 
+  /**
+   * Liefert den Propertynamen
+   */
+  public get name(): string {
+    return this._name;
+  }
+
+
+  /**
+   * Liefert den Namen des Targets der Property
+   */
   public get targetName(): string {
     if (this.target instanceof Function) {
       return this.target.name;
@@ -24,6 +35,6 @@ export abstract class PropertyMetadata<T> extends Metadata<T> {
       // tslint:disable-next-line:ban-types
       return (this.target as Object).constructor.name;
     }
-    throw new NotSupportedException(`name = ${this.name}: not supported target ${Core.stringify(this.target)}`);
+    throw new NotSupportedException(`not supported target ${Core.stringify(this.target)}`);
   }
 }

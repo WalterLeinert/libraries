@@ -9,7 +9,7 @@ export class ClassSerializerMetadata extends ClassMetadata {
   new Dictionary<string, PropertySerializerMetadata>();
 
   constructor(target: Funktion) {
-    super(target, target.name);
+    super(target);
   }
 
   public add(metadata: PropertySerializerMetadata) {

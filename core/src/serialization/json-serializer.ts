@@ -107,9 +107,9 @@ export class JsonSerializer {
 
           // JsonClass?
           if (clazzMetadata) {
-            JsonSerializer.addSerializedType(json, clazzMetadata.name);   // Typ für Deserialiserung hinterlegen
+            JsonSerializer.addSerializedType(json, clazzMetadata.targetName);   // Typ für Deserialiserung hinterlegen
             if (log.isDebugEnabled()) {
-              log.debug(`setting type = ${clazzMetadata.name}: obj = ${Core.stringify(obj)}`);
+              log.debug(`setting type = ${clazzMetadata.targetName}: obj = ${Core.stringify(obj)}`);
             }
           }
 
@@ -236,7 +236,7 @@ export class JsonSerializer {
 
           if (clazzMetadata) {
             if (clazzMeta !== clazzMetadata) {
-              throw new InvalidOperationException(`Type infos do not match: ${clazzMetadata.name} - ${clazzMeta.name}`);
+              throw new InvalidOperationException(`Type infos do not match: ${clazzMetadata.name} - ${clazzMeta.targetName}`);
             }
           } else {
             clazzMetadata = clazzMeta;

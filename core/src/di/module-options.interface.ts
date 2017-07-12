@@ -10,7 +10,7 @@ import { Funktion } from '../base/objectType';
  * @interface IModuleOptions
  */
 export interface IModuleOptions {
-  
+
   /**
    * Liste aller Modulimports
    *
