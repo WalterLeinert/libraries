@@ -24,7 +24,7 @@ export class ClientComponent {
 
   constructor(injector: Injector) {
     using(new XLog(ClientComponent.logger, levels.INFO, 'ctor'), (log) => {
-      log.log(`initializing @fluxgate/server, setting injector`);
+      log.log(`initializing @fluxgate/client, setting injector`);
       CoreInjector.instance.setInjector(injector);
     });
   }
