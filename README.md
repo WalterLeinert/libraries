@@ -99,13 +99,16 @@ Ein Beispiel für typischen DI-Code sieht wie folgt aus:
     { provide: LOGGER, useValue: CoreComponent.logger },
     { provide: LOG_EXCEPTIONS, useValue: true },
     { provide: STRINGIFYER, useClass: SimpleStringifyer }   // default
-  ],
+  ]
 })
 export class CoreComponent {
   public static readonly logger = getLogger(CoreComponent);
 
   constructor(injector: Injector) {
-    CoreInjector.instance.setInjector(injector, true);
+    using(new XLog(CoreComponent.logger, levels.INFO, 'ctor'), (log) => {
+      log.log(`initializing @fluxgate/core, setting injector`);
+      CoreInjector.instance.setInjector(injector);
+    });
   }
 }
 
