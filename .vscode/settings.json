@@ -12,7 +12,7 @@
   "workbench.statusBar.visible": true,
   "workbench.activityBar.visible": true,
   //"terminal.integrated.shell.windows": "C:\\Program Files\\Git\\git-bash.exe -c \"exec node %*\""
-   "tslint.rulesDirectory": "./client/node_modules/codelyzer",
+   "tslint.rulesDirectory": "./node_modules/codelyzer",
   "tslint.configFile": "./tslint.json",
   "tslint.enable": true,
   "html.format.extraLiners": "head, body, /html, p-tabView",
