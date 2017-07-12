@@ -80,6 +80,56 @@ Die Library stellt Komponenten und Module zur Verfügung zur effizienten Impleme
     - flx-role-selector
 
 
+## Dependency Injection
+
+In @fluxgate/core ist ein dependency injection Mechanismus implementiert, der weitgehend kompatibel zum Mechanismus in angular ist.
+Die eigentliche Funktionalität für dependency injection basiert auf der Library https://github.com/mgechev/injection-js. Die fehlende module und component Unterstützung ist
+analog zu angular umgesetzt.
+
+Hierzu sind zwei decorators @FlxComponen und @FlxModule implementiert, die in wesentlicher Hinsicht zu angular kompatibel sind.
+
+Ein Beispiel für typischen DI-Code sieht wie folgt aus: 
+
+```ts
+
+
+@FlxComponent({
+  providers: [
+    { provide: DEFAULT_CATEGORY, useValue: CoreComponent.logger.category },
+    { provide: LOGGER, useValue: CoreComponent.logger },
+    { provide: LOG_EXCEPTIONS, useValue: true },
+    { provide: STRINGIFYER, useClass: SimpleStringifyer }   // default
+  ]
+})
+export class CoreComponent {
+  public static readonly logger = getLogger(CoreComponent);
+
+  constructor(injector: Injector) {
+    using(new XLog(CoreComponent.logger, levels.INFO, 'ctor'), (log) => {
+      log.log(`initializing @fluxgate/core, setting injector`);
+      CoreInjector.instance.setInjector(injector);
+    });
+  }
+}
+
+@FlxModule({
+  declarations: [
+    CoreComponent
+  ],
+  exports: [
+    CoreComponent
+  ],
+  bootstrap: [
+    CoreComponent
+  ]
+})
+export class CoreModule {
+}
+
+```
+
+
+
 ## Entwicklung, Build
 
 Die Softwareentwicklung erfolgt in Visual Code (vscode).
