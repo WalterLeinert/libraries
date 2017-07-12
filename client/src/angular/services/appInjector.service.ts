@@ -22,18 +22,12 @@ export class AppInjector extends InjectorBase<Injector, OpaqueToken> {
   }
 
 
-  public setInjector(injector: Injector) {
-    super.setInjectorInternal(injector);
-  }
-
-
   protected onResolveAndCreate(providers: Provider[], injector?: ReflectiveInjector): ReflectiveInjector {
     if (!injector) {
       injector = ReflectiveInjector.resolveAndCreate(providers);
-      this.clearInjector();
 
       // console.warn(`cleared existing injector`);
-      this.setInjector(injector);
+      this.setInjector(injector, true);
     } else {
       injector = (injector as ReflectiveInjector).resolveAndCreateChild(providers);
     }
