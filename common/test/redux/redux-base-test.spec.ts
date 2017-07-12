@@ -17,13 +17,15 @@ import { IEntity } from '../../src/model';
 import { IService } from '../../src/model/service/service.interface';
 
 
+import { CommonTest } from '../common.spec';
+
 import {
   ICrudServiceRequests, ICrudServiceState, ICurrentItemServiceRequests, ICurrentItemServiceState,
   IServiceRequests, IServiceState, ServiceCommand, ServiceRequests, Store
 } from '../../src/redux';
 import { EntityVersionCache } from '../../src/redux/cache/entity-version-cache';
 import { EntityVersionServiceFake } from '../../src/testing/entity-version-service-fake';
-import { CommonTest } from '../common.spec';
+
 
 
 export class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TService

@@ -4,6 +4,7 @@
 
 
 export * from './base';
+export * from './bootstrap';
 export * from './config';
 export * from './exceptions';
 export * from './model';

@@ -195,7 +195,9 @@ export class EntityGenerator<T extends IEntity<TId>, TId extends IToString> {
         items.push(item);
       }
 
-      log.log(`${Core.stringify(items)}`);
+      if (log.isEnabled()) {
+        log.log(`${Core.stringify(items)}`);
+      }
 
       return items;
     });
