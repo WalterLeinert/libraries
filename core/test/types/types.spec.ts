@@ -5,8 +5,8 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { CoreUnitTest } from '../unit-test';
 import { Types } from '../../src/types';
+import { CoreUnitTest } from '../unit-test';
 
 
 // von @fluxgate/common kopiert

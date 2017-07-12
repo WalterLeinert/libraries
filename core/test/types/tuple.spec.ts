@@ -4,8 +4,8 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { CoreUnitTest } from '../unit-test';
 import { Tuple, Tuple3, Tuple4 } from '../../src/types';
+import { CoreUnitTest } from '../unit-test';
 
 
 @suite('core.types.Tuple')

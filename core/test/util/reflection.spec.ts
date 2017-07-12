@@ -9,8 +9,8 @@ import * as chai from 'chai';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { CoreUnitTest } from '../unit-test';
 import { Reflection } from '../../src/util';
+import { CoreUnitTest } from '../unit-test';
 
 
 @suite('core.util.Reflection')
