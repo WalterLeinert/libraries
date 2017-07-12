@@ -38,6 +38,12 @@ export class PlatformTestComponent {
   imports: [
     CoreModule
   ],
+  declarations: [
+    PlatformTestComponent
+  ],
+  exports: [
+    PlatformTestComponent
+  ],
   bootstrap: [
     PlatformTestComponent
   ]
