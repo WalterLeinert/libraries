@@ -4,8 +4,7 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Activator } from '../../src/base/activator';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { Activator } from '../../src/base/activator';import { CoreUnitTest } from '../unit-test';
 
 class Test {
     constructor(public name: string, public id: number) {

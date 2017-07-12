@@ -5,7 +5,7 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { FlattenJson } from '../../src/base/flatten-json';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 const data = {
   name: '@fluxgate/core',

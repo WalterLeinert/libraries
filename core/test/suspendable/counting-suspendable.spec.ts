@@ -6,7 +6,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { using } from '../../src/diagnostics/';
 import { CountingSuspendable, Suspender } from '../../src/suspendable/';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 
 

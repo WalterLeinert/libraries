@@ -9,7 +9,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { TypeReflector } from '../../src/reflection/typeReflector';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 class BaseClass {
   constructor(public name: string) {

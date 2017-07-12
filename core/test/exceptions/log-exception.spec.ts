@@ -8,7 +8,7 @@ import { CoreInjector } from '../../src/di/core-injector';
 import { ConsoleLogger } from '../../src/diagnostics/consoleLogger';
 import { DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER } from '../../src/diagnostics/logger.token';
 import { AssertionException } from '../../src/exceptions/assertionException';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 
 @suite('core.exceptions: should log exception')

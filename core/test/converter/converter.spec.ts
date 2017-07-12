@@ -7,7 +7,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { ConverterRegistry } from '../../src/converter';
 import { InvalidOperationException } from '../../src/exceptions';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 import { ShortTime } from '../../src/types/shortTime';
 import { Time } from '../../src/types/time';
 

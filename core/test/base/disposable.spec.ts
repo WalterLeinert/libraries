@@ -7,7 +7,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { Disposable, using } from '../../src/base/disposable';
 import { NotImplementedException } from '../../src/exceptions/notImplementedException';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 class Test extends Disposable {
 

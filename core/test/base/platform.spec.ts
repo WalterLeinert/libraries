@@ -5,7 +5,7 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { Platform } from '../../src/base/platform';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 
 @suite('core.base.Platform')

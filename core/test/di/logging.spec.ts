@@ -7,7 +7,7 @@ import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 export const LOGGER = new InjectionToken<ILogger>('logger');
 

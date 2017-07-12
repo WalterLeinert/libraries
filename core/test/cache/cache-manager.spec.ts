@@ -8,7 +8,7 @@ import { suite, test } from 'mocha-typescript';
 import { IConfig } from '../../src/diagnostics/config.interface';
 import { configure } from '../../src/diagnostics/logging-core';
 
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 import { CacheManager } from '../../src/cache/cache-manager';
 import { CacheTypes } from '../../src/cache/cache-type';

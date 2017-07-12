@@ -7,7 +7,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { Funktion } from '../../src/base/objectType';
 import { ConverterRegistry } from '../../src/converter/converter-registry';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 
 @suite('core.converter (Error converter)')

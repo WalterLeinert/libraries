@@ -16,7 +16,7 @@ import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 import { Types } from '../../../src/types/types';
 
-import { CoreUnitTest } from '../../../src/testing/unit-test';
+import { CoreUnitTest } from '../../unit-test';
 
 
 class ChildProvider {

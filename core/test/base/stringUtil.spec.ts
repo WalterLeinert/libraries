@@ -6,7 +6,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { StringUtil } from '../../src/base/stringUtil';
 import { AssertionException } from '../../src/exceptions/assertionException';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 
 @suite('core.base.StringUtil')

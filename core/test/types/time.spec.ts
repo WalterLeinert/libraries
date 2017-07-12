@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { AssertionException } from '../../src/exceptions/assertionException';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 import { Time } from '../../src/types/time';
 
 

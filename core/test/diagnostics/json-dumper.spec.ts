@@ -6,7 +6,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
 import { JsonDumper } from '../../src/diagnostics/json-dumper';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 
 const json = {

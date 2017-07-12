@@ -7,7 +7,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 import { Dictionary } from '../../src/types/dictionary';
 
 

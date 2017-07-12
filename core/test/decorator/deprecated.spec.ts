@@ -7,7 +7,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { Deprecated } from '../../src/decorator/';
 import { configure, IConfig } from '../../src/diagnostics/';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 const tester = (doTest: (test: any, test2: any, test3: any) => void) => {
   @Deprecated()

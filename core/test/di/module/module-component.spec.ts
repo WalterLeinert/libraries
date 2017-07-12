@@ -15,7 +15,7 @@ import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 
-import { CoreUnitTest } from '../../../src/testing/unit-test';
+import { CoreUnitTest } from '../../unit-test';
 
 
 @FlxComponent({

@@ -6,7 +6,7 @@ import { suite, test } from 'mocha-typescript';
 
 import { Funktion } from '../../src/base/objectType';
 import { ClassMetadata, Metadata, PropertyMetadata } from '../../src/metadata/';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 
 const metadatas: Array<Metadata<any>> = new Array<Metadata<any>>();

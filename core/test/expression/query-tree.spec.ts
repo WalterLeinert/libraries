@@ -19,8 +19,8 @@ import { Core } from '../../src/diagnostics/core';
 import { AndTerm, BinaryTerm, NotTerm, OrTerm, Query, SelectorTerm, UnaryTerm } from '../../src/expression';
 import { IVisitor, VisitableNode } from '../../src/pattern/visitor';
 import { Indenter, Suspender } from '../../src/suspendable';
-import { CoreTestModule } from '../../src/testing/unit-test';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreTestModule } from '../unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 
 // ---------------------------------------------------------------------------------------------------

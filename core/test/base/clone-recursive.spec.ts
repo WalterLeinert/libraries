@@ -9,7 +9,7 @@ import { suite, test } from 'mocha-typescript';
 import { Clone } from '../../src/base/clone';
 import { CloneVerifier } from '../../src/base/clone-verifier';
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 class TreeNode extends UniqueIdentifiable {
   constructor(private _id: number, private _name: string, private _child?: TreeNode) {

@@ -15,8 +15,8 @@ import { CoreInjector } from '../../src/di/core-injector';
 import { FlxComponent } from '../../src/di/flx-component.decorator';
 import { FlxModule } from '../../src/di/flx-module.decorator';
 import { ModuleMetadataStorage } from '../../src/di/module-metadata-storage';
-import { CoreUnitTest } from '../../src/testing/unit-test';
-import { CoreTestModule } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
+import { CoreTestModule } from '../unit-test';
 
 import { ExceptionFactory } from '../../src/exceptions';
 import { JsonSerializer } from '../../src/serialization/json-serializer';

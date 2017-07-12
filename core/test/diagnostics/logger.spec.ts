@@ -16,7 +16,7 @@ import { configure, getLogger } from '../../src/diagnostics/logging-core';
 import { XLog } from '../../src/diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 
 class Test {

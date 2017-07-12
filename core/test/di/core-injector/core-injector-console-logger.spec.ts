@@ -14,7 +14,7 @@ import { CoreInjector } from '../../../src/di/core-injector';
 import { FlxComponent } from '../../../src/di/flx-component.decorator';
 import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-import { CoreTestModule } from '../../../src/testing/unit-test';
+import { CoreTestModule } from '../../unit-test';
 
 import { InvalidOperationException } from '../../../src/exceptions/invalidOperationException';
 
@@ -33,7 +33,7 @@ configure(config);
 
 
 
-import { CoreUnitTest } from '../../../src/testing/unit-test';
+import { CoreUnitTest } from '../../unit-test';
 
 import { ConsoleLogger, DateLogger, ILogger, LOGGER } from '../logger';
 

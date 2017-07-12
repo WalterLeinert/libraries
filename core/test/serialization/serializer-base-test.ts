@@ -5,7 +5,7 @@ import { expect } from 'chai';
 
 import { Differ } from '../../src/base/differ';
 import { JsonSerializer } from '../../src/serialization';
-import { CoreUnitTest } from '../../src/testing/unit-test';
+import { CoreUnitTest } from '../unit-test';
 
 
 export abstract class SerializerBaseTest extends CoreUnitTest {
