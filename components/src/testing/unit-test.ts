@@ -78,25 +78,21 @@ export class ComponentsTestModule {
 
 
 
-
 /**
- * Hilfsklasse/Service zum Ermitteln eines zentralen Injectors (Root-Injector?)
+ * Hilfsmodul zur Testinitialisierung
  */
-@Injectable()
-export class InjectorHelper {
-  constructor(public injector: Injector) {
-  }
-}
-
-
 @NgModule({
   providers: [
-    InjectorHelper,
     TestHelperModule
   ]
 })
 export class TestHelperModule {
 
+  /**
+   * Bei der Instantiierung wird der Injector bereitgestellt
+   *
+   * @param injector
+   */
   constructor(private injector: Injector) {
   }
 
@@ -104,8 +100,8 @@ export class TestHelperModule {
   /**
    * Testinitialisierung
    *
-   * @param config
-   * @param testModule
+   * @param config - optionale Logging-Konfiguration
+   * @param testModule - optional: Test-Modul für die Initialisierung der DI für @fluxgate/components
    */
   public static initialize(config?: IConfig, testModule: Funktion = ComponentsTestModule) {
 
@@ -118,9 +114,7 @@ export class TestHelperModule {
         ],
 
         levels: {
-          '[all]': 'INFO',
-          'Test': 'DEBUG',
-          'Test2': 'INFO'
+          '[all]': 'WARN'
         }
       };
     }

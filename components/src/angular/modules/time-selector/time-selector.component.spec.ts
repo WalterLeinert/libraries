@@ -47,7 +47,7 @@ describe('TimeSelectorComponent', () => {
         appenders: [
         ],
         levels: {
-          '[all]': 'INFO',
+          '[all]': 'WARN',
           'Test': 'DEBUG',
           'Test2': 'INFO'
         }
