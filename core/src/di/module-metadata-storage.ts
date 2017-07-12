@@ -120,7 +120,8 @@ export class ModuleMetadataStorage {
         const moduleMetadata = this.findModuleMetadata(module);
         Assertion.notNull(moduleMetadata, `bootstrap: module ${moduleMetadata.targetName} not registered`);
 
-        Assertion.that(!Types.isNullOrEmpty(moduleMetadata.bootstrap), `bootstrap: module ${moduleMetadata.targetName} no bootstrap components defined`);
+        Assertion.that(!Types.isNullOrEmpty(moduleMetadata.bootstrap),
+          `bootstrap: module ${moduleMetadata.targetName} no bootstrap components defined`);
 
         // nun alle Provider der Moduls sammeln zum Erzeugen des Module-Injectors
         const declaredComponents = new Set(moduleMetadata.declarations);

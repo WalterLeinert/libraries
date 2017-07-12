@@ -58,25 +58,25 @@ export class ModuleMetadata extends DiMetadata {
 
         if (this._options.imports) {
           this.createDict('imports', 'module',
-            (metadataStorage: ModuleMetadataStorage, target: Funktion) => metadataStorage.findModuleMetadata(target),
+            (ms: ModuleMetadataStorage, t: Funktion) => ms.findModuleMetadata(t),
             this._options.imports, this.importsDict, (component) => component.setParent(this));
         }
 
         if (this._options.declarations) {
           this.createDict('declarations', 'component',
-            (metadataStorage: ModuleMetadataStorage, target: Funktion) => metadataStorage.findComponentMetadata(target),
+            (ms: ModuleMetadataStorage, t: Funktion) => ms.findComponentMetadata(t),
             this._options.declarations, this.declarationsDict, (component) => component.setModule(this));
         }
 
         if (this._options.exports) {
           this.createDict('exports', 'component',
-            (metadataStorage: ModuleMetadataStorage, target: Funktion) => metadataStorage.findComponentMetadata(target),
+            (ms: ModuleMetadataStorage, t: Funktion) => ms.findComponentMetadata(t),
             this._options.exports, this.exportsDict);
         }
 
         if (this._options.bootstrap) {
           this.createDict('bootstrap', 'component',
-            (metadataStorage: ModuleMetadataStorage, target: Funktion) => metadataStorage.findComponentMetadata(target),
+            (ms: ModuleMetadataStorage, t: Funktion) => ms.findComponentMetadata(t),
             this._options.bootstrap, this.bootstrapDict);
         }
       }

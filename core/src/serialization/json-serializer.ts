@@ -235,8 +235,8 @@ export class JsonSerializer {
           Assert.notNull(clazzMeta, `No metadata found for type: ${clazz.name}`);
 
           if (clazzMetadata) {
-            if (clazzMeta !== clazzMetadata) {
-              throw new InvalidOperationException(`Type infos do not match: ${clazzMetadata.name} - ${clazzMeta.targetName}`);
+            if (clazzMeta !== clazzMetadata) {throw new InvalidOperationException(
+                `Type infos do not match: ${clazzMetadata.name} - ${clazzMeta.targetName}`);
             }
           } else {
             clazzMetadata = clazzMeta;

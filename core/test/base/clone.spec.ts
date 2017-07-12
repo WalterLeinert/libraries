@@ -9,8 +9,8 @@ import { suite, test } from 'mocha-typescript';
 import { Clone } from '../../src/base/clone';
 import { CloneVerifier } from '../../src/base/clone-verifier';
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
-import { CoreUnitTest } from '../unit-test';
 import { Types } from '../../src/types/types';
+import { CoreUnitTest } from '../unit-test';
 
 
 class Test extends UniqueIdentifiable {

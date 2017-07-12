@@ -7,11 +7,11 @@ import process = require('process');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { PlatformUnitTest } from '../src/testing/unit-test';
+import { PlatformUnitTest } from '../unit-test';
 
 // import { AssertionException } from '@fluxgate/core/exceptions/assertion';
-// import { PlatformUnitTest } from '../src/testing/unit-test';
-import { FileSystem } from '../src/util/fileSystem';
+// import { PlatformUnitTest } from 'unit-test';
+import { FileSystem } from '../../src/util/fileSystem';
 
 
 @suite('platform.util.FileSystem')

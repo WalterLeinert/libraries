@@ -7,9 +7,9 @@ import { suite, test } from 'mocha-typescript';
 
 
 import { ConverterRegistry } from '../../src/converter';
-import { CoreUnitTest } from '../unit-test';
 import { Time } from '../../src/types/time';
 import { Types } from '../../src/types/types';
+import { CoreUnitTest } from '../unit-test';
 
 
 class Test {

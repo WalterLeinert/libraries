@@ -7,8 +7,8 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { UniqueIdentifiable } from '../../src/base/uniqueIdentifiable';
-import { CoreUnitTest } from '../unit-test';
 import { Dictionary } from '../../src/types/dictionary';
+import { CoreUnitTest } from '../unit-test';
 
 
 class KeyClass extends UniqueIdentifiable {
