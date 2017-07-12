@@ -7,9 +7,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 import { ConfirmationService } from 'primeng/components/common/api';
 
-import { APP_STORE_PROVIDER, AppInjector, CurrentUserService, MessageService } from '@fluxgate/client';
+import {
+  APP_STORE_PROVIDER, AppInjector, ClientModule,
+  CurrentUserService, MessageService
+} from '@fluxgate/client';
 import { ShortTime } from '@fluxgate/core';
 
+import { TestHelperModule } from '../../../testing/unit-test';
 import { TimeSelectorComponent } from './time-selector.component';
 
 
@@ -24,7 +28,8 @@ describe('TimeSelectorComponent', () => {
       imports: [
         BrowserAnimationsModule,
         FormsModule,
-        CalendarModule
+        CalendarModule,
+        TestHelperModule
       ],
       declarations: [
         TimeSelectorComponent
@@ -36,15 +41,19 @@ describe('TimeSelectorComponent', () => {
         CurrentUserService,
         MessageService
       ]
-    }).compileComponents();
+    }).compileComponents().then((reason) => {
 
-    AppInjector.instance.setInjector(TestBed.get(Injector, Injector));
+      const thm = TestBed.get(TestHelperModule);
 
-    fixture = TestBed.createComponent(TimeSelectorComponent);
-    comp = fixture.debugElement.componentInstance;
-    de = fixture.debugElement;
-    el = de.nativeElement;
-    //   expect(compiled.querySelector('h1').textContent).toContain('app works!');
+      TestHelperModule.initialize();
+
+      fixture = TestBed.createComponent(TimeSelectorComponent);
+      comp = fixture.debugElement.componentInstance;
+      de = fixture.debugElement;
+      el = de.nativeElement;
+      //   expect(compiled.querySelector('h1').textContent).toContain('app works!');
+    });
+
   }));
 
   it('should create the component', async(() => {

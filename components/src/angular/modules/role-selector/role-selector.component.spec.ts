@@ -6,12 +6,14 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ConfirmationService } from 'primeng/components/common/api';
 
-import { APP_STORE_PROVIDER, AppInjector, CurrentUserService } from '@fluxgate/client';
+import { APP_STORE_PROVIDER, AppInjector, ClientModule, CurrentUserService } from '@fluxgate/client';
+import { ModuleMetadataStorage } from '@fluxgate/core';
 
 import {
   ENTITY_VERSION_SERVICE_FAKE_PROVIDER, EntityVersionServiceFakeService
 } from '../../../testing/entity-version-service-fake.service';
 import { ROLE_SERVICE_FAKE_PROVIDER } from '../../../testing/role-service-fake.service';
+import { TestHelperModule } from '../../../testing/unit-test';
 import { RoleSelectorServiceRequestsModule } from '../../redux/role-selector-service-requests';
 import { DropdownSelectorModule } from '../dropdown-selector';
 import { RoleSelectorComponent } from './role-selector.component';
@@ -29,6 +31,7 @@ describe('RoleSelectorComponent', () => {
         CommonModule,
         FormsModule,
         RouterTestingModule,
+        TestHelperModule,
         DropdownSelectorModule,
         RoleSelectorServiceRequestsModule
       ],
@@ -44,15 +47,17 @@ describe('RoleSelectorComponent', () => {
         ROLE_SERVICE_FAKE_PROVIDER,
         ENTITY_VERSION_SERVICE_FAKE_PROVIDER
       ]
-    }).compileComponents();
+    }).compileComponents().then((reason) => {
 
-    AppInjector.instance.setInjector(TestBed.get(Injector, Injector));
+      TestHelperModule.initialize();
 
-    fixture = TestBed.createComponent(RoleSelectorComponent);
-    comp = fixture.debugElement.componentInstance;
-    de = fixture.debugElement;
-    el = de.nativeElement;
-    //   expect(compiled.querySelector('h1').textContent).toContain('app works!');
+      fixture = TestBed.createComponent(RoleSelectorComponent);
+      comp = fixture.debugElement.componentInstance;
+      de = fixture.debugElement;
+      el = de.nativeElement;
+      //   expect(compiled.querySelector('h1').textContent).toContain('app works!');
+    });
+
   }));
 
   it('should create the component', async(() => {

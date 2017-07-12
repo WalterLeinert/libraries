@@ -1,4 +1,4 @@
-export { BootstrapComponents } from './bootstrap';
+export { ComponentsComponent, ComponentsModule } from './bootstrap';
 
 export { ClientServicesModule } from './angular/modules';
 
