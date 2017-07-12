@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 
-import { BaseTest } from '../src/testing/baseTest';
+import { CommonUnitTest } from './unit-test';
 
 /**
  * Basisklasse für Tests im Bereich common. Intialisiert das Logging
  *
- * @class LoggerConfigFileTest
+ * @class CommonTest
  */
-export class CommonTest extends BaseTest {
+export class CommonTest extends CommonUnitTest {
 
   protected static before(done: (err?: any) => void) {
     super.before((err?: any) => {
@@ -15,7 +15,7 @@ export class CommonTest extends BaseTest {
         done(err);
       }
 
-      BaseTest.initializeLogging('common', {
+      CommonUnitTest.initializeLogging('common', {
         relativePath: 'test/config'
       });
       done();

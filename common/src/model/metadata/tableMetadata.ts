@@ -57,7 +57,7 @@ export abstract class TableMetadata extends ClassMetadata {
    */
   protected constructor(private _metadataStorage: MetadataStorage, target: Funktion,
     public options: TableOptions | EnumTableOptions) {
-    super(target, target.name);
+    super(target);
   }
 
   /**
