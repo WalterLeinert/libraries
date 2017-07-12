@@ -17,10 +17,10 @@ import {
 } from '@fluxgate/core';
 import { PlatformModule } from '@fluxgate/platform';
 
-import { AppConfig } from '../src/base/appConfig';
-import { EntityStringifyer } from '../src/model/entity-stringifyer';
-import { Logging } from '../src/util/logging';
-import { ILoggingConfigurationOptions } from '../src/util/loggingConfiguration';
+import { AppConfig } from '../base/appConfig';
+import { EntityStringifyer } from '../model/entity-stringifyer';
+import { Logging } from '../util/logging';
+import { ILoggingConfigurationOptions } from '../util/loggingConfiguration';
 
 
 

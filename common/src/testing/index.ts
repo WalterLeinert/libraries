@@ -4,5 +4,6 @@ export * from './extended-user-service-requests-fake';
 export * from './role-service-fake';
 export * from './role-service-requests-fake';
 export * from './service-fake';
+export * from './unit-test';
 export * from './user-service-fake';
 export * from './user-service-requests-fake';

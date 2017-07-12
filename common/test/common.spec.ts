@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { CommonUnitTest } from './unit-test';
+import { CommonUnitTest } from '../src/testing/unit-test';
 
 /**
  * Basisklasse für Tests im Bereich common. Intialisiert das Logging
