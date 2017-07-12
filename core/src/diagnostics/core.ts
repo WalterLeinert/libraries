@@ -5,13 +5,10 @@ import { STRINGIFYER } from './stringifyer.token';
 
 
 export class Core {
-  private static _stringifyer: IStringifyer;
+  public static readonly DEFAULT_STRINGIFYER: IStringifyer = new SimpleStringifyer();
 
   public static stringify(value: any): string {
-    if (!Core._stringifyer) {
-      Core._stringifyer = CoreInjector.instance.getInstance<IStringifyer>(STRINGIFYER, new SimpleStringifyer());
-    }
-
-    return Core._stringifyer.stringify(value);
+    const stringifyer = CoreInjector.instance.getInstance<IStringifyer>(STRINGIFYER, Core.DEFAULT_STRINGIFYER);
+    return stringifyer.stringify(value);
   }
 }
