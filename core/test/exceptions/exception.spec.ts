@@ -21,36 +21,6 @@ import { CoreTestModule } from '../unit-test';
 import { ExceptionFactory } from '../../src/exceptions';
 import { JsonSerializer } from '../../src/serialization/json-serializer';
 
-// ---------------------------------------------------------------------------------------------------
-@Injectable()
-@FlxComponent({
-  providers: [
-  ]
-})
-class ExceptionTestComponent {
-}
-
-
-@Injectable()
-@FlxModule({
-  imports: [
-    // CoreUnitTestModule
-  ],
-  declarations: [
-    ExceptionTestComponent
-  ],
-  bootstrap: [
-    ExceptionTestComponent
-  ]
-})
-class ExceptionTestModule {
-  constructor(injector: Injector) {
-    CoreInjector.instance.setInjector(injector, true);
-  }
-}
-
-const rootInjector = ModuleMetadataStorage.instance.bootstrapModule(ExceptionTestModule);
-// ---------------------------------------------------------------------------------------------------
 
 
 const errorText = 'user not found';

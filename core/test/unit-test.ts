@@ -61,22 +61,41 @@ export class CoreTestModule {
  */
 export abstract class CoreUnitTest {
 
-  config: IConfig = {
-    appenders: [
-    ],
-
-    levels: {
-      '[all]': 'FATAL',
-      'Test': 'DEBUG',
-      'Test2': 'INFO'
-    }
-  };
-
   protected before() {
-    configure(this.config);
+
+    //
+    // Default Loggingkonfiguration für jeden Tests
+    //
+    const config: IConfig = {
+      appenders: [
+      ],
+
+      levels: {
+        '[all]': 'FATAL',
+        'Test': 'DEBUG',
+        'Test2': 'INFO'
+      }
+    };
+
+    configure(config);
   }
 
+
   protected static before() {
+
+    //
+    // Default Loggingkonfiguration für alle Tests
+    //
+    const config: IConfig = {
+      appenders: [
+      ],
+
+      levels: {
+        '[all]': 'WARN'
+      }
+    };
+
+    configure(config);
     ModuleMetadataStorage.instance.bootstrapModule(CoreTestModule);
   }
 }

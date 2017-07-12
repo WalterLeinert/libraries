@@ -23,37 +23,6 @@ import { CoreTestModule } from '../unit-test';
 import { CoreUnitTest } from '../unit-test';
 
 
-// ---------------------------------------------------------------------------------------------------
-@Injectable()
-@FlxComponent({
-  providers: [
-  ]
-})
-class QueryTreeTestComponent {
-}
-
-
-@Injectable()
-@FlxModule({
-  imports: [
-    // CoreUnitTestModule
-  ],
-  declarations: [
-    QueryTreeTestComponent
-  ],
-  bootstrap: [
-    QueryTreeTestComponent
-  ]
-})
-class QueryTreeTestModule {
-  constructor(injector: Injector) {
-    CoreInjector.instance.setInjector(injector, true);
-  }
-}
-
-const rootInjector = ModuleMetadataStorage.instance.bootstrapModule(QueryTreeTestModule);
-// ---------------------------------------------------------------------------------------------------
-
 
 class TermVisitor implements IVisitor<VisitableNode> {
   private indenter: Indenter = new Indenter();
