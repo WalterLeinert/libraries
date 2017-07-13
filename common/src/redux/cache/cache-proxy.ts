@@ -155,7 +155,11 @@ export class CacheProxy<T extends IEntity<TId>, TId extends IToString> extends S
       (log) => {
 
         return Observable.create((observer: Subscriber<FindByIdResult<T, TId>>) => {
-          const item = CacheProxy._cacheManager.getItem<T, TId>(this.tableMetadata.className, id);
+          let item: T;
+
+          if (CacheProxy._cacheManager.containsCache(this.tableMetadata.className)) {
+            item = CacheProxy._cacheManager.getItem<T, TId>(this.tableMetadata.className, id);
+          }
 
           if (!Types.isPresent(item)) {
             super.findById(id).subscribe((findByIdResult: FindByIdResult<T, TId>) => {
