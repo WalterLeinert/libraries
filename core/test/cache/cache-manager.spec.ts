@@ -76,11 +76,15 @@ class ConverterTest extends CoreUnitTest {
         // 'LruCache': 'DEBUG'
       }
     };
-
     configure(config);
 
     this.cacheManager = new CacheManager({
-      cacheType: CacheTypes.LRU,
+      default: {
+        cacheType: CacheTypes.LRU,
+        options: {
+          maxItems: 10
+        }
+      },
       configurations: [
         {
           model: CacheItem,

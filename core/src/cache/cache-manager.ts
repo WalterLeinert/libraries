@@ -12,10 +12,9 @@ import { Core } from '../diagnostics/core';
 import { Types } from '../types/types';
 import { Assert } from '../util/assert';
 import { CacheFactoryFactory } from './cache-factory';
-import { ICacheManagerConfiguration } from './cache-manager-configuration.interface';
+import { ICacheConfigurationBase, ICacheManagerConfiguration } from './cache-manager-configuration.interface';
+import { CacheTypes } from './cache-type';
 import { ICache } from './cache.interface';
-
-
 
 
 /**
@@ -27,18 +26,26 @@ import { ICache } from './cache.interface';
 export class CacheManager {
   protected static readonly logger = getLogger(CacheManager);
 
+  public static readonly DEFAUL_CONFIGURATION: ICacheConfigurationBase = {
+    cacheType: CacheTypes.LRU
+  };
+
   private cacheMap = new Map<string, ICache<any, any>>();
 
   public constructor(managerConfiguration: ICacheManagerConfiguration) {
     Assert.notNull(managerConfiguration);
 
-    let cacheType = managerConfiguration.cacheType;
+    const defaultOptions = managerConfiguration.default;
 
     managerConfiguration.configurations.forEach((configuration) => {
-      cacheType = Types.isNullOrEmpty(configuration.cacheType) ? cacheType : configuration.cacheType;
+      const cacheType = Types.isNullOrEmpty(configuration.cacheType) ?
+        defaultOptions.cacheType : configuration.cacheType;
+
+      const options = Types.isNullOrEmpty(configuration.options) ?
+        defaultOptions.options : configuration.options;
 
       const cacheFactory = CacheFactoryFactory.instance.create(cacheType);
-      const cache = cacheFactory.create(configuration.options);
+      const cache = cacheFactory.create(options);
       this.addCache(configuration.model, cache);
     });
   }
