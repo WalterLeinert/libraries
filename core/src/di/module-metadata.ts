@@ -17,6 +17,7 @@ import { JsonDumper } from '../diagnostics/json-dumper';
 import { ClassMetadata } from '../metadata/class-metadata';
 import { Metadata } from '../metadata/metadata';
 import { Dictionary } from '../types/dictionary';
+import { Types } from '../types/types';
 
 import { ComponentMetadata } from './component-metadata';
 import { DiMetadata } from './di-metadata';
@@ -186,17 +187,25 @@ export class ModuleMetadata extends DiMetadata {
   }
 
 
-  public flattenItems<T>(targets: any[]): T[] {
+  /**
+   * erzeugt ein flaches Array vom Typ T. @param{items} können als Elementr auch Arrays enthalten;
+   * diese werden rekursiv aufgelöst.
+   *
+   * @param items
+   */
+  public flattenItems<T>(items: any[]): T[] {
     const flattened: T[] = [];
 
-    targets.forEach((item: Funktion | any) => {
-      if (Array.isArray(item)) {
-        const itemFlattened = this.flattenItems<T>(item as any[]);
-        flattened.push(...itemFlattened);
-      } else {
-        flattened.push(item as T);
-      }
-    });
+    if (Types.isPresent(items)) {
+      items.forEach((item: Funktion | any) => {
+        if (Array.isArray(item)) {
+          const itemFlattened = this.flattenItems<T>(item as any[]);
+          flattened.push(...itemFlattened);
+        } else {
+          flattened.push(item as T);
+        }
+      });
+    }
 
     return flattened;
   }
