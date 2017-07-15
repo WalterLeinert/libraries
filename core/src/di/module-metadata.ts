@@ -77,11 +77,14 @@ export class ModuleMetadata extends DiMetadata {
         if (this._options.bootstrap) {
           this.createDict('bootstrap', 'component',
             (ms: ModuleMetadataStorage, t: Funktion) => ms.findComponentMetadata(t),
-            this._options.bootstrap, this.bootstrapDict);
+            this._options.bootstrap, this.bootstrapDict, undefined,
+            (t) => `${t.name} cannot be used as an entry component.`);
         }
+
       }
     });
   }
+
 
 
   public get imports(): ModuleMetadata[] {
@@ -105,6 +108,28 @@ export class ModuleMetadata extends DiMetadata {
     return this._options;
   }
 
+
+
+  public validate() {
+    //
+    // checks:
+    // Set mit Moduldeklarationen + exports der importierten Module erzeugen
+    //
+    const declarationsAllSet = new Set<ComponentMetadata>(this.declarations);
+
+    this.imports.forEach((item) => {
+      item.exports.forEach((exp) => {
+        declarationsAllSet.add(exp);
+      });
+    });
+
+    const exportsSet = new Set<ComponentMetadata>(this.exports);
+
+    exportsSet.forEach((item) => {
+      Assertion.that(declarationsAllSet.has(item), `Can't export directive ${item.targetName} from ` +
+        `${this.targetName} as it was neither declared nor imported!`);
+    });
+  }
 
   /**
    * Liefert alle Provider der kompletten Hierarchie als flache Liste
@@ -148,7 +173,8 @@ export class ModuleMetadata extends DiMetadata {
     finder: (metadataStorage: ModuleMetadataStorage, target: Funktion) => T,
     targets: Funktion[],
     itemsDict: Dictionary<Funktion, T>,
-    moduleSetter?: (item: T) => void) {
+    moduleSetter?: (item: T) => void,
+    targetMessage?: (item: Funktion) => string) {
 
     const duplicates = new Set<Funktion>();
 
@@ -156,7 +182,9 @@ export class ModuleMetadata extends DiMetadata {
 
     flattenedTargets.forEach((target) => {
       const metadata = finder(ModuleMetadataStorage.instance, target);
-      Assertion.notNull(metadata, `${name}: ${type} ${target.name} not registered`);
+
+      const message = targetMessage ? targetMessage(target) : `${name}: ${type} ${target.name} not registered`;
+      Assertion.notNull(metadata, message);
 
       Assertion.that(!duplicates.has(target),
         `${name}: ${type} ${target.name} already registered`);
@@ -186,4 +214,5 @@ export class ModuleMetadata extends DiMetadata {
 
     return flattened;
   }
+
 }

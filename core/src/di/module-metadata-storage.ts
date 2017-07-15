@@ -118,11 +118,20 @@ export class ModuleMetadataStorage {
       `model = ${module.name}`), (log) => {
         Assertion.notNull(module);
 
+
+        // Module validieren
+        this.validate();
+
         const moduleMetadata = this.findModuleMetadata(module);
-        Assertion.notNull(moduleMetadata, `bootstrap: module ${moduleMetadata.targetName} not registered`);
+        Assertion.notNull(moduleMetadata, `bootstrap: module ${moduleMetadata.targetName} no registered FlxModule`);
 
         Assertion.that(!Types.isNullOrEmpty(moduleMetadata.bootstrap),
-          `bootstrap: module ${moduleMetadata.targetName} no bootstrap components defined`);
+          `The module ${moduleMetadata.targetName} was bootstrapped, but it does not declare "@FlxModule.bootstrap" ` +
+          `components. Please define one.`);
+
+        moduleMetadata.bootstrap.forEach((item) => {
+          const bootstrapComponent = item.getInstance(item.target);
+        });
 
 
         const rootInjector = this.createModuleInjector(moduleMetadata, undefined);
@@ -151,6 +160,7 @@ export class ModuleMetadataStorage {
         const moduleInstance = moduleMetadata.getInstance(moduleMetadata.target);
       });
   }
+
 
 
   public static get instance(): ModuleMetadataStorage {
@@ -194,7 +204,7 @@ export class ModuleMetadataStorage {
             log.debug(`import: ${mod.targetName}, merging declared components as providers`);
           }
           mod.declarations.forEach((item) => {
-             if (log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
               log.debug(`  declared component: ${item.targetName}`);
             }
             module.providers.push(...item.providers);
@@ -337,4 +347,10 @@ export class ModuleMetadataStorage {
       });
   }
 
+
+  private validate() {
+    this.moduleDict.values.forEach((item) => {
+      item.validate();
+    });
+  }
 }
