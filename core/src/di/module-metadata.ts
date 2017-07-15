@@ -152,7 +152,9 @@ export class ModuleMetadata extends DiMetadata {
 
     const duplicates = new Set<Funktion>();
 
-    targets.forEach((target) => {
+    const flattenedTargets = this.flattenComponentTargets(targets);
+
+    flattenedTargets.forEach((target) => {
       const metadata = finder(ModuleMetadataStorage.instance, target);
       Assertion.notNull(metadata, `${name}: ${type} ${target.name} not registered`);
 
@@ -167,5 +169,21 @@ export class ModuleMetadata extends DiMetadata {
         moduleSetter(metadata);
       }
     });
+  }
+
+
+  private flattenComponentTargets(targets: any[]): Funktion[] {
+    const flattened: Funktion[] = [];
+
+    targets.forEach((item: Funktion | any) => {
+      if (Array.isArray(item)) {
+        const itemFlattened = this.flattenComponentTargets(item as any[]);
+        flattened.push(...itemFlattened);
+      } else {
+        flattened.push(item as Funktion);
+      }
+    });
+
+    return flattened;
   }
 }
