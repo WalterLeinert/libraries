@@ -8,7 +8,7 @@ import 'reflect-metadata';
 import { Injectable, Injector } from 'injection-js';
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { DiMetadata } from '../../../src/di/di-metadata';
 import { FlxComponent } from '../../../src/di/flx-component.decorator';
@@ -95,7 +95,7 @@ export class Module_2 {
 
 
 
-@suite('core.di: providers and module hierarchy') @only
+@suite('core.di: providers and module hierarchy')
 class ModuleTest extends CoreUnitTest {
   private metadata: ModuleMetadata;
 
