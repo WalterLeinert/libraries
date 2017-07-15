@@ -134,15 +134,6 @@ export class ModuleMetadataStorage {
         this.createInjectorsRec(moduleMetadata);
 
 
-        //
-        // ... dann für alle bootstrap Komponenten injectors erzeugen
-        //
-        moduleMetadata.bootstrap.forEach((item) => {
-          item.createInjector([
-            item.target as any,
-            ...item.providers
-          ], rootInjector);
-        });
 
         if (log.isDebugEnabled()) {
           this.dumpInjectorsRec(moduleMetadata);
@@ -167,18 +158,45 @@ export class ModuleMetadataStorage {
   }
 
 
-
-  private createInjectorsRec(module: ModuleMetadata) {
+  /**
+   * erzeugt die Injector Hierarchie rekursiv
+   *
+   * @param module - das aktuelle Modul
+   * @param parentInjector - der aktuelle Injector des Parent-Moduls
+   */
+  private createInjectorsRec(module: ModuleMetadata, parentInjector?: ReflectiveInjector) {
     using(new XLog(ModuleMetadataStorage.logger, levels.INFO, 'createInjectorsRec',
       `model = ${module.targetName}`), (log) => {
 
-        const modInjector = this.createModuleInjector(module, module.__injector);
-
+        //
+        // für jedes importierte Modul m_imp, die Provider aller exportierten Komponenten
+        // in die Modul-Providers aufnehmen, damit die Komponenten im Modulkontext
+        // alle aufgelöst werden können
+        //
         module.imports.forEach((mod) => {
-          this.createInjectorsRec(mod);
+          mod.exports.forEach((item) => {
+            module.providers.push(...item.providers);
+          });
         });
 
+
+        // nun den Module-Injectorhierarchie rekursiv erzeugen
+        const modInjector = this.createModuleInjector(module, parentInjector);
+
+        module.imports.forEach((mod) => {
+          this.createInjectorsRec(mod, modInjector);
+        });
+
+        //
+        // ist die Rekursion über die importierten Module bei einem leaf module angekommen,
+        // dann werden für die dort deklarierten Komponenten die Injectors erzeugt. Die deklarierten Komponenten
+        // gehören zu diesem Modul.
+        //
         module.declarations.forEach((item) => {
+
+          //
+          // ... und für jede Komponente einen Injector erzeugen
+          //
           if (!item.__injector) {
             this.createComponentInjector(item, modInjector);
           }
@@ -187,6 +205,12 @@ export class ModuleMetadataStorage {
   }
 
 
+  /**
+   * erzeugt einen Injector zur Komponente @param{component} mit dem zugehörigen@param{parentInjector}.
+   *
+   * @param component
+   * @param parentInjector
+   */
   private createComponentInjector(component: ComponentMetadata, parentInjector: ReflectiveInjector) {
     using(new XLog(ModuleMetadataStorage.logger, levels.INFO, 'createComponentInjector',
       `component = ${component.targetName}, ` +
@@ -200,6 +224,13 @@ export class ModuleMetadataStorage {
       });
   }
 
+
+  /**
+   * erzeugt einen Injector für @param{module} und den zugehörigen @param{parentInjector}.
+   *
+   * @param module
+   * @param parentInjector
+   */
   private createModuleInjector(module: ModuleMetadata, parentInjector: ReflectiveInjector): ReflectiveInjector {
     return using(new XLog(ModuleMetadataStorage.logger, levels.INFO, 'createModuleInjector',
       `model = ${module.targetName}, ` +
@@ -244,6 +275,29 @@ export class ModuleMetadataStorage {
       });
   }
 
+
+
+  /**
+   * Gibt für das Root-Modul @param{rootModule} rekursiv (über alle importierten Module) die
+   * Injector-Hierarchie als inverse tree mit leaf declaration components als Wurzeln.
+   *
+   * Ein Pfad ausgehend von einer leaf declaration component endent dann immer beim root module.
+   *
+   * @param module
+   */
+  private dumpInjectors(rootModule: ModuleMetadata) {
+    using(new XLog(ModuleMetadataStorage.logger, levels.DEBUG, 'dumpInjectorsRec',
+      `rootModule = ${rootModule.targetName}`), (log) => {
+
+        this.dumpInjectorsRec(rootModule);
+      });
+  }
+
+  /**
+   * Gibt für das Modul @param{module}
+   *
+   * @param module
+   */
   private dumpInjectorsRec(module: ModuleMetadata) {
     using(new XLog(ModuleMetadataStorage.logger, levels.DEBUG, 'dumpInjectorsRec',
       // tslint:disable-next-line:no-string-literal
