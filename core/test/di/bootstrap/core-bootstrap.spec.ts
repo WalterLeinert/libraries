@@ -9,6 +9,8 @@ import { Injectable, InjectionToken, Injector, ReflectiveInjector } from 'inject
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
+import { IConfig } from '../../../src/diagnostics/config.interface';
+import { configure } from '../../../src/diagnostics/logging-core';
 
 import { DiMetadata } from '../../../src/di/di-metadata';
 import { FlxComponent } from '../../../src/di/flx-component.decorator';
@@ -65,7 +67,7 @@ export class CoreBootstrapModule {
 @suite('core.di.core: bootstrap:')
 class CoreTest {
 
-  @test 'should boostrap and create root injector'() {
+  @test 'should bootstrap and create root injector'() {
     expect(CoreBootstrapModule.injector).to.exist;
     expect(Types.getClassName(CoreBootstrapModule.injector)).to.equal(DiMetadata.INJECTOR_CLASSNAME);
   }
@@ -81,5 +83,20 @@ class CoreTest {
 
   public before() {
     ModuleMetadataStorage.instance.bootstrapModule(CoreBootstrapModule);
+  }
+
+  protected static before() {
+
+    const config: IConfig = {
+      appenders: [
+      ],
+
+      levels: {
+        '[all]': 'ERROR',
+        'ModuleMetadataStorage': 'WARN',
+      }
+    };
+
+    configure(config);
   }
 }

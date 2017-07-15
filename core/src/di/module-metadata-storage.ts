@@ -119,19 +119,8 @@ export class ModuleMetadataStorage {
         Assertion.notNull(module);
 
 
-        // Module validieren
-        this.validate();
-
-        const moduleMetadata = this.findModuleMetadata(module);
-        Assertion.notNull(moduleMetadata, `bootstrap: module ${moduleMetadata.targetName} no registered FlxModule`);
-
-        Assertion.that(!Types.isNullOrEmpty(moduleMetadata.bootstrap),
-          `The module ${moduleMetadata.targetName} was bootstrapped, but it does not declare "@FlxModule.bootstrap" ` +
-          `components. Please define one.`);
-
-        moduleMetadata.bootstrap.forEach((item) => {
-          const bootstrapComponent = item.getInstance(item.target);
-        });
+        // Validierung
+        const moduleMetadata = this.validate(module);
 
 
         const rootInjector = this.createModuleInjector(moduleMetadata, undefined);
@@ -177,6 +166,8 @@ export class ModuleMetadataStorage {
   private createInjectorsRec(module: ModuleMetadata, parentInjector?: ReflectiveInjector) {
     using(new XLog(ModuleMetadataStorage.logger, levels.INFO, 'createInjectorsRec',
       `model = ${module.targetName}`), (log) => {
+
+        module.validate();
 
         //
         // für jedes importierte Modul, die Provider aller exportierten Komponenten
@@ -348,9 +339,14 @@ export class ModuleMetadataStorage {
   }
 
 
-  private validate() {
-    this.moduleDict.values.forEach((item) => {
-      item.validate();
-    });
+  private validate(module: Funktion): ModuleMetadata {
+    const moduleMetadata = this.findModuleMetadata(module);
+    Assertion.notNull(moduleMetadata, `bootstrap: module ${moduleMetadata.targetName} no registered FlxModule`);
+
+    Assertion.that(!Types.isNullOrEmpty(moduleMetadata.bootstrap),
+      `The module ${moduleMetadata.targetName} was bootstrapped, but it does not declare "@FlxModule.bootstrap" ` +
+      `components. Please define one.`);
+
+    return moduleMetadata;
   }
 }

@@ -77,8 +77,7 @@ export class ModuleMetadata extends DiMetadata {
         if (this._options.bootstrap) {
           this.createDict('bootstrap', 'component',
             (ms: ModuleMetadataStorage, t: Funktion) => ms.findComponentMetadata(t),
-            this._options.bootstrap, this.bootstrapDict, undefined,
-            (t) => `${t.name} cannot be used as an entry component.`);
+            this._options.bootstrap, this.bootstrapDict);
         }
 
       }
@@ -111,12 +110,39 @@ export class ModuleMetadata extends DiMetadata {
 
 
   public validate() {
+
     //
-    // checks:
+    // Declarations prüfen: fehlt der @FlxComponent decorator?
+    //
+    const flattenedDeclarations = this.flattenItems<Funktion>(this.options.declarations);
+    flattenedDeclarations.forEach((item) => {
+      const component = ModuleMetadataStorage.instance.findComponentMetadata(item);
+      if (!component) {
+        throw new Error(`Unexpected value ${item.name} declared by the module ${this.targetName}.` +
+          `Please add a @FlxComponent annotation.`);
+      }
+    });
+
+
+    //
+    // Bootstrap prüfen: fehlt der @FlxComponent decorator?
+    //
+    const flattenedBootstrap = this.flattenItems<Funktion>(this.options.bootstrap);
+    flattenedBootstrap.forEach((item) => {
+      const component = ModuleMetadataStorage.instance.findComponentMetadata(item);
+      if (!component) {
+        throw new Error(`${item.name} cannot be used as an entry component. May be @FlxComponent is missing?`);
+      }
+    });
+
+
+
+    //
+    // Exports prüfen: ist export in declarations oder in den exports der import module?
+    //
     // Set mit Moduldeklarationen + exports der importierten Module erzeugen
     //
     const declarationsAllSet = new Set<ComponentMetadata>(this.declarations);
-
     this.imports.forEach((item) => {
       item.exports.forEach((exp) => {
         declarationsAllSet.add(exp);
@@ -130,6 +156,7 @@ export class ModuleMetadata extends DiMetadata {
         `${this.targetName} as it was neither declared nor imported!`);
     });
   }
+
 
   /**
    * Liefert alle Provider der kompletten Hierarchie als flache Liste
@@ -158,6 +185,23 @@ export class ModuleMetadata extends DiMetadata {
     return visitor.items;
   }
 
+
+  public flattenItems<T>(targets: any[]): T[] {
+    const flattened: T[] = [];
+
+    targets.forEach((item: Funktion | any) => {
+      if (Array.isArray(item)) {
+        const itemFlattened = this.flattenItems<T>(item as any[]);
+        flattened.push(...itemFlattened);
+      } else {
+        flattened.push(item as T);
+      }
+    });
+
+    return flattened;
+  }
+
+
   protected get parent(): ModuleMetadata {
     return this._parent;
   }
@@ -171,48 +215,32 @@ export class ModuleMetadata extends DiMetadata {
     name: string,
     type: string,
     finder: (metadataStorage: ModuleMetadataStorage, target: Funktion) => T,
-    targets: Funktion[],
+    targets: Funktion[] | any[],
     itemsDict: Dictionary<Funktion, T>,
-    moduleSetter?: (item: T) => void,
-    targetMessage?: (item: Funktion) => string) {
+    moduleSetter?: (item: T) => void) {
 
     const duplicates = new Set<Funktion>();
 
-    const flattenedTargets = this.flattenComponentTargets(targets);
+    const flattenedTargets = this.flattenItems<Funktion>(targets);
 
     flattenedTargets.forEach((target) => {
       const metadata = finder(ModuleMetadataStorage.instance, target);
 
-      const message = targetMessage ? targetMessage(target) : `${name}: ${type} ${target.name} not registered`;
-      Assertion.notNull(metadata, message);
+      if (metadata) {
+        Assertion.that(!duplicates.has(target),
+          `${name}: ${type} ${target.name} already registered`);
 
-      Assertion.that(!duplicates.has(target),
-        `${name}: ${type} ${target.name} already registered`);
+        duplicates.add(target);
 
-      duplicates.add(target);
+        itemsDict.set(target, metadata);
 
-      itemsDict.set(target, metadata);
-
-      if (moduleSetter) {
-        moduleSetter(metadata);
+        if (moduleSetter) {
+          moduleSetter(metadata);
+        }
       }
+
     });
   }
 
-
-  private flattenComponentTargets(targets: any[]): Funktion[] {
-    const flattened: Funktion[] = [];
-
-    targets.forEach((item: Funktion | any) => {
-      if (Array.isArray(item)) {
-        const itemFlattened = this.flattenComponentTargets(item as any[]);
-        flattened.push(...itemFlattened);
-      } else {
-        flattened.push(item as Funktion);
-      }
-    });
-
-    return flattened;
-  }
 
 }
