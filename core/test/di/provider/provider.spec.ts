@@ -22,12 +22,30 @@ import { Types } from '../../../src/types/types';
 import { CoreUnitTest } from '../../unit-test';
 
 
+
+// ------------------------ Module_0 ---------------------------------------------
+@Injectable()
+export class Service_0 {
+}
+
+@FlxModule({
+  providers: [
+    Service_0
+  ]
+})
+export class Module_0 {
+}
+// ------------------------ Module_0 ---------------------------------------------
+
 // ------------------------ Module_1 ---------------------------------------------
 @Injectable()
 export class Service_1 {
 }
 
 @FlxModule({
+  imports: [
+    Module_0
+  ],
   providers: [
     Service_1
   ]
@@ -97,6 +115,11 @@ class ModuleTest extends CoreUnitTest {
   @test 'should get Service_1 by Module_2'() {
     expect(Module_2.injector.get(Service_1)).to.exist;
   }
+
+  @test 'should get Service_0 by Module_2'() {
+    expect(Module_2.injector.get(Service_0)).to.exist;
+  }
+
 
 
   protected before() {
