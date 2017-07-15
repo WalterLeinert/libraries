@@ -169,12 +169,34 @@ export class ModuleMetadataStorage {
       `model = ${module.targetName}`), (log) => {
 
         //
-        // für jedes importierte Modul m_imp, die Provider aller exportierten Komponenten
-        // in die Modul-Providers aufnehmen, damit die Komponenten im Modulkontext
+        // für jedes importierte Modul, die Provider aller exportierten Komponenten
+        // in die Modul-Providers aufnehmen, damit die Komponenten (und deren Provider) im Modulkontext
         // alle aufgelöst werden können
         //
         module.imports.forEach((mod) => {
+          if (log.isDebugEnabled()) {
+            log.debug(`import: ${mod.targetName}, merging exported module providers`);
+          }
           mod.exports.forEach((item) => {
+            if (log.isDebugEnabled()) {
+              log.debug(`  exported component: ${item.targetName}`);
+            }
+            module.providers.push(...item.providers);
+          });
+        });
+
+        //
+        // für jedes importierte Modul alle deklarierten Komponenten  in die Modul-Providers
+        // aufnehmen, damit die Komponenten im Modulkontext alle aufgelöst werden können
+        //
+        module.imports.forEach((mod) => {
+          if (log.isDebugEnabled()) {
+            log.debug(`import: ${mod.targetName}, merging declared components as providers`);
+          }
+          mod.declarations.forEach((item) => {
+             if (log.isDebugEnabled()) {
+              log.debug(`  declared component: ${item.targetName}`);
+            }
             module.providers.push(...item.providers);
           });
         });
