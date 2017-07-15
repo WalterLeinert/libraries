@@ -25,7 +25,7 @@ export interface IModuleOptions {
    * @type {Funktion[]}
    * @memberof IModuleOptions
    */
-  declarations?: Funktion[];
+  declarations?: Funktion[] | any[];
 
   /**
    * Liste aller Komponentenexports
@@ -33,7 +33,7 @@ export interface IModuleOptions {
    * @type {Funktion[]}
    * @memberof IModuleOptions
    */
-  exports?: Funktion[];
+  exports?: Funktion[] | any[];
 
   /**
    * Liste aller Provider
