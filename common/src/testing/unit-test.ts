@@ -138,7 +138,9 @@ export abstract class CommonUnitTest {
 
       if (AppConfig.config) {
         AppConfig.config.cacheManagerConfiguration = {
-          cacheType: 'lru',
+          default: {
+            cacheType: 'lru',
+          },
           configurations: [
             {
               model: '',
@@ -163,7 +165,9 @@ export abstract class CommonUnitTest {
           printUrl: '',
           proxyMode: 'nop',
           cacheManagerConfiguration: {
-            cacheType: 'lru',
+            default: {
+              cacheType: 'lru'
+            },
             configurations: [
               {
                 model: '',
