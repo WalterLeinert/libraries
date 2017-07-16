@@ -26,8 +26,10 @@ import { Logger } from '../logger.service';
 @FlxComponent({
 })
 export class CoreBootstrapComponent {
-  constructor(public logger: Logger) {
+  public static injector: Injector;
 
+  constructor(injector: Injector, public logger: Logger) {
+    CoreBootstrapComponent.injector = injector;
   }
 
   public log(message: string) {
@@ -57,7 +59,7 @@ export class CoreBootstrapModule {
 
   constructor(injector: Injector) {
     // tslint:disable-next-line:no-console
-    console.log(`injector: ` + injector);
+    // console.log(`injector: ` + injector);
 
     CoreBootstrapModule.injector = injector;
   }
@@ -73,12 +75,17 @@ class CoreTest {
   }
 
 
-  @test 'should test component creation'() {
-    expect(CoreBootstrapModule.injector.get<CoreBootstrapComponent>(CoreBootstrapComponent)).to.be.instanceof(
+  @test 'should test logger creation'() {
+    expect(CoreBootstrapModule.injector.get<Logger>(Logger)).to.be.instanceof(Logger);
+  }
+
+
+  @test 'should test component/logger creation by component'() {
+    expect(CoreBootstrapComponent.injector.get<CoreBootstrapComponent>(CoreBootstrapComponent)).to.be.instanceof(
       CoreBootstrapComponent
     );
 
-    expect(CoreBootstrapModule.injector.get<Logger>(Logger)).to.be.instanceof(Logger);
+    expect(CoreBootstrapComponent.injector.get<Logger>(Logger)).to.be.instanceof(Logger);
   }
 
   public before() {
