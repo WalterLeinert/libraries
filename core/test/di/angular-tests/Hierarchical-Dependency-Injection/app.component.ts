@@ -1,3 +1,5 @@
+import { Injector } from 'injection-js';
+
 import { FlxComponent } from '../../../../src/di/flx-component.decorator';
 
 // -------------------------------------- logging --------------------------------------------
@@ -15,7 +17,7 @@ import { XLog } from '../../../../src/diagnostics/xlog';
 import { CarsComponent } from './car.components';
 import { HeroesListComponent } from './heroes-list.component';
 import { VillainsListComponent } from './villains-list.component';
-
+import { VillainsService } from './villains.service';
 
 @FlxComponent({
   // selector: 'my-app',
@@ -30,6 +32,10 @@ import { VillainsListComponent } from './villains-list.component';
   //   <villains-list *ngIf="showVillains"></villains-list>
   //   <my-cars       *ngIf="showCars"></my-cars>
   // `
+  providers: [
+    VillainsService,
+    VillainsListComponent
+  ]
 })
 export class AppComponent {
   protected static readonly logger = getLogger(AppComponent);
@@ -38,9 +44,11 @@ export class AppComponent {
   private showHeroes = true;
   private showVillains = true;
 
-  constructor(heroesList: HeroesListComponent, villainsList: VillainsListComponent, cars: CarsComponent) {
+  constructor(injector: Injector) {
     using(new XLog(AppComponent.logger, levels.INFO, 'ctor'), (log) => {
       log.log(`showHeroes = ${this.showHeroes}`);
+
+      const component = injector.get(VillainsListComponent);
     });
   }
 }
