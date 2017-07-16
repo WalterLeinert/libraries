@@ -5,40 +5,32 @@
 import { Injectable, InjectionToken, Injector } from 'injection-js';
 
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
+import { only, suite, test } from 'mocha-typescript';
 
 import { IConfig } from '../../../src/diagnostics/config.interface';
-import { configure } from '../../../src/diagnostics/logging-core';
 
 import { CoreInjector } from '../../../src/di/core-injector';
 import { FlxComponent } from '../../../src/di/flx-component.decorator';
 import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-import { CoreTestModule } from '../../unit-test';
-
-import { InvalidOperationException } from '../../../src/exceptions/invalidOperationException';
+import { DiUnitTest } from '../di-unit-test';
 
 
-const config: IConfig = {
+DiUnitTest.configureLogging({
   appenders: [
   ],
   levels: {
     '[all]': 'WARN',
     'ComponentMetadata': 'INFO',
     'ModuleMetadata': 'WARN',
-    'ModuleMetadataStorage': 'INFO'
+    'ModuleMetadataStorage': 'WARN'
   }
-};
-configure(config);
+});
 
-
-
-import { CoreUnitTest } from '../../unit-test';
 
 import { ConsoleLogger, DateLogger, ILogger, LOGGER } from '../logger';
 
 
-@Injectable()
 @FlxComponent({
   providers: [
     { provide: LOGGER, useClass: DateLogger }
@@ -48,7 +40,6 @@ class DateLoggerTestComponent {
 }
 
 
-@Injectable()
 @FlxComponent({
   providers: [
     { provide: LOGGER, useClass: ConsoleLogger }
@@ -58,15 +49,12 @@ class ConsoleLoggerTestComponent {
 }
 
 
-@Injectable()
 @FlxModule({
-  imports: [
-    // CoreTestModule
-  ],
   declarations: [
     ConsoleLoggerTestComponent
   ],
   providers: [
+    ConsoleLoggerTestComponent,
     { provide: LOGGER, useClass: ConsoleLogger }
   ],
   bootstrap: [
@@ -75,7 +63,6 @@ class ConsoleLoggerTestComponent {
 })
 class ConsoleLoggerTestModule {
   constructor(comp: ConsoleLoggerTestComponent, injector: Injector) {
-    // CoreInjector.instance.setRootComponent(comp, true);
     CoreInjector.instance.setInjector(injector, true);
   }
 }
@@ -92,8 +79,8 @@ class LoggerTest {
 
 
 
-@suite('core.di.CoreInjector')
-class CoreInjectorTest extends CoreUnitTest {
+@suite('core.di.CoreInjector') @only
+class CoreInjectorTest extends DiUnitTest {
 
   @test 'should create ConsoleLogger by token'() {
     const tester = new LoggerTest();
@@ -109,7 +96,7 @@ class CoreInjectorTest extends CoreUnitTest {
   }
 
   public before() {
-    const rootInjector = ModuleMetadataStorage.instance.bootstrapModule(ConsoleLoggerTestModule);
+    ModuleMetadataStorage.instance.bootstrapModule(ConsoleLoggerTestModule);
   }
 
 }
