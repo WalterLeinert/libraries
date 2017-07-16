@@ -2,10 +2,6 @@
 // tslint:disable:member-access
 // tslint:disable:no-unused-expression
 
-import 'reflect-metadata';
-
-import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
-
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
@@ -13,49 +9,44 @@ import { FlxComponent } from '../../../src/di/flx-component.decorator';
 import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-
-import { CoreUnitTest } from '../../unit-test';
-
-// tslint:disable-next-line:no-namespace
-namespace Di {
-
-  @FlxModule({
-  })
-  export class TestChildModule {
-  }
+import { DiUnitTest } from '../di-unit-test';
 
 
-  @FlxModule({
-    imports: [
-      TestChildModule,
-      // TestModule -> assertion: module already registered
-    ],
-    providers: [
-    ]
-  })
-  export class TestParentModule {
+@FlxModule({
+})
+export class TestChildModule {
+}
 
-  }
+
+@FlxModule({
+  imports: [
+    TestChildModule,
+    // TestModule -> assertion: module already registered
+  ],
+  providers: [
+  ]
+})
+export class TestParentModule {
+
 }
 
 
 @suite('core.di.Module')
-class ModuleTest extends CoreUnitTest {
+class ModuleTest extends DiUnitTest {
   private metadata: ModuleMetadata;
 
   @test 'should annotate and register module'() {
     expect(this.metadata).to.be.not.null;
-    expect(this.metadata.target).to.equal(Di.TestParentModule);
+    expect(this.metadata.target).to.equal(TestParentModule);
   }
 
   @test 'should have one import'() {
     expect(this.metadata.imports.length).to.equal(1);
-    expect(this.metadata.imports[0].target).to.equal(Di.TestChildModule);
+    expect(this.metadata.imports[0].target).to.equal(TestChildModule);
   }
 
 
   protected before() {
-    super.before();
-    this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(Di.TestParentModule);
+    this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(TestParentModule);
   }
 }

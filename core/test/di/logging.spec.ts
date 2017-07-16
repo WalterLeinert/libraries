@@ -7,7 +7,7 @@ import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { CoreUnitTest } from '../unit-test';
+import { DiUnitTest } from './di-unit-test';
 
 export const LOGGER = new InjectionToken<ILogger>('logger');
 
@@ -40,7 +40,7 @@ export class DateLogger extends Logger {
 
 
 @suite('core.exceptions.di: test resolveAndCreate')
-class InjectionTest extends CoreUnitTest {
+class InjectionTest extends DiUnitTest {
 
   @test 'should create loggers'() {
     const injector = ReflectiveInjector.resolveAndCreate([ConsoleLogger, DateLogger]);
@@ -55,7 +55,7 @@ class InjectionTest extends CoreUnitTest {
 
 
 @suite('core.exceptions.di: test resolveAndCreate by token')
-class InjectionTokenTest extends CoreUnitTest {
+class InjectionTokenTest extends DiUnitTest {
 
   @test 'should create ConsoleLogger by token'() {
     const injector = ReflectiveInjector.resolveAndCreate([
