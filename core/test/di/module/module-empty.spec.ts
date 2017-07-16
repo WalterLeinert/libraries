@@ -2,18 +2,13 @@
 // tslint:disable:member-access
 // tslint:disable:no-unused-expression
 
-import 'reflect-metadata';
-
-import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
-
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { FlxComponent } from '../../../src/di/flx-component.decorator';
 import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-import { CoreUnitTest } from '../../unit-test';
+import { DiUnitTest } from '../di-unit-test';
 
 
 @FlxModule({
@@ -31,7 +26,7 @@ export class TestModuleEmpty {
 
 
 @suite('core.di.Module: no imports, declarations, etc.')
-class ModuleTest extends CoreUnitTest {
+class ModuleTest extends DiUnitTest {
   private metadata: ModuleMetadata;
 
   @test 'should annotate and register module'() {
@@ -65,12 +60,6 @@ class ModuleTest extends CoreUnitTest {
   }
 
   protected before() {
-    super.before();
     this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(TestModuleEmpty);
-  }
-
-  protected static before() {
-    // kein bootstrap in Basisklasse
-    // ModuleMetadataStorage.instance.bootstrapModule(TestModuleEmpty);
   }
 }

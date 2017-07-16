@@ -4,7 +4,7 @@
 
 import 'reflect-metadata';
 
-import { Injectable, InjectionToken, Injector, ReflectiveInjector } from 'injection-js';
+import { ReflectiveInjector } from 'injection-js';
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
@@ -15,11 +15,10 @@ import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 
-import { CoreUnitTest } from '../../unit-test';
+import { DiUnitTest } from '../di-unit-test';
 import { Logger } from '../logger.service';
 
 
-@Injectable()
 @FlxComponent({
 })
 export class CoreComponent {
@@ -31,7 +30,6 @@ export class CoreComponent {
     this.logger.log(message);
   }
 }
-
 
 
 @FlxModule({
@@ -55,7 +53,7 @@ export class CoreModule {
 
 
 @suite('core.di.core: CoreModule/-Component')
-class CoreTest extends CoreUnitTest {
+class CoreTest extends DiUnitTest {
   private metadata: ModuleMetadata;
 
 
@@ -117,7 +115,6 @@ class CoreTest extends CoreUnitTest {
   }
 
   protected before() {
-    super.before();
     this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(CoreModule);
   }
 }

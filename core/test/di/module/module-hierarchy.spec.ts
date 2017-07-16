@@ -15,11 +15,7 @@ import { FlxComponent } from '../../../src/di/flx-component.decorator';
 import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
-import { IConfig } from '../../../src/diagnostics/config.interface';
-import { configure } from '../../../src/diagnostics/logging-core';
-import { Types } from '../../../src/types/types';
-
-import { CoreUnitTest } from '../../unit-test';
+import { DiUnitTest } from '../di-unit-test';
 
 
 // ------------------------ Module_1 ---------------------------------------------
@@ -118,22 +114,7 @@ export class Module_3 {
 }
 // ------------------------ Module_3 ---------------------------------------------
 
-abstract class TestHelper {
-
-  protected static before() {
-    const config: IConfig = {
-      appenders: [
-      ],
-
-      levels: {
-        '[all]': 'ERROR',
-        'ModuleMetadataStorage': 'WARN',
-      }
-    };
-
-    configure(config);
-  }
-
+abstract class TestHelper extends DiUnitTest {
 
   protected before() {
     ModuleMetadataStorage.instance.bootstrapModule(Module_3);

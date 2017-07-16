@@ -4,7 +4,7 @@
 
 import 'reflect-metadata';
 
-import { Injectable, InjectionToken, ReflectiveInjector } from 'injection-js';
+import { ReflectiveInjector } from 'injection-js';
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
@@ -14,7 +14,7 @@ import { FlxModule } from '../../../src/di/flx-module.decorator';
 import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 
-import { CoreUnitTest } from '../../unit-test';
+import { DiUnitTest } from '../di-unit-test';
 
 
 @FlxComponent({
@@ -49,9 +49,8 @@ export class TestModuleComponentAll {
 
 
 @suite('core.di.Module: imports, declarations, exports, providers')
-class ModuleAllTest extends CoreUnitTest {
+class ModuleAllTest extends DiUnitTest {
   private metadata: ModuleMetadata;
-
 
 
   @test 'should check imports'() {
@@ -76,7 +75,6 @@ class ModuleAllTest extends CoreUnitTest {
   }
 
   protected before() {
-    super.before();
     this.metadata = ModuleMetadataStorage.instance.findModuleMetadata(TestModuleComponentAll);
   }
 }

@@ -2,7 +2,7 @@
 // tslint:disable:member-access
 // tslint:disable:no-unused-expression
 
-import { Injectable, InjectionToken, Injector } from 'injection-js';
+import { Injector } from 'injection-js';
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
