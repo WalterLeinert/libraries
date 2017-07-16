@@ -8,7 +8,7 @@ import 'reflect-metadata';
 import { Injector } from 'injection-js';
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { DiMetadata } from '../../../src/di/di-metadata';
 import { FlxComponent } from '../../../src/di/flx-component.decorator';
@@ -141,7 +141,7 @@ abstract class TestHelper {
 }
 
 
-@suite('core.di.Module: module hierarchy and providers') @only
+@suite('core.di.Module: module hierarchy and providers')
 class ModuleTest extends TestHelper {
 
   @test 'should get Module_3 by Module_3'() {
@@ -168,7 +168,7 @@ class ModuleTest extends TestHelper {
 
 
 
-@suite('core.di.Module: instance creation bottom up (start c11): ') @only
+@suite('core.di.Module: instance creation bottom up (start c11): ')
 class C11Test extends TestHelper {
   private metadata;
 
@@ -207,7 +207,7 @@ class C11Test extends TestHelper {
 
 
 
-@suite('core.di.Module: instance creation bottom up (start c21): ') @only
+@suite('core.di.Module: instance creation bottom up (start c21): ')
 class C21Test extends TestHelper {
   private metadata;
 
@@ -230,7 +230,7 @@ class C21Test extends TestHelper {
 }
 
 
-@suite('core.di.Module: expected errors: ') @only
+@suite('core.di.Module: expected errors: ')
 class ErrorTest extends TestHelper {
   private metadata;
 
