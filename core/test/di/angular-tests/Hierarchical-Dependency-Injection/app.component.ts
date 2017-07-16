@@ -9,7 +9,7 @@ import { levels } from '../../../../src/diagnostics/level';
 import { ILevel } from '../../../../src/diagnostics/level.interface';
 // tslint:disable-next-line:no-unused-variable
 import { ILogger } from '../../../../src/diagnostics/logger.interface';
-import { configure, getLogger } from '../../../../src/diagnostics/logging-core';
+import { getLogger } from '../../../../src/diagnostics/logging-core';
 import { XLog } from '../../../../src/diagnostics/xlog';
 // -------------------------------------- logging --------------------------------------------
 
