@@ -287,9 +287,9 @@ export class ModuleMetadataStorage {
         //
         const injector = module.createInjector([
           module.target as any,
-          ...Array.from(declaredComponents).map((item) => item.target),
-          ...Array.from(additionalBootstrapComponents).map((item) => item.target),
-          ...importsFlat.map((item) => item.target),
+          // ...Array.from(declaredComponents).map((item) => item.target),
+          // ...Array.from(additionalBootstrapComponents).map((item) => item.target),
+          // ...importsFlat.map((item) => item.target),
           ...module.providers,
           ...moduleProvidersFlat
         ], parentInjector);
