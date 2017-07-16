@@ -51,7 +51,7 @@ class ModuleTest extends CoreUnitTest {
 
       levels: {
         '[all]': 'ERROR',
-        'ModuleMetadataStorage': 'DEBUG',
+        'ModuleMetadataStorage': 'WARN',
       }
     };
 
