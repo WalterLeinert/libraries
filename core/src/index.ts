@@ -2,6 +2,9 @@
   require('./bootstrap');
 })();
 
+// re-export symbols
+export { Injectable, InjectionToken, Inject, Optional, Injector, ReflectiveInjector } from 'injection-js';
+
 export * from './adapter';
 export * from './bootstrap';
 export * from './base';
