@@ -5,7 +5,7 @@
 import { Injectable, InjectionToken, Injector } from 'injection-js';
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { IConfig } from '../../../src/diagnostics/config.interface';
 
@@ -79,7 +79,7 @@ class LoggerTest {
 
 
 
-@suite('core.di.CoreInjector') @only
+@suite('core.di.CoreInjector')
 class CoreInjectorTest extends DiUnitTest {
 
   @test 'should create ConsoleLogger by token'() {

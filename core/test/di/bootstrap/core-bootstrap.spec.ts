@@ -4,13 +4,10 @@
 
 import 'reflect-metadata';
 
-import { Injectable, InjectionToken, Injector, ReflectiveInjector } from 'injection-js';
+import { InjectionToken, Injector, ReflectiveInjector } from 'injection-js';
 
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
-
-import { IConfig } from '../../../src/diagnostics/config.interface';
-import { configure } from '../../../src/diagnostics/logging-core';
 
 import { DiMetadata } from '../../../src/di/di-metadata';
 import { FlxComponent } from '../../../src/di/flx-component.decorator';
@@ -19,10 +16,10 @@ import { ModuleMetadata } from '../../../src/di/module-metadata';
 import { ModuleMetadataStorage } from '../../../src/di/module-metadata-storage';
 import { Types } from '../../../src/types/types';
 
+import { DiUnitTest } from '../di-unit-test';
 import { Logger } from '../logger.service';
 
 
-@Injectable()
 @FlxComponent({
 })
 export class CoreBootstrapComponent {
@@ -58,16 +55,13 @@ export class CoreBootstrapModule {
   public static injector: Injector;
 
   constructor(injector: Injector) {
-    // tslint:disable-next-line:no-console
-    // console.log(`injector: ` + injector);
-
     CoreBootstrapModule.injector = injector;
   }
 }
 
 
 @suite('core.di.core: bootstrap:')
-class CoreTest {
+class CoreTest extends DiUnitTest {
 
   @test 'should bootstrap and create root injector'() {
     expect(CoreBootstrapModule.injector).to.exist;
@@ -90,20 +84,5 @@ class CoreTest {
 
   public before() {
     ModuleMetadataStorage.instance.bootstrapModule(CoreBootstrapModule);
-  }
-
-  protected static before() {
-
-    const config: IConfig = {
-      appenders: [
-      ],
-
-      levels: {
-        '[all]': 'ERROR',
-        'ModuleMetadataStorage': 'WARN',
-      }
-    };
-
-    configure(config);
   }
 }
