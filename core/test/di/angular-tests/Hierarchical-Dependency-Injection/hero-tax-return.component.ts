@@ -12,7 +12,7 @@ import { HeroTaxReturnService } from './hero-tax-return.service';
 })
 export class HeroTaxReturnComponent {
   public message = '';
-  @Output() close = new EventEmitter<void>();
+  @Output() public close = new EventEmitter<void>();
 
   public get taxReturn(): HeroTaxReturn {
     return this.heroTaxReturnService.taxReturn;

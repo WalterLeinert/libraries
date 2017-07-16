@@ -26,7 +26,7 @@ export class HeroesService {
 
   public getTaxReturn(hero: Hero): Observable<HeroTaxReturn> {
     return new Observable<HeroTaxReturn>((observer: Observer<HeroTaxReturn>) => {
-      const htr = this.heroTaxReturns.find(t => t.hero.id === hero.id);
+      const htr = this.heroTaxReturns.find((t) => t.hero.id === hero.id);
       observer.next(htr || new HeroTaxReturn(0, hero));
       observer.complete();
     });
