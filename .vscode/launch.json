@@ -8,15 +8,17 @@
       "type": "chrome",
       "request": "launch",
       "name": "client: Launch Chrome",
-      "url": "https://localhost:8180",
+      "url": "http://localhost:9876/#",
       "webRoot": "${workspaceRoot}"
     },
         {
       "type": "node",
       "request": "launch",
+      "protocol": "inspector",
       "name": "core: run Mocha",
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
+        "--inspect",
         "core/dist/test/**/*.spec.js",
         "--no-timeouts"
       ],
