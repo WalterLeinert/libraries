@@ -35,6 +35,9 @@ export class CoreTestComponent {
  * @class CoreUnitTestModule
  */
 @FlxModule({
+  declarations: [
+    CoreTestComponent
+  ],
   providers: [
     { provide: DEFAULT_CATEGORY, useValue: '-unknown-' },
     { provide: LOGGER, useClass: ConsoleLogger },
