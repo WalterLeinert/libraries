@@ -54,6 +54,10 @@ class TreeNode extends UniqueIdentifiable {
 }
 
 
+class SimpleObject {
+  public name: string;
+}
+
 
 @suite('core.diagnostics.JsonDumper')
 class DumperTest extends CoreUnitTest {
@@ -61,6 +65,60 @@ class DumperTest extends CoreUnitTest {
   @test 'should dump empty json'() {
     const dump = JsonDumper.stringify({});
     return expect(dump).to.be.equal(`{    // Object
+}`);
+  }
+
+
+  @test 'should stringify null'() {
+    const result = JsonDumper.stringify(null);
+    expect(result).to.equal('null');
+  }
+
+  @test 'should stringify undefined'() {
+    const result = JsonDumper.stringify(undefined);
+    expect(result).to.equal('undefined');
+  }
+
+
+  @test 'should stringify number'() {
+    const result = JsonDumper.stringify(4711);
+    expect(result).to.equal('4711');
+  }
+
+  @test 'should stringify string'() {
+    const result = JsonDumper.stringify('hugo');
+    expect(result).to.equal('"hugo"');
+  }
+
+  @test 'should stringify Date'() {
+    const result = JsonDumper.stringify(new Date(2006, 0, 2, 15, 4, 5));
+    expect(result).to.equal('"2006-01-02T14:04:05.000Z"');
+  }
+
+  @test 'should stringify SimpleObject'() {
+    const result = JsonDumper.stringify(new SimpleObject());
+    expect(result).to.equal(`{    // SimpleObject
+}`);
+  }
+
+  // https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+  // Hinweis: die Ausgabe ist typtreuer als die originale JSON.stringify Ausgabe!
+  @test 'should stringify test from MDN 1 (not fully compatible)'() {
+    const result = JsonDumper.stringify({ x: [10, undefined, () => { /*ok*/ }, Symbol('my-symbol')] });
+    expect(result).to.equal(`{    // Object
+  "x": [
+    10,
+    undefined,
+    (),
+    Symbol(my-symbol)
+  ]
+}`);
+  }
+
+  @test 'should stringify test from MDN 2'() {
+    // tslint:disable-next-line:only-arrow-functions
+    const result = JsonDumper.stringify({ [Symbol('foo')]: 'foo' });
+    expect(result).to.equal(`{    // Object
 }`);
   }
 

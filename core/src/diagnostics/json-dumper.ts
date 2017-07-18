@@ -52,12 +52,23 @@ class DumperInternal extends ClonerBase {
         this.sb.append('"');
       }
 
-      this.sb.append(`${value}`);
+      if (Types.isSymbol(value)) {
+        this.sb.append(value.toString());
+      } else {
+        this.sb.append(`${value}`);
+      }
 
       if (Types.isString(value)) {
         this.sb.append('"');
       }
 
+      return;
+    }
+
+    if (value instanceof Date) {
+      this.sb.append('"');
+      this.sb.append(value.toISOString());
+      this.sb.append('"');
       return;
     }
 
