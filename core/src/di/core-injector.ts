@@ -11,7 +11,6 @@ import { XLog } from '../diagnostics/xlog';
 
 import { Assertion } from '../base/assertion';
 import { Funktion } from '../base/objectType';
-import { JsonDumper } from '../diagnostics/json-dumper';
 import { Types } from '../types/types';
 import { ComponentMetadata } from './component-metadata';
 import { InjectorBase } from './injector-base';
@@ -48,7 +47,7 @@ export class CoreInjector extends InjectorBase<Injector, OpaqueToken> {
         if (!this.getInjector() && Types.isPresent(notFoundValue)) {
           // tslint:disable-next-line:no-console
           console.warn(
-            `CoreInjector.getInstance: token = ${token}: using notFoundValue = ${JsonDumper.stringify(notFoundValue)}`);
+            `CoreInjector.getInstance: token = ${token}: using notFoundValue = ${JSON.stringify(notFoundValue)}`);
           return notFoundValue;     // v.a. für Unittests und deren Initialisierung
         }
         return this.getInjector().get(token, notFoundValue) as TInstance;
