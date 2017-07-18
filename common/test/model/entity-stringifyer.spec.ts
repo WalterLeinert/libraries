@@ -6,7 +6,7 @@
 require('reflect-metadata');
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { Core } from '@fluxgate/core';
 
@@ -42,7 +42,7 @@ class NoEntity {
 }
 
 
-@suite('model.EntityStringifyer') @only
+@suite('model.EntityStringifyer')
 class EntityStringifyerTest extends CommonTest {
   private tableMetadata: TableMetadata;
 
@@ -108,9 +108,17 @@ class EntityStringifyerTest extends CommonTest {
   }
 
   // https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-  @test 'should stringify test from MDN 1'() {
-    const result = Core.stringify({ x: [10, undefined, () => { /*ok*/ }, Symbol('')] });
-    expect(result).to.equal('{"x":[10,null,null,null]}');
+  // Hinweis: die Ausgabe ist typtreuer als die originale JSON.stringify Ausgabe!
+  @test 'should stringify test from MDN 1 (not fully compatible)'() {
+    const result = Core.stringify({ x: [10, undefined, () => { /*ok*/ }, Symbol('my-symbol')] });
+    expect(result).to.equal(`{    // Object
+  "x": [
+    10,
+    undefined,
+    (),
+    Symbol(my-symbol)
+  ]
+}`);
   }
 
   @test 'should stringify test from MDN 2'() {
