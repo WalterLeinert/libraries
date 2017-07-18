@@ -2,9 +2,13 @@ import { ClonerBase } from '../base/clone';
 import { using } from '../base/disposable';
 import { Funktion } from '../base/objectType';
 import { StringBuilder } from '../base/stringBuilder';
+import { CoreInjector } from '../di/core-injector';
 import { Indenter } from '../suspendable/indenter';
 import { Suspender } from '../suspendable/suspender';
 import { Types } from '../types/types';
+import { NopValueReplacer } from './nop-value-replacer';
+import { IValueReplacer } from './value-replacer.interface';
+import { VALUE_REPLACER } from './value-replacer.token';
 
 
 class DumperInternal extends ClonerBase {
@@ -12,7 +16,7 @@ class DumperInternal extends ClonerBase {
   private sb: StringBuilder = new StringBuilder();
 
 
-  public constructor(private maxDepth: number) {
+  public constructor(private replacer: IValueReplacer, private maxDepth: number) {
     super(true);
   }
 
@@ -31,7 +35,7 @@ class DumperInternal extends ClonerBase {
    */
   private dumpRec<T>(value: T, attrName?: string) {
     if (!Types.isNullOrEmpty(attrName)) {
-      this.indent(`${attrName}: `);
+      this.indent(`"${attrName}": `);
     }
 
     // primitive Typen
@@ -45,13 +49,13 @@ class DumperInternal extends ClonerBase {
     // primitive Typen sind ok
     if (Types.isPrimitive(value)) {
       if (Types.isString(value)) {
-        this.sb.append('\'');
+        this.sb.append('"');
       }
 
       this.sb.append(`${value}`);
 
       if (Types.isString(value)) {
-        this.sb.append('\'');
+        this.sb.append('"');
       }
 
       return;
@@ -130,7 +134,9 @@ class DumperInternal extends ClonerBase {
         super.iterateOnEntries(value, undefined,
           (count, index, entryName, entryValue, clonedEntryName, clonedEntryValue) => {
             using(new Suspender([this.indenter]), () => {
-              this.dumpRec(entryValue, entryName);   // Rekursion
+              const entryValueReplaced = this.replacer.replace(value, entryName, entryValue);
+
+              this.dumpRec(entryValueReplaced, entryName);   // Rekursion
 
               if (index < count - 1) {
                 this.sb.appendLine(',');
@@ -161,6 +167,8 @@ class DumperInternal extends ClonerBase {
 // tslint:disable-next-line:max-classes-per-file
 export class JsonDumper {
 
+  public static DEFAULT_REPLACER = new NopValueReplacer();
+
   /**
    * Gibt das Objekt @param{value} als String aus.
    *
@@ -173,7 +181,10 @@ export class JsonDumper {
    * @memberOf Clone
    */
   public static stringify<T>(value: T, maxDepth: number = Number.MAX_VALUE): string {
-    const dumper = new DumperInternal(maxDepth);
+    const valueReplacer = CoreInjector.instance.getInstance<IValueReplacer>(VALUE_REPLACER,
+      JsonDumper.DEFAULT_REPLACER);
+
+    const dumper = new DumperInternal(valueReplacer, maxDepth);
     dumper.dump<T>(value);
 
     return dumper.toString();

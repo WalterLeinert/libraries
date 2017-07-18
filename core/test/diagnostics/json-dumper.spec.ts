@@ -68,23 +68,23 @@ class DumperTest extends CoreUnitTest {
   @test 'should dump json without cyclic reference'() {
     const dump = JsonDumper.stringify(json);
     return expect(dump).to.be.equal(`{    // Object
-  null: null,
-  undefined: undefined,
-  items: [
-    'name1',
+  "null": null,
+  "undefined": undefined,
+  "items": [
+    "name1",
     4711
   ],
-  name: 'Walter',
-  id: 4711,
-  valid: true,
-  inner1: {    // Object
-    no: 1,
-    inner: {    // Object
-      hallo: 'du'
+  "name": "Walter",
+  "id": 4711,
+  "valid": true,
+  "inner1": {    // Object
+    "no": 1,
+    "inner": {    // Object
+      "hallo": "du"
     }
   },
-  inner2: {    // Object
-    no: 2
+  "inner2": {    // Object
+    "no": 2
   }
 }`);
   }
@@ -93,23 +93,23 @@ class DumperTest extends CoreUnitTest {
   @test 'should dump json with maxDepth 1'() {
     const dump = JsonDumper.stringify(json, 1);
     return expect(dump).to.be.equal(`{    // Object
-  null: null,
-  undefined: undefined,
-  items: [
-    'name1',
+  "null": null,
+  "undefined": undefined,
+  "items": [
+    "name1",
     4711
   ],
-  name: 'Walter',
-  id: 4711,
-  valid: true,
-  inner1: {    // Object
-    no: 1,
-    inner: {    // Object
+  "name": "Walter",
+  "id": 4711,
+  "valid": true,
+  "inner1": {    // Object
+    "no": 1,
+    "inner": {    // Object
       ...
     }
   },
-  inner2: {    // Object
-    no: 2
+  "inner2": {    // Object
+    "no": 2
   }
 }`);
   }
@@ -118,18 +118,18 @@ class DumperTest extends CoreUnitTest {
   @test 'should dump json with maxDepth 0'() {
     const dump = JsonDumper.stringify(json, 0);
     return expect(dump).to.be.equal(`{    // Object
-  null: null,
-  undefined: undefined,
-  items: [
+  "null": null,
+  "undefined": undefined,
+  "items": [
     ...    // 2 items
   ],
-  name: 'Walter',
-  id: 4711,
-  valid: true,
-  inner1: {    // Object
+  "name": "Walter",
+  "id": 4711,
+  "valid": true,
+  "inner1": {    // Object
     ...
   },
-  inner2: {    // Object
+  "inner2": {    // Object
     ...
   }
 }`);
@@ -143,9 +143,9 @@ class DumperTest extends CoreUnitTest {
 
     const dump = JsonDumper.stringify(tree);
     return expect(dump).to.be.equal(`{    // TreeNode
-  _id: 1,
-  _name: 'root',
-  _child:     ----> cycle detected: type = TreeNode
+  "_id": 1,
+  "_name": "root",
+  "_child":     ----> cycle detected: type = TreeNode
 }`);
   }
 }
