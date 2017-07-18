@@ -7,14 +7,22 @@ import { Injector } from 'injection-js';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { CoreInjector, CoreModule, DEFAULT_CATEGORY, FlxComponent, FlxModule, LOGGER } from '@fluxgate/core';
+import {
+  CoreInjector, CoreModule, DEFAULT_CATEGORY, FlxComponent, FlxModule,
+  LOGGER, STRINGIFYER, VALUE_REPLACER
+} from '@fluxgate/core';
 import { PlatformModule } from '@fluxgate/platform';
+
+import { EntityStringifyer } from './model/entity-stringifyer';
+import { EntityValueReplacer } from './model/entity-value-replacer';
 
 
 @FlxComponent({
   providers: [
     { provide: DEFAULT_CATEGORY, useValue: CommonComponent.logger.category },
-    { provide: LOGGER, useValue: CommonComponent.logger }
+    { provide: LOGGER, useValue: CommonComponent.logger },
+    { provide: STRINGIFYER, useClass: EntityStringifyer },
+    { provide: VALUE_REPLACER, useClass: EntityValueReplacer }   // -> resetSecrets
   ],
 })
 export class CommonComponent {
