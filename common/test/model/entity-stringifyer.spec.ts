@@ -6,7 +6,7 @@
 require('reflect-metadata');
 
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
+import { only, suite, test } from 'mocha-typescript';
 
 import { Core } from '@fluxgate/core';
 
@@ -20,8 +20,8 @@ import { TableMetadata } from '../../src/model/metadata/tableMetadata';
 import { CommonTest } from '../common.spec';
 
 
-@Table({ name: ArtikelEntityStrigifyer.TABLE_NAME })
-class ArtikelEntityStrigifyer {
+@Table({ name: ArtikelEntityStringifyer.TABLE_NAME })
+class ArtikelEntityStringifyer {
   public static readonly TABLE_NAME = 'artikel';
 
   @IdColumn({ name: 'artikel_id' })
@@ -42,7 +42,7 @@ class NoEntity {
 }
 
 
-@suite('model.EntityStringifyer')
+@suite('model.EntityStringifyer') @only
 class EntityStringifyerTest extends CommonTest {
   private tableMetadata: TableMetadata;
 
@@ -52,12 +52,15 @@ class EntityStringifyerTest extends CommonTest {
 
 
   @test 'should have secrets reset'() {
-    const entity = new ArtikelEntityStrigifyer();
+    const entity = new ArtikelEntityStringifyer();
     entity.password = 'password';
     entity.password_salt = 'password_salt';
 
     const entityStringifyed = Core.stringify(entity);
-    expect(entityStringifyed).to.equal(`{"password":"*****","password_salt":"*****"}`);
+    expect(entityStringifyed).to.equal(`{    // ArtikelEntityStringifyer
+  "password": "*****",
+  "password_salt": "*****"
+}`);
   }
 
   @test 'should log warning for unregistered class'() {
@@ -66,7 +69,10 @@ class EntityStringifyerTest extends CommonTest {
     entity.password_salt = 'password_salt';
 
     const entityStringifyed = Core.stringify(entity);
-    expect(entityStringifyed).to.equal(`{"password":"password","password_salt":"password_salt"}`);
+    expect(entityStringifyed).to.equal(`{    // NoEntity
+  "password": "password",
+  "password_salt": "password_salt"
+}`);
   }
 
   @test 'should stringify null'() {
@@ -76,7 +82,7 @@ class EntityStringifyerTest extends CommonTest {
 
   @test 'should stringify undefined'() {
     const result = Core.stringify(undefined);
-    expect(result).to.equal(undefined);
+    expect(result).to.equal('undefined');
   }
 
 
@@ -97,7 +103,8 @@ class EntityStringifyerTest extends CommonTest {
 
   @test 'should stringify NoEntity'() {
     const result = Core.stringify(new NoEntity());
-    expect(result).to.equal('{}');
+    expect(result).to.equal(`{    // NoEntity
+}`);
   }
 
   // https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
@@ -109,13 +116,14 @@ class EntityStringifyerTest extends CommonTest {
   @test 'should stringify test from MDN 2'() {
     // tslint:disable-next-line:only-arrow-functions
     const result = Core.stringify({ [Symbol('foo')]: 'foo' });
-    expect(result).to.equal('{}');
+    expect(result).to.equal(`{    // Object
+}`);
   }
 
 
   protected before(done?: (err?: any) => void) {
     super.before(() => {
-      this.tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelEntityStrigifyer);
+      this.tableMetadata = MetadataStorage.instance.findTableMetadata(ArtikelEntityStringifyer);
       done();
     });
   }

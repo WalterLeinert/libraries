@@ -12,13 +12,12 @@ import { configure, getLogger, IConfig, ILogger, levels, using, XLog } from '@fl
 
 import {
   CoreInjector, CoreModule, DEFAULT_CATEGORY, FlxComponent, FlxModule,
-  fromEnvironment, LOG_EXCEPTIONS, LOGGER, ModuleMetadataStorage, STRINGIFYER,
-  Types
+  fromEnvironment, LOG_EXCEPTIONS, LOGGER, ModuleMetadataStorage, Types
 } from '@fluxgate/core';
 import { PlatformModule } from '@fluxgate/platform';
 
 import { AppConfig } from '../base/appConfig';
-import { EntityStringifyer } from '../model/entity-stringifyer';
+import { CommonComponent, CommonModule } from '../bootstrap';
 import { Logging } from '../util/logging';
 import { ILoggingConfigurationOptions } from '../util/loggingConfiguration';
 
@@ -45,8 +44,7 @@ configure(config);
   providers: [
     { provide: DEFAULT_CATEGORY, useValue: CommonTestComponent.logger.category },
     { provide: LOGGER, useValue: CommonTestComponent.logger },
-    { provide: LOG_EXCEPTIONS, useValue: false },
-    { provide: STRINGIFYER, useClass: EntityStringifyer }   // -> resetSecrets
+    { provide: LOG_EXCEPTIONS, useValue: false }
   ]
 })
 export class CommonTestComponent {
@@ -65,7 +63,7 @@ export class CommonTestComponent {
  */
 @FlxModule({
   imports: [
-    PlatformModule
+    CommonModule
   ],
   declarations: [
     CommonTestComponent

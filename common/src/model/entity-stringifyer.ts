@@ -1,6 +1,5 @@
-import { Clone, IStringifyer, Types } from '@fluxgate/core';
+import { IStringifyer, JsonDumper, Types } from '@fluxgate/core';
 
-import { IEntity } from './entity.interface';
 import { MetadataStorage } from './metadata/metadataStorage';
 
 /**
@@ -15,41 +14,14 @@ export class EntityStringifyer implements IStringifyer {
   public static readonly DEFAULT_SECRET_RESET = '*****';
 
   /**
-   * Creates an json string for the given entity @param{entity}. If @param{resetSecrets} is true,
-   * secret properties are reset in result string if the properties are decorated as secret in
-   * the model class.
+   * Creates an json string for the given @param{value}. It uses @param{JsonDumper} to
+   * stringify the value, which should be configured to use @see{EntityValueReplacer} to reset secret
+   * propertyies (like password).
    *
    * @static
-   * @template TId
-   * @param {IEntity<TId>} entity
-   * @param {boolean} [resetSecrets=true]
    * @returns {string}
-   * @memberof EntityDumper
    */
-  public stringify<TId>(value: IEntity<TId>, resetSecrets: boolean = true): string {
-    if (!Types.isPresent(value) || Types.isPrimitive(value)) {
-      return JSON.stringify(value);             // muss JSON.stringify bleiben
-    }
-
-    try {
-      const ctor = Types.getConstructor(value);
-
-      // if no entity, use JSON.stringify
-      const metadata = MetadataStorage.instance.findTableMetadata(ctor);
-      if (!metadata) {
-        return JSON.stringify(value);         // muss JSON.stringify bleiben
-      }
-    } catch (exc) {
-      // no type with constructor
-      return JSON.stringify(value);           // muss JSON.stringify bleiben
-    }
-
-    if (resetSecrets) {
-      const clone = Clone.clone(value);
-      MetadataStorage.instance.resetSecrets(clone, EntityStringifyer.DEFAULT_SECRET_RESET);
-      value = clone;
-    }
-
-    return JSON.stringify(value);           // muss JSON.stringify bleiben
+  public stringify(value: any): string {
+    return JsonDumper.stringify(value);
   }
 }
