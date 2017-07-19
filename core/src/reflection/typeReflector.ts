@@ -46,7 +46,7 @@ export class TypeReflector {
   }
 
   public get parent(): TypeReflector {
-    return this.parent;
+    return this._parent;
   }
 
   public get propertyReflectors(): PropertyReflector[] {
