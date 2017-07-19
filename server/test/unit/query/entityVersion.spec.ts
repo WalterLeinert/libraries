@@ -21,13 +21,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import {
   ConstantValueGenerator, EntityVersion,
-  NumberIdGenerator
+  NumberIdGenerator, QueryTest
 } from '@fluxgate/common';
 
 import { EntityVersionService } from '../../../src/ts-express-decorators-flx/services/entityVersion.service';
 import { EntityVersionTestBase } from '../entity-version-test-base';
 import { KnexTest } from '../knex-test';
-import { QueryTest } from './query-test';
 import { QueryTestService } from './query-test.service';
 
 

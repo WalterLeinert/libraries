@@ -20,12 +20,14 @@ chai.should();
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { AppConfig, AppRegistry, ConstantValueGenerator, EntityVersion, NumberIdGenerator } from '@fluxgate/common';
+import {
+  AppConfig, AppRegistry, ConstantValueGenerator, EntityVersion,
+  NumberIdGenerator, QueryTest
+} from '@fluxgate/common';
 
 import { EntityVersionService } from '../../../src/ts-express-decorators-flx/services/entityVersion.service';
 import { EntityVersionTestBase } from '../entity-version-test-base';
 import { KnexTest } from '../knex-test';
-import { QueryTest } from './query-test';
 import { QueryTestService } from './query-test.service';
 
 

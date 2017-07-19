@@ -20,13 +20,11 @@ chai.should();
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { ConstantValueGenerator, NumberIdGenerator } from '@fluxgate/common';
+import { ConstantValueGenerator, NumberIdGenerator, QueryTest } from '@fluxgate/common';
 import { Clone, OptimisticLockException } from '@fluxgate/core';
 
 import { KnexTest } from '../knex-test';
-import { QueryTest } from './query-test';
 import { QueryTestService } from './query-test.service';
-
 
 
 
