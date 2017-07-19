@@ -8,13 +8,12 @@ const email = require('emailjs/email');
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { IMessage, SmtpConfig } from '@fluxgate/common';
+import { IMailMessage, SmtpConfig } from '@fluxgate/common';
 import { Assert, Core } from '@fluxgate/core';
-
-import { ISMTPConfig } from './smtpconfig.interface';
 
 import { ConfigService } from '../config.service';
 import { ServiceCore } from '../service-core';
+import { ISMTPConfig } from './smtpconfig.interface';
 
 
 /**
@@ -31,7 +30,7 @@ export class EmailService extends ServiceCore {
     super();
   }
 
-  public send(message: IMessage, configId: string = SmtpConfig.DEFAULT_ID): Promise<any> {
+  public send(message: IMailMessage, configId: string = SmtpConfig.DEFAULT_ID): Promise<any> {
     Assert.notNull(message);
 
     return using(new XLog(EmailService.logger, levels.INFO, 'Initialize Emailsystem'), (log) => {
