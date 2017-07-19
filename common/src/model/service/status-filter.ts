@@ -1,6 +1,6 @@
-import { Serializable } from '@fluxgate/core';
+import { EnumHelper, Serializable } from '@fluxgate/core';
 
-import { EntityStatus } from '../entity-status';
+import { EntityStatus, EntityStatusHelper } from '../entity-status';
 
 export enum FilterBehaviour {
 
@@ -36,6 +36,9 @@ export enum FilterBehaviour {
  */
 @Serializable()
 export class StatusFilter {
+  private static filterBehaviourMap = EnumHelper.getBidirectionalMap<FilterBehaviour>(FilterBehaviour);
+  private static entityStatusMap = EnumHelper.getBidirectionalMap<EntityStatus>(EntityStatus);
+
 
   constructor(private _behaviour: FilterBehaviour, private _status: EntityStatus) {
   }
@@ -46,5 +49,14 @@ export class StatusFilter {
 
   public get status(): EntityStatus {
     return this._status;
+  }
+
+
+  /**
+   * Liefert einen String bestehend aus den Enumnamen von behaviour und status.
+   */
+  public toString() {
+    return `${StatusFilter.filterBehaviourMap.map2To1(this._behaviour)}-` +
+      `${StatusFilter.entityStatusMap.map2To1(this._status)}`;
   }
 }

@@ -41,6 +41,19 @@ export class EntityVersionCache {
   }
 
 
+  /**
+   * Liefert die Keys aller CacheEntries, deren Key im Dictionary mit @param{entity} beginnt.
+   */
+  public getKeysStartingWith<T>(entity: string): string[] {
+    return using(new XLog(EntityVersionCache.logger, levels.INFO, 'getStartingWith'), (log) => {
+      Assert.notNullOrEmpty(entity);
+
+      const keys = this.entityDict.keys.filter((item) => item.startsWith(entity));
+      return keys;
+    });
+  }
+
+
   public reset() {
     using(new XLog(EntityVersionCache.logger, levels.INFO, 'reset'), (log) => {
       this.entityDict.clear();
