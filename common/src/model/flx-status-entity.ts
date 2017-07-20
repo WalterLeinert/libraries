@@ -42,11 +42,11 @@ export abstract class FlxStatusEntity<TId> extends FlxEntity<TId> implements ISt
   }
 
 
-  private getStatus(status: EntityStatus): boolean {
+  public getStatus(status: EntityStatus): boolean {
     return EntityStatusHelper.hasFlag(this.__status, status);
   }
 
-  private setStatus(status: EntityStatus, value: boolean) {
+  public setStatus(status: EntityStatus, value: boolean) {
     this.__status = EntityStatusHelper.setFlag(this.__status, status, value);
   }
 }

@@ -12,6 +12,7 @@ import { Serializable } from '@fluxgate/core';
 
 @Serializable()
 export abstract class ServiceResult {
+  private _fromCache: boolean;
 
   /**
    * Creates an instance of ServiceResult.
@@ -27,6 +28,20 @@ export abstract class ServiceResult {
     return this._entityVersion;
   }
 
+
+  /**
+   * Liefert true, falls das Result aus dem Cache kam (nur für Unittests)
+   */
+  public get __fromCache(): boolean {
+    return this._fromCache;
+  }
+
+  /**
+   * Setzt das Flag fromCache auf den Wert @param{value} (nur für Unittests)
+   */
+  public __setFromCache(value: boolean = true) {
+    this._fromCache = value;
+  }
 
   public toString(): string {
     return `entityVersion: ${this._entityVersion}`;

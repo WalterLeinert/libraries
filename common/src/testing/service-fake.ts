@@ -14,14 +14,15 @@ import {
 } from '@fluxgate/core';
 
 import {
-  EntityGenerator, EntityVersion, IEntity, IFlxEntity, IService, TableMetadata, VersionedEntity
+  EntityGenerator, EntityStatus, EntityVersion, FlxStatusEntity, IEntity, IFlxEntity, IFlxStatusEntity,
+  IService, TableMetadata, VersionedEntity
 } from '../model';
 import { CreateResult } from '../model/service/create-result';
 import { DeleteResult } from '../model/service/delete-result';
 import { FindByIdResult } from '../model/service/find-by-id-result';
 import { FindResult } from '../model/service/find-result';
 import { QueryResult } from '../model/service/query-result';
-import { StatusFilter } from '../model/service/status-filter';
+import { FilterBehaviour, StatusFilter } from '../model/service/status-filter';
 import { UpdateResult } from '../model/service/update-result';
 
 /**
@@ -93,7 +94,50 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
       if (exception) {
         observer.error(exception);
       } else {
-        observer.next(new FindResult(this._items as any[], this.getEntityVersion(this.getTableName())));
+
+        let items = this._items;
+
+        if (this._tableMetadata.statusColumnKeys.length > 0) {
+          const statusColumn = this._tableMetadata.statusColumn;
+
+          // defaults
+          let behaviour = FilterBehaviour.None;
+          let status = EntityStatus.None;
+
+          if (filter && filter instanceof StatusFilter) {
+            behaviour = filter.behaviour;
+            status = filter.status;
+          }
+
+          switch (behaviour) {
+            // only items with matching status
+            case FilterBehaviour.None:
+              items = this._items.filter((item: FlxStatusEntity<TId>) => item.__status === 0);
+              break;
+
+            // items + items with matching status
+            case FilterBehaviour.Add:
+              items = this._items.filter((item: FlxStatusEntity<TId>) =>
+                item.__status === 0 || item.getStatus(status));
+              break;
+
+            // only items with matching status
+            case FilterBehaviour.Only:
+              items = this._items.filter((item: FlxStatusEntity<TId>) => item.getStatus(status));
+              break;
+
+            // items + items without matching status
+            case FilterBehaviour.Exclude:
+              items = this._items.filter((item: FlxStatusEntity<TId>) =>
+                item.__status === 0 || !item.getStatus(status));
+              break;
+
+            default:
+              throw new InvalidOperationException(`unsupported filter behaviour: ${behaviour}`);
+          }
+        }
+
+        observer.next(new FindResult(items as any[], this.getEntityVersion(this.getTableName())));
       }
     });
   }
@@ -143,6 +187,9 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
 
         itemCloned.__version++;
         this.incrementEntityVersion();
+
+        const items = this._items.map((it) => it.id === item.id ? itemCloned : it);
+        this._items = [...items];
 
         observer.next(new UpdateResult(itemCloned, this.getEntityVersion(this.getTableName())));
       }
@@ -299,7 +346,7 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
    */
   private getEntityVersion(tableName: string): number {
 
-      // sucht in items nach dem Item mit der Id itemId
+    // sucht in items nach dem Item mit der Id itemId
     const finder = (itemId: string, items: Array<IEntity<string>>) => {
       const versionedEntity = items.find((ev) => ev.id === itemId);
       if (versionedEntity instanceof VersionedEntity) {

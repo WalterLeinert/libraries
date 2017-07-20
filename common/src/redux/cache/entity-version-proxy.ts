@@ -76,6 +76,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
             // items aus dem Cache immer Klonen, damit es sich ähnlich wie bei echten Serverrequests verhält
             //
             createResult = new CreateResult(Clone.clone(createResult.item), createResult.entityVersion);
+            createResult.__setFromCache();
           }
 
           observer.next(createResult);
@@ -176,7 +177,9 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               //
               items = Clone.clone(items);
 
-              observer.next(new FindResult<T>(items, cacheEntry.version));
+              const findResult = new FindResult<T>(items, cacheEntry.version);
+              findResult.__setFromCache();
+              observer.next(findResult);
             }
           } else {
             // noch nichts im Cache? -> immer service call
@@ -224,6 +227,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
                 // item aus dem Cache immer Klonen, damit es sich ähnlich wie bei echten Serverrequests verhält
                 //
                 findByIdResult = new FindByIdResult(Clone.clone(findByIdResult.item), findByIdResult.entityVersion);
+                findByIdResult.__setFromCache();
               }
 
               observer.next(findByIdResult);
@@ -270,7 +274,10 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
                   //
                   item = Clone.clone(item);
 
-                  observer.next(new FindByIdResult<T, TId>(item, cacheEntry.version));
+                  const result = new FindByIdResult<T, TId>(item, cacheEntry.version);
+                  result.__setFromCache();
+
+                  observer.next(result);
                 }
               } else {
                 // noch nie gecached -> kein cache update
@@ -313,6 +320,8 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
 
               this.updateCache(log, deleteResult.entityVersion, cacheEntry, updater,
                 `delete item[${this.getTableName()}] from cache`, false);
+
+              deleteResult.__setFromCache();
 
               observer.next(deleteResult);
             } else {
@@ -376,6 +385,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
               // item aus dem Cache immer Klonen, damit es sich ähnlich wie bei echten Serverrequests verhält
               //
               updateResult = new UpdateResult<T, TId>(Clone.clone(updateResult.item), updateResult.entityVersion);
+              updateResult.__setFromCache();
 
               observer.next(updateResult);
 
