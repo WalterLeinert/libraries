@@ -17,7 +17,7 @@ chai.should();
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+import { configure, getLogger, IConfig, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import { ConstantValueGenerator, NumberIdGenerator, QueryTest } from '@fluxgate/common';
@@ -46,6 +46,23 @@ class OptimisticLockTest extends KnexTest<QueryTest, number> {
         __test: new ConstantValueGenerator(0),
       },
       tableMetadata: KnexTest.metadataService.findTableMetadata(QueryTest)
+    });
+  }
+
+  public before(done: () => void) {
+    super.before(() => {
+
+      // Logging-Konfiguration bevor Tests laufen
+      const config: IConfig = {
+        appenders: [
+        ],
+        levels: {
+          '[all]': 'FATAL'
+        }
+      };
+      configure(config);
+
+      done();
     });
   }
 
