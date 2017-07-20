@@ -74,7 +74,7 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
         this.incrementEntityVersion();
 
         this._items.push(item);
-        observer.next(new CreateResult<T, TId>(item, this.getEntityVersion()));
+        observer.next(new CreateResult<T, TId>(item, this.getEntityVersion(this.getTableName())));
       }
     });
   }
@@ -93,7 +93,7 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
       if (exception) {
         observer.error(exception);
       } else {
-        observer.next(new FindResult(this._items as any[], this.getEntityVersion()));
+        observer.next(new FindResult(this._items as any[], this.getEntityVersion(this.getTableName())));
       }
     });
   }
@@ -117,7 +117,7 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
         const items = this._items.filter((elem) => elem.id === id);
 
         observer.next(new FindByIdResult<T, TId>(
-          (items.length === 1 ? items[0] as any : undefined), this.getEntityVersion()));
+          (items.length === 1 ? items[0] as any : undefined), this.getEntityVersion(this.getTableName())));
       }
     });
   }
@@ -144,7 +144,7 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
         itemCloned.__version++;
         this.incrementEntityVersion();
 
-        observer.next(new UpdateResult(itemCloned, this.getEntityVersion()));
+        observer.next(new UpdateResult(itemCloned, this.getEntityVersion(this.getTableName())));
       }
     });
   }
@@ -171,7 +171,7 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
 
         this.incrementEntityVersion();
 
-        observer.next(new DeleteResult(id, this.getEntityVersion()));
+        observer.next(new DeleteResult(id, this.getEntityVersion(this.getTableName())));
       }
     });
   }
@@ -195,7 +195,7 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
         } else {
 
           log.warn(`query terms not used.`);
-          observer.next(new QueryResult(this._items as any[], this.getEntityVersion()));
+          observer.next(new QueryResult(this._items as any[], this.getEntityVersion(this.getTableName())));
         }
       });
     });
@@ -272,8 +272,16 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
     return this._tableMetadata;
   }
 
+
+  /**
+   * simuliert die Aktualisierung der Version der aktuellen Entity in der EntityVersion-Tabelle über den
+   * Fake-Service _entityVersionServiceFake nach CRUD-Operationen
+   */
   private incrementEntityVersion() {
-    if (this._entityVersionServiceFake) {
+    //
+    // nicht bei der EntityVersion-Tabelle selbst!
+    //
+    if (this.getTableName() !== EntityVersion.TABLE_NAME) {
       const versionedEntity = this._entityVersionServiceFake.items.find((ev) => ev.id === this.getTableName());
       if (versionedEntity instanceof VersionedEntity) {
         versionedEntity.__version++;
@@ -283,15 +291,31 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
     }
   }
 
-  private getEntityVersion(): number {
-    if (this._entityVersionServiceFake) {
-      const versionedEntity = this._entityVersionServiceFake.items.find((ev) => ev.id === this.getTableName());
+
+  /**
+   * simuliert die EntityVersion-Tabelle und liefert für die Tabelle @param{tableName} die max. entity version.
+   *
+   * @param tableName
+   */
+  private getEntityVersion(tableName: string): number {
+
+      // sucht in items nach dem Item mit der Id itemId
+    const finder = (itemId: string, items: Array<IEntity<string>>) => {
+      const versionedEntity = items.find((ev) => ev.id === itemId);
       if (versionedEntity instanceof VersionedEntity) {
         return versionedEntity.__version;
       } else {
         throw new InvalidOperationException(`Entity ${this.getModelClassName} ist not versioned`);
       }
+    };
+
+    //
+    // nicht bei der EntityVersion-Tabelle selbst!
+    //
+    if (this.getTableName() !== EntityVersion.TABLE_NAME) {
+      return finder(tableName, this._entityVersionServiceFake.items);
+    } else {
+      return finder(tableName, this._items.map((it) => it as any as IEntity<string>));
     }
-    throw new NotSupportedException();
   }
 }

@@ -13,7 +13,6 @@ import { ServiceFake } from './service-fake';
  * @extends {ServiceFake<EntityVersion, string>}
  */
 export class EntityVersionServiceFake extends ServiceFake<EntityVersion, string> {
-  public static instance = new EntityVersionServiceFake();
 
   constructor() {
     super(MetadataStorage.instance.findTableMetadata(EntityVersion),
