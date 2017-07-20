@@ -1,6 +1,6 @@
 
 import { IUser, User } from '../model';
-import { ConstantValueGenerator, EntityGenerator, NumberIdGenerator } from '../model/generator';
+import { ConstantValueGenerator, EntityGenerator, NopValueGenerator, NumberIdGenerator } from '../model/generator';
 import { MetadataStorage } from '../model/metadata';
 import { EntityVersionServiceFake } from './entity-version-service-fake';
 import { ServiceFake } from './service-fake';
@@ -29,7 +29,8 @@ export class UserServiceFake extends ServiceFake<IUser, number> {
           __client: new ConstantValueGenerator(1),
           __version: new ConstantValueGenerator(0),
           __deleted: new ConstantValueGenerator(false),
-          __archived: new ConstantValueGenerator(false)
+          __archived: new ConstantValueGenerator(false),
+          __status: new NopValueGenerator()     // Property nicht verändern, erfolgt über __deleted, etc.
         }
       }), entityVersionServiceFake
     );
