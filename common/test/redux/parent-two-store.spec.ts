@@ -13,7 +13,7 @@ import {
 } from '../../src/redux';
 import { RoleStore } from '../../src/redux/store';
 import { RoleServiceFake } from '../../src/testing/role-service-fake';
-import { ReduxBaseTest } from './redux-base-test.spec';
+import { ReduxBaseTest } from './redux-base-test';
 
 
 

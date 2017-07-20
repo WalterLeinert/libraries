@@ -15,7 +15,7 @@ import {
 
 import { ExtendedUserServiceRequestsFake } from '../../src/testing';
 import { UserServiceFake } from '../../src/testing/user-service-fake';
-import { ReduxBaseTest } from './redux-base-test.spec';
+import { ReduxBaseTest } from './redux-base-test';
 
 
 @suite('common.redux: CurrentUserStore')

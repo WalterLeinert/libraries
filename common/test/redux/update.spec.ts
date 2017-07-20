@@ -14,7 +14,7 @@ import { UserStore } from '../../src/redux/store';
 
 import { UserServiceFake } from '../../src/testing/user-service-fake';
 import { UserServiceRequestsFake } from '../../src/testing/user-service-requests-fake';
-import { ReduxBaseTest } from './redux-base-test.spec';
+import { ReduxBaseTest } from './redux-base-test';
 
 
 const config: IConfig = {

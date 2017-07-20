@@ -134,51 +134,6 @@ export abstract class CommonUnitTest {
     using(new XLog(CommonUnitTest.logger, levels.DEBUG, 'before'), (log) => {
       CommonUnitTest.initializeLogging();
 
-      if (AppConfig.config) {
-        AppConfig.config.cacheManagerConfiguration = {
-          default: {
-            cacheType: 'lru',
-          },
-          configurations: [
-            {
-              model: '',
-              options: {
-                maxItems: 1
-              }
-            }
-
-          ]
-        };
-
-      } else {
-
-        //
-        // Konfiguration für Tests registrieren
-        // hier nur wichtig: cacheManagerConfiguration
-        //
-        AppConfig.register({
-          url: '',
-          printTopic: '',
-          mode: 'development',
-          printUrl: '',
-          proxyMode: 'nop',
-          cacheManagerConfiguration: {
-            default: {
-              cacheType: 'lru'
-            },
-            configurations: [
-              {
-                model: '',
-                options: {
-                  maxItems: 1
-                }
-              }
-
-            ]
-          }
-        });
-      }
-
       done();
     });
   }
@@ -186,7 +141,6 @@ export abstract class CommonUnitTest {
   protected after(done?: (err?: any) => void) {
     // tslint:disable-next-line:no-empty
     using(new XLog(CommonUnitTest.logger, levels.DEBUG, 'after'), (log) => {
-      AppConfig.unregister();
       done();
     });
   }

@@ -11,7 +11,7 @@ import { CurrentItemSetCommand, SettingCurrentItemCommand } from '../../src/redu
 
 import { CurrentUserServiceRequestsFake } from '../../src/testing/current-user-service-requests-fake';
 import { UserServiceFake } from '../../src/testing/user-service-fake';
-import { ReduxBaseTest } from './redux-base-test.spec';
+import { ReduxBaseTest } from './redux-base-test';
 
 
 @suite('common.redux: set current item')

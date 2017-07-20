@@ -13,6 +13,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 import { Assert, Core, CustomSubject, ICtor, IToString } from '@fluxgate/core';
 
+import { AppConfig, IAppConfig } from '../../src/base/appConfig';
 import { IEntity } from '../../src/model';
 import { IService } from '../../src/model/service/service.interface';
 
@@ -25,10 +26,10 @@ import {
 } from '../../src/redux';
 import { EntityVersionCache } from '../../src/redux/cache/entity-version-cache';
 import { EntityVersionServiceFake } from '../../src/testing/entity-version-service-fake';
+import { DEFAULT_APP_CONFIG } from './default-app-config';
 
 
-
-export class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TService
+export abstract class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TService
   extends IService<T, TId>> extends CommonTest {
   protected static readonly logger = getLogger(ReduxBaseTest);
 
@@ -48,29 +49,53 @@ export class ReduxBaseTest<T extends IEntity<TId>, TId extends IToString, TServi
 
   protected constructor(private storeId: string,
     private serviceRequestClazz: ICtor<ServiceRequests>,
-    private serviceClazz: ICtor<TService>) {
+    private serviceClazz: ICtor<TService>, private appConfig: IAppConfig = DEFAULT_APP_CONFIG) {
     super();
   }
 
 
   protected before(done: (err?: any) => void) {
-    this._store = new Store();
-    this._entityVersionServiceFake = new EntityVersionServiceFake();
-    this._serviceFake = new this.serviceClazz(this._entityVersionServiceFake);
-    this._serviceRequests = new this.serviceRequestClazz(this.storeId, this._serviceFake, this._store,
-      this._entityVersionServiceFake);
+    super.before(() => {
 
-    const commandStore = this._store.getCommandStore(this.storeId);
+      this._store = new Store();
+      this._entityVersionServiceFake = new EntityVersionServiceFake();
+      this._serviceFake = new this.serviceClazz(this._entityVersionServiceFake);
+      this._serviceRequests = new this.serviceRequestClazz(this.storeId, this._serviceFake, this._store,
+        this._entityVersionServiceFake);
 
-    if (commandStore.parent) {
-      this.parentStoreId = commandStore.parent.name;
-      this.subscribeToParentStore(this.parentStoreId);
-    }
+      const commandStore = this._store.getCommandStore(this.storeId);
 
-    this.subscribeToStore(this.storeId);
-    this.reset();
+      if (commandStore.parent) {
+        this.parentStoreId = commandStore.parent.name;
+        this.subscribeToParentStore(this.parentStoreId);
+      }
 
-    done();
+      this.subscribeToStore(this.storeId);
+      this.reset();
+
+
+
+      if (this.appConfig) {
+        AppConfig.unregister();
+
+        AppConfig.register(this.appConfig);
+      }
+
+      done();
+    });
+
+
+  }
+
+  protected after(done: (err?: any) => void) {
+    super.after(() => {
+
+      if (this.appConfig) {
+        AppConfig.unregister();
+      }
+
+      done();
+    });
   }
 
 

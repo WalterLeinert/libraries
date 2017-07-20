@@ -5,21 +5,28 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 
-import { IUser } from '../../src/model';
-import { CrudServiceRequests, ServiceRequestStates } from '../../src/redux';
-import { FindingItemsCommand, ItemsFoundCommand } from '../../src/redux';
-import { UserStore } from '../../src/redux/store';
+import { AppConfig, IAppConfig } from '../../../src/base/appConfig';
+import { IUser } from '../../../src/model';
+import { CrudServiceRequests, ServiceRequestStates } from '../../../src/redux';
+import { FindingItemsCommand, ItemsFoundCommand } from '../../../src/redux';
+import { UserStore } from '../../../src/redux/store';
 
-import { UserServiceFake } from '../../src/testing/user-service-fake';
-import { UserServiceRequestsFake } from '../../src/testing/user-service-requests-fake';
-import { ReduxBaseTest } from './redux-base-test';
+import { UserServiceFake } from '../../../src/testing/user-service-fake';
+import { UserServiceRequestsFake } from '../../../src/testing/user-service-requests-fake';
+import { ReduxBaseTest } from '../redux-base-test';
 
 
-@suite('common.redux: find')
+@suite('common.redux: cache: find')
 class FindTest extends ReduxBaseTest<IUser, number, any> {
 
   constructor() {
-    super(UserStore.ID, UserServiceRequestsFake, UserServiceFake);
+    super(UserStore.ID, UserServiceRequestsFake, UserServiceFake, {
+      url: '',
+      printTopic: '',
+      mode: 'development',
+      printUrl: '',
+      proxyMode: 'entityVersion'
+    });
   }
 
   @test 'should test initial state'() {
@@ -49,4 +56,5 @@ class FindTest extends ReduxBaseTest<IUser, number, any> {
       });
     });
   }
+
 }
