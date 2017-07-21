@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/platform",
-  "version": "2.3.0",
+  "version": "2.4.0-beta.0",
   "description": "Fluxgate Library Platform (node/browser)",
   "browser": "dist/browser/src/index.js",
   "main": "dist/node/src/index.js",
@@ -40,13 +40,13 @@
     "yargs": "^7.0.2"
   },
   "dependencies": {
-    "@fluxgate/core": "2.3.0",
+    "@fluxgate/core": "2.4.0-beta.0",
     "tslib": "^1.5.0"
   },
   "directories": {
     "lib": "lib"
   },
   "peerDependencies": {
-    "@fluxgate/core": ">=2.3.0"
+    "@fluxgate/core": ">=2.4.0-beta.0"
   }
 }
