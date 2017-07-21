@@ -45,6 +45,52 @@ class FindTest extends ReduxBaseTest<IUser, number, any> {
     });
   }
 
+  @test 'should dispatch find after delete -> from cache'() {
+    this.crudServiceRequests.deleteById(1).subscribe((deleteId) => {
+      this.crudServiceRequests.find().subscribe((items) => {
+        expect(items.length).to.equal(UserServiceFake.ITEMS - 1);
+
+        // commands:
+        // 0: Deleting
+        // 1: Deleted
+        // 2: ItemsFound (after delete)
+        // 3: Finding
+        // 4: ItemsFound
+        expect(this.commands[4].fromCache).to.be.true;
+      });
+    });
+  }
+
+
+  @test 'should dispatch find after update -> from cache'() {
+    this.crudServiceRequests.find().subscribe((itemsFound) => {
+      const item0 = itemsFound[0];
+      item0.username = item0.username + '-updated';
+
+      this.crudServiceRequests.update(item0).subscribe((updated) => {
+        expect(updated.__version).to.equal(item0.__version + 1);
+
+        this.crudServiceRequests.find().subscribe((items) => {
+
+          // Hinweis: cache wird zwischen den Tests nicht zurückgesetzt -> wegen delete ein Item weniger
+          expect(items.length).to.equal(UserServiceFake.ITEMS - 1);
+
+          expect(items[0]).to.deep.equal(updated);
+
+          // commands:
+          // 0: Finding
+          // 1: ItemsFound
+          // 2: Updating
+          // 3: Updated
+          // 4: ItemsFound (after update)
+          // 5: Finding
+          // 6: ItemsFound
+          expect(this.commands[6].fromCache).to.be.true;
+        });
+      });
+    });
+  }
+
 
   @test 'should dispatch find (StatusFilter(FilterBehaviour.Only, EntityStatus.Archived)) -> not from cache'() {
     this.crudServiceRequests.find(new StatusFilter(FilterBehaviour.Only, EntityStatus.Archived)).subscribe((items) => {
