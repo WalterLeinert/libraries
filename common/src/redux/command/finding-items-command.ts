@@ -19,7 +19,7 @@ import { ServiceCommand } from './service-command';
 export class FindingItemsCommand<T, TId> extends ServiceCommand<T> {
 
   constructor(serviceRequests: IServiceRequests) {
-    super(serviceRequests);
+    super(serviceRequests, false);
   }
 
   /**

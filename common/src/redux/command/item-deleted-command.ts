@@ -20,7 +20,7 @@ import { ServiceCommand } from './service-command';
 export class ItemDeletedCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T> {
 
   constructor(serviceRequests: IServiceRequests, public id: TId) {
-    super(serviceRequests);
+    super(serviceRequests, false);
   }
 
   public hasModifiedItems(): boolean {

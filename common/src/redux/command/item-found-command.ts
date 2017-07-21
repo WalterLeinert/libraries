@@ -20,8 +20,8 @@ import { ServiceCommand } from './service-command';
  */
 export class ItemFoundCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T> {
 
-  constructor(serviceRequests: IServiceRequests, private item: T) {
-    super(serviceRequests);
+  constructor(serviceRequests: IServiceRequests, private item: T, fromCache: boolean) {
+    super(serviceRequests, fromCache);
   }
 
   /**

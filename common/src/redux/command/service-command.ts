@@ -16,7 +16,7 @@ import { ICommand } from './command.interface';
  */
 export abstract class ServiceCommand<T> implements ICommand<IServiceState> {
 
-  protected constructor(private _serviceRequests: IServiceRequests) {
+  protected constructor(private _serviceRequests: IServiceRequests, private _fromCache: boolean) {
   }
 
   /**
@@ -53,6 +53,10 @@ export abstract class ServiceCommand<T> implements ICommand<IServiceState> {
     // ... und dann ggf. noch update über konrkete ServiceRequests (z.B. currentItem anpassen)
     //
     return this._serviceRequests.updateState(this, commandState);
+  }
+
+  public get fromCache(): boolean {
+    return this._fromCache;
   }
 
 

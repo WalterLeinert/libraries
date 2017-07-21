@@ -57,6 +57,13 @@ export abstract class ReduxBaseTest<T extends IEntity<TId>, TId extends IToStrin
   protected before(done: (err?: any) => void) {
     super.before(() => {
 
+      if (this.appConfig) {
+        AppConfig.unregister();
+
+        AppConfig.register(this.appConfig);
+      }
+
+
       this._store = new Store();
       this._entityVersionServiceFake = new EntityVersionServiceFake();
       this._serviceFake = new this.serviceClazz(this._entityVersionServiceFake);
@@ -72,14 +79,6 @@ export abstract class ReduxBaseTest<T extends IEntity<TId>, TId extends IToStrin
 
       this.subscribeToStore(this.storeId);
       this.reset();
-
-
-
-      if (this.appConfig) {
-        AppConfig.unregister();
-
-        AppConfig.register(this.appConfig);
-      }
 
       done();
     });
@@ -152,7 +151,6 @@ export abstract class ReduxBaseTest<T extends IEntity<TId>, TId extends IToStrin
 
 
   protected reset() {
-    EntityVersionCache.instance.reset();
     this._commands = [];
     this._states = [];
     this._parentCommands = [];

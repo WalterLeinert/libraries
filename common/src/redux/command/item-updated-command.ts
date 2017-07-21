@@ -21,7 +21,7 @@ import { ServiceCommand } from './service-command';
 export class ItemUpdatedCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T> {
 
   constructor(serviceRequests: IServiceRequests, public item: T) {
-    super(serviceRequests);
+    super(serviceRequests, false);
   }
 
 

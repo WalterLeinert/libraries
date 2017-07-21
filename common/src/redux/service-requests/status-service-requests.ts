@@ -52,7 +52,7 @@ export abstract class StatusServiceRequests<T extends IEntity<TId>, TId extends 
             // this.dispatch(new ItemDeletedCommand(this, updateResult.id));
 
             this.dispatch(new ItemsFoundCommand(this,
-              this.getCrudState(this.storeId).items.filter((it) => it.id !== updateResult.id)));
+              this.getCrudState(this.storeId).items.filter((it) => it.id !== updateResult.id), true));
 
             observer.next(updateResult.id);
           },
@@ -90,7 +90,7 @@ export abstract class StatusServiceRequests<T extends IEntity<TId>, TId extends 
             // this.dispatch(new ItemDeletedCommand(this, updateResult.id));
 
             this.dispatch(new ItemsFoundCommand(this,
-              this.getCrudState(this.storeId).items.filter((it) => it.id !== updateResult.id)));
+              this.getCrudState(this.storeId).items.filter((it) => it.id !== updateResult.id), true));
 
             observer.next(updateResult.id);
           },

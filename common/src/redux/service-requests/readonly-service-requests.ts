@@ -69,7 +69,7 @@ export class ReadonlyServiceRequests<T extends IEntity<TId>, TId extends IToStri
 
         this.getService().findById(id).subscribe(
           (findByIdResult) => {
-            this.dispatch(new ItemFoundByIdCommand(this, findByIdResult.item));
+            this.dispatch(new ItemFoundByIdCommand(this, findByIdResult.item, findByIdResult.__fromCache));
             observer.next(findByIdResult.item);
           },
           (exc: IException) => {

@@ -12,7 +12,7 @@ import { Serializable } from '@fluxgate/core';
 
 @Serializable()
 export abstract class ServiceResult {
-  private _fromCache: boolean;
+  private _fromCache: boolean = false;
 
   /**
    * Creates an instance of ServiceResult.

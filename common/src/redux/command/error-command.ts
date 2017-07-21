@@ -18,7 +18,7 @@ import { ServiceCommand } from './service-command';
 export class ErrorCommand<T> extends ServiceCommand<T> {
 
   constructor(serviceRequests: IServiceRequests, private error: IException) {
-    super(serviceRequests);
+    super(serviceRequests, false);
   }
 
 

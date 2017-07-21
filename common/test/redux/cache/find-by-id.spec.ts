@@ -20,7 +20,7 @@ import { UserServiceRequestsFake } from '../../../src/testing/user-service-reque
 import { ReduxBaseTest } from '../redux-base-test';
 
 
-@suite('common.redux.cache.EntityVersionProxy: find -- test if 2nd call returns data from cache')
+@suite('common.redux.cache.EntityVersionProxy: findById -- test if 2nd call returns data from cache')
 class FindTest extends ReduxBaseTest<IUser, number, any> {
 
   constructor() {
@@ -33,41 +33,21 @@ class FindTest extends ReduxBaseTest<IUser, number, any> {
     });
   }
 
+  @test 'should dispatch findById -> not from cache'() {
+    this.crudServiceRequests.findById(1).subscribe((items) => {
+      expect(this.commands[1].fromCache).to.be.false;
+    });
+  }
+
+  // call find -> all items in cache
   @test 'should dispatch find -> not from cache'() {
     this.crudServiceRequests.find().subscribe((items) => {
       expect(this.commands[1].fromCache).to.be.false;
     });
   }
 
-  @test 'should dispatch find -> from cache'() {
-    this.crudServiceRequests.find().subscribe((items) => {
-      expect(this.commands[1].fromCache).to.be.true;
-    });
-  }
-
-
-  @test 'should dispatch find (StatusFilter(FilterBehaviour.Only, EntityStatus.Archived)) -> not from cache'() {
-    this.crudServiceRequests.find(new StatusFilter(FilterBehaviour.Only, EntityStatus.Archived)).subscribe((items) => {
-      expect(this.commands[1].fromCache).to.be.false;
-    });
-  }
-
-  @test 'should dispatch find (StatusFilter(FilterBehaviour.Only, EntityStatus.Archived)) -> from cache'() {
-    this.crudServiceRequests.find(new StatusFilter(FilterBehaviour.Only, EntityStatus.Archived)).subscribe((items) => {
-      expect(this.commands[1].fromCache).to.be.true;
-    });
-  }
-
-
-  @test 'should dispatch find (StatusFilter(FilterBehaviour.Add, EntityStatus.Archived)) -> not from cache'() {
-    this.crudServiceRequests.find(new StatusFilter(FilterBehaviour.Add, EntityStatus.Archived)).subscribe((items) => {
-
-      expect(this.commands[1].fromCache).to.be.false;
-    });
-  }
-
-  @test 'should dispatch find (StatusFilter(FilterBehaviour.Add, EntityStatus.Archived)) -> from cache'() {
-    this.crudServiceRequests.find(new StatusFilter(FilterBehaviour.Add, EntityStatus.Archived)).subscribe((items) => {
+  @test 'should dispatch findById -> from cache'() {
+    this.crudServiceRequests.findById(1).subscribe((items) => {
       expect(this.commands[1].fromCache).to.be.true;
     });
   }

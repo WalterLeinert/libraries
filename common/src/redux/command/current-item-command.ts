@@ -15,6 +15,6 @@ import { ServiceCommand } from './service-command';
 export abstract class CurrentItemCommand<T> extends ServiceCommand<T> {
 
   protected constructor(serviceRequests: IServiceRequests, protected item: T) {
-    super(serviceRequests);
+    super(serviceRequests, false);
   }
 }

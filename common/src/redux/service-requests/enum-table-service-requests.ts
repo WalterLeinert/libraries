@@ -45,7 +45,7 @@ export class EnumTableServiceRequests extends ServiceRequests implements ICrudSe
 
         Observable.of(new FindResult<any>(this.enumValues, -1)).subscribe(
           (findResult) => {
-            this.dispatch(new ItemsFoundCommand(this, findResult.items));
+            this.dispatch(new ItemsFoundCommand(this, findResult.items, findResult.__fromCache));
             observer.next(findResult.items);
           },
           (exc: IException) => {

@@ -18,8 +18,8 @@ import { ServiceCommand } from './service-command';
  */
 export class CoreItemsFoundCommand<T> extends ServiceCommand<T> {
 
-  constructor(serviceRequests: IServiceRequests, private items: T[]) {
-    super(serviceRequests);
+  constructor(serviceRequests: IServiceRequests, private items: T[], fromCache: boolean) {
+    super(serviceRequests, fromCache);
   }
 
   public hasModifiedItems(): boolean {

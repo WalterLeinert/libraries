@@ -71,7 +71,7 @@ export abstract class CoreServiceRequests<T> extends ServiceRequests implements 
 
         this._coreService.query(query).subscribe(
           (queryResult) => {
-            this.dispatch(new ItemsQueriedCommand(this, queryResult.items));
+            this.dispatch(new ItemsQueriedCommand(this, queryResult.items, queryResult.__fromCache));
             observer.next(queryResult.items);
           },
           (exc: IException) => {
@@ -100,7 +100,7 @@ export abstract class CoreServiceRequests<T> extends ServiceRequests implements 
 
         this._coreService.find(filter).subscribe(
           (findResult) => {
-            this.dispatch(new ItemsFoundCommand(this, findResult.items));
+            this.dispatch(new ItemsFoundCommand(this, findResult.items, findResult.__fromCache));
             observer.next(findResult.items);
           },
           (exc: IException) => {

@@ -22,7 +22,7 @@ import { ServiceCommand } from './service-command';
 export class QueryingItemsCommand<T extends IEntity<TId>, TId> extends ServiceCommand<T> {
 
   constructor(serviceRequests: IServiceRequests, private query: IQuery) {
-    super(serviceRequests);
+    super(serviceRequests, false);
   }
 
   /**

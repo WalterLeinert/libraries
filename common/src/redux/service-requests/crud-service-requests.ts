@@ -69,7 +69,8 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
 
             // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
             // Update der Itemliste nach create
-            this.dispatch(new ItemsFoundCommand(this, [...this.getCrudState(this.storeId).items, createResult.item]));
+            this.dispatch(new ItemsFoundCommand(this,
+              [...this.getCrudState(this.storeId).items, createResult.item], true));
 
             observer.next(createResult.item);
           },
@@ -103,7 +104,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
             // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
             // Update der Itemliste nach update
             this.dispatch(new ItemsFoundCommand(this,
-              this.getCrudState(this.storeId).items.map((it) => it.id !== item.id ? it : updateResult.item)));
+              this.getCrudState(this.storeId).items.map((it) => it.id !== item.id ? it : updateResult.item), true));
 
             observer.next(updateResult.item);
           },
@@ -138,7 +139,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
             // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
             // Update der Itemliste nach delete
             this.dispatch(new ItemsFoundCommand(this,
-              this.getCrudState(this.storeId).items.filter((item) => item.id !== deleteResult.id)));
+              this.getCrudState(this.storeId).items.filter((item) => item.id !== deleteResult.id), true));
 
             observer.next(deleteResult.id);
           },
@@ -173,7 +174,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
             // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
             // Update der Itemliste nach delete
             this.dispatch(new ItemsFoundCommand(this,
-              this.getCrudState(this.storeId).items.filter((it) => it.id !== deleteResult.id)));
+              this.getCrudState(this.storeId).items.filter((it) => it.id !== deleteResult.id), true));
 
             observer.next(deleteResult.id);
           },
