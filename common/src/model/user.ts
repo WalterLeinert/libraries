@@ -70,7 +70,7 @@ export class User extends FlxStatusEntity<number> implements IUser {
   public password: string;
 
   @Secret()
-  @Column({ name: 'user_password_salt' })
+  @Column({ name: 'user_password_salt', hidden: true })
   public password_salt: string;
 
 
