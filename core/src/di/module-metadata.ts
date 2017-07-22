@@ -53,7 +53,7 @@ export class ModuleMetadata extends DiMetadata {
       if (this._options) {
 
         if (log.isDebugEnabled()) {
-          log.debug(`options: ${JsonDumper.stringify(this._options, 2)}`);
+          log.debug(`options: ${JsonDumper.stringify(this._options, { maxDepth: 2 })}`);
         }
 
 
