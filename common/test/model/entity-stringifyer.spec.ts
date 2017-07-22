@@ -8,7 +8,7 @@ require('reflect-metadata');
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Core } from '@fluxgate/core';
+import { Core, JsonSerializer, OptimisticLockException } from '@fluxgate/core';
 
 
 import { Column } from '../../src/model/decorator/column';
@@ -42,7 +42,7 @@ class NoEntity {
 }
 
 
-@suite('model.EntityStringifyer')
+@suite('common.model.EntityStringifyer')
 class EntityStringifyerTest extends CommonTest {
   private tableMetadata: TableMetadata;
 
@@ -126,6 +126,17 @@ class EntityStringifyerTest extends CommonTest {
     const result = Core.stringify({ [Symbol('foo')]: 'foo' });
     expect(result).to.equal(`{    // Object
 }`);
+  }
+
+
+  @test 'should serialize/deserialize exception'() {
+    const formatter = new JsonSerializer();
+    const value = new OptimisticLockException('test');
+
+    const valueSerialized = formatter.serialize(value);
+    const valueDeserialized = formatter.deserialize(valueSerialized);
+
+    expect(value).to.eql(valueDeserialized);
   }
 
 
