@@ -11,12 +11,19 @@ import { IValueReplacer } from './value-replacer.interface';
 import { VALUE_REPLACER } from './value-replacer.token';
 
 
+export interface IJsonDumperOptions {
+  maxDepth?: number;
+  showInfo?: boolean;
+}
+
+
+
 class DumperInternal extends ClonerBase {
   private indenter: Indenter = new Indenter();
   private sb: StringBuilder = new StringBuilder();
 
 
-  public constructor(private replacer: IValueReplacer, private maxDepth: number) {
+  public constructor(private replacer: IValueReplacer, private options: IJsonDumperOptions) {
     super(true);
   }
 
@@ -108,7 +115,7 @@ class DumperInternal extends ClonerBase {
       const arr = value as any as any[];
       this.sb.appendLine(`[`);
 
-      if (this.indenter.Counter <= this.maxDepth) {
+      if (this.indenter.Counter <= this.options.maxDepth) {
 
         using(new Suspender([this.indenter]), () => {
 
@@ -134,14 +141,18 @@ class DumperInternal extends ClonerBase {
       this.indent(`]`);
 
     } else if (Types.isObject(value)) {
-      if (!Types.isPresent(value.constructor)) {
-        this.sb.appendLine(`{    // value.constructor === null`);
-      } else {
-        this.sb.appendLine(`{    // ${value.constructor.name}`);
+      this.sb.append(`{`);
+      if (this.options.showInfo) {
+        if (!Types.isPresent(value.constructor)) {
+          this.sb.append(`    // value.constructor === null`);
+        } else {
+          this.sb.append(`    // ${value.constructor.name}`);
+        }
       }
+      this.sb.appendLine();
 
 
-      if (this.indenter.Counter <= this.maxDepth) {
+      if (this.indenter.Counter <= this.options.maxDepth) {
         super.iterateOnEntries(value, undefined,
           (count, index, entryName, entryValue, clonedEntryName, clonedEntryValue) => {
             using(new Suspender([this.indenter]), () => {
@@ -174,11 +185,15 @@ class DumperInternal extends ClonerBase {
 }
 
 
-
 // tslint:disable-next-line:max-classes-per-file
 export class JsonDumper {
 
   public static DEFAULT_REPLACER = new NopValueReplacer();
+
+  public static DEFAULT_OPTIONS: IJsonDumperOptions = {
+    maxDepth: Number.MAX_VALUE,
+    showInfo: true
+  };
 
   /**
    * Gibt das Objekt @param{value} als String aus.
@@ -191,11 +206,22 @@ export class JsonDumper {
    *
    * @memberOf Clone
    */
-  public static stringify<T>(value: T, maxDepth: number = Number.MAX_VALUE): string {
+  public static stringify<T>(value: T, options?: IJsonDumperOptions): string {
     const valueReplacer = CoreInjector.instance.getInstance<IValueReplacer>(VALUE_REPLACER,
       JsonDumper.DEFAULT_REPLACER);
 
-    const dumper = new DumperInternal(valueReplacer, maxDepth);
+    if (!options) {
+      options = JsonDumper.DEFAULT_OPTIONS;
+    } else {
+      if (!Types.isPresent(options.maxDepth)) {
+        options.maxDepth = JsonDumper.DEFAULT_OPTIONS.maxDepth;
+      }
+      if (!Types.isPresent(options.showInfo)) {
+        options.showInfo = JsonDumper.DEFAULT_OPTIONS.showInfo;
+      }
+    }
+
+    const dumper = new DumperInternal(valueReplacer, options);
     dumper.dump<T>(value);
 
     return dumper.toString();

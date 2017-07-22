@@ -101,6 +101,12 @@ class DumperTest extends CoreUnitTest {
 }`);
   }
 
+  @test 'should stringify SimpleObject w/o type info'() {
+    const result = JsonDumper.stringify(new SimpleObject(), { showInfo: false });
+    expect(result).to.equal(`{
+}`);
+  }
+
   // https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
   // Hinweis: die Ausgabe ist typtreuer als die originale JSON.stringify Ausgabe!
   @test 'should stringify test from MDN 1 (not fully compatible)'() {
@@ -148,8 +154,33 @@ class DumperTest extends CoreUnitTest {
   }
 
 
+  @test 'should dump json without cyclic reference w/o type info'() {
+    const dump = JsonDumper.stringify(json, { showInfo: false });
+    return expect(dump).to.be.equal(`{
+  "null": null,
+  "undefined": undefined,
+  "items": [
+    "name1",
+    4711
+  ],
+  "name": "Walter",
+  "id": 4711,
+  "valid": true,
+  "inner1": {
+    "no": 1,
+    "inner": {
+      "hallo": "du"
+    }
+  },
+  "inner2": {
+    "no": 2
+  }
+}`);
+  }
+
+
   @test 'should dump json with maxDepth 1'() {
-    const dump = JsonDumper.stringify(json, 1);
+    const dump = JsonDumper.stringify(json, { maxDepth: 1 });
     return expect(dump).to.be.equal(`{    // Object
   "null": null,
   "undefined": undefined,
@@ -174,7 +205,7 @@ class DumperTest extends CoreUnitTest {
 
 
   @test 'should dump json with maxDepth 0'() {
-    const dump = JsonDumper.stringify(json, 0);
+    const dump = JsonDumper.stringify(json, { maxDepth: 0 });
     return expect(dump).to.be.equal(`{    // Object
   "null": null,
   "undefined": undefined,

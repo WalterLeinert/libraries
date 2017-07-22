@@ -1,4 +1,5 @@
 import { Core } from '../diagnostics/core';
+import { JsonDumper } from '../diagnostics/json-dumper';
 import { Nullable } from '../types/nullable';
 import { Types } from '../types/types';
 import { ConverterBase } from './converter-base';
@@ -25,7 +26,13 @@ export class ErrorConverter extends ConverterBase implements IConverter<Error, s
       for (const propertyKey of propertyKeys) {
         rval[propertyKey.toString()] = value[propertyKey.toString()];
       }
-      return Core.stringify(rval);
+
+      //
+      // Hinweis: hier darf nicht Core.stringify verwendet werden, da sonst ggf. über den mittels
+      // dependency injection injizierten JsonDumper und die Defaultoptionen (showInfo: true) ein JSON-Format
+      // erzeugt wird, was nicht über JSON.parse gelesen werden kann!
+      //
+      return JSON.stringify(rval);
     });
   }
 
