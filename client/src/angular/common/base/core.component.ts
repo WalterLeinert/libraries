@@ -315,7 +315,17 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   }
 
 
-  protected createDisplayInfos(item: any, model: Funktion, metadataService: MetadataService):
+  /**
+   * Erzeugt Displayinfos für das Item @param{item} der Modelklasse @param{model} mit Hilfe der
+   * Metadaten @param{metadataService}. Sind @param{propertyName} angegeben, so werden Displayinfos
+   * nur für die entsprechenden Properties erzeugt
+   *
+   * @param item
+   * @param model
+   * @param metadataService
+   * @param propertyNames
+   */
+  protected createDisplayInfos(item: any, model: Funktion, metadataService: MetadataService, propertyNames?: string[]):
     IControlDisplayInfo[] {
     Assert.notNull(item);
     Assert.notNull(model);
@@ -323,7 +333,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
     const tableMetadata = metadataService.findTableMetadata(model);
     const configurator = new MetadataDisplayInfoConfiguration(tableMetadata, metadataService,
-      AppInjector.instance.getInjector());
+      AppInjector.instance.getInjector(), propertyNames);
     return configurator.createConfig(item);
   }
 
@@ -343,12 +353,12 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @memberOf CoreComponent
    */
   protected buildFormFromModel<T>(formBuilder: FormBuilder, clazz: Funktion, metadataService: MetadataService,
-    groupName: string = FormGroupInfo.DEFAULT_NAME): T {
+    groupName: string = FormGroupInfo.DEFAULT_NAME, propertyNames?: string[]): T {
     const tableMetadata = metadataService.findTableMetadata(clazz);
     Assert.notNull(tableMetadata, `Metadaten für Tabelle ${clazz.name}`);
 
     const obj = tableMetadata.createEntity<T>();
-    const displayInfos = this.createDisplayInfos(obj, clazz, metadataService);
+    const displayInfos = this.createDisplayInfos(obj, clazz, metadataService, propertyNames);
     this.buildForm(formBuilder, obj, displayInfos, tableMetadata, groupName);
 
     return obj;

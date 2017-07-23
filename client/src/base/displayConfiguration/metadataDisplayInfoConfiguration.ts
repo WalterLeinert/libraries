@@ -31,7 +31,7 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
   protected static readonly logger = getLogger(MetadataDisplayInfoConfiguration);
 
   constructor(protected tableMetadata: TableMetadata, private metadataService: MetadataService,
-    private injector: Injector) {
+    private injector: Injector, private propertyNames?: string[]) {
 
     super();
 
@@ -93,6 +93,7 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
     });
   }
 
+
   /**
    * falls keine Column-Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
    *
@@ -103,7 +104,17 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
   protected createDisplayInfos(): IControlDisplayInfo[] {
     const columnInfos: IControlDisplayInfo[] = [];
 
+    const propertyNames = new Set<string>(this.propertyNames);
+
     for (const metaData of this.tableMetadata.columnMetadata) {
+
+      //
+      // falls propertyNames angegeben sind, dürfen wir nur die entsprechenden Metadaten verwenden
+      //
+      if (propertyNames.size > 0 && !propertyNames.has(metaData.propertyName)) {
+        continue;
+      }
+
       //
       // nur DisplayInfo generieren, falls hidden nicht gesetzt ist
       //
