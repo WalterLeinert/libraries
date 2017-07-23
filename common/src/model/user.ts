@@ -63,7 +63,7 @@ export class User extends FlxStatusEntity<number> implements IUser {
 
   @Validation([
     Validators.required,
-    Validators.range({ min: 8 })
+    Validators.range({ min: 5 })
   ])
   @Secret()
   @Column({ name: 'user_password', displayName: 'Password' })
