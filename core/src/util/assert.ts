@@ -48,7 +48,7 @@ export class Assert {
 
 
   /**
-   * Stellt sicher, dass der Wert vom Typ {T} @param{value} nicht null ist.
+   * Stellt sicher, dass der Wert vom Typ {T} @param{value} nicht null oder undefined ist.
    * Wirft einen @see{AssertionError} falls nicht.
    *
    * @static
@@ -58,8 +58,11 @@ export class Assert {
    * @memberOf Assert
    */
   public static notNull<T>(value: T, message?: string) {
-    if (value == null) {
+    if (value === null) {
       throw new AssertionException('value is null' + (message ? ': ' + message : ''));
+    }
+    if (value === undefined) {
+      throw new AssertionException('value is undefined' + (message ? ': ' + message : ''));
     }
   }
 
