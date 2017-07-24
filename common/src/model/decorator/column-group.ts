@@ -1,39 +1,25 @@
-import { InstanceAccessor } from '@fluxgate/core';
-
+import { Funktion } from '@fluxgate/core';
 import { MetadataStorage } from '../metadata/metadataStorage';
 
+
+/**
+ * Optionen für ColumnGroups
+ */
 export interface IColumnGroupOptions {
+
+  /**
+   * Der Anzeigename der Gruppe
+   */
   displayName: string;
+
+  /**
+   * relative Position der Gruppe bzgl. anderer Gruppen
+   */
   order?: number;
 }
 
-/**
- * Decorator: definiert die Property der Client-Id (Mandantenfähigkeit)
- */
-export function ColumnGroup1(groupName: string, options?: IColumnGroupOptions) {
-  // tslint:disable-next-line:only-arrow-functions
-  return (target: object, propertyName: string) => {
-    MetadataStorage.instance.addColumnGroup(target.constructor, propertyName, groupName, options);
-  };
-}
-
-
-// TODO: test
-export function ColumnGroup2<T>(
-  groupName: string,
-  // dataSource: (type?: T) => ICtor<T>,
-  prop: Array<InstanceAccessor<T, any>>,
-  order?: number
-) {
-  // tslint:disable-next-line:only-arrow-functions
-  return (target: object) => {
-    // TODO
-  };
-}
-
 export function ColumnGroup<T>(groupName: string, columnNames: string[], options?: IColumnGroupOptions) {
-  // tslint:disable-next-line:only-arrow-functions
-  return (target: object) => {
-    MetadataStorage.instance.addColumnGroups(target.constructor, groupName, columnNames, options);
+  return (target: Funktion) => {
+    MetadataStorage.instance.addColumnGroup(target, groupName, columnNames, options);
   };
 }

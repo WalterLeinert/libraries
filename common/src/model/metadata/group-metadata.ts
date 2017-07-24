@@ -4,20 +4,10 @@ import { ColumnMetadata } from './columnMetadata';
 
 
 export abstract class GroupMetadata {
-  private _groupColumns: ColumnMetadata[] = [];
 
-  protected constructor(private _columnNames: string[]) {
-  }
-
-  public addColumnName(name: string) {
-    Assert.notNullOrEmpty(name);
-    this._columnNames.push(name);
-  }
-
-  public resolveColumns(resolver: (name: string) => ColumnMetadata) {
-    this._columnNames.forEach((name) => {
-      this._groupColumns.push(resolver(name));
-    });
+  protected constructor(private _columnNames: string[], private _groupColumns: ColumnMetadata[]) {
+    Assert.notNullOrEmpty(_columnNames);
+    Assert.notNullOrEmpty(_groupColumns);
   }
 
   public get groupColumns(): ColumnMetadata[] {

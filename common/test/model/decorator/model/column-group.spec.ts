@@ -8,7 +8,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Column } from '../../../../src/model/decorator/column';
-import { ColumnGroup, ColumnGroup1 } from '../../../../src/model/decorator/column-group';
+import { ColumnGroup } from '../../../../src/model/decorator/column-group';
 import { IdColumn } from '../../../../src/model/decorator/id-column';
 import { Table } from '../../../../src/model/decorator/table';
 import { IEntity } from '../../../../src/model/entity.interface';
@@ -37,19 +37,15 @@ import { CommonTest } from '../../../common.spec';
 class ArtikelColumnGroup implements IEntity<number> {
   public static readonly TABLE_NAME = 'artikel';
 
-  @ColumnGroup1('standard', { displayName: 'Standard' })
   @IdColumn({ name: 'artikel_id' })
   public id: number;
 
-  @ColumnGroup1('standard')
   @Column({ name: 'artikel_name' })
   public name: string;
 
-  @ColumnGroup1('extended')
   @Column({ name: 'artikel_weight' })
   public weight: number;
 
-  @ColumnGroup1('extended')
   @Column({ name: 'artikel_length' })
   public length: number;
 }

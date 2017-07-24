@@ -44,9 +44,6 @@ export class MetadataStorage {
   private tableStatusColumnDict: Dictionary<string, Dictionary<string, EntityStatus>> =
   new Dictionary<string, Dictionary<string, EntityStatus>>();
 
-  private tableColumnGroupDict: Dictionary<string, Dictionary<string, ColumnGroupMetadata>> =
-  new Dictionary<string, Dictionary<string, ColumnGroupMetadata>>();
-
   private tableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
   private dbTableDict: Dictionary<string, TableMetadata> = new Dictionary<string, TableMetadata>();
 
@@ -64,12 +61,11 @@ export class MetadataStorage {
     using(new XLog(MetadataStorage.logger, levels.INFO, 'addTableMetadata', `targetName = ${metadata.target.name}`),
       (log) => {
 
-        const targetName = metadata.target.name;
+        const targetName = metadata.targetName;
 
         if (this.tableDict.containsKey(targetName)) {
           throw new InvalidOperationException(`Table ${targetName} already registered.`);
         }
-
 
         const colMetadata: ColumnMetadata[] = this.tableColumnDict.get(targetName);
         const valMetadata: ValidationMetadata[] = this.tableValidationDict.get(targetName);
@@ -169,29 +165,6 @@ export class MetadataStorage {
               metadata.setStatusColumn(propertyName, dict.get(propertyName));
             }
           }
-        }
-
-
-        /**
-         * ColumnGroupMetadata anlegen
-         */
-        if (this.tableColumnGroupDict.containsKey(targetName)) {
-          const colGroupDict = this.tableColumnGroupDict.get(targetName);
-
-          // über alle Properties der Table ...
-          colGroupDict.keys.forEach((groupName) => {
-            const colGroupMetadata = colGroupDict.get(groupName);
-
-            // ColumnGroupMetadata erzeugen/erweitern
-            colGroupMetadata.resolveColumns((name: string) => {
-              return metadata.getColumnMetadataByProperty(name);
-            });
-          });
-
-          // ... und in Tablemetadata übernehmen
-          colGroupDict.values.forEach((item) => {
-            metadata.addGroupMetadata(item);
-          });
         }
 
 
@@ -390,36 +363,6 @@ export class MetadataStorage {
 
 
   /**
-   * ColumnGroup-Info (groupName, options) für eine Property @param{propertyName} ablegen für das angebene Target.
-   *
-   * @param {Funktion} target
-   * @param {string} propertyName
-   * @param {string} groupName
-   * @param {number} order
-   * @memberof MetadataStorage
-   */
-  public addColumnGroup(target: Funktion, propertyName: string, groupName: string, options: IColumnGroupOptions) {
-    Assert.notNull(target);
-
-    let colGroupDict: Dictionary<string, ColumnGroupMetadata> =
-      this.tableColumnGroupDict.get(target.name);
-
-    if (!colGroupDict) {
-      colGroupDict = new Dictionary<string, ColumnGroupMetadata>();
-      this.tableColumnGroupDict.set(target.name, colGroupDict);
-    }
-
-
-    let colGroupMetadata: ColumnGroupMetadata = colGroupDict.get(groupName);
-    if (!colGroupMetadata) {
-      colGroupMetadata = new ColumnGroupMetadata(groupName, [], options);
-      colGroupDict.set(groupName, colGroupMetadata);
-    }
-    colGroupMetadata.addColumnName(propertyName);
-  }
-
-
-  /**
    * ColumnGroup-Info (groupName, options) für die columns @param{columnNames} ablegen für das angebene Target.
    *
    * @param target
@@ -427,19 +370,46 @@ export class MetadataStorage {
    * @param columnNames
    * @param options
    */
-  public addColumnGroups(target: Funktion, groupName: string,
+  public addColumnGroup(target: Funktion, groupName: string,
     columnNames: string[], options: IColumnGroupOptions) {
     Assert.notNull(target);
+    Assert.notNullOrEmpty(groupName);
+    Assert.notNullOrEmpty(columnNames);
 
-    let colGroupDict: Dictionary<string, ColumnGroupMetadata> =
-      this.tableColumnGroupDict.get(target.name);
+    const tableMetadata = this.findTableMetadata(target);
+    Assert.notNull(tableMetadata, `Table ${target.name} does not exist.`);
 
-    if (!colGroupDict) {
-      colGroupDict = new Dictionary<string, ColumnGroupMetadata>();
-      this.tableColumnGroupDict.set(target.name, colGroupDict);
-    }
+    // prüfen, ob Namen doppelt vorkommen
+    const columnNameSet = new Set<string>(columnNames);
+    Assert.that(columnNameSet.size === columnNames.length, `column names must be unique`);
 
-    colGroupDict.set(groupName, new ColumnGroupMetadata(groupName, columnNames, options));
+    // prüfen, ob entsprechende Properties existieren und column metadata sammeln
+    const groupColumns = [];
+
+    columnNameSet.forEach((item) => {
+      const colMetadata = tableMetadata.getColumnMetadataByProperty(item);
+      Assert.notNull(colMetadata, `Column ${item} no known property of model ${tableMetadata.className}`);
+      groupColumns.push(colMetadata);
+    });
+
+    //
+    // prüfen, ob group name bereits definert oder property namen bereits unter anderen
+    // group names definiert wurden
+    //
+    const groupColumnNameMap: Dictionary<string, Set<string>> = new Dictionary<string, Set<string>>();
+    tableMetadata.columnGroupMetadata.map((item) => groupColumnNameMap.set(item.name, new Set(item.columnNames)));
+
+    Assert.that(!groupColumnNameMap.containsKey(groupName),
+      `groupName ${groupName} already exists in model ${tableMetadata.className}`);
+
+    columnNames.forEach((item) =>
+      groupColumnNameMap.keys.forEach((key) => Assert.that(!groupColumnNameMap.get(key).has(item),
+        `group ${groupName}: column name ${item} already defined in group ${key}.`))
+    );
+
+
+    const groupMetadata = new ColumnGroupMetadata(groupName, columnNames, options, groupColumns);
+    tableMetadata.addGroupMetadata(groupMetadata);
   }
 
 

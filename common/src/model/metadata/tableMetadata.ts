@@ -72,8 +72,15 @@ export abstract class TableMetadata extends ClassMetadata {
     this.addInternal(metadata);
   }
 
+  /**
+   * Fügt ein @see{ColumnGroupMetadata} hinzu.
+   * Hinweis: die Metadaten werden immer am Anfang des Arrays eingefügt,
+   * da die Decorators in umgekehrter Reihenfolge ausgeführt werden.
+   *
+   * @param colGroupMetadata
+   */
   public addGroupMetadata(colGroupMetadata: ColumnGroupMetadata) {
-    this._columnGroupMetadata.push(colGroupMetadata);
+    this._columnGroupMetadata.splice(0, 0, colGroupMetadata);
   }
 
   /**
