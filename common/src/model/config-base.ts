@@ -55,13 +55,26 @@ export abstract class ConfigBase extends FlxEntity<string> {
 
 
   /**
+   * Liefert die zusammengesetzte Id (type, id)
+   *
+   * @readonly
+   * @type {string}
+   * @memberof ConfigBase
+   */
+  @Column({ displayName: 'Id', persisted: false })
+  public get id(): string {
+    return ConfigBase.createId(this.type, this.configId);
+  }
+
+
+  /**
    * Die Id der Konfiguration. Es kann mehrere Konfigurationen des Typs @see{type} geben
    *
    * @type {string}
    * @memberof ConfigBase
    */
-  @IdColumn({ displayName: 'Id' })
-  public id: string = ConfigBase.DEFAULT_ID;
+  @Column({ displayName: 'Config-Id', hidden: true })
+  public configId: string = ConfigBase.DEFAULT_ID;
 
 
   /**
@@ -70,7 +83,7 @@ export abstract class ConfigBase extends FlxEntity<string> {
    * @type {string}
    * @memberof ConfigBase
    */
-  @Column({ hidden: true })
+  @Column({ displayName: 'Type', hidden: true })
   public type: string;
 
 
@@ -100,19 +113,6 @@ export abstract class ConfigBase extends FlxEntity<string> {
 
 
   /**
-   * Liefert die zusammengesetzte Id (type, id)
-   *
-   * @readonly
-   * @type {string}
-   * @memberof ConfigBase
-   */
-  @Column({ displayName: 'Name', persisted: false })
-  public get compositeId(): string {
-    return ConfigBase.createId(this.type, this.id);
-  }
-
-
-  /**
    * Liefert eine Id, die aus composite id und Typname der Modelklasse besteht.
    *
    * Beispiel: 'smpt-default@SmtConfig'
@@ -122,7 +122,7 @@ export abstract class ConfigBase extends FlxEntity<string> {
    * @memberof ConfigBase
    */
   public get fullId(): string {
-    return `${ConfigBase.createId(this.type, this.id)}@${this.constructor.name}`;
+    return `${this.id}@${this.constructor.name}`;
   }
 
 

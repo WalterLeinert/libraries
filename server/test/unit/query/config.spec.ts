@@ -22,7 +22,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  ConfigBase, ConstantValueGenerator, CreateResult, IStatusQuery,
+  ConfigBase, ConstantValueGenerator, CreateResult, IStatusQuery, NopValueGenerator,
   ServiceResult, SmtpConfig, StringIdGenerator, UpdateResult
 } from '@fluxgate/common';
 import { Clone, ICtor, SelectorTerm } from '@fluxgate/core';
@@ -49,8 +49,9 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
         super.setupConfig(ConfigService, SmtpConfig, {
           count: ConfigTest.ITEMS,
           maxCount: ConfigTest.MAX_ITEMS,
-          idGenerator: new StringIdGenerator(ConfigTest.MAX_ITEMS, '@test'),
+          idGenerator: new NopValueGenerator(),
           columns: {
+            configId: new StringIdGenerator(ConfigTest.MAX_ITEMS, '@test'),
             type: new ConstantValueGenerator('smtp'),
             __client: new ConstantValueGenerator(1),
             __version: new ConstantValueGenerator(0)
@@ -74,12 +75,12 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
 
 
   @test 'should create new config'() {
-    const id = '@test1';
-    const config = this.createConfig(id);
+    const configId = '@test1';
+    const config = this.createConfig(configId);
 
     // updateResult.entityVersion ist für den Test nicht relevant -> vom Ergebnis übernehmen
-    const expectedConfigResult = this.createExpectedConfigResult<CreateResult<SmtpConfig, string>>(id, CreateResult,
-      undefined);
+    const expectedConfigResult = this.createExpectedConfigResult<CreateResult<SmtpConfig, string>>(
+      configId, CreateResult, undefined);
 
     return expect(this.configService.create(undefined, config)
       .then((createResult) => createResult.item))
@@ -94,9 +95,10 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
   }
 
   @test 'should find 1 config entry (findById)'() {
-    const id = '@test1';
-    return expect(this.configService.findById(undefined, ConfigBase.createId(
-      SmtpConfig.TYPE, id))
+    const configId = '@test1';
+    const id = ConfigBase.createId(
+      SmtpConfig.TYPE, configId);
+    return expect(this.configService.findById(undefined, id)
       .then((result) => result.item.id))
       .to.become(id);
   }
@@ -112,9 +114,9 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
 
 
   @test 'should update config'() {
-    const id = '@test1';
+    const configId = '@test1';
 
-    const result = this.createExpectedConfigResult<UpdateResult<SmtpConfig, string>>(id, UpdateResult, -1);
+    const result = this.createExpectedConfigResult<UpdateResult<SmtpConfig, string>>(configId, UpdateResult, -1);
     result.item.description = result.item.description + '-updated';
 
     const resultCloned = Clone.clone(result);
@@ -127,14 +129,14 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
 
 
   @test 'should delete config'() {
-    const id = '@test1';
+    const configId = '@test1';
 
-    const result = this.createExpectedConfigResult<UpdateResult<SmtpConfig, string>>(id, UpdateResult, -1);
+    const result = this.createExpectedConfigResult<UpdateResult<SmtpConfig, string>>(configId, UpdateResult, -1);
     result.item.description = result.item.description + '-updated';
 
-    return expect(this.configService.delete(undefined, ConfigBase.createId(SmtpConfig.TYPE, id))
+    return expect(this.configService.delete(undefined, ConfigBase.createId(SmtpConfig.TYPE, configId))
       .then((deleteResult) => deleteResult.id))
-      .to.become(ConfigBase.createId(SmtpConfig.TYPE, id));
+      .to.become(ConfigBase.createId(SmtpConfig.TYPE, configId));
   }
 
 
@@ -147,11 +149,11 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
 
 
 
-  private createConfig(id: string): SmtpConfig {
+  private createConfig(configId: string): SmtpConfig {
     const config: SmtpConfig = new SmtpConfig();
-    config.id = id;
+    config.configId = configId;
     config.type = 'smtp';
-    config.description = `Test-Configdescription-${id}`;
+    config.description = `Test-Configdescription-${configId}`;
     config.host = 'localhost';
     config.from = 'walter';
     config.user = 'christian';
@@ -165,10 +167,10 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
     return config;
   }
 
-  private createExpectedConfigResult<T extends ServiceResult>(id: string, resultCtor: ICtor<T>,
+  private createExpectedConfigResult<T extends ServiceResult>(configId: string, resultCtor: ICtor<T>,
     expectedEntityVersion: number): T {
-    const config = this.createConfig(id);
-    config.id = id;
+    const config = this.createConfig(configId);
+    config.configId = configId;
     return new resultCtor(config, expectedEntityVersion);
   }
 

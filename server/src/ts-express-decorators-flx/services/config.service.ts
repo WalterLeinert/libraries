@@ -260,7 +260,7 @@ export class ConfigService extends ServiceCore {
 
   private createSystemConfigFromConfig(config: ConfigBase): ISystemConfig {
     const systemConfig: ISystemConfig = {
-      id: ConfigBase.createId(config.type, config.id),
+      id: config.id,
       __client: config.__client,
       __version: undefined,
       type: config.type,

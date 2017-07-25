@@ -175,7 +175,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
         KnexTest._configService.create(undefined, item).then((result) => {
           log.log(`created temp. entity: id = ${result.item.id}`);
 
-          KnexTest._firstConfigTestId = result.item.compositeId;
+          KnexTest._firstConfigTestId = result.item.id;
 
           KnexTest._configService.delete(undefined, KnexTest._firstConfigTestId)
             .then((rowsAffected) => {

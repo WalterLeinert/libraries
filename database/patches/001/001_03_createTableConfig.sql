@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `systemconfig` (
 INSERT INTO `systemconfig` (`systemconfig_id`, `systemconfig_type`, `systemconfig_description`, `systemconfig_json`, `__client`, `__version`) VALUES
 ('smtp-default', 'smtp', 'SMTP-Konfiguration', '{
     "__type__":"SmtpConfig",
-    "id":"default",
+    "configId":"default",
     "version":0,
     "type":"smtp",
     "host":"smtp.1und1.de",
@@ -60,7 +60,7 @@ INSERT INTO `systemconfig` (`systemconfig_id`, `systemconfig_type`, `systemconfi
   INSERT INTO `systemconfig` (`systemconfig_id`, `systemconfig_type`, `systemconfig_description`, `systemconfig_json`, `__client`, `__version`) VALUES
 ('smtp-test', 'smtp', 'weitere SMTP-Konfiguration', '{
     "__type__":"SmtpConfig",
-    "id":"test",
+    "configId":"test",
     "version":0,
     "type":"smtp",
     "host":"host-2",
