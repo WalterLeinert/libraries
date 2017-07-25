@@ -13,13 +13,13 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import {
   APP_STORE,
-  AutoformConfiguration, ControlType, FormAction, FormActions, IAutoformConfig,
+  AutoformConfiguration, ControlType, DataFormAction, FormAction, FormActions, IAutoformConfig,
   IControlDisplayInfo, IDataFormAction, MessageService, MetadataService, ServiceRequestsComponent
 } from '@fluxgate/client';
 import {
   ICrudServiceRequests, ItemCreatedCommand, ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand, Store, TableMetadata
 } from '@fluxgate/common';
-import { Assert, Clone, Color, Core, NotSupportedException, Utility } from '@fluxgate/core';
+import { Assert, Clone, Color, Core, NotSupportedException, Types, Utility } from '@fluxgate/core';
 
 
 @Component({
@@ -262,27 +262,27 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
       if (!this.skipNgOnInit) {
 
-        this.route.data.subscribe((data: IDataFormAction) => {
-          log.log(`data = ${Core.stringify(data)}`);
+        this.route.data.subscribe((formAction: IDataFormAction) => {
+          log.log(`data = ${Core.stringify(formAction)}`);
 
-          Assert.notNull(data);
+          Assert.notNull(formAction);
 
-          if (Utility.isNullOrEmpty(data.action) || Utility.isNullOrEmpty(data.resolverKey)) {
-            if (Utility.isNullOrEmpty(data.action)) {
+          if (Utility.isNullOrEmpty(formAction.action) || Utility.isNullOrEmpty(formAction.resolverKey)) {
+            if (Utility.isNullOrEmpty(formAction.action)) {
               log.warn(`data.action is empty`);
             }
-            if (Utility.isNullOrEmpty(data.resolverKey)) {
+            if (Utility.isNullOrEmpty(formAction.resolverKey)) {
               log.warn(`data.resolverKey is empty`);
             }
 
           } else {
-            Assert.notNullOrEmpty(data.action);
-            Assert.notNullOrEmpty(data.resolverKey);
+            Assert.notNullOrEmpty(formAction.action);
+            Assert.notNullOrEmpty(formAction.resolverKey);
 
-            this.action = data.action;
-            this.showButtons = data.showButtons;
+            this.action = formAction.action;
+            this.showButtons = formAction.showButtons;
 
-            const value = data[data.resolverKey];
+            const value = DataFormAction.getData(formAction);
             Assert.notNull(value);
 
             this.value = value;
@@ -494,7 +494,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       this.setServiceRequests(serviceRequests);
     });
   }
-
 
 
   /**

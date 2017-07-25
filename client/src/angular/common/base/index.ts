@@ -9,6 +9,8 @@ export * from './controlType';
 export * from './control-base.component';
 export * from './core.component';
 export * from './core-service';
+export * from './data-form-action';
+export * from './data-form-action.interface';
 export * from './extended-core.component';
 export * from './form-action';
 export * from './formGroupInfo';
