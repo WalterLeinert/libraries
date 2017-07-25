@@ -8,7 +8,7 @@ const email = require('emailjs/email');
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { IMailMessage, SmtpConfig } from '@fluxgate/common';
+import { ConfigBase, IMailMessage, SmtpConfig } from '@fluxgate/common';
 import { Assert, Core } from '@fluxgate/core';
 
 import { ConfigService } from '../config.service';
@@ -36,41 +36,41 @@ export class EmailService extends ServiceCore {
     return using(new XLog(EmailService.logger, levels.INFO, 'Initialize Emailsystem'), (log) => {
 
       return new Promise<any>((resolve, reject) => {
-        this.configService.findById<SmtpConfig>(null, SmtpConfig.name, configId).then((configResult) => {
+        this.configService.findById<SmtpConfig>(null, ConfigBase.createId(SmtpConfig.name, configId))
+          .then((configResult) => {
 
-          log.warn(`configResult = ${Core.stringify(configResult)}`);
+            log.warn(`configResult = ${Core.stringify(configResult)}`);
 
+            const smtpConfig: ISMTPConfig = {
+              from: configResult.item.from,
+              host: configResult.item.host,
+              password: configResult.item.password,
+              port: configResult.item.port,
+              ssl: configResult.item.ssl,
+              user: configResult.item.user
+            };
 
-          const smtpConfig: ISMTPConfig = {
-            from: configResult.item.from,
-            host: configResult.item.host,
-            password: configResult.item.password,
-            port: configResult.item.port,
-            ssl: configResult.item.ssl,
-            user: configResult.item.user
-          };
-
-          const mailtransport = email.server.connect(smtpConfig);
-          if (!message.from) {
-            message.from = configResult.item.from;
-          }
-
-          mailtransport.send(message, (err, themessage) => {
-            if (err) {
-              log.error(err);
-
-              reject(err);
-            } else {
-              log.log(themessage);
-
-              resolve(themessage);
+            const mailtransport = email.server.connect(smtpConfig);
+            if (!message.from) {
+              message.from = configResult.item.from;
             }
-          });
 
-        }).catch((err) => {
-          log.error(err);
-          reject(err);
-        })
+            mailtransport.send(message, (err, themessage) => {
+              if (err) {
+                log.error(err);
+
+                reject(err);
+              } else {
+                log.log(themessage);
+
+                resolve(themessage);
+              }
+            });
+
+          }).catch((err) => {
+            log.error(err);
+            reject(err);
+          })
           ;
       });
 

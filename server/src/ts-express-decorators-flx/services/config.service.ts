@@ -1,3 +1,5 @@
+import * as Knex from 'knex';
+
 import { Service } from 'ts-express-decorators';
 
 // -------------------------------------- logging --------------------------------------------
@@ -23,8 +25,10 @@ import { SystemConfigService } from './system-config.service';
 
 /**
  * Klasse zum Ermitteln einer Systemkonfiguration für einen gegebenen Typ und eine Id
+ * mittels @see{SystemConfigService}.
+ *
  * Die Konfiguration liegt in der Entity SystemConfig als JSON-String eines
- * serialisierten Objekts vor. Die Id in SystemConfi ist eine Kombination aus (type-id) der
+ * serialisierten Objekts vor. Die Id in SystemConfig ist eine Kombination aus (type-id) der
  * ConfigBase-Instanz.
  *
  * @export
@@ -52,21 +56,18 @@ export class ConfigService extends ServiceCore {
    *
    * @template T - Konfigurationstyp
    * @param {ISessionRequest} request - der REST-Request
-   * @param {string} model - Name der Konfigurationsklasse (z.B. 'SmtpConfig')
    * @param {string} id - Id der Konfiguration ('z.B. 'default')
    * @returns {Promise<FindByIdResult<T, string>>} - Promise
    * @memberof ConfigService
    */
-  public findById<T extends ConfigBase>(request: ISessionRequest, model: string, id: string):
+  public findById<T extends ConfigBase>(request: ISessionRequest, id: string):
     Promise<FindByIdResult<T, string>> {
-    Assert.notNullOrEmpty(model);
     Assert.notNullOrEmpty(id);
 
-    return using(new XLog(ConfigService.logger, levels.INFO, 'findById', `[${model}] id = ${id}`), (log) => {
+    return using(new XLog(ConfigService.logger, levels.INFO, 'findById', `id = ${id}`), (log) => {
       return new Promise<FindByIdResult<T, string>>((resolve, reject) => {
-        const type = this.getConfigType(model);
 
-        this.systemConfigService.findById<ISystemConfig>(request, ConfigBase.createId(type, id))
+        this.systemConfigService.findById<ISystemConfig>(request, id)
           .then((result) => {
             const config = this.deserialize<T>(JSON.parse(result.item.json));
             this.updateConfigFromSystemConfig(config, result.item);
@@ -87,33 +88,19 @@ export class ConfigService extends ServiceCore {
    * @returns {Promise<FindResult<T>>}
    * @memberof ConfigService
    */
-  public find<T extends ConfigBase>(request: ISessionRequest, model: string, filter?: StatusFilter):
+  public find<T extends ConfigBase>(request: ISessionRequest, filter?: StatusFilter):
     Promise<FindResult<T>> {
-    return using(new XLog(ConfigService.logger, levels.INFO, 'find', `[${model}]`), (log) => {
+    return using(new XLog(ConfigService.logger, levels.INFO, 'find'), (log) => {
       return new Promise<FindResult<T>>((resolve, reject) => {
-        let type = this.getConfigType(model);
 
-        // falls die übergebene Modelklasse 'ConfigBase' (Basisklasse) ist, sollen alle
-        // Configurationseinträge geliefert werden -> type = '%' -> Suche '... like %-% ...'
-        const metadata = this.getMetadata(model);
-        if (metadata.className === ConfigBase.name) {
-          type = '%';
-        }
-
-        const query = new StatusQuery(new SelectorTerm({
-          name: 'id',
-          operator: 'like',
-          value: ConfigBase.createId(type, '%')
-        }), filter);
-
-        this.systemConfigService.query(request, query)
-          .then((queryResult) => {
-            const result = queryResult.items.map((item) => {
+        this.systemConfigService.find(request, filter)
+          .then((findResult) => {
+            const result = findResult.items.map((item) => {
               const config = this.deserialize<T>(JSON.parse(item.json));
               this.updateConfigFromSystemConfig(config, item);
               return config;
             });
-            resolve(new FindResult(result, queryResult.entityVersion));
+            resolve(new FindResult(result, findResult.entityVersion));
           });
       });
     });
@@ -122,10 +109,22 @@ export class ConfigService extends ServiceCore {
 
   public query<T extends ConfigBase>(
     request: ISessionRequest,
-    model: string,
     query: IStatusQuery
   ): Promise<QueryResult<ConfigBase>> {
-    throw new NotSupportedException();
+    return using(new XLog(ConfigService.logger, levels.INFO, 'query'), (log) => {
+      return new Promise<QueryResult<T>>((resolve, reject) => {
+
+        this.systemConfigService.query(request, query)
+          .then((queryResult) => {
+            const result = queryResult.items.map((item) => {
+              const config = this.deserialize<T>(JSON.parse(item.json));
+              this.updateConfigFromSystemConfig(config, item);
+              return config;
+            });
+            resolve(new QueryResult(result, queryResult.entityVersion));
+          });
+      });
+    });
   }
 
 
@@ -146,10 +145,9 @@ export class ConfigService extends ServiceCore {
 
   public create<T extends ConfigBase>(
     request: ISessionRequest,
-    model: string,
     subject: ConfigBase
   ): Promise<CreateResult<T, string>> {
-    return using(new XLog(ConfigService.logger, levels.INFO, 'create', `[${model}]`), (log) => {
+    return using(new XLog(ConfigService.logger, levels.INFO, 'create', `[${subject.constructor.name}]`), (log) => {
       if (log.isDebugEnabled) {
         log.debug('subject: ', subject);
       }
@@ -170,10 +168,9 @@ export class ConfigService extends ServiceCore {
 
   public update<T extends ConfigBase>(
     request: ISessionRequest,
-    model: string,
     subject: ConfigBase
   ): Promise<UpdateResult<T, string>> {
-    return using(new XLog(ConfigService.logger, levels.INFO, 'update', `[${model}]`), (log) => {
+    return using(new XLog(ConfigService.logger, levels.INFO, 'update', `[${subject.constructor.name}]`), (log) => {
       if (log.isDebugEnabled) {
         log.debug('subject: ', subject);
       }
@@ -209,25 +206,46 @@ export class ConfigService extends ServiceCore {
 
   public delete(
     request: ISessionRequest,
-    model: string,
     id: string
   ): Promise<DeleteResult<string>> {
-    return using(new XLog(ConfigService.logger, levels.INFO, 'delete', `[${model}] id = ${id}`), (log) => {
-      const type = this.getConfigType(model);
+    return using(new XLog(ConfigService.logger, levels.INFO, 'delete', `id = ${id}`), (log) => {
 
       return new Promise<DeleteResult<string>>((resolve, reject) => {
-        return this.systemConfigService.delete(request, ConfigBase.createId(type, id))
+        return this.systemConfigService.delete(request, id)
           .then((deleteResult) => {
-            const configId = deleteResult.id.replace(ConfigBase.createId(type, ''), '');
-            resolve(new DeleteResult(configId, deleteResult.entityVersion));
+            resolve(deleteResult);
           });
       });
     });
   }
 
+  public queryKnex(
+    request: ISessionRequest,
+    query: Knex.QueryBuilder,
+    filter?: StatusFilter,
+    trxExisting?: Knex.Transaction
+  ): Promise<QueryResult<ConfigBase>> {
+    throw new NotSupportedException();
+  }
 
-  public getMetadata(model: string | Funktion): TableMetadata {
-    return this.metadataService.findTableMetadata(model);
+  public get idColumnName(): string {
+    return this.systemConfigService.idColumnName;
+  }
+
+  public set idColumnName(value: string) {
+    // ok
+  }
+
+  public get tableName(): string {
+    return this.systemConfigService.tableName;
+  }
+
+  public get metadata(): TableMetadata {
+    return this.systemConfigService.metadata;
+  }
+
+  public fromTable(table?: string | Funktion): Knex.QueryBuilder {
+    throw new NotSupportedException();
   }
 
   protected deserialize<T>(json: any): T {
@@ -240,17 +258,12 @@ export class ConfigService extends ServiceCore {
     return this.serializer.serialize(item);
   }
 
-  private getConfigType(model: string): string {
-    const typeColumn = this.getMetadata(model).getColumnMetadataByProperty(ConfigBase.TYPE_COLUMN);
-    return typeColumn.options.default as string;
-  }
-
-
   private createSystemConfigFromConfig(config: ConfigBase): ISystemConfig {
     const systemConfig: ISystemConfig = {
       id: ConfigBase.createId(config.type, config.id),
       __client: config.__client,
       __version: undefined,
+      type: config.type,
       description: config.description,
       json: JSON.stringify(this.serialize(config))                // muss JSON.stringify bleiben
     };

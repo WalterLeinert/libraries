@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `systemconfig`;
 CREATE TABLE IF NOT EXISTS `systemconfig` (
   `systemconfig_id` varchar(25) NOT NULL,
+  `systemconfig_type` varchar(25) NOT NULL,
   `systemconfig_description` varchar(100) DEFAULT NULL,
   `systemconfig_json` text NOT NULL,
   `__client` int(11) NOT NULL DEFAULT '1',
@@ -39,8 +40,8 @@ CREATE TABLE IF NOT EXISTS `systemconfig` (
 -- Daten für Tabelle `systemconfig`
 --
 
-INSERT INTO `systemconfig` (`systemconfig_id`, `systemconfig_description`, `systemconfig_json`, `__client`, `__version`) VALUES
-('smtp-default', 'SMTP-Konfiguration', '{
+INSERT INTO `systemconfig` (`systemconfig_id`, `systemconfig_type`, `systemconfig_description`, `systemconfig_json`, `__client`, `__version`) VALUES
+('smtp-default', 'smtp', 'SMTP-Konfiguration', '{
     "__type__":"SmtpConfig",
     "id":"default",
     "version":0,
@@ -56,8 +57,8 @@ INSERT INTO `systemconfig` (`systemconfig_id`, `systemconfig_description`, `syst
     "__version":0
 }', 1, 0);
 
-  INSERT INTO `systemconfig` (`systemconfig_id`, `systemconfig_description`, `systemconfig_json`, `__client`, `__version`) VALUES
-('smtp-test', 'weitere SMTP-Konfiguration', '{
+  INSERT INTO `systemconfig` (`systemconfig_id`, `systemconfig_type`, `systemconfig_description`, `systemconfig_json`, `__client`, `__version`) VALUES
+('smtp-test', 'smtp', 'weitere SMTP-Konfiguration', '{
     "__type__":"SmtpConfig",
     "id":"test",
     "version":0,

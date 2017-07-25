@@ -12,6 +12,7 @@ import { AppConfigService, MetadataService } from '@fluxgate/client';
 import { ConfigBase, SmtpConfig, TableService } from '@fluxgate/common';
 
 import { ConfigService } from './config.service';
+import { SystemConfigService } from './system-config.service';
 
 /**
  * Service für REST-Api den Smtp-Configservice
@@ -24,8 +25,9 @@ import { ConfigService } from './config.service';
 @TableService(ConfigBase)
 export class SmtpConfigService extends ConfigService<SmtpConfig> {
 
-  constructor(metadataService: MetadataService, http: Http, configService: AppConfigService) {
-    super(metadataService, http, configService, SmtpConfig);
+  constructor(metadataService: MetadataService, http: Http, configService: AppConfigService,
+    systemConfigService: SystemConfigService) {
+    super(metadataService, http, configService, systemConfigService);
   }
 
 }

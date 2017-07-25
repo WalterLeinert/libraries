@@ -8,17 +8,19 @@ import {
   ENTITY_VERSION_SERVICE, EntityVersion, ExtendedCrudServiceRequests, IService, Store, TableServiceRequests
 } from '@fluxgate/common';
 
-import { ConfigServiceProxy } from './config-service-proxy';
+import { ConfigService } from './config.service';
+import { SystemConfigService } from './system-config.service';
+
 
 @Injectable()
 @TableServiceRequests(ConfigBase)
 export class ConfigServiceRequests extends ExtendedCrudServiceRequests<ConfigBase, string> {
 
-  constructor(service: ConfigServiceProxy, @Inject(APP_STORE) store: Store,
+  constructor(service: ConfigService<ConfigBase>, @Inject(APP_STORE) store: Store,
     @Inject(ENTITY_VERSION_SERVICE) entityVersionService?: IService<EntityVersion, string>) {
     super(ConfigStore.ID, service, store, entityVersionService);
 
-    service.setModel('');
+    // service.setModel('');
   }
 }
 
@@ -33,7 +35,8 @@ export class ConfigServiceRequests extends ExtendedCrudServiceRequests<ConfigBas
   ],
   providers: [
     ConfigServiceRequests,
-    ConfigServiceProxy
+    ConfigService,
+    SystemConfigService
   ]
 })
 export class ConfigServiceRequestsModule { }

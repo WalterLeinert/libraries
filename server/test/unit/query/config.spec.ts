@@ -22,11 +22,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import {
-  ConstantValueGenerator,
-  CreateResult,
+  ConfigBase, ConstantValueGenerator, CreateResult, IStatusQuery,
   ServiceResult, SmtpConfig, StringIdGenerator, UpdateResult
 } from '@fluxgate/common';
-import { Clone, ICtor } from '@fluxgate/core';
+import { Clone, ICtor, SelectorTerm } from '@fluxgate/core';
 
 import { ConfigService } from '../../../src/ts-express-decorators-flx/services/config.service';
 
@@ -68,7 +67,7 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
 
 
   @test 'should find 2 config entries (with id "smtp-xxx")'() {
-    return expect(this.configService.find(undefined, SmtpConfig.name)
+    return expect(this.configService.find(undefined)
       .then((result) => result.items.length))
       .to.become(2);
   }
@@ -82,23 +81,33 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
     const expectedConfigResult = this.createExpectedConfigResult<CreateResult<SmtpConfig, string>>(id, CreateResult,
       undefined);
 
-    return expect(this.configService.create(undefined, SmtpConfig.name, config)
+    return expect(this.configService.create(undefined, config)
       .then((createResult) => createResult.item))
       .to.become(expectedConfigResult.item);
   }
 
 
-  @test 'should find 1 config entry (with id "smtp-@test1")'() {
-    return expect(this.configService.find(undefined, SmtpConfig.name)
+  @test 'should now find 3 config entries (additional with id "smtp-@test1")'() {
+    return expect(this.configService.find(undefined)
       .then((result) => result.items.length))
       .to.become(3);
   }
 
   @test 'should find 1 config entry (findById)'() {
     const id = '@test1';
-    return expect(this.configService.findById(undefined, SmtpConfig.name, id)
+    return expect(this.configService.findById(undefined, ConfigBase.createId(
+      SmtpConfig.TYPE, id))
       .then((result) => result.item.id))
       .to.become(id);
+  }
+
+
+  @test 'should query all entries of type smtp'() {
+    return expect(this.configService.query(undefined, {
+      term: new SelectorTerm({ name: 'type', operator: '=', value: 'smtp' })
+    })
+      .then((result) => result.items.length))
+      .to.become(3);
   }
 
 
@@ -111,7 +120,7 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
     const resultCloned = Clone.clone(result);
     resultCloned.item.__version++;
 
-    return expect(this.configService.update(undefined, SmtpConfig.name, result.item)
+    return expect(this.configService.update(undefined, result.item)
       .then((updateResult) => updateResult.item))
       .to.become(resultCloned.item);
   }
@@ -123,17 +132,19 @@ class ConfigTest extends KnexTest<SmtpConfig, string> {
     const result = this.createExpectedConfigResult<UpdateResult<SmtpConfig, string>>(id, UpdateResult, -1);
     result.item.description = result.item.description + '-updated';
 
-    return expect(this.configService.delete(undefined, SmtpConfig.name, id)
+    return expect(this.configService.delete(undefined, ConfigBase.createId(SmtpConfig.TYPE, id))
       .then((deleteResult) => deleteResult.id))
-      .to.become(id);
+      .to.become(ConfigBase.createId(SmtpConfig.TYPE, id));
   }
 
 
   @test 'should find again 2 config entries (after deletion)'() {
-    return expect(this.configService.find(undefined, SmtpConfig.name)
+    return expect(this.configService.find(undefined)
       .then((result) => result.items.length))
       .to.become(2);
   }
+
+
 
 
   private createConfig(id: string): SmtpConfig {

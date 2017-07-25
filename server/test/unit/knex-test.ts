@@ -138,6 +138,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
   }
 
 
+
   protected static setupConfig<TModelClass extends ConfigBase>(serviceClass: ICtor<ConfigService>,
     modelClass: ICtor<ConfigBase>,
     generatorConfig: IEntityGeneratorConfig | ValueGenerator<any>,
@@ -155,7 +156,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
             count: 1,
             maxCount: 1,
             idGenerator: generatorConfig,
-            tableMetadata: KnexTest._configService.getMetadata(modelClass)
+            tableMetadata: KnexTest._metadataService.findTableMetadata(modelClass)
           };
         } else {
           config = generatorConfig;
@@ -171,12 +172,12 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
          * ab der wir alle Test-Items löschen können
          */
         const item = eg.createItem(true);
-        KnexTest._configService.create(undefined, modelClass.name, item).then((result) => {
+        KnexTest._configService.create(undefined, item).then((result) => {
           log.log(`created temp. entity: id = ${result.item.id}`);
 
-          KnexTest._firstConfigTestId = result.item.id;
+          KnexTest._firstConfigTestId = result.item.compositeId;
 
-          KnexTest._configService.delete(undefined, modelClass.name, KnexTest._firstConfigTestId)
+          KnexTest._configService.delete(undefined, KnexTest._firstConfigTestId)
             .then((rowsAffected) => {
               log.log(`deleted temp. entity: id = ${result.item.id}`);
 

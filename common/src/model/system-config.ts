@@ -20,6 +20,9 @@ export class SystemConfig extends FlxEntity<string> implements ISystemConfig {
   @IdColumn({ name: 'systemconfig_id', displayName: 'Id' })
   public id: string;
 
+  @Column({ name: 'systemconfig_type', displayName: 'Type' })
+  public type: string;
+
   @Validation([
     Validators.required
   ])

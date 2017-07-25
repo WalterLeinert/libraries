@@ -139,6 +139,10 @@ export abstract class ConfigBase extends FlxEntity<string> {
     return `${type}-${id}`;
   }
 
+  public static createFromCompositeId(compositeId: ICompositeId): string {
+    Assert.notNull(compositeId);
+    return `${compositeId.type}-${compositeId.id}`;
+  }
 
   /**
    * Erzeugt aus der zusammengesetzten @param{compositeId} ein Tupel mit den Einzel-Ids (type, id).
