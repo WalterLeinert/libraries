@@ -27,11 +27,10 @@ import { Assert, Core, NotSupportedException, Utility } from '@fluxgate/core';
 
   <div>
     <flx-autoform [value]="value" [config]="config" [action]="action" [showButtons]="'true'" [skipNgOnInit]="'true'"
-    (close)="onClose($event)" (cancel)="onCancel()">
+      (close)="onClose($event)" (cancel)="onCancel()">
     </flx-autoform>
- </div>
+  </div>
 
-  <flx-confirmation-dialog></flx-confirmation-dialog>
 </p-dialog>
 `,
   styles: [`

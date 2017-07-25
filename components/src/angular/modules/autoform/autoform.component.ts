@@ -1,6 +1,6 @@
 // tslint:disable:max-line-length
 
-import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -152,6 +152,8 @@ import { Assert, Clone, Color, Core, NotSupportedException, Types, Utility } fro
       </div>
     </p-footer>
   </form>
+
+  <flx-confirmation-dialog></flx-confirmation-dialog>
 </div>
 `,
   styles: [`
@@ -244,7 +246,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
 
   constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService, private injector: Injector,
-    private metadataService: MetadataService) {
+    private metadataService: MetadataService, private cdr: ChangeDetectorRef) {
     super(router, route, messageService, null);
 
     using(new XLog(AutoformComponent.logger, levels.INFO, 'ctor'), (log) => {
@@ -288,6 +290,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
             this.value = value;
 
             this.initForm(this.value);
+            this.cdr.detectChanges();
           }
         });
       } else {
