@@ -10,7 +10,8 @@ import {
   AppConfig, CreateResult, DeleteResult, IEntity, ProxyModes, ServiceResult, UpdateResult
 } from '@fluxgate/common';
 import {
-  EntityNotFoundException, Funktion, ICtor, IToString, OptimisticLockException
+  EntityNotFoundException, Funktion, ICtor, IException, IToString, OptimisticLockException,
+  ServerBusinessException, ServerSystemException, Types
 } from '@fluxgate/core';
 
 
@@ -132,7 +133,29 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                 trx.rollback();
               }
 
-              reject(this.createSystemException(err));
+              // TODO: Test für DB-Fehlerbehandllung
+              if (Types.hasProperty(err, 'code') && Types.hasProperty(err, 'sqlMessage')) {
+                const code = err.code;
+                const sqlMessage = err.sqlMessage;
+
+                let exc: IException;
+
+                switch (code) {
+                  case 'ER_DUP_ENTRY':
+                    exc = new ServerBusinessException(sqlMessage);
+                    break;
+
+                  default:
+                    exc = new ServerSystemException(sqlMessage);
+                    break;
+                }
+                reject(exc);
+
+              } else {
+                reject(this.createSystemException(err));
+              }
+
+
             });
 
         };
