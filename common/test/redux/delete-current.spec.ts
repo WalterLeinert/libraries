@@ -2,7 +2,7 @@
 // tslint:disable:member-access
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 
 import { IUser } from '../../src/model';
@@ -39,7 +39,7 @@ export class UserSelectorStore extends CommandStore<IExtendedCrudServiceState<IU
 }
 
 
-@suite('common.redux: delete (current)') @only
+@suite('common.redux: delete (current)')
 class DeleteCurrentTest extends ReduxBaseTest<IUser, number, any> {
   private beforeState: IServiceState;
   private itemToDelete: IUser;

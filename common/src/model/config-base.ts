@@ -73,8 +73,11 @@ export abstract class ConfigBase extends FlxEntity<string> {
    * @type {string}
    * @memberof ConfigBase
    */
-  @Column({ displayName: 'Config-Id', hidden: true })
-  public configId: string = ConfigBase.DEFAULT_ID;
+  @Validation([
+    Validators.required
+  ])
+  @Column({ displayName: 'Config-Id' })
+  public configId: string;  // = ConfigBase.DEFAULT_ID;
 
 
   /**
@@ -83,6 +86,9 @@ export abstract class ConfigBase extends FlxEntity<string> {
    * @type {string}
    * @memberof ConfigBase
    */
+  @Validation([
+    Validators.required
+  ])
   @Column({ displayName: 'Type', hidden: true })
   public type: string;
 
