@@ -19,7 +19,7 @@ import {
 import {
   ICrudServiceRequests, ItemCreatedCommand, ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand, Store, TableMetadata
 } from '@fluxgate/common';
-import { Assert, Clone, Color, Core, NotSupportedException, Types, Utility } from '@fluxgate/core';
+import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Utility } from '@fluxgate/core';
 
 
 @Component({
@@ -146,9 +146,10 @@ import { Assert, Clone, Color, Core, NotSupportedException, Types, Utility } fro
 
     <p-footer *ngIf="showButtons">
       <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <button *ngIf="showNewButton" type="button" class="btn btn-primary" (click)='createNew()'>New</button>
           <button type="button" class="btn btn-primary" (click)='cancel()'>Cancel</button>
           <button type="button" class="btn btn-primary" [disabled]="isSaveDisabled()" (click)='submit()'>Save</button>
-          <button type="button" class="btn btn-primary" (click)='confirmDelete()'>Delete</button>
+          <button type="button" class="btn btn-primary" [disabled]="isDeleteDisabled()" (click)='confirmDelete()'>Delete</button>
       </div>
     </p-footer>
   </form>
@@ -207,6 +208,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
 
   @Input() public showButtons: boolean = false;
+  @Input() public showNewButton: boolean = false;
   @Input() public skipNgOnInit: boolean = false;
 
   @Output() public cancelChange = new EventEmitter<any>();
@@ -243,6 +245,19 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
    * @memberOf AutoformComponent
    */
   public dataItem: any;
+
+  private tableMetadata: TableMetadata;
+
+  /**
+   * falls true, wurde über den New-Button eine neue leere Entity erzeugt,
+   * die (normlerweise) später gespeichert wird
+   */
+  private creatingNew: boolean = false;
+
+  /**
+   * falls eine neue Entity angelegt werden soll, wird die bisherige Entity hier abgelegt
+   */
+  private clonedValue: any;
 
 
   constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService, private injector: Injector,
@@ -283,14 +298,13 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
             this.action = formAction.action;
             this.showButtons = formAction.showButtons;
+            this.showNewButton = formAction.showNewButton;
 
             const value = DataFormAction.getData(formAction);
             Assert.notNull(value);
 
             this.value = value;
-
             this.initForm(this.value);
-            this.cdr.detectChanges();
           }
         });
       } else {
@@ -299,11 +313,25 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     });
   }
 
+  public createNew<T>(): void {
+    this.clonedValue = Clone.clone(this.value);
+    this.value = this.tableMetadata.createEntity<T>();
+    this.initForm(this.value);
+    this.creatingNew = true;
+  }
+
 
   /**
    * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
    */
   public cancel(): void {
+    if (this.creatingNew) {
+      this.value = this.clonedValue;
+      this.clonedValue = undefined;
+      this.creatingNew = false;
+    }
+    this.initForm(this.value);
+
     this.onCancelChange();
   }
 
@@ -312,12 +340,12 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
    * Speichert Änderungen an der Entity
    */
   public submit() {
-    if (this.action === FormActions.UPDATE) {
+    if (this.action === FormActions.UPDATE && !this.creatingNew) {
       this.registerSubscription(this.serviceRequests.update(this.value).subscribe(
         (value: any) => {
           // -> onStoreUpdated
         }));
-    } else if (this.action === FormActions.CREATE) {
+    } else if (this.action === FormActions.CREATE || this.creatingNew) {
       this.registerSubscription(this.serviceRequests.create(this.value).subscribe(
         (value: any) => {
           // -> onStoreUpdated
@@ -347,6 +375,10 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     return !(this.hasChanges() && this.isValid());
   }
 
+  public isDeleteDisabled(): boolean {
+    return this.creatingNew;
+  }
+
 
 
   /**
@@ -361,7 +393,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       rval = true;
     }
 
-    return rval || value === undefined || value[info.valueField] === undefined;
+    return rval;
   }
 
   /**
@@ -448,6 +480,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
         this.onCloseChange(true);
       } else {
         if (command instanceof ItemCreatedCommand || command instanceof ItemDeletedCommand || command instanceof ItemUpdatedCommand) {
+          this.creatingNew = false;
           this.resetFormGroup(this.value);
           this.onCloseChange(false);
         }
@@ -484,16 +517,16 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
    * mittels MetadataService für die Entity @see{entityName} den zugehörigen Service ermitteln und
    * den ProxyService damit initialisieren
    */
-  private setupProxy(entityName: string) {
-    using(new XLog(AutoformComponent.logger, levels.INFO, 'setupProxy', `entityName = ${entityName}`), (log) => {
-      const tableMetadata: TableMetadata = this.metadataService.findTableMetadata(entityName);
+  private setupProxy(model: Funktion) {
+    using(new XLog(AutoformComponent.logger, levels.INFO, 'setupProxy', `model = ${model.name}`), (log) => {
+      this.tableMetadata = this.metadataService.findTableMetadata(model);
 
-      Assert.notNull(tableMetadata, `No metadata for entity ${entityName}`);
+      Assert.notNull(this.tableMetadata, `No metadata for entity ${model.name}`);
 
-      log.log(`table = ${tableMetadata.options.name}`);
+      log.log(`table = ${this.tableMetadata.options.name}`);
 
       const store = this.injector.get(APP_STORE) as Store;
-      const serviceRequests = tableMetadata.getServiceRequestsInstance(this.injector, store);
+      const serviceRequests = this.tableMetadata.getServiceRequestsInstance(this.injector, store);
       this.setServiceRequests(serviceRequests);
     });
   }
@@ -508,8 +541,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     if (value !== undefined) {
 
       if (value.constructor) {
-        const clazzName = value.constructor.name;
-        tableMetadata = this.metadataService.findTableMetadata(clazzName);
+        tableMetadata = this.metadataService.findTableMetadata(value.constructor);
       }
     }
     return tableMetadata;
@@ -550,7 +582,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       }
 
       if (log.isDebugEnabled()) {
-        log.log(`configInternal : ${Core.stringify(this.configInternal)}`);
+        log.debug(`configInternal : ${Core.stringify(this.configInternal)}`);
       }
 
     });
@@ -559,12 +591,14 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   private initForm(value: any) {
     Assert.notNull(value);
     Assert.notNull(value.constructor);
-    const entityName = value.constructor.name;
 
-    this.setupProxy(entityName);
+    this.setupProxy(value.constructor);
 
     // FormBuilder erzeugen
-    this.buildForm(this.fb, this.value, this.configInternal.columnInfos, this.metadataService.findTableMetadata(entityName));
+    this.buildForm(this.fb, this.value, this.configInternal.columnInfos, this.metadataService.findTableMetadata(value.constructor));
+
+    // erneut change detection triggern
+    this.cdr.detectChanges();
   }
 
 }
