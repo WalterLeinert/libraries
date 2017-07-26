@@ -96,7 +96,7 @@ export class RangeValidator extends Validator {
       if (property.propertyType === ColumnTypes.STRING) {
         if (typeof value === 'string') {
           if (compare(value.length, minMax)) {
-            sb.append(`Text '${value}' may not contain ${minMaxTest} than ${minMax} characters.`);
+            sb.append(`Text may not contain ${minMaxTest} than ${minMax} characters.`);
             rval = false;
           }
         }
