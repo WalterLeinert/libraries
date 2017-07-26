@@ -1,21 +1,23 @@
-import { IException, IToString } from '@fluxgate/core';
-
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
+
+import { Assert, IException, IToString } from '@fluxgate/core';
 
 import { IEntity } from '../../model/entity.interface';
 import { EntityVersion } from '../../model/entityVersion';
 import { IService } from '../../model/service/service.interface';
 import {
-  CreatingItemCommand, DeletingItemCommand, ErrorCommand,
+  CreatingItemCommand, CurrentItemSetCommand, DeletingItemCommand, ErrorCommand,
   ItemCreatedCommand, ItemDeletedCommand, ItemsFoundCommand,
   ItemUpdatedCommand, UpdatingItemCommand
 } from '../command';
 import { ICrudServiceState } from '../state/crud-service-state.interface';
+import { ICurrentItemServiceState } from '../state/current-item-service-state.interface';
 import { CommandStore } from '../store/command-store';
 import { Store } from '../store/store';
 import { ICrudServiceRequests } from './crud-service-requests.interface';
@@ -134,13 +136,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
 
         this.getService().delete(id).subscribe(
           (deleteResult) => {
-            this.dispatch(new ItemDeletedCommand(this, deleteResult.id));
-
-            // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
-            // Update der Itemliste nach delete
-            this.dispatch(new ItemsFoundCommand(this,
-              this.getCrudState(this.storeId).items.filter((item) => item.id !== deleteResult.id), true));
-
+            this.handleDelete(deleteResult.id);
             observer.next(deleteResult.id);
           },
           (exc: IException) => {
@@ -169,13 +165,7 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
 
         this.getService().delete(item.id).subscribe(
           (deleteResult) => {
-            this.dispatch(new ItemDeletedCommand(this, deleteResult.id));
-
-            // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
-            // Update der Itemliste nach delete
-            this.dispatch(new ItemsFoundCommand(this,
-              this.getCrudState(this.storeId).items.filter((it) => it.id !== deleteResult.id), true));
-
+            this.handleDelete(deleteResult.id);
             observer.next(deleteResult.id);
           },
           (exc: IException) => {
@@ -196,6 +186,62 @@ export class CrudServiceRequests<T extends IEntity<TId>, TId extends IToString>
 
   protected getService(): IService<T, TId> {
     return super.getService() as IService<T, TId>;
+  }
+
+
+  private handleDelete(deletedId: TId) {
+    // Status for dispatch ItemDeletedCommand -> CurrentItem noch gesetzt
+    const preDeleteState = this.getCrudState(this.storeId);
+
+    this.dispatch(new ItemDeletedCommand(this, deletedId));
+
+    // TODO: soll das so bleiben oder sollen wird das im Client behandeln?
+    // Update der Itemliste nach delete
+    this.dispatch(new ItemsFoundCommand(this,
+      this.getCrudState(this.storeId).items.filter((item) => item.id !== deletedId), true));
+
+    // falls das currentItem gelöscht wurde, setzen wir ein neues currentItem
+    this.dispatchCurrentItem(preDeleteState, deletedId);
+  }
+
+
+  /**
+   * falls ein currentItemState existiert und das akutelle Item gelöscht wurde,
+   * ermitteln wir ein neues akutelles Item und dispatchen ein CurrentItemSetCommand
+   *
+   * @param state
+   * @param deletedId
+   */
+  private dispatchCurrentItem(state: ICrudServiceState<T, TId>, deletedId: TId) {
+    const currentItemState = state as any as ICurrentItemServiceState<T>;
+    let currentItem: T;
+
+    //
+    // wurde currentItem glöscht?
+    // falls ja, selektieren wir das nächste aus der Umgebung
+    //
+    if (currentItemState && currentItemState.currentItem && currentItemState.currentItem.id === deletedId) {
+      let itemIndex = state.items.findIndex((it) => it.id === deletedId);
+      Assert.that(itemIndex >= 0 && itemIndex < state.items.length);
+
+      if (itemIndex >= state.items.length - 1) {
+        itemIndex = state.items.length - 2;       // letztes Element wurde gelöscht
+        currentItem = state.items[state.items.length - 2];
+      } else if (itemIndex === 0) {
+        itemIndex = 1;
+      } else {
+        itemIndex++;
+      }
+
+      // gültiger Index, letztes Element gelöscht?
+      if (itemIndex >= 0 && itemIndex < state.items.length) {
+        currentItem = state.items[itemIndex];
+      }
+
+
+      // falls das currentItem gelöscht wurde, setzen wir ein neues currentItem
+      this.dispatch(new CurrentItemSetCommand(this, currentItem));
+    }
   }
 
 }

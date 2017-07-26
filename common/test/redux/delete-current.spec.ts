@@ -2,18 +2,25 @@
 // tslint:disable:member-access
 
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
+import { only, suite, test } from 'mocha-typescript';
 
 
 import { IUser } from '../../src/model';
 import {
-  CommandStore, ExtendedCrudServiceRequests, IExtendedCrudServiceState, IServiceState,
-  ItemDeletedCommand, ReduxParentStore,
+  CommandStore, CurrentItemSetCommand, ExtendedCrudServiceRequests, IExtendedCrudServiceState,
+  IServiceState, ItemDeletedCommand,
+  ItemsFoundCommand, ReduxParentStore,
   ServiceRequestStates, UserStore
 } from '../../src/redux';
 import { ExtendedUserServiceRequestsFake } from '../../src/testing';
 import { UserServiceFake } from '../../src/testing/user-service-fake';
 import { ReduxBaseTest } from './redux-base-test';
+
+
+interface IDeleteRange {
+  from: number;
+  to: number;
+}
 
 /**
  * SelectorStore, der auf dem UserStore als Parent basiert
@@ -32,9 +39,8 @@ export class UserSelectorStore extends CommandStore<IExtendedCrudServiceState<IU
 }
 
 
-@suite('common.redux: delete (current)')
+@suite('common.redux: delete (current)') @only
 class DeleteCurrentTest extends ReduxBaseTest<IUser, number, any> {
-  private static readonly DELETE_ID = 1;
   private beforeState: IServiceState;
   private itemToDelete: IUser;
 
@@ -43,34 +49,167 @@ class DeleteCurrentTest extends ReduxBaseTest<IUser, number, any> {
   }
 
 
-  @test 'should dispatch command: ItemDeletedCommand'() {
-    expect(this.commands.length).to.equal(3);
-    expect(this.commands[1]).to.be.instanceOf(ItemDeletedCommand);
+  @test 'should dispatch command: ItemDeletedCommand, CurrentItemSetCommand (first)'() {
+    const idToDelete = 1;   // erstes Item
+    this.setupTest(undefined, idToDelete, () => {
+      expect(this.commands.length).to.equal(4);
+      expect(this.commands[1]).to.be.instanceOf(ItemDeletedCommand);
+      expect(this.commands[2]).to.be.instanceOf(ItemsFoundCommand);
+      expect(this.commands[3]).to.be.instanceOf(CurrentItemSetCommand);
 
 
-    const state0 = this.getCrudStateAt(0);
+      const state0 = this.getCrudStateAt(0);
 
-    // state nach ItemDeleted
-    const state1 = this.getCrudStateAt(1);
+      // state nach ItemDeleted
+      const state1 = this.getCrudStateAt(1);
 
-    expect(state1).to.deep.equal({
-      ...state0,
-      currentItem: null,            // current wurde gelöscht
-      deletedId: DeleteCurrentTest.DELETE_ID,
-      state: ServiceRequestStates.DONE
+      expect(state1).to.deep.equal({
+        ...state0,
+        currentItem: null,            // current wurde gelöscht
+        deletedId: idToDelete,
+        state: ServiceRequestStates.DONE
+      });
+
+
+      // currentItem state nach ItemDeleted
+      const state3 = this.getCurrentItemStateAt(3);
+
+      // currentItem muss 2. Item sein
+      expect(state3.currentItem.id).to.equal(idToDelete + 1);
     });
   }
 
 
-  protected before(done: (err?: any) => void) {
-    super.before(() => {
-      //
-      // before-Status erzeugen
-      //
-      this.crudServiceRequests.find().subscribe((items) => {
-        const state = this.getCrudState();
 
-        this.itemToDelete = state.items.filter((item) => item.id === DeleteCurrentTest.DELETE_ID)[0];
+  @test 'should dispatch command: ItemDeletedCommand, CurrentItemSetCommand (last)'() {
+    const idToDelete = UserServiceFake.ITEMS;   // letztes Item
+    this.setupTest(undefined, idToDelete, () => {
+      expect(this.commands.length).to.equal(4);
+      expect(this.commands[1]).to.be.instanceOf(ItemDeletedCommand);
+      expect(this.commands[2]).to.be.instanceOf(ItemsFoundCommand);
+      expect(this.commands[3]).to.be.instanceOf(CurrentItemSetCommand);
+
+
+      const state0 = this.getCrudStateAt(0);
+
+      // state nach ItemDeleted
+      const state1 = this.getCrudStateAt(1);
+
+      expect(state1).to.deep.equal({
+        ...state0,
+        currentItem: null,            // current wurde gelöscht
+        deletedId: idToDelete,
+        state: ServiceRequestStates.DONE
+      });
+
+
+      // currentItem state nach ItemDeleted
+      const state3 = this.getCurrentItemStateAt(3);
+
+      // currentItem muss vorletztes Item sein
+      expect(state3.currentItem.id).to.equal(UserServiceFake.ITEMS - 1);
+    });
+  }
+
+
+  @test 'should dispatch command: ItemDeletedCommand, CurrentItemSetCommand (middle)'() {
+    const idToDelete = UserServiceFake.ITEMS / 2;   // mittleres Item
+    this.setupTest(undefined, idToDelete, () => {
+      expect(this.commands.length).to.equal(4);
+      expect(this.commands[1]).to.be.instanceOf(ItemDeletedCommand);
+      expect(this.commands[2]).to.be.instanceOf(ItemsFoundCommand);
+      expect(this.commands[3]).to.be.instanceOf(CurrentItemSetCommand);
+
+
+      const state0 = this.getCrudStateAt(0);
+
+      // state nach ItemDeleted
+      const state1 = this.getCrudStateAt(1);
+
+      expect(state1).to.deep.equal({
+        ...state0,
+        currentItem: null,            // current wurde gelöscht
+        deletedId: idToDelete,
+        state: ServiceRequestStates.DONE
+      });
+
+
+      // currentItem state nach ItemDeleted
+      const state3 = this.getCurrentItemStateAt(3);
+
+      // currentItem muss vorletztes Item sein
+      expect(state3.currentItem.id).to.equal(idToDelete + 1);
+    });
+  }
+
+
+  @test 'should dispatch command: ItemDeletedCommand, CurrentItemSetCommand (last one)'() {
+    const idToDelete = 1;   // erste Item
+    this.setupTest({ from: 2, to: UserServiceFake.ITEMS }, idToDelete, () => {
+      expect(this.commands.length).to.equal(4);
+      expect(this.commands[1]).to.be.instanceOf(ItemDeletedCommand);
+      expect(this.commands[2]).to.be.instanceOf(ItemsFoundCommand);
+      expect(this.commands[3]).to.be.instanceOf(CurrentItemSetCommand);
+
+
+      const state0 = this.getCrudStateAt(0);
+
+      // state nach ItemDeleted
+      const state1 = this.getCrudStateAt(1);
+
+      expect(state1).to.deep.equal({
+        ...state0,
+        currentItem: null,            // current wurde gelöscht
+        deletedId: idToDelete,
+        state: ServiceRequestStates.DONE
+      });
+
+
+      // currentItem state nach ItemDeleted
+      const state3 = this.getCurrentItemStateAt(3);
+
+      // currentItem undefined
+      // tslint:disable-next-line:no-unused-expression
+      expect(state3.currentItem).to.be.undefined;
+    });
+  }
+
+
+
+
+  /**
+   * Testvorbereitung: das Item mit der Id wird als current markiert und gelöscht
+   *
+   * @param id
+   * @param done
+   */
+  private setupTest(deleteRange: IDeleteRange, id: number, done: (err?: any) => void) {
+    //
+    // before-Status erzeugen
+    //
+    this.crudServiceRequests.find().subscribe((items) => {
+      const state = this.getCrudState();
+
+      this.itemToDelete = state.items.filter((item) => item.id === id)[0];
+
+
+      const deletePromises: Array<Promise<any>> = [];
+
+      if (deleteRange) {
+        for (let idToDelete = deleteRange.from; idToDelete <= deleteRange.to; idToDelete++) {
+          const promise = new Promise<any>((resolve, reject) => {
+            this.crudServiceRequests.deleteById(idToDelete).subscribe((deletedId) => {
+              resolve();
+            });
+          });
+          deletePromises.push(promise);
+        }
+      }
+
+      //
+      // erst nach dem Löschen des Ranges den eigentlichen Test vorbereiten
+      //
+      Promise.all(deletePromises).then(() => {
 
         // currentItem setzen -> nach update prüfen
         this.currentItemServiceRequests.setCurrent(this.itemToDelete).subscribe((item) => {
@@ -80,11 +219,12 @@ class DeleteCurrentTest extends ReduxBaseTest<IUser, number, any> {
           this.reset();
 
           // Test: Item löschen
-          this.crudServiceRequests.deleteById(DeleteCurrentTest.DELETE_ID).subscribe((id) => {
+          this.crudServiceRequests.deleteById(id).subscribe((deletedId) => {
             done();
           });
         });
       });
+
     });
   }
 }
