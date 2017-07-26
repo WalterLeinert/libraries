@@ -72,6 +72,9 @@ export class ConfigService extends ServiceCore {
             const config = this.deserialize<T>(JSON.parse(result.item.json));
             this.updateConfigFromSystemConfig(config, result.item);
             resolve(new FindByIdResult(config, result.entityVersion));
+          })
+          .catch((err) => {
+            reject(err);
           });
       });
     });
@@ -101,6 +104,9 @@ export class ConfigService extends ServiceCore {
               return config;
             });
             resolve(new FindResult(result, findResult.entityVersion));
+          })
+          .catch((err) => {
+            reject(err);
           });
       });
     });
@@ -122,6 +128,9 @@ export class ConfigService extends ServiceCore {
               return config;
             });
             resolve(new QueryResult(result, queryResult.entityVersion));
+          })
+          .catch((err) => {
+            reject(err);
           });
       });
     });
@@ -160,6 +169,9 @@ export class ConfigService extends ServiceCore {
             const config = this.deserialize<T>(JSON.parse(result.item.json));
             this.updateConfigFromSystemConfig(config, result.item);
             resolve(new CreateResult(config, result.entityVersion));
+          })
+          .catch((err) => {
+            reject(err);
           });
       });
     });
@@ -193,6 +205,9 @@ export class ConfigService extends ServiceCore {
 
                   trx.commit();
                   resolve(new UpdateResult(config, result.entityVersion));
+                })
+                .catch((err) => {
+                  reject(err);
                 });
             }).catch((err) => {
               trx.rollback();
@@ -214,6 +229,9 @@ export class ConfigService extends ServiceCore {
         return this.systemConfigService.delete(request, id)
           .then((deleteResult) => {
             resolve(deleteResult);
+          })
+          .catch((err) => {
+            reject(err);
           });
       });
     });
