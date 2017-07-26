@@ -27,7 +27,15 @@ export class DataFormAction implements IDataFormAction {
    * @type {boolean}
    * @memberof IDataFormAction
    */
-  public showButtons?: boolean;
+  public showButtons?: boolean = false;
+
+  /**
+   * falls true, wird z.B. auf AutoformComponent eine New-Button angezeigt
+   *
+   * @type {boolean}
+   * @memberof IDataFormAction
+   */
+  public showNewButton?: boolean = false;
 
 
   public static getData(formAction: IDataFormAction): any {

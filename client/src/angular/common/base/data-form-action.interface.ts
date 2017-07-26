@@ -28,4 +28,12 @@ export interface IDataFormAction {
    * @memberof IDataFormAction
    */
   showButtons?: boolean;
+
+  /**
+   * falls true, wird z.B. auf AutoformComponent eine New-Button angezeigt
+   *
+   * @type {boolean}
+   * @memberof IDataFormAction
+   */
+  showNewButton?: boolean;
 }
