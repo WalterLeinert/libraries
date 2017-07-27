@@ -40,7 +40,7 @@ export class UserService extends BaseService<IUser, number> {
           resolve(result);
         })
         .catch((err) => {
-          reject(this.createSystemException(err));
+          reject(err);
         });
     });
   }
@@ -55,7 +55,7 @@ export class UserService extends BaseService<IUser, number> {
           resolve(result);
         })
         .catch((err) => {
-          reject(this.createSystemException(err));
+          reject(err);
         });
     });
   }
@@ -71,7 +71,7 @@ export class UserService extends BaseService<IUser, number> {
           resolve(result);
         })
         .catch((err) => {
-          reject(this.createSystemException(err));
+          reject(err);
         });
     });
   }
@@ -215,7 +215,7 @@ export class UserService extends BaseService<IUser, number> {
             })
             .catch((err) => {
               log.error(err);
-              reject(this.createSystemException(err));
+              reject(err);
             });
         });
 
@@ -257,7 +257,7 @@ export class UserService extends BaseService<IUser, number> {
           })
           .catch((err) => {
             log.error(err);
-            reject(this.createSystemException(err));
+            reject(err);
           });
       });
     });
@@ -297,7 +297,7 @@ export class UserService extends BaseService<IUser, number> {
           })
           .catch((err) => {
             log.error(err);
-            reject(this.createSystemException(err));
+            reject(err);
           });
       });
     });
@@ -355,7 +355,7 @@ export class UserService extends BaseService<IUser, number> {
           })
           .catch((err) => {
             log.error(err);
-            reject(this.createSystemException(err));
+            reject(err);
           });
       });
     });

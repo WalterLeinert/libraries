@@ -118,7 +118,7 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
               if (!useExistingTransaction) {
                 transaction.rollback();
               }
-              reject(this.createSystemException(err));
+              reject(this.createException(err));
             });
         };
 

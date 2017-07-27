@@ -15,6 +15,7 @@ import {
 } from '@fluxgate/core';
 
 
+import { ErrorAdapterFactory } from '../database/error-adapter-factory';
 import { ISessionRequest } from '../session/session-request.interface';
 import { IBaseService } from './baseService.interface';
 import { KnexService } from './knex.service';
@@ -133,31 +134,8 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                 trx.rollback();
               }
 
-              // TODO: Test für DB-Fehlerbehandllung
-              if (Types.hasProperty(err, 'code') && Types.hasProperty(err, 'sqlMessage')) {
-                const code = err.code;
-                const sqlMessage = err.sqlMessage;
-
-                let exc: IException;
-
-                switch (code) {
-                  case 'ER_DUP_ENTRY':
-                    exc = new ServerBusinessException(sqlMessage);
-                    break;
-
-                  default:
-                    exc = new ServerSystemException(sqlMessage);
-                    break;
-                }
-                reject(exc);
-
-              } else {
-                reject(this.createSystemException(err));
-              }
-
-
+              reject(this.createException(err));
             });
-
         };
 
 
@@ -283,7 +261,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                 trx.rollback();
               }
 
-              reject(this.createSystemException(err));
+              reject(this.createException(err));
             });
 
         };
@@ -343,8 +321,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
                   trx.rollback();
                 }
 
-                reject(this.createSystemException(
-                  new EntityNotFoundException(`table: ${this.tableName}, id: ${id}`)));
+                reject(new EntityNotFoundException(`table: ${this.tableName}, id: ${id}`));
               } else {
 
                 // query für Inkrement der EntityVersion Tabelle erzeugen
@@ -369,7 +346,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
               if (!useExistingTransaction) {
                 trx.rollback();
               }
-              reject(this.createSystemException(err));
+              reject(this.createException(err));
             });
         };
 

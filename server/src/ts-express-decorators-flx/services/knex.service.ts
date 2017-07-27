@@ -8,6 +8,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 
+import { ErrorAdapter } from '../database/error-adapter';
+import { ErrorAdapterFactory } from '../database/error-adapter-factory';
+
 /**
  * Service für den Zugriff auf die Datenbank über Knex
  */
@@ -15,9 +18,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 export class KnexService {
   protected static logger = getLogger(KnexService);
   private static _knex: Knex;
+  private static _errorAdapter: ErrorAdapter;
 
   public static configure(knexConfig: Knex.Config) {
     KnexService._knex = Knex(knexConfig);
+
+    KnexService._errorAdapter = ErrorAdapterFactory.instance.createAdapter(knexConfig.client);
   }
 
   /**
@@ -29,6 +35,14 @@ export class KnexService {
    */
   get knex(): Knex {
     return KnexService._knex;
+  }
+
+
+  /**
+   * Liefert den konkreten ErrorAdapter für den konfigurierten DB-Client
+   */
+  get errorAdapter(): ErrorAdapter {
+    return KnexService._errorAdapter;
   }
 
 }

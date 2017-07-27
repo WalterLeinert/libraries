@@ -12,10 +12,11 @@ import {
   ServiceResult, StatusFilter, TableMetadata, User
 } from '@fluxgate/common';
 import {
-  Assert, Clone, Core, Funktion, ICtor, InvalidOperationException, Types
+  Assert, Clone, Core, Funktion, ICtor, IException, InvalidOperationException, Types
 } from '@fluxgate/core';
 
 
+import { ErrorAdapterFactory } from '../database/error-adapter-factory';
 import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
 import { ICoreService } from './core-service.interface';
@@ -127,7 +128,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
               if (!useExistingTransaction) {
                 trx.rollback();
               }
-              reject(this.createSystemException(err));
+              reject(this.createException(err));
             });
         };
 
@@ -219,7 +220,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
               if (!useExistingTransaction) {
                 trx.rollback();
               }
-              reject(this.createSystemException(err));
+              reject(this.createException(err));
             });
         };
 
@@ -583,5 +584,16 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
       ) &&
       this.entityVersionMetadata && this.entityVersionMetadata !== this.metadata &&
       !this.metadata.options.isView);
+  }
+
+
+  /**
+   * erzeugt eine DB-abhängige Exception für den Error @param{err} und die Message @param{message}
+   *
+   * @param err
+   * @param message
+   */
+  protected createException(err: Error, message?: string): IException {
+    return this._knexService.errorAdapter.createException(err, message);
   }
 }

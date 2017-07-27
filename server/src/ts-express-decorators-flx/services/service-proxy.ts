@@ -189,7 +189,7 @@ export abstract class ServiceProxy<T extends IEntity<TId>, TId extends IToString
    * @returns {IException}
    */
   public createBusinessException(error: string | IException | Error): IException {
-    return ExceptionWrapper.createBusinessException(error);
+    return this._service.createBusinessException(error);
   }
 
   /**
