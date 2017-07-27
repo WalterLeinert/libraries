@@ -1,11 +1,19 @@
 import { ConfigBase } from '../model/config-base';
 import { Column } from '../model/decorator/column';
+import { ColumnGroup } from '../model/decorator/column-group';
 import { Secret } from '../model/decorator/secret';
 import { Table } from '../model/decorator/table';
 import { Validation } from '../model/decorator/validation';
 import { Validators } from '../model/validation/validators';
 
 
+@ColumnGroup(PrintServerConfig.TYPE, [
+  'host',
+  'port',
+  'location',
+  'user',
+  'password'
+], { displayName: 'Printserver' })
 @Table()
 export class PrintServerConfig extends ConfigBase {
   public static readonly TYPE = 'print-server';
@@ -21,7 +29,7 @@ export class PrintServerConfig extends ConfigBase {
 
   @Validation([
     Validators.required,
-     // TODO: geht so nicht -- vom Control kommt der Wert vom Typ number und nicht string
+    // TODO: geht so nicht -- vom Control kommt der Wert vom Typ number und nicht string
     // Validators.positiveInteger
   ])
   @Column({ displayName: 'Port' })

@@ -1,6 +1,7 @@
 import { Assert } from '@fluxgate/core';
 
 import { Column } from '../model/decorator/column';
+import { ColumnGroup } from '../model/decorator/column-group';
 import { IdColumn } from '../model/decorator/id-column';
 import { Table } from '../model/decorator/table';
 import { Validation } from '../model/decorator/validation';
@@ -41,6 +42,12 @@ export interface IFullId {
  * @class ConfigBase
  * @extends {FlxEntity<string>}
  */
+@ColumnGroup('standard', [
+  'id',
+  'configId',
+  'description',
+  'version'
+], { displayName: 'Standard' })
 @Table()
 export abstract class ConfigBase extends FlxEntity<string> {
   /**

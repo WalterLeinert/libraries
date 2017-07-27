@@ -1,10 +1,20 @@
 import { ConfigBase } from '../model/config-base';
 import { Column } from '../model/decorator/column';
+import { ColumnGroup } from '../model/decorator/column-group';
 import { Secret } from '../model/decorator/secret';
 import { Table } from '../model/decorator/table';
 import { Validation } from '../model/decorator/validation';
 import { Validators } from '../model/validation/validators';
 
+
+@ColumnGroup(SmtpConfig.TYPE, [
+  'host',
+  'port',
+  'ssl',
+  'user',
+  'password',
+  'from'
+], { displayName: 'Smtp' })
 @Table()
 export class SmtpConfig extends ConfigBase {
   public static readonly TYPE = 'smtp';
