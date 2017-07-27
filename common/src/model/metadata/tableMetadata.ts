@@ -80,7 +80,23 @@ export abstract class TableMetadata extends ClassMetadata {
    * @param colGroupMetadata
    */
   public addGroupMetadata(colGroupMetadata: ColumnGroupMetadata) {
-    this._columnGroupMetadata.splice(0, 0, colGroupMetadata);
+    const derivedIndex = this._columnGroupMetadata.findIndex((item) =>
+      item.derived && item.name === colGroupMetadata.name);
+
+    if (derivedIndex >= 0) {
+      this._columnGroupMetadata.splice(derivedIndex, 1);
+    }
+
+    // letztes geerbtes Element suchen
+    let lastDerivedIndex = this._columnGroupMetadata.reverse().findIndex((item) => item.derived);
+    if (lastDerivedIndex < 0) {
+      lastDerivedIndex = 0;
+    } else {
+      lastDerivedIndex++;
+    }
+
+    // ... und neue Metadaten hinter diesem Einfügen
+    this._columnGroupMetadata.splice(lastDerivedIndex, 0, colGroupMetadata);
   }
 
   /**

@@ -8,7 +8,7 @@ import { GroupMetadata } from './group-metadata';
 export class ColumnGroupMetadata extends GroupMetadata {
 
   public constructor(private _name: string, columnNames: string[], private _options: IColumnGroupOptions,
-    groupColumns: ColumnMetadata[]) {
+    groupColumns: ColumnMetadata[], private _derived: boolean = false) {
     super(columnNames, groupColumns);
 
     Assert.notNullOrEmpty(_name);
@@ -21,5 +21,9 @@ export class ColumnGroupMetadata extends GroupMetadata {
 
   public get options(): IColumnGroupOptions {
     return this._options;
+  }
+
+  public get derived(): boolean {
+    return this._derived;
   }
 }

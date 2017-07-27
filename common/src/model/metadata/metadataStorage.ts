@@ -271,6 +271,25 @@ export class MetadataStorage {
               metadata.setStatusColumn(baseStatusCol.propertyName, statusColKey);
             }
           });
+
+          //
+          // column group Metadaten vererben und als geerbt markieren
+          //
+          const columnGroupMetadataInherited = [];
+          baseTableMetadata.columnGroupMetadata.forEach((cgm) => {
+            if (!metadata.columnGroupMetadata.find((it) => it.name === cgm.name)) {
+              const columnNames = new Set<string>(cgm.columnNames);
+              const columnMetadata = metadata.columnMetadata.filter((it) => columnNames.has(it.propertyName));
+              const cgmDerived = new ColumnGroupMetadata(
+                cgm.name, [...cgm.columnNames], { ...cgm.options }, columnMetadata, true);
+
+              columnGroupMetadataInherited.push(cgmDerived);
+            }
+          });
+
+          if (columnGroupMetadataInherited.length > 0) {
+            metadata.columnGroupMetadata.unshift(...columnGroupMetadataInherited);
+          }
         }
 
 
@@ -394,10 +413,12 @@ export class MetadataStorage {
 
     //
     // prüfen, ob group name bereits definert oder property namen bereits unter anderen
-    // group names definiert wurden
+    // group names definiert wurden (Hinweis: nicht für geerbte column groups!)
     //
     const groupColumnNameMap: Dictionary<string, Set<string>> = new Dictionary<string, Set<string>>();
-    tableMetadata.columnGroupMetadata.map((item) => groupColumnNameMap.set(item.name, new Set(item.columnNames)));
+    tableMetadata.columnGroupMetadata
+      .filter((it) => !it.derived)
+      .map((item) => groupColumnNameMap.set(item.name, new Set(item.columnNames)));
 
     Assert.that(!groupColumnNameMap.containsKey(groupName),
       `groupName ${groupName} already exists in model ${tableMetadata.className}`);
