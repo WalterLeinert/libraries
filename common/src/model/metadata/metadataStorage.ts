@@ -276,19 +276,21 @@ export class MetadataStorage {
           // column group Metadaten vererben und als geerbt markieren
           //
           const columnGroupMetadataInherited = [];
-          baseTableMetadata.columnGroupMetadata.forEach((cgm) => {
-            if (!metadata.columnGroupMetadata.find((it) => it.name === cgm.name)) {
-              const columnNames = new Set<string>(cgm.columnNames);
-              const columnMetadata = metadata.columnMetadata.filter((it) => columnNames.has(it.propertyName));
-              const cgmDerived = new ColumnGroupMetadata(
-                cgm.name, [...cgm.columnNames], { ...cgm.options }, columnMetadata, true);
+          baseTableMetadata.columnGroupMetadataInternal.forEach((cgm) => {
+            if (!cgm.hidden) {
+              if (!metadata.columnGroupMetadataInternal.find((it) => it.name === cgm.name)) {
+                const columnNames = new Set<string>(cgm.columnNames);
+                const columnMetadata = metadata.columnMetadata.filter((it) => columnNames.has(it.propertyName));
+                const cgmDerived = new ColumnGroupMetadata(
+                  cgm.name, [...cgm.columnNames], { ...cgm.options }, columnMetadata, cgm.hidden, true);
 
-              columnGroupMetadataInherited.push(cgmDerived);
+                columnGroupMetadataInherited.push(cgmDerived);
+              }
             }
           });
 
           if (columnGroupMetadataInherited.length > 0) {
-            metadata.columnGroupMetadata.unshift(...columnGroupMetadataInherited);
+            metadata.columnGroupMetadataInternal.unshift(...columnGroupMetadataInherited);
           }
         }
 
@@ -416,7 +418,7 @@ export class MetadataStorage {
     // group names definiert wurden (Hinweis: nicht für geerbte column groups!)
     //
     const groupColumnNameMap: Dictionary<string, Set<string>> = new Dictionary<string, Set<string>>();
-    tableMetadata.columnGroupMetadata
+    tableMetadata.columnGroupMetadataInternal
       .filter((it) => !it.derived)
       .map((item) => groupColumnNameMap.set(item.name, new Set(item.columnNames)));
 

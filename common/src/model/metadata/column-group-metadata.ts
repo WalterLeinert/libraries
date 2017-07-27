@@ -7,8 +7,9 @@ import { GroupMetadata } from './group-metadata';
 // tslint:disable-next-line:max-classes-per-file
 export class ColumnGroupMetadata extends GroupMetadata {
 
+
   public constructor(private _name: string, columnNames: string[], private _options: IColumnGroupOptions,
-    groupColumns: ColumnMetadata[], private _derived: boolean = false) {
+    groupColumns: ColumnMetadata[], private _hidden: boolean = false, private _derived: boolean = false) {
     super(columnNames, groupColumns);
 
     Assert.notNullOrEmpty(_name);
@@ -21,6 +22,15 @@ export class ColumnGroupMetadata extends GroupMetadata {
 
   public get options(): IColumnGroupOptions {
     return this._options;
+  }
+
+  /**
+   * falls true, wird die column group nicht speziell angezeigt, sondern nur die Controls
+   * Hinweis: markiert die künstliche column group, die angelegt wird, falls keine
+   * column groups explizit definiert sind!
+   */
+  public get hidden(): boolean {
+    return this._hidden;
   }
 
   public get derived(): boolean {

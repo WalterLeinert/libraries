@@ -161,7 +161,20 @@ export abstract class TableMetadata extends ClassMetadata {
     return this._columnMetadata;
   }
 
+  public get columnGroupMetadataInternal(): ColumnGroupMetadata[] {
+    return this._columnGroupMetadata;
+  }
+
   public get columnGroupMetadata(): ColumnGroupMetadata[] {
+    //
+    // falls keine column groups definiert wurden, wird eine künstliche angelegt (hidden)
+    //
+    if (Types.isNullOrEmpty(this._columnGroupMetadata)) {
+      this._columnGroupMetadata.push(new ColumnGroupMetadata(
+        '-hidden-', this._columnMetadata.map((item) => item.propertyName),
+        { displayName: '-hidden-' }, this._columnMetadata, true)
+      );
+    }
     return this._columnGroupMetadata;
   }
 
