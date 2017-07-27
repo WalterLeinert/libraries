@@ -37,4 +37,24 @@ export class Utility {
     return (!value || value == null || value.length <= 0);
   }
 
+
+  //
+  // Set-Operationen
+  //
+
+  public static toArray<T>(set: Set<T>): T[] {
+    return [...Array.from<T>(set)];
+  }
+
+  public static intersect<T>(set1: Set<T>, set2: Set<T>): Set<T> {
+    return new Set(Utility.toArray(set1).filter((x) => set2.has(x)));
+  }
+
+  public static difference<T>(set1: Set<T>, set2: Set<T>): Set<T> {
+    return new Set(Utility.toArray(set1).filter((x) => !set2.has(x)));
+  }
+
+  public static union<T>(set1: Set<T>, set2: Set<T>): Set<T> {
+    return new Set([...Utility.toArray(set1), ...Utility.toArray(set2)]);
+  }
 }
