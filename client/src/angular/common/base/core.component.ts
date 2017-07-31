@@ -420,24 +420,26 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
     using(new XLog(CoreComponent.logger, levels.INFO, 'buildForm'), (log) => {
 
-
+      //
+      // neue FormGroupInfo für form mit Name groupName anlegen und alle Controls
+      // mit Validierungsinformationen dort registrieren
+      //
       const formInfo = new FormGroupInfo();
       this.formInfos.set(groupName, formInfo);
+
+      // Dictionary mit dem Validierunginformationen
+      const validatorDict: {
+        [name: string]: [     // key: Propertyname
+          any,                // Propertywert
+          ValidatorFn[]       // Array von Validatoren
+        ]
+      } = {};
+
 
       //
       // über alle column group infos
       //
       groupInfos.forEach((groupInfo) => {
-
-        // Dictionary mit dem Validierunginformationen
-        const validatorDict: {
-          [name: string]: [     // key: Propertyname
-            any,                // Propertywert
-            ValidatorFn[]       // Array von Validatoren
-          ]
-        } = {};
-
-
 
 
         //
@@ -513,13 +515,12 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
           formInfo.setValidationMessages(info.valueField, messageDict);
         });
 
-
         if (log.isDebugEnabled()) {
           log.debug('validatorDict: ', Core.stringify(validatorDict));
         }
-
-        formInfo.setFormGroup(formBuilder.group(validatorDict));
       });
+
+      formInfo.setFormGroup(formBuilder.group(validatorDict));
     });
   }
 

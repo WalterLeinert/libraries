@@ -29,127 +29,141 @@ import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Uti
 <div class="container-fluid">
   <form *ngIf="dataItem" class="form-horizontal" [formGroup]="getForm()">
 
-    <div *ngIf="configInternal && configInternal.columnInfos">
-      <ul *ngFor="let info of configInternal.columnInfos">
+    <div *ngIf="configInternal && configInternal.groupInfos">
+      <ul *ngFor="let groupInfo of configInternal.groupInfos">
 
-        <!--
-        normale Text-/Eingabefelder
-        -->
-        <div *ngIf="info.controlType === controlType.Input">
-          <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-            <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+        <p-fieldset [legend]="groupInfo.name" [toggleable]="true">
 
-            <div class="col-sm-10">
-              <input flxAutofocus [type]="getInputType(info)" class="form-control"
-                      [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
-                      [required]="info.required" [readonly]="isReadonly(info)"
-                      [style.color]="getColor(dataItem, info)"
-              >
+          <ul *ngFor="let info of groupInfo.columnInfos">
+
+            <!--
+            normale Text-/Eingabefelder
+            -->
+            <div *ngIf="info.controlType === controlType.Input">
+
+
+              <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+                <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+
+                <div class="col-sm-10">
+                  <input flxAutofocus [type]="getInputType(info)" class="form-control"
+                          [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
+                          [required]="info.required" [readonly]="isReadonly(info)"
+                          [style.color]="getColor(dataItem, info)"
+                  >
+                </div>
+
+                <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+                  {{ getFormErrors(info.valueField) }}
+                </div>
+
+              </div>
+
+               <!-- TODO
+              <flx-autoform-input [formControlName]="info.valueField" class="form-control" [info]="info" [dataItem]="dataItem" >
+              </flx-autoform-input>
+              -->
             </div>
 
-            <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-              {{ getFormErrors(info.valueField) }}
+            <!--
+            Checkbox-Controls für boolean Werte
+            -->
+            <div *ngIf="info.controlType === controlType.Checkbox">
+              <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+                <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+
+                <div class="col-sm-10">
+                  <p-checkbox binary="true" class="form-control" [formControlName]="info.valueField"
+                              [(ngModel)]="dataItem[info.valueField]"
+                              [required]="info.required"
+                              [style.color]="getColor(dataItem, info)">
+                  </p-checkbox>
+                </div>
+
+                <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+                  {{ getFormErrors(info.valueField) }}
+                </div>
+
+              </div>
             </div>
 
-          </div>
-        </div>
+            <!--
+            Datumsfelder
+            -->
+            <div *ngIf="info.controlType === controlType.Date">
+              <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+                <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
-        <!--
-        Checkbox-Controls für boolean Werte
-        -->
-        <div *ngIf="info.controlType === controlType.Checkbox">
-          <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-            <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+                <div class="col-sm-10">
+                  <p-calendar inputStyleClass="form-control" [formControlName]="info.valueField"
+                              [(ngModel)]="dataItem[info.valueField]"
+                              [required]="info.required" [readonlyInput]="isReadonly(info)"
+                              dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
+                  </p-calendar>
+                </div>
 
-            <div class="col-sm-10">
-              <p-checkbox binary="true" class="form-control" [formControlName]="info.valueField"
-                          [(ngModel)]="dataItem[info.valueField]"
-                          [required]="info.required"
-                          [style.color]="getColor(dataItem, info)">
-              </p-checkbox>
+                <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+                  {{ getFormErrors(info.valueField) }}
+                </div>
+
+              </div>
             </div>
 
-            <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-              {{ getFormErrors(info.valueField) }}
-            </div>
+            <!--
+            Zeitfelder:
+            -->
+            <div *ngIf="info.controlType === controlType.Time">
+              <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+                <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
-          </div>
-        </div>
-
-        <!--
-        Datumsfelder
-        -->
-        <div *ngIf="info.controlType === controlType.Date">
-          <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-            <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
-
-            <div class="col-sm-10">
-              <p-calendar inputStyleClass="form-control" [formControlName]="info.valueField"
-                          [(ngModel)]="dataItem[info.valueField]"
-                          [required]="info.required" [readonlyInput]="isReadonly(info)"
-                          dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
-              </p-calendar>
-            </div>
-
-            <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-              {{ getFormErrors(info.valueField) }}
-            </div>
-
-          </div>
-        </div>
-
-        <!--
-        Zeitfelder:
-        -->
-        <div *ngIf="info.controlType === controlType.Time">
-          <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-            <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
-
-            <div class="col-sm-10">
-              <flx-time-selector inputStyleClass="form-control"
-                                  [formControlName]="info.valueField"
-                                  [(ngModel)]="dataItem[info.valueField]"
-                                  [required]="info.required" [readonly]="isReadonly(info)"
-                                  [style.color]="getColor(dataItem, info)">
-              </flx-time-selector>
-            </div>
-
-            <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-               {{ getFormErrors(info.valueField) }}
-            </div>
-
-          </div>
-        </div>
-
-
-        <!--
-        Dropdown/Wertelisten:
-        -->
-        <div *ngIf="info.controlType === controlType.DropdownSelector">
-          <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-            <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
-
-            <div class="col-sm-10">
-              <flx-dropdown-selector inputStyleClass="form-control"
+                <div class="col-sm-10">
+                  <flx-time-selector inputStyleClass="form-control"
                                       [formControlName]="info.valueField"
                                       [(ngModel)]="dataItem[info.valueField]"
                                       [required]="info.required" [readonly]="isReadonly(info)"
-                                      [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
-                                      [textField]="info.enumInfo.textField"
-                                      [valueField]="info.enumInfo.valueField"
-                                      [style]="{'width':'100%'}"
-                                      [style.color]="getColor(dataItem, info)"
-                                      [debug]="false">
-              </flx-dropdown-selector>
+                                      [style.color]="getColor(dataItem, info)">
+                  </flx-time-selector>
+                </div>
+
+                <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+                  {{ getFormErrors(info.valueField) }}
+                </div>
+
+              </div>
             </div>
 
-            <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-              {{ getFormErrors(info.valueField) }}
+
+            <!--
+            Dropdown/Wertelisten:
+            -->
+            <div *ngIf="info.controlType === controlType.DropdownSelector">
+              <div class="form-group" *ngIf="! isHidden(info, dataItem)">
+                <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
+
+                <div class="col-sm-10">
+                  <flx-dropdown-selector inputStyleClass="form-control"
+                                          [formControlName]="info.valueField"
+                                          [(ngModel)]="dataItem[info.valueField]"
+                                          [required]="info.required" [readonly]="isReadonly(info)"
+                                          [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
+                                          [textField]="info.enumInfo.textField"
+                                          [valueField]="info.enumInfo.valueField"
+                                          [style]="{'width':'100%'}"
+                                          [style.color]="getColor(dataItem, info)"
+                                          [debug]="false">
+                  </flx-dropdown-selector>
+                </div>
+
+                <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
+                  {{ getFormErrors(info.valueField) }}
+                </div>
+
+              </div>
             </div>
 
-          </div>
-        </div>
+          </ul>
 
+        </p-fieldset>
       </ul>
     </div>
 
@@ -250,8 +264,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
   public configInternal: IAutoformConfig;
   // << Konfiguration
-
-  public columnGroupMetadata: ColumnGroupMetadata[];
 
   /**
    * die (intern) angebundene Modelinstanz
@@ -603,26 +615,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
       }
 
 
-      //
-      // columnGroup-Info aufbauen: sind im Model keine column groups definiert,
-      // erzeugen wir eine künstliche für eine einheitliche Behandlung im template
-      //
-      this.columnGroupMetadata = tableMetadata.columnGroupMetadata;
-
-      if (Types.isNullOrEmpty(this.columnGroupMetadata)) {
-        const cgm = new ColumnGroupMetadata('-', tableMetadata.columnMetadata.map((it) => it.propertyName), {
-          displayName: '-',
-        }, tableMetadata.columnMetadata);
-
-        this.columnGroupMetadata = [cgm];
-      }
-
-
-      this.columnGroupMetadata.forEach((cgm) => {
-        const infos = this.createDisplayInfos(this.value, tableMetadata.target, this.metadataService, cgm.columnNames);
-      });
-
-
       this.configurator = new AutoformConfiguration(tableMetadata, this.metadataService, this.injector);
 
       if (this.config) {
@@ -638,11 +630,11 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
         tableMetadata.columnGroupMetadata.forEach((cgm) => {
 
-          const displayInfos = this.createDisplayInfos(obj, tableMetadata.target, this.metadataService);
+          const displayInfos = this.createDisplayInfos(obj, tableMetadata.target, this.metadataService, cgm.columnNames);
 
           groupInfos.push({
             columnInfos: displayInfos,
-            hidden: false,
+            hidden: cgm.hidden,
             name: cgm.name,
             order: cgm.options.order
           });
