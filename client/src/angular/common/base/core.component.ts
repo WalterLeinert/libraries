@@ -36,6 +36,7 @@ import { AppInjector } from '../../services/appInjector.service';
 import { CurrentUserService } from '../../services/current-user.service';
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
+import { IAutoformConfig, IColumnGroupInfo } from './autoformConfig.interface';
 import { FormGroupInfo, IMessageDict } from './formGroupInfo';
 
 
@@ -338,6 +339,40 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   }
 
 
+  protected createGroupInfos(tableMetadata: TableMetadata, obj: any, clazz: Funktion,
+    metadataService: MetadataService, propertyNames?: string[]) {
+
+    const groupInfos: IColumnGroupInfo[] = [];
+
+    tableMetadata.columnGroupMetadata.forEach((cgm) => {
+
+      let propertyNameSet: Set<string>;
+
+      // entweder alle Properties aus cgm übernehmen oder nur die, die über propertyNames gefiltert sind
+      if (Types.isNullOrEmpty(propertyNames)) {
+        propertyNameSet = new Set(cgm.columnNames);
+      } else {
+        propertyNameSet = Utility.intersect(new Set(propertyNames), new Set(cgm.columnNames));
+      }
+
+
+      if (propertyNameSet.size > 0) {
+        const displayInfos = this.createDisplayInfos(obj, clazz, metadataService, Utility.toArray(propertyNameSet));
+
+        groupInfos.push({
+          columnInfos: displayInfos,
+          hidden: false,
+          name: cgm.name,
+          order: cgm.options.order
+        });
+      }
+    });
+
+    return groupInfos;
+  }
+
+
+
   /**
    * Erzeugt mit Hilfe eines @see{FormBuilder}s für die Modelklasse @param{clazz} über die Metadaten
    * und den Injector eine FormGroup @param{groupName} und liefert eine neu erzeugte Modelinstanz.
@@ -358,11 +393,13 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     Assert.notNull(tableMetadata, `Metadaten für Tabelle ${clazz.name}`);
 
     const obj = tableMetadata.createEntity<T>();
-    const displayInfos = this.createDisplayInfos(obj, clazz, metadataService, propertyNames);
-    this.buildForm(formBuilder, obj, displayInfos, tableMetadata, groupName);
+    const groupInfos = this.createGroupInfos(tableMetadata, obj, clazz, metadataService, propertyNames);
+
+    this.buildForm(formBuilder, obj, groupInfos, tableMetadata, groupName);
 
     return obj;
   }
+
 
   /**
    * Erzeugt mit Hilfe eines @see{FormBuilder}s für @param{dataItem} und die Infos @param{displayInfos} eine FormGroup
@@ -374,101 +411,115 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * @param tableMetadata Metadaten
    * @param groupName der Name der FormGroup
    */
-  protected buildForm(formBuilder: FormBuilder, dataItem: any, displayInfos: IControlDisplayInfo[],
+  protected buildForm(formBuilder: FormBuilder, dataItem: any, groupInfos: IColumnGroupInfo[],
     tableMetadata: TableMetadata, groupName: string = FormGroupInfo.DEFAULT_NAME): void {
     Assert.notNullOrEmpty(groupName);
     Assert.notNull(formBuilder);
     Assert.notNull(dataItem);
-    Assert.notNullOrEmpty(displayInfos);
+    Assert.notNullOrEmpty(groupInfos);
 
-    using(new XLog(CoreComponent.logger, levels.INFO, 'buildForm', `groupName = ${groupName}`), (log) => {
+    using(new XLog(CoreComponent.logger, levels.INFO, 'buildForm'), (log) => {
 
-      // Dictionary mit dem Validierunginformationen
-      const validatorDict: {
-        [name: string]: [     // key: Propertyname
-          any,                // Propertywert
-          ValidatorFn[]       // Array von Validatoren
-        ]
-      } = {};
 
       const formInfo = new FormGroupInfo();
       this.formInfos.set(groupName, formInfo);
 
+      //
+      // über alle column group infos
+      //
+      groupInfos.forEach((groupInfo) => {
 
-      displayInfos.forEach((info) => {
-        const validators: ValidatorFn[] = [];
-        const messageDict: IMessageDict = {};
+        // Dictionary mit dem Validierunginformationen
+        const validatorDict: {
+          [name: string]: [     // key: Propertyname
+            any,                // Propertywert
+            ValidatorFn[]       // Array von Validatoren
+          ]
+        } = {};
 
-        if (tableMetadata) {
-          const colMetadata = tableMetadata.getColumnMetadataByProperty(info.valueField);
 
-          if (colMetadata.validator instanceof CompoundValidator) {
-            const vs = (colMetadata.validator as CompoundValidator).validators;
 
-            vs.forEach((v) => {
 
-              //
-              // angular kompatible ValidatorFn erzeugen, die mit fluxgate Validation arbeitet
-              //
-              const validatorFn = (metadata: ColumnMetadata, vd: IValidation) =>
-                (control: AbstractControl): ValidationErrors | null => {
-                  return using(new XLog(CoreComponent.logger, levels.DEBUG, 'validatorFn',
-                    `validator = ${vd.constructor.name}, propertyName = ${metadata.propertyName}, ` +
-                    `value = ${control.value}`), (lg) => {
+        //
+        // über alle column infos
+        //
+        groupInfo.columnInfos.forEach((info) => {
+          const validators: ValidatorFn[] = [];
+          const messageDict: IMessageDict = {};
 
-                      const result = vd.validate(control.value, metadata);
-                      if (result.ok) {
-                        if (lg.isDebugEnabled()) {
-                          lg.debug(`result ok`);
+          if (tableMetadata) {
+            const colMetadata = tableMetadata.getColumnMetadataByProperty(info.valueField);
+
+            if (colMetadata.validator instanceof CompoundValidator) {
+              const vs = (colMetadata.validator as CompoundValidator).validators;
+
+              vs.forEach((v) => {
+
+                //
+                // angular kompatible ValidatorFn erzeugen, die mit fluxgate Validation arbeitet
+                //
+                const validatorFn = (metadata: ColumnMetadata, vd: IValidation) =>
+                  (control: AbstractControl): ValidationErrors | null => {
+                    return using(new XLog(CoreComponent.logger, levels.DEBUG, 'validatorFn',
+                      `validator = ${vd.constructor.name}, propertyName = ${metadata.propertyName}, ` +
+                      `value = ${control.value}`), (lg) => {
+
+                        const result = vd.validate(control.value, metadata);
+                        if (result.ok) {
+                          if (lg.isDebugEnabled()) {
+                            lg.debug(`result ok`);
+                          }
+                          return null;
                         }
-                        return null;
-                      }
 
-                      if (lg.isDebugEnabled()) {
-                        lg.debug(`errors: ${Core.stringify(result.messages)}`);
-                      }
-                      return {
-                        [metadata.propertyName]: result.messages
-                      };
-                    });
-                };
+                        if (lg.isDebugEnabled()) {
+                          lg.debug(`errors: ${Core.stringify(result.messages)}`);
+                        }
+                        return {
+                          [metadata.propertyName]: result.messages
+                        };
+                      });
+                  };
 
 
-              validators.push(validatorFn(colMetadata, v));
-            });
+                validators.push(validatorFn(colMetadata, v));
+              });
+            }
+          } else {
+
+            if (info.required) {
+              validators.push(Validators.required);
+              // tslint:disable-next-line:no-string-literal
+              messageDict['required'] = 'Value required';
+            }
+
+            if (info.dataType === DataTypes.NUMBER) {
+              validators.push(Validators.pattern('[0-9]+'));
+              // tslint:disable-next-line:no-string-literal
+              messageDict['pattern'] = 'Only digits allowed';
+            }
           }
-        } else {
 
-          if (info.required) {
-            validators.push(Validators.required);
-            // tslint:disable-next-line:no-string-literal
-            messageDict['required'] = 'Value required';
-          }
 
-          if (info.dataType === DataTypes.NUMBER) {
-            validators.push(Validators.pattern('[0-9]+'));
-            // tslint:disable-next-line:no-string-literal
-            messageDict['pattern'] = 'Only digits allowed';
+
+          if (validators.length <= 0) {
+            validators.push(Validators.nullValidator);    // noop Validator als einzigen Validator hinzufügen
           }
+          validatorDict[info.valueField] = [
+            dataItem[info.valueField],
+            validators
+          ];
+
+          formInfo.setValidationMessages(info.valueField, messageDict);
+        });
+
+
+        if (log.isDebugEnabled()) {
+          log.debug('validatorDict: ', Core.stringify(validatorDict));
         }
 
-
-        if (validators.length <= 0) {
-          validators.push(Validators.nullValidator);    // noop Validator als einzigen Validator hinzufügen
-        }
-        validatorDict[info.valueField] = [
-          dataItem[info.valueField],
-          validators
-        ];
-
-        formInfo.setValidationMessages(info.valueField, messageDict);
+        formInfo.setFormGroup(formBuilder.group(validatorDict));
       });
-
-      if (log.isDebugEnabled()) {
-        log.debug('validatorDict: ', Core.stringify(validatorDict));
-      }
-
-      formInfo.setFormGroup(formBuilder.group(validatorDict));
     });
   }
 

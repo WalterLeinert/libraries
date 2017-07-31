@@ -12,12 +12,13 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import {
-  APP_STORE,
-  AutoformConfiguration, ControlType, DataFormAction, FormAction, FormActions, IAutoformConfig,
-  IControlDisplayInfo, IDataFormAction, MessageService, MetadataService, ServiceRequestsComponent
+  APP_STORE, AutoformConfiguration, ControlType, DataFormAction, FormAction,
+  FormActions, IAutoformConfig, IColumnGroupInfo, IControlDisplayInfo, IDataFormAction,
+  MessageService, MetadataService, ServiceRequestsComponent
 } from '@fluxgate/client';
 import {
-  ICrudServiceRequests, ItemCreatedCommand, ItemDeletedCommand, ItemUpdatedCommand, ServiceCommand, Store, TableMetadata
+  ColumnGroupMetadata, ICrudServiceRequests, ItemCreatedCommand, ItemDeletedCommand,
+  ItemUpdatedCommand, ServiceCommand, Store, TableMetadata
 } from '@fluxgate/common';
 import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Utility } from '@fluxgate/core';
 
@@ -39,9 +40,10 @@ import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Uti
             <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
             <div class="col-sm-10">
-              <input flxAutofocus [type]="getInputType(info)" class="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
-                [required]="info.required" [readonly]="isReadonly(info)"
-                [style.color]="getColor(dataItem, info)"
+              <input flxAutofocus [type]="getInputType(info)" class="form-control"
+                      [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
+                      [required]="info.required" [readonly]="isReadonly(info)"
+                      [style.color]="getColor(dataItem, info)"
               >
             </div>
 
@@ -60,9 +62,10 @@ import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Uti
             <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
             <div class="col-sm-10">
-              <p-checkbox binary="true" class="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
-                [required]="info.required"
-                [style.color]="getColor(dataItem, info)" >
+              <p-checkbox binary="true" class="form-control" [formControlName]="info.valueField"
+                          [(ngModel)]="dataItem[info.valueField]"
+                          [required]="info.required"
+                          [style.color]="getColor(dataItem, info)">
               </p-checkbox>
             </div>
 
@@ -81,9 +84,10 @@ import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Uti
             <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
             <div class="col-sm-10">
-              <p-calendar inputStyleClass="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
-                [required]="info.required" [readonlyInput]="isReadonly(info)"
-                dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
+              <p-calendar inputStyleClass="form-control" [formControlName]="info.valueField"
+                          [(ngModel)]="dataItem[info.valueField]"
+                          [required]="info.required" [readonlyInput]="isReadonly(info)"
+                          dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
               </p-calendar>
             </div>
 
@@ -102,14 +106,16 @@ import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Uti
             <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
             <div class="col-sm-10">
-              <flx-time-selector inputStyleClass="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
-                [required]="info.required" [readonly]="isReadonly(info)"
-                [style.color]="getColor(dataItem, info)">
+              <flx-time-selector inputStyleClass="form-control"
+                                  [formControlName]="info.valueField"
+                                  [(ngModel)]="dataItem[info.valueField]"
+                                  [required]="info.required" [readonly]="isReadonly(info)"
+                                  [style.color]="getColor(dataItem, info)">
               </flx-time-selector>
             </div>
 
             <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-              {{ getFormErrors(info.valueField) }}
+               {{ getFormErrors(info.valueField) }}
             </div>
 
           </div>
@@ -124,13 +130,16 @@ import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Uti
             <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
             <div class="col-sm-10">
-              <flx-dropdown-selector inputStyleClass="form-control" [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
-                [required]="info.required" [readonly]="isReadonly(info)"
-                [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
-                [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
-                [style]="{'width':'100%'}"
-                [style.color]="getColor(dataItem, info)"
-                [debug]="false">
+              <flx-dropdown-selector inputStyleClass="form-control"
+                                      [formControlName]="info.valueField"
+                                      [(ngModel)]="dataItem[info.valueField]"
+                                      [required]="info.required" [readonly]="isReadonly(info)"
+                                      [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
+                                      [textField]="info.enumInfo.textField"
+                                      [valueField]="info.enumInfo.valueField"
+                                      [style]="{'width':'100%'}"
+                                      [style.color]="getColor(dataItem, info)"
+                                      [debug]="false">
               </flx-dropdown-selector>
             </div>
 
@@ -146,10 +155,15 @@ import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Uti
 
     <p-footer *ngIf="showButtons">
       <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-          <button *ngIf="showNewButton" type="button" class="btn btn-primary" (click)='createNew()'>New</button>
-          <button type="button" class="btn btn-primary" (click)='cancel()'>Cancel</button>
-          <button type="button" class="btn btn-primary" [disabled]="isSaveDisabled()" (click)='submit()'>Save</button>
-          <button type="button" class="btn btn-primary" [disabled]="isDeleteDisabled()" (click)='confirmDelete()'>Delete</button>
+        <button *ngIf="showNewButton" type="button" class="btn btn-primary" (click)='createNew()'>New
+        </button>
+        <button type="button" class="btn btn-primary" (click)='cancel()'>Cancel</button>
+        <button type="button" class="btn btn-primary" [disabled]="isSaveDisabled()" (click)='submit()'>
+            Save
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="isDeleteDisabled()"
+                (click)='confirmDelete()'>Delete
+        </button>
       </div>
     </p-footer>
   </form>
@@ -158,12 +172,12 @@ import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Uti
 </div>
 `,
   styles: [`
-.ng-valid[required], .ng-valid.required  {
-  border-left: 5px solid #42A948; /* green */
+.ng-valid[required], .ng-valid.required {
+    border-left: 5px solid #42A948; /* green */
 }
 
-.ng-invalid:not(form)  {
-  border-left: 5px solid #a94442; /* red */
+.ng-invalid:not(form) {
+    border-left: 5px solid #a94442; /* red */
 }
 `]
 })
@@ -237,6 +251,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   public configInternal: IAutoformConfig;
   // << Konfiguration
 
+  public columnGroupMetadata: ColumnGroupMetadata[];
 
   /**
    * die (intern) angebundene Modelinstanz
@@ -260,6 +275,16 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   private clonedValue: any;
 
 
+  /**
+   *
+   * @param {FormBuilder} fb
+   * @param {Router} router
+   * @param {ActivatedRoute} route
+   * @param {MessageService} messageService
+   * @param {Injector} injector
+   * @param {MetadataService} metadataService
+   * @param {ChangeDetectorRef} cdr
+   */
   constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService, private injector: Injector,
     private metadataService: MetadataService, private cdr: ChangeDetectorRef) {
     super(router, route, messageService, null);
@@ -380,9 +405,12 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   }
 
 
-
   /**
    * Liefert true, falls Feld zu @param{metadata} nicht anzuzeigen ist
+   *
+   * @param {IControlDisplayInfo} info
+   * @param value
+   * @returns {boolean}
    */
   public isHidden(info: IControlDisplayInfo, value: any): boolean {
     // Default: Anzeige, falls displayName im Model gesetzt ist
@@ -396,13 +424,12 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     return rval;
   }
 
+
   /**
    * Liefert true, falls die Daten nicht änderbar sind
    *
    * @param {IControlDisplayInfo} info
-   * @returns
-   *
-   * @memberOf AutoformComponent
+   * @returns {boolean}
    */
   public isReadonly(info: IControlDisplayInfo): boolean {
     return !info.editable || this.action === FormActions.VIEW;
@@ -423,6 +450,12 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   }
 
 
+  /**
+   * Liefert den Typ eines html-input Fields für die angegebene Info @see{info}
+   *
+   * @param {IControlDisplayInfo} info
+   * @returns {string}
+   */
   public getInputType(info: IControlDisplayInfo): string {
     if (info.isSecret) {
       return 'password';
@@ -439,7 +472,8 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     return this._config;
   }
 
-  @Input() public set config(config: IAutoformConfig) {
+  @Input()
+  public set config(config: IAutoformConfig) {
     this._config = config;
     this.initBoundData(this.dataItem, this.getMetadataForValue(this.value));
   }
@@ -462,13 +496,13 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     return this._value;
   }
 
-  @Input() public set value(value: any) {
+  @Input()
+  public set value(value: any) {
     if (this._value !== value) {
       this._value = value;
       this.onValueChange(value);
     }
   }
-
 
 
   protected onStoreUpdated<T>(command: ServiceCommand<T>): void {
@@ -512,7 +546,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   }
 
 
-
   /**
    * mittels MetadataService für die Entity @see{entityName} den zugehörigen Service ermitteln und
    * den ProxyService damit initialisieren
@@ -548,8 +581,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   }
 
 
-
-
   private initBoundData(item: any, tableMetadata: TableMetadata) {
     this.setupConfig(item, tableMetadata);
     this.setupData(item);
@@ -571,20 +602,58 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
         return;
       }
 
+
+      //
+      // columnGroup-Info aufbauen: sind im Model keine column groups definiert,
+      // erzeugen wir eine künstliche für eine einheitliche Behandlung im template
+      //
+      this.columnGroupMetadata = tableMetadata.columnGroupMetadata;
+
+      if (Types.isNullOrEmpty(this.columnGroupMetadata)) {
+        const cgm = new ColumnGroupMetadata('-', tableMetadata.columnMetadata.map((it) => it.propertyName), {
+          displayName: '-',
+        }, tableMetadata.columnMetadata);
+
+        this.columnGroupMetadata = [cgm];
+      }
+
+
+      this.columnGroupMetadata.forEach((cgm) => {
+        const infos = this.createDisplayInfos(this.value, tableMetadata.target, this.metadataService, cgm.columnNames);
+      });
+
+
       this.configurator = new AutoformConfiguration(tableMetadata, this.metadataService, this.injector);
 
       if (this.config) {
         this.configInternal = Clone.clone(this.config);
 
-        this.configurator.configureConfig(this.configInternal);
+        this.configInternal.groupInfos.forEach((gi) => {
+          this.configurator.configureConfig(gi.columnInfos);
+        });
+
       } else {
-        this.configInternal = this.configurator.createConfig(this.config);
+        const obj = tableMetadata.createEntity();
+        const groupInfos: IColumnGroupInfo[] = [];
+
+        tableMetadata.columnGroupMetadata.forEach((cgm) => {
+
+          const displayInfos = this.createDisplayInfos(obj, tableMetadata.target, this.metadataService);
+
+          groupInfos.push({
+            columnInfos: displayInfos,
+            hidden: false,
+            name: cgm.name,
+            order: cgm.options.order
+          });
+
+        });
+        this.configInternal = { groupInfos: groupInfos };
       }
 
       if (log.isDebugEnabled()) {
         log.debug(`configInternal : ${Core.stringify(this.configInternal)}`);
       }
-
     });
   }
 
@@ -595,7 +664,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     this.setupProxy(value.constructor);
 
     // FormBuilder erzeugen
-    this.buildForm(this.fb, this.value, this.configInternal.columnInfos, this.metadataService.findTableMetadata(value.constructor));
+    this.buildForm(this.fb, this.value, this.configInternal.groupInfos, this.metadataService.findTableMetadata(value.constructor));
 
     // erneut change detection triggern
     this.cdr.detectChanges();

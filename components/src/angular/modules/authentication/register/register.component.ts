@@ -108,8 +108,8 @@ export class RegisterComponent extends ExtendedCoreComponent {
     this.user = userTableMetadata.createEntity<User>();
     this.user.role = UserRoleId.User;
 
-    const displayInfos = this.createDisplayInfos(this.user, User, metadataService);
-    this.buildForm(this.fb, this.user, displayInfos, userTableMetadata);
+    const groupInfos = this.createGroupInfos(userTableMetadata, this.user, User, metadataService);
+    this.buildForm(this.fb, this.user, groupInfos, userTableMetadata);
   }
 
   public signup() {

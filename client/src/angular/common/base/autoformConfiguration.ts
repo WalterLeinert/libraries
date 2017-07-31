@@ -21,7 +21,7 @@ export class AutoformConfiguration {
     this.reflectionConfigurator = new ReflectionDisplayInfoConfiguration();
   }
 
-  public createConfig(item?: any): IAutoformConfig {
+  public createConfig(item?: any): IControlDisplayInfo[] {
     let displayInfos: IControlDisplayInfo[];
 
     if (item === undefined) {
@@ -30,14 +30,12 @@ export class AutoformConfiguration {
       displayInfos = this.reflectionConfigurator.createConfig(item);
     }
 
-    return {
-      columnInfos: displayInfos
-    };
+    return displayInfos;
   }
 
 
-  public configureConfig(config: IAutoformConfig): void {
-    this.dataTableConfigurator.configureConfig(config.columnInfos);
+  public configureConfig(displayInfos: IControlDisplayInfo[]): void {
+    this.dataTableConfigurator.configureConfig(displayInfos);
   }
 
 }
