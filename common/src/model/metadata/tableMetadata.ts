@@ -113,12 +113,6 @@ export abstract class TableMetadata extends ClassMetadata {
             }
           }
 
-          //
-          // wurden alle columns gelöscht? -> column group löschen
-          //
-          if (item.columnNames.length <= 0) {
-            cgmToDelete.add(item);
-          }
         } else if (item.hidden) {
           // default column group
           for (let i = item.columnNames.length - 1; i >= 0; i--) {
@@ -127,6 +121,15 @@ export abstract class TableMetadata extends ClassMetadata {
               item.groupColumns.splice(i, 1);
             }
           }
+        }
+
+        const allHidden = item.groupColumns.every((it) => it.options.hidden);
+
+        //
+        // wurden alle columns gelöscht oder sind alle columns als hidden markiert? -> column group löschen
+        //
+        if (item.columnNames.length <= 0 || allHidden) {
+          cgmToDelete.add(item);
         }
       });
 
