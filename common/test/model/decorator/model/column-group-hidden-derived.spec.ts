@@ -62,44 +62,42 @@ class ColumnGroupTest extends CommonTest {
   }
 
 
+  @test 'should verify default columnGroup'() {
+    // tslint:disable-next-line:no-unused-expression
+    expect(this.tableMetadata.columnGroupMetadata[0].hidden).to.be.true;
+    expect(this.tableMetadata.columnGroupMetadata[0].name).to.equal(ColumnGroupMetadata.DEFAULT_NAME);
+  }
+
   @test 'should verify columnGroup name'() {
     // tslint:disable-next-line:no-unused-expression
-    expect(this.tableMetadata.columnGroupMetadata[0].hidden).to.be.false;
-    expect(this.tableMetadata.columnGroupMetadata[0].name).to.equal('name');
+    expect(this.tableMetadata.columnGroupMetadata[1].hidden).to.be.false;
+    expect(this.tableMetadata.columnGroupMetadata[1].name).to.equal('name');
   }
 
   @test 'should verify columnGroup extended'() {
     // tslint:disable-next-line:no-unused-expression
-    expect(this.tableMetadata.columnGroupMetadata[1].hidden).to.be.false;
-    expect(this.tableMetadata.columnGroupMetadata[1].name).to.equal('extended');
-  }
-
-  @test 'should verify default columnGroup'() {
-    // tslint:disable-next-line:no-unused-expression
-    expect(this.tableMetadata.columnGroupMetadata[2].hidden).to.be.true;
-    expect(this.tableMetadata.columnGroupMetadata[2].name).to.equal(ColumnGroupMetadata.DEFAULT_NAME);
+    expect(this.tableMetadata.columnGroupMetadata[2].hidden).to.be.false;
+    expect(this.tableMetadata.columnGroupMetadata[2].name).to.equal('extended');
   }
 
 
 
-
+  @test 'should verify columns of hidden group (column name removed)'() {
+    expect(this.tableMetadata.columnGroupMetadata[0].groupColumns.length).to.equal(1);
+    expect(this.tableMetadata.columnGroupMetadata[0].groupColumns[0].propertyName).to.equal('id');
+  }
 
   @test 'should verify columns of group name (derived)'() {
-    expect(this.tableMetadata.columnGroupMetadata[0].groupColumns.length).to.equal(1);
-    expect(this.tableMetadata.columnGroupMetadata[0].groupColumns[0].propertyName).to.equal('name');
-    expect(this.tableMetadata.columnGroupMetadata[0].options.displayName).to.equal('Name-derived');
+    expect(this.tableMetadata.columnGroupMetadata[1].groupColumns.length).to.equal(1);
+    expect(this.tableMetadata.columnGroupMetadata[1].groupColumns[0].propertyName).to.equal('name');
+    expect(this.tableMetadata.columnGroupMetadata[1].options.displayName).to.equal('Name-derived');
   }
 
 
   @test 'should verify columns of group extended'() {
-    expect(this.tableMetadata.columnGroupMetadata[1].groupColumns.length).to.equal(2);
-    expect(this.tableMetadata.columnGroupMetadata[1].groupColumns[0].propertyName).to.equal('weight');
-    expect(this.tableMetadata.columnGroupMetadata[1].groupColumns[1].propertyName).to.equal('length');
-  }
-
-  @test 'should verify columns of hidden group (column name removed)'() {
-    expect(this.tableMetadata.columnGroupMetadata[2].groupColumns.length).to.equal(1);
-    expect(this.tableMetadata.columnGroupMetadata[2].groupColumns[0].propertyName).to.equal('id');
+    expect(this.tableMetadata.columnGroupMetadata[2].groupColumns.length).to.equal(2);
+    expect(this.tableMetadata.columnGroupMetadata[2].groupColumns[0].propertyName).to.equal('weight');
+    expect(this.tableMetadata.columnGroupMetadata[2].groupColumns[1].propertyName).to.equal('length');
   }
 
 

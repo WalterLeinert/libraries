@@ -236,7 +236,7 @@ export class MetadataStorage {
             if (!col) {
               // Metadaten vererben
               const colInherited = new ColumnMetadata(
-                metadata.target, baseCol.propertyName, baseCol.propertyType, baseCol.options);
+                metadata.target, baseCol.propertyName, baseCol.propertyType, baseCol.options, true);
               columnsInherited.push(colInherited);
             }
           });

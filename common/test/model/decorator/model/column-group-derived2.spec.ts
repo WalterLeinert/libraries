@@ -66,38 +66,39 @@ class ColumnGroupTest extends CommonTest {
   }
 
 
+
+  @test 'should verify columnGroup default'() {
+    expect(this.tableMetadata.columnGroupMetadata[0].name).to.equal(ColumnGroupMetadata.DEFAULT_NAME);
+  }
+
   @test 'should verify columnGroup name'() {
-    expect(this.tableMetadata.columnGroupMetadata[0].name).to.equal('name');
+    expect(this.tableMetadata.columnGroupMetadata[1].name).to.equal('name');
   }
 
   @test 'should verify columnGroup extended'() {
-    expect(this.tableMetadata.columnGroupMetadata[1].name).to.equal('extended');
+    expect(this.tableMetadata.columnGroupMetadata[2].name).to.equal('extended');
   }
 
 
-  @test 'should verify columnGroup default'() {
-    expect(this.tableMetadata.columnGroupMetadata[2].name).to.equal(ColumnGroupMetadata.DEFAULT_NAME);
+  @test 'should verify columns of group default'() {
+    expect(this.tableMetadata.columnGroupMetadata[0].groupColumns.length).to.equal(1);
+    expect(this.tableMetadata.columnGroupMetadata[0].groupColumns[0].propertyName).to.equal('id');
   }
-
 
 
   @test 'should verify columns of group name (derived)'() {
-    expect(this.tableMetadata.columnGroupMetadata[0].groupColumns.length).to.equal(1);
-    expect(this.tableMetadata.columnGroupMetadata[0].groupColumns[0].propertyName).to.equal('name');
-    expect(this.tableMetadata.columnGroupMetadata[0].options.displayName).to.equal('Name-derived');
+    expect(this.tableMetadata.columnGroupMetadata[1].groupColumns.length).to.equal(1);
+    expect(this.tableMetadata.columnGroupMetadata[1].groupColumns[0].propertyName).to.equal('name');
+    expect(this.tableMetadata.columnGroupMetadata[1].options.displayName).to.equal('Name-derived');
   }
 
 
   @test 'should verify columns of group extended'() {
-    expect(this.tableMetadata.columnGroupMetadata[1].groupColumns.length).to.equal(2);
-    expect(this.tableMetadata.columnGroupMetadata[1].groupColumns[0].propertyName).to.equal('weight');
-    expect(this.tableMetadata.columnGroupMetadata[1].groupColumns[1].propertyName).to.equal('length');
+    expect(this.tableMetadata.columnGroupMetadata[2].groupColumns.length).to.equal(2);
+    expect(this.tableMetadata.columnGroupMetadata[2].groupColumns[0].propertyName).to.equal('weight');
+    expect(this.tableMetadata.columnGroupMetadata[2].groupColumns[1].propertyName).to.equal('length');
   }
 
-  @test 'should verify columns of group default'() {
-    expect(this.tableMetadata.columnGroupMetadata[2].groupColumns.length).to.equal(1);
-    expect(this.tableMetadata.columnGroupMetadata[2].groupColumns[0].propertyName).to.equal('id');
-  }
 
 
   protected before(done?: (err?: any) => void) {

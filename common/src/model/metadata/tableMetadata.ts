@@ -171,6 +171,32 @@ export abstract class TableMetadata extends ClassMetadata {
           this._columnGroupMetadata.splice(i, 1);
         }
       }
+
+
+      //
+      // hidden column groups, die ausschliesslich geerbte columns haben, werden
+      // an den Anfang verschoben
+      //
+      const cgmToMove = [];
+
+      for (let i = this._columnGroupMetadata.length - 1; i >= 0; i--) {
+        if (this._columnGroupMetadata[i].hidden) {
+          const allDerived = this._columnGroupMetadata[i].groupColumns.every((item) => item.derived);
+          if (allDerived) {
+            cgmToMove.push(i);
+          }
+        }
+      }
+
+      let startIndex = 0;
+
+      // wichtig: index läuft von oben nach unten wegen "remove"
+      cgmToMove.forEach((item) => {
+        const cgm = this._columnGroupMetadata.splice(item, 1);
+        this._columnGroupMetadata.splice(startIndex, 0, ...cgm);
+        startIndex++;
+      });
+
     });
   }
 

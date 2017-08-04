@@ -27,9 +27,10 @@ export class ColumnMetadata extends PropertyMetadata<Funktion> {
    * @param {string} propertyName - Name der Modelproperty
    * @param {ColumnType} propertyType - Typ der Modelproperty
    * @param {ColumnOptions} options - weitere Propertyeigenschaften
+   * @param {boolean} _derived - abgeleitete Property
    */
   constructor(target: Funktion, public propertyName: string, public propertyType: ColumnType,
-    public options: ColumnOptions) {
+    public options: ColumnOptions, private _derived: boolean = false) {
     super(target, propertyName);
   }
 
@@ -181,4 +182,7 @@ export class ColumnMetadata extends PropertyMetadata<Funktion> {
     return this._enumMetadata;
   }
 
+  public get derived(): boolean {
+    return this._derived;
+  }
 }
