@@ -8,7 +8,7 @@ import 'reflect-metadata';
 import { Injector } from 'injection-js';
 
 import { expect } from 'chai';
-import { only, suite, test } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 
 import { DiMetadata } from '../../../../src/di/di-metadata';
 import { ModuleMetadata } from '../../../../src/di/module-metadata';
