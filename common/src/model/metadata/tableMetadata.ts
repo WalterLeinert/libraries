@@ -3,7 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { Assert, ClassMetadata, Dictionary, Funktion, IToString, Tuple, Types } from '@fluxgate/core';
+import { Assert, ClassMetadata, Dictionary, Funktion, IToString, Tuple, Tuple3, Types } from '@fluxgate/core';
 
 import { ICrudServiceRequests } from '../../redux/service-requests/crud-service-requests.interface';
 import { EnumTableServiceRequests } from '../../redux/service-requests/enum-table-service-requests';
@@ -72,32 +72,109 @@ export abstract class TableMetadata extends ClassMetadata {
     this.addInternal(metadata);
   }
 
+
   /**
    * Fügt ein @see{ColumnGroupMetadata} hinzu.
-   * Hinweis: die Metadaten werden immer am Anfang des Arrays eingefügt,
-   * da die Decorators in umgekehrter Reihenfolge ausgeführt werden.
+   *
+   * Dabei wird geprüft, ob geerbte column groups bzw. geerbte columns zu löschen sind.
    *
    * @param colGroupMetadata
    */
   public addGroupMetadata(colGroupMetadata: ColumnGroupMetadata) {
-    const derivedIndex = this._columnGroupMetadata.findIndex((item) =>
-      item.derived && item.name === colGroupMetadata.name);
+    using(new XLog(TableMetadata.logger, levels.DEBUG, 'createModelInstance'), (log) => {
+      //
+      // falls eine geerbte ColumnGroup gleichen Namens existiert, wird die geerbte
+      // entfernt ("überschrieben")
+      //
+      const derivedIndex = this._columnGroupMetadata.findIndex((item) =>
+        item.derived && item.name === colGroupMetadata.name);
 
-    if (derivedIndex >= 0) {
-      this._columnGroupMetadata.splice(derivedIndex, 1);
-    }
+      if (derivedIndex >= 0) {
+        this._columnGroupMetadata.splice(derivedIndex, 1);
+      }
 
-    // letztes geerbtes Element suchen
-    let lastDerivedIndex = this._columnGroupMetadata.reverse().findIndex((item) => item.derived);
-    if (lastDerivedIndex < 0) {
-      lastDerivedIndex = 0;
-    } else {
-      lastDerivedIndex++;
-    }
 
-    // ... und neue Metadaten hinter diesem Einfügen
-    this._columnGroupMetadata.splice(lastDerivedIndex, 0, colGroupMetadata);
+      //
+      // falls eine geerbte ColumnGroup Columns enthält, die der aktuellen ColumnGroup zugeordnet sind,
+      // gleichen Namens existiert, werden die geerbten Columns gelöscht (und anschliessend durch
+      // die neu zugeordneten ersetzt)
+      // Gleichzeit werden alle columns, die column groups zugeordnet sind aus der default column group
+      // entfernt
+      //
+      const columnNames = new Set(colGroupMetadata.columnNames);
+      const cgmToDelete = new Set<ColumnGroupMetadata>();
+
+      this._columnGroupMetadata.forEach((item) => {
+        if (item.derived) {
+          for (let i = item.columnNames.length - 1; i >= 0; i--) {
+            if (columnNames.has(item.columnNames[i])) {
+              item.columnNames.splice(i, 1);
+              item.groupColumns.splice(i, 1);
+            }
+          }
+
+          //
+          // wurden alle columns gelöscht? -> column group löschen
+          //
+          if (item.columnNames.length <= 0) {
+            cgmToDelete.add(item);
+          }
+        } else if (item.hidden) {
+          // default column group
+          for (let i = item.columnNames.length - 1; i >= 0; i--) {
+            if (columnNames.has(item.columnNames[i])) {
+              item.columnNames.splice(i, 1);
+              item.groupColumns.splice(i, 1);
+            }
+          }
+        }
+      });
+
+      //
+      // falls mittlerweile eine geerbte column group leer geworden ist, wird diese entfernt
+      //
+      if (cgmToDelete.size > 0) {
+        for (let i = this._columnGroupMetadata.length - 1; i >= 0; i--) {
+          if (cgmToDelete.has(this._columnGroupMetadata[i])) {
+            this._columnGroupMetadata.splice(i, 1);
+          }
+        }
+      }
+
+
+      //
+      // schliesslich die neue column group direkt hinter die letzte geerbte column group einfügen ->
+      // Reihenfolge:
+      // - geerbte cgm
+      // - 1. cgm
+      // - 2. cgm
+      // ...
+      //
+      const reversed = [...this._columnGroupMetadata].reverse();
+      let lastDerivedIndex = reversed.findIndex((item) => item.derived);
+      if (lastDerivedIndex < 0) {
+        lastDerivedIndex = 0;
+      } else {
+        lastDerivedIndex = reversed.length - lastDerivedIndex - 1;
+        lastDerivedIndex++;
+      }
+
+      // ... und neue Metadaten hinter diesem Einfügen
+      this._columnGroupMetadata.splice(lastDerivedIndex, 0, colGroupMetadata);
+
+      // column groups, die mittlerweile leer geworden sind entfernen
+      for (let i = this._columnGroupMetadata.length - 1; i >= 0; i--) {
+        if (this._columnGroupMetadata[i].columnNames.length <= 0) {
+          if (!this._columnGroupMetadata[i].hidden) {
+            log.warn(`column group ${this._columnGroupMetadata[i].name} has no columns`);
+          }
+          this._columnGroupMetadata.splice(i, 1);
+        }
+      }
+    });
   }
+
+
 
   /**
    * Fügt die Metadaten @param{metadata} vor die bisherigen Metadaten ein.
@@ -161,21 +238,16 @@ export abstract class TableMetadata extends ClassMetadata {
     return this._columnMetadata;
   }
 
-  public get columnGroupMetadataInternal(): ColumnGroupMetadata[] {
+  public get columnGroupMetadata(): ColumnGroupMetadata[] {
     return this._columnGroupMetadata;
   }
 
-  public get columnGroupMetadata(): ColumnGroupMetadata[] {
-    //
-    // falls keine column groups definiert wurden, wird eine künstliche angelegt (hidden)
-    //
-    if (Types.isNullOrEmpty(this._columnGroupMetadata)) {
-      this._columnGroupMetadata.push(new ColumnGroupMetadata(
-        '-hidden-', this._columnMetadata.map((item) => item.propertyName),
-        { displayName: '-hidden-' }, this._columnMetadata, true)
-      );
-    }
-    return this._columnGroupMetadata;
+
+  public createDefaultColumnGroup() {
+    this._columnGroupMetadata.push(new ColumnGroupMetadata(
+      ColumnGroupMetadata.DEFAULT_NAME, this._columnMetadata.map((item) => item.propertyName),
+      { displayName: ColumnGroupMetadata.DEFAULT_NAME }, [...this._columnMetadata], true, false, this.isAbstract)
+    );
   }
 
 
@@ -187,6 +259,13 @@ export abstract class TableMetadata extends ClassMetadata {
     return this._statusColMap.keys;
   }
 
+  public get isAbstract(): boolean {
+    let isAbstract = false;
+    if (!(this.options instanceof EnumTableOptions)) {
+      isAbstract = this.options.isAbstract;
+    }
+    return isAbstract;
+  }
 
   /**
    * Erzeugt eine neue Modellinstanz

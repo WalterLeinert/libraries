@@ -15,4 +15,9 @@ export interface TableOptions {
    * true, falls View und keine Tabelle
    */
   isView?: boolean;
+
+  /**
+   * true, falls die Tabelle nur eine abstrakte Basisklasse hat
+   */
+  isAbstract?: boolean;
 }

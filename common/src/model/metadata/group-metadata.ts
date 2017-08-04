@@ -5,9 +5,13 @@ import { ColumnMetadata } from './columnMetadata';
 
 export abstract class GroupMetadata {
 
-  protected constructor(private _columnNames: string[], private _groupColumns: ColumnMetadata[]) {
-    Assert.notNullOrEmpty(_columnNames);
-    Assert.notNullOrEmpty(_groupColumns);
+  protected constructor(private _columnNames: string[], private _groupColumns: ColumnMetadata[],
+    private _isAbstract: boolean) {
+
+    if (!this._isAbstract) {
+      Assert.notNullOrEmpty(_columnNames);
+      Assert.notNullOrEmpty(_groupColumns);
+    }
   }
 
   public get groupColumns(): ColumnMetadata[] {

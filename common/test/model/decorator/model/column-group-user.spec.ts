@@ -12,24 +12,13 @@ import { ColumnGroup } from '../../../../src/model/decorator/column-group';
 import { IdColumn } from '../../../../src/model/decorator/id-column';
 import { Table } from '../../../../src/model/decorator/table';
 import { IEntity } from '../../../../src/model/entity.interface';
-import { ColumnGroupMetadata } from '../../../../src/model/metadata/column-group-metadata';
 import { MetadataStorage } from '../../../../src/model/metadata/metadataStorage';
 import { TableMetadata } from '../../../../src/model/metadata/tableMetadata';
+import { User } from '../../../../src/model/user';
 import { CommonTest } from '../../../common.spec';
 
 
-
-@Table()
-class HiddenColumnGroup implements IEntity<number> {
-  @IdColumn()
-  public id: number;
-
-  @Column()
-  public name: string;
-}
-
-
-@suite('model.decorator.ColumnGroup - hidden:')
+@suite('model.decorator.ColumnGroup - User:')
 class ColumnGroupTest extends CommonTest {
   private tableMetadata: TableMetadata;
 
@@ -37,22 +26,24 @@ class ColumnGroupTest extends CommonTest {
     return expect(this.tableMetadata).to.be.not.null;
   }
 
-  @test 'should exist 1 columnGroup'() {
-    return expect(this.tableMetadata.columnGroupMetadata.length).to.equal(1);
-  }
-
-  @test 'should verify columnGroup hidden'() {
+  @test 'should exist 1 hidden columnGroup'() {
+    expect(this.tableMetadata.columnGroupMetadata.length).to.equal(1);
     // tslint:disable-next-line:no-unused-expression
     expect(this.tableMetadata.columnGroupMetadata[0].hidden).to.be.true;
   }
 
-  @test 'should verify columnGroup name'() {
-    expect(this.tableMetadata.columnGroupMetadata[0].name).to.equal(ColumnGroupMetadata.DEFAULT_NAME);
+
+  @test 'should verify columnGroup column names'() {
+    expect(this.tableMetadata.columnGroupMetadata[0].columnNames.length).to.equal(
+      this.tableMetadata.columnMetadata.length);
   }
+
+
+
 
   protected before(done?: (err?: any) => void) {
     super.before(() => {
-      this.tableMetadata = MetadataStorage.instance.findTableMetadata(HiddenColumnGroup);
+      this.tableMetadata = MetadataStorage.instance.findTableMetadata(User);
       done();
     });
   }

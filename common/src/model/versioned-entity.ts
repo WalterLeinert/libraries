@@ -15,7 +15,7 @@ import { IVersionedEntity } from './versioned-entity.interface';
  * @implements {IVersionedEntity}
  * @template TId
  */
-@Table()
+@Table({ isAbstract: true })
 export abstract class VersionedEntity<TId> extends Entity<TId> implements IVersionedEntity {
 
   @VersionColumn({ name: '__version', default: 0 })

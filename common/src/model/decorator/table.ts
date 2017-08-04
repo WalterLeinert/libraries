@@ -25,6 +25,9 @@ export function Table(options?: TableOptions) {
     if (options.isView === undefined) {
       options.isView = false;
     }
+    if (options.isAbstract === undefined) {
+      options.isAbstract = false;
+    }
 
     MetadataStorage.instance.addTableMetadata(new TableMetadataInternal(MetadataStorage.instance, target, options));
 

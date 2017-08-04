@@ -16,7 +16,7 @@ import { IStatusEntity } from './status-entity.interface';
  * @implements {IStatusEntity}
  * @template TId
  */
-@Table()
+@Table({ isAbstract: true })
 export abstract class FlxStatusEntity<TId> extends FlxEntity<TId> implements IStatusEntity {
 
   @Column({ name: EntityStatusHelper.PROPERTY_NAME_STATUS, hidden: true })

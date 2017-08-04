@@ -15,7 +15,7 @@ import { VersionedEntity } from './versioned-entity';
  * @implements {IClientEntity}
  * @template TId
  */
-@Table()
+@Table({ isAbstract: true })
 export abstract class FlxEntity<TId> extends VersionedEntity<TId> implements IClientEntity {
 
   @ClientColumn({ name: '__client' })

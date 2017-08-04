@@ -6,11 +6,11 @@ import { GroupMetadata } from './group-metadata';
 
 // tslint:disable-next-line:max-classes-per-file
 export class ColumnGroupMetadata extends GroupMetadata {
-
+  public static readonly DEFAULT_NAME = '-default-';
 
   public constructor(private _name: string, columnNames: string[], private _options: IColumnGroupOptions,
-    groupColumns: ColumnMetadata[], private _hidden: boolean = false, private _derived: boolean = false) {
-    super(columnNames, groupColumns);
+    groupColumns: ColumnMetadata[], private _hidden: boolean = false, private _derived: boolean, isAbstract: boolean) {
+    super(columnNames, groupColumns, isAbstract);
 
     Assert.notNullOrEmpty(_name);
   }

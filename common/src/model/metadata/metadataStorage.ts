@@ -182,8 +182,8 @@ export class MetadataStorage {
           //
           // alle Status-Columns prüfen (wie deleted, archived)
           //
-          baseTableMetadata.statusColumnKeys.forEach((statusColKey) => {
-            const baseStatusCol = baseTableMetadata.getStatusColumn(statusColKey);
+          baseTableMetadata.statusColumnKeys.forEach((baseStatusColKey) => {
+            const baseStatusCol = baseTableMetadata.getStatusColumn(baseStatusColKey);
 
             const statusCol = metadata.getColumnMetadataByDbCol(baseStatusCol.options.name);
 
@@ -198,8 +198,8 @@ export class MetadataStorage {
           //
           // alle speziellen Columns prüfen (primaryKey, version, client)
           //
-          baseTableMetadata.specialColumnKeys.forEach((specialColKey) => {
-            const baseSpecialCol = baseTableMetadata.getSpecialColumn(specialColKey.item1, specialColKey.item2);
+          baseTableMetadata.specialColumnKeys.forEach((baseSpecialColKey) => {
+            const baseSpecialCol = baseTableMetadata.getSpecialColumn(baseSpecialColKey.item1, baseSpecialColKey.item2);
 
             const specialCol = metadata.getColumnMetadataByDbCol(baseSpecialCol.options.name);
 
@@ -248,13 +248,13 @@ export class MetadataStorage {
           //
           // alle speziellen vererbten Columns setzen (primaryKey, version, client)
           //
-          baseTableMetadata.specialColumnKeys.forEach((specialColKey) => {
-            const baseSpecialCol = baseTableMetadata.getSpecialColumn(specialColKey.item1, specialColKey.item2);
+          baseTableMetadata.specialColumnKeys.forEach((baseSpecialColKey) => {
+            const baseSpecialCol = baseTableMetadata.getSpecialColumn(baseSpecialColKey.item1, baseSpecialColKey.item2);
 
             // falls spezial Column noch nicht gesetzt, diese setzen
             // (Hinweis: die primaryKey-Column wird beim Vererben gesetzt)
-            if (!metadata.getSpecialColumn(specialColKey.item1, specialColKey.item2)) {
-              metadata.setSpecialColumn(baseSpecialCol.propertyName, specialColKey.item1);
+            if (!metadata.getSpecialColumn(baseSpecialColKey.item1, baseSpecialColKey.item2)) {
+              metadata.setSpecialColumn(baseSpecialCol.propertyName, baseSpecialColKey.item1);
             }
           });
 
@@ -262,36 +262,72 @@ export class MetadataStorage {
           //
           // alle vererbten Status-Columns setzen (wie deleted, archived)
           //
-          baseTableMetadata.statusColumnKeys.forEach((statusColKey) => {
-            const baseStatusCol = baseTableMetadata.getStatusColumn(statusColKey);
+          baseTableMetadata.statusColumnKeys.forEach((baseStatusColKey) => {
+            const baseStatusCol = baseTableMetadata.getStatusColumn(baseStatusColKey);
 
             // falls spezial Column noch nicht gesetzt, diese setzen
             // (Hinweis: die primaryKey-Column wird beim Vererben gesetzt)
-            if (!metadata.getStatusColumn(statusColKey)) {
-              metadata.setStatusColumn(baseStatusCol.propertyName, statusColKey);
+            if (!metadata.getStatusColumn(baseStatusColKey)) {
+              metadata.setStatusColumn(baseStatusCol.propertyName, baseStatusColKey);
             }
           });
+
+
+
+          // -----------------------------------------------------------------------
+          // Column Groups
+          //
+          // zunächst alle columns in default column group übernehmen; diese werden
+          // anschliessend ggf. durch @ColumnGroup decorators wieder auf spezielle
+          // named column groups verteilt.
+          // -----------------------------------------------------------------------
+
+          // zu diesem Zeitpunkt dürfen noch keine column groups vorhanden sein
+          Assert.that(metadata.columnGroupMetadata.length === 0);
+
+          metadata.createDefaultColumnGroup();
+          const defaultColumnGroup = metadata.columnGroupMetadata[0];
+
 
           //
           // column group Metadaten vererben und als geerbt markieren
           //
           const columnGroupMetadataInherited = [];
-          baseTableMetadata.columnGroupMetadataInternal.forEach((cgm) => {
-            if (!cgm.hidden) {
-              if (!metadata.columnGroupMetadataInternal.find((it) => it.name === cgm.name)) {
-                const columnNames = new Set<string>(cgm.columnNames);
-                const columnMetadata = metadata.columnMetadata.filter((it) => columnNames.has(it.propertyName));
-                const cgmDerived = new ColumnGroupMetadata(
-                  cgm.name, [...cgm.columnNames], { ...cgm.options }, columnMetadata, cgm.hidden, true);
+          baseTableMetadata.columnGroupMetadata.forEach((baseCgm) => {
 
-                columnGroupMetadataInherited.push(cgmDerived);
+            //
+            // nach einer gleichnamigen column group suchen und die columns vererben
+            //
+            if (!metadata.columnGroupMetadata.find((it) => it.name === baseCgm.name)) {
+              const baseColumnNames = new Set<string>(baseCgm.columnNames);
+              const columnMetadata = metadata.columnMetadata.filter((it) => baseColumnNames.has(it.propertyName));
+              const cgmDerived = new ColumnGroupMetadata(
+                baseCgm.name, [...baseCgm.columnNames], { ...baseCgm.options }, columnMetadata,
+                baseCgm.hidden, true, baseTableMetadata.isAbstract);
+
+              columnGroupMetadataInherited.push(cgmDerived);
+
+              //
+              // alle geerbten column group columns aus der default column group entfernen ->
+              // diese sind ja jetzt zugeordnet
+              //
+              for (let i = defaultColumnGroup.columnNames.length - 1; i >= 0; i--) {
+                if (baseColumnNames.has(defaultColumnGroup.columnNames[i])) {
+                  defaultColumnGroup.columnNames.splice(i, 1);
+                  defaultColumnGroup.groupColumns.splice(i, 1);
+                }
               }
             }
           });
 
           if (columnGroupMetadataInherited.length > 0) {
-            metadata.columnGroupMetadataInternal.unshift(...columnGroupMetadataInherited);
+            metadata.columnGroupMetadata.unshift(...columnGroupMetadataInherited);
           }
+        } else {
+          // zu diesem Zeitpunkt dürfen noch keine column groups vorhanden sein
+          Assert.that(metadata.columnGroupMetadata.length === 0);
+
+          metadata.createDefaultColumnGroup();
         }
 
 
@@ -417,21 +453,26 @@ export class MetadataStorage {
     // prüfen, ob group name bereits definert oder property namen bereits unter anderen
     // group names definiert wurden (Hinweis: nicht für geerbte column groups!)
     //
-    const groupColumnNameMap: Dictionary<string, Set<string>> = new Dictionary<string, Set<string>>();
-    tableMetadata.columnGroupMetadataInternal
-      .filter((it) => !it.derived)
-      .map((item) => groupColumnNameMap.set(item.name, new Set(item.columnNames)));
+    const groupColumnNameMap: Dictionary<ColumnGroupMetadata, Set<string>> =
+      new Dictionary<ColumnGroupMetadata, Set<string>>();
 
-    Assert.that(!groupColumnNameMap.containsKey(groupName),
+    tableMetadata.columnGroupMetadata
+      .filter((it) => !it.derived)
+      .map((item) => groupColumnNameMap.set(item, new Set(item.columnNames)));
+
+    const groupColumnNameSet = new Set(groupColumnNameMap.keys.map((item) => item.name));
+
+    Assert.that(!groupColumnNameSet.has(groupName),
       `groupName ${groupName} already exists in model ${tableMetadata.className}`);
 
     columnNames.forEach((item) =>
-      groupColumnNameMap.keys.forEach((key) => Assert.that(!groupColumnNameMap.get(key).has(item),
+      groupColumnNameMap.keys.forEach((key) => Assert.that(!groupColumnNameMap.get(key).has(item) || key.hidden,
         `group ${groupName}: column name ${item} already defined in group ${key}.`))
     );
 
 
-    const groupMetadata = new ColumnGroupMetadata(groupName, columnNames, options, groupColumns);
+    const groupMetadata = new ColumnGroupMetadata(groupName, columnNames, options, groupColumns,
+      false, false, tableMetadata.isAbstract);
     tableMetadata.addGroupMetadata(groupMetadata);
   }
 
