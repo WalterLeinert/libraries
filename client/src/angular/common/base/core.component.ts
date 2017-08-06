@@ -189,6 +189,39 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   }
 
 
+  /**
+   * Liefert den Typ eines html-input Fields für die angegebene Info @see{info}
+   *
+   * @param {IControlDisplayInfo} info
+   * @returns {string}
+   */
+  public getInputType(info: IControlDisplayInfo): string {
+    if (info.isSecret) {
+      return 'password';
+    } else {
+      return 'text';
+    }
+  }
+
+
+  /**
+   * Liefert die Validierungsfehler für das angegebene Control @param{controlName} und die
+   * FormGroup @param{groupName}
+   *
+   * @protected
+   * @param {string} controlName
+   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
+   * @returns {string}
+   *
+   * @memberOf CoreComponent
+   */
+  public getFormErrors(controlName: string, groupName: string = FormGroupInfo.DEFAULT_NAME): string {
+    Assert.notNullOrEmpty(controlName);
+    Assert.notNullOrEmpty(groupName);
+    const formInfo = this.formInfos.get(groupName);
+    return formInfo.getFormErrors(controlName);
+  }
+
 
   /**
    * löscht alle Messages
@@ -650,24 +683,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    */
   protected get form(): FormGroup {
     return this.getForm();
-  }
-
-  /**
-   * Liefert die Validierungsfehler für das angegebene Control @param{controlName} und die
-   * FormGroup @param{groupName}
-   *
-   * @protected
-   * @param {string} controlName
-   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
-   * @returns {string}
-   *
-   * @memberOf CoreComponent
-   */
-  protected getFormErrors(controlName: string, groupName: string = FormGroupInfo.DEFAULT_NAME): string {
-    Assert.notNullOrEmpty(controlName);
-    Assert.notNullOrEmpty(groupName);
-    const formInfo = this.formInfos.get(groupName);
-    return formInfo.getFormErrors(controlName);
   }
 
 

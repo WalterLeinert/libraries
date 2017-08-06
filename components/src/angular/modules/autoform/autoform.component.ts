@@ -1,6 +1,6 @@
 // tslint:disable:max-line-length
 
-import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, Input, Output, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -22,6 +22,8 @@ import {
 } from '@fluxgate/common';
 import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Utility } from '@fluxgate/core';
 
+import { AutoformControlsComponent } from './autoform-controls/autoform-controls.component';
+import { IAutoform } from './autoform.interface';
 
 @Component({
   selector: 'flx-autoform',
@@ -32,153 +34,19 @@ import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Uti
     <div *ngIf="configInternal && configInternal.groupInfos">
       <ul *ngFor="let groupInfo of configInternal.groupInfos">
 
-<!--
-        <div *ngIf="!groupInfo.hidden">
-          <!__
-            falls die Groupinfo anzuzeigen ist, betten wir diese in ein p-fieldset ein
-          __>
-          <p-fieldset *ngIf="!groupInfo.hidden; then autoformContent; else empty" [legend]="groupInfo.name" [toggleable]="true">
-          </p-fieldset>
+        <div *ngIf="groupInfo.hidden">
+          <ul *ngFor="let info of groupInfo.columnInfos">
+                <flx-autoform-controls [formGroup]="getForm()" [info]="info" [dataItem]="dataItem" [action]="action">
+                </flx-autoform-controls>
+          </ul>
         </div>
--->
 
-        <p-fieldset [legend]="groupInfo.name" [toggleable]="true">
-
-          <!-- <ng-template #autoformContent> -->
+        <p-fieldset *ngIf="!groupInfo.hidden" [legend]="groupInfo.name" [toggleable]="true">
             <ul *ngFor="let info of groupInfo.columnInfos">
-
-              <!--
-              normale Text-/Eingabefelder
-              -->
-              <div *ngIf="info.controlType === controlType.Input">
-
-
-                <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-                  <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
-
-                  <div class="col-sm-10">
-                    <input flxAutofocus [type]="getInputType(info)" class="form-control"
-                            [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
-                            [required]="info.required" [readonly]="isReadonly(info)"
-                            [style.color]="getColor(dataItem, info)"
-                    >
-                  </div>
-
-                  <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-                    {{ getFormErrors(info.valueField) }}
-                  </div>
-
-                </div>
-
-                  <!-- TODO
-                <flx-autoform-input [formControlName]="info.valueField" class="form-control" [info]="info" [dataItem]="dataItem" >
-                </flx-autoform-input>
-                -->
-              </div>
-
-              <!--
-              Checkbox-Controls für boolean Werte
-              -->
-              <div *ngIf="info.controlType === controlType.Checkbox">
-                <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-                  <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
-
-                  <div class="col-sm-10">
-                    <p-checkbox binary="true" class="form-control" [formControlName]="info.valueField"
-                                [(ngModel)]="dataItem[info.valueField]"
-                                [required]="info.required"
-                                [style.color]="getColor(dataItem, info)">
-                    </p-checkbox>
-                  </div>
-
-                  <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-                    {{ getFormErrors(info.valueField) }}
-                  </div>
-
-                </div>
-              </div>
-
-              <!--
-              Datumsfelder
-              -->
-              <div *ngIf="info.controlType === controlType.Date">
-                <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-                  <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
-
-                  <div class="col-sm-10">
-                    <p-calendar inputStyleClass="form-control" [formControlName]="info.valueField"
-                                [(ngModel)]="dataItem[info.valueField]"
-                                [required]="info.required" [readonlyInput]="isReadonly(info)"
-                                dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
-                    </p-calendar>
-                  </div>
-
-                  <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-                    {{ getFormErrors(info.valueField) }}
-                  </div>
-
-                </div>
-              </div>
-
-              <!--
-              Zeitfelder:
-              -->
-              <div *ngIf="info.controlType === controlType.Time">
-                <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-                  <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
-
-                  <div class="col-sm-10">
-                    <flx-time-selector inputStyleClass="form-control"
-                                        [formControlName]="info.valueField"
-                                        [(ngModel)]="dataItem[info.valueField]"
-                                        [required]="info.required" [readonly]="isReadonly(info)"
-                                        [style.color]="getColor(dataItem, info)">
-                    </flx-time-selector>
-                  </div>
-
-                  <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-                    {{ getFormErrors(info.valueField) }}
-                  </div>
-
-                </div>
-              </div>
-
-
-              <!--
-              Dropdown/Wertelisten:
-              -->
-              <div *ngIf="info.controlType === controlType.DropdownSelector">
-                <div class="form-group" *ngIf="! isHidden(info, dataItem)">
-                  <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
-
-                  <div class="col-sm-10">
-                    <flx-dropdown-selector inputStyleClass="form-control"
-                                            [formControlName]="info.valueField"
-                                            [(ngModel)]="dataItem[info.valueField]"
-                                            [required]="info.required" [readonly]="isReadonly(info)"
-                                            [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
-                                            [textField]="info.enumInfo.textField"
-                                            [valueField]="info.enumInfo.valueField"
-                                            [style]="{'width':'100%'}"
-                                            [style.color]="getColor(dataItem, info)"
-                                            [debug]="false">
-                    </flx-dropdown-selector>
-                  </div>
-
-                  <div *ngIf="getFormErrors(info.valueField)" class="alert alert-danger">
-                    {{ getFormErrors(info.valueField) }}
-                  </div>
-
-                </div>
-              </div>
+              <flx-autoform-controls [formGroup]="getForm()" [info]="info" [dataItem]="dataItem" [action]="action">
+              </flx-autoform-controls>
             </ul>
-
-          <!-- </ng-template> -->
         </p-fieldset>
-
-
-        <ng-template #empty>
-        </ng-template>
 
       </ul>
     </div>
@@ -211,10 +79,12 @@ import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Uti
 }
 `]
 })
-export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServiceRequests<any, any>> {
+export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServiceRequests<any, any>> implements AfterViewInit {
   protected static readonly logger = getLogger(AutoformComponent);
 
   public static DETAILS = 'Details';
+
+  @ViewChildren(AutoformControlsComponent) public controls: QueryList<AutoformControlsComponent>;
 
 
   /**
@@ -366,6 +236,12 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     });
   }
 
+  public ngAfterViewInit() {
+    this.controls.forEach((item) => {
+      item.setParent(this);
+    });
+  }
+
   public createNew<T>(): void {
     this.clonedValue = Clone.clone(this.value);
     this.value = this.tableMetadata.createEntity<T>();
@@ -477,20 +353,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     return undefined;
   }
 
-
-  /**
-   * Liefert den Typ eines html-input Fields für die angegebene Info @see{info}
-   *
-   * @param {IControlDisplayInfo} info
-   * @returns {string}
-   */
-  public getInputType(info: IControlDisplayInfo): string {
-    if (info.isSecret) {
-      return 'password';
-    } else {
-      return 'text';
-    }
-  }
 
 
   // -------------------------------------------------------------------------------------
