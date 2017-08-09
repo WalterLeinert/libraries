@@ -53,14 +53,14 @@ import { IAutoform } from './autoform.interface';
 
     <p-footer *ngIf="showButtons">
       <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-        <button *ngIf="showNewButton" type="button" class="btn btn-primary" (click)='createNew()'>New
+        <button *ngIf="showNewButton" type="button" class="btn btn-primary" (click)='onCreateNew()'>New
         </button>
-        <button type="button" class="btn btn-primary" (click)='cancel()'>Cancel</button>
-        <button type="button" class="btn btn-primary" [disabled]="isSaveDisabled()" (click)='submit()'>
+        <button type="button" class="btn btn-primary" (click)='onCancel()'>Cancel</button>
+        <button type="button" class="btn btn-primary" [disabled]="isSaveDisabled()" (click)='onSubmit()'>
             Save
         </button>
         <button type="button" class="btn btn-primary" [disabled]="isDeleteDisabled()"
-                (click)='confirmDelete()'>Delete
+                (click)='onDelete()'>Delete
         </button>
       </div>
     </p-footer>
@@ -125,8 +125,8 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   @Input() public showNewButton: boolean = false;
   @Input() public skipNgOnInit: boolean = false;
 
-  @Output() public cancelChange = new EventEmitter<any>();
-  @Output() public closeChange = new EventEmitter<any>();
+  @Output() public cancel = new EventEmitter<any>();
+  @Output() public close = new EventEmitter<any>();
 
 
   // >> Konfiguration
@@ -242,7 +242,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     });
   }
 
-  public createNew<T>(): void {
+  public onCreateNew<T>(): void {
     this.clonedValue = Clone.clone(this.value);
     this.value = this.tableMetadata.createEntity<T>();
     this.initForm(this.value);
@@ -253,7 +253,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   /**
    * Bricht den Dialog ab und navigiert zum Topic-Pfad des Services
    */
-  public cancel(): void {
+  public onCancel(): void {
     if (this.creatingNew) {
       this.value = this.clonedValue;
       this.clonedValue = undefined;
@@ -261,14 +261,14 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
     }
     this.initForm(this.value);
 
-    this.onCancelChange();
+    this.doCancel();
   }
 
 
   /**
    * Speichert Änderungen an der Entity
    */
-  public submit() {
+  public onSubmit() {
     if (this.action === FormActions.UPDATE && !this.creatingNew) {
       this.registerSubscription(this.serviceRequests.update(this.value).subscribe(
         (value: any) => {
@@ -285,7 +285,7 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   }
 
 
-  public confirmDelete() {
+  public onDelete() {
     using(new XLog(AutoformComponent.logger, levels.INFO, 'confirmDelete'), (log) => {
 
       if (confirm('Do you want to delete this record?')) {
@@ -401,12 +401,12 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
       const state = super.getStoreState(command.storeId);
       if (state.error) {
-        this.onCloseChange(true);
+        this.doClose(true);
       } else {
         if (command instanceof ItemCreatedCommand || command instanceof ItemDeletedCommand || command instanceof ItemUpdatedCommand) {
           this.creatingNew = false;
           this.resetFormGroup(this.value);
-          this.onCloseChange(false);
+          this.doClose(false);
         }
       }
     });
@@ -415,24 +415,20 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
   /**
    *
-   *
-   * @protected
    * @param {boolean} formResetRequired
    * @memberof AutoformComponent
    */
-  protected onCloseChange(formResetRequired: boolean) {
-    this.closeChange.emit(formResetRequired);
+  private doClose(formResetRequired: boolean) {
+    this.close.emit(formResetRequired);
   }
 
 
   /**
    *
-   *
-   * @protected
    * @memberof AutoformComponent
    */
-  protected onCancelChange() {
-    this.cancelChange.emit();
+  private doCancel() {
+    this.cancel.emit();
   }
 
 
