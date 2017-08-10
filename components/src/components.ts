@@ -33,7 +33,7 @@ export { MessagesComponent, MessagesModule } from './angular/modules/messages';
 export { MonthSelectorComponent, IMonth, MonthSelectorModule } from './angular/modules/month-selector';
 export { RoleSelectorComponent, RoleSelectorModule } from './angular/modules/role-selector';
 export { SelectionListComponent, SelectionListModule } from './angular/modules/selection-list';
-export { SidebarComponent, SidebarModule } from './angular/modules/sidebar';
+export { FlxSidebarComponent, FlxSidebarModule } from './angular/modules/sidebar';
 export { TabComponent, TabModule } from './angular/modules/tab';
 export { TimeSelectorComponent, TimeSelectorModule } from './angular/modules/time-selector';
 export { UserSelectorComponent, UserSelectorModule } from './angular/modules/user-selector';
