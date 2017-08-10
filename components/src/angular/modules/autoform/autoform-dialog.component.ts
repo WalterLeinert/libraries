@@ -1,6 +1,6 @@
 // tslint:disable:max-line-length
 
-import { Component, Injector, Input } from '@angular/core';
+import { AfterViewInit, Component, Injector, Input, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -17,6 +17,8 @@ import {
 } from '@fluxgate/client';
 import { ICrudServiceRequests } from '@fluxgate/common';
 import { Assert, Core, NotSupportedException, Utility } from '@fluxgate/core';
+
+import { AutoformComponent } from './autoform.component';
 
 
 @Component({
@@ -43,12 +45,14 @@ import { Assert, Core, NotSupportedException, Utility } from '@fluxgate/core';
 }
 `]
 })
-export class AutoformDialogComponent extends ServiceRequestsComponent<any, ICrudServiceRequests<any, any>> {
+export class AutoformDialogComponent extends ServiceRequestsComponent<any, ICrudServiceRequests<any, any>> implements AfterViewInit {
   protected static readonly logger = getLogger(AutoformDialogComponent);
 
   public static DETAILS = 'Details';
 
   public pageTitle: string = AutoformDialogComponent.DETAILS;
+
+  @ViewChild(AutoformComponent) public autoform: AutoformComponent;
 
 
   // >> Value Property
@@ -100,7 +104,7 @@ export class AutoformDialogComponent extends ServiceRequestsComponent<any, ICrud
 
   // tslint:disable-next-line:use-life-cycle-interface
   public ngOnInit() {
-    using(new XLog(AutoformDialogComponent.logger, levels.INFO, 'ctor'), (log) => {
+    using(new XLog(AutoformDialogComponent.logger, levels.INFO, 'ngOnInit'), (log) => {
       super.ngOnInit();
 
       this.route.data.subscribe((data: IDataFormAction) => {
@@ -128,6 +132,12 @@ export class AutoformDialogComponent extends ServiceRequestsComponent<any, ICrud
           this.value = value;
         }
       });
+    });
+  }
+
+  public ngAfterViewInit() {
+    using(new XLog(AutoformDialogComponent.logger, levels.INFO, 'ngAfterViewInit'), (log) => {
+      // this.autoform.
     });
   }
 
