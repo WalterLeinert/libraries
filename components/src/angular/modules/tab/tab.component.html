@@ -1,0 +1,7 @@
+<div style="margin: 0 0 0 20px">
+  <ul class="nav nav-tabs" role="tablist">
+    <li *ngFor="let tab of tabs" data-toggle="tab" role="tab" class="nav-panel {{tab.status}}">
+      <a class="nav-link" (click)="GoTo(tab.route)">{{ tab.header }}</a>
+    </li>
+  </ul>
+</div>

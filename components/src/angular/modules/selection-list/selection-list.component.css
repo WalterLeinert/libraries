@@ -1,0 +1,25 @@
+.listitem {
+  background-color: #fafafa;
+  width:100%;
+  padding: 5px 5px 5px 10px; 
+  border-bottom: 1px solid #efefef;
+}
+
+.listitem:hover {
+  background-color: #bddff3;
+}
+
+.selected {
+  background-color: #0077c2;
+  color: white;
+}
+
+.mainitem {
+ font-size: 110%;
+ font-weight: bold;
+}
+
+.normalitem {
+  font-size: 90%;
+  font-weight: normal;
+}

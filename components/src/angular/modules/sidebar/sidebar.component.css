@@ -1,0 +1,30 @@
+#Containerfixed {
+  width: 40px;
+  float: right;
+}
+
+#Containerauto {
+  overflow-y:scroll; 
+  overflow-x:hidden;
+  height:95%;
+  height:calc(100%-50px);
+  height: -moz-calc(100%-50px);
+  height: -webkit-calc(100%-50px);
+}
+
+.noscroll {
+  overflow:hidden;
+}
+
+.borderright {
+    border: 0px solid #cccccc;
+    border-right-width: 1px;
+}
+
+.shadow {
+    box-shadow: 0 0 1.5em rgba(85,85,85,.5);
+}
+
+.ng-sidebar--docked {
+  box-shadow: 0 0 1.5em rgba(85,85,85,.5);
+}

@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/components",
-  "version": "2.4.1-beta.1",
+  "version": "2.4.1-beta.2",
   "description": "Fluxgate Angular Component-Library ",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -64,6 +64,7 @@
     "@fluxgate/common": "2.4.1-beta.0",
     "@fluxgate/core": "2.4.1-beta.0",
     "@fluxgate/platform": "2.4.1-beta.0",
+    "angular-resizable-element": "^1.2.1",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",
