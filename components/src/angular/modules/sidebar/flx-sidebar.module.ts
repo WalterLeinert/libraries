@@ -5,12 +5,13 @@ import { FormsModule } from '@angular/forms';
 // Sidebar
 import { SidebarModule } from 'ng-sidebar';
 
-import { FlxSidebarComponent } from './sidebar.component';
+import { FlxSidebarComponent } from './flx-sidebar.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    SidebarModule
   ],
   declarations: [
     FlxSidebarComponent
