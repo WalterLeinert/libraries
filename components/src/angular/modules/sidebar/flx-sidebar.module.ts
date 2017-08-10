@@ -2,7 +2,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { SidebarComponent } from './sidebar.component';
+// Sidebar
+import { SidebarModule } from 'ng-sidebar';
+
+import { FlxSidebarComponent } from './sidebar.component';
 
 @NgModule({
   imports: [
@@ -10,12 +13,12 @@ import { SidebarComponent } from './sidebar.component';
     FormsModule
   ],
   declarations: [
-    SidebarComponent
+    FlxSidebarComponent
   ],
   exports: [
-    SidebarComponent
+    FlxSidebarComponent
   ],
   providers: [
   ]
 })
-export class SidebarModule { }
+export class FlxSidebarModule { }

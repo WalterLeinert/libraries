@@ -6,7 +6,7 @@ import { ResizeEvent } from 'angular-resizable-element';
 @Component({
   selector: 'flx-sidebar',
   template: `
-  <ng - sidebar - container class="noscroll" >
+  <ng-sidebar-container class="noscroll" >
   <!--A sidebar -- >
   <ng-sidebar class="ng-sidebar noscroll" [(opened)] = "opened" style="height:100%;" [mode]="mode"
   [closeOnClickOutside] = "closeOnClickOutside"
@@ -76,19 +76,19 @@ import { ResizeEvent } from 'angular-resizable-element';
 
   `]
 })
-export class SidebarComponent implements OnInit {
+export class FlxSidebarComponent implements OnInit {
   public static readonly MIN_MENU_WIDTH = 250;
   public static readonly DEFAULT_DOCKED_SIZE = '35px';
   public static readonly PINNED_ICON = 'fa fa fa-thumb-tack fa-lg';
-  public static readonly UNPINNED_ICON = SidebarComponent.PINNED_ICON + 'fa-rotate-90';
+  public static readonly UNPINNED_ICON = FlxSidebarComponent.PINNED_ICON + 'fa-rotate-90';
 
   // sidebar
   public opened: boolean = false;
-  public pinbutton: string = SidebarComponent.UNPINNED_ICON;
+  public pinbutton: string = FlxSidebarComponent.UNPINNED_ICON;
   public mode: string = 'over';
   public closeOnClickOutside: boolean = true;
   public menueSize: number = 300;
-  public dockedSize: string = SidebarComponent.DEFAULT_DOCKED_SIZE;
+  public dockedSize: string = FlxSidebarComponent.DEFAULT_DOCKED_SIZE;
   private _pinned: boolean = false;
 
 
@@ -110,7 +110,7 @@ export class SidebarComponent implements OnInit {
 
   public onResizeEnd(event: ResizeEvent): void {
     this.menueSize = event.rectangle.width;
-    if (this.menueSize < SidebarComponent.MIN_MENU_WIDTH) { this.menueSize = SidebarComponent.MIN_MENU_WIDTH; }
+    if (this.menueSize < FlxSidebarComponent.MIN_MENU_WIDTH) { this.menueSize = FlxSidebarComponent.MIN_MENU_WIDTH; }
 
     if (this._pinned) {
       this.dockedSize = this.menueSize + 'px';
@@ -124,11 +124,11 @@ export class SidebarComponent implements OnInit {
 
     if (this._pinned) {
       this.dockedSize = this.menueSize + 'px';
-      this.pinbutton = SidebarComponent.PINNED_ICON;
+      this.pinbutton = FlxSidebarComponent.PINNED_ICON;
       this.opened = false;
     } else {
-      this.dockedSize = SidebarComponent.DEFAULT_DOCKED_SIZE;
-      this.pinbutton = SidebarComponent.UNPINNED_ICON;
+      this.dockedSize = FlxSidebarComponent.DEFAULT_DOCKED_SIZE;
+      this.pinbutton = FlxSidebarComponent.UNPINNED_ICON;
       this.opened = true;
     }
   }

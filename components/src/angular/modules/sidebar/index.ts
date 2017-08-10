@@ -1,2 +1,2 @@
-export * from './sidebar.component';
-export * from './sidebar.module';
+export * from './flx-sidebar.component';
+export * from './flx-sidebar.module';
