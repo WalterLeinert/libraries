@@ -1,25 +1,30 @@
-// import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { TabComponent } from './tab.component';
+import { TabComponent as FlxTabComponent } from './tab.component';
+import { TabModule } from './tab.module';
 
-// describe('TabComponent', () => {
-//   let component: TabComponent;
-//   let fixture: ComponentFixture<TabComponent>;
+describe('TabComponent', () => {
+  let component: FlxTabComponent;
+  let fixture: ComponentFixture<FlxTabComponent>;
 
-//   beforeEach(async(() => {
-//     TestBed.configureTestingModule({
-//       declarations: [ TabComponent ]
-//     })
-//     .compileComponents();
-//   }));
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        TabModule
+      ],
+      declarations: [
+      ]
+    })
+      .compileComponents();
+  }));
 
-//   beforeEach(() => {
-//     fixture = TestBed.createComponent(TabComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(FlxTabComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-//   it('should be created', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+  it('should be created', () => {
+    expect(component).toBeTruthy();
+  });
+});
