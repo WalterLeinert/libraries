@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
+// Resizing
+import { ResizeEvent } from 'angular-resizable-element';
+
 @Component({
   selector: 'flx-sidebar',
   template: `
