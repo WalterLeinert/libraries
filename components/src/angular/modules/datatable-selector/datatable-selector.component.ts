@@ -62,15 +62,15 @@ export type selectionMode = 'single' | 'multiple' | '';
             [sortable]="sortable" [editable]="isEditable(info)">
 
             <div [style.text-align]="info.textAlignment">
-              <template let-col let-data="rowData" pTemplate="body">
+              <ng-template let-col let-data="rowData" pTemplate="body">
                   <span [style.color]="getColor(data, info)">{{ formatValue(data[col.field], info) }}</span>
-              </template>
+              </ng-template>
             </div>
 
             <!--
-            <template let-col let-data="rowData" pTemplate="editor">
+            <ng-template let-col let-data="rowData" pTemplate="editor">
               {{ data[col.field] }}
-            </template>
+            </ng-template>
             -->
 
           </p-column>
@@ -84,17 +84,17 @@ export type selectionMode = 'single' | 'multiple' | '';
             [sortable]="sortable" [editable]="isEditable(info)" [style]="{'overflow':'visible' }">
 
             <div [style.text-align]="info.textAlignment">
-              <template let-col let-data="rowData" pTemplate="body">
+              <ng-template let-col let-data="rowData" pTemplate="body">
                 <span [style.color]="getColor(data, info)">{{ formatValue(data[col.field], info) }}</span>
-              </template>
+              </ng-template>
             </div>
 
-            <template let-col let-data="rowData" pTemplate="editor">
+            <ng-template let-col let-data="rowData" pTemplate="editor">
                 <p-calendar [(ngModel)]="data[col.field]"
                   dateFormat="yy-mm-dd" [minDate]="getMinDate(data, info)" [maxDate]="getMaxDate(data, info)"
                   [style.color]="getColor(data, info)">
                 </p-calendar>
-            </template>
+            </ng-template>
 
           </p-column>
         </div>
@@ -108,15 +108,15 @@ export type selectionMode = 'single' | 'multiple' | '';
             [sortable]="sortable" [editable]="isEditable(info)" [style]="{'overflow':'visible' }">
 
             <div [style.text-align]="info.textAlignment">
-              <template let-col let-data="rowData" pTemplate="body">
+              <ng-template let-col let-data="rowData" pTemplate="body">
                 <span [style.color]="getColor(data, info)">{{ formatValue(data[col.field], info) }}</span>
-              </template>
+              </ng-template>
             </div>
 
-            <template let-col let-data="rowData" pTemplate="editor">
+            <ng-template let-col let-data="rowData" pTemplate="editor">
                 <flx-time-selector [(ngModel)]="data[col.field]" [style.color]="getColor(data, info)">
                 </flx-time-selector>
-            </template>
+            </ng-template>
 
           </p-column>
         </div>
@@ -130,24 +130,24 @@ export type selectionMode = 'single' | 'multiple' | '';
             [sortable]="sortable" [editable]="isEditable(info)" [style]=" {'overflow':'visible' }">
 
             <div [style.text-align]="info.textAlignment">
-              <template let-col let-data="rowData" pTemplate="body">
+              <ng-template let-col let-data="rowData" pTemplate="body">
                 <flx-enum-value [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
                   [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                   [itemSelector]="data[col.field]"
                   [style]="{'width':'100%'}" [style.color]="getColor(data, info)"
                   name="flxEnumValue">
                 </flx-enum-value>
-              </template>
+              </ng-template>
             </div>
 
-            <template let-col let-data="rowData" pTemplate="editor">
+            <ng-template let-col let-data="rowData" pTemplate="editor">
               <flx-dropdown-selector [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
                 [textField]="info.enumInfo.textField" [valueField]="info.enumInfo.valueField"
                 [(ngModel)]="data[col.field]"
                 [style]="{'width':'100%'}" [style.color]="getColor(data, info)"
                 name="flxDropdownSelector" [debug]="false">
               </flx-dropdown-selector>
-            </template>
+            </ng-template>
 
           </p-column>
         </div>
@@ -159,12 +159,12 @@ export type selectionMode = 'single' | 'multiple' | '';
         -->
       <div *ngIf="showEditButton">
         <p-column styleClass="col-button" [style]="{width: '100px', 'text-align': 'center'}" >
-          <template pTemplate="header">
+          <ng-template pTemplate="header">
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-          </template>
+          </ng-template>
 
 
-          <template let-data="rowData" pTemplate="body">
+          <ng-template let-data="rowData" pTemplate="body">
             <div *ngIf="isEditing(data)">
               <div>
                 <button pButton type="text" class="ui-button-secondary"
@@ -183,7 +183,7 @@ export type selectionMode = 'single' | 'multiple' | '';
                 </button>
               </div>
             </div>
-          </template>
+          </ng-template>
 
         </p-column>
       </div>
