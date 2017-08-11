@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-import { Fields } from './fields';
+import { Field } from './field';
 
 @Component({
   selector: 'flx-selectionlist',
@@ -52,7 +52,7 @@ import { Fields } from './fields';
 })
 export class SelectionListComponent implements OnInit {
   @Input() public datarecords: any[];
-  @Input() public fields: Fields[];
+  @Input() public fields: Field[];
   @Output() public onRecordSelect: EventEmitter<any> = new EventEmitter();
 
   public selectedRecord: any;
