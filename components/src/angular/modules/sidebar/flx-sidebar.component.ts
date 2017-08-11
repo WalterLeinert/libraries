@@ -36,7 +36,7 @@ import { ResizeEvent } from 'angular-resizable-element';
   </div>
   </ng-sidebar>
 
-  < !--Page content -- >
+  <!--Page content -- >
   <div ng-sidebar-content >
     <ng-content select="[flx-sidebar-detail]"> </ng-content>
   </div>
