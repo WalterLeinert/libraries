@@ -6,42 +6,39 @@ import { ResizeEvent } from 'angular-resizable-element';
 @Component({
   selector: 'flx-sidebar',
   template: `
-  <ng-sidebar-container class="noscroll" >
-  <!--A sidebar -- >
-  <ng-sidebar class="ng-sidebar noscroll" [(opened)] = "opened" style="height:100%;" [mode]="mode"
-  [closeOnClickOutside] = "closeOnClickOutside"
-  [closeOnClickBackdrop] = "false" dock=true
-  [dockedSize] = "dockedSize"
-  [sidebarClass] = "demo-sidebar" >
-  <div mwlResizable class="noscroll borderright"
-  [ngStyle] = "{'width': menueSize + 'px', 'height':'100%', 'background-color': '#eeeeee'}"
-  [resizeEdges] = "{right: true}"
-  [resizeCursorPrecision] = "10"
-  [enableGhostResize] = "true"(resizeStart) = "onResizeStart($event)" (resizeEnd)="onResizeEnd($event)">
-  <div style="width:100%; height:35px; padding:0">
-  <a class="btn btn-sm pull-right" (click) = "toggleSidebar()" data-toggle="tooltip"
-  data-placement="right" title="toggle sidebar"> <i class="fa fa-bars fa-lg"> </i></a>
-  <a class="btn btn-sm pull-right" (click) = "togglePinned()" data-toggle="tooltip"
-  data-placement="right" title="toggle sidebar pin" > <i [ngClass]="pinbutton"> </i></a>
-  </div>
+<ng-sidebar-container class="noscroll" >
+<ng-sidebar class="ng-sidebar noscroll" [(opened)] = "opened" style="height:100%;" [mode]="mode"
+[closeOnClickOutside] = "closeOnClickOutside"
+[closeOnClickBackdrop] = "false" dock=true
+[dockedSize] = "dockedSize"
+[sidebarClass] = "demo-sidebar" >
+<div mwlResizable class="noscroll borderright"
+[ngStyle] = "{'width': menueSize + 'px', 'height':'100%', 'background-color': '#eeeeee'}"
+[resizeEdges] = "{right: true}"
+[resizeCursorPrecision] = "10"
+[enableGhostResize] = "true"(resizeStart) = "onResizeStart($event)" (resizeEnd)="onResizeEnd($event)">
+<div style="width:100%; height:35px; padding:0">
+<a class="btn btn-sm pull-right" (click) = "toggleSidebar()" data-toggle="tooltip"
+data-placement="right" title="toggle sidebar"> <i class="fa fa-bars fa-lg"> </i></a>
+<a class="btn btn-sm pull-right" (click) = "togglePinned()" data-toggle="tooltip"
+data-placement="right" title="toggle sidebar pin" > <i [ngClass]="pinbutton"> </i></a>
+</div>
 
-  <div id=Containerfixed>
+<div id=Containerfixed>
     <ng-content select="[flx-sidebar-icons]"> </ng-content>
-  </div>
+</div>
 
-  <div id=Containerauto >
+<div id=Containerauto >
     <ng-content select="[flx-sidebar-main]"> </ng-content>
-  </div>
+</div>
 
-  </div>
-  </ng-sidebar>
+</div>
+</ng-sidebar>
 
-  <!--Page content -- >
-  <div ng-sidebar-content >
+<div ng-sidebar-content >
     <ng-content select="[flx-sidebar-detail]"> </ng-content>
-  </div>
-  </ng-sidebar-container>
-  `,
+</div>
+</ng-sidebar-container>`,
   styles: [`
 #Containerfixed {
   width: 40px;
@@ -73,8 +70,7 @@ import { ResizeEvent } from 'angular-resizable-element';
 .ng-sidebar--docked {
   box-shadow: 0 0 1.5em rgba(85,85,85,.5);
 }
-
-  `]
+`]
 })
 export class FlxSidebarComponent implements OnInit {
   public static readonly MIN_MENU_WIDTH = 250;
