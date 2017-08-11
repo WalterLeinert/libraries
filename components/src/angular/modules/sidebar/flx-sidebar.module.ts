@@ -5,13 +5,17 @@ import { FormsModule } from '@angular/forms';
 // Sidebar
 import { SidebarModule } from 'ng-sidebar';
 
+// Resizing der Sidebar
+import { ResizableModule } from 'angular-resizable-element';
+
 import { FlxSidebarComponent } from './flx-sidebar.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    SidebarModule
+    SidebarModule,
+    ResizableModule
   ],
   declarations: [
     FlxSidebarComponent
