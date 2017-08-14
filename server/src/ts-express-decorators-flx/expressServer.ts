@@ -106,7 +106,7 @@ export class ExpressServer extends ServerBase {
       //   .use(GlobalSerializationRequestHandler);
       // .use(GlobalSerializationResponsetHandler);
 
-      function setCustomHeader(res, path) {
+      function setCustomHeader(res, servepath) {
         res.setHeader('Content-Type', 'application/pdf');
       }
 
