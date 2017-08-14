@@ -15,5 +15,6 @@ export * from './role.service';
 export * from './user.service';
 export * from './print.service';
 export * from './service-proxy';
+export * from './service-core';
 export * from './system-config.service';
 export * from './email';
