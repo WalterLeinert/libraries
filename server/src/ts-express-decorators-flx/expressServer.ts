@@ -93,7 +93,8 @@ export class ExpressServer extends ServerBase {
         }))
         .use(cors({ origin: '*' }))
 
-        .use(Express.static(path.join(process.cwd(), '/app'), { index: ['index.html', 'index.htm'] }));
+        .use(Express.static(path.join(process.cwd(), '/app'), { index: ['index.html', 'index.htm'] }))
+        .use(Express.static('/data'));
 
       // Configure passport JS
       this
