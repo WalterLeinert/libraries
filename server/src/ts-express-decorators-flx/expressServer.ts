@@ -94,7 +94,8 @@ export class ExpressServer extends ServerBase {
         .use(cors({ origin: '*' }))
 
         .use(Express.static(path.join(process.cwd(), '/app'), { index: ['index.html', 'index.htm'] }))
-        .use(Express.static('/data'));
+        .use(Express.static(path.join(process.cwd(), '/data'), { setHeaders: setCustomHeader }))
+        .use(Express.static('/data'), { setHeaders: setCustomHeader });
 
       // Configure passport JS
       this
@@ -104,6 +105,10 @@ export class ExpressServer extends ServerBase {
       // this
       //   .use(GlobalSerializationRequestHandler);
       // .use(GlobalSerializationResponsetHandler);
+
+      function setCustomHeader(res, path) {
+        res.setHeader('Content-Type', 'application/pdf');
+      }
 
       return null;
     });
