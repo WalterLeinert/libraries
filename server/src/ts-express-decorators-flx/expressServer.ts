@@ -104,11 +104,6 @@ export class ExpressServer extends ServerBase {
       // this
       //   .use(GlobalSerializationRequestHandler);
       // .use(GlobalSerializationResponsetHandler);
-
-      function setCustomHeader(res, servepath) {
-        res.setHeader('Content-Type', 'application/pdf');
-      }
-
       return null;
     });
   }
