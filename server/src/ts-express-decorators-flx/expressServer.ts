@@ -10,7 +10,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { AppConfig, IAppConfig } from '@fluxgate/common';
-import { JsonReader } from '@fluxgate/platform';
+import { Assert, ServerSystemException, Types } from '@fluxgate/core';
+import { FileSystem, JsonReader } from '@fluxgate/platform';
 
 import { GlobalErrorHandler } from './middlewares/global-error-handler';
 // import {
@@ -77,6 +78,24 @@ export class ExpressServer extends ServerBase {
       const cors = require('cors');
       const passport = require('passport');
 
+      let dataName = ServerBase.DEFAULT_SERVER_CONFIGURATION.dataName;
+      if (!Types.isNullOrEmpty(this.configuration.dataName)) {
+        dataName = this.configuration.dataName;
+      }
+      log.log(`dataName = ${dataName}`);
+
+      Assert.notNullOrEmpty(this.configuration.dataDirectory, `no dataDirectory configured.`);
+      if (!FileSystem.directoryExists(this.configuration.dataDirectory)) {
+        throw new ServerSystemException(`Directory ${this.configuration.dataDirectory} does not exists.`);
+      }
+
+      let dataDirectory = this.configuration.dataDirectory;
+      if (!path.isAbsolute(dataDirectory)) {
+        dataDirectory = path.join(process.cwd(), dataDirectory);
+      }
+      log.log(`dataDirectory = ${dataDirectory}`);
+
+
       this
         // configure session used by passport
         .use(session({
@@ -94,7 +113,8 @@ export class ExpressServer extends ServerBase {
 
         .use(cors({ origin: '*' }))
 
-        .use(Express.static(path.join(process.cwd(), '/app'), { index: ['index.html', 'index.htm'] }));
+        .use(Express.static(path.join(process.cwd(), '/app'), { index: ['index.html', 'index.htm'] }))
+        .use(dataName, Express.static(dataDirectory));
 
       // Configure passport JS
       this

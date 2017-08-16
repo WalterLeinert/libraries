@@ -29,6 +29,17 @@ import { KnexService } from './services/knex.service';
  */
 export interface IServerConfiguration {
 
+  /**
+   * Name des virtuellen Datenverzeichnisses (default: /data)
+   */
+  dataName?: string;
+
+  /**
+   * Pfad auf physikalisches Datenverzeichnis, auf welches dataName gemountet ist
+   */
+  dataDirectory?: string;
+
+
   cert?: {
 
     /**
@@ -98,6 +109,7 @@ export abstract class ServerBase extends ServerLoader {
    * Default Express-Konfiguration
    */
   public static readonly DEFAULT_SERVER_CONFIGURATION: IServerConfiguration = {
+    dataName: '/data',
     express: {
       endPoint: '/rest',
       port: 8000,
@@ -119,7 +131,7 @@ export abstract class ServerBase extends ServerLoader {
    * In your constructor set the global endpoint and configure the folder to scan the controllers.
    * You can start the http and https server.
    */
-  protected constructor(private configuration: IServerConfiguration) {
+  protected constructor(protected configuration: IServerConfiguration) {
     super();
 
     using(new XLog(ServerBase.logger, levels.INFO, 'ctor'), (log) => {
