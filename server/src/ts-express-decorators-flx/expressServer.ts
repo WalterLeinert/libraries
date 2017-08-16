@@ -76,7 +76,6 @@ export class ExpressServer extends ServerBase {
       const session = require('express-session');
       const cors = require('cors');
       const passport = require('passport');
-      const directory = require('serve-index');
 
       this
         // configure session used by passport
@@ -96,8 +95,7 @@ export class ExpressServer extends ServerBase {
         .use(cors({ origin: '*' }))
 
         .use(Express.static(path.join(process.cwd(), '/app'), { index: ['index.html', 'index.htm'] }))
-        .use(Express.static(path.join(process.cwd(), '/data')))
-        .use(directory('/data'));
+        .use(Express.static(path.join('/', '/data')))
 
       // Configure passport JS
       this
