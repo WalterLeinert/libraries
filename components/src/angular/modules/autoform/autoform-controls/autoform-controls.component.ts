@@ -44,9 +44,10 @@ import { IAutoform } from '../autoform.interface';
 
       <div class="col-sm-10">
         <input [type]="getInputType(info)" class="form-control"
-                [formControlName]="info.valueField" [(ngModel)]="dataItem[info.valueField]"
-                [required]="info.required" [readonly]="isReadonly(info)"
-                [style.color]="getColor(dataItem, info)"
+          [id]="info.valueField" [formControlName]="info.valueField"
+          [(ngModel)]="dataItem[info.valueField]"
+          [required]="info.required" [readonly]="isReadonly(info)"
+          [style.color]="getColor(dataItem, info)"
         >
       </div>
 
@@ -70,10 +71,11 @@ import { IAutoform } from '../autoform.interface';
       <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
       <div class="col-sm-10">
-        <p-checkbox binary="true" class="form-control" [formControlName]="info.valueField"
-                    [(ngModel)]="dataItem[info.valueField]"
-                    [required]="info.required"
-                    [style.color]="getColor(dataItem, info)">
+        <p-checkbox binary="true" class="form-control"
+          [id]="info.valueField" [formControlName]="info.valueField"
+          [(ngModel)]="dataItem[info.valueField]"
+          [required]="info.required"
+          [style.color]="getColor(dataItem, info)">
         </p-checkbox>
       </div>
 
@@ -92,10 +94,11 @@ import { IAutoform } from '../autoform.interface';
       <label class="control-label col-sm-2" [for]="info.valueField">{{info.textField}}</label>
 
       <div class="col-sm-10">
-        <p-calendar inputStyleClass="form-control" [formControlName]="info.valueField"
-                    [(ngModel)]="dataItem[info.valueField]"
-                    [required]="info.required" [readonlyInput]="isReadonly(info)"
-                    dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
+        <p-calendar inputStyleClass="form-control"
+          [id]="info.valueField" [formControlName]="info.valueField"
+          [(ngModel)]="dataItem[info.valueField]"
+          [required]="info.required" [readonlyInput]="isReadonly(info)"
+          dateFormat="yy-mm-dd" [style.color]="getColor(dataItem, info)">
         </p-calendar>
       </div>
 
@@ -115,10 +118,10 @@ import { IAutoform } from '../autoform.interface';
 
       <div class="col-sm-10">
         <flx-time-selector inputStyleClass="form-control"
-                            [formControlName]="info.valueField"
-                            [(ngModel)]="dataItem[info.valueField]"
-                            [required]="info.required" [readonly]="isReadonly(info)"
-                            [style.color]="getColor(dataItem, info)">
+          [id]="info.valueField" [formControlName]="info.valueField"
+          [(ngModel)]="dataItem[info.valueField]"
+          [required]="info.required" [readonly]="isReadonly(info)"
+          [style.color]="getColor(dataItem, info)">
         </flx-time-selector>
       </div>
 
@@ -139,15 +142,15 @@ import { IAutoform } from '../autoform.interface';
 
       <div class="col-sm-10">
         <flx-dropdown-selector inputStyleClass="form-control"
-                                [formControlName]="info.valueField"
-                                [(ngModel)]="dataItem[info.valueField]"
-                                [required]="info.required" [readonly]="isReadonly(info)"
-                                [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
-                                [textField]="info.enumInfo.textField"
-                                [valueField]="info.enumInfo.valueField"
-                                [style]="{'width':'100%'}"
-                                [style.color]="getColor(dataItem, info)"
-                                [debug]="false">
+          [id]="info.valueField" [formControlName]="info.valueField"
+          [(ngModel)]="dataItem[info.valueField]"
+          [required]="info.required" [readonly]="isReadonly(info)"
+          [dataServiceRequests]="info.enumInfo.selectorDataServiceRequests"
+          [textField]="info.enumInfo.textField"
+          [valueField]="info.enumInfo.valueField"
+          [style]="{'width':'100%'}"
+          [style.color]="getColor(dataItem, info)"
+          [debug]="false">
         </flx-dropdown-selector>
       </div>
 

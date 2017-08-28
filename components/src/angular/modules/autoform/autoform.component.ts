@@ -53,14 +53,20 @@ import { IAutoform } from './autoform.interface';
 
     <p-footer *ngIf="showButtons">
       <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-        <button *ngIf="showNewButton" type="button" class="btn btn-primary" (click)='onCreateNew()'>New
+        <button *ngIf="showNewButton" type="button" class="btn btn-primary" id="new" (click)='onCreateNew()'>
+          New
         </button>
-        <button type="button" class="btn btn-primary" (click)='onCancel()'>Cancel</button>
-        <button type="button" class="btn btn-primary" [disabled]="isSaveDisabled()" (click)='onSubmit()'>
-            Save
+
+        <button type="button" class="btn btn-primary" id="cancel" (click)='onCancel()'>
+          Cancel
         </button>
-        <button type="button" class="btn btn-primary" [disabled]="isDeleteDisabled()"
-                (click)='onDelete()'>Delete
+
+        <button type="button" class="btn btn-primary" id="save" [disabled]="isSaveDisabled()" (click)='onSubmit()'>
+          Save
+        </button>
+
+        <button type="button" class="btn btn-primary" id="delete" [disabled]="isDeleteDisabled()" (click)='onDelete()'>
+          Delete
         </button>
       </div>
     </p-footer>
