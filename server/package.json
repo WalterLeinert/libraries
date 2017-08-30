@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/server",
-  "version": "",
+  "version": "2.4.1-beta.12",
   "description": "Fluxgate Server-Library ",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
