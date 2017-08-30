@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/core",
-  "version": "2.4.1-beta.0",
+  "version": "2.4.1-beta.1",
   "description": "Fluxgate Library Core",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -29,7 +29,6 @@
     "gulp-mocha": "^4.3.1",
     "gulp-sequence": "^0.4.6",
     "gulp-sourcemaps": "^2.4.1",
-    "gulp-tslint": "^8.1.1",
     "gulp-typescript": "^3.1.4",
     "json-diff-patch": "0.0.1",
     "log4js": "^1.1.1",
@@ -37,7 +36,6 @@
     "mocha": "^3.2.0",
     "mocha-typescript": "^1.0.18",
     "ts-loader": "^2.0.1",
-    "tslint": "^5.5.0",
     "typescript": "2.3.3",
     "yargs": "^7.0.2"
   },

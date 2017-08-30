@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/platform",
-  "version": "2.4.1-beta.0",
+  "version": "2.4.1-beta.1",
   "description": "Fluxgate Library Platform (node/browser)",
   "browser": "dist/browser/src/index.js",
   "main": "dist/node/src/index.js",
@@ -28,19 +28,17 @@
     "gulp-remove-code": "^1.0.2",
     "gulp-sequence": "^0.4.6",
     "gulp-sourcemaps": "^2.4.1",
-    "gulp-tslint": "^8.1.1",
     "gulp-typescript": "^3.1.4",
     "log4js": "^1.1.1",
     "merge2": "^1.0.3",
     "mocha": "^3.2.0",
     "mocha-typescript": "^1.0.18",
     "reflect-metadata": "^0.1.10",
-    "tslint": "^5.5.0",
     "typescript": "2.3.3",
     "yargs": "^7.0.2"
   },
   "dependencies": {
-    "@fluxgate/core": "2.4.1-beta.0",
+    "@fluxgate/core": "2.4.1-beta.1",
     "tslib": "^1.5.0"
   },
   "directories": {
