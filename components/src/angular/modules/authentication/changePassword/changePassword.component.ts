@@ -57,9 +57,9 @@ import { PassportService } from '../passport.service';
 
     <div class="form-group row">
       <div class="btn-group">
-        <button type="submit" class="btn btn-primary" [disabled]="form.invalid"
+        <button type="submit" class="btn btn-primary" id="changePassword" [disabled]="form.invalid"
           (click)='changePassword()'>Ändern</button>
-        <button type="submit" class="btn" (click)='cancel()'>Abbrechen</button>
+        <button type="submit" class="btn" id="cancel" (click)='cancel()'>Abbrechen</button>
       </div>
     </div>
   </form>

@@ -72,8 +72,8 @@ import { PassportService } from '../passport.service';
     <div class="form-group row">
       <div class="col-sm-5">
         <!-- disabled Steuerung nach Umbau von flx-dropdown auf getForm().invalid umbauen -->
-        <button type="submit" class="btn btn-primary" [disabled]="form.invalid" (click)='signup()'>Register</button>
-        <button type="submit" class="btn" (click)='cancel()'>Abbrechen</button>
+        <button type="submit" class="btn btn-primary" id="signup" [disabled]="form.invalid" (click)='signup()'>Register</button>
+        <button type="submit" class="btn" id="cancel" (click)='cancel()'>Abbrechen</button>
       </div>
     </div>
 
