@@ -74,7 +74,7 @@ gulp.task('test:server', function (cb) {
 })
 
 gulp.task('publish:server', function (cb) {
-  execCommand('gulp publish -f', 'server', bufferSize, cb);
+  execCommand('gulp publish', 'server', bufferSize, cb);
 })
 
 gulp.task('doc:server', function (cb) {

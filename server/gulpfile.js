@@ -43,6 +43,7 @@ function execCommand(command, cwd, maxBuffer, cb) {
   exec(command, execOpts, function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
+    console.log('Error: ' + err);
     cb(err);
   });
 }
@@ -79,17 +80,17 @@ gulp.task('tslint', () => {
 /**
  * kompiliert den Server
  */
-gulp.task('compile', function() {
-    var tsResult = gulp.src('src/**/*.ts')
-        .pipe(sourcemaps.init())
-        .pipe(tsProject());
+gulp.task('compile', function () {
+  var tsResult = gulp.src('src/**/*.ts')
+    .pipe(sourcemaps.init())
+    .pipe(tsProject());
 
-    return merge([
-        tsResult.dts.pipe(gulp.dest('dist/dts')),
-        tsResult.js
-          .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
-          .pipe(gulp.dest('dist/src'))
-    ]);
+  return merge([
+    tsResult.dts.pipe(gulp.dest('dist/dts')),
+    tsResult.js
+      .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+      .pipe(gulp.dest('dist/src'))
+  ]);
 });
 
 
@@ -109,10 +110,13 @@ gulp.task('compile:test', ['default'], function () {
 
 //optional - use a tsconfig file
 gulp.task('test', ['set-env', 'compile:test'], function () {
-  gulp.src('./dist/test/**/*.spec.js', {read: false})
+  gulp.src('./dist/test/**/*.spec.js', { read: false })
     .pipe(mocha({
       reporter: 'spec'
-    }));
+    }))
+    .once('error', () => {
+      process.exit();
+    });
 });
 
 
