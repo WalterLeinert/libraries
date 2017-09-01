@@ -26,7 +26,7 @@ import { PassportService } from '../passport.service';
   selector: 'flx-change-password',
   template: `
 <div class="container">
-  <h1>Login</h1>
+  <h1>Change Password</h1>
 
   <p-messages [value]="messages"></p-messages>
 
