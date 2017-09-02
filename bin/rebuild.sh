@@ -72,7 +72,7 @@ function rebuild() {
 	(
 		cd $dir                     && \
 		npm install                 && \
-		gulp publish
+		gulp publish -f
 	)
 	done
 }
