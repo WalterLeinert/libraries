@@ -1,7 +1,7 @@
 # This file is a template, and might need editing before it works on your project.
 # Official framework image. Look for the different tagged releases at:
 # https://hub.docker.com/r/library/node/tags/
-image: node:6
+image: localhost:5000/node-dev:latest
 
 before_script:
   # - npm install --global gulp-cli
