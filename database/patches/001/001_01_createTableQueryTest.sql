@@ -1,3 +1,4 @@
+USE `libraries`;
 DROP TABLE IF EXISTS `querytest`;
 
 CREATE TABLE `querytest` (
