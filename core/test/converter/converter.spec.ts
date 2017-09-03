@@ -21,12 +21,8 @@ const tests = [
     type: Date,
     success: [
       {
-        value: new Date(2017, 4, 8, 0, 0, 0),
-        expectedValue: '2017-05-07T22:00:00.000Z'
-      },
-      {
-        value: new Date(2017, 3, 2, 0, 0, 0),
-        expectedValue: '2017-04-01T22:00:00.000Z'
+        value: new Date('2017-04-09T14:02:05.000Z'),
+        expectedValue: '2017-04-09T14:02:05.000Z'
       }
     ],
     failure: [
