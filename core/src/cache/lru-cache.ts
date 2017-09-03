@@ -90,7 +90,7 @@ export class LruCache<T, TKey> implements ICache<T, TKey> {
   };
 
 
-  private _cache: LRU.Cache<T>;
+  private _cache: LRU.Cache<TKey, T>;
 
   public constructor(options?: ILruCacheOptions) {
     using(new XLog(LruCache.logger, levels.INFO, 'ctor'), (log) => {
@@ -111,7 +111,7 @@ export class LruCache<T, TKey> implements ICache<T, TKey> {
 
       log.log(`cacheOptions = ${Core.stringify(cacheOptions)}`);
 
-      this._cache = LRU<T>(cacheOptions);
+      this._cache = LRU<TKey, T>(cacheOptions);
     });
   }
 
