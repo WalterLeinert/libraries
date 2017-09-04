@@ -27,8 +27,8 @@ stages:
   - deploy
 
 lintJob:
-  - stage: lint
-  - script: gulp tslint
+  stage: lint
+  script: gulp tslint
 
 buildJob:
   stage: build
