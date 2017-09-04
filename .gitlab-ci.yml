@@ -2,6 +2,9 @@
 # Official framework image. Look for the different tagged releases at:
 # https://hub.docker.com/r/library/node/tags/
 image: localhost:5000/node-dev:latest
+before_script:
+  - echo 'registry=http://server.fluxgate.de:4873/' >> ~/.npmrc
+  - echo '//server.fluxgate.de:4873/:_authToken="PeTF/FIpWZ/96ffjQ/5lbBVfa8zj0HREo4YIU26Sgx0="' >> ~/.npmrc
 
 before_script:
   # - npm install --global gulp-cli
