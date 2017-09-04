@@ -97,7 +97,7 @@ class EntityStringifyerTest extends CommonTest {
   }
 
   @test 'should stringify Date'() {
-    const result = Core.stringify(new Date(2006, 0, 2, 15, 4, 5));
+    const result = Core.stringify(new Date('2006-01-02T14:04:05.000Z'));
     expect(result).to.equal('"2006-01-02T14:04:05.000Z"');
   }
 
