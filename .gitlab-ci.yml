@@ -5,6 +5,7 @@ image: localhost:5000/node-dev:latest
 before_script:
   - echo 'registry=http://server.fluxgate.de:4873/' >> ~/.npmrc
   - echo '//server.fluxgate.de:4873/:_authToken="PeTF/FIpWZ/96ffjQ/5lbBVfa8zj0HREo4YIU26Sgx0="' >> ~/.npmrc
+  - npm install
 
 # Pick zero or more services to be used on all builds.
 # Only needed when using a docker container to run your tests in.
@@ -20,9 +21,14 @@ cache:
   - node_modules/
 
 stages:
+  - lint
   - build
   - test
   - deploy
+
+lintJob:
+  - stage: lint
+  - script: gulp tslint
 
 buildJob:
   stage: build
@@ -33,8 +39,11 @@ buildJob:
 
 testJob:
   stage: test
-  script: gulp tslint
+  script:
+  - docker-compose up -d
+  - cd client
+  - ng e2e --no-serve
 
 deployJob:
   stage: deploy
-  script: echo "should deploy"
+  script: echo "*** should deploy ***"
