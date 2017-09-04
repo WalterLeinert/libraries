@@ -4,10 +4,10 @@
     "debug": false,
     "client": "mysql",
     "connection": {
-      "host": "libraries_mysql",
+      "host": "localhost",
       "user": "root",
       "password": "root",
-      "port": 3306,
+      "port": 33306,
       "database": "libraries"
     },
     "pool": {
