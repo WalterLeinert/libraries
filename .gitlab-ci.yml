@@ -18,8 +18,19 @@ cache:
   paths:
   - node_modules/
 
-test:all:
-  script:
-    # build muss vor tslint laufen
-    - bash bin/rebuild.sh -o
-    - gulp tslint
+stages:
+  - build
+  - test
+  - deploy
+
+buildJob:
+  stage: build
+  script: bash bin/rebuild.sh -o
+
+testJob:
+  stage: test
+  script: gulp tslint
+
+deployJob:
+  stage: deploy
+  script: echo "should deploy"
