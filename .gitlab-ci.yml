@@ -27,6 +27,9 @@ stages:
 buildJob:
   stage: build
   script: bash bin/rebuild.sh -o
+  valiables:
+    NODE_ENV: "ci"
+    CI_DEBUG_TRACE: "true"
 
 testJob:
   stage: test
