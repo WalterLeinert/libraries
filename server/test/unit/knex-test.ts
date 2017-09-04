@@ -208,8 +208,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
           //
           const config = JsonReader.readJsonSync<any>(knexConfigPath);
 
-          let systemEnv = fromEnvironment('NODE_ENV', 'development');
-          systemEnv = 'local';        // TODO
+          const systemEnv = fromEnvironment('NODE_ENV', 'local');
 
           log.log(`read knex config from ${knexConfigPath} for systemEnv = ${systemEnv}`);
 
