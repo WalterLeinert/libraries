@@ -29,7 +29,7 @@ buildJob:
   script: bash bin/rebuild.sh -o
   variables:
     NODE_ENV: "ci"
-    CI_DEBUG_TRACE: "true"
+    CI_DEBUG_TRACE: "false"
 
 testJob:
   stage: test
