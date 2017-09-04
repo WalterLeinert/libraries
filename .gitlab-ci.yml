@@ -18,8 +18,8 @@ before_script:
 # Only needed when using a docker container to run your tests in.
 # Check out: http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-service
 services:
-- docker:dind
-- name: localhost:5000/libraries_mysql
+  - name: docker:dind
+  - name: localhost:5000/libraries_mysql
     alias: libraries_mysql
 
 # This folder is cached between builds
