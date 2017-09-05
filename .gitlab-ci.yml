@@ -53,6 +53,7 @@ buildJob:
   stage: build
   variables:
     NODE_ENV: "development"
+    APP_ENV: "development"
     CI_DEBUG_TRACE: "false"
   script:
   - docker-compose up -d
