@@ -52,7 +52,7 @@ dockerJob:
 buildJob:
   stage: build
   variables:
-    NODE_ENV: "development"
+    NODE_ENV: "local"
     APP_ENV: "development"
     CI_DEBUG_TRACE: "true"
   script:
