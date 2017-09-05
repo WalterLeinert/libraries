@@ -42,6 +42,8 @@ lintJob:
 
 dockerJob:
   stage: docker
+  variables:
+    APP_ENV: "development"
   script:
   - docker-compose build
   # - sudo docker build -f .docker/docker-mysql.dockerfile -t libraries-mysql
