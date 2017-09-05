@@ -2,7 +2,7 @@
 # Official framework image. Look for the different tagged releases at:
 # https://hub.docker.com/r/library/node/tags/
 # image: localhost:5000/node-dev:latest
-image: jonaskello/docker-and-compose:1.12.1-1.8.0
+image: localhost:5000/node-dev:latest
 
 # When using dind, it's wise to use the overlayfs driver for
 # improved performance.
