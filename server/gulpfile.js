@@ -109,7 +109,7 @@ gulp.task('compile:test', ['default'], function () {
 
 
 //optional - use a tsconfig file
-gulp.task('test', ['set-env', 'compile:test'], function () {
+gulp.task('test', ['compile:test'], function () {
   gulp.src('./dist/test/**/*.spec.js', { read: false })
     .pipe(mocha({
       reporter: 'spec'
@@ -154,4 +154,4 @@ gulp.task('set-env', function () {
 
 
 /* single command to hook into VS Code */
-gulp.task('default', gulpSequence('set-env', 'clean', 'compile'/*gulp*/ /*, 'bundle'*/));
+gulp.task('default', gulpSequence('clean', 'compile'/*gulp*/ /*, 'bundle'*/));
