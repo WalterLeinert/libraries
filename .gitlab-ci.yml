@@ -54,7 +54,7 @@ buildJob:
   variables:
     NODE_ENV: "development"
     APP_ENV: "development"
-    CI_DEBUG_TRACE: "false"
+    CI_DEBUG_TRACE: "true"
   script:
   - docker-compose up -d
   - bash bin/rebuild.sh -o
