@@ -29,20 +29,5 @@
       "min": 2,
       "max": 10
     }
-  },
-  "development": {
-    "debug": false,
-    "client": "mysql",
-    "connection": {
-      "host": "libraries-mysql",
-      "user": "root",
-      "password": "root",
-      "port": 3306,
-      "database": "libraries"
-    },
-    "pool": {
-      "min": 2,
-      "max": 10
-    }
   }
 }
