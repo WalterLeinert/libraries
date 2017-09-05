@@ -2,7 +2,7 @@
 # Official framework image. Look for the different tagged releases at:
 # https://hub.docker.com/r/library/node/tags/
 # image: localhost:5000/node-dev:latest
-image: docker:latest
+image: jonaskello/docker-and-compose:1.12.1-1.8.0
 
 # When using dind, it's wise to use the overlayfs driver for
 # improved performance.
@@ -19,7 +19,7 @@ before_script:
 # Only needed when using a docker container to run your tests in.
 # Check out: http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-service
 services:
-  - docker:dind
+  - docker:1.12.1-dind
   # - name: localhost:5000/libraries_mysql
   #   alias: libraries_mysql
 
@@ -43,8 +43,9 @@ lintJob:
 dockerJob:
   stage: docker
   script:
-  - sudo docker build -f .docker/docker-mysql.dockerfile -t libraries-mysql
-  - sudo docker run --rm -p "33306:3306" libraries-mysql
+  - docker-compose build
+  # - sudo docker build -f .docker/docker-mysql.dockerfile -t libraries-mysql
+  # - sudo docker run --rm -p "33306:3306" libraries-mysql
 
 buildJob:
   stage: build
