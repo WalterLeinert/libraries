@@ -51,10 +51,13 @@ dockerJob:
 
 buildJob:
   stage: build
-  script: bash bin/rebuild.sh -o
   variables:
-    NODE_ENV: "ci"
+    NODE_ENV: "development"
     CI_DEBUG_TRACE: "false"
+  script:
+  - docker-compose up -d
+  - bash bin/rebuild.sh -o
+
 
 testJob:
   stage: test
