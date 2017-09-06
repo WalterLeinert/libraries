@@ -21,6 +21,8 @@ before_script:
 services:
   - name: mysql
     alias: mysql
+    variables:
+      MYSQL_ROOT_PASSWORD: "root"
   # - name: localhost:5000/libraries_mysql
   #   alias: libraries_mysql
 
