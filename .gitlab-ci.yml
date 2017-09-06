@@ -7,7 +7,9 @@ image: localhost:5000/node-dev:3
 # When using dind, it's wise to use the overlayfs driver for
 # improved performance.
 variables:
-  DOCKER_DRIVER: overlay2
+  # DOCKER_DRIVER: overlay2
+  MYSQL_DATABASE: libraries
+  MYSQL_ROOT_PASSWORD: "root"
 
 before_script:
   - echo 'registry=http://server.fluxgate.de:4873/' >> ~/.npmrc
@@ -21,8 +23,7 @@ before_script:
 services:
   - name: mysql
     alias: mysql
-    variables:
-      MYSQL_ROOT_PASSWORD: "root"
+
   # - name: localhost:5000/libraries_mysql
   #   alias: libraries_mysql
 
