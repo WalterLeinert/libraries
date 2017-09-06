@@ -32,7 +32,6 @@ cache:
 
 stages:
   - lint
-  - setupDatabase
   - build
   - test
   - deploy
@@ -41,16 +40,15 @@ lintJob:
   stage: lint
   script: gulp tslint
 
-setupDatabaseJob:
-  stage: setupDatabase
-  script: knex-importer -r -c database/config/knexfile.ci.json -d database
-
 buildJob:
   stage: build
   variables:
     NODE_ENV: "ci"
     CI_DEBUG_TRACE: "false"
-  script: bash bin/rebuild.sh -o
+  script:
+  # Test-DB erzeugen
+  - knex-importer -r -c database/config/knexfile.ci.json -d database
+  - bash bin/rebuild.sh -o
 
 
 # testJob:
