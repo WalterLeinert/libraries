@@ -45,6 +45,7 @@ buildJob:
   variables:
     NODE_ENV: "ci"
     CI_DEBUG_TRACE: "false"
+    CHROME_BIN: "/usr/bin/chromium-browser"
   script:
   # Test-DB erzeugen
   - knex-importer -r -c database/config/knexfile.ci.json -d database
