@@ -12,14 +12,15 @@ variables:
 before_script:
   - echo 'registry=http://server.fluxgate.de:4873/' >> ~/.npmrc
   - echo '//server.fluxgate.de:4873/:_authToken="PeTF/FIpWZ/96ffjQ/5lbBVfa8zj0HREo4YIU26Sgx0="' >> ~/.npmrc
-  - docker info
+  - npm install -g @tools/knex-importer
   - npm install
 
 # Pick zero or more services to be used on all builds.
 # Only needed when using a docker container to run your tests in.
 # Check out: http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-service
 services:
-  - docker:1.12.1-dind
+  - name: mysql
+    alias: mysql
   # - name: localhost:5000/libraries_mysql
   #   alias: libraries_mysql
 
@@ -56,17 +57,18 @@ buildJob:
     APP_ENV: "development"
     CI_DEBUG_TRACE: "true"
   script:
-  - docker-compose up -d
+  # Test-DB erzeugen/laden
+  - knex-importer -r -c database/config/knexfile.ci.json -d database
   - bash bin/rebuild.sh -o
 
 
-testJob:
-  stage: test
-  script:
-  - docker-compose up -d
-  - cd client
-  - ng e2e --no-serve
+# testJob:
+#   stage: test
+#   script:
+#   - docker-compose up -d
+#   - cd client
+#   - ng e2e --no-serve
 
-deployJob:
-  stage: deploy
-  script: echo "*** should deploy ***"
+# deployJob:
+#   stage: deploy
+#   script: echo "*** should deploy ***"
