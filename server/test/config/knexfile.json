@@ -19,7 +19,7 @@
     "debug": false,
     "client": "mysql",
     "connection": {
-      "host": "libraries-mysql",
+      "host": "mysql",
       "user": "root",
       "password": "root",
       "port": 3306,
