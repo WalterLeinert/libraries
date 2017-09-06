@@ -32,7 +32,7 @@ cache:
 
 stages:
   - lint
-  - docker
+  # - docker
   - build
   - test
   - deploy
