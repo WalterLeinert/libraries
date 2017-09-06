@@ -32,7 +32,6 @@ cache:
 
 stages:
   - lint
-  # - docker
   - build
   - test
   - deploy
@@ -41,12 +40,12 @@ lintJob:
   stage: lint
   script: gulp tslint
 
-dockerJob:
-  stage: docker
-  variables:
-    APP_ENV: "development"
-  script:
-  - docker-compose build
+# dockerJob:
+#   stage: docker
+#   variables:
+#     APP_ENV: "development"
+#   script:
+#   - docker-compose build
   # - sudo docker build -f .docker/docker-mysql.dockerfile -t libraries-mysql
   # - sudo docker run --rm -p "33306:3306" libraries-mysql
 
