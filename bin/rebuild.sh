@@ -68,7 +68,7 @@ function rebuild() {
 
 	npm install
 
-	for dir in core platform common server client components; do
+	for dir in core platform common server testing client components; do
 	(
 		cd $dir                     && \
 		npm install                 && \

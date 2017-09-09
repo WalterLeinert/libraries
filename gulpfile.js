@@ -17,6 +17,7 @@ require('./build/gulpfile.common');
 require('./build/gulpfile.server');
 require('./build/gulpfile.client');
 require('./build/gulpfile.components');
+require('./build/gulpfile.testing');
 
 
 gulp.task('info', function () {
@@ -34,7 +35,8 @@ gulp.task('npm-install', [
   'install:common',
   'install:client',
   'install:components',
-  'install:server'
+  'install:server',
+  'install:testing'
 ])
 
 gulp.task('update-fluxgate', [
@@ -42,7 +44,8 @@ gulp.task('update-fluxgate', [
   'update-fluxgate:common',
   'update-fluxgate:client',
   'update-fluxgate:components',
-  'update-fluxgate:server'
+  'update-fluxgate:server',
+  'update-fluxgate:testing'
 ])
 
 gulp.task('really-clean', [
@@ -51,7 +54,8 @@ gulp.task('really-clean', [
   'really-clean:common',
   'really-clean:client',
   'really-clean:components',
-  'really-clean:server'
+  'really-clean:server',
+  'really-clean:testing'
 ], function (cb) {
   return del('node_modules');
 })
@@ -62,7 +66,8 @@ gulp.task('clean', [
   'clean:common',
   'clean:server',
   'clean:client',
-  'clean:components'
+  'clean:components',
+  'clean:testing'
 ])
 
 gulp.task('tslint', [
@@ -71,7 +76,8 @@ gulp.task('tslint', [
   'tslint:common',
   'tslint:client',
   'tslint:components',
-  'tslint:server'
+  'tslint:server',
+  'tslint:testing'
 ])
 
 gulp.task('test', [
@@ -80,7 +86,8 @@ gulp.task('test', [
   'test:common',
   'test:client',
   'test:components',
-  'test:server'
+  'test:server',
+  'test:testing'
 ])
 
 gulp.task('publish', [
@@ -89,7 +96,8 @@ gulp.task('publish', [
   'publish:common',
   'publish:client',
   'publish:components',
-  'publish:server'
+  'publish:server',
+  'publish:testing'
 ])
 
 gulp.task('doc', [
@@ -98,7 +106,8 @@ gulp.task('doc', [
   'doc:common',
   'doc:client',
   'doc:components',
-  'doc:server'
+  'doc:server',
+  'doc:testing'
 ])
 
 gulp.task('build-all:client-components',
@@ -111,6 +120,7 @@ gulp.task('build-all',
     'build-all:core',
     'build-all:platform',
     'build-all:common',
+    'build-all:testing',
     ['build-all:server', 'build-all:client-components']
   )
 )

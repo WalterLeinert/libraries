@@ -57,6 +57,10 @@ gulp.task('install:common', function (cb) {
   execCommand('npm install', 'common', bufferSize, cb);
 })
 
+gulp.task('install:testing', function (cb) {
+  execCommand('npm install', 'testing', bufferSize, cb);
+})
+
 gulp.task('install:client', function (cb) {
   execCommand('npm install', 'client', bufferSize, cb);
 })
