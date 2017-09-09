@@ -51,45 +51,45 @@ gulp.copy = function (src, dest) {
 
 
 //-----------------------------------------------------------------------
-// Start: client
+// Start: testing
 //-----------------------------------------------------------------------
 gulp.task('tslint:testing', function (cb) {
-  execCommand('gulp tslint', 'client', bufferSize, cb);
+  execCommand('gulp tslint', 'testing', bufferSize, cb);
 })
 
 gulp.task('really-clean:testing', ['clean:testing'], function (cb) {
-    return del('client/node_modules');
+    return del('testing/node_modules');
 })
 
 gulp.task('clean:testing', function (cb) {
-  execCommand('gulp clean', 'client', bufferSize, cb);
+  execCommand('gulp clean', 'testing', bufferSize, cb);
 })
 
 gulp.task('build:testing', function (cb) {
-  execCommand('gulp', 'client', bufferSize, cb);
+  execCommand('gulp', 'testing', bufferSize, cb);
 })
 
 gulp.task('test:testing', function (cb) {
-  execCommand('gulp test', 'client', bufferSize, cb);
+  execCommand('gulp test', 'testing', bufferSize, cb);
 })
 
 gulp.task('publish:testing', function (cb) {
-  execCommand('gulp publish -f', 'client', bufferSize, cb);
+  execCommand('gulp publish -f', 'testing', bufferSize, cb);
 })
 
 gulp.task('doc:testing', function (cb) {
-  execCommand('gulp doc', 'client', bufferSize, cb);
+  execCommand('gulp doc', 'testing', bufferSize, cb);
 })
 
 gulp.task('build-all:testing', gulpSequence('clean:testing', 'build:testing', 'test:testing', 'publish:testing'))
 //-----------------------------------------------------------------------
-// End: client
+// End: testing
 //-----------------------------------------------------------------------
 
 gulp.task('update-fluxgate:testing', function (cb) {
-  execCommand('gulp update-fluxgate', 'client', bufferSize, cb);
+  execCommand('gulp update-fluxgate', 'testing', bufferSize, cb);
 })
 
 gulp.task('update-fluxgate-yarn:testing', function (cb) {
-  execCommand('gulp update-fluxgate-yarn', 'client', bufferSize, cb);
+  execCommand('gulp update-fluxgate-yarn', 'testing', bufferSize, cb);
 })
