@@ -1,7 +1,7 @@
 import { browser, ElementArrayFinder, ElementFinder, promise } from 'protractor';
 
 import { Assert } from '@fluxgate/core';
-import { ElementHelper } from './elementHelper';
+import { ElementHelper } from './element-helper';
 import { log } from './util';
 
 // TODO: nach fluxgate/libraries verschieben

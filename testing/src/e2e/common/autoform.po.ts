@@ -49,7 +49,8 @@ export class AutoformPage {
     if (!this.infoMap.has(name)) {
       throw new Error(`unkown model attribute: ${name}`);
     }
-    return element(by.css(`flx-autoform-dialog flx-autoform flx-autoform-controls label.control-label[for="${name}"]`)).getText();
+    return element(by.css(
+      `flx-autoform-dialog flx-autoform flx-autoform-controls label.control-label[for="${name}"]`)).getText();
   }
 
   /**
@@ -73,7 +74,7 @@ export class AutoformPage {
    * @returns {ElementFinder}
    * @memberof AutoformPage
    */
-  getNewButton(): ElementFinder {
+  public getNewButton(): ElementFinder {
     return element(by.id('new'));
   }
 
@@ -85,7 +86,7 @@ export class AutoformPage {
    * @returns {ElementFinder}
    * @memberof AutoformPage
    */
-  getDeleteButton(): ElementFinder {
+  public getDeleteButton(): ElementFinder {
     return element(by.id('delete'));
   }
 
@@ -96,7 +97,7 @@ export class AutoformPage {
    * @returns {ElementFinder}
    * @memberof AutoformPage
    */
-  getSaveButton(): ElementFinder {
+  public getSaveButton(): ElementFinder {
     return element(by.id('save'));
   }
 
@@ -106,7 +107,7 @@ export class AutoformPage {
    * @returns {ElementFinder}
    * @memberof AutoformPage
    */
-  getCancelButton(): ElementFinder {
+  public getCancelButton(): ElementFinder {
     return element(by.id('cancel'));
   }
 
