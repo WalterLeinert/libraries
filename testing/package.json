@@ -1,0 +1,34 @@
+{
+  "name": "@fluxgate/testing",
+  "version": "2.4.2-beta.1",
+  "description": "Fluxgate Testing-Library ",
+  "main": "dist/src/index.js",
+  "typings": "dist/dts/index.d.ts",
+  "scripts": {
+    "tslint": "tslint ./src/**/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://server.fluxgate.de:89/fluxgate/libraries.git"
+  },
+  "author": "Walter Leinert <walter.leinert@outlook.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jasmine": "^2.5.54",
+    "@types/node": "^8.0.28",
+    "@types/protractor": "^4.0.0"
+  },
+  "dependencies": {
+    "@fluxgate/common": "2.4.2-beta.2",
+    "@fluxgate/core": "2.4.2-beta.1",
+    "@fluxgate/platform": "2.4.2-beta.1"
+  },
+  "peerDependencies": {
+    "@fluxgate/common": ">=2.4.2-beta.0",
+    "@fluxgate/core": ">=2.4.2-beta.0",
+    "@fluxgate/platform": ">=2.4.2-beta.0"
+  },
+  "directories": {
+    "lib": "lib"
+  }
+}

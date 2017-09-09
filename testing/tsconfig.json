@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src/",
+    "module": "commonjs",
+    "target": "es5",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationDir": "dts/",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
+    "isolatedModules": false,
+    "suppressImplicitAnyIndexErrors": false,
+    "importHelpers": true,
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "outDir": "build/",
+    "types": [
+      "node",
+      "jasmine"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "dts"
+  ]
+}
