@@ -138,7 +138,6 @@ gulp.task('doc', () => {
 });
 
 
-
 // Hinweis: kein bundeling mehr für leichters Debuggen
 // gulp.task('bundle', ['compile'], function (cb) {
 //   execCommand('webpack', '.', null, cb);
