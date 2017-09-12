@@ -30,6 +30,52 @@ export class DatatableComponent extends E2eComponent {
   }
 
   public getRows(): ElementArrayFinder {
-    return this.getElement().all(this.byCss('tbody > tr.ui-widget-content > td > span'));
+    return this.getElement().all(this.byCss('tbody > tr'));
   }
+
+  /**
+   * returns the empty message for row count zero.
+   *
+   * @returns {promise.Promise<string>}
+   * @memberof DatatableComponent
+   */
+  public getEmptyMessage(): promise.Promise<string> {
+    return this.getElement().element(this.byCss('tbody > tr > td.ui-datatable-emptymessage')).getText();
+  }
+
+
+  /**
+   * returns the table row at given @param{index}.
+   * Hint: index is zero-based, maps to css-index one-based.
+   *
+   * @param index
+   */
+  public getRow(index: number): ElementFinder {
+    return this.getElement().element(this.byCss(`tbody > tr:nth-child(${index + 1})`));
+  }
+
+  /**
+   * returns all table columns for @param{row}
+   *
+   * @param {number} row
+   * @returns {ElementArrayFinder}
+   * @memberof DatatableComponent
+   */
+  public getColumns(row: number): ElementArrayFinder {
+    return this.getRow(row).all(this.byCss(`td`));
+  }
+
+  /**
+   * returns the table column at @param{index} for given row at @param{row}.
+   * Hint: index is zero-based, maps to css-index one-based.
+   *
+   * @param {number} row
+   * @param {number} index
+   * @returns {ElementFinder}
+   * @memberof DatatableComponent
+   */
+  public getColumn(row: number, index: number): ElementFinder {
+    return this.getRow(row).element(this.byCss(`td:nth-child(${index + 1})`));
+  }
+
 }
