@@ -10,7 +10,7 @@ import { E2eComponent, IE2eComponent } from './e2e-component';
 
 
 /**
- * helper class for e2e tests of FlxMonthSelector
+ * helper class for e2e tests of flx-month-selector
  *
  * @export
  */

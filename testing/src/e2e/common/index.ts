@@ -2,6 +2,7 @@ export * from './app.comp';
 export * from './autoform.po';
 export * from './base.po';
 export * from './datatable.comp';
+export * from './dropdown-selector.comp';
 export * from './element-helper';
 export * from './e2e-component';
 export * from './input-helper';

@@ -9,14 +9,14 @@ import { E2eComponent, IE2eComponent } from './e2e-component';
 
 
 /**
- * helper class for e2e tests of FlxMonthSelector
+ * helper class for e2e tests of flx-dropdown-selector
  *
  * @export
  */
-export abstract class DropdownSelectorComponent extends E2eComponent {
+export class DropdownSelectorComponent extends E2eComponent {
   protected static readonly logger = getLogger(DropdownSelectorComponent);
 
-  constructor(parent: IE2eComponent, css: string) {
+  constructor(parent: IE2eComponent, css: string = '') {
     super(parent, css);
   }
 
