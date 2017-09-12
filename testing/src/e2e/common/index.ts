@@ -8,3 +8,4 @@ export * from './input-helper';
 export * from './month-selector.comp';
 export * from './test-user.interface';
 export * from './util';
+export * from './year-selector.comp';

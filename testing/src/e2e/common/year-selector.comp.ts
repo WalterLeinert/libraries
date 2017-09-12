@@ -14,12 +14,12 @@ import { E2eComponent, IE2eComponent } from './e2e-component';
  *
  * @export
  */
-export class MonthSelectorComponent extends DropdownSelectorComponent {
-  protected static readonly logger = getLogger(MonthSelectorComponent);
+export class YearSelectorComponent extends DropdownSelectorComponent {
+  protected static readonly logger = getLogger(YearSelectorComponent);
 
-  protected static readonly LOCATOR = 'flx-month-selector';
+  protected static readonly LOCATOR = 'flx-year-selector';
 
   constructor(parent: IE2eComponent) {
-    super(parent, MonthSelectorComponent.LOCATOR);
+    super(parent, YearSelectorComponent.LOCATOR);
   }
 }

@@ -126,4 +126,15 @@ export class ElementHelper {
   public static isActive(elem: ElementFinder): promise.Promise<boolean> {
     return elem.equals(browser.driver.switchTo().activeElement());
   }
+
+
+  public static async expectTextArray(inputElements: ElementArrayFinder, extectedText: string[],
+    debug: boolean = false) {
+    Assert.notNull(inputElements);
+    Assert.notNullOrEmpty(extectedText);
+
+    for (let i = 0; i < extectedText.length; i++) {
+      expect(await inputElements.get(i).getText()).toBe(extectedText[i]);
+    }
+  }
 }
