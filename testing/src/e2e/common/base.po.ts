@@ -1,6 +1,17 @@
 import { browser, by, element, ElementFinder, promise } from 'protractor';
 
-export abstract class BasePage {
+import { E2eComponent, IE2eComponent } from './e2e-component';
+
+
+/**
+ * abstract base class for all page objects
+ *
+ * @export
+ * @abstract
+ * @class BasePage
+ * @extends {E2eComponent}
+ */
+export abstract class BasePage extends E2eComponent {
 
   /**
    * Navigiert auf diese Seite

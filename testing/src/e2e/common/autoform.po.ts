@@ -3,23 +3,31 @@ import { browser, by, element, ElementFinder, promise } from 'protractor';
 import { Types } from '@fluxgate/core';
 
 
+import { E2eComponent, IE2eComponent } from './e2e-component';
+
+
 export interface IControlInfo {
   name: string;
   text: string;
 }
 
 
-// TODO: nach fluxgate/libraries verschieben
 /**
  * Basisklasse für Autoform-Tests
  *
  * @export
  * @class AutoformPage
  */
-export class AutoformPage {
+export class AutoformPage extends E2eComponent {
+  protected static DIALOG_LOCATOR = 'flx-autoform-dialog';
+  protected static LOCATOR = 'flx-autoform';
+
   private infoMap: Map<string, IControlInfo> = new Map<string, IControlInfo>();
 
-  constructor(public infos: IControlInfo[]) {
+
+  constructor(parent: IE2eComponent, private isDialog: boolean, public infos: IControlInfo[]) {
+    super(parent, isDialog ? AutoformPage.DIALOG_LOCATOR : AutoformPage.LOCATOR);
+
     infos.forEach((info) => {
       this.infoMap.set(info.name, info);
     });
@@ -33,9 +41,8 @@ export class AutoformPage {
    * @returns {promise.Promise<string>}
    * @memberof AutoformPage
    */
-  public getTitle(parentElement?: string): promise.Promise<string> {
-    const pe = Types.isNullOrEmpty(parentElement) ? '' : parentElement;
-    return element(by.css(`${pe} flx-autoform-dialog span.ui-dialog-title`)).getText();
+  public getTitle(): promise.Promise<string> {
+    return this.getElement().element(by.css(`span.ui-dialog-title`)).getText();
   }
 
   /**
@@ -49,8 +56,8 @@ export class AutoformPage {
     if (!this.infoMap.has(name)) {
       throw new Error(`unkown model attribute: ${name}`);
     }
-    return element(by.css(
-      `flx-autoform-dialog flx-autoform flx-autoform-controls label.control-label[for="${name}"]`)).getText();
+    return this.getElement().element(by.css(
+      `flx-autoform-controls label.control-label[for="${name}"]`)).getText();
   }
 
   /**
@@ -64,7 +71,7 @@ export class AutoformPage {
     if (!this.infoMap.has(name)) {
       throw new Error(`unkown model attribute: ${name}`);
     }
-    return element(by.id(name));
+    return this.getElement().element(by.id(name));
   }
 
 
@@ -75,7 +82,7 @@ export class AutoformPage {
    * @memberof AutoformPage
    */
   public getNewButton(): ElementFinder {
-    return element(by.id('new'));
+    return this.getElement().element(by.id('new'));
   }
 
 
@@ -87,7 +94,7 @@ export class AutoformPage {
    * @memberof AutoformPage
    */
   public getDeleteButton(): ElementFinder {
-    return element(by.id('delete'));
+    return this.getElement().element(by.id('delete'));
   }
 
 
@@ -98,7 +105,7 @@ export class AutoformPage {
    * @memberof AutoformPage
    */
   public getSaveButton(): ElementFinder {
-    return element(by.id('save'));
+    return this.getElement().element(by.id('save'));
   }
 
   /**
@@ -108,7 +115,7 @@ export class AutoformPage {
    * @memberof AutoformPage
    */
   public getCancelButton(): ElementFinder {
-    return element(by.id('cancel'));
+    return this.getElement().element(by.id('cancel'));
   }
 
 }
