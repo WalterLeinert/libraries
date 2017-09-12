@@ -26,10 +26,10 @@ export class DatatableComponent extends E2eComponent {
    * @memberof DatatableComponent
    */
   public getHeaders(): ElementArrayFinder {
-    return this.getElement().all(by.css('thead > tr > th'));
+    return this.getElement().all(this.byCss('thead > tr > th'));
   }
 
   public getRows(): ElementArrayFinder {
-    return this.getElement().all(by.css('tbody > tr.ui-widget-content > td > span'));
+    return this.getElement().all(this.byCss('tbody > tr.ui-widget-content > td > span'));
   }
 }

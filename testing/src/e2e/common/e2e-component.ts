@@ -1,6 +1,13 @@
 import { by, element, ElementFinder } from 'protractor';
 import { By } from 'selenium-webdriver';
 
+// -------------------------- logging -------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------- logging -------------------------------
+
+import { Types } from '@fluxgate/core';
+
 
 /**
  * Interface for e2e helper classes
@@ -49,6 +56,8 @@ export interface IE2eComponent {
  * @implements {IE2eComponent}
  */
 export abstract class E2eComponent implements IE2eComponent {
+  protected static readonly logger = getLogger(E2eComponent);
+
   private _fullCss: string;
 
   /**
@@ -76,9 +85,20 @@ export abstract class E2eComponent implements IE2eComponent {
    * @memberof E2eComponent
    */
   public getElement(): ElementFinder {
-    // console.log(`getElement: type = ${Types.getClassName(this)}, fullCss = ${this.fullCss}`);
+    return using(new XLog(E2eComponent.logger, levels.INFO, 'getElement'), (log) => {
+      // console.log(`getElement: type = ${Types.getClassName(this)}, fullCss = ${this.fullCss}`);
 
-    return element(by.css(this._fullCss));
+      return element(this.byCss(this.fullCss));
+    });
+  }
+
+  protected byCss(css: string): By {
+    return using(new XLog(E2eComponent.logger, levels.INFO, 'byCss'), (log) => {
+      if (log.isEnabled()) {
+        log.log(`class ${Types.getClassName(this)}: css = ${css}`);
+      }
+      return by.css(css);
+    });
   }
 
 

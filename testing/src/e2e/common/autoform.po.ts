@@ -42,7 +42,7 @@ export class AutoformPage extends E2eComponent {
    * @memberof AutoformPage
    */
   public getTitle(): promise.Promise<string> {
-    return this.getElement().element(by.css(`span.ui-dialog-title`)).getText();
+    return this.getElement().element(this.byCss(`span.ui-dialog-title`)).getText();
   }
 
   /**
@@ -56,7 +56,7 @@ export class AutoformPage extends E2eComponent {
     if (!this.infoMap.has(name)) {
       throw new Error(`unkown model attribute: ${name}`);
     }
-    return this.getElement().element(by.css(
+    return this.getElement().element(this.byCss(
       `flx-autoform-controls label.control-label[for="${name}"]`)).getText();
   }
 
