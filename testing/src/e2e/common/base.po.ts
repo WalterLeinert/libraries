@@ -1,6 +1,7 @@
 import { browser, by, element, ElementFinder, promise } from 'protractor';
 
-import { E2eComponent, IE2eComponent } from './e2e-component';
+import { IAppComponent } from './app.comp.interface';
+import { E2eComponent } from './e2e-component';
 
 
 /**
@@ -54,5 +55,10 @@ export abstract class BasePage extends E2eComponent {
    */
   public clickLink(name: string): promise.Promise<void> {
     return browser.actions().click(this.getLink(name)).perform();
+  }
+
+
+  public get app(): IAppComponent {
+    return this.parent as IAppComponent;
   }
 }
