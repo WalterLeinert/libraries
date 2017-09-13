@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/testing",
-  "version": "2.4.2-beta.21",
+  "version": "2.4.2-beta.25",
   "description": "Fluxgate Testing-Library ",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
