@@ -20,9 +20,7 @@ export class ButtonComponent extends E2eComponent {
   }
 
   public click(): promise.Promise<void> {
-    return browser.actions()
-      .click()
-      .perform();
+    return this.getElement().click();
   }
 
   public isEnabled(): promise.Promise<boolean> {
