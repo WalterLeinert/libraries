@@ -1,4 +1,4 @@
-import { browser, element, by, ElementArrayFinder, ElementFinder, promise } from 'protractor';
+import { browser, by, element, ElementArrayFinder, ElementFinder, promise } from 'protractor';
 
 import { IAppComponent } from './app.comp.interface';
 import { BasePage } from './base.po';

@@ -84,6 +84,7 @@ export abstract class E2eComponent implements IE2eComponent {
    * @memberof E2eComponent
    */
   public async expectElements() {
+    // ok
   }
 
 

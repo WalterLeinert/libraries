@@ -1,4 +1,4 @@
-import { browser, element, by, ElementArrayFinder, ElementFinder, promise } from 'protractor';
+// import { browser, by, element, ElementArrayFinder, ElementFinder, promise } from 'protractor';
 
 import { IAppComponent } from './app.comp.interface';
 import { ButtonComponent } from './button.comp';
@@ -33,17 +33,17 @@ export class ChangePasswordComponent extends E2eComponent {
   }
 
   public async expectElements() {
-    expect(await this.passwordLabel.getElement()).not.toBeNull;
-    expect(await this.passwordInput.getElement()).not.toBeNull;
+    expect(await this.passwordLabel.getElement()).not.toBeNull();
+    expect(await this.passwordInput.getElement()).not.toBeNull();
 
-    expect(await this.passwordNewLabel.getElement()).not.toBeNull;
-    expect(await this.passwordNewInput.getElement()).not.toBeNull;
+    expect(await this.passwordNewLabel.getElement()).not.toBeNull();
+    expect(await this.passwordNewInput.getElement()).not.toBeNull();
 
-    expect(await this.passwordNewRepeatedLabel.getElement()).not.toBeNull;
-    expect(await this.passwordNewRepeatedInput.getElement()).not.toBeNull;
+    expect(await this.passwordNewRepeatedLabel.getElement()).not.toBeNull();
+    expect(await this.passwordNewRepeatedInput.getElement()).not.toBeNull();
 
-    expect(await this.changePasswordButton.getElement()).not.toBeNull;
-    expect(await this.cancelButton.getElement()).not.toBeNull;
+    expect(await this.changePasswordButton.getElement()).not.toBeNull();
+    expect(await this.cancelButton.getElement()).not.toBeNull();
   }
 
   public get passwordLabel(): LabelComponent {

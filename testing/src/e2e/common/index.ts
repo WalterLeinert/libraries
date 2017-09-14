@@ -3,9 +3,9 @@ export * from './app.comp.interface';
 export * from './autoform.po';
 export * from './base.po';
 export * from './button.comp';
-export * from './change-password.comp'
-export * from './change-password.po'
-export * from './container.comp'
+export * from './change-password.comp';
+export * from './change-password.po';
+export * from './container.comp';
 export * from './datatable.comp';
 export * from './dropdown-selector.comp';
 export * from './element-helper';

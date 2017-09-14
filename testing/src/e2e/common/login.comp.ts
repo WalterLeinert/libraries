@@ -29,11 +29,11 @@ export class LoginComponent extends E2eComponent {
   }
 
   public async expectElements() {
-    expect(await this.usernameLabel.getElement()).not.toBeNull;
-    expect(await this.usernameInput.getElement()).not.toBeNull;
-    expect(await this.passwordLabel.getElement()).not.toBeNull;
-    expect(await this.passwordInput.getElement()).not.toBeNull;
-    expect(await this.loginButton.getElement()).not.toBeNull;
+    expect(await this.usernameLabel.getElement()).not.toBeNull();
+    expect(await this.usernameInput.getElement()).not.toBeNull();
+    expect(await this.passwordLabel.getElement()).not.toBeNull();
+    expect(await this.passwordInput.getElement()).not.toBeNull();
+    expect(await this.loginButton.getElement()).not.toBeNull();
   }
 
   public getTitle(): promise.Promise<string> {
