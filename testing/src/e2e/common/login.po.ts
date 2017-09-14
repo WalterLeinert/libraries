@@ -1,16 +1,12 @@
-// tslint:disable:no-unused-expression
-
 import { browser, element, ElementFinder, promise } from 'protractor';
 
 import { IAppComponent } from './app.comp.interface';
+import { BasePage } from './base.po';
 import { ButtonComponent } from './button.comp';
 import { InputComponent } from './input.comp';
 import { LabelComponent } from './label.comp';
 import { LoginComponent } from './login.comp';
-import { BasePage } from './base.po';
 import { ITestUser } from './test-user.interface';
-import { log } from './util';
-
 
 
 export class LoginPage extends BasePage {

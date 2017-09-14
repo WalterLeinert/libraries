@@ -1,6 +1,7 @@
-import { element, ElementArrayFinder, ElementFinder } from 'protractor';
+import { ElementArrayFinder, ElementFinder } from 'protractor';
 
-import { E2eComponent, IE2eComponent } from './e2e-component';
+import { ContainerComponent } from './container.comp';
+import { IE2eComponent } from './e2e-component';
 
 
 /**
@@ -8,7 +9,7 @@ import { E2eComponent, IE2eComponent } from './e2e-component';
  *
  * @export
  */
-export class TabComponent extends E2eComponent {
+export class TabComponent extends ContainerComponent {
 
   /**
    * Creates an instance of TabComponent.

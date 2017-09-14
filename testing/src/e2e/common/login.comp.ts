@@ -4,10 +4,9 @@ import { browser, element, ElementFinder, promise } from 'protractor';
 
 import { IAppComponent } from './app.comp.interface';
 import { ButtonComponent } from './button.comp';
+import { E2eComponent, IE2eComponent } from './e2e-component';
 import { InputComponent } from './input.comp';
 import { LabelComponent } from './label.comp';
-import { E2eComponent, IE2eComponent } from './e2e-component';
-import { ITestUser } from './test-user.interface';
 
 
 export class LoginComponent extends E2eComponent {
