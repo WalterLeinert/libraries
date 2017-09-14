@@ -1,4 +1,4 @@
-import { by, element, ElementFinder } from 'protractor';
+import { by, element, ElementFinder, promise } from 'protractor';
 import { By } from 'selenium-webdriver';
 
 // -------------------------- logging -------------------------------
@@ -41,6 +41,7 @@ export interface IE2eComponent {
    */
   getElement(): ElementFinder;
 
+  expectElements();
 }
 
 
@@ -74,6 +75,15 @@ export abstract class E2eComponent implements IE2eComponent {
     } else {
       this._fullCss = this._css;
     }
+  }
+
+
+  /**
+   * expects all components of a concrete parent component
+   *
+   * @memberof E2eComponent
+   */
+  public async expectElements() {
   }
 
 

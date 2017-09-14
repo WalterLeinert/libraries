@@ -2,9 +2,6 @@ import { browser, element, ElementFinder, promise } from 'protractor';
 
 import { IAppComponent } from './app.comp.interface';
 import { BasePage } from './base.po';
-import { ButtonComponent } from './button.comp';
-import { InputComponent } from './input.comp';
-import { LabelComponent } from './label.comp';
 import { LoginComponent } from './login.comp';
 import { ITestUser } from './test-user.interface';
 
@@ -25,7 +22,7 @@ export class LoginPage extends BasePage {
     return browser.get(url);
   }
 
-  public async expectElements(): promise.Promise<void> {
+  public async expectElements() {
     return this._login.expectElements();
   }
 
@@ -38,9 +35,9 @@ export class LoginPage extends BasePage {
     this.navigateTo();
 
     return promise.all([
-      this.usernameInput.sendKeys(username),
-      this.passwordInput.sendKeys(password),
-      this.loginButton.click()
+      this.login.usernameInput.sendKeys(username),
+      this.login.passwordInput.sendKeys(password),
+      this.login.loginButton.click()
     ]);
   }
 
@@ -48,24 +45,8 @@ export class LoginPage extends BasePage {
     return this.getElement().element(this.byCss('h1')).getText();
   }
 
-  public get usernameLabel(): LabelComponent {
-    return this._login.usernameLabel;
-  }
-
-  public get usernameInput(): InputComponent {
-    return this._login.usernameInput;
-  }
-
-  public get passwordLabel(): LabelComponent {
-    return this._login.passwordLabel;
-  }
-
-  public get passwordInput(): InputComponent {
-    return this._login.passwordInput;
-  }
-
-  public get loginButton(): ButtonComponent {
-    return this._login.loginButton;
+  public get login(): LoginComponent {
+    return this._login;
   }
 
 }

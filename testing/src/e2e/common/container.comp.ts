@@ -18,6 +18,11 @@ export class ContainerComponent extends E2eComponent {
     this._children = [];
   }
 
+  public async expectElements() {
+    this._children.forEach((c) => {
+      c.expectElements();
+    });
+  }
 
   public addComponent(component: IE2eComponent) {
     this._children.push(component);
