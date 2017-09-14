@@ -36,6 +36,34 @@ export class TabComponent extends E2eComponent {
   }
 
   /**
+   * returns the tab header at the given index
+   *
+   * @param {number} index
+   * @returns {ElementFinder}
+   * @memberof TabComponent
+   */
+  public getHeader(index: number): ElementFinder {
+    return this.getHeaders().get(index);
+  }
+
+  /**
+   * returns the tab header with the given title
+   *
+   * @param {0} index
+   * @returns {ElementFinder}
+   * @memberof TabComponent
+   */
+  public getHeaderByName(title: string): ElementFinder {
+    return this.getHeaders().filter((elem, i) => {
+      return elem.getText().then((val) => {
+        return val === title;
+      });
+    }).first();
+  }
+
+
+
+  /**
    * returns the content of the current tab
    *
    * @returns {ElementArrayFinder}
