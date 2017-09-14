@@ -13,9 +13,6 @@ export class ChangePasswordPage extends BasePage {
     this._changePassword = new ChangePasswordComponent(this);
   }
 
-  public navigateTo() {
-  }
-
   public getTitle(): promise.Promise<string> {
     return this.getElement().element(this.byCss('h1')).getText();
   }

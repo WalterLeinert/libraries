@@ -16,11 +16,14 @@ export abstract class BasePage extends E2eComponent {
 
   /**
    * Navigiert auf diese Seite
+   * Muss für konrete Seite überschrieben werden!
    *
    * @abstract
    * @memberof BasePage
    */
-  public abstract navigateTo();
+  public navigateTo<T>(): promise.Promise<T> {
+    return promise.fulfilled<T>();
+  }
 
 
   public getLink(name: string): ElementFinder {
