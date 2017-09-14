@@ -7,7 +7,6 @@ import { ButtonComponent } from './button.comp';
 import { InputComponent } from './input.comp';
 import { LabelComponent } from './label.comp';
 import { E2eComponent, IE2eComponent } from './e2e-component';
-import { StartPage } from './start.po';
 import { ITestUser } from './test-user.interface';
 
 

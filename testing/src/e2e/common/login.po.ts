@@ -6,6 +6,7 @@ import { IAppComponent } from './app.comp.interface';
 import { ButtonComponent } from './button.comp';
 import { InputComponent } from './input.comp';
 import { LabelComponent } from './label.comp';
+import { LoginComponent } from './login.comp';
 import { BasePage } from './base.po';
 import { ITestUser } from './test-user.interface';
 import { log } from './util';
@@ -13,55 +14,38 @@ import { log } from './util';
 
 
 export class LoginPage extends BasePage {
-  protected static LOCATOR = 'flx-login';
+  private _login: LoginComponent;
 
-  private _usernameLabel: LabelComponent;
-  private _usernameInput: InputComponent;
-  private _passwordLabel: LabelComponent;
-  private _passwordInput: InputComponent;
-  private _loginButton: ButtonComponent;
-
-  constructor(app: IAppComponent, private user: ITestUser = {
+  constructor(app: IAppComponent, css: string = '', private user: ITestUser = {
     username: 'tester',
     password: 'tester'
   }) {
-    super(app, LoginPage.LOCATOR);
+    super(app, css);
 
-    this._usernameLabel = new LabelComponent(this, 'label[for="username"]');
-    this._usernameInput = new InputComponent(this, '#username');
-    this._passwordLabel = new LabelComponent(this, 'label[for="password"]');
-    this._passwordInput = new InputComponent(this, '#password');
-    this._loginButton = new ButtonComponent(this, '#login');
+    this._login = new LoginComponent(this);
   }
 
-  public async expectElements() {
-
-    expect(await this.usernameLabel.getElement()).not.toBeNull;
-    expect(await this.usernameInput.getElement()).not.toBeNull;
-    expect(await this.passwordLabel.getElement()).not.toBeNull;
-    expect(await this.passwordInput.getElement()).not.toBeNull;
-    expect(await this.loginButton.getElement()).not.toBeNull;
+  public navigateTo(url: string = '/'): promise.Promise<any> {
+    return browser.get(url);
   }
 
-  public navigateTo() {
-    browser.get('/');
+  public async expectElements(): promise.Promise<void> {
+    return this._login.expectElements();
+  }
+
+  public loginTestUser(): promise.Promise<void[]> {
+    return this.loginUser(this.user.username, this.user.password);
   }
 
 
-  public loginTestUser() {
-    this.loginUser(this.user.username, this.user.password);
-  }
-
-
-  public loginUser(username, password) {
+  public loginUser(username, password): promise.Promise<void[]> {
     this.navigateTo();
 
-    this.usernameInput.sendKeys(username);
-    this.passwordInput.sendKeys(password);
-
-    this.loginButton.click().then(() => {
-      // log(`logged in user ${username}`);
-    });
+    return promise.all([
+      this.usernameInput.sendKeys(username),
+      this.passwordInput.sendKeys(password),
+      this.loginButton.click()
+    ]);
   }
 
   public getTitle(): promise.Promise<string> {
@@ -69,22 +53,23 @@ export class LoginPage extends BasePage {
   }
 
   public get usernameLabel(): LabelComponent {
-    return this._usernameLabel;
+    return this._login.usernameLabel;
   }
 
   public get usernameInput(): InputComponent {
-    return this._usernameInput;
+    return this._login.usernameInput;
   }
 
   public get passwordLabel(): LabelComponent {
-    return this._passwordLabel;
+    return this._login.passwordLabel;
   }
 
   public get passwordInput(): InputComponent {
-    return this._passwordInput;
+    return this._login.passwordInput;
   }
 
   public get loginButton(): ButtonComponent {
-    return this._loginButton;
+    return this._login.loginButton;
   }
+
 }
