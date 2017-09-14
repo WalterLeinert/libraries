@@ -6,13 +6,12 @@ import { IAppComponent } from './app.comp.interface';
 import { ButtonComponent } from './button.comp';
 import { InputComponent } from './input.comp';
 import { LabelComponent } from './label.comp';
-import { BasePage } from './base.po';
+import { E2eComponent, IE2eComponent } from './e2e-component';
+import { StartPage } from './start.po';
 import { ITestUser } from './test-user.interface';
-import { log } from './util';
 
 
-
-export class LoginPage extends BasePage {
+export class LoginComponent extends E2eComponent {
   protected static LOCATOR = 'flx-login';
 
   private _usernameLabel: LabelComponent;
@@ -21,11 +20,8 @@ export class LoginPage extends BasePage {
   private _passwordInput: InputComponent;
   private _loginButton: ButtonComponent;
 
-  constructor(app: IAppComponent, private user: ITestUser = {
-    username: 'tester',
-    password: 'tester'
-  }) {
-    super(app, LoginPage.LOCATOR);
+  constructor(parent: IE2eComponent) {
+    super(parent, LoginComponent.LOCATOR);
 
     this._usernameLabel = new LabelComponent(this, 'label[for="username"]');
     this._usernameInput = new InputComponent(this, '#username');
@@ -35,33 +31,11 @@ export class LoginPage extends BasePage {
   }
 
   public async expectElements() {
-
     expect(await this.usernameLabel.getElement()).not.toBeNull;
     expect(await this.usernameInput.getElement()).not.toBeNull;
     expect(await this.passwordLabel.getElement()).not.toBeNull;
     expect(await this.passwordInput.getElement()).not.toBeNull;
     expect(await this.loginButton.getElement()).not.toBeNull;
-  }
-
-  public navigateTo() {
-    browser.get('/');
-  }
-
-
-  public loginTestUser() {
-    this.loginUser(this.user.username, this.user.password);
-  }
-
-
-  public loginUser(username, password) {
-    this.navigateTo();
-
-    this.usernameInput.sendKeys(username);
-    this.passwordInput.sendKeys(password);
-
-    this.loginButton.click().then(() => {
-      // log(`logged in user ${username}`);
-    });
   }
 
   public getTitle(): promise.Promise<string> {

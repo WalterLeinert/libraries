@@ -5,6 +5,8 @@ import { browser, by, element, ElementArrayFinder, ElementFinder, promise } from
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
+import { Types } from '@fluxgate/core';
+
 import { E2eComponent, IE2eComponent } from './e2e-component';
 
 
@@ -16,8 +18,12 @@ import { E2eComponent, IE2eComponent } from './e2e-component';
 export class DropdownSelectorComponent extends E2eComponent {
   protected static readonly logger = getLogger(DropdownSelectorComponent);
 
+  protected static LOCATOR = 'flx-dropdown-selector p-dropdown';
+
+
   constructor(parent: IE2eComponent, css: string = '') {
-    super(parent, css);
+    super(parent, Types.isNullOrEmpty(css) ?
+      DropdownSelectorComponent.LOCATOR : css + ' ' + DropdownSelectorComponent.LOCATOR);
   }
 
 
@@ -25,7 +31,7 @@ export class DropdownSelectorComponent extends E2eComponent {
   public getDropdownCaret(): ElementFinder {
     return using(new XLog(DropdownSelectorComponent.logger, levels.INFO, 'getDropdownCaret'), (log) => {
       return this.getElement().element(this.byCss(
-        'flx-dropdown-selector p-dropdown div div.ui-dropdown-trigger.ui-state-default.ui-corner-right span'));
+        'div div.ui-dropdown-trigger.ui-state-default.ui-corner-right span'));
     });
   }
 
@@ -34,8 +40,7 @@ export class DropdownSelectorComponent extends E2eComponent {
   public getDropdownList(): ElementArrayFinder {
     return using(new XLog(DropdownSelectorComponent.logger, levels.INFO, 'getDropdownList'), (log) => {
       return this.getElement().all(this.byCss(
-        'flx-dropdown-selector p-dropdown' +
-        ' div.ui-dropdown-panel.ui-widget-content.ui-corner-all.ui-helper-hidden.ui-shadow div ul li span'));
+        'div.ui-dropdown-panel.ui-widget-content.ui-corner-all.ui-helper-hidden.ui-shadow div ul li span'));
     });
   }
 

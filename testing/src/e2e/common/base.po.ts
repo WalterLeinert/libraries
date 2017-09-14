@@ -23,25 +23,6 @@ export abstract class BasePage extends E2eComponent {
   public abstract navigateTo();
 
 
-  /**
-   * Liefert den aktiven Tab
-   *
-   * @returns {ElementFinder}
-   * @memberof BasePage
-   */
-  public abstract getActiveTab(): ElementFinder;
-
-
-  /**
-   * Liefert den Titel des aktiven Tabs
-   *
-   * @returns {promise.Promise<string>}
-   * @memberof BasePage
-   */
-  public getTabTitle(): promise.Promise<string> {
-    return this.getActiveTab().getText();
-  }
-
   public getLink(name: string): ElementFinder {
     return element(by.linkText(`${name}`));
   }
