@@ -1,5 +1,7 @@
 export * from './app.comp';
 export * from './app.comp.interface';
+export * from './control-info.interface';
+export * from './autoform.comp';
 export * from './autoform.po';
 export * from './base.po';
 export * from './button.comp';
@@ -16,6 +18,7 @@ export * from './label.comp';
 export * from './login.comp';
 export * from './login.po';
 export * from './month-selector.comp';
+export * from './sidebar.comp';
 export * from './tab.comp';
 export * from './test-user.interface';
 export * from './util';
