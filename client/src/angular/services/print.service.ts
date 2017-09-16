@@ -56,7 +56,7 @@ export class PrintService extends ServiceCore {
 
       return this.http
         .post(this.getUrl(), printData, options)
-        .map(this.extractData)
+        .map((response: Response) => this.deserialize(response.json()))
         .catch(this.handleError);
     });
   }
@@ -69,12 +69,6 @@ export class PrintService extends ServiceCore {
         .map((response: Response) => this.deserialize(response.json()))
         .catch(this.handleError);
     });
-  }
-
-
-  private extractData(res: Response) {
-    const body = res;
-    return body;
   }
 
 }
