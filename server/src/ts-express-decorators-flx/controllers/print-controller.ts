@@ -14,8 +14,8 @@ import { ControllerCore } from './base/controller-core';
 import { FindMethod } from './decorator/find-method.decorator';
 
 @Controller('/printer')
-export class PrinterController extends ControllerCore {
-  protected static readonly logger = getLogger(PrinterController);
+export class PrintController extends ControllerCore {
+  protected static readonly logger = getLogger(PrintController);
 
   constructor(service: PrintService) {
     super(service);
@@ -26,7 +26,7 @@ export class PrinterController extends ControllerCore {
   public getPrinters(
     @Request() request: ISessionRequest
     ): Promise<IPrinter[]> {
-    return using(new XLog(PrinterController.logger, levels.INFO, 'getPrinters'), (log) => {
+    return using(new XLog(PrintController.logger, levels.INFO, 'getPrinters'), (log) => {
       return new Promise<IPrinter[]>((resolve, reject) => {
         this.getService().find(request).then((result) => {
           resolve(this.serialize(result));
