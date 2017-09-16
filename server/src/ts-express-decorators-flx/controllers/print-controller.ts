@@ -1,11 +1,12 @@
-import {
-  Authenticated, Controller, Request
-} from 'ts-express-decorators';
+import { Authenticated, Controller, Get, Request } from 'ts-express-decorators';
+
+// -------------------------- logging -------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------- logging -------------------------------
 
 // Fluxgate
-import {
-  FindResult, IPrinter
-} from '@fluxgate/common';
+import { FindResult, IPrinter } from '@fluxgate/common';
 
 import { PrintService } from '../services/print.service';
 import { ISessionRequest } from '../session/session-request.interface';
@@ -14,32 +15,28 @@ import { FindMethod } from './decorator/find-method.decorator';
 
 @Controller('/printer')
 export class PrinterController extends ControllerCore {
+  protected static readonly logger = getLogger(PrinterController);
 
   constructor(service: PrintService) {
     super(service);
   }
 
   @Authenticated()
-  @FindMethod()
-  public find(
+  @Get('/find')
+  public getPrinters(
     @Request() request: ISessionRequest
-    ): Promise<FindResult<IPrinter>> {
-    return this.findInternal(request);
+    ): Promise<IPrinter[]> {
+    return using(new XLog(PrinterController.logger, levels.INFO, 'getPrinters'), (log) => {
+      return new Promise<IPrinter[]>((resolve, reject) => {
+        this.getService().find(request).then((result) => {
+          resolve(this.serialize(result));
+        });
+      });
+    });
   }
 
   protected getService(): PrintService {
     return super.getService() as PrintService;
-  }
-
-
-  private findInternal(
-    request: ISessionRequest,
-  ): Promise<FindResult<IPrinter>> {
-    return new Promise<FindResult<IPrinter>>((resolve, reject) => {
-      this.getService().find(request).then((result) => {
-        resolve(this.serialize(result));
-      });
-    });
   }
 
 }

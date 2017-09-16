@@ -6,13 +6,14 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { FindResult, IPrinter } from '@fluxgate/common';
+import { FindResult, IPrinter, Printer } from '@fluxgate/common';
 
 import { ISessionRequest } from '../session/session-request.interface';
 import { ServiceCore } from './service-core';
 
 @Service()
 export class PrintService extends ServiceCore {
+  protected static readonly logger = getLogger(PrintService);
 
   private options = {
     host: 'localhost',
@@ -35,22 +36,24 @@ export class PrintService extends ServiceCore {
 
   public find(
     request: ISessionRequest
-  ): Promise<FindResult<IPrinter[]>> {
-    return new Promise<FindResult<IPrinter[]>>((resolve) => {
-      const http = require('https');
-      http.get(this.options, (res) => {
-        const bodyChunks = [];
-        res.on('data', (chunk) => {
-          bodyChunks.push(chunk);
-        }).on('end', () => {
-          const body = Buffer.concat(bodyChunks);
-          const printers = JSON.parse(body.toString()) as IPrinter[];
-          resolve(new FindResult([printers], undefined));
+  ): Promise<IPrinter[]> {
+    return using(new XLog(PrintService.logger, levels.INFO, 'find'), (log) => {
+      return new Promise<IPrinter[]>((resolve) => {
+        // const http = require('https');
+        // http.get(this.options, (res) => {
+        //   const bodyChunks = [];
+        //   res.on('data', (chunk) => {
+        //     bodyChunks.push(chunk);
+        //   }).on('end', () => {
+        //     const body = Buffer.concat(bodyChunks);
+        //     const printers = JSON.parse(body.toString()) as IPrinter[];
+        //     resolve([printers]);
 
-        });
+        //   });
+        // });
+        const printer = new Printer('pr01');
+        resolve([printer]);
       });
-      // const printer = new Printer('pr01');
-      // resolve(new FindResult([printer], -1));
     });
   }
 
