@@ -1,6 +1,17 @@
 export type RestMethod = 'GET' | 'PUT' | 'POST' | 'PATCH' | 'DELETE';
 
 /**
+ * All data types that column can be.
+ */
+export class RestMethods {
+  public static GET: RestMethod = 'GET';
+  public static PUT: RestMethod = 'PUT';
+  public static POST: RestMethod = 'POST';
+  public static PATCH: RestMethod = 'PATCH';
+  public static DELETE: RestMethod = 'DELETE';
+}
+
+/**
  * options for for communication with the external print service
  *
  * @export
@@ -16,36 +27,12 @@ export interface IPrintServiceOptions {
   host: string;
 
   /**
-   * relative REST-Path
-   *
-   * @type {string}
-   * @memberof IPrintServiceOptions
-   */
-  path: string;
-
-  /**
    * Port
    *
    * @type {number}
    * @memberof IPrintServiceOptions
    */
   port: number;
-
-  /**
-   * REST method (e.g. 'POST')
-   *
-   * @type {string}
-   * @memberof IPrintServiceOptions
-   */
-  method: RestMethod;
-
-  /**
-   * TODO
-   *
-   * @type {boolean}
-   * @memberof IPrintServiceOptions
-   */
-  json: boolean;
 
   /**
    * TODO

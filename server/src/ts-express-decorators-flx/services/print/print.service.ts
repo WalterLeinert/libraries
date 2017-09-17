@@ -1,7 +1,8 @@
-import { Injector, Inject } from 'injection-js';
+import { Inject, Injector } from 'injection-js';
 
+import * as http from 'https';
 import { Service } from 'ts-express-decorators';
-const http = require('https');
+
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -9,12 +10,12 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { FindResult, IPrinter, Printer } from '@fluxgate/common';
+import { FindResult, IPrinter, IPrintTask, Printer } from '@fluxgate/common';
 
 import { ISessionRequest } from '../../session/session-request.interface';
-import { ServiceCore } from '../service-core';
 import { ServerConfigurationService } from '../server-configuration.service';
-import { IPrintServiceOptions } from './print-service-options.interface';
+import { ServiceCore } from '../service-core';
+import { IPrintServiceOptions, RestMethods } from './print-service-options.interface';
 
 
 /**
@@ -27,6 +28,7 @@ import { IPrintServiceOptions } from './print-service-options.interface';
 @Service()
 export class PrintService extends ServiceCore {
   protected static readonly logger = getLogger(PrintService);
+  public static readonly URL_PREFIX = '/rest/';
 
   constructor(private configurationService: ServerConfigurationService) {
     super();
@@ -35,16 +37,6 @@ export class PrintService extends ServiceCore {
       log.log(`configuration = ${JSON.stringify(configurationService.get())}`);
     });
   }
-
-  private options: IPrintServiceOptions = {
-    host: 'localhost',
-    path: '/rest/info?GetPrinters',
-    port: 8881,
-    method: 'POST',
-    json: true,
-    rejectUnauthorized: false,
-    requestCert: true
-  };
 
 
   /**
@@ -64,7 +56,17 @@ export class PrintService extends ServiceCore {
         const printConfiguration = this.configurationService.get().print;
         log.log(`printConfiguration = ${JSON.stringify(printConfiguration)}`);
 
-        http.get(printConfiguration, (res) => {
+        const options = {
+          host: printConfiguration.host,
+          path: this.createUrl('info', 'GetPrinters'),
+          port: printConfiguration.port,
+          method: RestMethods.POST,
+          json: true,
+          rejectUnauthorized: false,
+          requestCert: true
+        };
+
+        http.get(options, (res) => {
           const bodyChunks = [];
           res.on('data', (chunk) => {
             bodyChunks.push(chunk);
@@ -80,6 +82,47 @@ export class PrintService extends ServiceCore {
         // resolve([printer]);
       });
     });
+  }
+
+
+  public formatData(
+    request: ISessionRequest,
+    printTask: IPrintTask,
+    filename: string
+  ): Promise<IPrinter[]> {
+    return using(new XLog(PrintService.logger, levels.INFO, 'find'), (log) => {
+      return new Promise<IPrinter[]>((resolve) => {
+
+        const printConfiguration = this.configurationService.get().print;
+        log.log(`printConfiguration = ${JSON.stringify(printConfiguration)}`);
+
+        const options = {
+          host: printConfiguration.host,
+          path: this.createUrl('json', filename),
+          port: printConfiguration.port,
+          method: RestMethods.POST,
+          body: printTask,
+          json: true,
+          rejectUnauthorized: false,
+          requestCert: true
+        };
+
+        http.get(options, (res) => {
+          const bodyChunks = [];
+          res.on('data', (chunk) => {
+            bodyChunks.push(chunk);
+          }).on('end', () => {
+            const body = Buffer.concat(bodyChunks);
+            const printers = JSON.parse(body.toString()) as IPrinter[];
+            resolve(printers);
+          });
+        });
+      });
+    });
+  }
+
+  private createUrl(type: string, verb: string): string {
+    return PrintService.URL_PREFIX + type + '?' + verb;
   }
 
 }
