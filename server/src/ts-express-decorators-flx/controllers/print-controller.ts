@@ -1,4 +1,4 @@
-import { Authenticated, Controller, Get, Request } from 'ts-express-decorators';
+import { Authenticated, Controller, Get, Metadata, Request } from 'ts-express-decorators';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -8,7 +8,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import { FindResult, IPrinter } from '@fluxgate/common';
 
-import { PrintService } from '../services/print.service';
+import { PrintService } from '../services/print/print.service';
 import { ISessionRequest } from '../session/session-request.interface';
 import { ControllerCore } from './base/controller-core';
 import { FindMethod } from './decorator/find-method.decorator';
@@ -28,7 +28,7 @@ export class PrintController extends ControllerCore {
     ): Promise<IPrinter[]> {
     return using(new XLog(PrintController.logger, levels.INFO, 'getPrinters'), (log) => {
       return new Promise<IPrinter[]>((resolve, reject) => {
-        this.getService().find(request).then((result) => {
+        this.getService().getPrinters(request).then((result) => {
           resolve(this.serialize(result));
         });
       });

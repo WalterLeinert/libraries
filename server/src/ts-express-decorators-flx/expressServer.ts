@@ -1,6 +1,6 @@
 import * as Express from 'express';
 import * as path from 'path';
-import { ServerSettings } from 'ts-express-decorators';
+import { InjectorService, ServerSettings } from 'ts-express-decorators';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -18,7 +18,8 @@ import { GlobalErrorHandler } from './middlewares/global-error-handler';
 //   GlobalSerializationRequestHandler, GlobalSerializationResponsetHandler
 // } from './middlewares/global-serialization-handler';
 import { ServerBase } from './serverBase';
-import { IServerConfiguration } from './serverBase';
+import { IServerConfiguration } from './server-configuration.interface';
+import { ServerConfigurationService } from './services/server-configuration.service';
 
 
 const appConfigPath = path.join(process.cwd(), 'app/config/config.json');
@@ -71,6 +72,14 @@ export class ExpressServer extends ServerBase {
    */
   public $onMountingMiddlewares(): void | Promise<any> {
     return using(new XLog(ExpressServer.logger, levels.INFO, '$onMountingMiddlewares'), (log) => {
+
+      //
+      // Hinweis: der ServerConfigurationService ist erst hier verfügbar, da erst in ServerLoader.initializeSettings
+      // die Services mittels InjectorService.load(); geladen wurden.
+      //
+      const configurationService: ServerConfigurationService = InjectorService.get<ServerConfigurationService>(ServerConfigurationService);
+      configurationService.register(this.configuration);
+
 
       super.$onMountingMiddlewares();
 
