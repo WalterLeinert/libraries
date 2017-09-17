@@ -18,8 +18,8 @@ import { FileSystem } from '@fluxgate/platform';
 
 // lokale Komponenten
 import { Messages } from '../resources/messages';
-import { KnexService } from './services/knex.service';
 import { IServerConfiguration } from './server-configuration.interface';
+import { KnexService } from './services/knex.service';
 
 
 /**

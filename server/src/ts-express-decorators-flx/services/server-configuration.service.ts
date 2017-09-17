@@ -1,7 +1,5 @@
 import { Service } from 'ts-express-decorators';
 
-// fluxgate
-import { } from '@fluxgate/core';
 
 import { IServerConfiguration } from '../server-configuration.interface';
 

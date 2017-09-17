@@ -17,8 +17,9 @@ import { GlobalErrorHandler } from './middlewares/global-error-handler';
 // import {
 //   GlobalSerializationRequestHandler, GlobalSerializationResponsetHandler
 // } from './middlewares/global-serialization-handler';
-import { ServerBase } from './serverBase';
+
 import { IServerConfiguration } from './server-configuration.interface';
+import { ServerBase } from './serverBase';
 import { ServerConfigurationService } from './services/server-configuration.service';
 
 
@@ -77,7 +78,8 @@ export class ExpressServer extends ServerBase {
       // Hinweis: der ServerConfigurationService ist erst hier verfügbar, da erst in ServerLoader.initializeSettings
       // die Services mittels InjectorService.load(); geladen wurden.
       //
-      const configurationService: ServerConfigurationService = InjectorService.get<ServerConfigurationService>(ServerConfigurationService);
+      const configurationService: ServerConfigurationService =
+        InjectorService.get<ServerConfigurationService>(ServerConfigurationService);
       configurationService.register(this.configuration);
 
 
