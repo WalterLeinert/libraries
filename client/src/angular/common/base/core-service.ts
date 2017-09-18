@@ -32,8 +32,8 @@ import { ServiceBase } from './service-base';
 export abstract class CoreService<T, TId extends IToString> extends ServiceBase<T, TId> {
   protected static logger = getLogger(CoreService);
 
-  public static JSON_HEADERS = new Headers({ 'Content-Type': 'application/json' });        // ... Set content type to JSON
-  public static JSON_OPTIONS = new RequestOptions({ headers: CoreService.JSON_HEADERS });       // Create a request option
+  public static JSON_HEADERS = new Headers({ 'Content-Type': 'application/json' });       // set content type to JSON
+  public static JSON_OPTIONS = new RequestOptions({ headers: CoreService.JSON_HEADERS }); // create a request option
 
 
   protected constructor(model: Funktion, metadataService: MetadataService,
