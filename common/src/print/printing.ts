@@ -3,7 +3,7 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, Core } from '@fluxgate/core';
+import { Assert, Core, Types } from '@fluxgate/core';
 
 import { ColumnTypes } from '../model/metadata/columnTypes';
 import { MetadataStorage } from '../model/metadata/metadataStorage';
@@ -31,7 +31,7 @@ export class Printing {
    *
    * @memberOf PrintService
    */
-  public createPrintTask<TMaster, TDetail>(formName: string, printOptions: IPrintOptions, master: TMaster,
+  public static createPrintTask<TMaster, TDetail>(formName: string, printOptions: IPrintOptions, master: TMaster,
     details: TDetail[]): IPrintTask {
 
     Assert.notNull(master);
@@ -41,11 +41,8 @@ export class Printing {
       `formName = ${formName}, printOptions = ${Core.stringify(printOptions)}`), (log) => {
 
         const masterMetadata = MetadataStorage.instance.findTableMetadata(master.constructor);
-        const detailMetadata = MetadataStorage.instance.findTableMetadata(details[0].constructor);
 
         const masterData = this.createTableRecords(masterMetadata, master);
-        const detailsData = this.createTableRecords(detailMetadata, details);
-
 
         const masterFields = masterMetadata.columnMetadata.map((item) => {
           return {
@@ -54,48 +51,62 @@ export class Printing {
           };
         });
 
-        const detailFields = detailMetadata.columnMetadata.map((item) => {
-          return {
-            name: item.propertyName,
-            type: item.propertyType
-          };
-        });
+        const data = [
+          {
+            table: masterMetadata.className,
+            records: masterData
+          }
+        ];
 
+        const tables = [
+          {
+            name: masterMetadata.className,
+            type: TableType.Master,
+            fields: masterFields
+          }
+        ];
 
-        const printTask: IPrintTask = {
-          report: formName,
+        let detailsData = [];
+        let detailFields = [];
 
-          tables: [
+        if (!Types.isNullOrEmpty(details)) {
+          const detailMetadata = MetadataStorage.instance.findTableMetadata(details[0].constructor);
+
+          detailsData = this.createTableRecords(detailMetadata, details);
+
+          detailFields = detailMetadata.columnMetadata.map((item) => {
+            return {
+              name: item.propertyName,
+              type: item.propertyType
+            };
+          });
+
+          data.push(
             {
-              name: masterMetadata.className,
-              type: TableType.Master,
-              fields: masterFields
-            },
+              table: detailMetadata.className,
+              records: detailsData
+            }
+          );
+
+          tables.push(
             {
               name: detailMetadata.className,
               type: TableType.Detail,
               fields: detailFields
-            },
+            }
+          );
+        }
 
-          ],
+
+        const printTask: IPrintTask = {
+          report: formName,
+          tables: tables,
           printJobs: [
             {
-
               options: printOptions,
-              data: [
-                {
-                  table: masterMetadata.className,
-                  records: masterData
-                },
-                {
-                  table: detailMetadata.className,
-                  records: detailsData
-                }
-              ]
+              data: data
             }
-
           ]
-
         };
 
         if (log.isDebugEnabled()) {
@@ -119,7 +130,7 @@ export class Printing {
    *
    * @memberOf PrintComponent
    */
-  private createTableRecords<TTable>(tableMetadata: TableMetadata, tableData: TTable[] | TTable): ITableRow[] {
+  private static createTableRecords<TTable>(tableMetadata: TableMetadata, tableData: TTable[] | TTable): ITableRow[] {
     const records: ITableRow[] = [];
 
     let tableRows: TTable[] = [];
