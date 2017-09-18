@@ -42,11 +42,11 @@ export class PrintController extends ControllerCore {
   @Authenticated()
   @Post(`/${Printing.CREATE_REPORT}`)
   public createReport(
-    request: IBodyRequest<IPrintTask>
+    @Request() request: IBodyRequest<IPrintTask>
     ): Promise<any> {
     return Promise.resolve()
       .then(() => this.deserialize<IPrintTask>(request.body))
-      .then((deserializedData) => this.getService().createReport(request, deserializedData, 'filename.pdf'))
+      .then((printTask) => this.getService().createReport(request, printTask, 'filename.pdf'))
       .then<any>((result) => this.serialize(result));
   }
 
