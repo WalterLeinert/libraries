@@ -69,7 +69,7 @@ export class AutoformComponent extends E2eComponent {
       this._newButton = new ButtonComponent(this, '#new');
       this._deleteButton = new ButtonComponent(this, '#delete');
       this._saveButton = new ButtonComponent(this, '#save');
-      this._saveButton = new ButtonComponent(this, '#cancel');
+      this._cancelButton = new ButtonComponent(this, '#cancel');
     });
   }
 
