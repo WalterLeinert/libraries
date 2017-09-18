@@ -6,7 +6,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { FindResult, IPrinter, IPrintTask } from '@fluxgate/common';
+import { FindResult, IPrinter, IPrintTask, Printing } from '@fluxgate/common';
 
 import { PrintService } from '../services/print/print.service';
 import { IBodyRequest } from '../session/body-request.interface';
@@ -24,7 +24,7 @@ export class PrintController extends ControllerCore {
   }
 
   @Authenticated()
-  @Get('/find')
+  @Get(`/${Printing.GET_PRINTERS}`)
   public getPrinters(
     @Request() request: ISessionRequest
     ): Promise<IPrinter[]> {
@@ -40,13 +40,13 @@ export class PrintController extends ControllerCore {
 
 
   @Authenticated()
-  @Post('/formatData')
-  public formatData(
+  @Post(`/${Printing.CREATE_REPORT}`)
+  public createReport(
     request: IBodyRequest<IPrintTask>
     ): Promise<any> {
     return Promise.resolve()
       .then(() => this.deserialize<IPrintTask>(request.body))
-      .then((deserializedData) => this.getService().formatData(request, deserializedData, 'filename.pdf'))
+      .then((deserializedData) => this.getService().createReport(request, deserializedData, 'filename.pdf'))
       .then<any>((result) => this.serialize(result));
   }
 

@@ -17,6 +17,16 @@ import { TableType } from './model/tableType.enum';
 export class Printing {
   protected static readonly logger = getLogger(Printing);
 
+  /**
+   * REST-Api: verb zum Holen der Druckerliste (z.B. /rest/printer/getPrinters
+   */
+  public static GET_PRINTERS = 'getPrinters';
+
+  /**
+   * REST-Api: verb zum Formatieren/Drucken (z.B. /rest/printer/createReport
+   */
+  public static CREATE_REPORT = 'createReport';
+
 
   /**
    * Erzeugt eine @param{IPrintTask} mit den angegebene Parametern

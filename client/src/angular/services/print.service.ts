@@ -15,6 +15,7 @@ import {
 } from '@fluxgate/common';
 import { Assert, Core } from '@fluxgate/core';
 
+import { CoreService } from '../common/base/core-service';
 import { ServiceCore } from '../common/base/service-core';
 import { AppConfigService } from './app-config.service';
 import { MetadataService } from './metadata.service';
@@ -28,12 +29,6 @@ export class PrintService extends ServiceCore {
   public static readonly TOPIC = 'json?id=221';
   public static readonly TOPIC_PRINTERS = 'printers';
 
-  public static readonly JSON_HEADERS = new Headers({
-    'Content-Type': 'application/json'
-  });
-
-  public options: RequestOptions;
-
   constructor(http: Http, private metadataService: MetadataService, private configService: AppConfigService) {
     super(http, configService.config.printUrl, configService.config.printTopic);
   }
@@ -45,27 +40,32 @@ export class PrintService extends ServiceCore {
    * @param {IPrintTask} printTask
    * @returns {Observable<any>}
    *
-   * @memberOf PrintService
+   * @memberof PrintService
    */
-  public print<TTable>(printTask: IPrintTask): Observable<any> {
-    return using(new XLog(PrintService.logger, levels.INFO, 'print'), (log) => {
-      const options = new RequestOptions({ headers: PrintService.JSON_HEADERS });
+  public createReport<TTable>(printTask: IPrintTask): Observable<any> {
+    return using(new XLog(PrintService.logger, levels.INFO, 'createReport'), (log) => {
 
       // const printData = printTask;
       const printData = Core.stringify(printTask);
 
       return this.http
-        .post(this.getUrl(), printData, options)
+        .post(`${this.getUrl()}/${Printing.CREATE_REPORT}`, this.serialize(printData), CoreService.JSON_OPTIONS)
         .map((response: Response) => this.deserialize(response.json()))
         .catch(this.handleError);
     });
   }
 
 
+  /**
+   * Liefert die Liste der Drucker (inkl. Infos dazu)
+   *
+   * @returns {Observable<IPrinter[]>}
+   * @memberof PrintService
+   */
   public getPrinters(): Observable<IPrinter[]> {
     return using(new XLog(PrintService.logger, levels.INFO, 'getPrinters'), (log) => {
       return this.http
-        .get(`${this.getUrl()}/${ServiceConstants.FIND}`)
+        .get(`${this.getUrl()}/${Printing.GET_PRINTERS}`)
         .map((response: Response) => this.deserialize(response.json()))
         .catch(this.handleError);
     });

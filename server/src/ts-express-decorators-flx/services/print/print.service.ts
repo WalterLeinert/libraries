@@ -50,8 +50,8 @@ export class PrintService extends ServiceCore {
   public getPrinters(
     request: ISessionRequest
   ): Promise<IPrinter[]> {
-    return using(new XLog(PrintService.logger, levels.INFO, 'find'), (log) => {
-      return new Promise<IPrinter[]>((resolve) => {
+    return using(new XLog(PrintService.logger, levels.INFO, 'getPrinters'), (log) => {
+      return new Promise<IPrinter[]>((resolve, reject) => {
 
         const printConfiguration = this.configurationService.get().print;
         log.log(`printConfiguration = ${JSON.stringify(printConfiguration)}`);
@@ -74,6 +74,9 @@ export class PrintService extends ServiceCore {
             const body = Buffer.concat(bodyChunks);
             const printers = JSON.parse(body.toString()) as IPrinter[];
             resolve(printers);
+          }).on('error', (err) => {
+            log.error(`error: ${err}`);
+            reject(err);
           });
         });
 
@@ -85,13 +88,13 @@ export class PrintService extends ServiceCore {
   }
 
 
-  public formatData(
+  public createReport(
     request: ISessionRequest,
     printTask: IPrintTask,
     filename: string
   ): Promise<IPrinter[]> {
-    return using(new XLog(PrintService.logger, levels.INFO, 'find'), (log) => {
-      return new Promise<IPrinter[]>((resolve) => {
+    return using(new XLog(PrintService.logger, levels.INFO, 'createReport'), (log) => {
+      return new Promise<IPrinter[]>((resolve, reject) => {
 
         const printConfiguration = this.configurationService.get().print;
         log.log(`printConfiguration = ${JSON.stringify(printConfiguration)}`);
@@ -115,6 +118,9 @@ export class PrintService extends ServiceCore {
             const body = Buffer.concat(bodyChunks);
             const printers = JSON.parse(body.toString()) as IPrinter[];
             resolve(printers);
+          }).on('error', (err) => {
+            log.error(`error: ${err}`);
+            reject(err);
           });
         });
       });
