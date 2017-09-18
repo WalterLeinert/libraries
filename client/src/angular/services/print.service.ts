@@ -44,12 +44,8 @@ export class PrintService extends ServiceCore {
    */
   public createReport<TTable>(printTask: IPrintTask): Observable<any> {
     return using(new XLog(PrintService.logger, levels.INFO, 'createReport'), (log) => {
-
-      // const printData = printTask;
-      const printData = Core.stringify(printTask);
-
       return this.http
-        .post(`${this.getUrl()}/${Printing.CREATE_REPORT}`, this.serialize(printData), CoreService.JSON_OPTIONS)
+        .post(`${this.getUrl()}/${Printing.CREATE_REPORT}`, this.serialize(printTask), CoreService.JSON_OPTIONS)
         .map((response: Response) => this.deserialize(response.json()))
         .catch(this.handleError);
     });
