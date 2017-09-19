@@ -89,10 +89,10 @@ export class UserService extends BaseService<IUser, number> {
   public create(request: ISessionRequest, user: IUser): Promise<CreateResult<IUser, number>> {
     Assert.that(Role.isValidRole(user.role));
 
-    user.password_salt = shortid.gen();
+    user.passwordSalt = shortid.gen();
 
     return new Promise<CreateResult<IUser, number>>((resolve, reject) => {
-      Encryption.hashPassword(user.password, user.password_salt, (err, encryptedPassword) => {
+      Encryption.hashPassword(user.password, user.passwordSalt, (err, encryptedPassword) => {
         if (err) {
           reject(this.createSystemException(err));
         }
@@ -119,10 +119,10 @@ export class UserService extends BaseService<IUser, number> {
   public changePassword(request: ISessionRequest, user: IUser): Promise<UpdateResult<IUser, number>> {
     Assert.that(Role.isValidRole(user.role));
 
-    user.password_salt = shortid.gen();
+    user.passwordSalt = shortid.gen();
 
     return new Promise<UpdateResult<IUser, number>>((resolve, reject) => {
-      Encryption.hashPassword(user.password, user.password_salt, (err, encryptedPassword) => {
+      Encryption.hashPassword(user.password, user.passwordSalt, (err, encryptedPassword) => {
         if (err) {
           reject(this.createSystemException(err));
         }
@@ -192,7 +192,7 @@ export class UserService extends BaseService<IUser, number> {
                 } else {
                   user = result.items[0];
 
-                  Encryption.hashPassword(password, user.password_salt, (err, encryptedPassword) => {
+                  Encryption.hashPassword(password, user.passwordSalt, (err, encryptedPassword) => {
                     if (err) {
                       log.log(message);
                       reject(this.createBusinessException(message));
@@ -336,7 +336,7 @@ export class UserService extends BaseService<IUser, number> {
 
             const user = result.items[0];
 
-            Encryption.hashPassword(password, user.password_salt, (err, encryptedPassword) => {
+            Encryption.hashPassword(password, user.passwordSalt, (err, encryptedPassword) => {
               if (err) {
                 reject(this.createSystemException(err));
               }

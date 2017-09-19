@@ -1,4 +1,4 @@
-# Fluxgate libraries core, platform, common, client, server
+# Fluxgate libraries core, platform, common, client, server, testing
 
 ### Walter Leinert: 2016, 2017
 
@@ -79,6 +79,15 @@ Die Library stellt Komponenten und Module zur Verfügung zur effizienten Impleme
     - flx-user-selector
     - flx-role-selector
 
+### Testing
+
+Die Library enthält Hilfsklassen zur Implementierung von e2e-Tests.
+
+- Basisklassen zur Implemetierung von Komponenten- und PageObject-Helper
+- Komponenten- und PageObject-Helper für Library-Komponenten (wie AutoformComponent, MonthSelectorComponent)
+
+Mit Hilfe dieser Klassen lässt sich für Tests
+
 
 ## Dependency Injection
 
@@ -88,7 +97,7 @@ analog zu angular umgesetzt.
 
 Hierzu sind zwei decorators @FlxComponen und @FlxModule implementiert, die in wesentlicher Hinsicht zu angular kompatibel sind.
 
-Ein Beispiel für typischen DI-Code sieht wie folgt aus: 
+Ein Beispiel für typischen DI-Code sieht wie folgt aus:
 
 ```ts
 

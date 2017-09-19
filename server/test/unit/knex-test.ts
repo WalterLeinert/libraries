@@ -45,6 +45,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
 
 
   // tslint:disable-next-line:no-unused-variable
+  // tslint:disable-next-line:variable-name
   private static ___initialize = (() => {
     KnexTest._firstTestId = 0;
 

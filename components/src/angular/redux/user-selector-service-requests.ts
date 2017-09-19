@@ -14,7 +14,7 @@ export class UserSelectorServiceRequests extends ExtendedCrudServiceRequests<IUs
 
   constructor(service: UserService, @Inject(APP_STORE) store: Store,
     @Inject(ENTITY_VERSION_SERVICE) entityVersionService?: IService<EntityVersion, string>) {
-    super(new GenericStore<IUser, number>(CommandStore.NoId), service, store, entityVersionService, UserStore.ID);
+    super(new GenericStore<IUser, number>(CommandStore.NO_ID), service, store, entityVersionService, UserStore.ID);
   }
 }
 

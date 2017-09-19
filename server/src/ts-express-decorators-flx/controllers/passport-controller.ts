@@ -210,7 +210,7 @@ export class PassportController extends ControllerCore {
     ): Promise<IUser> {
     return using(new XLog(PassportController.logger, levels.INFO, 'currentUser'), (log) => {
       return new Promise<IUser>((resolve, reject) => {
-        return resolve(this.serialize(request.user ? request.user : User.Null));
+        return resolve(this.serialize(request.user ? request.user : User.NULL));
       });
     });
   }

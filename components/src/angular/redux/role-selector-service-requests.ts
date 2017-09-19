@@ -15,7 +15,7 @@ export class RoleSelectorServiceRequests extends ExtendedCrudServiceRequests<IRo
 
   constructor(service: RoleService, @Inject(APP_STORE) store: Store,
     @Inject(ENTITY_VERSION_SERVICE) entityVersionService?: IService<EntityVersion, string>) {
-    super(new GenericStore<IRole, number>(CommandStore.NoId), service, store, entityVersionService, RoleStore.ID);
+    super(new GenericStore<IRole, number>(CommandStore.NO_ID), service, store, entityVersionService, RoleStore.ID);
   }
 }
 
