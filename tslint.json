@@ -32,6 +32,8 @@
     ],
 
     "variable-name": [
+      true,
+      "allow-leading-underscore",
       "check-format",
       "ban-keywords"
     ],

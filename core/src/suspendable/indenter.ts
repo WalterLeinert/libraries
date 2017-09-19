@@ -54,6 +54,6 @@ export class Indenter extends CountingSuspendable {
    * @memberof Indenter
    */
   public getIndentation(): string {
-    return this.indentationLevels[this.Counter];
+    return this.indentationLevels[this.counter];
   }
 }

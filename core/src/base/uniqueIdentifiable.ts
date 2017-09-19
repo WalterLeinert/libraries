@@ -6,6 +6,7 @@ export abstract class Identifiable implements IUniqueIdentifiable {
 
 // tslint:disable-next-line:max-classes-per-file
 export abstract class UniqueIdentifiable extends Identifiable {
+  // tslint:disable-next-line:variable-name
   private static __id = 0;
   private _instanceId;
 

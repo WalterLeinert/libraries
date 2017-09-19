@@ -15,7 +15,7 @@ export enum ReflectionType {
 }
 
 export class TypeReflector {
-  public static NoParent = new TypeReflector({});
+  public static NO_PARENT = new TypeReflector({});
   private reflectionType: ReflectionType;
   private propertyDict: Dictionary<string, PropertyReflector> = new Dictionary<string, PropertyReflector>();
   private _parent: TypeReflector;
@@ -40,7 +40,7 @@ export class TypeReflector {
 
       this._parent = Object.getPrototypeOf(obj);
       if (this._parent === Object.prototype) {
-        this._parent = TypeReflector.NoParent;
+        this._parent = TypeReflector.NO_PARENT;
       }
     }
   }

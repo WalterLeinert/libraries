@@ -7,29 +7,29 @@ import { Suspendable } from './suspendable';
 /// </summary>
 
 export class CountingSuspendable extends Suspendable {
-  private m_counter: number = 0;
+  private _counter: number = 0;
 
   public constructor(private increment: number = 1) {
     super();
   }
 
   public suspend(): void {
-    this.m_counter += this.increment;
+    this._counter += this.increment;
   }
 
   public resume(): void {
-    this.m_counter -= this.increment;
+    this._counter -= this.increment;
   }
 
   public get isSuspended(): boolean {
-    return this.m_counter > 0;
+    return this._counter > 0;
   }
 
   public get canBeResumed(): boolean {
-    return this.m_counter <= 0;
+    return this._counter <= 0;
   }
 
-  public get Counter(): number {
-    return this.m_counter;
+  public get counter(): number {
+    return this._counter;
   }
 }

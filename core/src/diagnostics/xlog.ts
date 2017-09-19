@@ -30,7 +30,7 @@ enum EnterExit {
 export class XLog extends Disposable implements ILogger {
   private static indentation = -1;
 
-  private static readonly EnterExitStrings: string[] = ['>> ', '<< ', '@  '];
+  private static readonly ENTER_EXIT_STRINGS: string[] = ['>> ', '<< ', '@  '];
   private static readonly defaultIndentation = 2;
   private static readonly maxIndentations = 30;
   private static readonly indentationLevels = new Array<string>();
@@ -218,7 +218,7 @@ export class XLog extends Disposable implements ILogger {
     }
 
     const indent = XLog.indentationLevels[XLog.indentation];
-    let prefix = indent + XLog.EnterExitStrings[kind] + this.functionName;
+    let prefix = indent + XLog.ENTER_EXIT_STRINGS[kind] + this.functionName;
     const prefixedMessage = new StringBuilder();
 
     // prefix not empty message

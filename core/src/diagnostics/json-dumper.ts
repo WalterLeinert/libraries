@@ -115,7 +115,7 @@ class DumperInternal extends ClonerBase {
       const arr = value as any as any[];
       this.sb.appendLine(`[`);
 
-      if (this.indenter.Counter <= this.options.maxDepth) {
+      if (this.indenter.counter <= this.options.maxDepth) {
 
         using(new Suspender([this.indenter]), () => {
 
@@ -152,7 +152,7 @@ class DumperInternal extends ClonerBase {
       this.sb.appendLine();
 
 
-      if (this.indenter.Counter <= this.options.maxDepth) {
+      if (this.indenter.counter <= this.options.maxDepth) {
         super.iterateOnEntries(value, undefined,
           (count, index, entryName, entryValue, clonedEntryName, clonedEntryValue) => {
             using(new Suspender([this.indenter]), () => {

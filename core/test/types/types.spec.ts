@@ -29,7 +29,7 @@ interface IUser {
   /**
    * Das Passwort Salt (für Verschlüsselung)
    */
-  password_salt: string;
+  passwordSalt: string;
 
   /**
    * Liefert true, falls der User ein Admin ist.
@@ -48,7 +48,7 @@ interface IUser {
   /**
    * Mandanten-Id
    */
-  id_client?: number;
+  idClient?: number;
 
   /**
    * Setzt Passwort und Salt zurück
@@ -67,7 +67,8 @@ interface IUser {
  */
 class TestUser implements IUser {
   constructor(public id: number, public username, public firstname, public lastname, public role: number,
-    public password: string, public password_salt: string, public id_client: number = 1, public __version: number = 1,
+    // tslint:disable-next-line:variable-name
+    public password: string, public passwordSalt: string, public idClient: number = 1, public __version: number = 1,
     public deleted: boolean = false) {
   }
 
