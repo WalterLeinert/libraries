@@ -39,6 +39,7 @@ export class Role extends FlxStatusEntity<number> implements IRole {
   private static roleIdMap: { [id: number]: boolean } = {};
 
   // tslint:disable-next-line:no-unused-variable
+  // tslint:disable-next-line:variable-name
   private static ___initRole: boolean = (() => {
     EnumHelper.getValues(UserRoleId).map((e) => {
       Role.roleIdMap[e] = true;

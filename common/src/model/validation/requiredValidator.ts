@@ -21,6 +21,6 @@ export class RequiredValidator extends Validator {
       }
     }
 
-    return ValidationResult.Ok;
+    return ValidationResult.OK;
   }
 }

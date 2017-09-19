@@ -22,5 +22,6 @@ export class QueryTest extends FlxStatusEntity<number> {
 
   // @Test()
   @Column({ name: 'test' })
+  // tslint:disable-next-line:variable-name
   public __test: number;
 }

@@ -29,7 +29,7 @@ class ArtikelClient implements IEntity<number> {
   public name: string;
 
   @ClientColumn({ name: 'id_client' })
-  public id_client?: number;
+  public idClient?: number;
 }
 
 @Table({ name: ArtikelClient.TABLE_NAME })
@@ -43,7 +43,7 @@ class ArtikelClient2 implements IEntity<number> {
   public name: string;
 
   @ClientColumn({ name: 'id_client', hidden: false })
-  public id_client?: number;
+  public idClient?: number;
 }
 
 
@@ -64,7 +64,7 @@ class ColumnTest extends CommonTest {
     // tslint:disable-next-line:no-unused-expression
     expect(clientMetadata.options.hidden).to.be.true;
 
-    expect(clientMetadata.propertyName).to.equal('id_client');
+    expect(clientMetadata.propertyName).to.equal('idClient');
     expect(clientMetadata.propertyType).to.equal(ColumnTypes.NUMBER);
   }
 

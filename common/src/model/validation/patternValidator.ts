@@ -16,7 +16,7 @@ export class PatternValidator extends Validator {
 
   public validate(value: string, property?: string | ColumnMetadata): ValidationResult {
     if (!Types.isPresent(value)) {
-      return ValidationResult.Ok;
+      return ValidationResult.OK;
     }
     Assert.that(Types.isString(value));
 
@@ -26,7 +26,7 @@ export class PatternValidator extends Validator {
       return ValidationResult.create(this, property, false, `does not match "${this.pattern}"`);
     }
 
-    return ValidationResult.Ok;
+    return ValidationResult.OK;
   }
 
   public get pattern(): string {

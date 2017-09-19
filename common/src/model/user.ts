@@ -29,7 +29,7 @@ export class User extends FlxStatusEntity<number> implements IUser {
    */
   public static readonly USER_CONFIG_KEY = 'IUser';
 
-  public static Null = new User(-1, '-no-name-', -1, 'none');
+  public static NULL = new User(-1, '-no-name-', -1, 'none');
 
 
   @IdColumn({ name: 'user_id', displayName: 'Id' })
@@ -71,7 +71,7 @@ export class User extends FlxStatusEntity<number> implements IUser {
 
   @Secret()
   @Column({ name: 'user_password_salt', hidden: true })
-  public password_salt: string;
+  public passwordSalt: string;
 
 
   @Column({ displayName: 'Name', persisted: false })
@@ -107,7 +107,7 @@ export class User extends FlxStatusEntity<number> implements IUser {
   }
 
   public get isNull(): boolean {
-    return this.id === User.Null.id;
+    return this.id === User.NULL.id;
   }
 }
 

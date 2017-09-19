@@ -19,6 +19,7 @@ import { VersionedEntity } from './versioned-entity';
 export abstract class FlxEntity<TId> extends VersionedEntity<TId> implements IClientEntity {
 
   @ClientColumn({ name: '__client' })
+  // tslint:disable-next-line:variable-name
   public __client: number;   // = Mandant.FIRST_ID;
 
   public toString(): string {

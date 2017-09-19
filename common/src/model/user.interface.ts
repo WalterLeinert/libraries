@@ -22,7 +22,7 @@ export interface IUser extends IFlxStatusEntity<number> {
   /**
    * Das Passwort Salt (für Verschlüsselung)
    */
-  password_salt: string;
+  passwordSalt: string;
 
   /**
    * Liefert true, falls der User ein Admin ist.

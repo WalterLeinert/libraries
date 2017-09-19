@@ -10,6 +10,7 @@ import { IStatusEntity } from './status-entity.interface';
 
 export abstract class Status {
   @Column({ name: '__status', hidden: true })
+  // tslint:disable-next-line:variable-name
   public __status: number;
 
 
@@ -73,6 +74,7 @@ export class FlxStatusEntity<TId> extends FlxEntity<number> implements IStatusEn
   public id: number;
 
   @Column({ name: '__status', hidden: true })
+  // tslint:disable-next-line:variable-name
   public __status: number;
 
 

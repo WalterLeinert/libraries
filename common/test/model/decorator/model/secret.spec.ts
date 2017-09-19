@@ -31,12 +31,12 @@ class ArtikelSecret {
 
   @Secret()
   @Column()
-  public password_salt: string;
+  public passwordSalt: string;
 }
 
 class NoEntity {
   public password: string;
-  public password_salt: string;
+  public passwordSalt: string;
 }
 
 
@@ -50,24 +50,24 @@ class SecretTest extends CommonTest {
 
   @test 'should exist columnMetadata'() {
     expect(this.tableMetadata.getSecretColumn('password')).to.be.not.null;
-    expect(this.tableMetadata.getSecretColumn('password_salt')).to.be.not.null;
+    expect(this.tableMetadata.getSecretColumn('passwordSalt')).to.be.not.null;
   }
 
   @test 'should have secrets reset'() {
     const artikel = new ArtikelSecret();
     artikel.password = 'password';
-    artikel.password_salt = 'password_salt';
+    artikel.passwordSalt = 'passwordSalt';
 
     MetadataStorage.instance.resetSecrets(artikel);
 
     expect(artikel.password).to.be.undefined;
-    expect(artikel.password_salt).to.be.undefined;
+    expect(artikel.passwordSalt).to.be.undefined;
   }
 
   @test 'should log warning for unregistered class'() {
     const artikel = new NoEntity();
     artikel.password = 'password';
-    artikel.password_salt = 'password_salt';
+    artikel.passwordSalt = 'passwordSalt';
 
     MetadataStorage.instance.resetSecrets(artikel);
   }

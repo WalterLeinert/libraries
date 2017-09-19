@@ -31,6 +31,7 @@ class ArtikelTest implements IEntity<number> {
 
   @Test()
   @Column({ name: 'artikel_test', persisted: false })
+  // tslint:disable-next-line:variable-name
   public __test: any;
 }
 

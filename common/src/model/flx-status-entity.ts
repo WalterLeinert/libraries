@@ -20,6 +20,7 @@ import { IStatusEntity } from './status-entity.interface';
 export abstract class FlxStatusEntity<TId> extends FlxEntity<TId> implements IStatusEntity {
 
   @Column({ name: EntityStatusHelper.PROPERTY_NAME_STATUS, hidden: true })
+  // tslint:disable-next-line:variable-name
   public __status: number;
 
   @StatusColumn(EntityStatus.Deleted)

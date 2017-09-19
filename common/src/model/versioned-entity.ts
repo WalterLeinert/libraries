@@ -19,6 +19,7 @@ import { IVersionedEntity } from './versioned-entity.interface';
 export abstract class VersionedEntity<TId> extends Entity<TId> implements IVersionedEntity {
 
   @VersionColumn({ name: '__version', default: 0 })
+  // tslint:disable-next-line:variable-name
   public __version: number;
 
   public toString(): string {

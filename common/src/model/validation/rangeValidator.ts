@@ -55,7 +55,7 @@ export class RangeValidator extends Validator {
 
   public validate(value: any, property?: string | ColumnMetadata): ValidationResult {
     if (!Types.isPresent(value)) {
-      return ValidationResult.Ok;
+      return ValidationResult.OK;
     }
 
     const sb = new StringBuilder();
@@ -74,7 +74,7 @@ export class RangeValidator extends Validator {
       }
     }
 
-    return ValidationResult.Ok;
+    return ValidationResult.OK;
   }
 
 

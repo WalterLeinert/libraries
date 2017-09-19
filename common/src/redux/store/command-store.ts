@@ -25,7 +25,7 @@ import { IServiceState } from '../state/service-state.interface';
 export class CommandStore<TState extends IServiceState> extends UniqueIdentifiable {
   protected static readonly logger = getLogger(CommandStore);
 
-  public static NoId = '--';
+  public static NO_ID = '--';
 
   private _name: string;
   private _channel: string;
@@ -41,10 +41,11 @@ export class CommandStore<TState extends IServiceState> extends UniqueIdentifiab
    *
    * @memberOf CommandStore
    */
-  constructor(name: string = CommandStore.NoId, private _initialState: TState, private _parent?: CommandStore<TState>) {
+  constructor(name: string = CommandStore.NO_ID, private _initialState: TState,
+    private _parent?: CommandStore<TState>) {
     super();
     using(new XLog(CommandStore.logger, levels.INFO, 'ctor'), (log) => {
-      if (Types.isPresent(name) && name !== CommandStore.NoId) {
+      if (Types.isPresent(name) && name !== CommandStore.NO_ID) {
         this._name = name;
       } else {
         this._name = `${this.constructor.name}-${this.instanceId}`;

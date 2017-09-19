@@ -32,7 +32,7 @@ import { ServiceRequests } from './service-requests';
 export class EnumTableServiceRequests extends ServiceRequests implements ICrudServiceRequests<any, any> {
 
   public constructor(private _tableMetadata: TableMetadata, store: Store, private enumValues: any[]) {
-    super(new GenericStore<any, any>(CommandStore.NoId), store, EnumTableStore.ID);
+    super(new GenericStore<any, any>(CommandStore.NO_ID), store, EnumTableStore.ID);
     Assert.notNullOrEmpty(enumValues, 'enumValues');
   }
 

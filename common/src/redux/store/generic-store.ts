@@ -16,7 +16,7 @@ import { CommandStore } from './command-store';
 export class GenericStore<T extends IEntity<TId>, TId extends IToString>
   extends CommandStore<IExtendedCrudServiceState<T, TId>> {
 
-  constructor(storeId: string = CommandStore.NoId, parent?: CommandStore<IExtendedCrudServiceState<T, TId>>) {
+  constructor(storeId: string = CommandStore.NO_ID, parent?: CommandStore<IExtendedCrudServiceState<T, TId>>) {
     super(storeId, ExtendedCrudServiceRequests.INITIAL_STATE, parent);
   }
 }

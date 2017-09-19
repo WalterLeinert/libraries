@@ -24,7 +24,7 @@ class ArtikelFindByIdResultSerialization implements IEntity<number> {
   public name: string;
 
   @ClientColumn({ name: 'id_client' })
-  public id_client?: number;
+  public idClient?: number;
 
   @Column({ name: 'artikel_created' })
   public created: Date;
@@ -53,7 +53,7 @@ class ModelSerializationTest {
     const model = new ArtikelFindByIdResultSerialization();
     model.id = 1;
     model.name = 'Hemd';
-    model.id_client = 2;
+    model.idClient = 2;
     model.created = new Date('2017-05-10');
     model.start = new ShortTime(8, 30);
 

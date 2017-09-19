@@ -23,7 +23,7 @@ class ArtikelSerialization implements IEntity<number> {
   public name: string;
 
   @ClientColumn({ name: 'id_client' })
-  public id_client?: number;
+  public idClient?: number;
 
   @Column({ name: 'artikel_created' })
   public created: Date;
@@ -53,7 +53,7 @@ class ModelSerializationTest {
     const tester = new ArtikelSerialization();
     tester.id = 1;
     tester.name = 'Hemd';
-    tester.id_client = 2;
+    tester.idClient = 2;
     tester.created = new Date('2017-05-10');
     tester.start = new ShortTime(8, 30);
 

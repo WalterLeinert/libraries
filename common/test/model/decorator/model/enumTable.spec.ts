@@ -35,7 +35,7 @@ class ArtikelEnumTable {
   @Enum<KollektionEnumTable, string, number>((dataSource) => KollektionEnumTable,
     (kollektion) => kollektion.nameKoll, (kollektion) => kollektion.idKoll)
   @Column({ name: 'id_kollektion', nullable: true })
-  public id_kollektion?: number;
+  public idKollektion?: number;
 }
 
 
@@ -81,7 +81,7 @@ class EnumTableTest extends CommonTest {
   }
 
   @test 'should exist dataSource'() {
-    const propertyName = 'id_kollektion';
+    const propertyName = 'idKollektion';
     const colMetaData = this.tableMetadata.getColumnMetadataByProperty(propertyName);
     expect(colMetaData).to.be.not.null;
     expect(colMetaData.propertyName).to.equal(propertyName);
@@ -93,7 +93,7 @@ class EnumTableTest extends CommonTest {
   }
 
   @test 'should exist text/ValueField'() {
-    const propertyName = 'id_kollektion';
+    const propertyName = 'idKollektion';
     const colMetaData = this.tableMetadata.getColumnMetadataByProperty(propertyName);
 
 

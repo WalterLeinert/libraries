@@ -6,7 +6,7 @@ import { ValidationMessage } from './validationMessage';
 import { Validator } from './validator';
 
 export class ValidationResult {
-  public static Ok = new ValidationResult(true);
+  public static OK = new ValidationResult(true);
 
   private _messages: ValidationMessage[] = [];
 

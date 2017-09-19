@@ -33,12 +33,12 @@ class ArtikelEntityStringifyer {
 
   @Secret()
   @Column()
-  public password_salt: string;
+  public passwordSalt: string;
 }
 
 class NoEntity {
   public password: string;
-  public password_salt: string;
+  public passwordSalt: string;
 }
 
 
@@ -54,24 +54,24 @@ class EntityStringifyerTest extends CommonTest {
   @test 'should have secrets reset'() {
     const entity = new ArtikelEntityStringifyer();
     entity.password = 'password';
-    entity.password_salt = 'password_salt';
+    entity.passwordSalt = 'passwordSalt';
 
     const entityStringifyed = Core.stringify(entity);
     expect(entityStringifyed).to.equal(`{    // ArtikelEntityStringifyer
   "password": "*****",
-  "password_salt": "*****"
+  "passwordSalt": "*****"
 }`);
   }
 
   @test 'should log warning for unregistered class'() {
     const entity = new NoEntity();
     entity.password = 'password';
-    entity.password_salt = 'password_salt';
+    entity.passwordSalt = 'passwordSalt';
 
     const entityStringifyed = Core.stringify(entity);
     expect(entityStringifyed).to.equal(`{    // NoEntity
   "password": "password",
-  "password_salt": "password_salt"
+  "passwordSalt": "passwordSalt"
 }`);
   }
 
