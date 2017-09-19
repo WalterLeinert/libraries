@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/platform",
-  "version": "2.4.4-beta.0",
+  "version": "2.4.4-beta.1",
   "description": "Fluxgate Library Platform (node/browser)",
   "browser": "dist/browser/src/index.js",
   "main": "dist/node/src/index.js",
