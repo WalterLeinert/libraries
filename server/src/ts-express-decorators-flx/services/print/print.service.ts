@@ -11,6 +11,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { FindResult, IPrinter, IPrintTask, Printer } from '@fluxgate/common';
+import { Core } from '@fluxgate/core';
 
 import { ISessionRequest } from '../../session/session-request.interface';
 import { ServerConfigurationService } from '../server-configuration.service';
@@ -34,7 +35,7 @@ export class PrintService extends ServiceCore {
     super();
 
     using(new XLog(PrintService.logger, levels.INFO, 'ctor'), (log) => {
-      log.log(`configuration = ${JSON.stringify(configurationService.get())}`);
+      log.log(`configuration = ${Core.stringify(configurationService.get())}`);
     });
   }
 
@@ -54,7 +55,7 @@ export class PrintService extends ServiceCore {
       return new Promise<IPrinter[]>((resolve, reject) => {
 
         const printConfiguration = this.configurationService.get().print;
-        log.log(`printConfiguration = ${JSON.stringify(printConfiguration)}`);
+        log.log(`printConfiguration = ${Core.stringify(printConfiguration)}`);
 
         const options = {
           host: printConfiguration.host,
@@ -69,8 +70,14 @@ export class PrintService extends ServiceCore {
         http.get(options, (res) => {
           const bodyChunks = [];
           res.on('data', (chunk) => {
+            if (log.isDebugEnabled()) {
+              log.debug(`data: chunk.length = ${chunk.length}, bodyChunks.length = ${bodyChunks.length}`);
+            }
             bodyChunks.push(chunk);
           }).on('end', () => {
+            if (log.isDebugEnabled()) {
+              log.debug(`end: bodyChunks.length = ${bodyChunks.length}`);
+            }
             const body = Buffer.concat(bodyChunks);
             const printers = JSON.parse(body.toString()) as IPrinter[];
             resolve(printers);
@@ -88,21 +95,26 @@ export class PrintService extends ServiceCore {
   }
 
 
+  // TODO: eigentlich print-Methode -> vs. createReport (PDF)
   public createReport(
     request: ISessionRequest,
     printTask: IPrintTask,
     filename: string
-  ): Promise<IPrinter[]> {
-    return using(new XLog(PrintService.logger, levels.INFO, 'createReport'), (log) => {
-      return new Promise<IPrinter[]>((resolve, reject) => {
+  ): Promise<any> {
+    return using(new XLog(PrintService.logger, levels.INFO, 'createReport', `filename = ${filename}`), (log) => {
+      return new Promise<any>((resolve, reject) => {
+
+        if (log.isEnabled()) {
+          log.log(`printTask: ${Core.stringify(printTask)}`);
+        }
 
         const printConfiguration = this.configurationService.get().print;
-        log.log(`printConfiguration = ${JSON.stringify(printConfiguration)}`);
+        log.log(`printConfiguration = ${Core.stringify(printConfiguration)}`);
 
         const options = {
           host: printConfiguration.host,
-          path: this.createUrl('json', filename),
           port: printConfiguration.port,
+          path: this.createUrl('json', filename),
           method: RestMethods.POST,
           body: printTask,
           json: true,
@@ -113,11 +125,17 @@ export class PrintService extends ServiceCore {
         http.get(options, (res) => {
           const bodyChunks = [];
           res.on('data', (chunk) => {
+            if (log.isDebugEnabled()) {
+              log.debug(`data: chunk.length = ${chunk.length}, bodyChunks.length = ${bodyChunks.length}`);
+            }
             bodyChunks.push(chunk);
           }).on('end', () => {
+            if (log.isDebugEnabled()) {
+              log.debug(`end: bodyChunks.length = ${bodyChunks.length}`);
+            }
             const body = Buffer.concat(bodyChunks);
-            const printers = JSON.parse(body.toString()) as IPrinter[];
-            resolve(printers);
+            const result = body.toString();
+            resolve(result);
           }).on('error', (err) => {
             log.error(`error: ${err}`);
             reject(err);
