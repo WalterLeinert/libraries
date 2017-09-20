@@ -20,14 +20,23 @@ export interface IServerConfiguration {
    */
   dataDirectory?: string;
 
+  /**
+   * erlaubte MIME encodings
+   *
+   * @type {string[]}
+   */
+  acceptMimes: string[];
 
+
+  /**
+   * Konfiguration von Zertifikaten
+   */
   cert?: {
 
     /**
      * Pfad auf die Zertifikatdatei (relativ oder absolut)
      *
      * @type {string}
-     * @memberOf IServerConfiguration
      */
     certPath: string;
 
@@ -35,12 +44,14 @@ export interface IServerConfiguration {
      * Pfad auf die Datei mit private Key (relativ oder absolut)
      *
      * @type {string}
-     * @memberOf IServerConfiguration
      */
     keyPath: string;
   };
 
 
+  /**
+   * Konfiguration von express.js
+   */
   express: {
 
     /**
@@ -62,6 +73,10 @@ export interface IServerConfiguration {
     httpsPort: number;
   };
 
+
+  /**
+   * Konfiguration von eines Mailservers
+   */
   mail: {
     host: string;
     port: number;
@@ -71,7 +86,13 @@ export interface IServerConfiguration {
     from: string;
   };
 
+  /**
+   * Konfiguration für das Drucken
+   */
   print: IPrintServiceOptions;
 
+  /**
+   * Konfiguration für Knex
+   */
   knex: Knex.Config;
 }

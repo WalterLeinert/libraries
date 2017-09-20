@@ -18,6 +18,7 @@ import { FileSystem } from '@fluxgate/platform';
 
 // lokale Komponenten
 import { Messages } from '../resources/messages';
+import { GlobalAcceptMimesMiddleware } from './middlewares/global-accept-mimes-middleware';
 import { IServerConfiguration } from './server-configuration.interface';
 import { KnexService } from './services/knex.service';
 
@@ -37,6 +38,7 @@ export abstract class ServerBase extends ServerLoader {
    */
   public static readonly DEFAULT_SERVER_CONFIGURATION: IServerConfiguration = {
     dataName: '/data',
+    acceptMimes: ['application/json'],
     express: {
       endPoint: '/rest',
       port: 8000,
@@ -129,8 +131,8 @@ export abstract class ServerBase extends ServerLoader {
       const methodOverride = require('method-override');
 
       this
+        .use(GlobalAcceptMimesMiddleware)
         .use(morgan('dev'))
-        .use(ServerLoader.AcceptMime('application/json'))
 
         .use(cookieParser())
         .use(compress({}))
@@ -227,6 +229,13 @@ export abstract class ServerBase extends ServerLoader {
 
       const cwd = process.cwd();
       log.info(`cwd = ${cwd}`);
+
+      //
+      // acceptMimes
+      //
+      if (!Types.isPresent(configuration.acceptMimes)) {
+        configuration.acceptMimes = [...ServerBase.DEFAULT_SERVER_CONFIGURATION.acceptMimes];
+      }
 
       //
       // Endpoint
