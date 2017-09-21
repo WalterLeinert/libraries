@@ -14,6 +14,12 @@ import { ITableRow } from './model/tableRow.interface';
 import { TableType } from './model/tableType.enum';
 
 
+export interface ITablePrintInfo<T> {
+  rows: T[];
+  columns?: string[];
+}
+
+
 export class Printing {
   protected static readonly logger = getLogger(Printing);
 
@@ -46,81 +52,40 @@ export class Printing {
 
   /**
    * Erzeugt eine @param{IPrintTask} mit den angegebene Parametern
+   * Die Tabellendaten @param{details} fehlen, falls nur eine "flache" Liste gedruckt werden soll;
+   * die Daten dieser "flachen" Liste sind dann in @param{master} enthalten.
    *
    * @template TMaster - Mastertable
    * @template TDetail - Detailtables
    * @param {string} formName - Formularname
    * @param {IPrintOptions} printOptions
-   * @param {TMaster} master
-   * @param {TDetail[]} details
+   * @param {ITablePrintInfo<TMaster>} master Master Druckinfos
+   * @param {ITablePrintInfo<TDetail>} details Details Druckinfos
    * @returns {IPrintTask}
    *
    * @memberOf PrintService
    */
-  public static createPrintTask<TMaster, TDetail>(formName: string, printOptions: IPrintOptions, master: TMaster,
-    details: TDetail[]): IPrintTask {
+  public static createPrintTask<TMaster, TDetail>(formName: string, printOptions: IPrintOptions,
+    master: ITablePrintInfo<TMaster>, details?: ITablePrintInfo<TDetail>): IPrintTask {
 
     Assert.notNull(master);
-    Assert.notNull(details);
+    Assert.notNullOrEmpty(master.rows);
 
     return using(new XLog(Printing.logger, levels.INFO, 'createPrintTask',
       `formName = ${formName}, printOptions = ${Core.stringify(printOptions)}`), (log) => {
 
-        const masterMetadata = MetadataStorage.instance.findTableMetadata(master.constructor);
+        const masterResult = Printing.createTableInfo(master, TableType.Master);
 
-        const masterData = this.createTableRecords(masterMetadata, master);
+        const data = masterResult.data;
+        const tables = masterResult.tables;
 
-        const masterFields = masterMetadata.columnMetadata.map((item) => {
-          return {
-            name: item.propertyName,
-            type: item.propertyType
-          };
-        });
+        if (!Types.isNull(details)) {
+          Assert.notNullOrEmpty(details.rows);
 
-        const data = [
-          {
-            table: masterMetadata.className,
-            records: masterData
-          }
-        ];
+          const detailResult = Printing.createTableInfo(details, TableType.Detail);
 
-        const tables = [
-          {
-            name: masterMetadata.className,
-            type: TableType.Master,
-            fields: masterFields
-          }
-        ];
-
-        let detailsData = [];
-        let detailFields = [];
-
-        if (!Types.isNullOrEmpty(details)) {
-          const detailMetadata = MetadataStorage.instance.findTableMetadata(details[0].constructor);
-
-          detailsData = this.createTableRecords(detailMetadata, details);
-
-          detailFields = detailMetadata.columnMetadata.map((item) => {
-            return {
-              name: item.propertyName,
-              type: item.propertyType
-            };
-          });
-
-          data.push(
-            {
-              table: detailMetadata.className,
-              records: detailsData
-            }
-          );
-
-          tables.push(
-            {
-              name: detailMetadata.className,
-              type: TableType.Detail,
-              fields: detailFields
-            }
-          );
+          data.push(...detailResult.data);
+          tables.push(...detailResult.tables);
         }
 
 
@@ -145,27 +110,96 @@ export class Printing {
 
 
   /**
-   * Erzeugt für die Tabelle mit dem Metadaten @param{tableMetadata} und den Tabellendaten @param{tableData} ITableInfo
+   * Erzeugt die Druckinformationen für die Felder und die Daten für @param{printInfo} und
+   * den Tabellentyp @param{tableType}.
+   *
+   * @private
+   * @static
+   * @template TTable
+   * @param {ITablePrintInfo<TTable>} printInfo
+   * @param {TableType} tableType
+   * @returns
+   * @memberof Printing
+   */
+  private static createTableInfo<TTable>(printInfo: ITablePrintInfo<TTable>, tableType: TableType) {
+    const tableMetadata = MetadataStorage.instance.findTableMetadata(printInfo.rows[0].constructor);
+
+    const tableRecords = this.createTableRecords(tableMetadata, printInfo);
+
+    //
+    // Set für Spaltenfilter aufbauen: default -> alle Spalten aus Metadaten
+    //
+    let tableColumns: Set<string> = new Set(tableMetadata.columnMetadata.map((item) => {
+      return item.propertyName;
+    }));
+
+    if (!Types.isNullOrEmpty(printInfo.columns)) {
+      tableColumns = new Set(printInfo.columns);
+    }
+
+    const tableFields = tableMetadata.columnMetadata
+      .filter((item) => {
+        return tableColumns.has(item.propertyName);
+      })
+      .map((item) => {
+        return {
+          name: item.propertyName,
+          type: item.propertyType
+        };
+      });
+
+
+    const data = [
+      {
+        table: tableMetadata.className,
+        records: tableRecords
+      }
+    ];
+
+    const tables = [
+      {
+        name: tableMetadata.className,
+        type: tableType,
+        fields: tableFields
+      }
+    ];
+
+    return {
+      data: [
+        {
+          table: tableMetadata.className,
+          records: tableRecords
+        }
+      ],
+
+      tables: [
+        {
+          name: tableMetadata.className,
+          type: tableType,
+          fields: tableFields
+        }
+      ]
+    };
+  }
+
+
+  /**
+   * Erzeugt für die Tabelle mit dem Metadaten @param{tableMetadata} und den Tabellendaten @param{tableData}
    * ein Array von @see{iTableRow}.
    *
    * @private
    * @template TTable
    * @param {TableMetadata} tableMetadata
-   * @param {(TTable[] | TTable)} tableData
+   * @param {TTable[]} tableData
    * @returns {ITableRow[]}
    *
    * @memberOf PrintComponent
    */
-  private static createTableRecords<TTable>(tableMetadata: TableMetadata, tableData: TTable[] | TTable): ITableRow[] {
+  private static createTableRecords<TTable>(tableMetadata: TableMetadata, tableData: ITablePrintInfo<TTable>):
+    ITableRow[] {
     const records: ITableRow[] = [];
 
-    let tableRows: TTable[] = [];
-
-    if (Array.isArray(tableData)) {
-      tableRows = tableData as TTable[];
-    } else {
-      tableRows.push(tableData as TTable);
-    }
+    const tableRows: TTable[] = [...tableData.rows];
 
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < tableRows.length; i++) {
