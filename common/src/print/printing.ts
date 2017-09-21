@@ -51,6 +51,24 @@ export class Printing {
 
 
   /**
+   * Erzeugt eine @param{IPrintTask} mit den angegebene Parametern.
+   * Die Daten der "flachen" Liste sind in @param{tableInfo} enthalten.
+   *
+   * @static
+   * @template TTable
+   * @param {string} formName
+   * @param {IPrintOptions} printOptions
+   * @param {ITablePrintInfo<TTable>} tableInfo
+   * @returns {IPrintTask}
+   * @memberof Printing
+   */
+  public static createPrintTask<TTable>(formName: string, printOptions: IPrintOptions,
+    tableInfo: ITablePrintInfo<TTable>): IPrintTask {
+    return Printing.createPrintTaskMasterDetails(formName, printOptions, tableInfo);
+  }
+
+
+  /**
    * Erzeugt eine @param{IPrintTask} mit den angegebene Parametern
    * Die Tabellendaten @param{details} fehlen, falls nur eine "flache" Liste gedruckt werden soll;
    * die Daten dieser "flachen" Liste sind dann in @param{master} enthalten.
@@ -65,7 +83,7 @@ export class Printing {
    *
    * @memberOf PrintService
    */
-  public static createPrintTask<TMaster, TDetail>(formName: string, printOptions: IPrintOptions,
+  public static createPrintTaskMasterDetails<TMaster, TDetail>(formName: string, printOptions: IPrintOptions,
     master: ITablePrintInfo<TMaster>, details?: ITablePrintInfo<TDetail>): IPrintTask {
 
     Assert.notNull(master);
@@ -79,7 +97,7 @@ export class Printing {
         const data = masterResult.data;
         const tables = masterResult.tables;
 
-        if (!Types.isNull(details)) {
+        if (Types.isPresent(details)) {
           Assert.notNullOrEmpty(details.rows);
 
           const detailResult = Printing.createTableInfo(details, TableType.Detail);
@@ -124,8 +142,6 @@ export class Printing {
   private static createTableInfo<TTable>(printInfo: ITablePrintInfo<TTable>, tableType: TableType) {
     const tableMetadata = MetadataStorage.instance.findTableMetadata(printInfo.rows[0].constructor);
 
-    const tableRecords = this.createTableRecords(tableMetadata, printInfo);
-
     //
     // Set für Spaltenfilter aufbauen: default -> alle Spalten aus Metadaten
     //
@@ -147,6 +163,8 @@ export class Printing {
           type: item.propertyType
         };
       });
+
+    const tableRecords = this.createTableRecords(tableMetadata, printInfo, tableColumns);
 
 
     const data = [
@@ -185,18 +203,19 @@ export class Printing {
 
   /**
    * Erzeugt für die Tabelle mit dem Metadaten @param{tableMetadata} und den Tabellendaten @param{tableData}
-   * ein Array von @see{iTableRow}.
+   * ein Array von @see{iTableRow}. Die Daten werden über @param{tableColumns} gefiltert.
    *
    * @private
    * @template TTable
    * @param {TableMetadata} tableMetadata
    * @param {TTable[]} tableData
+   * @param {Set<string>} tableColumns
    * @returns {ITableRow[]}
    *
    * @memberOf PrintComponent
    */
-  private static createTableRecords<TTable>(tableMetadata: TableMetadata, tableData: ITablePrintInfo<TTable>):
-    ITableRow[] {
+  private static createTableRecords<TTable>(tableMetadata: TableMetadata, tableData: ITablePrintInfo<TTable>,
+    tableColumns: Set<string>): ITableRow[] {
     const records: ITableRow[] = [];
 
     const tableRows: TTable[] = [...tableData.rows];
@@ -208,10 +227,15 @@ export class Printing {
       tableMetadata.columnMetadata.forEach((item) => {
         const key = item.propertyName;
 
-        if (item.propertyType === ColumnTypes.SHORTTIME) {
-          rowData[key] = tableRows[i][key].toString();
-        } else {
-          rowData[key] = tableRows[i][key];
+        //
+        // Daten nach Spalten filtern
+        //
+        if (tableColumns.has(key)) {
+          if (item.propertyType === ColumnTypes.SHORTTIME) {
+            rowData[key] = tableRows[i][key].toString();
+          } else {
+            rowData[key] = tableRows[i][key];
+          }
         }
       });
 

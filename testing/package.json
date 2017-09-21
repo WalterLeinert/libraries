@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/testing",
-  "version": "2.4.4-beta.5",
+  "version": "2.4.4-beta.7",
   "description": "Fluxgate Testing-Library ",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -31,7 +31,7 @@
     "yargs": "^7.0.2"
   },
   "dependencies": {
-    "@fluxgate/common": "2.4.4-beta.6",
+    "@fluxgate/common": "2.4.4-beta.8",
     "@fluxgate/core": "2.4.4-beta.2",
     "@fluxgate/platform": "2.4.4-beta.2"
   },
