@@ -13,7 +13,7 @@ import {
   ColumnTypes, IPrinter, IPrintOptions, IPrintTask, ITableRow,
   Printing, ServiceConstants, TableMetadata, TableType
 } from '@fluxgate/common';
-import { Assert, Core } from '@fluxgate/core';
+import { Assert, base64, Core } from '@fluxgate/core';
 
 import { CoreService } from '../common/base/core-service';
 import { ServiceCore } from '../common/base/service-core';
@@ -25,30 +25,8 @@ import { MetadataService } from './metadata.service';
 export class PrintService extends ServiceCore {
   protected static readonly logger = getLogger(PrintService);
 
-  // TODO: public static readonly TOPIC = 'print';
-  public static readonly TOPIC = 'json?id=221';
-  public static readonly TOPIC_PRINTERS = 'printers';
-
   constructor(http: Http, private metadataService: MetadataService, private configService: AppConfigService) {
-    super(http, configService.config.printUrl, configService.config.printTopic);
-  }
-
-  /**
-   * Druckt die @param{printTask} mit den enthaltenen Optionen und Daten aus.
-   *
-   * @template TTable
-   * @param {IPrintTask} printTask
-   * @returns {Observable<any>}
-   *
-   * @memberof PrintService
-   */
-  public createReport<TTable>(printTask: IPrintTask): Observable<any> {
-    return using(new XLog(PrintService.logger, levels.INFO, 'createReport'), (log) => {
-      return this.http
-        .post(`${this.getUrl()}/${Printing.CREATE_REPORT}`, this.serialize(printTask), CoreService.JSON_OPTIONS)
-        .map((response: Response) => this.deserialize(response.json()))
-        .catch(this.handleError);
-    });
+    super(http, configService.config.url, Printing.TOPIC);
   }
 
 
@@ -62,6 +40,66 @@ export class PrintService extends ServiceCore {
     return using(new XLog(PrintService.logger, levels.INFO, 'getPrinters'), (log) => {
       return this.http
         .get(`${this.getUrl()}/${Printing.GET_PRINTERS}`)
+        .map((response: Response) => this.deserialize(response.json()))
+        .catch(this.handleError);
+    });
+  }
+
+
+  /**
+   * Druckt die @param{printTask} mit den enthaltenen Optionen und Daten aus.
+   *
+   * @param {IPrintTask} printTask
+   * @returns {Observable<any>}
+   *
+   * @memberof PrintService
+   */
+  public print(printTask: IPrintTask): Observable<any> {
+    return using(new XLog(PrintService.logger, levels.INFO, 'print'), (log) => {
+      return this.http
+        .post(`${this.getUrl()}/${Printing.PRINT}`, this.serialize(printTask), CoreService.JSON_OPTIONS)
+        .map((response: Response) => this.deserialize(response.json()))
+        .catch(this.handleError);
+    });
+  }
+
+  /**
+   * Erzeugt ein PDF-Dokument über die @param{printTask} mit den enthaltenen Optionen und Daten.
+   *
+   * @param {IPrintTask} printTask
+   * @returns {Observable<any>}
+   *
+   * @memberof PrintService
+   */
+  public createPdf(printTask: IPrintTask): Observable<any> {
+    return using(new XLog(PrintService.logger, levels.INFO, 'createPdf'), (log) => {
+      log.warn(`Schnittstelle muss noch genau definiert werden`);
+
+      return this.http
+        .post(`${this.getUrl()}/${Printing.CREATE_PDF}`, this.serialize(printTask), CoreService.JSON_OPTIONS)
+        .map((response: Response) => this.deserialize(response.json()))
+        .catch(this.handleError);
+    });
+  }
+
+  /**
+   * Transferiert den @param{report} zum Druckservice.
+   *
+   * @param {string} reportName Name des Reports
+   * @param {base64} report Reportdaten, base64-kodiert
+   * @returns {Observable<any>}
+   *
+   * @memberof PrintService
+   */
+  public transferReport(reportName: string, report: base64): Observable<any> {
+    return using(new XLog(PrintService.logger, levels.INFO, 'transferReport'), (log) => {
+
+      log.warn(`Schnittstelle muss noch genau definiert werden`);
+
+      const reportBase64 = Buffer.from(report).toString('base64');
+      return this.http
+        .post(`${this.getUrl()}/${Printing.TRANSFER_REPORT}?${reportName}`, this.serialize(reportBase64),
+        CoreService.JSON_OPTIONS)
         .map((response: Response) => this.deserialize(response.json()))
         .catch(this.handleError);
     });

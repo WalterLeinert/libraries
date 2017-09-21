@@ -26,9 +26,7 @@ class FindTest extends ReduxBaseTest<IUser, number, any> {
   constructor() {
     super(UserStore.ID, UserServiceRequestsFake, UserServiceFake, {
       url: '',
-      printTopic: '',
       mode: 'development',
-      printUrl: '',
       proxyMode: 'entityVersion'
     });
   }

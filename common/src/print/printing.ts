@@ -18,14 +18,30 @@ export class Printing {
   protected static readonly logger = getLogger(Printing);
 
   /**
-   * REST-Api: verb zum Holen der Druckerliste (z.B. /rest/printer/getPrinters
+   * REST-Api: Topic, welches die Url aufbaut
+   */
+  public static TOPIC = 'printing';
+
+  /**
+   * REST-Api: verb zum Holen der Druckerliste (z.B. /rest/printing/getPrinters)
    */
   public static GET_PRINTERS = 'getPrinters';
 
   /**
-   * REST-Api: verb zum Formatieren/Drucken (z.B. /rest/printer/createReport
+   * REST-Api: verb zum Übertragen eines Reports an den Druckservice (RemoteAgent)
+   * (z.B. /rest/printing/transferReport)
    */
-  public static CREATE_REPORT = 'createReport';
+  public static TRANSFER_REPORT = 'transferReport';
+
+  /**
+   * REST-Api: verb zum Ausdruck (z.B. /rest/printing/print)
+   */
+  public static PRINT = 'print';
+
+  /**
+   * REST-Api: verb zum Erzeugen eines PDF-Dokuments (z.B. /rest/printing/createPdf)
+   */
+  public static CREATE_PDF = 'createPdf';
 
 
   /**

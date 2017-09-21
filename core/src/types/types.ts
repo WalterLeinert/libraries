@@ -2,8 +2,16 @@ import { Assertion } from '../base/assertion';
 import { Funktion, ObjectType } from '../base/objectType';
 import { Utility } from '../util/utility';
 
-
+/**
+ * modelliert ein Byte.
+ */
 export type byte = number;
+
+/**
+ * modelliert einen String mit Base64-Kodierung
+ */
+export type base64 = string;
+
 
 export class Types {
 

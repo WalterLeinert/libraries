@@ -53,16 +53,6 @@ export interface IAppConfig {
   url: string;
 
   /**
-   * Basis-Url des Print-Services (REST-Api)
-   *
-   * @type {string}
-   * @memberOf IAppConfig
-   */
-  printUrl: string;
-
-  printTopic: string;   // TODO: nur bis die Schnittstelle abgestimmt ist
-
-  /**
    * Der Modus, in dem das komplette System läuft (Client + Server)
    *
    * @type {RunMode}

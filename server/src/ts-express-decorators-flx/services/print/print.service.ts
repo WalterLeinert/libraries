@@ -11,7 +11,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 // Fluxgate
 import { FindResult, IPrinter, IPrintTask, Printer } from '@fluxgate/common';
-import { Core } from '@fluxgate/core';
+import { base64, Core, NotImplementedException, StringBuilder, Types } from '@fluxgate/core';
 
 import { ISessionRequest } from '../../session/session-request.interface';
 import { ServerConfigurationService } from '../server-configuration.service';
@@ -95,13 +95,20 @@ export class PrintService extends ServiceCore {
   }
 
 
-  // TODO: eigentlich print-Methode -> vs. createReport (PDF)
-  public createReport(
+
+  /**
+   * Erzeugt einen Ausdruck mit den Daten/Optionen in @param{printTask}
+   *
+   * @param {ISessionRequest} request
+   * @param {IPrintTask} printTask
+   * @returns {Promise<any>}
+   * @memberof PrintService
+   */
+  public print(
     request: ISessionRequest,
-    printTask: IPrintTask,
-    filename: string
+    printTask: IPrintTask
   ): Promise<any> {
-    return using(new XLog(PrintService.logger, levels.INFO, 'createReport', `filename = ${filename}`), (log) => {
+    return using(new XLog(PrintService.logger, levels.INFO, 'print'), (log) => {
       return new Promise<any>((resolve, reject) => {
 
         if (log.isEnabled()) {
@@ -114,7 +121,7 @@ export class PrintService extends ServiceCore {
         const options = {
           host: printConfiguration.host,
           port: printConfiguration.port,
-          path: this.createUrl('json', filename),
+          path: this.createUrl('json'),
           method: RestMethods.POST,
           body: printTask,
           json: true,
@@ -145,8 +152,49 @@ export class PrintService extends ServiceCore {
     });
   }
 
-  private createUrl(type: string, verb: string): string {
-    return PrintService.URL_PREFIX + type + '?' + verb;
+
+  /**
+   * Erzeugt einen Ausdruck mit den Daten/Optionen in @param{printTask}
+   *
+   * @param {ISessionRequest} request
+   * @param {IPrintTask} printTask
+   * @returns {Promise<any>}
+   * @memberof PrintService
+   */
+  public createPdf(
+    request: ISessionRequest,
+    printTask: IPrintTask
+  ): Promise<any> {
+    return using(new XLog(PrintService.logger, levels.INFO, 'createPdf'), (log) => {
+      throw new NotImplementedException();
+    });
   }
 
+
+  /**
+   * Erzeugt einen Ausdruck mit den Daten/Optionen in @param{printTask}
+   *
+   * @param {ISessionRequest} request
+   * @param {base64} report
+   * @returns {Promise<any>}
+   * @memberof PrintService
+   */
+  public transferReport(
+    request: ISessionRequest,
+    reportName: string,
+    report: base64
+  ): Promise<any> {
+    return using(new XLog(PrintService.logger, levels.INFO, 'transferReport', `reportName = ${reportName}`), (log) => {
+      throw new NotImplementedException();
+    });
+  }
+
+  private createUrl(type: string, verb?: string): string {
+    const sb = new StringBuilder(PrintService.URL_PREFIX + type);
+    if (Types.isPresent(verb)) {
+      sb.append('?' + verb);
+    }
+
+    return sb.toString();
+  }
 }

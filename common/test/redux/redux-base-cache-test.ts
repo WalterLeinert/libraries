@@ -57,9 +57,7 @@ export abstract class ReduxBaseCacheTest<T extends IEntity<TId>, TId extends ITo
         //
         AppConfig.register({
           url: '',
-          printTopic: '',
           mode: 'development',
-          printUrl: '',
           proxyMode: 'nop',
           cacheManagerConfiguration: {
             default: {
