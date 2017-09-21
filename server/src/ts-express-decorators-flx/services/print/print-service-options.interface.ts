@@ -34,19 +34,39 @@ export interface IPrintServiceOptions {
    */
   port: number;
 
-  /**
-   * TODO
-   *
-   * @type {boolean}
-   * @memberof IPrintServiceOptions
-   */
-  rejectUnauthorized: boolean;
 
   /**
-   * TODO
-   *
-   * @type {boolean}
-   * @memberof IPrintServiceOptions
+   * Konfiguration von Zertifikaten etc.
    */
-  requestCert: boolean;
+  agentOptions: {
+
+    /**
+     * Pfad auf die Zertifikatdatei (relativ oder absolut)
+     *
+     * @type {string}
+     */
+    certPath: string;
+
+    /**
+     * Pfad auf die Datei mit private Key (relativ oder absolut)
+     *
+     * @type {string}
+     */
+    keyPath: string;
+
+    /**
+     * Pfad auf die Datei mit ca Key (relativ oder absolut)
+     *
+     * @type {string}
+     */
+    caPath: string;
+
+    /**
+     * TODO
+     *
+     * @type {boolean}
+     * @memberof IPrintServiceOptions
+     */
+    rejectUnauthorized: boolean;
+  };
 }

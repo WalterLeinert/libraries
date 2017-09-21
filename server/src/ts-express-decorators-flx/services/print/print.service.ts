@@ -1,6 +1,7 @@
 import { Inject, Injector } from 'injection-js';
 
-import * as http from 'https';
+import * as path from 'path';
+import * as httpRequest from 'request';
 import { Service } from 'ts-express-decorators';
 
 
@@ -12,6 +13,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import { FindResult, IPrinter, IPrintTask, Printer } from '@fluxgate/common';
 import { base64, Core, NotImplementedException, StringBuilder, Types } from '@fluxgate/core';
+import { FileSystem } from '@fluxgate/platform';
 
 import { ISessionRequest } from '../../session/session-request.interface';
 import { ServerConfigurationService } from '../server-configuration.service';
@@ -57,34 +59,20 @@ export class PrintService extends ServiceCore {
         const printConfiguration = this.configurationService.get().print;
         log.log(`printConfiguration = ${Core.stringify(printConfiguration)}`);
 
-        const options = {
-          host: printConfiguration.host,
-          path: this.createUrl('info', 'GetPrinters'),
-          port: printConfiguration.port,
-          method: RestMethods.POST,
-          json: true,
-          rejectUnauthorized: false,
-          requestCert: true
-        };
 
-        http.get(options, (res) => {
-          const bodyChunks = [];
-          res.on('data', (chunk) => {
-            if (log.isDebugEnabled()) {
-              log.debug(`data: chunk.length = ${chunk.length}, bodyChunks.length = ${bodyChunks.length}`);
-            }
-            bodyChunks.push(chunk);
-          }).on('end', () => {
-            if (log.isDebugEnabled()) {
-              log.debug(`end: bodyChunks.length = ${bodyChunks.length}`);
-            }
-            const body = Buffer.concat(bodyChunks);
-            const printers = JSON.parse(body.toString()) as IPrinter[];
-            resolve(printers);
-          }).on('error', (err) => {
-            log.error(`error: ${err}`);
+        const options = this.createOptions(log, printConfiguration, false, 'info', 'GetPrinters');
+        log.log(`options = ${Core.stringify(options)}`);
+
+        httpRequest(options, (err, res, body) => {
+          if (err) {
+            log.error(err);
             reject(err);
-          });
+          } else {
+            log.log(`body = ${body}`);
+            const rval = JSON.parse(body) as IPrinter[];
+            resolve(rval);
+          }
+
         });
 
         // TODO: fake
@@ -118,35 +106,20 @@ export class PrintService extends ServiceCore {
         const printConfiguration = this.configurationService.get().print;
         log.log(`printConfiguration = ${Core.stringify(printConfiguration)}`);
 
-        const options = {
-          host: printConfiguration.host,
-          port: printConfiguration.port,
-          path: this.createUrl('json'),
-          method: RestMethods.POST,
-          body: printTask,
-          json: true,
-          rejectUnauthorized: false,
-          requestCert: true
-        };
 
-        http.get(options, (res) => {
-          const bodyChunks = [];
-          res.on('data', (chunk) => {
-            if (log.isDebugEnabled()) {
-              log.debug(`data: chunk.length = ${chunk.length}, bodyChunks.length = ${bodyChunks.length}`);
-            }
-            bodyChunks.push(chunk);
-          }).on('end', () => {
-            if (log.isDebugEnabled()) {
-              log.debug(`end: bodyChunks.length = ${bodyChunks.length}`);
-            }
-            const body = Buffer.concat(bodyChunks);
-            const result = body.toString();
-            resolve(result);
-          }).on('error', (err) => {
-            log.error(`error: ${err}`);
+        const options = this.createOptions(log, printConfiguration, true, 'json', 'dummy.json');
+        (options as any).body = printTask;    // TODO
+        log.log(`options = ${Core.stringify(options)}`);
+
+        httpRequest(options, (err, res, body) => {
+          if (err) {
+            log.error(err);
             reject(err);
-          });
+          } else {
+            log.log(`body = ${Core.stringify(body)}`);
+            // const rval = JSON.parse(body);
+            resolve(body);
+          }
         });
       });
     });
@@ -189,12 +162,44 @@ export class PrintService extends ServiceCore {
     });
   }
 
-  private createUrl(type: string, verb?: string): string {
-    const sb = new StringBuilder(PrintService.URL_PREFIX + type);
+  private createUrl(options: IPrintServiceOptions, type: string, verb?: string): string {
+    const sb = new StringBuilder(`https://${options.host}:${options.port}`);
+    sb.append(PrintService.URL_PREFIX);
+    sb.append(type);
+
     if (Types.isPresent(verb)) {
       sb.append('?' + verb);
     }
 
     return sb.toString();
+  }
+
+
+
+  private createOptions(log: XLog, printConfiguration: IPrintServiceOptions, json: boolean, type: string, arg: string) {
+
+    const errorLogger = (message: string): void => {
+      log.error(message);
+    };
+
+    const cert = FileSystem.readTextFile(errorLogger, printConfiguration.agentOptions.certPath, 'Zertifikat');
+    const key = FileSystem.readTextFile(errorLogger, printConfiguration.agentOptions.keyPath, 'Private Key');
+    const ca = FileSystem.readTextFile(errorLogger, printConfiguration.agentOptions.caPath, 'ca');
+
+
+    const options = {
+      url: this.createUrl(printConfiguration, type, arg),
+      method: RestMethods.POST,
+      json: json,
+      agentOptions: {
+        cert: cert,
+        key: key,
+        ca: ca,
+        rejectUnauthorized: printConfiguration.agentOptions.rejectUnauthorized
+      },
+      headers: {}
+    };
+
+    return options;
   }
 }

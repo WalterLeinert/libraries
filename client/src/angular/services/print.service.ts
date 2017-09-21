@@ -58,7 +58,7 @@ export class PrintService extends ServiceCore {
     return using(new XLog(PrintService.logger, levels.INFO, 'print'), (log) => {
       return this.http
         .post(`${this.getUrl()}/${Printing.PRINT}`, this.serialize(printTask), CoreService.JSON_OPTIONS)
-        .map((response: Response) => this.deserialize(response.json()))
+        .map((response: Response) => response.json())
         .catch(this.handleError);
     });
   }

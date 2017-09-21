@@ -271,6 +271,21 @@ export abstract class ServerBase extends ServerLoader {
           configuration.cert.keyPath = path.join(process.cwd(), 'config', configuration.cert.keyPath);
         }
       }
+
+      if (!path.isAbsolute(configuration.print.agentOptions.certPath)) {
+        configuration.print.agentOptions.certPath = path.join(process.cwd(), 'config',
+          configuration.print.agentOptions.certPath);
+      }
+
+      if (!path.isAbsolute(configuration.print.agentOptions.keyPath)) {
+        configuration.print.agentOptions.keyPath = path.join(process.cwd(), 'config',
+          configuration.print.agentOptions.keyPath);
+      }
+
+      if (!path.isAbsolute(configuration.print.agentOptions.caPath)) {
+        configuration.print.agentOptions.caPath = path.join(process.cwd(), 'config',
+          configuration.print.agentOptions.caPath);
+      }
     });
   }
 

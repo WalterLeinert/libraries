@@ -140,9 +140,7 @@ export abstract class ServerUnitTest {
         //
         AppConfig.register({
           url: '',
-          printTopic: '',
           mode: 'development',
-          printUrl: '',
           proxyMode: 'nop',
           cacheManagerConfiguration: {
             default: {
