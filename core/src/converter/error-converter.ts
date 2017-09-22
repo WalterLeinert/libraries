@@ -8,7 +8,7 @@ import { IConverter } from './converter.interface';
 
 
 // @Converter(Error)
-export class ErrorConverter extends ConverterBase implements IConverter<Error, string> {
+export class ErrorConverter extends ConverterBase<Error, string> implements IConverter<Error, string> {
 
   constructor() {
     super(Error);

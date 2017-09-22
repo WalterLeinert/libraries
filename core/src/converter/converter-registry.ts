@@ -2,6 +2,7 @@ import { Funktion } from '../base/objectType';
 import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { Dictionary } from '../types/dictionary';
 import { Assert } from '../util/assert';
+import { BooleanConverter } from './boolean-converter';
 import { IConverter } from './converter.interface';
 import { DateConverter } from './date-converter';
 import { ErrorConverter } from './error-converter';
@@ -22,8 +23,8 @@ export class ConverterRegistry {
   private static initialized = (() => {
     ConverterRegistry.register(Date, new DateConverter());
     ConverterRegistry.register(Error, new ErrorConverter());
-    // ConverterRegistry.register('number', new NumberConverter());
     ConverterRegistry.register(Number, new NumberConverter());
+    ConverterRegistry.register(Boolean, new BooleanConverter());
   })();
 
   public static register<T1, T2>(type: string | Funktion, converter: IConverter<T1, T2>) {

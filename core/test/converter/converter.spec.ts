@@ -4,7 +4,7 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-
+import { Funktion } from '../../src/base/objectType';
 import { ConverterRegistry } from '../../src/converter';
 import { InvalidOperationException } from '../../src/exceptions';
 import { ShortTime } from '../../src/types/shortTime';
@@ -15,78 +15,96 @@ const nullUndefinedTests = [
   Date
 ];
 
+interface ISuccessCase {
+  back?: boolean;
+  value: any;
+  expectedValue: any;
+}
 
-const tests = [
+interface IFailureCase {
+  back?: boolean;
+  value: any;
+  expectedException: any;
+}
+
+interface ITestCases {
+  type: Funktion;
+  success: ISuccessCase[];
+  failure: IFailureCase[];
+}
+
+
+const tests: ITestCases[] = [
+  {
+    type: Boolean,
+    success: [
+      { value: Boolean(true), expectedValue: 'true' },
+      { value: Boolean(false), expectedValue: 'false' },
+      { value: true, expectedValue: 'true' },
+      { value: false, expectedValue: 'false' },
+      { back: true, value: 'true', expectedValue: true },
+      { back: true, value: 'True', expectedValue: true },
+      { back: true, value: '1', expectedValue: true },
+      { back: true, value: 'false', expectedValue: false },
+      { back: true, value: 'False', expectedValue: false },
+      { back: true, value: '0', expectedValue: false }
+    ],
+    failure: [
+      { value: 'XXXXX', expectedException: InvalidOperationException },
+      { back: true, value: 10, expectedException: InvalidOperationException },
+    ]
+  },
+
+  {
+    type: Number,
+    success: [
+      { value: Number(4711), expectedValue: '4711' },
+      { value: Number(-1), expectedValue: '-1' },
+      { value: -15, expectedValue: '-15' },
+      { value: 0, expectedValue: '0' },
+      { value: 123, expectedValue: '123' },
+      { back: true, value: '4711', expectedValue: 4711 },
+      { back: true, value: '-2', expectedValue: -2 },
+      { back: true, value: '0', expectedValue: 0 },
+    ],
+    failure: [
+      { value: '1,23', expectedException: InvalidOperationException },
+      { back: true, value: 'hallo', expectedException: InvalidOperationException },
+    ]
+  },
+
   {
     type: Date,
     success: [
-      {
-        value: new Date('2017-04-09T14:02:05.000Z'),
-        expectedValue: '2017-04-09T14:02:05.000Z'
-      }
+      { value: new Date('2017-04-09T14:02:05.000Z'), expectedValue: '2017-04-09T14:02:05.000Z' }
     ],
     failure: [
-      {
-        back: false,
-        value: 'invalid-date',
-        expectedException: InvalidOperationException
-      },
-
-      {
-        back: true,
-        value: '2017-04-01YY22:00:00.000Z',
-        expectedException: InvalidOperationException
-      },
+      { value: 'invalid-date', expectedException: InvalidOperationException },
+      { back: true, value: '2017-04-01YY22:00:00.000Z', expectedException: InvalidOperationException },
     ]
   },
 
   {
     type: ShortTime,
     success: [
-      {
-        value: new ShortTime(19, 15),
-        expectedValue: '19:15'
-      }
+      { value: new ShortTime(19, 15), expectedValue: '19:15' }
     ],
     failure: [
-      {
-        back: false,
-        value: 4711,
-        expectedException: InvalidOperationException
-      },
-
-      {
-        back: true,
-        value: '31:99',
-        expectedException: InvalidOperationException
-      },
+      { value: 4711, expectedException: InvalidOperationException },
+      { back: true, value: '31:99', expectedException: InvalidOperationException },
     ]
   },
-
 
   {
     type: Time,
     success: [
-      {
-        value: new Time(12, 13, 0),
-        expectedValue: '12:13:00'
-      }
+      { value: new Time(12, 13, 0), expectedValue: '12:13:00' }
     ],
     failure: [
-      {
-        back: false,
-        value: true,
-        expectedException: InvalidOperationException
-      },
-
-      {
-        back: true,
-        value: '100',
-        expectedException: InvalidOperationException
-      },
+      { value: true, expectedException: InvalidOperationException },
+      { back: true, value: '100', expectedException: InvalidOperationException },
     ]
   }
-
 
 ];
 
@@ -104,13 +122,16 @@ class ConverterTest extends CoreUnitTest {
   }
 
 
-  @test 'should convert from'() {
+  @test 'should convert'() {
     tests.forEach((tst) => {
       const converter = ConverterRegistry.get(tst.type);
 
       for (const data of tst.success) {
-        expect(converter.convert(data.value)).to.eql(data.expectedValue);
-        expect(converter.convertBack(data.expectedValue)).to.eql(data.value);
+        if (data.back && data.back === true) {
+          expect(converter.convertBack(data.value)).to.eql(data.expectedValue);
+        } else {
+          expect(converter.convert(data.value)).to.eql(data.expectedValue);
+        }
       }
     });
   }
@@ -127,9 +148,13 @@ class ConverterFailureTest extends CoreUnitTest {
 
       for (const data of tst.failure) {
         if (data.back && data.back === true) {
-          expect(() => converter.convertBack(data.value)).to.throw(data.expectedException);
+          expect(() => converter.convertBack(data.value),
+            `value = ${data.value}, expectedException = ${data.expectedException.name}`)
+            .to.throw(data.expectedException);
         } else {
-          expect(() => converter.convert(data.value)).to.throw(data.expectedException);
+          expect(() => converter.convert(data.value),
+            `value = ${data.value}, expectedException = ${data.expectedException.name}`)
+            .to.throw(data.expectedException);
         }
       }
     });

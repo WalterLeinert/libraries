@@ -5,8 +5,8 @@ import { IConverterOptions } from './converter-options.interface';
 import { IConverter } from './converter.interface';
 
 
-// @Converter(Date)
-export class NumberConverter extends ConverterBase implements IConverter<number, string> {
+// @Converter(Number)
+export class NumberConverter extends ConverterBase<number, string> implements IConverter<number, string> {
 
   constructor() {
     super(Number);

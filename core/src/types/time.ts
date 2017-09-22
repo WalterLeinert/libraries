@@ -160,7 +160,7 @@ export class Time extends ShortTime {
 
 // tslint:disable-next-line:max-classes-per-file
 @Converter(Time)
-export class TimeConverter extends ConverterBase implements IConverter<Time, string> {
+export class TimeConverter extends ConverterBase<Time, string> implements IConverter<Time, string> {
 
   constructor() {
     super(Time);

@@ -1,3 +1,4 @@
+export * from './boolean-converter';
 export * from './converter-base';
 export * from './converter.decorator';
 export * from './converter.interface';

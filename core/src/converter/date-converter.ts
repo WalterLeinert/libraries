@@ -6,7 +6,7 @@ import { IConverter } from './converter.interface';
 
 
 // @Converter(Date)
-export class DateConverter extends ConverterBase implements IConverter<Date, string> {
+export class DateConverter extends ConverterBase<Date, string> implements IConverter<Date, string> {
 
   constructor() {
     super(Date);
