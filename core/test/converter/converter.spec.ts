@@ -28,7 +28,7 @@ interface IFailureCase {
 }
 
 interface ITestCases {
-  type: Funktion;
+  type: Funktion | string;
   success: ISuccessCase[];
   failure: IFailureCase[];
 }
@@ -56,6 +56,23 @@ const tests: ITestCases[] = [
   },
 
   {
+    type: 'integer',
+    success: [
+      { value: -15, expectedValue: '-15' },
+      { value: 0, expectedValue: '0' },
+      { value: 123, expectedValue: '123' },
+      { back: true, value: '4711', expectedValue: 4711 },
+      { back: true, value: '-2', expectedValue: -2 },
+      { back: true, value: '0', expectedValue: 0 },
+    ],
+    failure: [
+      { value: '1.23', expectedException: InvalidOperationException },
+      { back: true, value: 'hallo', expectedException: InvalidOperationException },
+    ]
+  },
+
+
+  {
     type: Number,
     success: [
       { value: Number(4711), expectedValue: '4711' },
@@ -63,6 +80,7 @@ const tests: ITestCases[] = [
       { value: -15, expectedValue: '-15' },
       { value: 0, expectedValue: '0' },
       { value: 123, expectedValue: '123' },
+      { value: -1.23, expectedValue: '-1.23' },
       { back: true, value: '4711', expectedValue: 4711 },
       { back: true, value: '-2', expectedValue: -2 },
       { back: true, value: '0', expectedValue: 0 },

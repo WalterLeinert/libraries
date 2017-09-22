@@ -6,7 +6,9 @@ import { BooleanConverter } from './boolean-converter';
 import { IConverter } from './converter.interface';
 import { DateConverter } from './date-converter';
 import { ErrorConverter } from './error-converter';
+import { IntegerConverter } from './integer-converter';
 import { NumberConverter } from './number-converter';
+
 
 /**
  * Registry für alle bekannten Converter.
@@ -25,6 +27,7 @@ export class ConverterRegistry {
     ConverterRegistry.register(Error, new ErrorConverter());
     ConverterRegistry.register(Number, new NumberConverter());
     ConverterRegistry.register(Boolean, new BooleanConverter());
+    ConverterRegistry.register('integer', new IntegerConverter());
   })();
 
   public static register<T1, T2>(type: string | Funktion, converter: IConverter<T1, T2>) {

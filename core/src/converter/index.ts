@@ -5,3 +5,4 @@ export * from './converter.interface';
 export * from './converter-options.interface';
 export * from './converter-registry';
 export * from './date-converter';
+export * from './integer-converter';
