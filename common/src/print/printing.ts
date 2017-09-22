@@ -3,11 +3,13 @@
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, Core, Types } from '@fluxgate/core';
+import { Assert, ConverterRegistry, Core, Types } from '@fluxgate/core';
 
 import { ColumnTypes } from '../model/metadata/columnTypes';
 import { MetadataStorage } from '../model/metadata/metadataStorage';
 import { TableMetadata } from '../model/metadata/tableMetadata';
+import { Printer } from './model/printer';
+import { IPrinter } from './model/printer.interface';
 import { IPrintOptions } from './model/printOptions.interface';
 import { IPrintTask } from './model/printTask.interface';
 import { ITableRow } from './model/tableRow.interface';
@@ -243,5 +245,99 @@ export class Printing {
     }
 
     return records;
+  }
+
+
+  // {
+  //   "name": "HP Officejet Pro 8620 (Netzwerk)",
+  //   "orientation": "portrait",
+  //   "type": "local",
+  //   "state": "printing",
+  //   "status": "can print",
+  //   "resolution": "600,600 dpi",
+  //   "papersize": "A4",
+  //   "paperwidth": "4961",
+  //   "paperheight": "7016",
+  //   "printablewidth": "4805",
+  //   "printableheight": "6860",
+  //   "copies": "1",
+  //   "canrendercopies": "true",
+  //   "currenttray": "Automatisch auswählen",
+  //   "trays": [
+  //     {
+  //       "name": "Automatisch auswählen"
+  //     },
+  //     {
+  //       "name": "Autom. Druckerauswahl"
+  //     },
+  //     {
+  //       "name": "Fach 1"
+  //     },
+  //     {
+  //       "name": "Fach 2"
+  //     }
+  //   ],
+  //   "defaulttray": "Automatisch auswählen"
+  // },
+
+
+  public static convertPrinterFromRemoteAgent(printerInfos: any[]): IPrinter[] {
+    const stringProperties = [
+      'orientation',
+      'type',
+      'state',
+      'status',
+      'resolution',
+      'papersize',
+      'currenttray',
+      'defaulttray'
+    ];
+
+    const numberProperties = [
+      'paperwidth',
+      'paperheight',
+      'printablewidth',
+      'printableheight',
+      'copies'
+    ];
+
+    const printers = [];
+
+    for (const printerInfo of printerInfos) {
+      const printer: IPrinter = new Printer(printerInfo.name);
+
+      // String-Properties übernehmen
+      stringProperties.forEach((property) => {
+        if (Types.hasProperty(printerInfo, property)) {
+          printer[property] = printerInfo[property];
+        }
+      });
+
+      numberProperties.forEach((property) => {
+        if (Types.hasProperty(printerInfo, property)) {
+          const converter = ConverterRegistry.get<number, string>('integer');
+          printer[property] = converter.convertBack(printerInfo[property]);
+        }
+      });
+
+      let prop = 'canrendercopies';
+      if (Types.hasProperty(printerInfo, prop)) {
+        const converter = ConverterRegistry.get<boolean, string>(Boolean);
+        printer[prop] = converter.convertBack(printerInfo[prop]);
+      }
+
+      prop = 'trays';
+      if (Types.hasProperty(printerInfo, prop)) {
+        printer.trays = [];
+
+        printerInfo[prop].forEach((tray: { name: string }) => {
+          printer.trays.push({ name: tray.name });
+        });
+      }
+
+      printers.push(printer);
+    }
+
+    return printers;
   }
 }

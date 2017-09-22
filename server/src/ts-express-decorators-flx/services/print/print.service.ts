@@ -11,7 +11,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 // Fluxgate
-import { FindResult, IPrinter, IPrintTask, Printer } from '@fluxgate/common';
+import { FindResult, IPrinter, IPrintTask, Printer, Printing } from '@fluxgate/common';
 import { base64, Core, NotImplementedException, StringBuilder, Types } from '@fluxgate/core';
 import { FileSystem } from '@fluxgate/platform';
 
@@ -69,7 +69,7 @@ export class PrintService extends ServiceCore {
             reject(err);
           } else {
             log.log(`body = ${body}`);
-            const rval = JSON.parse(body) as IPrinter[];
+            const rval = Printing.convertPrinterFromRemoteAgent(JSON.parse(body).printers);
             resolve(rval);
           }
 
