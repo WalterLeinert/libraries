@@ -1,6 +1,6 @@
 import * as Knex from 'knex';
 
-import { IPrintServiceOptions } from './services/print/print-service-options.interface';
+import { IPrintServiceOptions } from '@fluxgate/common';
 
 /**
  * Konfiguration des Server v.a. für Https

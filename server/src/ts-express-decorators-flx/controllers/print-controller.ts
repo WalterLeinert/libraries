@@ -9,7 +9,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { FindResult, IPrinter, IPrintTask, Printing } from '@fluxgate/common';
 import { base64 } from '@fluxgate/core';
 
-import { PrintService } from '../services/print/print.service';
+import { PrintService } from '../services/print.service';
 import { IBodyRequest } from '../session/body-request.interface';
 import { ISessionRequest } from '../session/session-request.interface';
 import { ControllerCore } from './base/controller-core';
