@@ -1,3 +1,4 @@
+import 'fs';
 import * as path from 'path';
 import * as httpRequest from 'request';
 
@@ -90,6 +91,37 @@ export class PrintAgentClient {
     });
   }
 
+
+  /**
+   * Überträgt den Report @param{reportName} als @param{report}
+   *
+   * @param {string} reportName
+   * @param {Buffer} report
+   * @returns {Promise<any>}
+   * @memberof PrintAgentClient
+   */
+  public transfer(reportName: string, report: Buffer): Promise<any> {
+    return using(new XLog(PrintAgentClient.logger, levels.INFO, 'transfer'), (log) => {
+
+      return new Promise<any>((resolve, reject) => {
+        log.log(`printConfiguration = ${Core.stringify(this.printConfiguration)}`);
+        const options = this.createOptions(log, this.printConfiguration, false, 'report', reportName);
+
+        (options as any).body = report; // TODO
+        log.log(`options = ${Core.stringify(options)}`);
+
+        httpRequest(options, (err, res, body) => {
+          if (err) {
+            log.error(err);
+            reject(err);
+          } else {
+            log.log(`body = ${Core.stringify(body)}`);
+            resolve(body);
+          }
+        });
+      });
+    });
+  }
 
 
   /**
