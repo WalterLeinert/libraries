@@ -51,7 +51,6 @@ buildJob:
   - knex-importer -r -c database/config/knexfile.ci.json -d database
   - bash bin/rebuild.sh -o
 
-
 # testJob:
 #   stage: test
 #   script:
