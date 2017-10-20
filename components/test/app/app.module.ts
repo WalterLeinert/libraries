@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 
-import '../../src/components';
+// import '../../src/components';
 
 
 @NgModule({
