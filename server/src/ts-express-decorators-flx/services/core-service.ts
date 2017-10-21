@@ -383,7 +383,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
 
           if (!useExistingTransaction) {
             trx.commit();
-            log.debug('queryResult after commit: ', subject);
+            log.debug(`queryResult after commit: ${Core.stringify(subject)} `);
           }
 
           resolve(new resultClazz(subject, entityVersion));

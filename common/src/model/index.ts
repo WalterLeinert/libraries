@@ -4,6 +4,7 @@ export * from './decorator';
 export * from './entity';
 export * from './entity-stringifyer';
 export * from './entity-status';
+export * from './entity-value-replacer';
 export * from './entityVersion';
 export * from './entity.interface';
 export * from './error';
