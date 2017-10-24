@@ -95,48 +95,88 @@ In @fluxgate/core ist ein dependency injection Mechanismus implementiert, der we
 Die eigentliche Funktionalität für dependency injection basiert auf der Library https://github.com/mgechev/injection-js. Die fehlende module und component Unterstützung ist
 analog zu angular umgesetzt.
 
-Hierzu sind zwei decorators @FlxComponen und @FlxModule implementiert, die in wesentlicher Hinsicht zu angular kompatibel sind.
+Hierzu sind zwei decorators @FlxComponent und @FlxModule implementiert, die in wesentlicher Hinsicht zu angular kompatibel sind.
 
-Ein Beispiel für typischen DI-Code sieht wie folgt aus:
+Ein Beispiel für typischen DI-Code im Client-Teil eines konkreten Projekts sieht wie folgt aus (ClientComponent):
 
 ```ts
+...
+// -------------------------------------- logging --------------------------------------------
+import { getLogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
+
+import { EntityStringifyer } from '@fluxgate/common';
+import {
+  CoreInjector, DEFAULT_CATEGORY, FlxComponent, Injector, LOG_EXCEPTIONS,
+  LOGGER, STRINGIFYER
+} from '@fluxgate/core';
 
 
 @FlxComponent({
   providers: [
-    { provide: DEFAULT_CATEGORY, useValue: CoreComponent.logger.category },
-    { provide: LOGGER, useValue: CoreComponent.logger },
+    { provide: DEFAULT_CATEGORY, useValue: ClientComponent.logger.category },
+    { provide: LOGGER, useValue: ClientComponent.logger },
     { provide: LOG_EXCEPTIONS, useValue: true },
-    { provide: STRINGIFYER, useClass: SimpleStringifyer }   // default
+    { provide: STRINGIFYER, useClass: EntityStringifyer }
   ]
 })
-export class CoreComponent {
-  public static readonly logger = getLogger(CoreComponent);
+export class ClientComponent {
+  protected static readonly logger = getLogger(ClientComponent);
 
   constructor(injector: Injector) {
-    using(new XLog(CoreComponent.logger, levels.INFO, 'ctor'), (log) => {
-      log.log(`initializing @fluxgate/core, setting injector`);
+    using(new XLog(ClientComponent.logger, levels.INFO, 'ctor'), (log) => {
       CoreInjector.instance.setInjector(injector);
     });
   }
 }
-
-@FlxModule({
-  declarations: [
-    CoreComponent
-  ],
-  exports: [
-    CoreComponent
-  ],
-  bootstrap: [
-    CoreComponent
-  ]
-})
-export class CoreModule {
-}
-
 ```
 
+bzw. (ClientModule):
+
+```ts
+import { FlxModule } from '@fluxgate/core';
+
+import { ClientComponent } from './client.component';
+
+@FlxModule({
+  imports: [
+    ...
+  ],
+  declarations: [
+    ClientComponent
+  ],
+  bootstrap: [
+    ClientComponent
+  ]
+})
+export class ClientModule {
+}
+```
+
+Das Bootstrapping erfolgt analog zu Angular im Umfeld das Angular-Bootstraps z.B. in AppModule:
+
+```ts
+...
+import { ClientModule } from './client.module';
+...
+
+@NgModule({
+  imports: [
+   ...
+  ],
+  ...
+  bootstrap: [AppComponent]
+})
+export class AppModule {
+
+  constructor(router: Router, private injector: Injector) {
+    ModuleMetadataStorage.instance.bootstrapModule(ClientModule);
+    ...
+  }
+}
+```
+
+Das Module ClientModule stellt die Wurzel der DI-Injection-Hierarchie für die Provider dar. Weitere projektspezifische DI-Modules (und Components) werden über entsprechende Imports in ClientModule konfiguriert.
 
 
 ## Entwicklung, Build
