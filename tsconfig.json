@@ -1,16 +1,31 @@
 {
-    "compilerOptions": {
-        "experimentalDecorators": true,
-        "allowJs": true
-    },
-    "exclude": [
-      "node_modules",
-      "core/node_modules",
-      "platform/node_modules",
-      "common/node_modules",
-      "testing/node_modules",
-      "client/node_modules",
-      "component/node_modules",
-      "server/node_modules"
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationDir": "dts/",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
+    "isolatedModules": false,
+    "suppressImplicitAnyIndexErrors": false,
+    "importHelpers": true,
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "types": [
+      "node"
     ]
+  },
+  "exclude": [
+    "node_modules",
+    "core/node_modules",
+    "dts"
+  ]
 }

@@ -1,25 +1,10 @@
 {
-  "compileOnSave": false,
+  "extends": "../tsconfig.json",
+
   "compilerOptions": {
-    "baseUrl": "src",
-    "sourceMap": true,
-    "declaration": true,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "target": "es5",
-    "typeRoots": [
-      "../node_modules/@types"
-    ],
+    "baseUrl": "src/",
     "types": [
-      "jasmine",
-      "node"
-    ],
-    "lib": [
-      "es2016",
-      "dom"
-    ],
-     "outDir": "dist",
-    "rootDir": "."
+      "jasmine"
+    ]
   }
 }

@@ -17,7 +17,6 @@ const tsc = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
 const mocha = require('gulp-mocha');
-// const tscConfig = require('./src/tsconfig.app.json');
 const tsProject = tsc.createProject('tsconfig.json');
 
 const bufferSize = 4096 * 1024;

@@ -15,7 +15,6 @@ const tsc = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
 const mocha = require('gulp-mocha');
-const tscConfig = require('./tsconfig.json');
 const tsProject = tsc.createProject('tsconfig.json');
 
 /**
@@ -91,7 +90,7 @@ gulp.task('compile:test', ['default'], function () {
   return gulp.src('./test/**/*.ts', { base: '.' })
     .pipe(sourcemaps.init())
     /*transpile*/
-    .pipe(tsc(tscConfig.compilerOptions))
+    .pipe(tsProject())
     /*flush to disk*/
     .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
     .pipe(gulp.dest('dist'));

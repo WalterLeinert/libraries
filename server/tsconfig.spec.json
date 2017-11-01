@@ -1,3 +1,15 @@
+// {
+//   "extends": "../tsconfig.json",
+//   "compilerOptions": {
+//     "baseUrl": "src/"
+//   }
+// }
+//
+// TODO: geht so leider nicht!!
+// ts-log-debug hat u.a. (fehlerhafterweise, sollte devDep sein) eine dependency zu @types/chai
+// da @types/chai aber unter ../node_modules global installiert ist, gibt es "error TS2300: Duplicate identifier ..." Fehler!
+// Lösung: Update von ts-express-decorators + ts-log-debug
+
 {
   "compilerOptions": {
     "strict": false,

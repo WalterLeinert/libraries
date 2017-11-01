@@ -1,33 +1,10 @@
 {
+  "extends": "../tsconfig.json",
+
   "compilerOptions": {
     "baseUrl": "src/",
-    "module": "commonjs",
-    "target": "es5",
-    "noImplicitAny": false,
-    "sourceMap": true,
-    "declaration": true,
-    "declarationDir": "dts/",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "moduleResolution": "node",
-    "isolatedModules": false,
-    "suppressImplicitAnyIndexErrors": false,
-    "importHelpers": true,
-    "lib": [
-      "es6",
-      "dom"
-    ],
-    "outDir": "build/",
-    "typeRoots": [
-      "../node_modules/@types"
-    ],
     "types": [
-      "node",
       "jasmine"
     ]
-  },
-  "exclude": [
-    "node_modules",
-    "dts"
-  ]
+  }
 }

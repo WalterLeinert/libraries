@@ -16,8 +16,6 @@ const tsc = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
 const mocha = require('gulp-mocha');
-const tscConfig = require('./tsconfig.json');
-const tscConfigSpec = require('./tsconfig.spec.json');
 const tsProject = tsc.createProject('tsconfig.json');
 const tsProjectSpec = tsc.createProject('tsconfig.spec.json');
 
