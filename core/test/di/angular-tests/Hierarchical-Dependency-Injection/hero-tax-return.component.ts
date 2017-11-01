@@ -1,6 +1,6 @@
 import { FlxComponent } from '../../../../src/di/flx-component.decorator';
 
-import { EventEmitter, Input, Output } from '@angular/core';
+// import { EventEmitter, Input, Output } from '@angular/core';
 import { HeroTaxReturn } from './hero';
 import { HeroTaxReturnService } from './hero-tax-return.service';
 
@@ -12,16 +12,16 @@ import { HeroTaxReturnService } from './hero-tax-return.service';
 })
 export class HeroTaxReturnComponent {
   public message = '';
-  @Output() public close = new EventEmitter<void>();
+  // @Output() public close = new EventEmitter<void>();
 
-  public get taxReturn(): HeroTaxReturn {
-    return this.heroTaxReturnService.taxReturn;
-  }
+  // public get taxReturn(): HeroTaxReturn {
+  //   return this.heroTaxReturnService.taxReturn;
+  // }
 
-  @Input()
-  public set taxReturn(htr: HeroTaxReturn) {
-    this.heroTaxReturnService.taxReturn = htr;
-  }
+  // @Input()
+  // public set taxReturn(htr: HeroTaxReturn) {
+  //   this.heroTaxReturnService.taxReturn = htr;
+  // }
 
   constructor(private heroTaxReturnService: HeroTaxReturnService) { }
 
@@ -31,7 +31,7 @@ export class HeroTaxReturnComponent {
   }
 
   public onClose() {
-    this.close.emit();
+    // this.close.emit();
   }
 
   public onSaved() {
