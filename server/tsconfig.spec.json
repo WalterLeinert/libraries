@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "baseUrl": "src/",
+    "strict": false,
+    "baseUrl": "test/",
     "module": "commonjs",
     "target": "es5",
     "noImplicitAny": false,
@@ -17,13 +18,9 @@
       "es6",
       "dom"
     ],
-    "outDir": "build/",
-    "typeRoots": [
-      "../node_modules/@types"
-    ],
+    "outDir": "dist/",
     "types": [
-      "node",
-      "jasmine"
+      "node"
     ]
   },
   "exclude": [

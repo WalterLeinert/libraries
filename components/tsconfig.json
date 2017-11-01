@@ -9,7 +9,11 @@
     "experimentalDecorators": true,
     "target": "es5",
     "typeRoots": [
-      "node_modules/@types"
+      "../node_modules/@types"
+    ],
+    "types": [
+      "jasmine",
+      "node"
     ],
     "lib": [
       "es2016",

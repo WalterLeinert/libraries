@@ -18,6 +18,9 @@
       "dom"
     ],
     "outDir": "build/",
+    "typeRoots": [
+      "../node_modules/@types"
+    ],
     "types": [
       "node"
     ]
