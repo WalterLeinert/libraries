@@ -210,6 +210,11 @@ bin/rebuild.sh --clean
 
 ### Release Notes
 
+#### Version 2.5.0
+  - Build-Konfiguration vereinfacht
+    - zentrales tsconfig.json im Root-Verzeichnis
+    - (fast alle) devDependencies in package.json im Root-Verzeichnis
+
 #### Version 2.2.4
 
   - common
