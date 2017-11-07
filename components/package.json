@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/components",
-  "version": "2.5.1",
+  "version": "2.5.2-beta.0",
   "description": "Fluxgate Angular Component-Library ",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -27,10 +27,10 @@
     "@angular/platform-browser-dynamic": "4.1.3",
     "@angular/platform-server": "4.1.3",
     "@angular/router": "4.1.3",
-    "@fluxgate/client": "2.5.1",
-    "@fluxgate/common": "2.5.1",
-    "@fluxgate/core": "2.5.1",
-    "@fluxgate/platform": "2.5.1",
+    "@fluxgate/client": "2.5.2-beta.0",
+    "@fluxgate/common": "2.5.2-beta.0",
+    "@fluxgate/core": "2.5.2-beta.0",
+    "@fluxgate/platform": "2.5.2-beta.0",
     "angular-resizable-element": "^1.2.1",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
@@ -44,10 +44,10 @@
     "zone.js": "0.8.12"
   },
   "peerDependencies": {
-    "@fluxgate/client": ">=2.5.1",
-    "@fluxgate/common": ">=2.5.1",
-    "@fluxgate/core": ">=2.5.1",
-    "@fluxgate/platform": ">=2.5.1"
+    "@fluxgate/client": ">=2.5.2-beta.0",
+    "@fluxgate/common": ">=2.5.2-beta.0",
+    "@fluxgate/core": ">=2.5.2-beta.0",
+    "@fluxgate/platform": ">=2.5.2-beta.0"
   },
   "directories": {
     "lib": "lib"
