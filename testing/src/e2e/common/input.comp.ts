@@ -33,7 +33,7 @@ export class InputComponent extends E2eComponent {
     return this.getElement().equals(browser.driver.switchTo().activeElement());
   }
 
-  public async expectState(inputStateExpected: IInputState): promise.Promise<void> {
+  public async expectState(inputStateExpected: IInputState): Promise<void> {
     return InputHelper.expectState(this.getElement(), inputStateExpected);
   }
 }

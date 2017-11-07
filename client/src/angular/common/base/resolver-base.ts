@@ -58,7 +58,7 @@ export abstract class ResolverBase<T extends IEntity<TId>, TId extends IToString
           }
         })
         .first()
-        .catch((error: Error) => {
+        .catch<T, T>((error: Error) => {
           log.error(`error = ${error}`);
           return null;
         });

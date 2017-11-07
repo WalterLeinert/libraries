@@ -75,10 +75,10 @@ export class ServiceProxy<T extends IEntity<TId>, TId extends IToString> impleme
   }
 
 
-  public findById<TFindById extends IEntity<TId>>(id: TId): Observable<FindByIdResult<TFindById, TId>> {
+  public findById(id: TId): Observable<FindByIdResult<T, TId>> {
     return using(new XLog(ServiceProxy.logger, levels.INFO, 'findById'), (log) => {
-      return Observable.create((observer: Subscriber<FindByIdResult<TFindById, TId>>) => {
-        this.service.findById(id).subscribe((result: FindByIdResult<TFindById, TId>) => {
+      return Observable.create((observer: Subscriber<FindByIdResult<T, TId>>) => {
+        this.service.findById(id).subscribe((result: FindByIdResult<T, TId>) => {
           observer.next(result);
         }, (err) => {
           observer.error(err);

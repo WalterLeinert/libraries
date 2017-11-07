@@ -30,7 +30,7 @@ export class Logging {
           systemMode: info as string
         };
       } else {
-        configOptions = info;
+        configOptions = info as ILoggingConfigurationOptions;
       }
 
       if (Utility.isNullOrEmpty(configOptions.systemMode)) {

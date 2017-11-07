@@ -34,7 +34,7 @@ export class UserService extends BaseService<IUser, number> {
   // ----------------------------------------------------------------
   public findById(request: ISessionRequest, id: number): Promise<FindByIdResult<IUser, number>> {
     return new Promise<FindByIdResult<IUser, number>>((resolve, reject) => {
-      super.findById<IUser>(request, id)
+      super.findById(request, id)
         .then((result) => {
           this.metadataService.resetSecrets(result.item);
           resolve(result);

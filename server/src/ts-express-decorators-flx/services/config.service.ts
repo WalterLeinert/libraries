@@ -67,7 +67,7 @@ export class ConfigService extends ServiceCore {
     return using(new XLog(ConfigService.logger, levels.INFO, 'findById', `id = ${id}`), (log) => {
       return new Promise<FindByIdResult<T, string>>((resolve, reject) => {
 
-        this.systemConfigService.findById<ISystemConfig>(request, id)
+        this.systemConfigService.findById(request, id)
           .then((result) => {
             const config = this.deserialize<T>(JSON.parse(result.item.json));
             this.updateConfigFromSystemConfig(config, result.item);
@@ -161,7 +161,7 @@ export class ConfigService extends ServiceCore {
         log.debug('subject: ', subject);
       }
 
-      return new Promise<CreateResult<ConfigBase, string>>((resolve, reject) => {
+      return new Promise<CreateResult<T, string>>((resolve, reject) => {
         const systemConfig: ISystemConfig = this.createSystemConfigFromConfig(subject);
 
         this.systemConfigService.create(request, systemConfig)
@@ -187,12 +187,12 @@ export class ConfigService extends ServiceCore {
         log.debug('subject: ', subject);
       }
 
-      return new Promise<UpdateResult<ConfigBase, string>>((resolve, reject) => {
+      return new Promise<UpdateResult<T, string>>((resolve, reject) => {
         this.knexService.knex.transaction((trx) => {
 
           const systemConfig: ISystemConfig = this.createSystemConfigFromConfig(subject);
 
-          this.systemConfigService.findById<ISystemConfig>(request, systemConfig.id, trx)
+          this.systemConfigService.findById(request, systemConfig.id, trx)
             .then((findByIdResult) => {
               systemConfig.__version = findByIdResult.item.__version;
 

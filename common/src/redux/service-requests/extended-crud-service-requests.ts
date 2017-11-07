@@ -68,7 +68,7 @@ export abstract class ExtendedCrudServiceRequests<T extends IEntity<TId>, TId ex
       return {
         ...state,
         currentItem: (extState.currentItem && extState.currentItem.id === command.id) ? null : extState.currentItem,
-      };
+      } as IServiceState;
     }
 
     if (command instanceof ItemUpdatedCommand) {
@@ -79,7 +79,7 @@ export abstract class ExtendedCrudServiceRequests<T extends IEntity<TId>, TId ex
         ...state,
         currentItem: (extState.currentItem && extState.currentItem.id === command.item.id) ?
           command.item : extState.currentItem,
-      };
+      } as IServiceState;
     }
 
 

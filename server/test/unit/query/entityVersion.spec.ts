@@ -76,7 +76,7 @@ class EntityVersionTest extends EntityVersionTestBase<QueryTest, number> {
 
   @test 'should create new record -> version == 0, increment entityVersion'(done: (err?: any) => void) {
     const item1 = this.createItem();
-    this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((entityVersionResult) => {
+    this.entityVersionService.findById(undefined, 'querytest').then((entityVersionResult) => {
       const versionPrev = entityVersionResult.item.__version;
 
       this.service.create(undefined, item1).then((result) => {
@@ -84,7 +84,7 @@ class EntityVersionTest extends EntityVersionTestBase<QueryTest, number> {
           done(`entity: initial version (${result.item.__version}) not 0`);
         }
 
-        this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
+        this.entityVersionService.findById(undefined, 'querytest').then((evResult) => {
           if (evResult.item.__version !== versionPrev + 1) {
             done(`entityVersion: versions different: ${evResult.item.__version} !== ${versionPrev + 1}`);
           } else {
@@ -102,7 +102,7 @@ class EntityVersionTest extends EntityVersionTestBase<QueryTest, number> {
 
       item.name = item.name + '-updated';
 
-      this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((entityVersionResult) => {
+      this.entityVersionService.findById(undefined, 'querytest').then((entityVersionResult) => {
         const entityVersionPrev = entityVersionResult.item.__version;
 
         this.service.update(undefined, item).then((updateResult) => {
@@ -117,7 +117,7 @@ class EntityVersionTest extends EntityVersionTestBase<QueryTest, number> {
             return;
           }
 
-          this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
+          this.entityVersionService.findById(undefined, 'querytest').then((evResult) => {
             if (evResult.item.__version !== entityVersionPrev + 1) {
               done(`entityVersion: versions different: ${evResult.item.__version} !== ${entityVersionPrev + 1}`);
               return;
@@ -137,7 +137,7 @@ class EntityVersionTest extends EntityVersionTestBase<QueryTest, number> {
 
       item.name = item.name + '-updated';
 
-      this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((entityVersionResult) => {
+      this.entityVersionService.findById(undefined, 'querytest').then((entityVersionResult) => {
         const entityVersionPrev = entityVersionResult.item.__version;
 
         this.service.update(undefined, item).then((updateResult) => {
@@ -152,7 +152,7 @@ class EntityVersionTest extends EntityVersionTestBase<QueryTest, number> {
             return;
           }
 
-          this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
+          this.entityVersionService.findById(undefined, 'querytest').then((evResult) => {
             if (evResult.item.__version !== entityVersionPrev + 1) {
               done(`entityVersion: versions different: ${evResult.item.__version} !== ${entityVersionPrev + 1}`);
               return;
@@ -178,12 +178,12 @@ class EntityVersionTest extends EntityVersionTestBase<QueryTest, number> {
     this.service.find(undefined).then((findResult) => {
       const item = findResult.items[findResult.items.length - 1];   // new record
 
-      this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((entityVersionResult) => {
+      this.entityVersionService.findById(undefined, 'querytest').then((entityVersionResult) => {
         const entityVersionPrev = entityVersionResult.item.__version;
 
         this.service.delete(undefined, item.id).then((deleteResult) => {
 
-          this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
+          this.entityVersionService.findById(undefined, 'querytest').then((evResult) => {
             if (evResult.item.__version !== entityVersionPrev + 1) {
               done(`entityVersion: versions different: ${evResult.item.__version} !== ${entityVersionPrev + 1}`);
               return;

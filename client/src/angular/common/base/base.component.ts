@@ -236,7 +236,7 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       .map((result: CreateResult<T, TId>) => {
         return result.item;
       })
-      .catch((err: any, caught: Observable<T>) => {
+      .catch<T, T>((err: any, caught: Observable<T>) => {
         this.handleError(err);
         throw err;
       });
@@ -255,7 +255,7 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       .map((result: UpdateResult<T, TId>) => {
         return result.item;
       })
-      .catch((err: any, caught: Observable<T>) => {
+      .catch<T, T>((err: any, caught: Observable<T>) => {
         this.handleError(err);
         throw err;
       });
@@ -273,7 +273,7 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       .map((result: DeleteResult<TId>) => {
         return result.id;
       })
-      .catch((err: any, caught: Observable<TId>) => {
+      .catch<TId, TId>((err: any, caught: Observable<TId>) => {
         this.handleError(err);
         throw err;
       });

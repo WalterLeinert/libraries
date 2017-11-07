@@ -2,9 +2,9 @@ import { Authenticated, Controller, PathParams, Request } from 'ts-express-decor
 
 // Fluxgate
 import {
-  CreateResult, DeleteResult, FindByIdResult, FindResult, IStatusQuery, QueryResult,
-  StatusFilter,
-  UpdateResult, User
+  CreateResult, DeleteResult, FindByIdResult, FindResult, IStatusQuery, IUser,
+  QueryResult,
+  StatusFilter, UpdateResult
 } from '@fluxgate/common';
 
 import { UserService } from '../services/user.service';
@@ -21,7 +21,7 @@ import { UpdateMethod } from './decorator/update-method.decorator';
 
 // tslint:disable-next-line:max-classes-per-file
 @Controller('/user')
-export class UserController extends ControllerBase<User, number> {
+export class UserController extends ControllerBase<IUser, number> {
   constructor(service: UserService) {
     super(service, 'user', 'user_id');
   }
@@ -29,8 +29,8 @@ export class UserController extends ControllerBase<User, number> {
   @Authenticated({ role: 'admin' })
   @CreateMethod()
   public create(
-    @Request() request: IBodyRequest<User>
-    ): Promise<CreateResult<User, number>> {
+    @Request() request: IBodyRequest<IUser>
+    ): Promise<CreateResult<IUser, number>> {
     return super.createInternal(request);
   }
 
@@ -39,7 +39,7 @@ export class UserController extends ControllerBase<User, number> {
   @FindMethod()
   public find(
     @Request() request: IBodyRequest<StatusFilter>
-    ): Promise<FindResult<User>> {
+    ): Promise<FindResult<IUser>> {
     return super.findInternal(request);
   }
 
@@ -48,7 +48,7 @@ export class UserController extends ControllerBase<User, number> {
   public findById(
     @Request() request: ISessionRequest,
     @PathParams('id') id: number
-    ): Promise<FindByIdResult<User, number>> {
+    ): Promise<FindByIdResult<IUser, number>> {
     return super.findByIdInternal(request, id);
   }
 
@@ -57,7 +57,7 @@ export class UserController extends ControllerBase<User, number> {
   @QueryMethod()
   public query(
     @Request() request: IBodyRequest<IStatusQuery>
-    ): Promise<QueryResult<User>> {
+    ): Promise<QueryResult<IUser>> {
     return super.queryInternal(request);
   }
 
@@ -65,8 +65,8 @@ export class UserController extends ControllerBase<User, number> {
   @Authenticated({ role: 'admin' })
   @UpdateMethod()
   public update(
-    @Request() request: IBodyRequest<User>
-    ): Promise<UpdateResult<User, number>> {
+    @Request() request: IBodyRequest<IUser>
+    ): Promise<UpdateResult<IUser, number>> {
     return super.updateInternal(request);
   }
 

@@ -10,7 +10,7 @@ import { FindByIdResult } from './find-by-id-result';
 /**
  * Interface für alle readonly Services
  */
-export interface IReadonlyService<T, TId extends IToString> extends ICoreService<T> {
+export interface IReadonlyService<T extends IEntity<TId>, TId extends IToString> extends ICoreService<T> {
 
   /**
    * Find the entity with the given id.
@@ -19,5 +19,5 @@ export interface IReadonlyService<T, TId extends IToString> extends ICoreService
    * @returns {Observable<FindByIdResult<T, TId>>}
    *
    */
-  findById<TFindById extends IEntity<TId>>(id: TId): Observable<FindByIdResult<TFindById, TId>>;
+  findById(id: TId): Observable<FindByIdResult<T, TId>>;
 }

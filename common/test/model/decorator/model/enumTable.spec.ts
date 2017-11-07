@@ -106,17 +106,6 @@ class EnumTableTest extends CommonTest {
     expect(colMetaData.enumMetadata.valueField).to.be.equal('idKoll');
   }
 
-  @test 'should test enumValues'() {
-    const tableMetadata = MetadataStorage.instance.findTableMetadata(KollektionEnumTable);
-    const serviceInstace = tableMetadata.getServiceInstance(undefined);
-    expect(serviceInstace).to.be.not.null;
-    expect(Types.hasMethod(serviceInstace, 'find')).to.be.true;
-
-    serviceInstace.find().subscribe((findResult) => {
-      expect(findResult.items).to.deep.equal(KollektionEnumTable.ENUM_VALUES);
-    });
-  }
-
 
   protected before(done?: (err?: any) => void) {
     super.before(() => {

@@ -139,7 +139,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
         //
         // aktuelle entityVersion ermitteln
         //
-        this.entityVersionService.findById<IFlxEntity<string>>(this.getTableName()).subscribe((entityVersionResult) => {
+        this.entityVersionService.findById(this.getTableName()).subscribe((entityVersionResult) => {
           const cacheKey = this.createCacheEntryKey(this.getTableName(), filter);
           const cacheEntry = EntityVersionCache.instance.get<T>(cacheKey);
 
@@ -239,7 +239,7 @@ export class EntityVersionProxy<T extends IEntity<TId>, TId extends IToString> e
           //
           // findById nur durchführen, falls die entityVersion neuer ist -> sonst Entity aus Cache-Items
           //
-          this.entityVersionService.findById<IFlxEntity<string>>(this.getTableName())
+          this.entityVersionService.findById(this.getTableName())
             .subscribe((entityVersionResult) => {
               const cacheKey = this.createCacheEntryKey(this.getTableName());
               const cacheEntry = EntityVersionCache.instance.get<T>(cacheKey);

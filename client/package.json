@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/client",
-  "version": "2.5.0",
+  "version": "2.5.1-beta.0",
   "description": "Fluxgate Client-Library ",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -27,9 +27,9 @@
     "@angular/platform-browser-dynamic": "4.1.3",
     "@angular/platform-server": "4.1.3",
     "@angular/router": "4.1.3",
-    "@fluxgate/common": "2.5.0",
-    "@fluxgate/core": "2.5.0",
-    "@fluxgate/platform": "2.5.0",
+    "@fluxgate/common": "2.5.1-beta.0",
+    "@fluxgate/core": "2.5.1-beta.0",
+    "@fluxgate/platform": "2.5.1-beta.0",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",
@@ -41,9 +41,9 @@
     "zone.js": "0.8.12"
   },
   "peerDependencies": {
-    "@fluxgate/common": ">=2.5.0",
-    "@fluxgate/core": ">=2.5.0",
-    "@fluxgate/platform": ">=2.5.0"
+    "@fluxgate/common": ">=2.5.1-beta.0",
+    "@fluxgate/core": ">=2.5.1-beta.0",
+    "@fluxgate/platform": ">=2.5.1-beta.0"
   },
   "directories": {
     "lib": "lib"

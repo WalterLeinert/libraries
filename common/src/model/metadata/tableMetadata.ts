@@ -462,25 +462,6 @@ export abstract class TableMetadata extends ClassMetadata {
   }
 
 
-  /**
-   * Liefert eine zugehörige Serviceinstanz.
-   *
-   * Wenn die Table keine EnumTable ist, wird die Serviceinstance über den @param{injector} ermittelt;
-   * sonst wird ein entsprechender @see{EnumTableService} erzeugt.
-   *
-   * @param {*} injector
-   * @returns {IServiceCrud}
-   *
-   * @memberOf TableMetadata
-   */
-  public getServiceInstance<T, TId>(injector: any): IReadonlyService<T, TId> {
-    if (this.options instanceof EnumTableOptions) {
-      return new EnumTableService(this, this.options.enumValues);
-    } else {
-      return injector.get(this.serviceClazz);
-    }
-  }
-
 
   /**
    * Liefert eine zugehörige ServiceRequests-Instanz.

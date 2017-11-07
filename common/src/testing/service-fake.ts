@@ -176,17 +176,19 @@ export abstract class ServiceFake<T extends IEntity<TId>, TId extends IToString>
    *
    * @memberOf Service
    */
-  public update<TFlx extends IFlxEntity<TId>>(item: TFlx, exception?: IException): Observable<UpdateResult<TFlx, TId>> {
+  public update(item: T, exception?: IException): Observable<UpdateResult<T, TId>> {
     Assert.notNull(item, 'item');
 
-    return Observable.create((observer: Subscriber<UpdateResult<TFlx, TId>>) => {
+    return Observable.create((observer: Subscriber<UpdateResult<T, TId>>) => {
       if (exception) {
         observer.error(exception);
       } else {
         const itemCloned = Clone.clone(item);
 
-        itemCloned.__version++;
-        this.incrementEntityVersion();
+        if (itemCloned instanceof FlxStatusEntity) {
+          itemCloned.__version++;
+          this.incrementEntityVersion();
+        }
 
         const items = this._items.map((it) => it.id === item.id ? itemCloned : it);
         this._items = [...items];

@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/testing",
-  "version": "2.5.0",
+  "version": "2.5.1-beta.0",
   "description": "Fluxgate Testing-Library ",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -17,14 +17,14 @@
 
   },
   "dependencies": {
-    "@fluxgate/common": "2.5.0",
-    "@fluxgate/core": "2.5.0",
-    "@fluxgate/platform": "2.5.0"
+    "@fluxgate/common": "2.5.1-beta.0",
+    "@fluxgate/core": "2.5.1-beta.0",
+    "@fluxgate/platform": "2.5.1-beta.0"
   },
   "peerDependencies": {
-    "@fluxgate/common": ">=2.5.0",
-    "@fluxgate/core": ">=2.5.0",
-    "@fluxgate/platform": ">=2.5.0"
+    "@fluxgate/common": ">=2.5.1-beta.0",
+    "@fluxgate/core": ">=2.5.1-beta.0",
+    "@fluxgate/platform": ">=2.5.1-beta.0"
   },
   "directories": {
     "lib": "lib"

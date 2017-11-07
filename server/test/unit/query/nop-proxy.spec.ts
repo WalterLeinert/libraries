@@ -108,7 +108,7 @@ class NopProxyTest extends EntityVersionTestBase<QueryTest, number> {
 
       item.name = item.name + '-updated';
 
-      this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((entityVersionResult) => {
+      this.entityVersionService.findById(undefined, 'querytest').then((entityVersionResult) => {
         const entityVersionPrev = entityVersionResult.item.__version;
 
         this.service.update(undefined, item).then((updateResult) => {
@@ -130,7 +130,7 @@ class NopProxyTest extends EntityVersionTestBase<QueryTest, number> {
           }
 
           // should not increment entityVersion table
-          this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
+          this.entityVersionService.findById(undefined, 'querytest').then((evResult) => {
             if (evResult.item.__version !== entityVersionPrev) {
               done(`entityVersion: versions different: ${evResult.item.__version} !== ${entityVersionPrev}`);
             } else {
@@ -150,7 +150,7 @@ class NopProxyTest extends EntityVersionTestBase<QueryTest, number> {
 
       item.name = item.name + '-updated';
 
-      this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((entityVersionResult) => {
+      this.entityVersionService.findById(undefined, 'querytest').then((entityVersionResult) => {
         const entityVersionPrev = entityVersionResult.item.__version;
 
         this.service.update(undefined, item).then((updateResult) => {
@@ -166,7 +166,7 @@ class NopProxyTest extends EntityVersionTestBase<QueryTest, number> {
           }
 
           // should not increment entityVersion table
-          this.entityVersionService.findById<EntityVersion>(undefined, 'querytest').then((evResult) => {
+          this.entityVersionService.findById(undefined, 'querytest').then((evResult) => {
             if (evResult.item.__version !== entityVersionPrev) {
               done(`entityVersion: versions different: ${evResult.item.__version} !== ${entityVersionPrev}`);
             } else {

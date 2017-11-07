@@ -91,7 +91,7 @@ class UpdateTest extends ReduxBaseTest<IUser, number, any> {
 
   protected before(done: (err?: any) => void) {
     super.before(() => {
-      this.serviceFake.findById<IUser>(UpdateTest.UPDATE_ID).subscribe((findByIdResult) => {
+      this.serviceFake.findById(UpdateTest.UPDATE_ID).subscribe((findByIdResult) => {
         this.item = findByIdResult.item;
 
         // snapshot vom Status

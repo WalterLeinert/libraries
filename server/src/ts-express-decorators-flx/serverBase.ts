@@ -1,7 +1,20 @@
+// tslint:disable:interface-name
+
 import * as Express from 'express';
 import * as Knex from 'knex';
 import * as path from 'path';
+
+
+import { IServerLifecycle } from 'ts-express-decorators';
+
+// tslint:disable-next-line:no-empty-interface
+export interface ServerLoader extends IServerLifecycle {
+
+}
+
 import { ServerLoader } from 'ts-express-decorators';
+
+
 import { Forbidden } from 'ts-httpexceptions';
 
 // -------------------------- logging -------------------------------
@@ -21,6 +34,9 @@ import { Messages } from '../resources/messages';
 import { GlobalAcceptMimesMiddleware } from './middlewares/global-accept-mimes-middleware';
 import { IServerConfiguration } from './server-configuration.interface';
 import { KnexService } from './services/knex.service';
+
+
+
 
 
 /**

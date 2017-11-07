@@ -65,7 +65,10 @@ export abstract class ServiceResolver<T extends IEntity<TId>, TId extends IToStr
           }
         })
         .first()
-        .catch((error: Error) => {
+        .map((item) => {
+          return item.item as T;
+        })
+        .catch<T, T>((error: Error, caught: Observable<T>) => {
           log.error(`error = ${error}`);
           return null;
         });
