@@ -3,8 +3,7 @@
 // tslint:disable:no-unused-expression
 
 
-// tslint:disable-next-line:no-var-requires
-require('reflect-metadata');
+import 'reflect-metadata';
 
 import { Injectable, InjectionToken, Injector } from 'injection-js';
 

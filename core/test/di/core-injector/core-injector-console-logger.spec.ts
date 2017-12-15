@@ -2,6 +2,8 @@
 // tslint:disable:member-access
 // tslint:disable:no-unused-expression
 
+import 'reflect-metadata';
+
 import { Injector } from 'injection-js';
 
 import { expect } from 'chai';

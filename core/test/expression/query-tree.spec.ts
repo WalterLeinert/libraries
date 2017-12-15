@@ -1,8 +1,7 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
 
-// tslint:disable-next-line:no-var-requires
-require('reflect-metadata');
+import 'reflect-metadata';
 
 import { Injectable, InjectionToken, Injector } from 'injection-js';
 
