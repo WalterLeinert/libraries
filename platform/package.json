@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/platform",
-  "version": "2.5.2-beta.0",
+  "version": "2.5.2-beta.1",
   "description": "Fluxgate Library Platform (node/browser)",
   "browser": "dist/browser/src/index.js",
   "main": "dist/node/src/index.js",
@@ -14,17 +14,15 @@
   },
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
-  "devDependencies": {
-
-  },
+  "devDependencies": {},
   "dependencies": {
-    "@fluxgate/core": "2.5.2-beta.0",
+    "@fluxgate/core": "2.5.2-beta.1",
     "tslib": "^1.5.0"
   },
   "directories": {
     "lib": "lib"
   },
   "peerDependencies": {
-    "@fluxgate/core": ">=2.5.2-beta.0"
+    "@fluxgate/core": ">=2.5.2-beta.1"
   }
 }

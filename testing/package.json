@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/testing",
-  "version": "2.5.2-beta.0",
+  "version": "2.5.2-beta.1",
   "description": "Fluxgate Testing-Library ",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -13,18 +13,16 @@
   },
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
-  "devDependencies": {
-
-  },
+  "devDependencies": {},
   "dependencies": {
-    "@fluxgate/common": "2.5.2-beta.0",
-    "@fluxgate/core": "2.5.2-beta.0",
-    "@fluxgate/platform": "2.5.2-beta.0"
+    "@fluxgate/common": "2.5.2-beta.1",
+    "@fluxgate/core": "2.5.2-beta.1",
+    "@fluxgate/platform": "2.5.2-beta.1"
   },
   "peerDependencies": {
-    "@fluxgate/common": ">=2.5.2-beta.0",
-    "@fluxgate/core": ">=2.5.2-beta.0",
-    "@fluxgate/platform": ">=2.5.2-beta.0"
+    "@fluxgate/common": ">=2.5.2-beta.1",
+    "@fluxgate/core": ">=2.5.2-beta.1",
+    "@fluxgate/platform": ">=2.5.2-beta.1"
   },
   "directories": {
     "lib": "lib"
