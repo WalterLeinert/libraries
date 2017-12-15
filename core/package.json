@@ -13,7 +13,6 @@
   },
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
-  "devDependencies": {},
   "dependencies": {
     "dashdash": "^1.14.1",
     "injection-js": "^2.1.0",
@@ -22,11 +21,8 @@
     "moment": "^2.18.1",
     "object.entries": "^1.0.4",
     "reflect-metadata": "^0.1.10",
-    "rxjs": "^5.3.0",
+    "rxjs": "^5.0.1",
     "tinycolor2": "^1.4.1",
     "tslib": "^1.5.0"
-  },
-  "directories": {
-    "lib": "lib"
   }
 }

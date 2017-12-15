@@ -52,8 +52,8 @@
     "jasmine": "^2.5.3",
     "jasmine-core": "^2.5.2",
     "jasmine-spec-reporter": "^4.0.0",
-    "json5": "^0.5.1",
     "json-diff-patch": "0.0.1",
+    "json5": "^0.5.1",
     "karma": "^1.6.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-cli": "^1.0.1",
@@ -67,18 +67,18 @@
     "protractor": "^5.2.0",
     "reflect-metadata": "^0.1.10",
     "rollup": "^0.41.6",
-    "rxjs": "^5.5.2",
+    "rxjs": "^5.0.1",
     "traverse": "^0.6.6",
-    "tslib": "^1.7.1",
-    "tslint": "^5.5.0",
     "ts-loader": "^2.0.1",
     "ts-node": "^3.0.2",
+    "tslib": "^1.5.0",
+    "tslint": "^5.5.0",
     "typescript": "2.4.2",
     "vinyl-source-stream": "^1.1.0",
     "webpack": "^2.6.1",
     "webpack-fail-plugin": "^1.0.6",
     "webpack-merge": "^4.1.0",
     "yargs": "^8.0.1",
-    "zone.js": "^0.8.18"
+    "zone.js": "^0.8.4"
   }
 }
