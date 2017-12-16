@@ -2,7 +2,7 @@
 # Official framework image. Look for the different tagged releases at:
 # https://hub.docker.com/r/library/node/tags/
 # image: localhost:5000/node-dev:latest
-image: localhost:5000/node-dev:4
+image: localhost:5000/node-dev:5
 
 variables:
   MYSQL_DATABASE: libraries
