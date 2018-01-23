@@ -80,6 +80,15 @@ export abstract class ServerUnitTest {
   protected static before(done?: (err?: any) => void) {
     using(new XLog(ServerUnitTest.logger, levels.DEBUG, 'static.before'), (log) => {
       ModuleMetadataStorage.instance.bootstrapModule(ServerTestModule);
+
+      process.on('unhandledRejection', (reason) => {
+        log.error('unhandledRejection: Reason: ', reason);
+      });
+
+      process.on('rejectionhandled', (reason) => {
+        log.error('rejectionhandled: Reason: ', reason);
+      });
+
       done();
     });
   }
