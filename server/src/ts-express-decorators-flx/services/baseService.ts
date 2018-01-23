@@ -142,7 +142,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
         //
         // an existierender Transaktion teilnehmen bzw. neue Transaktion starten
         //
-        if (trxExisting) {
+        if (Types.isPresent(trxExisting)) {
           creater(trxExisting, true);
         } else {
           this.knexService.knex.transaction((trx) => {
@@ -270,7 +270,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
         //
         // an existierender Transaktion teilnehmen bzw. neue Transaktion starten
         //
-        if (trxExisting) {
+        if (Types.isPresent(trxExisting)) {
           updater(trxExisting, true);
         } else {
           this.knexService.knex.transaction((trx) => {
@@ -354,7 +354,7 @@ export abstract class BaseService<T extends IEntity<TId>, TId extends IToString>
         //
         // an existierender Transaktion teilnehmen bzw. neue Transaktion starten
         //
-        if (trxExisting) {
+        if (Types.isPresent(trxExisting)) {
           deleter(trxExisting, true);
         } else {
           this.knexService.knex.transaction((trx) => {
