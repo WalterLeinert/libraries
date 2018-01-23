@@ -43,7 +43,10 @@ function execCommand(command, cwd, maxBuffer, cb) {
   exec(command, execOpts, function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
-    console.log('Error: ' + err);
+    if (err) {
+      console.log('Error: ' + err);
+    }
+
     cb(err);
   });
 }
