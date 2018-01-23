@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/server",
-  "version": "2.5.2-beta.1",
+  "version": "2.5.3",
   "description": "Fluxgate Server-Library ",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -14,11 +14,13 @@
   },
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/knex": "0.0.48"
+  },
   "dependencies": {
-    "@fluxgate/common": "2.5.2-beta.1",
-    "@fluxgate/core": "2.5.2-beta.1",
-    "@fluxgate/platform": "2.5.2-beta.1",
+    "@fluxgate/common": "2.5.3",
+    "@fluxgate/core": "2.5.3",
+    "@fluxgate/platform": "2.5.3",
     "body-parser": "^1.17.1",
     "compression": "^1.6.2",
     "cookie-parser": "^1.4.3",
@@ -39,12 +41,12 @@
     "reflect-metadata": "^0.1.9",
     "request": "^2.82.0",
     "rxjs": "^5.0.1",
-    "ts-express-decorators": "1.4.6"
+    "ts-express-decorators": "^3.0.0"
   },
   "peerDependencies": {
-    "@fluxgate/common": ">=2.5.2-beta.1",
-    "@fluxgate/core": ">=2.5.2-beta.1",
-    "@fluxgate/platform": ">=2.5.2-beta.1"
+    "@fluxgate/common": ">=2.5.3",
+    "@fluxgate/core": ">=2.5.3",
+    "@fluxgate/platform": ">=2.5.3"
   },
   "directories": {
     "lib": "lib"

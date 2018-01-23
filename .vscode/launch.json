@@ -73,6 +73,7 @@
     {
       "type": "node",
       "request": "launch",
+      "protocol": "inspector",
       "name": "server: run Mocha",
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
