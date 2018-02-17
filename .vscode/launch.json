@@ -87,7 +87,7 @@
       "sourceMaps": true,
       "stopOnEntry": false,
       "env": {
-        "NODE_ENV": "debug"
+        "NODE_ENV": "local"
       }
     }
   ]
