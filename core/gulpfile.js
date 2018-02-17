@@ -95,12 +95,13 @@ gulp.task('compile:test', ['default'], function () {
     .pipe(gulp.dest('dist'));
 });
 
+gulp.task('prepare-test', gulpSequence('set-env', 'compile:test'));
 
-gulp.task('test', ['set-env', 'compile:test'], function () {
+gulp.task('test', ['prepare-test'], function () {
   gulp.src('./dist/test/**/*.spec.js', { read: false })
-    .pipe(mocha({
-      reporter: 'spec'
-    }));
+  .pipe(mocha({
+    reporter: 'spec'
+  }));
 });
 
 gulp.task('update-fluxgate', function () {
