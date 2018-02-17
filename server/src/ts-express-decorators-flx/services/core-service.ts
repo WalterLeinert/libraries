@@ -313,6 +313,7 @@ export abstract class CoreService<T> extends ServiceCore implements ICoreService
    * @memberOf BaseService
    */
   protected createModelInstances(rows: any[]): T[] {
+    Assert.that(Types.isArray(rows), 'rows must be array type');
     const result = new Array<T>();
     for (const row of rows) {
       result.push(this.metadata.createModelInstance<T>(row));
