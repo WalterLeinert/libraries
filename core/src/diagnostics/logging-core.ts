@@ -2,7 +2,6 @@ import { Funktion } from '../base/objectType';
 import { Types } from '../types/types';
 import { IConfig } from './config.interface';
 import { ConsoleLogger } from './consoleLogger';
-import { Logger } from './logger';
 import { ILogger } from './logger.interface';
 import { LoggerRegistry } from './loggerRegistry';
 
@@ -22,7 +21,7 @@ export function getLogger(category: string | Funktion): ILogger {
   }
 
   if (!LoggerRegistry.hasLogger(categoryName)) {
-    const logger = new Logger(ConsoleLogger.create(categoryName));
+    const logger = ConsoleLogger.create(categoryName);
 
     LoggerRegistry.registerLogger(categoryName, logger);
   }
@@ -38,6 +37,6 @@ export function getLogger(category: string | Funktion): ILogger {
  * @param {string} filename
  * @param {*} [options]
  */
-export function configure(config: IConfig, options?: any): void {
-  LoggerRegistry.configure(config, options);
+export function configure(config: IConfig): void {
+  LoggerRegistry.configure(config);
 }

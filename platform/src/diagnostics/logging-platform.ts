@@ -33,6 +33,6 @@ export function getLogger(category: string | Funktion): ILogger {
  * @param {string} filename
  * @param {*} [options]
  */
-export function configure(config: string | IConfig, options?: any): void {
-  return loggerFacade.configure(config, options);
+export function configure(config: string | IConfig): void {
+  return loggerFacade.configure(config);
 }

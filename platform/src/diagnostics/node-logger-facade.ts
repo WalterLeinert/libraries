@@ -3,12 +3,13 @@ import { IConfig, ILogger, Logger, LoggerRegistry, Types } from '@fluxgate/core'
 
 import { JsonReader } from '../util/jsonReader';
 import { LoggerFacade } from './logger-facade';
+import { NodeLogger } from './node-logger';
 
 
 // removeIf(browser)
 
 // tslint:disable-next-line:no-var-requires
-const log4js = require('log4js');
+import { configure, getLogger } from 'log4js';
 
 export class NodeLoggerFacade extends LoggerFacade {
 
@@ -17,7 +18,7 @@ export class NodeLoggerFacade extends LoggerFacade {
 
     let logger: ILogger;
     if (!this.isRegisteredLogger(categoryName)) {
-      logger = new Logger(log4js.getLogger(categoryName));
+      logger = new NodeLogger(getLogger(categoryName), categoryName);
       this.registerLogger(categoryName, logger);
     } else {
       logger = this.getRegisteredLogger(categoryName);
@@ -26,15 +27,15 @@ export class NodeLoggerFacade extends LoggerFacade {
     return logger;
   }
 
-  public configure(config: string | IConfig, options?: any): void {
+  public configure(config: string | IConfig): void {
 
-    log4js.configure(config, options);
+    // configure(config, options);
 
     if (Types.isString(config)) {
       const conf = JsonReader.readJsonSync<IConfig>(config as string);
-      LoggerRegistry.configure(conf as IConfig, options);
+      LoggerRegistry.configure(conf as IConfig);
     } else {
-      LoggerRegistry.configure(config as IConfig, options);
+      LoggerRegistry.configure(config as IConfig);
     }
   }
 

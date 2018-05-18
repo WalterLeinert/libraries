@@ -1,17 +1,15 @@
 import { Injectable } from 'injection-js';
+import { Logger } from 'log4js';
 
-import { Types } from '../types/types';
-import { Level } from './level';
-import { ILevel } from './level.interface';
-import { ILogger } from './logger.interface';
+import { ILevel, ILogger, Level, NotImplementedException, Types } from '@fluxgate/core';
 
 /**
  * Proxy für log4js bzw. @see{BrowserLogger}.
  */
 @Injectable()
-export class Logger implements ILogger {
+export class NodeLogger implements ILogger {
 
-  public constructor(private logger: ILogger) {
+  public constructor(private logger: Logger, private _category: string) {
   }
 
 
@@ -41,7 +39,7 @@ export class Logger implements ILogger {
   }
 
   public isLevelEnabled(level: ILevel): boolean {
-    return this.logger.isLevelEnabled(level);
+    return this.logger.isLevelEnabled(level.toString());
   }
 
   public isTraceEnabled(): boolean {
@@ -76,19 +74,19 @@ export class Logger implements ILogger {
     } else {
       lev = Level.toLevel(level as string);
     }
-    this.logger.setLevel(lev);
+    this.logger.level = lev.toString();
   }
 
   public get level(): ILevel {
-    return this.logger.level;
+    return Level.toLevel(this.logger.level);
   }
 
   public get category(): string {
-    return this.logger.category;
+    return this._category;
   }
 
   public toString(): string {
-    return this.logger.category;
+    return this.category;
   }
 
 }

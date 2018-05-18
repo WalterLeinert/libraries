@@ -24,7 +24,7 @@ export class LoggerRegistry {
    *
    * @memberOf LoggerRegistry
    */
-  public static configure(config: IConfig, options?: any): void {
+  public static configure(config: IConfig): void {
     LoggerRegistry.registerConfiguration(config);
   }
 

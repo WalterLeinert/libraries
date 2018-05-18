@@ -21,11 +21,11 @@ export class BrowserLoggerFacade extends LoggerFacade {
   }
 
 
-  public configure(config: string | IConfig, options?: any): void {
+  public configure(config: string | IConfig): void {
     if (Types.isString(config)) {
       throw new NotSupportedException('only supported on node platforms');
     }
-    LoggerRegistry.configure(config as IConfig, options);
+    LoggerRegistry.configure(config as IConfig);
   }
 }
 // endRemoveIf(node)

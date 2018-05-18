@@ -5,7 +5,7 @@ import { IConfig, ILogger, LoggerRegistry, Types } from '@fluxgate/core';
 // tslint:disable-next-line:max-classes-per-file
 export abstract class LoggerFacade {
   public abstract getLogger(category: string | Funktion): ILogger;
-  public abstract configure(config: string | IConfig, options?: any): void;
+  public abstract configure(config: string | IConfig): void;
 
   protected getCategoryName(category: string | Funktion) {
     let categoryName: string;

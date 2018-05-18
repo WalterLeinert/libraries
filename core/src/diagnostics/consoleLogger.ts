@@ -10,6 +10,7 @@ import { StringBuilder } from '../base/stringBuilder';
 import { Types } from '../types/types';
 
 import { levels } from './level';
+import { Level } from './level';
 import { ILevel } from './level.interface';
 import { ILogger } from './logger.interface';
 import { DEFAULT_CATEGORY } from './logger.token';
@@ -20,7 +21,7 @@ export class ConsoleLogger implements ILogger {
   private _level: ILevel = levels.WARN;
   private _category: string;
 
-  public constructor( @Inject(DEFAULT_CATEGORY) category: string | Funktion) {
+  public constructor(@Inject(DEFAULT_CATEGORY) category: string | Funktion) {
     this._category = (typeof category === 'string' ? category : category.name);
   }
 
@@ -115,7 +116,7 @@ export class ConsoleLogger implements ILogger {
     if (!Types.isString(level)) {
       lev = level as ILevel;
     } else {
-      throw new Error(`Level string ${level} currently not supported`);
+      lev = Level.toLevel(level);
     }
     this._level = lev;
   }
