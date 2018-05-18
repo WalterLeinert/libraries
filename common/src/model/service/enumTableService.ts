@@ -1,5 +1,5 @@
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
+
+import { Observable, of, throwError as observableThrowError } from 'rxjs';
 
 import { Assert, NotSupportedException } from '@fluxgate/core';
 
@@ -31,7 +31,7 @@ export class EnumTableService implements IService<any, any> {
    * @memberOf EnumTableService
    */
   public find(filter: StatusFilter): Observable<FindResult<any>> {
-    return Observable.of(new FindResult<any>(this.enumValues, -1));
+    return of(new FindResult<any>(this.enumValues, -1));
   }
 
   public getModelClassName(): string {
@@ -72,18 +72,18 @@ export class EnumTableService implements IService<any, any> {
   }
 
   public create(item: any): any {
-    return Observable.throw(`Not supported`);
+    return observableThrowError(`Not supported`);
   }
 
   public findById(id: any): any {
-    return Observable.throw(`Not supported`);
+    return observableThrowError(`Not supported`);
   }
 
   public update(item: any): any {
-    return Observable.throw(`Not supported`);
+    return observableThrowError(`Not supported`);
   }
 
   public delete(id: any): any {
-    return Observable.throw(`Not supported`);
+    return observableThrowError(`Not supported`);
   }
 }

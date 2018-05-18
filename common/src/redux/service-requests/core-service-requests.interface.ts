@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { StatusFilter } from '../../model/service/status-filter';
 import { IStatusQuery } from '../../model/service/status-query';

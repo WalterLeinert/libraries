@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { ICurrentItemServiceState } from '../state/current-item-service-state.interface';
 import { IServiceRequests } from './service-requests.interface';

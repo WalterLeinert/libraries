@@ -1,5 +1,4 @@
-import { Observable } from 'rxjs/Observable';
-import { Subscriber } from 'rxjs/Subscriber';
+import { Observable ,  Subscriber } from 'rxjs';
 
 import { CurrentItemSetCommand } from '../command/current-item-set-command';
 import { SettingCurrentItemCommand } from '../command/setting-current-item-command';

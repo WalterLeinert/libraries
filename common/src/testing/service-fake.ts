@@ -1,6 +1,5 @@
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
-import { Subscriber } from 'rxjs/Subscriber';
+
+import { Observable ,  Subscriber } from 'rxjs';
 
 
 // -------------------------------------- logging --------------------------------------------

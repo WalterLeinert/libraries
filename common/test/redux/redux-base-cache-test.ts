@@ -3,7 +3,7 @@
 // tslint:disable-next-line:no-var-requires
 require('reflect-metadata');
 
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 
 // -------------------------- logging -------------------------------
