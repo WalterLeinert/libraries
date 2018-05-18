@@ -57,7 +57,7 @@
       "name": "platform: run Mocha",
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
-        "platform/dist/node/test/**/*.spec.js",
+        "${workspaceRoot}/platform/dist/node/test/**/*.spec.js",
         "--no-timeouts"
       ],
       "cwd": "${workspaceRoot}",
