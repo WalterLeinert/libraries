@@ -1,7 +1,6 @@
 import { Injectable } from 'injection-js';
 
-import { Observable } from 'rxjs/observable';
-import { of } from 'rxjs/observable/of';
+import { Observable, of } from 'rxjs';
 
 // tslint:disable-next-line:interface-name
 export interface Villain { id: number; name: string; }

@@ -1,6 +1,6 @@
 import { FlxComponent } from '../../../../src/di/flx-component.decorator';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { Hero, HeroTaxReturn } from './hero';
 import { HeroesService } from './heroes.service';

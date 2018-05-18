@@ -1,13 +1,13 @@
 import { FlxComponent } from '../../../../src/di/flx-component.decorator';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { Villain, VillainsService } from './villains.service';
 
 @FlxComponent({
   // selector: 'villains-list',
   // templateUrl: './villains-list.component.html',
-  providers: [ VillainsService ]
+  providers: [VillainsService]
 })
 export class VillainsListComponent {
   public villains: Observable<Villain[]>;

@@ -9,11 +9,9 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "moduleResolution": "node",
-    "isolatedModules": false,
-    "suppressImplicitAnyIndexErrors": false,
     "importHelpers": true,
     "lib": [
-      "es6",
+      "es2017",
       "dom"
     ],
     "typeRoots": [

@@ -1,5 +1,4 @@
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 
 import { Assert } from '../util/assert';
 
@@ -31,6 +30,6 @@ export class ValueListAdapter<T> implements IListAdapter<T> {
    * @returns{Observable<T[]>}
    */
   public getItems(): Observable<T[]> {
-    return Observable.of(this.items);
+    return of(this.items);
   }
 }

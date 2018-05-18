@@ -65,7 +65,7 @@ export abstract class Exception implements IException {
       } else if (typeof innerException === 'string') {
         this._innerException = new WrappedException(new Error(innerException));
       } else {
-        this._innerException = new WrappedException(new Error(innerException));
+        this._innerException = new WrappedException(new Error(innerException.message));
       }
 
       // sb.append(', innerException: ');

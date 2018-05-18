@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/core",
-  "version": "2.5.4-beta.0",
+  "version": "2.6.0-beta.0",
   "description": "Fluxgate Library Core",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -16,13 +16,13 @@
   "dependencies": {
     "dashdash": "^1.14.1",
     "injection-js": "^2.1.0",
-    "left-pad": "^1.1.3",
-    "lru-cache": "^4.1.1",
-    "moment": "^2.18.1",
+    "left-pad": "^1.3.0",
+    "lru-cache": "^4.1.3",
+    "moment": "^2.22.1",
     "object.entries": "^1.0.4",
-    "reflect-metadata": "^0.1.10",
-    "rxjs": "^5.0.1",
-    "tinycolor2": "^1.4.1",
-    "tslib": "^1.5.0"
+    "tinycolor2": "^1.4.1"
+  },
+  "devDependencies": {
+    "@types/tinycolor2": "^1.4.0"
   }
 }

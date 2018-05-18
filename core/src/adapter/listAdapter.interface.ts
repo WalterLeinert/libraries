@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 /**
  * Interface für Adapter zum Bereitstellen von Listen des Typs {T}
