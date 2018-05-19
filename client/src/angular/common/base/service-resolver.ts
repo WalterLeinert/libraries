@@ -1,7 +1,6 @@
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
-
-import 'rxjs/add/operator/first';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { catchError, first, map, tap } from 'rxjs/operators';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -59,19 +58,21 @@ export abstract class ServiceResolver<T extends IEntity<TId>, TId extends IToStr
       // You can ensure it gets closed after the first value is emitted, by using the first() operator."
       //
       return this.service.findById(id)
-        .do((item) => {
-          if (log.isDebugEnabled()) {
-            log.debug(`item = ${Core.stringify(item)}`);
-          }
-        })
-        .first()
-        .map((item) => {
-          return item.item as T;
-        })
-        .catch<T, T>((error: Error, caught: Observable<T>) => {
-          log.error(`error = ${error}`);
-          return null;
-        });
+        .pipe(
+          tap((item) => {
+            if (log.isDebugEnabled()) {
+              log.debug(`item = ${Core.stringify(item)}`);
+            }
+          }),
+          first(),
+          map((item) => {
+            return item.item as T;
+          }),
+          catchError<T, T>((error: Error, caught: Observable<T>) => {
+            log.error(`error = ${error}`);
+            return null;
+          })
+        );
     });
   }
 }

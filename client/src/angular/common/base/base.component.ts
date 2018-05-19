@@ -1,10 +1,7 @@
 // import { Injector, ReflectiveInjector } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 
 // -------------------------------------- logging --------------------------------------------
@@ -115,41 +112,46 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
     if (routeParams.subject && !Utility.isNullOrEmpty(routeParams.action)) {
       switch (routeParams.action) {
         case 'select':
-          return Observable.of(service.getEntityId(routeParams.subject));
+          return of(service.getEntityId(routeParams.subject));
 
         case 'create':
-          return this.createItem(routeParams.subject).map((item: T) => service.getEntityId(item));
+          return this.createItem(routeParams.subject)
+            .pipe(map((item: T) => service.getEntityId(item)));
 
         case 'update':
-          return this.updateItem(routeParams.subject).map((item: T) => service.getEntityId(routeParams.subject));
+          return this.updateItem(routeParams.subject)
+            .pipe(map((item: T) => service.getEntityId(routeParams.subject)));
 
         case 'delete':
-          return this.deleteItem(service.getEntityId(routeParams.subject)).map((id: TId) => {
-            let index = items.findIndex((item) => service.getEntityId(item) === id);
+          return this.deleteItem(service.getEntityId(routeParams.subject))
+            .pipe(
+              map((id: TId) => {
+                let index = items.findIndex((item) => service.getEntityId(item) === id);
 
-            if (index >= items.length - 1) {
-              index--;
-            } else {
-              index++;
-            }
+                if (index >= items.length - 1) {
+                  index--;
+                } else {
+                  index++;
+                }
 
-            if (index < 0) {
-              index = undefined;
-            }
+                if (index < 0) {
+                  index = undefined;
+                }
 
-            let idToSelect: TId;
-            if (index !== undefined) {
-              idToSelect = service.getEntityId(items[index]);
-            }
+                let idToSelect: TId;
+                if (index !== undefined) {
+                  idToSelect = service.getEntityId(items[index]);
+                }
 
-            return idToSelect;
-          });
+                return idToSelect;
+              })
+            );
 
         default:
           throw new NotSupportedException();
       }
     } else {
-      return Observable.of(undefined);
+      return of(undefined);
     }
   }
 
@@ -183,28 +185,28 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       service = this.service as any as IService<T, TId>;    // TODO: ggf. Laufzeitcheck
     }
 
-    return service.find().
-      do((findResult) => {
-
-        if (idToSelect !== undefined) {
-          selectedItem = findResult.items.find((item) => {
-            return (idAccessor(item) === idToSelect);
-          });
-        } else {
-          if (!Utility.isNullOrEmpty(findResult.items)) {
-            selectedItem = findResult.items[0];
+    return service.find()
+      .pipe(
+        tap((findResult) => {
+          if (idToSelect !== undefined) {
+            selectedItem = findResult.items.find((item) => {
+              return (idAccessor(item) === idToSelect);
+            });
           } else {
-            selectedItem = undefined;
+            if (!Utility.isNullOrEmpty(findResult.items)) {
+              selectedItem = findResult.items[0];
+            } else {
+              selectedItem = undefined;
+            }
           }
-        }
-
-      }).
-      map((res) => {
-        const result: IRefreshHelper<T> = {
-          items: res.items, selectedItem: selectedItem
-        };
-        return result;
-      });
+        }),
+        map((res) => {
+          const result: IRefreshHelper<T> = {
+            items: res.items, selectedItem: selectedItem
+          };
+          return result;
+        })
+      );
   }
 
 
@@ -228,18 +230,20 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       service = this.service as any as IService<T, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.create(item)
-      .do((result: CreateResult<T, TId>) => {
-        idSetter(result.item, idAccessor(result.item));
-        this.addSuccessMessage('Record created.');
-        this.resetFormGroup(result.item, groupName);
-      })
-      .map((result: CreateResult<T, TId>) => {
-        return result.item;
-      })
-      .catch<T, T>((err: any, caught: Observable<T>) => {
-        this.handleError(err);
-        throw err;
-      });
+      .pipe(
+        tap((result: CreateResult<T, TId>) => {
+          idSetter(result.item, idAccessor(result.item));
+          this.addSuccessMessage('Record created.');
+          this.resetFormGroup(result.item, groupName);
+        }),
+        map((result: CreateResult<T, TId>) => {
+          return result.item;
+        }),
+        catchError<T, T>((err: any, caught: Observable<T>) => {
+          this.handleError(err);
+          throw err;
+        })
+      );
   }
 
   protected updateItem<T extends IEntity<TId>, TId>(item: T, groupName: string = FormGroupInfo.DEFAULT_NAME,
@@ -248,17 +252,19 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       service = this.service as any as IService<T, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.update(item)
-      .do((result: UpdateResult<T, TId>) => {
-        this.addSuccessMessage('Record updated.');
-        this.resetFormGroup(result.item, groupName);
-      })
-      .map((result: UpdateResult<T, TId>) => {
-        return result.item;
-      })
-      .catch<T, T>((err: any, caught: Observable<T>) => {
-        this.handleError(err);
-        throw err;
-      });
+      .pipe(
+        tap((result: UpdateResult<T, TId>) => {
+          this.addSuccessMessage('Record updated.');
+          this.resetFormGroup(result.item, groupName);
+        }),
+        map((result: UpdateResult<T, TId>) => {
+          return result.item;
+        }),
+        catchError<T, T>((err: any, caught: Observable<T>) => {
+          this.handleError(err);
+          throw err;
+        })
+      );
   }
 
   protected deleteItem<TId>(id: TId, service?: IService<any, TId>): Observable<TId> {
@@ -266,17 +272,19 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
       service = this.service as any as IService<any, TId>;    // TODO: ggf. Laufzeitcheck
     }
     return service.delete(id)
-      .do((result: DeleteResult<TId>) => {
-        this.addSuccessMessage('Record deleted.');
-        this.resetForm();
-      })
-      .map((result: DeleteResult<TId>) => {
-        return result.id;
-      })
-      .catch<TId, TId>((err: any, caught: Observable<TId>) => {
-        this.handleError(err);
-        throw err;
-      });
+      .pipe(
+        tap((result: DeleteResult<TId>) => {
+          this.addSuccessMessage('Record deleted.');
+          this.resetForm();
+        }),
+        map((result: DeleteResult<TId>) => {
+          return result.id;
+        }),
+        catchError<TId, TId>((err: any, caught: Observable<TId>) => {
+          this.handleError(err);
+          throw err;
+        })
+      );
   }
 
 

@@ -1,4 +1,4 @@
-import { Injectable, Injector, OpaqueToken, Provider, ReflectiveInjector } from '@angular/core';
+import { Injectable, InjectionToken, Injector, Provider, ReflectiveInjector } from '@angular/core';
 
 import { InjectorBase } from '@fluxgate/core';
 
@@ -13,7 +13,7 @@ import { InjectorBase } from '@fluxgate/core';
  * @class AppInjector
  */
 @Injectable()
-export class AppInjector extends InjectorBase<Injector, OpaqueToken> {
+export class AppInjector extends InjectorBase<Injector, InjectionToken<any>> {
   public static readonly instance = new AppInjector();
 
   private constructor() {

@@ -1,10 +1,6 @@
-import { Http, Response } from '@angular/http';
-
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -47,7 +43,7 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
    * @memberOf Service
    */
   protected constructor(model: Funktion, metadataService: MetadataService,
-    http: Http, configService: AppConfigService, topic?: string) {
+    http: HttpClient, configService: AppConfigService, topic?: string) {
     super(model, metadataService, http, configService, topic);
   }
 
@@ -69,13 +65,15 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
       }
 
       return this.http.post(`${this.getUrl()}/${ServiceConstants.CREATE}`, this.serialize(item))
-        .map((response: Response) => this.deserialize(response.json()))
-        .do((result: CreateResult<T, TId>) => {
-          if (log.isInfoEnabled()) {
-            log.log(`created ${Core.stringify(result)}`);
-          }
-        })
-        .catch(this.handleError);
+        .pipe(
+          map((response: Response) => this.deserialize(response.json())),
+          tap((result: CreateResult<T, TId>) => {
+            if (log.isInfoEnabled()) {
+              log.log(`created ${Core.stringify(result)}`);
+            }
+          }),
+          catchError<CreateResult<T, TId>, any>(this.handleError)
+        );
     });
   }
 
@@ -99,13 +97,15 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
         }
 
         return this.http.put(`${this.getUrl()}/${ServiceConstants.UPDATE}`, this.serialize(item))
-          .map((response: Response) => this.deserialize(response.json()))
-          .do((result: UpdateResult<T, TId>) => {
-            if (log.isInfoEnabled()) {
-              log.log(`updated [${this.getModelClassName()}]: ${Core.stringify(result)}`);
-            }
-          })
-          .catch(this.handleError);
+          .pipe(
+            map((response: Response) => this.deserialize(response.json())),
+            tap((result: UpdateResult<T, TId>) => {
+              if (log.isInfoEnabled()) {
+                log.log(`updated [${this.getModelClassName()}]: ${Core.stringify(result)}`);
+              }
+            }),
+            catchError<UpdateResult<T, TId>, any>(this.handleError)
+          );
       });
   }
 
@@ -124,15 +124,16 @@ export abstract class Service<T extends IEntity<TId>, TId extends IToString> ext
       (log) => {
 
         return this.http.delete(`${this.getUrl()}/${id}`)
-          .map((response: Response) => this.deserialize(response.json()))
-          .do((result: DeleteResult<TId>) => {
-            if (log.isInfoEnabled()) {
-              log.log(`deleted [${this.getModelClassName()}]: ${Core.stringify(result)}`);
-            }
-          })
-          .catch(this.handleError);
+          .pipe(
+            map((response: Response) => this.deserialize(response.json())),
+            tap((result: DeleteResult<TId>) => {
+              if (log.isInfoEnabled()) {
+                log.log(`deleted [${this.getModelClassName()}]: ${Core.stringify(result)}`);
+              }
+            }),
+            catchError<DeleteResult<TId>, any>(this.handleError)
+          );
       });
   }
-
 
 }

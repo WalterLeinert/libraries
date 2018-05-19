@@ -1,10 +1,6 @@
-import { Http, Response } from '@angular/http';
-
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -34,7 +30,7 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
 
 
   protected constructor(model: Funktion, metadataService: MetadataService,
-    http: Http, configService: AppConfigService, topic?: string) {
+    http: HttpClient, configService: AppConfigService, topic?: string) {
     super(model, metadataService, http, configService, topic);
   }
 
@@ -53,13 +49,15 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
       `[${this.getModelClassName()}]; id = ${id}`), (log) => {
 
         return this.http.get(`${this.getUrl()}/${id}`)
-          .map((response: Response) => this.deserialize(response.json()))
-          .do((result: FindByIdResult<T, TId>) => {
-            if (log.isInfoEnabled()) {
-              log.log(`found [${this.getModelClassName()}]: id = ${id} -> ${Core.stringify(result)}`);
-            }
-          })
-          .catch(this.handleError);
+          .pipe(
+            map((response: Response) => this.deserialize(response.json())),
+            tap((result: FindByIdResult<T, TId>) => {
+              if (log.isInfoEnabled()) {
+                log.log(`found [${this.getModelClassName()}]: id = ${id} -> ${Core.stringify(result)}`);
+              }
+            }),
+            catchError<FindByIdResult<T, TId>, any>(this.handleError)
+          );
       });
   }
 }

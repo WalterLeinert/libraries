@@ -1,9 +1,6 @@
 import { OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-
-import 'rxjs/add/observable/from';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { from, Observable, Subscription } from 'rxjs';
 
 // PrimeNG
 import { ConfirmationService } from 'primeng/components/common/api';
@@ -59,7 +56,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   protected static readonly logger = getLogger(CoreComponent);
 
   private static subscriptionMap: Dictionary<UniqueIdentifiable, Subscription[]> =
-  new Dictionary<UniqueIdentifiable, Subscription[]>();
+    new Dictionary<UniqueIdentifiable, Subscription[]>();
 
   // statisches Set für globale/unique Store-Subscriptions
   private static storeSubscriptions: Set<string> = new Set<string>();
@@ -122,7 +119,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
       this.destroyed = true;
 
       log.log(`unsubscribe store ${this.subscriptions.length} subscriptions`);
-      Observable.from(this.subscriptions).subscribe((sub) => {
+      from(this.subscriptions).subscribe((sub) => {
         sub.unsubscribe();
       });
 

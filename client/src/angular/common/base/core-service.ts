@@ -1,10 +1,7 @@
-import { Headers, Http, RequestOptions, Response } from '@angular/http';
-
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Headers, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -32,12 +29,12 @@ import { ServiceBase } from './service-base';
 export abstract class CoreService<T, TId extends IToString> extends ServiceBase<T, TId> {
   protected static logger = getLogger(CoreService);
 
-  public static JSON_HEADERS = new Headers({ 'Content-Type': 'application/json' });       // set content type to JSON
-  public static JSON_OPTIONS = new RequestOptions({ headers: CoreService.JSON_HEADERS }); // create a request option
+  public static JSON_HEADERS = new HttpHeaders({ 'Content-Type': 'application/json' });   // set content type to JSON
+  public static JSON_OPTIONS = { headers: CoreService.JSON_HEADERS };                     // create a request option
 
 
   protected constructor(model: Funktion, metadataService: MetadataService,
-    http: Http, configService: AppConfigService, topic?: string) {
+    http: HttpClient, configService: AppConfigService, topic?: string) {
     super(model, metadataService, http, configService, topic);
   }
 
@@ -56,13 +53,16 @@ export abstract class CoreService<T, TId extends IToString> extends ServiceBase<
         const serializedFilter = this.serialize(filter);
 
         return this.http.post(`${this.getUrl()}/${ServiceConstants.FIND}`, serializedFilter, CoreService.JSON_OPTIONS)
-          .map((response: Response) => this.deserialize(response.json()))
-          .do((result: FindResult<T>) => {
-            if (log.isInfoEnabled()) {
-              log.log(`found [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
-            }
-          })
-          .catch(this.handleError);
+          .pipe(
+            map((response: Response) => this.deserialize(response.json())),
+            tap((result: FindResult<T>) => {
+              if (log.isInfoEnabled()) {
+                log.log(`found [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
+              }
+              return result;
+            }),
+            catchError<FindResult<T>, any>(this.handleError)
+          );
       });
   }
 
@@ -86,17 +86,19 @@ export abstract class CoreService<T, TId extends IToString> extends ServiceBase<
       const serializedQuery = this.serialize(query);
 
       return this.http.post(`${this.getUrl()}/${ServiceConstants.QUERY}`, serializedQuery, CoreService.JSON_OPTIONS)
-        .map((response: Response) => this.deserialize(response.json()))
-        .do((result: QueryResult<T>) => {
-          if (log.isInfoEnabled()) {
-            log.log(`queried [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
+        .pipe(
+          map((response: Response) => this.deserialize(response.json())),
+          tap((result: QueryResult<T>) => {
+            if (log.isInfoEnabled()) {
+              log.log(`queried [${this.getModelClassName()}]: -> ${result.items.length} item(s)`);
 
-            if (log.isDebugEnabled()) {
-              log.debug(`query result: ${Core.stringify(result)}`);
+              if (log.isDebugEnabled()) {
+                log.debug(`query result: ${Core.stringify(result)}`);
+              }
             }
-          }
-        })
-        .catch(this.handleError);
+          }),
+          catchError<QueryResult<T>, any>(this.handleError)
+        );
     });
   }
 }

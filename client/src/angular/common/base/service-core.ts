@@ -1,7 +1,6 @@
-import { Http, Response } from '@angular/http';
 
-import { Observable } from 'rxjs/Observable';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import { HttpClient } from '@angular/common/http';
+import { Observable, throwError as observableThrowError } from 'rxjs';
 
 import * as HttpStatusCodes from 'http-status-codes';
 
@@ -11,7 +10,9 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
 import { IServiceCore } from '@fluxgate/common';
-import { Assert, Constants, IException, JsonSerializer, ServerSystemException, StringBuilder } from '@fluxgate/core';
+import {
+  Assert, Constants, IException, JsonSerializer, NotSupportedException, ServerSystemException, StringBuilder
+} from '@fluxgate/core';
 
 
 /**
@@ -38,7 +39,7 @@ export abstract class ServiceCore implements IServiceCore {
    *
    * @memberOf ServiceBase
    */
-  protected constructor(private _http: Http, baseUrl: string, private _topic: string) {
+  protected constructor(private _http: HttpClient, baseUrl: string, private _topic: string) {
     Assert.notNull(_http);
     Assert.notNullOrEmpty(baseUrl);
     Assert.notNullOrEmpty(_topic);
@@ -92,8 +93,8 @@ export abstract class ServiceCore implements IServiceCore {
    *
    * @memberOf ServiceBase
    */
-  public static handleServerError(response: Response): ErrorObservable {
-    return Observable.throw(ServiceCore.createServerException(response));
+  public static handleServerError(response: Response): Observable<never> {
+    return observableThrowError(ServiceCore.createServerException(response));
   }
 
 
@@ -105,21 +106,30 @@ export abstract class ServiceCore implements IServiceCore {
       // In a real world app, we might use a remote logging infrastructure
       let errorMessage = '** unknown error **';
 
-      if (response.status < HttpStatusCodes.OK || response.status >= HttpStatusCodes.MULTIPLE_CHOICES) {
-        errorMessage = response.text();
-      }
+      Promise.all([response.text(), response.json()])
+        .then((res) => {
+          const errorMsg = res[0];
+          const json = res[1];
 
-      if (response.status === 0) {
-        errorMessage = 'Server down?';
-      }
+          if (response.status < HttpStatusCodes.OK || response.status >= HttpStatusCodes.MULTIPLE_CHOICES) {
+            errorMessage = errorMsg;
+          }
 
-      log.error(`errorMessage = ${errorMessage}: [ ${ServiceCore.formatResponseStatus(response)} ]`);
+          if (response.status === 0) {
+            errorMessage = 'Server down ?';
+          }
 
-      if (JsonSerializer.isSerialized(response.json())) {
-        return ServiceCore._serializer.deserialize<IException>(response.json());
-      }
+          log.error(`errorMessage = ${errorMessage}: [ ${ServiceCore.formatResponseStatus(response)} ]`);
 
-      return new ServerSystemException(errorMessage);
+          if (JsonSerializer.isSerialized(json)) {
+            return ServiceCore._serializer.deserialize<IException>(json);
+          }
+
+          return new ServerSystemException(errorMessage);
+        });
+
+      throw new NotSupportedException('has to be changed due to Promise.all');
+      // return new ServerSystemException(errorMessage);
     });
   }
 
@@ -133,12 +143,12 @@ export abstract class ServiceCore implements IServiceCore {
    * @type {Http}
    * @memberOf ServiceBase
    */
-  protected get http(): Http {
+  protected get http(): HttpClient {
     return this._http;
   }
 
 
-  protected handleError(response: Response): ErrorObservable {
+  protected handleError(response: Response): Observable<never> {
     return ServiceCore.handleServerError(response);
   }
 

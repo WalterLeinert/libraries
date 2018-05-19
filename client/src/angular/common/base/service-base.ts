@@ -1,4 +1,4 @@
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -35,7 +35,7 @@ export abstract class ServiceBase<T, TId> extends ServiceCore implements IServic
    *
    * @memberOf ServiceBase
    */
-  protected constructor(model: Funktion, private metadataService: MetadataService, http: Http,
+  protected constructor(model: Funktion, private metadataService: MetadataService, http: HttpClient,
     configService: AppConfigService, topic: string) {
     super(http, configService.config.url,
       topic === undefined ? metadataService.findTableMetadata(model).options.name : topic);

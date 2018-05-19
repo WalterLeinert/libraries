@@ -1,5 +1,5 @@
-
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { IEntity } from '@fluxgate/common';
 import { IListAdapter } from '@fluxgate/core';
@@ -20,7 +20,7 @@ export class TableListAdapter<T extends IEntity<TId>, TId> implements IListAdapt
 
   public getItems(): Observable<T[]> {
     return this.service.find()
-      .map((result) => result.items);
+      .pipe(map((result) => result.items));
   }
 
   /**

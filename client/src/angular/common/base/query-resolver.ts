@@ -1,7 +1,7 @@
-import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 
-import 'rxjs/add/operator/first';
-import { Observable } from 'rxjs/Observable';
+import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
+import { Observable, throwError as observableThrowError } from 'rxjs';
+import { catchError, first, map, tap } from 'rxjs/operators';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -67,17 +67,19 @@ export abstract class QueryResolver<T> implements Resolve<T> {
        * You can ensure it gets closed after the first value is emitted, by using the first() operator."
        */
       return this.serviceRequests.query(query)
-        .do((items) => {
-          if (log.isDebugEnabled()) {
-            log.debug(`items = ${Core.stringify(items)}`);
-          }
-        })
-        .map((items) => items[0])
-        .first()
-        .catch((error: Error) => {
-          log.error(`error = ${error}`);
-          return Observable.throw(error);
-        });
+        .pipe(
+          tap((items) => {
+            if (log.isDebugEnabled()) {
+              log.debug(`items = ${Core.stringify(items)}`);
+            }
+          }),
+          map((items) => items[0]),
+          first(),
+          catchError((error: Error) => {
+            log.error(`error = ${error}`);
+            return observableThrowError(error);
+          })
+        );
     });
   }
 }

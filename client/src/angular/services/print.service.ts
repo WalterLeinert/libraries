@@ -1,7 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, Response } from '@angular/http';
+import { Headers } from '@angular/http';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 
 // -------------------------------------- logging --------------------------------------------
@@ -25,7 +27,7 @@ import { MetadataService } from './metadata.service';
 export class PrintService extends ServiceCore {
   protected static readonly logger = getLogger(PrintService);
 
-  constructor(http: Http, private metadataService: MetadataService, private configService: AppConfigService) {
+  constructor(http: HttpClient, private metadataService: MetadataService, private configService: AppConfigService) {
     super(http, configService.config.url, Printing.TOPIC);
   }
 
@@ -40,8 +42,10 @@ export class PrintService extends ServiceCore {
     return using(new XLog(PrintService.logger, levels.INFO, 'getPrinters'), (log) => {
       return this.http
         .get(`${this.getUrl()}/${Printing.GET_PRINTERS}`)
-        .map((response: Response) => this.deserialize(response.json()))
-        .catch(this.handleError);
+        .pipe(
+          map((response: Response) => this.deserialize(response.json())),
+          catchError<IPrinter[], any>(this.handleError)
+        );
     });
   }
 
@@ -58,8 +62,10 @@ export class PrintService extends ServiceCore {
     return using(new XLog(PrintService.logger, levels.INFO, 'print'), (log) => {
       return this.http
         .post(`${this.getUrl()}/${Printing.PRINT}`, this.serialize(printTask), CoreService.JSON_OPTIONS)
-        .map((response: Response) => response.json())
-        .catch(this.handleError);
+        .pipe(
+          map((response: Response) => response.json()),
+          catchError(this.handleError)
+        );
     });
   }
 
@@ -77,8 +83,10 @@ export class PrintService extends ServiceCore {
 
       return this.http
         .post(`${this.getUrl()}/${Printing.CREATE_PDF}`, this.serialize(printTask), CoreService.JSON_OPTIONS)
-        .map((response: Response) => this.deserialize(response.json()))
-        .catch(this.handleError);
+        .pipe(
+          map((response: Response) => this.deserialize(response.json())),
+          catchError(this.handleError)
+        );
     });
   }
 
@@ -99,9 +107,11 @@ export class PrintService extends ServiceCore {
       const reportBase64 = Buffer.from(report).toString('base64');
       return this.http
         .post(`${this.getUrl()}/${Printing.TRANSFER_REPORT}?${reportName}`, this.serialize(reportBase64),
-        CoreService.JSON_OPTIONS)
-        .map((response: Response) => this.deserialize(response.json()))
-        .catch(this.handleError);
+          CoreService.JSON_OPTIONS)
+        .pipe(
+          map((response: Response) => this.deserialize(response.json())),
+          catchError(this.handleError)
+        );
     });
   }
 
