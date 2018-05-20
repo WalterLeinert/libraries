@@ -4,7 +4,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import 'rxjs/add/observable/throw';
+
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable

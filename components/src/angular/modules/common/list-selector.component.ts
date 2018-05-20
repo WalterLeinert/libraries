@@ -3,7 +3,7 @@ import { EventEmitter, Input, Output } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import 'rxjs/add/observable/throw';
+
 
 // Fluxgate
 import { MessageService, MetadataService } from '@fluxgate/client';

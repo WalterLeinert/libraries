@@ -1,11 +1,8 @@
-import { Injectable, Optional } from '@angular/core';
-import { Http, Response, URLSearchParams } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
+
+import { Observable } from 'rxjs';
 
 
 // -------------------------------------- logging --------------------------------------------
@@ -38,7 +35,7 @@ import { SystemConfigService } from './system-config.service';
 @TableService(ConfigBase)
 export class ConfigService<T extends ConfigBase> extends Service<T, string> {
 
-  constructor(metadataService: MetadataService, http: Http, configService: AppConfigService,
+  constructor(metadataService: MetadataService, http: HttpClient, configService: AppConfigService,
     private systemConfigService: SystemConfigService) {
     super(ConfigBase, metadataService, http, configService, 'config');
   }

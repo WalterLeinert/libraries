@@ -2,9 +2,13 @@
   "extends": "../tsconfig.json",
 
   "compilerOptions": {
-    "baseUrl": "src/",
+    "baseUrl": ".",
     "types": [
       "jasmine"
     ]
-  }
+  },
+  "files": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ]
 }

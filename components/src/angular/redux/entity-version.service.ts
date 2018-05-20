@@ -1,9 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/map';
 
 // Fluxgate
 import { AppConfigService, MetadataService, ReadonlyService } from '@fluxgate/client';
@@ -21,7 +18,7 @@ import { ENTITY_VERSION_SERVICE, EntityVersion, TableService } from '@fluxgate/c
 @TableService(EntityVersion)
 export class EntityVersionService extends ReadonlyService<EntityVersion, string> {
 
-  constructor(metadataService: MetadataService, http: Http, configService: AppConfigService) {
+  constructor(metadataService: MetadataService, http: HttpClient, configService: AppConfigService) {
     super(EntityVersion, metadataService, http, configService);
   }
 }

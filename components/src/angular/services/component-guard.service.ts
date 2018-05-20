@@ -2,8 +2,8 @@ import { Injectable, NgModule } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanDeactivate, Router, RouterStateSnapshot } from '@angular/router';
 
 
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
+
+import { Observable } from 'rxjs';
 
 // Fluxgate
 import { CoreComponent, MessageService, } from '@fluxgate/client';

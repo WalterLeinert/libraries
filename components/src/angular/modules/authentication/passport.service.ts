@@ -1,11 +1,8 @@
-// Angular
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
 
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -40,7 +37,7 @@ export class PassportService extends ServiceCore {
    *
    * @memberOf PassportService
    */
-  constructor(http: Http, configService: AppConfigService) {
+  constructor(http: HttpClient, configService: AppConfigService) {
     super(http, configService.config.url, 'passport');
 
     using(new XLog(PassportService.logger, levels.INFO, 'ctor'), (log) => {
@@ -68,11 +65,13 @@ export class PassportService extends ServiceCore {
       user.__client = clientId;
 
       return this.http.post(this.getUrl() + PassportService.LOGIN, this.serialize(user))
-        .map((response: Response) => this.deserialize(response.json()))
-        .do((u) => {
-          log.log('user: ' + Core.stringify(u));
-        })
-        .catch(this.handleError);
+        .pipe(
+          map((response: Response) => this.deserialize(response.json())),
+          tap((u) => {
+            log.log('user: ' + Core.stringify(u));
+          }),
+          catchError<IUser, any>(this.handleError)
+        );
     });
   }
 
@@ -90,11 +89,13 @@ export class PassportService extends ServiceCore {
     return using(new XLog(PassportService.logger, levels.INFO, 'signup',
       `username =  ${Core.stringify(user)}`), (log) => {
         return this.http.post(this.getUrl() + PassportService.SIGNUP, this.serialize(user))
-          .map((response: Response) => this.deserialize(response.json()))
-          .do((u) => {
-            log.log(`user = ${Core.stringify(u)}`);
-          })
-          .catch(this.handleError);
+          .pipe(
+            map((response: Response) => this.deserialize(response.json())),
+            tap((u) => {
+              log.log(`user = ${Core.stringify(u)}`);
+            }),
+            catchError<User, any>(this.handleError)
+          );
       });
   }
 
@@ -106,16 +107,19 @@ export class PassportService extends ServiceCore {
    *
    * @memberOf PassportService
    */
-  public logoff() {
+  public logoff(): Observable<any> {
     return using(new XLog(PassportService.logger, levels.INFO, 'logoff'), (log) => {
       return this.http.get(this.getUrl() + PassportService.LOGOFF)
-        .map((response: Response) => {
-          // ok
-        }).do((user) => {
-          log.log(`user = ${Core.stringify(user)}`);
-        })
-        .do((data) => PassportService.logger.info('result: ' + Core.stringify(data)))
-        .catch(this.handleError);
+        .pipe(
+          map((response: Response) => {
+            // ok
+          }),
+          tap((user) => {
+            log.log(`user = ${Core.stringify(user)}`);
+          }),
+          tap((data) => PassportService.logger.info('result: ' + Core.stringify(data))),
+          catchError(this.handleError)
+        );
     });
   }
 
@@ -136,11 +140,13 @@ export class PassportService extends ServiceCore {
       const passwordChange = new PasswordChange(username, password, passwordNew);
 
       return this.http.post(this.getUrl() + PassportService.CHANGE_PASSWORD, this.serialize(passwordChange))
-        .map((response: Response) => this.deserialize(response.json()))
-        .do((user) => {
-          log.log(`user = ${Core.stringify(user)}`);
-        })
-        .catch(this.handleError);
+        .pipe(
+          map((response: Response) => this.deserialize(response.json())),
+          tap((user) => {
+            log.log(`user = ${Core.stringify(user)}`);
+          }),
+          catchError<IUser, any>(this.handleError)
+        );
     });
   }
 

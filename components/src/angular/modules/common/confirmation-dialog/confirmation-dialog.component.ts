@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, NgModule } from '@angular/core';
 
-import 'rxjs/add/observable/of';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+
+import { BehaviorSubject ,  Observable } from 'rxjs';
 
 
 // PrimeNG

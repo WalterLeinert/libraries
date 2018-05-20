@@ -1,5 +1,5 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 
 // Fluxgate
 import { AppConfigService, MetadataService, Service } from '@fluxgate/client';
@@ -17,7 +17,7 @@ import { SystemConfig, TableService } from '@fluxgate/common';
 @TableService(SystemConfig)
 export class SystemConfigService extends Service<SystemConfig, string> {
 
-  constructor(metadataService: MetadataService, http: Http, configService: AppConfigService) {
+  constructor(metadataService: MetadataService, http: HttpClient, configService: AppConfigService) {
     super(SystemConfig, metadataService, http, configService);
   }
 }

@@ -1,5 +1,5 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 
 
 // -------------------------------------- logging --------------------------------------------
@@ -25,7 +25,7 @@ import { SystemConfigService } from './system-config.service';
 @TableService(ConfigBase)
 export class SmtpConfigService extends ConfigService<SmtpConfig> {
 
-  constructor(metadataService: MetadataService, http: Http, configService: AppConfigService,
+  constructor(metadataService: MetadataService, http: HttpClient, configService: AppConfigService,
     systemConfigService: SystemConfigService) {
     super(metadataService, http, configService, systemConfigService);
   }

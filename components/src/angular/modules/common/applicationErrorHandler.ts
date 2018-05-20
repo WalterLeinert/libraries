@@ -31,7 +31,7 @@ export class ApplicationErrorHandler extends ErrorHandler {
 
   constructor(private injector: Injector, private messageService: MessageService,
     @Inject(LOGGING_ERROR_HANDLER_OPTIONS) private options: ILoggingErrorHandlerOptions) {
-    super(options.rethrowError);
+    super();
   }
 
   public handleError(error: Error) {
