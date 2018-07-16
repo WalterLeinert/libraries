@@ -1,5 +1,5 @@
 import { Funktion } from '@fluxgate/core';
-import { IConfig, ILogger, Logger, LoggerRegistry, Types } from '@fluxgate/core';
+import { IConfig, ILogger, LoggerRegistry, Types } from '@fluxgate/core';
 
 import { JsonReader } from '../util/jsonReader';
 import { LoggerFacade } from './logger-facade';
@@ -9,7 +9,7 @@ import { NodeLogger } from './node-logger';
 // removeIf(browser)
 
 // tslint:disable-next-line:no-var-requires
-import { configure, getLogger } from 'log4js';
+import { getLogger } from 'log4js';
 
 export class NodeLoggerFacade extends LoggerFacade {
 
