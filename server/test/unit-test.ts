@@ -85,8 +85,8 @@ export abstract class ServerUnitTest {
         log.error('unhandledRejection: Reason: ', reason);
       });
 
-      process.on('rejectionhandled', (reason) => {
-        log.error('rejectionhandled: Reason: ', reason);
+      process.on('rejectionHandled', (reason) => {
+        log.error('rejectionHandled: Reason: ', reason);
       });
 
       done();
