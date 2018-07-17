@@ -234,6 +234,25 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
 
   /**
+   * Liefert die zugehörige @see{FormGroup} für den Namen @param{groupName}.
+   *
+   * @protected
+   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
+   * @returns {FormGroup}
+   *
+   * @memberOf CoreComponent
+   */
+  public getForm(groupName: string = FormGroupInfo.DEFAULT_NAME): FormGroup {
+    Assert.notNullOrEmpty(groupName);
+    const formInfo = this.formInfos.get(groupName);
+    if (formInfo) {
+      return formInfo.form;
+    }
+    return null;
+  }
+
+
+  /**
    * löscht alle Messages
    *
    * @protected
@@ -646,24 +665,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
     return formInfo.isFormControlInvalid(controlName);
   }
 
-
-  /**
-   * Liefert die zugehörige @see{FormGroup} für den Namen @param{groupName}.
-   *
-   * @protected
-   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
-   * @returns {FormGroup}
-   *
-   * @memberOf CoreComponent
-   */
-  protected getForm(groupName: string = FormGroupInfo.DEFAULT_NAME): FormGroup {
-    Assert.notNullOrEmpty(groupName);
-    const formInfo = this.formInfos.get(groupName);
-    if (formInfo) {
-      return formInfo.form;
-    }
-    return null;
-  }
 
   /**
    * Fügt die @see{FormGroup} für den Namen @param{groupName} hinzu.

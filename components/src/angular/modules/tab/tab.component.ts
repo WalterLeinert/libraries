@@ -1,5 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 
+// -------------------------------------- logging --------------------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
+
 import { Tab } from './tab';
 
 @Component({
@@ -91,10 +96,18 @@ import { Tab } from './tab';
 
 })
 export class TabComponent implements OnInit {
+  protected static readonly logger = getLogger(TabComponent);
+
   @Input() public tabs: Tab[];
 
   public ngOnInit() {
     // ok
   }
 
+
+  public GoTo(route) {
+    using(new XLog(TabComponent.logger, levels.INFO, 'GoTo'), (log) => {
+      // ok
+    });
+  }
 }

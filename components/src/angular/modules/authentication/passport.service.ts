@@ -21,11 +21,11 @@ import { Assert, Core } from '@fluxgate/core';
 export class PassportService extends ServiceCore {
   protected static logger = getLogger(PassportService);
 
-  public static get LOGIN() { return '/login'; }
-  public static get SIGNUP() { return '/signup'; }
-  public static get LOGOFF() { return '/logout'; }
-  public static get CHANGE_PASSWORD() { return '/changePassword'; }
-  public static get CURRENT_USER() { return '/currentUser'; }
+  public static readonly LOGIN = '/login';
+  public static readonly SIGNUP = '/signup';
+  public static readonly LOGOFF = '/logout';
+  public static readonly CHANGE_PASSWORD = '/changePassword';
+  public static readonly CURRENT_USER = '/currentUser';
 
 
   /**
