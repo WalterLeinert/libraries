@@ -33,7 +33,7 @@
     "http-status-codes": "^1.1.6",
     "moment": "^2.22.1",
     "ng-sidebar": "^7.1.0",
-    "ng2-toastr": "^4.1.2",
+    "ngx-toastr": "^8.8.0",
     "primeng": "^6.0.0-alpha.1",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26"

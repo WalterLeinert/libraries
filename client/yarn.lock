@@ -56,17 +56,17 @@
   dependencies:
     tslib "^1.9.0"
 
-"@fluxgate/common@^2.6.0-beta.0":
+"@fluxgate/common@2.6.0-beta.0":
   version "2.6.0-beta.0"
-  resolved "http://localhost:4873/@fluxgate%2fcommon/-/common-2.6.0-beta.0.tgz#0ba56a22f596b435c388f4a26e9c2df9775b6875"
+  resolved "http://localhost:4873/@fluxgate%2fcommon/-/common-2.6.0-beta.0.tgz#9934bdead1a3ee21c5824fb882b8b8a1b199ac37"
   dependencies:
     "@fluxgate/core" "2.6.0-beta.0"
-    "@fluxgate/platform" "^2.6.0-beta.0"
-    moment "^2.17.1"
+    "@fluxgate/platform" "2.6.0-beta.0"
+    moment "^2.22.1"
     object.entries "^1.0.4"
     request "^2.82.0"
 
-"@fluxgate/core@2.6.0-beta.0", "@fluxgate/core@^2.6.0-beta.0":
+"@fluxgate/core@2.6.0-beta.0":
   version "2.6.0-beta.0"
   resolved "http://localhost:4873/@fluxgate%2fcore/-/core-2.6.0-beta.0.tgz#b324d22f4b6cbf86288f88ce07cb54df67f0f548"
   dependencies:
@@ -78,9 +78,9 @@
     object.entries "^1.0.4"
     tinycolor2 "^1.4.1"
 
-"@fluxgate/platform@^2.6.0-beta.0":
+"@fluxgate/platform@2.6.0-beta.0":
   version "2.6.0-beta.0"
-  resolved "http://localhost:4873/@fluxgate%2fplatform/-/platform-2.6.0-beta.0.tgz#580ab008e6184413a2a8e38d361336f13cf789a1"
+  resolved "http://localhost:4873/@fluxgate%2fplatform/-/platform-2.6.0-beta.0.tgz#078be85e8544ca5851a6ef44022f41eb2948b4a9"
   dependencies:
     "@fluxgate/core" "2.6.0-beta.0"
     log4js "^2.6.1"
@@ -809,7 +809,7 @@ mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
-moment@^2.17.1, moment@^2.22.1:
+moment@^2.22.1:
   version "2.22.2"
   resolved "http://localhost:4873/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
@@ -821,9 +821,11 @@ netmask@^1.0.6:
   version "1.0.6"
   resolved "http://localhost:4873/netmask/-/netmask-1.0.6.tgz#20297e89d86f6f6400f250d9f4f6b4c1945fcd35"
 
-ng2-toastr@^4.0.1:
-  version "4.1.2"
-  resolved "http://localhost:4873/ng2-toastr/-/ng2-toastr-4.1.2.tgz#1b452f07139961c38f866c6e24a06247efa21b11"
+ngx-toastr@^8.8.0:
+  version "8.8.0"
+  resolved "http://localhost:4873/ngx-toastr/-/ngx-toastr-8.8.0.tgz#69dc4a174f14b16eafefc19e16c923357fd11de5"
+  dependencies:
+    tslib "^1.9.0"
 
 node-uuid@~1.4.7:
   version "1.4.8"
