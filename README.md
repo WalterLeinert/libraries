@@ -1,10 +1,10 @@
 # Fluxgate libraries core, platform, common, client, server, testing
 
-### Walter Leinert: 2016, 2017
+### Walter Leinert: 2016, 2017, 2018
 
 
 ## Überblick
-Die Libraries stellen die Grundlage für die Implementierung von Projekten als Web-Anwendungen auf Basis von angular.io (angular 2), express und knex dar.
+Die Libraries stellen die Grundlage für die Implementierung von Projekten als Web-Anwendungen (single page apps, SPA) auf Basis von angular.io (aktuell: Version 6), express und knex dar.
 
 ### Core
 
@@ -83,10 +83,10 @@ Die Library stellt Komponenten und Module zur Verfügung zur effizienten Impleme
 
 Die Library enthält Hilfsklassen zur Implementierung von e2e-Tests.
 
-- Basisklassen zur Implemetierung von Komponenten- und PageObject-Helper
+- Basisklassen zur Implementierung von Komponenten- und PageObject-Helper
 - Komponenten- und PageObject-Helper für Library-Komponenten (wie AutoformComponent, MonthSelectorComponent)
 
-Mit Hilfe dieser Klassen lässt sich für Tests
+Mit Hilfe dieser Klassen lassen sich e2e-Tests effizienter und wartbarer implementieren.
 
 
 ## Dependency Injection
@@ -181,7 +181,7 @@ Das Module ClientModule stellt die Wurzel der DI-Injection-Hierarchie für die P
 
 ## Entwicklung, Build
 
-Die Softwareentwicklung erfolgt in Visual Code (vscode).
+Die Softwareentwicklung erfolgt in Visual Studio Code (vscode).
 
 Abhängigkeiten zu @angular-Libraries und @fluxgate/libraries werden absolut angegeben, um Probleme durch automatische Updates bei
 "npm install" zu vermeiden.
