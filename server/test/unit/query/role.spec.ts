@@ -91,7 +91,9 @@ class RoleTest extends EntityVersionTestBase<Role, number> {
   @test 'should update new role'() {
     const id = this.firstTestId + 1;
 
-    const result = this.createExpectedRoleResult(id, UpdateResult, this.getNextEntityVersionFor(Role));
+    const result = this.createExpectedRoleResult<UpdateResult<Role, number>>(
+      id, UpdateResult, this.getNextEntityVersionFor(Role));
+
     result.item.name = result.item.name + '-updated';
     result.item.description = result.item.description + '-updated';
 
