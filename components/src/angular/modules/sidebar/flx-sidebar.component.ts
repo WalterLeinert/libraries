@@ -10,8 +10,7 @@ import { ResizeEvent } from 'angular-resizable-element';
   <ng-sidebar class="ng-sidebar noscroll" [(opened)] = "opened" style="height:100%;" [mode]="mode"
     [closeOnClickOutside] = "closeOnClickOutside"
     [closeOnClickBackdrop] = "false" dock=true
-    [dockedSize] = "dockedSize"
-    [sidebarClass] = "demo-sidebar" >
+    [dockedSize] = "dockedSize" >
       <div mwlResizable class="noscroll borderright"
       [ngStyle] = "{'width': menueSize + 'px', 'height':'100%', 'background-color': '#eeeeee'}"
       [resizeEdges] = "{right: true}"

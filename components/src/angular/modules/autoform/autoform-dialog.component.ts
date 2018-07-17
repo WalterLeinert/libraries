@@ -24,7 +24,7 @@ import { AutoformComponent } from './autoform.component';
 @Component({
   selector: 'flx-autoform-dialog',
   template: `
-<p-dialog [(visible)]="value" [header]="pageTitle" (onHide)="onBeforeDialogHide($event)" [responsive]="true" showEffect="fade"
+<p-dialog [(visible)]="value" [header]="pageTitle" (onHide)="onBeforeDialogHide()" [responsive]="true" showEffect="fade"
   [modal]="true" width="600">
 
   <div>

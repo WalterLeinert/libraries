@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 
 // PrimeNG
 import { ConfirmationService } from 'primeng/components/common/api';
@@ -27,7 +27,8 @@ import {
     MessageService,
     MetadataService,
     PipeService,
-    PrintService
+    PrintService,
+    { provide: LOCALE_ID, useValue: 'de-de' }
   ]
 })
 export class ClientServicesModule { }

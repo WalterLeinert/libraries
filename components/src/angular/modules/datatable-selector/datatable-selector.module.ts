@@ -1,6 +1,6 @@
 // Angular
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 // PrimeNG
@@ -37,7 +37,8 @@ import { DataTableSelectorComponent } from './datatable-selector.component';
   providers: [
     MessageService,
     MetadataService,
-    PipeService
+    PipeService,
+    { provide: LOCALE_ID, useValue: 'de-de' }
   ]
 })
 export class DataTableSelectorModule { }

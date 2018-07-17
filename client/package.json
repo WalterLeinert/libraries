@@ -1,6 +1,6 @@
 {
   "name": "@fluxgate/client",
-  "version": "2.6.0-beta.0",
+  "version": "2.6.0-beta.6",
   "description": "Fluxgate Client-Library ",
   "main": "dist/src/index.js",
   "typings": "dist/dts/index.d.ts",
@@ -30,6 +30,6 @@
     "font-awesome": "^4.7.0",
     "http-status-codes": "^1.1.6",
     "ngx-toastr": "^8.8.0",
-    "primeng": "^6.0.0-alpha.1"
+    "primeng": "^6.0.1"
   }
 }

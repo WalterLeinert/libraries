@@ -955,7 +955,7 @@ prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "http://localhost:4873/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
 
-primeng@^6.0.0-alpha.1:
+primeng@^6.0.1:
   version "6.0.1"
   resolved "http://localhost:4873/primeng/-/primeng-6.0.1.tgz#51e79189713b4497d6facbcd4e00a49768dbbdce"
 

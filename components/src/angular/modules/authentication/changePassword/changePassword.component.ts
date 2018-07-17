@@ -6,6 +6,8 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { Message } from 'primeng/components/common/api';
+
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
@@ -79,6 +81,7 @@ import { PassportService } from '../passport.service';
 export class ChangePasswordComponent extends ExtendedCoreComponent {
   protected static logger = getLogger(ChangePasswordComponent);
 
+  public messages: Message[];
   public password: string;
   public passwordNew: string;
   public passwordNewRepeated: string;
@@ -126,9 +129,9 @@ export class ChangePasswordComponent extends ExtendedCoreComponent {
           });
 
         },
-        (error: Error) => {
-          this.handleError(error);
-        }));
+          (error: Error) => {
+            this.handleError(error);
+          }));
     });
   }
 

@@ -27,14 +27,18 @@ export class PipeTypes {
  * @class PipeService
  */
 // tslint:disable-next-line:max-classes-per-file
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PipeService {
   // private static readonly DEFAULT_LOCALE = LOCALE_ID ? LOCALE_ID.toString() : 'XX';  // TODO
   private static pipeDict: Dictionary<Tuple<PipeType, string>, PipeTransform> =
-  new Dictionary<Tuple<PipeType, string>, PipeTransform>();
+    new Dictionary<Tuple<PipeType, string>, PipeTransform>();
 
-  constructor( @Inject(LOCALE_ID) private _locale: string) {
-  }
+  private _locale: string = 'de-de';
+
+  // tslint:disable-next-line:no-empty
+  constructor() { }
 
 
   /**
@@ -72,7 +76,7 @@ export class PipeService {
           PipeService.pipeDict.set(tuple, new UpperCasePipe());
           break;
         default:
-          throw new NotSupportedException (`Unsupported pipe type: ${pipe}, locale = ${locale}`);
+          throw new NotSupportedException(`Unsupported pipe type: ${pipe}, locale = ${locale}`);
       }
 
     }

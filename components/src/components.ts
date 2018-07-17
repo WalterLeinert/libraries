@@ -11,8 +11,8 @@ export {
 export { AutoformComponent, AutoformDialogComponent, AutoformModule } from './angular/modules/autoform';
 
 export {
-  ApplicationErrorHandler, ConfirmationDialogComponent, ILoggingErrorHandlerOptions,
-  ApplicationErrorHandlerModule, ConfirmationDialogModule, LOGGING_ERROR_HANDLER_OPTIONS,
+  ApplicationErrorHandler, ConfirmationDialogComponent,
+  ApplicationErrorHandlerModule, ConfirmationDialogModule,
   ListSelectorComponent, PopupComponent, PopupModule, SelectorBaseComponent, ServiceRequestsSelectorComponent
 } from './angular/modules/common';
 

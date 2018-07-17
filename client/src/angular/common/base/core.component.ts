@@ -221,6 +221,19 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
 
   /**
+   * Liefert die default FormGroup
+   *
+   * @readonly
+   * @public
+   * @type {FormGroup}
+   * @memberOf CoreComponent
+   */
+  public get form(): FormGroup {
+    return this.getForm();
+  }
+
+
+  /**
    * löscht alle Messages
    *
    * @protected
@@ -667,19 +680,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
     const formInfo = new FormGroupInfo(formGroup);
     this.formInfos.set(groupName, formInfo);
-  }
-
-
-  /**
-   * Liefert die default FormGroup
-   *
-   * @readonly
-   * @protected
-   * @type {FormGroup}
-   * @memberOf CoreComponent
-   */
-  protected get form(): FormGroup {
-    return this.getForm();
   }
 
 

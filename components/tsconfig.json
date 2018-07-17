@@ -3,12 +3,14 @@
 
   "compilerOptions": {
     "baseUrl": ".",
-    "types": [
-      "jasmine"
-    ]
+    "outDir": "../../out-tsc/lib",
+    "target": "es2015",
+    "module": "es2015",
+    "moduleResolution": "node"
   },
-  "files": [
-    "src/**/*.ts",
-    "test/**/*.ts"
+  "exclude": [
+    "e2e/**/*.ts",
+    "test/**/*.ts",
+    "**/*.spec.ts"
   ]
 }

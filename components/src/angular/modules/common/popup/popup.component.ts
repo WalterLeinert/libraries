@@ -24,10 +24,10 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
           <p class="lead">{{message}}</p>
           <br>
           <div class="actions segments">
-            <button class="btn" id="cancelButton" (click)="onCancel()">
+            <button class="btn" id="cancelButton" (click)="onCancel($event)">
                               <i class="remove icon"></i>Nein
                             </button>
-            <button class="btn" id="approveButton" (click)="onApprove">
+            <button class="btn" id="approveButton" (click)="onApprove($event)">
                               <i class="checkmark icon">
                             </i>Ja</button>
             <button pButton type="text" (click)="onClick(true)" icon="fa-check" label="Click"></button>
@@ -68,6 +68,24 @@ export class PopupComponent {
     using(new XLog(PopupComponent.logger, levels.INFO, 'onClick'), (log) => {
       log.log('message inside modal-component: ' + event);
       this.onAnswer.next(event);
+
+      // this.dialog.close();
+    });
+  }
+
+  public onCancel(event: boolean) {
+    using(new XLog(PopupComponent.logger, levels.INFO, 'onCancel'), (log) => {
+      log.log('message inside modal-component: ' + event);
+      // this.onAnswer.next(event);
+
+      // this.dialog.close();
+    });
+  }
+
+  public onApprove(event: boolean) {
+    using(new XLog(PopupComponent.logger, levels.INFO, 'onApprove'), (log) => {
+      log.log('message inside modal-component: ' + event);
+      // this.onAnswer.next(event);
 
       // this.dialog.close();
     });

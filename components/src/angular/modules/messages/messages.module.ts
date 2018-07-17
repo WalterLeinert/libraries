@@ -2,16 +2,15 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 // import { ToastModule, ToastOptions } from 'ng2-toastr';
-import { ToastOptions } from 'ng2-toastr';
-import { ToastModule } from 'ng2-toastr/ng2-toastr';
+import { ToastrModule } from 'ngx-toastr';
 
-import { CustomOptions } from './custom-options';
+// TODO: import { CustomOptions } from './custom - options';
 import { MessagesComponent } from './messages.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    ToastModule.forRoot(),
+    ToastrModule.forRoot()
   ],
   declarations: [
     MessagesComponent
@@ -19,6 +18,6 @@ import { MessagesComponent } from './messages.component';
   exports: [
     MessagesComponent
   ],
-  providers: [{ provide: ToastOptions, useClass: CustomOptions }]
+  // TODO: providers: [{ provide: ToastOptions, useClass: CustomOptions }]
 })
 export class MessagesModule { }
