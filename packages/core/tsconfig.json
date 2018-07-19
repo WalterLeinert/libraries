@@ -1,12 +1,13 @@
 {
   "extends": "../../tsconfig.json",
-
   "compilerOptions": {
     "outDir": "../../dist/core",
     "target": "es5",
     "module": "umd",
     "declaration": true,
+    "sourceMap": false,
     "inlineSources": true,
+    "inlineSourceMap": true,
     "types": [
       "node"
     ]

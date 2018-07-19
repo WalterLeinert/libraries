@@ -81,7 +81,7 @@ gulp.task('compile', function () {
   return merge([
     tsResult.dts.pipe(gulp.dest('../../dist/core/dts')),
     tsResult.js
-      .pipe(sourcemaps.write('.', { sourceRoot: './', includeContent: false })) // Now the sourcemaps are added to the .js file
+      .pipe(sourcemaps.write('.')) // Now the sourcemaps are added to the .js file
       .pipe(gulp.dest('../../dist/core/src')),
       deployResult
   ]);
