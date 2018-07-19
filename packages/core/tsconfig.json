@@ -3,6 +3,8 @@
 
   "compilerOptions": {
     "outDir": "../../dist/core",
+    "target": "es5",
+    "module": "umd",
     "declaration": true,
     "inlineSources": true,
     "types": [
