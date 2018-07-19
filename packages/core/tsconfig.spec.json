@@ -2,14 +2,16 @@
   "extends": "../../tsconfig.json",
 
   "compilerOptions": {
-    "outDir": "../../dist/core",
+    "rootDir": "./",
+    "outDir": "./dist",
     "declaration": true,
     "inlineSources": true,
     "types": [
-      "node"
+      "node",
+      "mocha"
     ]
   },
-  "exclude": [
-    "test/**"
+  "include": [
+    "**/*.ts"
   ]
 }
