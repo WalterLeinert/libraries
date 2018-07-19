@@ -71,7 +71,7 @@ gulp.task('tslint', () => {
 
 
 gulp.task('compile', function () {
-  const tsResult = gulp.src('src/**/*.ts')
+  const tsResult = tsProject.src()
     .pipe(sourcemaps.init())
     .pipe(tsProject());
 
@@ -91,7 +91,7 @@ gulp.task('compile', function () {
 
 gulp.task('compile:test', ['default'], function () {
   //find test code - note use of 'base'
-  return gulp.src('./**/*.ts', { base: '.' })
+  return tsSpecProject.src()
     .pipe(sourcemaps.init())
     /*transpile*/
     .pipe(tsSpecProject())
