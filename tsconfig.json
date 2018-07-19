@@ -34,6 +34,12 @@
       ],
       "@fluxgate/core/*": [
         "dist/core/*"
+      ],
+      "@fluxgate/platform": [
+        "dist/platform"
+      ],
+      "@fluxgate/platform/*": [
+        "dist/platform/*"
       ]
     }
   }
