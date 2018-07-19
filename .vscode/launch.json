@@ -19,10 +19,10 @@
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
         "--inspect",
-        "core/dist/test/**/*.spec.js",
+        "dist/test/**/*.spec.js",
         "--no-timeouts"
       ],
-      "cwd": "${workspaceRoot}",
+      "cwd": "${workspaceRoot}/packages/core",
       "runtimeExecutable": null,
       "outFiles": [
       ],
