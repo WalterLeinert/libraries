@@ -52,6 +52,12 @@
       ],
       "@fluxgate/platform/*": [
         "dist/platform/*"
+      ],
+      "@fluxgate/testing": [
+        "dist/testing"
+      ],
+      "@fluxgate/testing/*": [
+        "dist/testing/*"
       ]
     }
   }
