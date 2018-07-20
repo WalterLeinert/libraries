@@ -2,11 +2,11 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/server",
-    "target": "es6",
+    "target": "es5",
+    "module": "umd",
     "declaration": true,
     "types": [
-      "node",
-      "reflect-metadata"
+      "node"
     ]
   },
   "exclude": [
