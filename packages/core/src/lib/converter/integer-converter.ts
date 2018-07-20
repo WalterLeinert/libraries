@@ -1,4 +1,4 @@
-import { InvalidOperationException } from '../../src/exceptions/invalidOperationException';
+import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { Nullable } from '../types/nullable';
 import { Types } from '../types/types';
 import { IConverterOptions } from './converter-options.interface';

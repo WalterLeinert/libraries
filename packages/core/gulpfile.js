@@ -104,7 +104,7 @@ gulp.task('compile:test', ['default'], function () {
 
 
 gulp.task('test', ['set-env', 'compile:test'], function () {
-  gulp.src('./dist/test/**/*.spec.js', { read: false })
+  gulp.src('./dist/src/test/**/*.spec.js', { read: false })
     .pipe(mocha({
       reporter: 'spec'
     }));

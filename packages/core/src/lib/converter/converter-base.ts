@@ -1,8 +1,7 @@
-import { Core } from '../../src/diagnostics/core';
-import { InvalidOperationException } from '../../src/exceptions/invalidOperationException';
+import { Core } from '../diagnostics/core';
+import { InvalidOperationException } from '../exceptions/invalidOperationException';
 import { Funktion } from './../base/objectType';
 import { Assert } from './../util/assert';
-import { IConverter } from './converter.interface';
 
 /**
  * Basisklasse für alle Converter
