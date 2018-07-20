@@ -4,6 +4,7 @@
     "packages/core",
     "packages/platform",
     "packages/common",
+    "packages/client",
     "packages/server"
   ],
   "version": "0.0.0"
