@@ -61,7 +61,7 @@ gulp.task('really-clean', ['clean'], function (cb) {
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-  return del([distPath, , 'dist', 'build', 'lib', 'dts', 'documentation'], {force: true});
+  return del([distPath, 'dist', 'build', 'lib', 'dts', 'documentation'], {force: true});
 });
 
 
