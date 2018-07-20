@@ -29,6 +29,12 @@
       "components/*": [
         "dist/components/*"
       ],
+      "@fluxgate/common": [
+        "dist/common"
+      ],
+      "@fluxgate/common/*": [
+        "dist/common/*"
+      ],
       "@fluxgate/core": [
         "dist/core"
       ],
