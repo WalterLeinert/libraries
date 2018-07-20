@@ -1,1 +1,1 @@
-export * from './src/e2e';
+export * from './src/lib/e2e';
