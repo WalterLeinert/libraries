@@ -12,7 +12,7 @@ import { PlatformUnitTest } from '../unit-test';
 
 // import { AssertionException } from '@fluxgate/core/exceptions/assertion';
 // import { PlatformUnitTest } from 'unit-test';
-import { FileSystem } from '../../src/util/fileSystem';
+import { FileSystem } from '../../lib/util/fileSystem';
 
 
 @suite('platform.util.FileSystem')

@@ -10,6 +10,6 @@
     ]
   },
   "exclude": [
-    "test/**"
+    "src/test/**"
   ]
 }

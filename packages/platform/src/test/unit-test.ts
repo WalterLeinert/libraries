@@ -7,7 +7,7 @@ import { Injectable, InjectionToken, Injector } from 'injection-js';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { configure, getLogger, IConfig, ILogger, levels, using, XLog } from '../src/diagnostics';
+import { configure, getLogger, IConfig, ILogger, levels, using, XLog } from '../lib/diagnostics';
 // -------------------------------------- logging --------------------------------------------
 
 import { DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER, STRINGIFYER } from '@fluxgate/core';

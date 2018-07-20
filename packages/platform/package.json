@@ -2,9 +2,9 @@
   "name": "@fluxgate/platform",
   "version": "2.6.0-beta.0",
   "description": "Fluxgate Library Platform (node/browser)",
-  "browser": "dist/browser/src/index.js",
-  "main": "dist/node/src/index.js",
-  "typings": "dist/node/dts/index.d.ts",
+  "browser": "browser/src/index.js",
+  "main": "node/src/index.js",
+  "typings": "node/dts/index.d.ts",
   "scripts": {
     "tslint": "tslint ./src/**/*.ts"
   },
@@ -16,7 +16,6 @@
   "license": "ISC",
   "devDependencies": {},
   "dependencies": {
-    "@fluxgate/core": "2.6.0-beta.0",
     "log4js": "^2.6.1"
   },
   "directories": {
