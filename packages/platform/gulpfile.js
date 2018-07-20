@@ -15,7 +15,10 @@ const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
 const mocha = require('gulp-mocha');
 const tsProject = tsc.createProject('tsconfig.json');
+const tsSpecProject = tsc.createProject('tsconfig.spec.json');
 const removeCode = require('gulp-remove-code');
+
+const distPath = '../../dist/platform';
 
 /**
     * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
@@ -59,8 +62,8 @@ gulp.task('really-clean', ['clean'], function (cb) {
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-  return del(['dist', 'build', 'lib', 'dts', 'documentation']);
-})
+  return del([distPath, 'dist', 'build', 'lib', 'dts', 'documentation'], {force: true});
+});
 
 
 gulp.task('tslint', () => {
@@ -72,42 +75,46 @@ gulp.task('tslint', () => {
 
 
 gulp.task('compile:browser', function() {
-    const tsResult = gulp.src('src/**/*.ts')
+    const tsResult = tsProject.src()
         .pipe(removeCode({ browser: true }))
         .pipe(sourcemaps.init())
         .pipe(tsProject());
 
     return merge([
-        tsResult.dts.pipe(gulp.dest('dist/browser/dts')),
+        tsResult.dts.pipe(gulp.dest(distPath + '/browser/dts')),
         tsResult.js
-          .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
-          .pipe(gulp.dest('dist/browser/src'))
+          .pipe(sourcemaps.write('.')) // Now the sourcemaps are added to the .js file
+          .pipe(gulp.dest(distPath + '/browser/src'))
     ]);
 });
 
 gulp.task('compile:node', function() {
-    const tsResult = gulp.src('src/**/*.ts')
+    const tsResult = tsProject.src()
         .pipe(removeCode({ node: true }))
         .pipe(sourcemaps.init())
         .pipe(tsProject());
 
+        const deployResult = gulp.src('package.json')
+        .pipe(gulp.dest(distPath));
+
     return merge([
-        tsResult.dts.pipe(gulp.dest('dist/node/dts')),
+        tsResult.dts.pipe(gulp.dest(distPath + '/node/dts')),
         tsResult.js
-          .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
-          .pipe(gulp.dest('dist/node/src'))
+          .pipe(sourcemaps.write('.')) // Now the sourcemaps are added to the .js file
+          .pipe(gulp.dest(distPath + '/node/src')),
+          deployResult
     ]);
 });
 
 
 gulp.task('compile:test-node', ['default'], function () {
   //find test code - note use of 'base'
-  return gulp.src('./test/**/*.ts', { base: '.' })
+  return tsSpecProject.src()
     .pipe(sourcemaps.init())
     /*transpile*/
-    .pipe(tsProject())
+    .pipe(tsSpecProject())
     /*flush to disk*/
-    .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+    .pipe(sourcemaps.write('.', { sourceRoot: './', includeContent: false })) // Now the sourcemaps are added to the .js file
     .pipe(gulp.dest('dist/node'));
 });
 

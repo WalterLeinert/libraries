@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "./dist",
+    "declaration": true,
+    "inlineSources": true,
+    "types": [
+      "node",
+      "mocha"
+    ]
+  },
+  "include": [
+    "**/*.ts"
+  ]
+}
