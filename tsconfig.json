@@ -29,6 +29,12 @@
       "components/*": [
         "dist/components/*"
       ],
+      "@fluxgate/client": [
+        "dist/client"
+      ],
+      "@fluxgate/client/*": [
+        "dist/client/*"
+      ],
       "@fluxgate/common": [
         "dist/common"
       ],
