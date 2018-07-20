@@ -1,6 +1,6 @@
 // export * from './angular/common/adapter';
-export * from './src/angular/common';
-export * from './src/angular/redux';
-export * from './src/angular/services';
-export * from './src/base';
-export * from './src/primeng';
+export * from './src/lib/angular/common';
+export * from './src/lib/angular/redux';
+export * from './src/lib/angular/services';
+export * from './src/lib/base';
+export * from './src/lib/primeng';
