@@ -19,7 +19,7 @@
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
         "--inspect",
-        "dist/src/test/**/*.spec.js",
+        "dist/test/**/*.spec.js",
         "--no-timeouts"
       ],
       "cwd": "${workspaceRoot}/packages/core",
@@ -39,9 +39,11 @@
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
         "dist/test/**/*.spec.js",
-        "--no-timeouts"
+        "--no-timeouts",
+        "-r", "ts-node/register",
+        "-r", "tsconfig-paths/register"
       ],
-      "cwd": "${workspaceRoot}/common",
+      "cwd": "${workspaceRoot}/packages/common",
       "runtimeExecutable": null,
       "outFiles": [
       ],
