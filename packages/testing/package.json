@@ -2,9 +2,11 @@
   "name": "@fluxgate/testing",
   "version": "2.6.0-beta.0",
   "description": "Fluxgate Testing-Library ",
-  "main": "dist/src/index.js",
-  "typings": "dist/dts/index.d.ts",
+  "main": "src/index.js",
+  "typings": "dts/index.d.ts",
   "scripts": {
+    "build": "gulp",
+    "test": "gulp test",
     "tslint": "tslint ./src/**/*.ts"
   },
   "repository": {
@@ -13,12 +15,10 @@
   },
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
-  "devDependencies": {},
-  "dependencies": {
-    "@fluxgate/common": "2.6.0-beta.0",
-    "@fluxgate/core": "2.6.0-beta.0",
-    "@fluxgate/platform": "2.6.0-beta.0"
+  "devDependencies": {
+    "@types/jasmine": "^2.8.8"
   },
+  "dependencies": {},
   "peerDependencies": {
     "@fluxgate/common": ">=2.6.0-beta.0",
     "@fluxgate/core": ">=2.6.0-beta.0",

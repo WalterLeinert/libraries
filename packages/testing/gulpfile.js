@@ -16,6 +16,9 @@ const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
 const mocha = require('gulp-mocha');
 const tsProject = tsc.createProject('tsconfig.json');
+const tsSpecProject = tsc.createProject('tsconfig.spec.json');
+
+const distPath = '../../dist/testing';
 
 /**
     * Hilfsfunktion zum Ausführen eines Kommandos (in gulp Skripts)
@@ -59,8 +62,8 @@ gulp.task('really-clean', ['clean'], function (cb) {
 
 // clean the contents of the distribution directory
 gulp.task('clean', function () {
-  return del(['dist', 'build', 'lib', 'dts', 'documentation']);
-})
+  return del([distPath, 'dist', 'build', 'lib', 'dts', 'documentation'], { force: true });
+});
 
 
 gulp.task('tslint', () => {
@@ -69,35 +72,39 @@ gulp.task('tslint', () => {
     .pipe(gulp_tslint.report());
 });
 
-gulp.task('compile', function() {
-    const tsResult = gulp.src('src/**/*.ts')
-        .pipe(sourcemaps.init())
-        .pipe(tsProject());
+gulp.task('compile', function () {
+  const tsResult = tsProject.src()
+    .pipe(sourcemaps.init())
+    .pipe(tsProject());
 
-    return merge([
-        tsResult.dts.pipe(gulp.dest('dist/dts')),
-        tsResult.js
-          .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
-          .pipe(gulp.dest('dist/src'))
-    ]);
+  const deployResult = gulp.src('package.json')
+    .pipe(gulp.dest(distPath));
+
+
+  return merge([
+    tsResult.dts.pipe(gulp.dest(distPath + '/dts')),
+    tsResult.js
+      .pipe(sourcemaps.write('.')) // Now the sourcemaps are added to the .js file
+      .pipe(gulp.dest(distPath + '/src')),
+      deployResult
+  ]);
 });
-
-
 
 
 gulp.task('compile:test', ['default'], function () {
   //find test code - note use of 'base'
-  return gulp.src('./test/**/*.ts', { base: '.' })
+  return tsSpecProject.src()
     .pipe(sourcemaps.init())
     /*transpile*/
-    .pipe(tsProject())
+    .pipe(tsSpecProject())
     /*flush to disk*/
-    .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+    .pipe(sourcemaps.write('.', { sourceRoot: './', includeContent: false })) // Now the sourcemaps are added to the .js file
     .pipe(gulp.dest('dist'));
 });
 
 
-gulp.task('test', ['set-env', 'compile:test'], function () {
+
+gulp.task('test', ['set-env', 'default'], function () {
   console.warn('*** echte Tests aktivieren, sobald Tests existieren');
   // TODO: echte Tests aktivieren, sobald Tests existieren
 });

@@ -1,10 +1,15 @@
 {
-  "extends": "../tsconfig.json",
-
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "src/",
+    "outDir": "../../dist/testing",
+    "target": "es5",
+    "module": "umd",
+    "declaration": true,
     "types": [
       "jasmine"
     ]
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
