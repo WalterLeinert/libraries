@@ -1,6 +1,16 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../../tsconfig.json",
+
   "compilerOptions": {
-    "baseUrl": "src/"
-  }
+    "outDir": "./dist",
+    "declaration": true,
+    "inlineSources": true,
+    "types": [
+      "node",
+      "mocha"
+    ]
+  },
+  "include": [
+    "test/**/*.ts"
+  ]
 }

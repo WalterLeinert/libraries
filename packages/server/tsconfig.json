@@ -1,8 +1,15 @@
 {
-  "extends": "../tsconfig.json",
-
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "src/",
-    "types": ["reflect-metadata"]
-  }
+    "outDir": "../../dist/server",
+    "target": "es6",
+    "declaration": true,
+    "types": [
+      "node",
+      "reflect-metadata"
+    ]
+  },
+  "exclude": [
+    "test/**/*.ts"
+  ]
 }
