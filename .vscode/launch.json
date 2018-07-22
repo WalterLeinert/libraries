@@ -83,16 +83,18 @@
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
         "dist/test/**/*.js",
-        "--no-timeouts"
+        "--no-timeouts",
+        "-r", "ts-node/register",
+        "-r", "tsconfig-paths/register"
       ],
-      "cwd": "${workspaceRoot}/server",
+      "cwd": "${workspaceRoot}/packages/server",
       "runtimeExecutable": null,
        "outFiles": [
       ],
       "sourceMaps": true,
       "stopOnEntry": false,
       "env": {
-        "NODE_ENV": "debug"
+        "NODE_ENV": "local"
       }
     },
     {

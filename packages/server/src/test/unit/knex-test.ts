@@ -201,7 +201,7 @@ export abstract class KnexTest<T extends IEntity<TId>, TId extends IToString> ex
         try {
           log.log(`static.before: done`);
 
-          const knexConfigPath = path.join(process.cwd(), '/test/config/knexfile.json');
+          const knexConfigPath = path.join(process.cwd(), '/src/test/config/knexfile.json');
           log.log(`knexConfigPath = ${knexConfigPath}`);
 
           //
