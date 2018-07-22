@@ -16,11 +16,11 @@ import {
 import { Activator, Core, Dictionary, fromEnvironment, Funktion, ICtor, IToString, Types } from '@fluxgate/core';
 import { JsonReader } from '@fluxgate/platform';
 
-import { IBaseService, IBaseServiceRaw } from '../../src/ts-express-decorators-flx/services/baseService.interface';
-import { ConfigService } from '../../src/ts-express-decorators-flx/services/config.service';
-import { KnexService } from '../../src/ts-express-decorators-flx/services/knex.service';
-import { MetadataService } from '../../src/ts-express-decorators-flx/services/metadata.service';
-import { SystemConfigService } from '../../src/ts-express-decorators-flx/services/system-config.service';
+import { IBaseService, IBaseServiceRaw } from '../../lib/ts-express-decorators-flx/services/baseService.interface';
+import { ConfigService } from '../../lib/ts-express-decorators-flx/services/config.service';
+import { KnexService } from '../../lib/ts-express-decorators-flx/services/knex.service';
+import { MetadataService } from '../../lib/ts-express-decorators-flx/services/metadata.service';
+import { SystemConfigService } from '../../lib/ts-express-decorators-flx/services/system-config.service';
 
 import { ServerUnitTest } from '../unit-test';
 

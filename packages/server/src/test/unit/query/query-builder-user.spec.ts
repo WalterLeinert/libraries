@@ -24,8 +24,8 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 import { ConstantValueGenerator, NumberIdGenerator, User, UserRoleId } from '@fluxgate/common';
 import { AndTerm, OrTerm, SelectorTerm } from '@fluxgate/core';
 
-import { KnexQueryVisitor } from '../../../src/ts-express-decorators-flx/services/knex-query-visitor';
-import { UserService } from '../../../src/ts-express-decorators-flx/services/user.service';
+import { KnexQueryVisitor } from '../../../lib/ts-express-decorators-flx/services/knex-query-visitor';
+import { UserService } from '../../../lib/ts-express-decorators-flx/services/user.service';
 import { KnexTest } from '../knex-test';
 
 

@@ -27,7 +27,7 @@ import {
 } from '@fluxgate/common';
 import { Clone, ICtor, SelectorTerm } from '@fluxgate/core';
 
-import { ConfigService } from '../../../src/ts-express-decorators-flx/services/config.service';
+import { ConfigService } from '../../../lib/ts-express-decorators-flx/services/config.service';
 
 import { KnexTest } from '../knex-test';
 

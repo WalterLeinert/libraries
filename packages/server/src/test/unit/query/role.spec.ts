@@ -29,7 +29,7 @@ import {
 import { Clone, ICtor } from '@fluxgate/core';
 
 
-import { RoleService } from '../../../src/ts-express-decorators-flx/services/role.service';
+import { RoleService } from '../../../lib/ts-express-decorators-flx/services/role.service';
 
 import { EntityVersionTestBase } from '../entity-version-test-base';
 

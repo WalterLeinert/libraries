@@ -17,7 +17,6 @@ const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
 const mocha = require('gulp-mocha');
 const tsProject = tsc.createProject('tsconfig.json');
-const tsProjectSpec = tsc.createProject('tsconfig.spec.json');
 const tsSpecProject = tsc.createProject('tsconfig.spec.json');
 
 const distPath = '../../dist/server';
@@ -122,6 +121,10 @@ gulp.task('compile:test', ['default'], function () {
 gulp.task('test', ['compile:test'], function () {
   gulp.src('./dist/test/**/*.spec.js', { read: false })
     .pipe(mocha({
+      require: [
+        'ts-node/register',
+        'tsconfig-paths/register'
+      ],
       reporter: 'spec'
     }))
     .once('error', () => {

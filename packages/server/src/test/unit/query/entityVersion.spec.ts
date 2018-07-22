@@ -24,7 +24,7 @@ import {
   NumberIdGenerator, QueryTest
 } from '@fluxgate/common';
 
-import { EntityVersionService } from '../../../src/ts-express-decorators-flx/services/entityVersion.service';
+import { EntityVersionService } from '../../../lib/ts-express-decorators-flx/services/entityVersion.service';
 import { EntityVersionTestBase } from '../entity-version-test-base';
 import { KnexTest } from '../knex-test';
 import { QueryTestService } from './query-test.service';
