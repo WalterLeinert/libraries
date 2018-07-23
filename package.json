@@ -41,6 +41,7 @@
     "@angular/language-service": "^6.0.9",
     "@compodoc/compodoc": "^1.1.2",
     "@compodoc/gulp-compodoc": "^0.0.9",
+    "@types/bluebird": "^3.5.21",
     "@types/chai-as-promised": "^7.1.0",
     "@types/jasmine": "~2.8.6",
     "@types/jasminewd2": "~2.0.3",
