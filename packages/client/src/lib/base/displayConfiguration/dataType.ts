@@ -19,9 +19,8 @@ export class DataTypes {
    * Liefert für den @see{ColumnType} @param{columnType} den entsprechenden @see{DataType}.
    * Falls keine Zuordnung existiert wird eine @see{NotSupportedException} geworfen.
    *
-   * @static
-   * @param {ColumnType} columnType
-   * @returns {DataType}
+   * @param columnType
+   * @returns
    *
    * @memberOf DataTypes
    */
@@ -57,9 +56,8 @@ export class DataTypes {
    * Liefert für den @param{type} den entsprechenden @see{ControlType}.
    * Falls keine Zuordnung existiert wird eine @see{NotSupportedException} geworfen.
    *
-   * @static
-   * @param {ColumnType} columnType
-   * @returns {DataType}
+   * @param columnType
+   * @returns
    *
    * @memberOf DataTypes
    */

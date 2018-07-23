@@ -22,10 +22,6 @@ import { TextAlignments } from './textAlignment';
 
 /**
  * Konfiguriert die DisplayInfos über die Metadaten.
- *
- * @export
- * @class MetadataDisplayInfoConfiguration
- * @extends {DisplayInfoConfiguration}
  */
 export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
   protected static readonly logger = getLogger(MetadataDisplayInfoConfiguration);
@@ -96,10 +92,6 @@ export class MetadataDisplayInfoConfiguration extends DisplayInfoConfiguration {
 
   /**
    * falls keine Column-Konfiguration angegeben ist, wird diese über die Metadaten erzeugt
-   *
-   * @private
-   *
-   * @memberOf DataTableSelectorComponent
    */
   protected createDisplayInfos(): IControlDisplayInfo[] {
     const columnInfos: IControlDisplayInfo[] = [];

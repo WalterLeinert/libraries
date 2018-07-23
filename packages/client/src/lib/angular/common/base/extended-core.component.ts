@@ -24,11 +24,6 @@ import { CoreComponent } from './core.component';
 /**
  * Erweiterung zu @see{CoreComponent}: alle Funktionen ohne Verwendung von Service(s) aus @see{BaseService}
  * hierher verschoben
- *
- * @export
- * @abstract
- * @class ExtendedCoreComponent
- * @extends {CoreComponent}
  */
 export abstract class ExtendedCoreComponent extends CoreComponent {
 
@@ -40,9 +35,9 @@ export abstract class ExtendedCoreComponent extends CoreComponent {
   /**
    * Creates an instance of BaseComponent.
    *
-   * @param {Router} _router - der zugehörige Router
-   * @param {ActivatedRoute} _route - die aktivierte Route
-   * @param {*} _service - der zugehörige Service
+   * @param _router - der zugehörige Router
+   * @param _route - die aktivierte Route
+   * @param _service - der zugehörige Service
    */
   protected constructor(private _router: Router, private _route: ActivatedRoute, messageService: MessageService) {
     super(messageService);
@@ -68,10 +63,8 @@ export abstract class ExtendedCoreComponent extends CoreComponent {
   /**
    * Navigiert zur Parent-Komponente mit einem Routing-Command @see{IRouterNavigationAction}.
    *
-   * @protected
-   * @template T
-   * @param {NavigationAction} action
-   * @param {T} subject
+   * @param action
+   * @param subject
    */
   protected navigateToParent<T>(action: NavigationAction, subject: T) {
     this.navigate(['../', this.createNavigationRouterAction(action, subject)]);
@@ -81,10 +74,9 @@ export abstract class ExtendedCoreComponent extends CoreComponent {
   /**
    * Navigiert über den zugehörigen Router
    *
-   * @protected
-   * @param {any[]} commands
-   * @param {NavigationExtras} [extras]
-   * @returns {Promise<boolean>}
+   * @param commands
+   * @param [extras]
+   * @returns
    */
   protected navigate(commands: any[], extras?: NavigationExtras): Promise<boolean> {
     return this._router.navigate(commands, extras);
@@ -141,10 +133,6 @@ export abstract class ExtendedCoreComponent extends CoreComponent {
 
   /**
    * Liefert den zugehörigen Router
-   *
-   * @readonly
-   * @protected
-   * @type {Router}
    */
   protected get router(): Router {
     return this._router;
@@ -152,10 +140,6 @@ export abstract class ExtendedCoreComponent extends CoreComponent {
 
   /**
    * Liefert die zugehörige Route
-   *
-   * @readonly
-   * @protected
-   * @type {ActivatedRoute}
    */
   protected get route(): ActivatedRoute {
     return this._route;

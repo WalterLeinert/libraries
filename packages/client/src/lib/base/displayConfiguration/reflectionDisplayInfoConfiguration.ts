@@ -14,10 +14,6 @@ import { DisplayInfoConfiguration } from './displayInfoConfiguration';
 
 /**
  * Konfiguriert die DisplayInfos über Reflection.
- *
- * @export
- * @class ReflectionDisplayInfoConfiguration
- * @extends {DisplayInfoConfiguration}
  */
 export class ReflectionDisplayInfoConfiguration extends DisplayInfoConfiguration {
   protected static readonly logger = getLogger(ReflectionDisplayInfoConfiguration);
@@ -25,10 +21,6 @@ export class ReflectionDisplayInfoConfiguration extends DisplayInfoConfiguration
 
   /**
    * falls keine Column-Konfiguration angegeben ist, wird diese über Reflection erzeugt
-   *
-   * @private
-   *
-   * @memberOf DataTableSelectorComponent
    */
   protected createDisplayInfos(item: any): IControlDisplayInfo[] {
     return using(new XLog(ReflectionDisplayInfoConfiguration.logger, levels.INFO, 'createDisplayInfos'), (log) => {

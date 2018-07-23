@@ -14,10 +14,6 @@ import { TextAlignments } from './textAlignment';
 
 /**
  * Basisklasse für die Konfiguration der DisplayInfos.
- *
- * @export
- * @abstract
- * @class DisplayInfoConfiguration
  */
 export abstract class DisplayInfoConfiguration implements IDisplayInfoConfiguration {
   protected static readonly logger = getLogger(DisplayInfoConfiguration);
@@ -25,10 +21,8 @@ export abstract class DisplayInfoConfiguration implements IDisplayInfoConfigurat
   /**
    * Erzeugt neue DisplayInfos
    *
-   * @param {*} [item] - muss angegeben sein, falls die Infos über Reflection erzeugt werden müssen.
-   * @returns {IControlDisplayInfo[]}
-   *
-   * @memberOf DisplayInfoConfiguration
+   * @param [item] - muss angegeben sein, falls die Infos über Reflection erzeugt werden müssen.
+   * @returns
    */
   public createConfig(item?: any): IControlDisplayInfo[] {
     return this.setupConfig(undefined, item);
@@ -37,10 +31,8 @@ export abstract class DisplayInfoConfiguration implements IDisplayInfoConfigurat
   /**
    * Konfiguriert existierende DisplayInfos
    *
-   * @param {IControlDisplayInfo[]} displayInfos
-   * @returns {IControlDisplayInfo[]}
-   *
-   * @memberOf DisplayInfoConfiguration
+   * @param displayInfos
+   * @returns
    */
   public configureConfig(displayInfos: IControlDisplayInfo[]): void {
     this.setupConfig(displayInfos);
@@ -59,12 +51,9 @@ export abstract class DisplayInfoConfiguration implements IDisplayInfoConfigurat
   /**
    * setzt die komplette DisplayInfo-Konfiguration auf
    *
-   * @private
-   * @param {IControlDisplayInfo[]} [displayInfos]
-   * @param {*} [item]
-   * @returns {IControlDisplayInfo[]}
-   *
-   * @memberOf DisplayInfoConfiguration
+   * @param [displayInfos]
+   * @param [item]
+   * @returns
    */
   private setupConfig(displayInfos?: IControlDisplayInfo[], item?: any): IControlDisplayInfo[] {
     return using(new XLog(DisplayInfoConfiguration.logger, levels.DEBUG, 'setupConfig'), (log) => {
@@ -96,10 +85,7 @@ export abstract class DisplayInfoConfiguration implements IDisplayInfoConfigurat
   /**
    * Konfiguriert ein DisplayInfo
    *
-   * @private
-   * @param {IControlDisplayInfo} colInfo
-   *
-   * @memberOf DisplayInfoConfiguration
+   * @param colInfo
    */
   private configureDisplayInfo(displayInfo: IControlDisplayInfo) {
     Assert.notNull(displayInfo);

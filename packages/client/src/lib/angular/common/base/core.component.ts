@@ -47,10 +47,6 @@ export interface IValidatorDict {
 
 /**
  * Basisklasse (Komponente) ohne Router, Service für alle GUI-Komponenten
- *
- * @export
- * @class CoreComponent
- * @implements {OnInit, OnDestroy}
  */
 export abstract class CoreComponent extends UniqueIdentifiable implements OnInit, OnDestroy {
   protected static readonly logger = getLogger(CoreComponent);
@@ -99,8 +95,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * Init-Methode der Komponente: kann in konkreter Komponente überschrieben werden
-   *
-   * @memberOf BaseComponent
    */
   public ngOnInit() {
     using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnInit', `class: ${this.constructor.name}`), (log) => {
@@ -111,8 +105,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * Destroy-Methode der Komponente: kann in konkreter Komponente überschrieben werden
-   *
-   * @memberOf BaseComponent
    */
   public ngOnDestroy() {
     using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnDestroy', `class: ${this.constructor.name}`), (log) => {
@@ -153,9 +145,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * Ist @param{groupName} angegeben, so wird nur die entsprechende Group untersucht.
    *
    * @param groupName - der Name der FormGroup
-   * @returns {boolean}
-   *
-   * @memberOf CoreComponent
+   * @returns
    */
 
   public hasChanges(groupName?: string): boolean {
@@ -189,8 +179,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * Liefert den Typ eines html-input Fields für die angegebene Info @see{info}
    *
-   * @param {IControlDisplayInfo} info
-   * @returns {string}
+   * @param info
+   * @returns
    */
   public getInputType(info: IControlDisplayInfo): string {
     if (info.isSecret) {
@@ -206,9 +196,9 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * FormGroup @param{groupName}
    *
    * @protected
-   * @param {string} controlName
-   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
-   * @returns {string}
+   * @param controlName
+   * @param [groupName=FormGroupInfo.DEFAULT_NAME]
+   * @returns
    *
    * @memberOf CoreComponent
    */
@@ -222,11 +212,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * Liefert die default FormGroup
-   *
-   * @readonly
-   * @public
-   * @type {FormGroup}
-   * @memberOf CoreComponent
    */
   public get form(): FormGroup {
     return this.getForm();
@@ -237,10 +222,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * Liefert die zugehörige @see{FormGroup} für den Namen @param{groupName}.
    *
    * @protected
-   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
-   * @returns {FormGroup}
-   *
-   * @memberOf CoreComponent
+   * @param [groupName=FormGroupInfo.DEFAULT_NAME]
+   * @returns
    */
   public getForm(groupName: string = FormGroupInfo.DEFAULT_NAME): FormGroup {
     Assert.notNullOrEmpty(groupName);
@@ -254,10 +237,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
 
   /**
    * löscht alle Messages
-   *
-   * @protected
-   *
-   * @memberOf BaseComponent
    */
   protected clearMessages() {
     this._messageService.clearMessage();
@@ -266,11 +245,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * fügt eine neue Info-Meldungung hinzu
    *
-   * @protected
-   * @param {string} text
-   * @param {string} [summary='Hinweis']
-   *
-   * @memberOf BaseComponent
+   * @param text
+   * @param [summary='Hinweis']
    */
   protected addSuccessMessage(text: string, summary = CoreComponent.SUCCESS_TEXT) {
     this.addMessage({ severity: MessageSeverity.Success, summary: summary, detail: text });
@@ -280,11 +256,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * fügt eine neue Info-Meldungung hinzu
    *
-   * @protected
-   * @param {string} text
-   * @param {string} [summary='Hinweis']
-   *
-   * @memberOf BaseComponent
+   * @param text
+   * @param [summary='Hinweis']
    */
   protected addInfoMessage(text: string, summary = CoreComponent.INFO_TEXT) {
     this.addMessage({ severity: MessageSeverity.Info, summary: summary, detail: text });
@@ -293,11 +266,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * fügt eine neue Warn-Meldungung hinzu
    *
-   * @protected
-   * @param {string} text
-   * @param {string} [summary='Hinweis']
-   *
-   * @memberOf BaseComponent
+   * @param text
+   * @param [summary='Hinweis']
    */
   protected addWarnMessage(text: string, summary = CoreComponent.WARN_TEXT) {
     this.addMessage({ severity: MessageSeverity.Warn, summary: summary, detail: text });
@@ -307,11 +277,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * fügt eine neue Fehlermeldungung hinzu
    *
-   * @protected
-   * @param {string} text
-   * @param {string} [summary='Fehlermeldung']
-   *
-   * @memberOf BaseComponent
+   * @param text
+   * @param [summary='Fehlermeldung']
    */
   protected addErrorMessage(text: string, summary = CoreComponent.ERROR_TEXT) {
     this.addMessage({ severity: MessageSeverity.Error, summary: summary, detail: text });
@@ -320,10 +287,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * fügt eine neue Meldung hinzu
    *
-   * @protected
-   * @param {Message} message
-   *
-   * @memberOf BaseComponent
+   * @param message
    */
   protected addMessage(message: IMessage) {
     this.messageService.addMessage(message);
@@ -332,11 +296,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * Behandelt eine Fehlermeldung
    *
-   * @protected
-   * @param {Error} error
-   * @param {string} [summary='Fehlermeldung']
-   *
-   * @memberOf BaseComponent
+   * @param error
+   * @param [summary='Fehlermeldung']
    */
   protected handleError(error: Error, summary?: string) {
     if (error instanceof Exception) {
@@ -360,10 +321,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * Die rxjs Subscription @param{subscription} für spätere Freigabe registrieren.
    *
-   * @protected
-   * @param {Subscription} subscription
-   *
-   * @memberOf CoreComponent
+   * @param subscription
    */
   protected registerSubscription(subscription: Subscription) {
     Assert.notNull(subscription);
@@ -439,15 +397,11 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * Erzeugt mit Hilfe eines @see{FormBuilder}s für die Modelklasse @param{clazz} über die Metadaten
    * und den Injector eine FormGroup @param{groupName} und liefert eine neu erzeugte Modelinstanz.
    *
-   * @protected
-   * @template T
-   * @param {FormBuilder} formBuilder
-   * @param {Funktion} model
-   * @param {MetadataService} metadataService
-   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
-   * @returns {T}
-   *
-   * @memberOf CoreComponent
+   * @param formBuilder
+   * @param model
+   * @param metadataService
+   * @param [groupName=FormGroupInfo.DEFAULT_NAME]
+   * @returns
    */
   protected buildFormFromModel<T>(formBuilder: FormBuilder, clazz: Funktion, metadataService: MetadataService,
     groupName: string = FormGroupInfo.DEFAULT_NAME, propertyNames?: string[]): T {
@@ -653,9 +607,9 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * Liefert true, falls das Control @param{controlName} der Gruppe
    * @param{groupName} den Status invalid hat.
    *
-   * @param {string} controlName
+   * @param controlName
    * @param groupName  der Name der FormGroup
-   * @returns {boolean}
+   * @returns
    */
   protected isFormControlInvalid(controlName: string, groupName: string = FormGroupInfo.DEFAULT_NAME): boolean {
     Assert.notNullOrEmpty(groupName);
@@ -670,11 +624,9 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * Fügt die @see{FormGroup} für den Namen @param{groupName} hinzu.
    *
    * @protected
-   * @param {FormGroup} formGroup neue FormGroup
-   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
-   * @returns {FormGroup}
-   *
-   * @memberOf CoreComponent
+   * @param formGroup neue FormGroup
+   * @param [groupName=FormGroupInfo.DEFAULT_NAME]
+   * @returns
    */
   protected addForm(formGroup: FormGroup, groupName: string = FormGroupInfo.DEFAULT_NAME) {
     Assert.notNull(formGroup);
@@ -702,10 +654,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * Liefert ein Observable<IUser> für die Überwachung der Änderungen des aktuellen Users
    *
-   * @protected
-   * @returns {Observable<IUser>}
-   *
-   * @memberof CoreComponent
+   * @returns
    */
   protected getCurrentUser(): Observable<IUser> {
     this.subscribeToStore(CurrentUserStore.ID);
@@ -716,13 +665,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * Registriert den Store @param{storeId} für Statusänderungen.
    *
-   * @protected
-   * @template T
-   * @template TId
-   * @param {string} storeId
-   * @returns {Subscription}
-   *
-   * @memberOf CoreComponent
+   * @param storeId
+   * @returns
    */
   protected subscribeToStore<T, TId>(storeId: string): Subscription {
     const subscription = this.getStoreSubject(storeId).subscribe((command) => {
@@ -742,11 +686,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * "virtuelle" Methode; muss in konkreten Klassen überschrieben werden, um die entsprechenden Statusupdates
    * mitzubekommen. Dieser Handler wird nur einmal pro CommandStore registriert!
    *
-   * @protected
-   * @template T
-   * @param {ServiceCommand<T>} command
-   *
-   * @memberof CoreComponent
+   * @param command
    */
   protected onStoreUpdatedGlobal<T>(command: ServiceCommand<T>): void {
     Assert.notNull(command);
@@ -782,12 +722,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    * "virtuelle" Methode; muss in konkreten Klassen überschrieben werden, um die entsprechenden Statusupdates
    * mitzubekommen. Dieser Handler wird für jede Componenten-Instanz registriert!
    *
-   * @protected
-   * @template T
-   * @template TId
-   * @param {ServiceCommand<T, TId>} value
-   *
-   * @memberOf CoreComponent
+   * @param value
    */
   protected onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T>): void {
     Assert.notNull(command);
@@ -797,13 +732,8 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * Liefert den Store-Status für die Id @param{storeId};
    *
-   * @protected
-   * @template T
-   * @template TId
-   * @param {string} storeId
-   * @returns {IServiceState}
-   *
-   * @memberOf CoreComponent
+   * @param storeId
+   * @returns
    */
   protected getStoreState<TState extends IServiceState>(storeId: string): TState {
     return this.store.getState(storeId) as TState;
@@ -822,10 +752,7 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   /**
    * Liefert den aktuell angemeldeten User über den @CurrentUserStore
    *
-   * @protected
-   * @returns {IUser}
-   *
-   * @memberOf CoreComponent
+   * @returns
    */
   protected get currentStoreUser(): IUser {
     const state = this.getStoreState<ICurrentItemServiceState<IUser>>(CurrentUserStore.ID);

@@ -8,9 +8,6 @@ import { InjectorBase } from '@fluxgate/core';
  *
  * Erst nach mindestens einem Aufruf von resolveAndCreate können Instanzen
  * dann über @see{getInstance} erhalten werden.
- *
- * @export
- * @class AppInjector
  */
 @Injectable()
 export class AppInjector extends InjectorBase<Injector, InjectionToken<any>> {

@@ -22,9 +22,6 @@ export class PipeTypes {
 
 /**
  * Service, der Standardpipes über ein Dictionary zur Verfügung stellt.
- *
- * @export
- * @class PipeService
  */
 // tslint:disable-next-line:max-classes-per-file
 @Injectable({
@@ -45,9 +42,8 @@ export class PipeService {
    * Liefert die Pipe für @param{pipe} und die Locale @param{locale}. Ist für das Tupel
    * noch keine Pipe registriert, wird dies dann durchgeführt.
    *
-   * @param {PipeType} pipe
-   * @param {string} [locale=this._locale]
-   * @returns {PipeTransform}
+   * @param pipe
+   * @param [locale=this._locale]
    *
    * @memberOf PipeService
    */
@@ -89,10 +85,8 @@ export class PipeService {
   /**
    * Liefert true, falls die Pipe @param{pipe} und dem Locale @param{locale} bereits registriert ist.
    *
-   * @private
-   * @param {PipeType} pipe
-   * @param {string} [locale=this._locale]
-   * @returns {boolean}
+   * @param pipe
+   * @param [locale=this._locale]
    *
    * @memberOf PipeService
    */

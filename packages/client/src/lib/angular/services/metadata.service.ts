@@ -14,10 +14,8 @@ export class MetadataService {
   /**
    * Liefert @see{TableMetadata} für die angegebene Modellklasse @param{model} (z.B. Artikel)
    *
-   * @param {Function} model
-   * @returns {TableMetadata}
-   *
-   * @memberOf MetadataService
+   * @param model
+   * @returns
    */
   public findTableMetadata(model: Funktion | string): TableMetadata {
     Assert.notNull(model);
@@ -32,8 +30,6 @@ export class MetadataService {
    * Liefert alle TableMetadatas
    *
    * @readonly
-   * @type {TableMetadata[]}
-   * @memberof MetadataStorage
    */
   public get tableMetadata(): TableMetadata[] {
     return MetadataStorage.instance.tableMetadata;
@@ -44,10 +40,8 @@ export class MetadataService {
    * Liefert @see{ClassSerializerMetadata} für die angegebene Modellklasse @param{model} (z.B. Artikel)
    * für Serialisierungssupport
    *
-   * @param {(Funktion | string)} model
-   * @returns {ClassSerializerMetadata}
-   *
-   * @memberof MetadataService
+   * @param model
+   * @returns
    */
   public findClassSerializerMetadata(model: Funktion | string): ClassSerializerMetadata {
     return SerializerMetadataStorage.instance.findClassMetadata(model);
@@ -56,13 +50,9 @@ export class MetadataService {
 
   /**
    * Liefert einen @see{IConverter} für den angegebenen Typ @param{type} oder undefined.
-   *
-   * @template T1
-   * @template T2
-   * @param {string | Funktion} type
-   * @returns {IConverter<T1, T2>}
-   *
-   * @memberof MetadataService
+
+   * @param  type
+   * @returns
    */
   public findConverter<T1, T2>(type: string | Funktion): IConverter<T1, T2> {
     return ConverterRegistry.get<T1, T2>(type);

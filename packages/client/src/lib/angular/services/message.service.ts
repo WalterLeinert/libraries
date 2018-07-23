@@ -14,10 +14,6 @@ import {
 /**
  * abstrakte Basisklasse für den MessageService
  * (der eigentliche Service @see{MessageService} muss wegen aot in fluxgate/components liegen)
- *
- * @export
- * @abstract
- * @class MessageServiceBase
  */
 @Injectable()
 export class MessageService {
@@ -67,10 +63,6 @@ export class MessageService {
 
   /**
    * Liefert die Message als shared @see{Observable}.
-   *
-   * @returns {Observable<IMessage>}
-   *
-   * @memberOf MessageService
    */
   public getMessage(): CustomSubject<IMessage> {
     return this.pubSub.subscribe<IMessage>(MessageService.TOPIC);

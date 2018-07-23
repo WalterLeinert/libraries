@@ -38,9 +38,6 @@ export interface IAutoformConfig {
    * Die Info zu dem column groups
    * Hinweis: auch wenn im Model keine column group konfiguriert ist, gibt es hier genau
    * eine column group mit der Property hidden == true
-   *
-   * @type {IColumnGroupInfo[]}
-   * @memberOf IColumnGroupInfo
    */
 
   groupInfos: IColumnGroupInfo[];

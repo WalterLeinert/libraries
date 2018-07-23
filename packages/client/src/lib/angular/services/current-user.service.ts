@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject ,  Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -49,9 +49,7 @@ export class CurrentUserService {
    * Liefert den aktuell angemeldeten User.
    *
    * @protected
-   * @returns {IUser}
-   *
-   * @memberOf CoreComponent
+   * @returns
    */
   public getCurrentUser(): IUser {
     const state = this.getStoreState<ICurrentItemServiceState<IUser>>(CurrentUserStore.ID);
@@ -63,11 +61,7 @@ export class CurrentUserService {
    * "virtuelle" Methode; muss in konkreten Klassen überschrieben werden, um die entsprechenden Statusupdates
    * mitzubekommen.
    *
-   * @template T
-   * @template TId
-   * @param {ServiceCommand<T, TId>} value
-   *
-   * @memberOf CoreComponent
+   * @param value
    */
   private onStoreUpdated<T extends IEntity<TId>, TId>(command: ServiceCommand<T>): void {
     Assert.notNull(command);
@@ -91,13 +85,8 @@ export class CurrentUserService {
   /**
    * Liefert den Store-Status für die Id @param{storeId};
    *
-   * @protected
-   * @template T
-   * @template TId
-   * @param {string} storeId
-   * @returns {IServiceState}
-   *
-   * @memberOf CoreComponent
+   * @param storeId
+   * @returns
    */
   private getStoreState<TState extends IServiceState>(storeId: string): TState {
     return this._store.getState(storeId) as TState;
@@ -106,10 +95,6 @@ export class CurrentUserService {
 
   /**
    * Benachrichtigt alle Listener, immer wenn sich der aktuelle/angemeldete User ändert.
-   *
-   * @private
-   *
-   * @memberOf CoreComponent
    */
   private updateUserState(command?: ServiceCommand<IUser>) {
     if (command instanceof SettingCurrentItemCommand) {

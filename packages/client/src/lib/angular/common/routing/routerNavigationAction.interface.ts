@@ -26,10 +26,6 @@ export type NavigationAction =
 
 /**
  * Interface für Routing-Parameter zur Durchführung von C(R)UD-Aktionen auf Model-Instanzen
- *
- * @export
- * @interface RouterNavigationAction
- * @template T
  */
 export class IRouterNavigationAction<T> {
 
