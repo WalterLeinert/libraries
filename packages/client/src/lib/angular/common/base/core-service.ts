@@ -20,11 +20,6 @@ import { ServiceBase } from './service-base';
 /**
  * Abstrakte Basisklasse für alle REST-Services, die noch nicht auf Entities arbeiten,
  * die einen Primary Key haben (kein Interface @see{IEntity})
- *
- * @export
- * @abstract
- * @class CoreService
- * @template T
  */
 export abstract class CoreService<T, TId extends IToString> extends ServiceBase<T, TId> {
   protected static logger = getLogger(CoreService);
@@ -41,10 +36,6 @@ export abstract class CoreService<T, TId extends IToString> extends ServiceBase<
 
   /**
    * Find all entities of type T.
-   *
-   * @returns {Observable<FindResult<T>>}
-   *
-   * @memberOf Service
    */
   public find(filter?: StatusFilter): Observable<FindResult<T>> {
     return using(new XLog(CoreService.logger, levels.INFO, 'find',
@@ -70,10 +61,8 @@ export abstract class CoreService<T, TId extends IToString> extends ServiceBase<
   /**
    * Finds all entities for the given query @param{query}
    *
-   * @param {IQuery} query
-   * @returns {Observable<QueryResult<T>>}
-   *
-   * @memberOf Service
+   * @param query
+   * @returns
    */
   public query(query: IStatusQuery): Observable<QueryResult<T>> {
     Assert.notNull(query, 'query');

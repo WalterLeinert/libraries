@@ -17,11 +17,6 @@ import {
 
 /**
  * Abstract base class for common rest-api service calls
- *
- * @export
- * @abstract
- * @class ServiceCore
- * @template T
  */
 export abstract class ServiceCore implements IServiceCore {
   protected static logger = getLogger(ServiceCore);
@@ -34,10 +29,8 @@ export abstract class ServiceCore implements IServiceCore {
   /**
    * Creates an instance of ServiceBase.
    *
-   * @param {Http} _http - Http client
-   * @param {string} baseUrl - base url of request
-   *
-   * @memberOf ServiceBase
+   * @param _http - Http client
+   * @param baseUrl - base url of request
    */
   protected constructor(private _http: HttpClient, baseUrl: string, private _topic: string) {
     Assert.notNull(_http);
@@ -57,8 +50,6 @@ export abstract class ServiceCore implements IServiceCore {
 
   /**
    * Liefert die Url inkl. Topic
-   *
-   * @type {string}
    */
   public getUrl(): string {
     return this._url;
@@ -66,8 +57,6 @@ export abstract class ServiceCore implements IServiceCore {
 
   /**
    * Liefert das Topic.
-   *
-   * @type {string}
    */
   public getTopic(): string {
     return this._topic;
@@ -76,8 +65,6 @@ export abstract class ServiceCore implements IServiceCore {
 
   /**
    * Liefert den Topicpfad (z.B. '/artikel' bei Topic 'artikel').
-   *
-   * @type {string}
    */
   public getTopicPath(): string {
     return Constants.PATH_SEPARATOR + this.getTopic();
@@ -87,8 +74,7 @@ export abstract class ServiceCore implements IServiceCore {
   /**
    * Handles server communication errors.
    *
-   * @private
-   * @param {Response} error
+   * @param error
    * @returns
    *
    * @memberOf ServiceBase
@@ -137,11 +123,6 @@ export abstract class ServiceCore implements IServiceCore {
 
   /**
    * Liefert den Http-Clientservice
-   *
-   * @readonly
-   * @protected
-   * @type {Http}
-   * @memberOf ServiceBase
    */
   protected get http(): HttpClient {
     return this._http;

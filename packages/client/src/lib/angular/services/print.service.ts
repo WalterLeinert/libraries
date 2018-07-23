@@ -35,8 +35,7 @@ export class PrintService extends ServiceCore {
   /**
    * Liefert die Liste der Drucker (inkl. Infos dazu)
    *
-   * @returns {Observable<IPrinter[]>}
-   * @memberof PrintService
+   * @returns
    */
   public getPrinters(): Observable<IPrinter[]> {
     return using(new XLog(PrintService.logger, levels.INFO, 'getPrinters'), (log) => {
@@ -53,10 +52,8 @@ export class PrintService extends ServiceCore {
   /**
    * Druckt die @param{printTask} mit den enthaltenen Optionen und Daten aus.
    *
-   * @param {IPrintTask} printTask
-   * @returns {Observable<any>}
-   *
-   * @memberof PrintService
+   * @param printTask
+   * @returns
    */
   public print(printTask: IPrintTask): Observable<any> {
     return using(new XLog(PrintService.logger, levels.INFO, 'print'), (log) => {
@@ -72,10 +69,8 @@ export class PrintService extends ServiceCore {
   /**
    * Erzeugt ein PDF-Dokument über die @param{printTask} mit den enthaltenen Optionen und Daten.
    *
-   * @param {IPrintTask} printTask
-   * @returns {Observable<any>}
-   *
-   * @memberof PrintService
+   * @param printTask
+   * @returns
    */
   public createPdf(printTask: IPrintTask): Observable<any> {
     return using(new XLog(PrintService.logger, levels.INFO, 'createPdf'), (log) => {
@@ -93,11 +88,9 @@ export class PrintService extends ServiceCore {
   /**
    * Transferiert den @param{report} zum Druckservice.
    *
-   * @param {string} reportName Name des Reports
-   * @param {base64} report Reportdaten, base64-kodiert
-   * @returns {Observable<any>}
-   *
-   * @memberof PrintService
+   * @param reportName Name des Reports
+   * @param report Reportdaten, base64-kodiert
+   * @returns
    */
   public transferReport(reportName: string, report: base64): Observable<any> {
     return using(new XLog(PrintService.logger, levels.INFO, 'transferReport'), (log) => {

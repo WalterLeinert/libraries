@@ -16,11 +16,6 @@ import { ServiceCore } from './service-core';
 
 /**
  * Abstract base class for common rest-api service calls
- *
- * @export
- * @abstract
- * @class Service
- * @template T
  */
 export abstract class ServiceBase<T, TId> extends ServiceCore implements IServiceBase<T, TId> {
   protected static logger = getLogger(ServiceBase);
@@ -30,10 +25,8 @@ export abstract class ServiceBase<T, TId> extends ServiceCore implements IServic
   /**
    * Creates an instance of ServiceBase.
    *
-   * @param {Http} _http - Http client
-   * @param {string} baseUrl - base url of request
-   *
-   * @memberOf ServiceBase
+   * @param _http - Http client
+   * @param baseUrl - base url of request
    */
   protected constructor(model: Funktion, private metadataService: MetadataService, http: HttpClient,
     configService: AppConfigService, topic: string) {
@@ -51,8 +44,6 @@ export abstract class ServiceBase<T, TId> extends ServiceCore implements IServic
 
   /**
    * Liefert den Klassennamen der zugehörigen Modellklasse (Entity).
-   *
-   * @type {string}
    */
   public getModelClassName(): string {
     return this._tableMetadata.className;
@@ -65,11 +56,6 @@ export abstract class ServiceBase<T, TId> extends ServiceCore implements IServic
 
   /**
    * Liefert die zugehörige @see{TableMetadata}
-   *
-   * @readonly
-   * @protected
-   * @type {TableMetadata}
-   * @memberOf Service
    */
   public get tableMetadata(): TableMetadata {
     return this._tableMetadata;
@@ -80,9 +66,6 @@ export abstract class ServiceBase<T, TId> extends ServiceCore implements IServic
   /**
    * Liefert die Id der Entity @param{item} über die Metainformation, falls vorhanden.
    * Sonst wird ein Error geworfen.
-   *
-   * @type {any}
-   * @memberOf Service
    */
   public getEntityId(item: T): TId {
     if (!this.tableMetadata.primaryKeyColumn) {
@@ -95,9 +78,6 @@ export abstract class ServiceBase<T, TId> extends ServiceCore implements IServic
   /**
    * Setzt die Id der Entity @param{item} über die Metainformation, falls vorhanden.
    * Sonst wird ein Error geworfen.
-   *
-   * @type {any}
-   * @memberOf Service
    */
   public setEntityId(item: T, id: TId) {
     if (!this.tableMetadata.primaryKeyColumn) {
