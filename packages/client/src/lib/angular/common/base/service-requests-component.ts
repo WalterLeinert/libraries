@@ -23,11 +23,6 @@ import { ExtendedCoreComponent } from './extended-core.component';
 /**
  * Basisklasse (Komponente) für alle GUI-Komponenten mit @see{Router}, @see{ActivatedRoute},
  * @see{MessageService} und einer @see{ServiceRequests}-Instanz.
- *
- * @export
- * @class ServiceRequestComponent
- * @implements {OnInit}
- * @template TService - der konkrete Service
  */
 export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServiceRequests>
   extends ExtendedCoreComponent {
@@ -37,11 +32,9 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
   /**
    * Creates an instance of ServiceRequestComponent.
    *
-   * @param {Router} _router - der zugehörige Router
-   * @param {ActivatedRoute} _route - die aktivierte Route
-   * @param {*} _service - der zugehörige Service
-   *
-   * @memberOf ServiceRequestComponent
+   * @param _router - der zugehörige Router
+   * @param _route - die aktivierte Route
+   * @param _service - der zugehörige Service
    */
   protected constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
     private _serviceRequests: TServiceRequests) {
@@ -60,9 +53,7 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
    * Liefert true, falls keine Änderungen an den Daten vorliegen oder diese invalid sind.
    * Zur Verwendung der disabled-Steuerung eines Save-Buttons.
    *
-   * @returns {boolean}
-   *
-   * @memberof ServiceRequestsComponent
+   * @returns
    */
   public isSaveDisabled(): boolean {
     return !(this.hasChanges() && this.isValid());
@@ -71,9 +62,7 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
   /**
    * Liefert true, falls im GUI ein Delete-Button disabled werden soll.
    *
-   * @returns {boolean}
-   *
-   * @memberof ServiceRequestsComponent
+   * @returns
    */
   public isDeleteDisabled(): boolean {
     return false;
@@ -88,11 +77,8 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
    * Ist _serviceRequests eine Instanz von @see{StatusServiceRequests}, wird nur das deleted-Flag
    * im Entity-Status gesetzt; ansonsten wird das Item komplett gelöscht.
    *
-   * @protected
-   * @param {T} item
-   * @param {boolean} setDeleted
-   *
-   * @memberof ServiceRequestsComponent
+   * @param item
+   * @param setDeleted
    */
   protected deleteItem(item: T, action?: () => void) {
     if (!(this._serviceRequests instanceof CrudServiceRequests)) {
@@ -113,11 +99,8 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
    * Liefert @param{item} als zu selektierendes Item oder (falls item undefined) das erste Item
    * aus der Liste @param{items}.
    *
-   * @protected
-   * @param {T[]} items - Itemliste
-   * @param {T} item - zu selektierendes Item oder undefined
-   *
-   * @memberof ServiceRequestsComponent
+   * @param items - Itemliste
+   * @param item - zu selektierendes Item oder undefined
    */
   protected selectItem(items: T[], item?: T): T {
     Assert.notNull(items);
@@ -174,11 +157,6 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
 
   /**
    * Liefert die storeId der zugehörigen ServiceRequests.
-   *
-   * @readonly
-   * @protected
-   * @type {string}
-   * @memberOf ServiceRequestsComponent
    */
   protected get storeId(): string {
     return this._serviceRequests.storeId;
@@ -187,11 +165,6 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
 
   /**
    * Liefert die zugehörigen ServiceRequests
-   *
-   * @readonly
-   * @protected
-   * @type {TService}
-   * @memberOf ServiceRequestsComponent
    */
   protected get serviceRequests(): TServiceRequests {
     return this._serviceRequests;
@@ -201,10 +174,7 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
   /**
    * setzt die ServiceRequests-Instanz
    *
-   * @protected
-   * @param {TServiceRequests} serviceRequests
-   *
-   * @memberof ServiceRequestsComponent
+   * @param serviceRequests
    */
   protected setServiceRequests(serviceRequests: TServiceRequests) {
     Assert.notNull(serviceRequests);
@@ -224,10 +194,7 @@ export abstract class ServiceRequestsComponent<T, TServiceRequests extends IServ
   /**
    * registriert die ServiceRequests-Instanz für Store-Updates
    *
-   * @protected
-   * @param {TServiceRequests} serviceRequests
-   *
-   * @memberof ServiceRequestsComponent
+   * @param serviceRequests
    */
   private setupServiceRequests() {
     Assert.notNull(this._serviceRequests);

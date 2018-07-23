@@ -17,14 +17,6 @@ import { Assert, Core, Query, SelectorTerm } from '@fluxgate/core';
  * abstrakte Basisklasse für alle Resolver, die mit ServiceRequests über eine Query ein Item auflösen.
  * Die Queryparameter (attribute, operator, value) müssen als Route Parameter angegeben sein.
  * Der Route-Parameter operator kann fehlen und hat den Defaultwert '='.
- *
- * @export
- * @abstract
- * @class QueryResolver
- * @implements {Resolve<T>}
- * @template T
- * @template TId
- *
  */
 export abstract class QueryResolver<T> implements Resolve<T> {
   protected static readonly logger = getLogger(QueryResolver);

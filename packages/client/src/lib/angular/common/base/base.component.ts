@@ -31,11 +31,6 @@ import { FormGroupInfo } from './formGroupInfo';
 
 /**
  * Basisklasse (Komponente) für alle GUI-Komponenten mit Router und einem Service
- *
- * @export
- * @class BaseComponent
- * @implements {OnInit}
- * @template TService - der konkrete Service
  */
 
 /*@Component({
@@ -51,11 +46,9 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
   /**
    * Creates an instance of BaseComponent.
    *
-   * @param {Router} _router - der zugehörige Router
-   * @param {ActivatedRoute} _route - die aktivierte Route
-   * @param {*} _service - der zugehörige Service
-   *
-   * @memberOf BaseComponent
+   * @param _router - der zugehörige Router
+   * @param _route - die aktivierte Route
+   * @param _service - der zugehörige Service
    */
   protected constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
     private _service: TService) {
@@ -85,15 +78,10 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
    * Führt die CRUD-Aktion in @param{routeParam} mit Hilfe des Services @param{service} durch (default:
    * aktueller Service), aktualisiert die an die Komponente angebundene Liste von Items mit Hilfe von @param{refresher}
    *
-   * @protected
-   * @template T - Typ der Model-Instanz
-   * @template TId - Typ der Id-Spalte der Model-Instanz
-   * @param {T[]} items - die aktuell angebundene Liste von Items
-   * @param {IRouterNavigationAction<T>} routeParams - Info mit action und subject
-   * @param {IService<T>} service - (optional) zu verwendender Service
-   * @returns Observable<TId> - die Id der Model-Instanz, die nach der Aktionen zu selektieren ist.
-   *
-   * @memberOf BaseComponent
+   * @param items - die aktuell angebundene Liste von Items
+   * @param routeParams - Info mit action und subject
+   * @param service - (optional) zu verwendender Service
+   * @returns - die Id der Model-Instanz, die nach der Aktionen zu selektieren ist.
    */
   protected performAction<T extends IEntity<TId>, TId>(items: T[], routeParams: IRouterNavigationAction<T>,
     service?: IService<T, TId>): Observable<TId> {
@@ -162,15 +150,10 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
    * und liefert einen IRefreshHelper als Observable
    * mit den Items und einem selectedItem, welches anhand von @param{id} ermittelt wird.
    *
-   * @protected
-   * @template T
-   * @template TId
-   * @param {TId} idToSelect - Id des zu selektierenden Items
-   * @param {InstanceAccessor<T, TId>} idAccessor - (optional) liefert die zu verwendende Id des items
-   * @param {IService<T>} service - (optional) zu verwendender Service
-   * @returns {Observable<IRefreshHelper<T>>}
-   *
-   * @memberOf BaseComponent
+   * @param idToSelect - Id des zu selektierenden Items
+   * @param idAccessor - (optional) liefert die zu verwendende Id des items
+   * @param service - (optional) zu verwendender Service
+   * @returns
    */
   protected refreshItems<T extends IEntity<TId>, TId>(idToSelect: TId, idAccessor?: InstanceAccessor<T, TId>,
     service?: IService<T, TId>): Observable<IRefreshHelper<T>> {
@@ -290,11 +273,6 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
 
   /**
    * Liefert den zugehörigen Service
-   *
-   * @readonly
-   * @protected
-   * @type {TService}
-   * @memberOf BaseComponent
    */
 
   protected get service(): TService {
@@ -305,11 +283,8 @@ export abstract class BaseComponent<TService extends IServiceBase<any, any>> ext
   /**
    * Setzt den Service (wird aktuell nur für AutoformComponent benötigt)
    *
-   * @protected
-   * @param {TService} service
+   * @param service
    * @returns
-   *
-   * @memberof BaseComponent
    */
   protected setService(service: TService) {
     return this._service = service;

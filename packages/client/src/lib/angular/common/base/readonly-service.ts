@@ -19,11 +19,6 @@ import { CoreService } from './core-service';
 /**
  * Abstrakte Basisklasse für alle REST-Services, die noch auf Entities arbeiten,
  * die einen Primary Key haben (Interface @see{IEntity})
- *
- * @export
- * @abstract
- * @class ReadonlyService
- * @template T
  */
 export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToString> extends CoreService<T, TId> {
   protected static logger = getLogger(ReadonlyService);
@@ -38,8 +33,8 @@ export abstract class ReadonlyService<T extends IEntity<TId>, TId extends IToStr
   /**
    * Find the entity with the given id.
    *
-   * @param {TId} id -- entity id.
-   * @returns {Observable<FindByIdResult<T, TId>>}
+   * @param id -- entity id.
+   * @returns
    *
    * @memberOf Service
    */

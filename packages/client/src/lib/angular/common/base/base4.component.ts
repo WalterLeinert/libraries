@@ -9,11 +9,6 @@ import { Base3Component } from './base3.component';
 
 /**
  * Basisklasse (Komponente) für alle GUI-Komponenten mit 3 Services.
- *
- * @export
- * @class Base3Component
- * @implements {OnInit}
- * @template TService - der konkrete Service
  */
 export abstract class Base4Component<
   TService1 extends IServiceBase<any, any>,
@@ -24,11 +19,9 @@ export abstract class Base4Component<
   /**
    * Creates an instance of BaseComponent.
    *
-   * @param {Router} _router - der zugehörige Router
-   * @param {ActivatedRoute} _route - die aktivierte Route
-   * @param {*} _service4 - der zugehörige Service
-   *
-   * @memberOf BaseComponent
+   * @param _router - der zugehörige Router
+   * @param _route - die aktivierte Route
+   * @param _service4 - der zugehörige Service
    */
   protected constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
     service: TService1, service2: TService2, service3: TService3,
@@ -38,11 +31,6 @@ export abstract class Base4Component<
 
   /**
    * Liefert den zugehörigen Service4
-   *
-   * @readonly
-   * @protected
-   * @type {TService4}
-   * @memberOf BaseComponent
    */
   public get service4(): TService4 {
     return this._service4;

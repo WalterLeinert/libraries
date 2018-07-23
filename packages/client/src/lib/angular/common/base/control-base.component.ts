@@ -14,13 +14,6 @@ import { CoreComponent } from './core.component';
 /**
  * Basisklasse für eigene Controls, die Databinding auf Forms über ngModel und Validierung
  * unterstützen
- *
- * @export
- * @class ControlBaseComponent
- * @extends {CoreComponent}
- * @implements {ControlValueAccessor}
- * @implements {Validator}
- * @template T
  */
 export abstract class ControlBaseComponent<T> extends CoreComponent implements ControlValueAccessor, Validator {
   protected static readonly logger = getLogger(ControlBaseComponent);
@@ -42,8 +35,8 @@ export abstract class ControlBaseComponent<T> extends CoreComponent implements C
    * Muss in konkreten Klassen überschrieben werden!
    *
    * @abstract
-   * @param {FormControl} control
-   * @returns {*} null (falls ok), sonst ein Validation Object (dictionary)
+   * @param control
+   * @returns null (falls ok), sonst ein Validation Object (dictionary)
    *
    * @memberOf SelectorBaseComponent
    */
@@ -137,9 +130,7 @@ export abstract class ControlBaseComponent<T> extends CoreComponent implements C
    * ValueChange-Handler: in konrekten Klassen überschreiben
    *
    * @protected
-   * @param {T} value
-   *
-   * @memberOf ControlBaseComponent
+   * @param value
    */
   protected onValueChange(value: T) {
     using(new XLog(ControlBaseComponent.logger, levels.DEBUG, 'onValueChange'), (log) => {

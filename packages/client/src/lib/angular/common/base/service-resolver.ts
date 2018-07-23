@@ -14,14 +14,6 @@ import { Assert, ConverterRegistry, Core, Funktion, IToString } from '@fluxgate/
 
 /**
  * abstrakte Basisklasse für alle Resolver, die mit Services arbeiten
- *
- * @export
- * @abstract
- * @class ServiceResolver
- * @implements {Resolve<T>}
- * @template T
- * @template TId
- *
  */
 export abstract class ServiceResolver<T extends IEntity<TId>, TId extends IToString> implements Resolve<T> {
   protected static readonly logger = getLogger(ServiceResolver);

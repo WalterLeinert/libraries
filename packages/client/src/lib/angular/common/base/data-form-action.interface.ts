@@ -5,9 +5,6 @@ import { FormAction } from './form-action';
 
 /**
  * Routing-Parameter (data), z.B. für die Aktivierung von AutoformComponent
- *
- * @export
- * @interface IDataFormAction
  */
 export interface IDataFormAction {
   /**
@@ -23,17 +20,11 @@ export interface IDataFormAction {
 
   /**
    * falls true, wird z.B. auf AutoformComponent eine Buttonleiste angezeigt
-   *
-   * @type {boolean}
-   * @memberof IDataFormAction
    */
   showButtons?: boolean;
 
   /**
    * falls true, wird z.B. auf AutoformComponent eine New-Button angezeigt
-   *
-   * @type {boolean}
-   * @memberof IDataFormAction
    */
   showNewButton?: boolean;
 }
