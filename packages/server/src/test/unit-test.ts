@@ -110,7 +110,7 @@ export abstract class ServerUnitTest {
         if (!Types.isPresent(configurationOptions)) {
           configurationOptions = {
             systemMode: fromEnvironment('NODE_ENV', 'development'),
-            relativePath: 'test/config'
+            relativePath: 'src/test/config'
           };
         }
 
