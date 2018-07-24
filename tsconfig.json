@@ -41,6 +41,12 @@
       "@fluxgate/common/*": [
         "dist/common/*"
       ],
+      "@fluxgate/components": [
+        "dist/components"
+      ],
+      "@fluxgate/components/*": [
+        "dist/components/*"
+      ],
       "@fluxgate/core": [
         "dist/core"
       ],
