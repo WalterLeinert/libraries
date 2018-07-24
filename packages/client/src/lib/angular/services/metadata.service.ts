@@ -50,7 +50,7 @@ export class MetadataService {
 
   /**
    * Liefert einen @see{IConverter} für den angegebenen Typ @param{type} oder undefined.
-
+   *
    * @param  type
    * @returns
    */
