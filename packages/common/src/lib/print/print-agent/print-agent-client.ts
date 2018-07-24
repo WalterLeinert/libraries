@@ -1,5 +1,3 @@
-import 'fs';
-import * as path from 'path';
 import * as httpRequest from 'request';
 
 // -------------------------- logging -------------------------------
@@ -7,8 +5,8 @@ import * as httpRequest from 'request';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------- logging -------------------------------
 
-import { Assert, Core, Funktion, StringBuilder, Types } from '@fluxgate/core';
-import { FileSystem } from '@fluxgate/platform';
+import { Core, NotSupportedException, StringBuilder, Types } from '@fluxgate/core';
+// import { FileSystem } from '@fluxgate/platform';
 
 import { IPrinter } from '../model/printer.interface';
 import { IPrintTask } from '../model/printTask.interface';
@@ -166,24 +164,26 @@ export class PrintAgentClient {
       log.error(message);
     };
 
-    const cert = FileSystem.readTextFile(errorLogger, printConfiguration.agentOptions.certPath, 'Zertifikat');
-    const key = FileSystem.readTextFile(errorLogger, printConfiguration.agentOptions.keyPath, 'Private Key');
-    const ca = FileSystem.readTextFile(errorLogger, printConfiguration.agentOptions.caPath, 'ca');
+    throw new NotSupportedException(`import FileSystem not usable here. It's only available on nodejs platorm.`);
+
+    // const cert = FileSystem.readTextFile(errorLogger, printConfiguration.agentOptions.certPath, 'Zertifikat');
+    // const key = FileSystem.readTextFile(errorLogger, printConfiguration.agentOptions.keyPath, 'Private Key');
+    // const ca = FileSystem.readTextFile(errorLogger, printConfiguration.agentOptions.caPath, 'ca');
 
 
-    const options = {
-      url: this.createUrl(printConfiguration, type, arg),
-      method: RestMethods.POST,
-      json: json,
-      agentOptions: {
-        cert: cert,
-        key: key,
-        ca: ca,
-        rejectUnauthorized: printConfiguration.agentOptions.rejectUnauthorized
-      },
-      headers: {}
-    };
+    // const options = {
+    // url: this.createUrl(printConfiguration, type, arg),
+    // method: RestMethods.POST,
+    // json: json,
+    // agentOptions: {
+    //   cert: cert,
+    //   key: key,
+    //   ca: ca,
+    //   rejectUnauthorized: printConfiguration.agentOptions.rejectUnauthorized
+    // },
+    // headers: {}
+    // };
 
-    return options;
+    // return options;
   }
 }
