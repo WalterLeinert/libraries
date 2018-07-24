@@ -1,37 +1,8 @@
 {
   "name": "@fluxgate/client",
-  "version": "2.6.0-beta.7",
-  "description": "Fluxgate Client-Library ",
-  "main": "src/index.js",
-  "typings": "dts/index.d.ts",
-  "scripts": {
-    "build": "gulp",
-    "test": "gulp test",
-    "tslint": "tslint ./src/**/*.ts"
-  },
-  "repository": {
-    "type": "git",
-    "url": "http://server.fluxgate.de:89/fluxgate/libraries.git"
-  },
-  "author": "Walter Leinert <walter.leinert@outlook.com>",
-  "license": "ISC",
-  "dependencies": {
-    "@angular/animations": "^6.0.9",
-    "@angular/common": "^6.0.9",
-    "@angular/compiler": "^6.0.9",
-    "@angular/core": "^6.0.9",
-    "@angular/forms": "^6.0.9",
-    "@angular/http": "^6.0.9",
-    "@angular/platform-browser": "^6.0.9",
-    "@angular/platform-browser-dynamic": "^6.0.9",
-    "@angular/router": "^6.0.9",
-    "@fluxgate/common": "2.6.0-beta.0",
-    "@fluxgate/core": "2.6.0-beta.0",
-    "@fluxgate/platform": "2.6.0-beta.0",
-    "bootstrap": "^3.3.7",
-    "font-awesome": "^4.7.0",
-    "http-status-codes": "^1.1.6",
-    "ngx-toastr": "^8.8.0",
-    "primeng": "^6.0.1"
+  "version": "2.6.0-beta.8",
+  "peerDependencies": {
+    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
   }
 }
