@@ -34,7 +34,7 @@
           "options": {
             "tsConfig": [
               "packages/client/tsconfig.lib.json",
-              "packages/client/tsconfig.spec.json"
+              "packages/client/tsconfig.lib.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
