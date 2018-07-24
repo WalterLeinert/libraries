@@ -115,6 +115,22 @@
       "env": {
         "NODE_ENV": "debug"
       }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "client: ng build",
+      "program": "${workspaceRoot}/node_modules/@angular/cli/bin/ng",
+      "args": [
+        "build",
+        "client"
+      ],
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": null,
+      "outFiles": [
+      ],
+      "sourceMaps": true,
+      "stopOnEntry": false
     }
   ]
 }
