@@ -20,10 +20,6 @@ import { ServiceRequestsSelectorComponent } from '../common/service-requests-sel
  *
  * Standarmäßig ist die Property @see{User.fullName} an das "textField" angebunden und
  * die Userinstanz selbst ('.') an das "valueField".
- *
- * @export
- * @class UserSelectorComponent
- * @extends {ServiceRequestsSelectorComponent}
  */
 @Component({
   selector: 'flx-user-selector',
