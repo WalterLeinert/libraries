@@ -3,7 +3,6 @@
   "dest": "../../dist/client",
   "deleteDestPath": false,
   "lib": {
-    "entryFile": "src/public_api.ts",
-    "flatModuleFile": "ngxs-client"
+    "entryFile": "src/public_api.ts"
   }
 }
