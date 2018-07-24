@@ -3,5 +3,8 @@
 // })();
 
 export * from './angular/modules/common';
+export * from './angular/modules/directives';
+export * from './angular/modules/dropdown-selector';
+
 export * from './angular/redux';
 export * from './angular/services';

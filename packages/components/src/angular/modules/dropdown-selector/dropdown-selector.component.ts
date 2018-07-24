@@ -27,10 +27,6 @@ import { IDropdownSelectorConfig } from './dropdown-selectorConfig.interface';
  * Fluxgate Dropdown-Komponente
  *
  * Kapselt die Dropdown-Konmponente von PrimeNG.
- *
- * @export
- * @class DropdownSelectorComponent
- * @implements {OnInit}
  */
 @Component({
   selector: 'flx-dropdown-selector',
@@ -85,9 +81,6 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
 
   /**
    * Die Dropdownkonfiguration.
-   *
-   * @type {IDropdownAdapterOptions}
-   * @memberOf DropdownSelectorComponent
    */
   private _config: IDropdownSelectorConfig;
 
@@ -97,51 +90,33 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
   /**
    * falls true, wird ein künstlicher erster Eintrag mit dem Text des Members
    * allowNoSelectionText erzeugt
-   *
-   * @type {boolean}
-   * @memberOf DropdownSelectorComponent
    */
   @Input() public allowNoSelection: boolean = false;
 
   /**
    * falls true, wird dieser Text als ein künstlicher erster Eintrag verwendet
-   *
-   * @type {string}
-   * @memberOf DropdownSelectorComponent
    */
   @Input() public allowNoSelectionText: string = DropdownSelectorComponent.ALLOW_NO_SELECTION_TEXT;
 
   /**
    * setzt das autoWidth-Attribut von p-dropdown
-   *
-   * @type {boolean}
-   * @memberOf DropdownSelectorComponent
    */
   @Input() public autoWidth: boolean;
 
 
   /**
    * Die Property in der angebundenen Werteliste, welche in der Dropbox angezeigt werden soll
-   *
-   * @type {string}
-   * @memberOf DropdownSelectorComponent
    */
   private _textField: string;
 
   /**
    * Die Property in der angebundenen Werteliste, welche nach Auswahl
    * als 'value' übernommen werden soll.
-   *
-   * @type {string}
-   * @memberOf DropdownSelectorComponent
    */
   private _valueField: string;
 
   /**
    * Die an die PrimtNG angebundenen Werte
-   *
-   * @type {any[]}
-   * @memberOf DropdownSelectorComponent
    */
   public options: SelectItem[];
 
@@ -390,9 +365,8 @@ export class DropdownSelectorComponent extends ListSelectorComponent<any> {
   /**
    * Liefert den Index des Werts (value) in der Optionsliste
    *
-   * @protected
-   * @param {*} value
-   * @returns {number}
+   * @param value
+   * @returns
    *
    * @memberOf DropdownSelectorComponent
    */

@@ -8,9 +8,6 @@ export interface IDropdownSelectorConfig {
 
   /**
    * Anzeige der Optionen
-   *
-   * @type {IDisplayInfo}
-   * @memberOf IDropdownSelectorConfig
    */
   displayInfo?: IDisplayInfo;
 

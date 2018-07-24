@@ -6,9 +6,6 @@ import { CommonModule } from '@angular/common';
 
 /**
  * Directive für Tests
- *
- * @export
- * @class HighlightDirective
  */
 @Directive({
   selector: '[flxHighlight]'

@@ -36,9 +36,6 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
  *   }
  * }
  *
- *
- * @export
- * @class AutofocusDirective
  */
 @Directive({
   selector: '[flxAutofocus]'
@@ -77,7 +74,7 @@ export class AutofocusDirective implements AfterViewInit {
   /**
    *
    *
-   * @param {string} nameAttribute
+   * @param nameAttribute
    * @returns
    *
    * @memberOf AutofocusDirective
