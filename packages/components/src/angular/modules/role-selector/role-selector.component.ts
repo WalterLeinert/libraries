@@ -20,10 +20,6 @@ import { ServiceRequestsSelectorComponent } from '../common/service-requests-sel
  *
  * Standarmäßig ist die Property @see{Role.description} an das "textField" angebunden und
  * die Rolleninstanz selbst ('.') an das "valueField".
- *
- * @export
- * @class RoleSelectorComponent
- * @extends {ServiceRequestsSelectorComponent}
  */
 @Component({
   selector: 'flx-role-selector',

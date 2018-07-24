@@ -64,18 +64,12 @@ export class MonthSelectorComponent extends SelectorBaseComponent<number> {
 
   /**
    * Die textField-Property: steuert, welche Property in @see{IMonth} angezeigt wird.
-   *
-   * @type {string}
-   * @memberOf MonthSelectorComponent
    */
   @Input() public textField: string = 'name';
 
   /**
    * Die Property in der angebundenen Werteliste, welche nach Auswahl
    * als 'value' übernommen werden soll.
-   *
-   * @type {string}
-   * @memberOf MonthSelectorComponent
    */
   @Input() public valueField: string = DisplayInfo.CURRENT_ITEM;
 

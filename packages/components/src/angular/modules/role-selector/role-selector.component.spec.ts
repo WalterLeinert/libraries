@@ -6,8 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ConfirmationService } from 'primeng/components/common/api';
 
-import { APP_STORE_PROVIDER, AppInjector, ClientModule, CurrentUserService } from '@fluxgate/client';
-import { ModuleMetadataStorage } from '@fluxgate/core';
+import { APP_STORE_PROVIDER, AppInjector, CurrentUserService } from '@fluxgate/client';
 
 import {
   ENTITY_VERSION_SERVICE_FAKE_PROVIDER, EntityVersionServiceFakeService
