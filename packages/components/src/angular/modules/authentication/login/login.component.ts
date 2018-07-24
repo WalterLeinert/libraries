@@ -86,11 +86,9 @@ export class LoginComponent extends ExtendedCoreComponent {
    * @see{RegisterGuardService} werden hier injiziert, damit diese dann korrekt
    * über Änderungen des aktuellen Benutzers informiert werden.
    *
-   * @param {Router} router
-   * @param {NavigationService} navigationService
-   * @param {PassportService} service
-   *
-   * @memberOf LoginComponent
+   * @param router
+   * @param navigationService
+   * @param service
    */
   constructor(private serviceRequests: CurrentUserServiceRequests,
     private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService,
@@ -123,9 +121,9 @@ export class LoginComponent extends ExtendedCoreComponent {
           });
 
         },
-        (error: Error) => {
-          this.handleError(error);
-        }));
+          (error: Error) => {
+            this.handleError(error);
+          }));
     });
   }
 }

@@ -9,9 +9,6 @@ export const AuthenticationNavigationToken = new InjectionToken<AuthenticationNa
 
 /**
  * Klasse für Redirect-Urls nach Authentifizierungsaktionen
- *
- * @export
- * @interface AuthenticationNavigation
  */
 export class AuthenticationNavigation {
   public loginRedirectUrl: string;

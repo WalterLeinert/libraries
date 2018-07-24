@@ -10,17 +10,17 @@ export interface IAutoform {
   /**
    * Liefert true, falls Feld zu @param{info} mit dem Wert @param{value} nicht anzuzeigen ist
    *
-   * @param {IControlDisplayInfo} info
+   * @param info
    * @param value
-   * @returns {boolean}
+   * @returns
    */
   isHidden(info: IControlDisplayInfo, value: any): boolean;
 
   /**
    * Liefert true, falls die Daten zu @param{info} nicht änderbar sind
    *
-   * @param {IControlDisplayInfo} info
-   * @returns {boolean}
+   * @param info
+   * @returns
    */
   isReadonly(info: IControlDisplayInfo): boolean;
 
@@ -32,8 +32,8 @@ export interface IAutoform {
   /**
    * Liefert den Typ eines html-input Fields für die angegebene Info @see{info}
    *
-   * @param {IControlDisplayInfo} info
-   * @returns {string}
+   * @param info
+   * @returns
    */
   getInputType(info: IControlDisplayInfo): string;
 
@@ -42,11 +42,9 @@ export interface IAutoform {
    * FormGroup @param{groupName}
    *
    * @protected
-   * @param {string} controlName
-   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
-   * @returns {string}
-   *
-   * @memberOf CoreComponent
+   * @param controlName
+   * @param [groupName=FormGroupInfo.DEFAULT_NAME]
+   * @returns
    */
   getFormErrors(controlName: string, groupName?: string): string;
 }

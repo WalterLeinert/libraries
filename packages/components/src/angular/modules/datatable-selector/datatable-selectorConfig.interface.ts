@@ -8,17 +8,11 @@ export interface IDataTableSelectorConfig {
 
   /**
    * die Zeilenkonfiguration für Anzeige/Editierbarkeit
-   *
-   * @type {IRowDisplayInfo}
-   * @memberOf IDataTableSelectorConfig
    */
   rowInfo?: IRowDisplayInfo;
 
-    /**
-     * Die Spaltenkonfiguration für Anzeige/Wertebinding
-     *
-     * @type {IControlDisplayInfo[]}
-     * @memberOf IDataTableSelectorConfig
-     */
-    columnInfos: IControlDisplayInfo[];
+  /**
+   * Die Spaltenkonfiguration für Anzeige/Wertebinding
+   */
+  columnInfos: IControlDisplayInfo[];
 }

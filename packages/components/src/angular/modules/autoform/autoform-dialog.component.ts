@@ -58,8 +58,6 @@ export class AutoformDialogComponent extends ServiceRequestsComponent<any, ICrud
   // >> Value Property
   /**
    * (von aussen) angebundenes Objekt.
-   *
-   * @type {*}
    */
   @Input() public value: any;
   // << Value Property
@@ -67,23 +65,11 @@ export class AutoformDialogComponent extends ServiceRequestsComponent<any, ICrud
 
   /**
    * Die durchzuführende Aktion (creae, edit, etc.)
-   *
-   * @private
-   * @type {FormAction}
-   * @memberOf AutoformComponent
    */
   @Input() public action: FormAction;
 
 
   // >> Konfiguration
-
-  /**
-   *
-   *
-   * @private
-   * @type {IAutoformConfig}
-   * @memberOf AutoformDialogComponent
-   */
   @Input() public config: IAutoformConfig;
 
   public configInternal: IAutoformConfig;
@@ -160,10 +146,6 @@ export class AutoformDialogComponent extends ServiceRequestsComponent<any, ICrud
 
   /**
    * Schliesst Autoform, falls keine ungespeicherten Änderungen vorliegen bzw. das Schliessen bestätigt wurde.
-   *
-   * @private
-   *
-   * @memberof AutoformDialogComponent
    */
   private closePopup() {
     if (this.hasChanges()) {
@@ -187,11 +169,8 @@ export class AutoformDialogComponent extends ServiceRequestsComponent<any, ICrud
   /**
    * Schliesst Autoform, indem auf die vorherige Seite navigiert wird.
    *
-   * @private
-   * @param {boolean} formResetRequired - falls true, wird ein resetFormGroup durchgeführt,
+   * @param formResetRequired - falls true, wird ein resetFormGroup durchgeführt,
    * damit nicht ein GuardService die Navigation verhindert.
-   *
-   * @memberof AutoformDialogComponent
    */
   private doClose(formResetRequired: boolean) {
     using(new XLog(AutoformDialogComponent.logger, levels.INFO, 'doClose', `formResetRequired = ${formResetRequired}, action = ${this.action}`), (log) => {

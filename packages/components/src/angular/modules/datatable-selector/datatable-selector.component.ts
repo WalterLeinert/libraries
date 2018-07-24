@@ -30,10 +30,6 @@ export type selectionMode = 'single' | 'multiple' | '';
 
 /**
  * Komponente DataTableSelector (Selektion eines Objekts aus einer Objektliste über eine PrimeNG-DataTable)
- *
- * @export
- * @class DataTableSelectorComponent
- * @implements {OnInit}
  */
 @Component({
   selector: 'flx-datatable-selector',
@@ -223,9 +219,6 @@ export class DataTableSelectorComponent extends ListSelectorComponent<any> {
 
   /**
    * selectionMode: single|multiple
-   *
-   * @type {selectionMode}
-   * @memberOf DataTableSelectorComponent
    */
   private _selectionMode: selectionMode = 'single';
 
@@ -236,49 +229,33 @@ export class DataTableSelectorComponent extends ListSelectorComponent<any> {
 
   /**
    * falls true, wird hinter der letzten Spalte eine Spalte mit Edit-Button angezeigt
-   *
-   * @type {boolean}
    */
   @Input() public showEditButton: boolean = false;
 
 
   /**
    * Sortmodus: single|multiple
-   *
-   * @type {sortMode}
-   * @memberOf DataTableSelectorComponent
    */
   private _sortMode: sortMode = 'single';
 
   /**
    * falls true, ist sind die Spalten sortierbar
-   *
-   * @type {boolean}
    */
   @Input() public sortable: boolean = true;
 
   /**
    * Anzahl der anzuzeigenden Gridzeilen
-   *
-   * @type {number}
-   * @memberOf DataTableSelectorComponent
    */
   @Input() public rows: number = 5;
 
   /**
    * Die Spaltenkonfiguration, die von aussen gesetzt werden kann.
-   *
-   * @type {IDataTableSelectorConfig}
-   * @memberOf DataTableSelectorComponent
    */
   private _config: IDataTableSelectorConfig;
 
   /**
    * Die Spaltenkonfiguration, die intern verwendet wird.
    * Entweder wird sie von @see{config} übernommen oder automatisch über die @see{dataItems} erzeugt.
-   *
-   * @type {IDataTableSelectorConfig}
-   * @memberOf DataTableSelectorComponent
    */
   public configInternal: IDataTableSelectorConfig;
 
@@ -304,13 +281,11 @@ export class DataTableSelectorComponent extends ListSelectorComponent<any> {
   /**
    * Creates an instance of DataTableSelectorComponent.
    *
-   * @param {Router} router
-   * @param {MetadataService} metadataService
-   * @param {PipeService} pipeService
-   * @param {Injector} injector
-   * @param {ChangeDetectorRef} changeDetectorRef
-   *
-   * @memberOf DataTableSelectorComponent
+   * @param router
+   * @param metadataService
+   * @param pipeService
+   * @param injector
+   * @param changeDetectorRef
    */
   constructor(router: Router, metadataService: MetadataService, messageService: MessageService,
     private pipeService: PipeService, private injector: Injector,
@@ -341,11 +316,9 @@ export class DataTableSelectorComponent extends ListSelectorComponent<any> {
   /**
    * Formatiert den Wert @param{value} mittels der Information in @param{info}
    *
-   * @param {*} value
-   * @param {IControlDisplayInfo} info
-   * @returns {*}
-   *
-   * @memberOf DataTableSelectorComponent
+   * @param value
+   * @param info
+   * @returns
    */
   public formatValue(value: any, info: IControlDisplayInfo): any {
     Assert.notNull(info);
@@ -374,9 +347,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent<any> {
   /**
    * Wird bei Click auf den Edit-Button aufgerufen
    *
-   * @param {*} data - die Modelinstanz der aktuellen Zeile
-   *
-   * @memberOf DataTableSelectorComponent
+   * @param data - die Modelinstanz der aktuellen Zeile
    */
   public editRow(data: any) {
     using(new XLog(DataTableSelectorComponent.logger, levels.INFO, 'editRow',
@@ -421,10 +392,8 @@ export class DataTableSelectorComponent extends ListSelectorComponent<any> {
   /**
    * Liefert true, falls die
    *
-   * @param {IControlDisplayInfo} info
-   * @returns {boolean}
-   *
-   * @memberOf DataTableSelectorComponent
+   * @param info
+   * @returns
    */
   public isEditable(info: IControlDisplayInfo): boolean {
     return using(new XLog(DataTableSelectorComponent.logger, levels.DEBUG, 'isEditable',
@@ -564,8 +533,8 @@ export class DataTableSelectorComponent extends ListSelectorComponent<any> {
    * TODO: Achtung: funktionert nicht nach Umsortierung der DataTable !!
    *
    * @protected
-   * @param {*} value
-   * @returns {number}
+   * @param value
+   * @returns
    *
    * @memberOf DataTableSelectorComponent
    */
@@ -597,9 +566,7 @@ export class DataTableSelectorComponent extends ListSelectorComponent<any> {
    * Überwachung der editable-Property: false editable -> Selektionsmöglichkeit ausschalten
    *
    * @protected
-   * @param {boolean} value
-   *
-   * @memberOf DataTableSelectorComponent
+   * @param value
    */
   protected onEditableChange(value: boolean) {
     super.onEditableChange(value);

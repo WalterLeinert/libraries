@@ -20,10 +20,6 @@ import { Assert, Clone, Core, Types, Utility } from '@fluxgate/core';
  * Fluxgate Dropdown-Komponente
  *
  * Kapselt die Dropdown-Konmponente von PrimeNG.
- *
- * @export
- * @class DropdownSelectorComponent
- * @implements {OnInit}
  */
 @Component({
   selector: 'flx-autoform-input',
@@ -57,9 +53,9 @@ export class AutoformInputComponent {
   /**
    * Liefert true, falls Feld zu @param{metadata} nicht anzuzeigen ist
    *
-   * @param {IControlDisplayInfo} info
+   * @param info
    * @param value
-   * @returns {boolean}
+   * @returns
    */
   public isHidden(info: IControlDisplayInfo, value: any): boolean {
     // Default: Anzeige, falls displayName im Model gesetzt ist
@@ -79,8 +75,8 @@ export class AutoformInputComponent {
   /**
    * Liefert true, falls die Daten nicht änderbar sind
    *
-   * @param {IControlDisplayInfo} info
-   * @returns {boolean}
+   * @param info
+   * @returns
    */
   public isReadonly(info: IControlDisplayInfo, action: FormAction): boolean {
     return !info.editable || action === FormActions.VIEW;
@@ -90,8 +86,8 @@ export class AutoformInputComponent {
   /**
    * Liefert den Typ eines html-input Fields für die angegebene Info @see{info}
    *
-   * @param {IControlDisplayInfo} info
-   * @returns {string}
+   * @param info
+   * @returns
    */
   public getInputType(info: IControlDisplayInfo): string {
     if (info.isSecret) {
@@ -107,11 +103,9 @@ export class AutoformInputComponent {
    * FormGroup @param{groupName}
    *
    * @protected
-   * @param {string} controlName
-   * @param {string} [groupName=FormGroupInfo.DEFAULT_NAME]
-   * @returns {string}
-   *
-   * @memberOf CoreComponent
+   * @param controlName
+   * @param [groupName=FormGroupInfo.DEFAULT_NAME]
+   * @returns
    */
   public getFormErrors(controlName: string, groupName: string = 'TODO'): string {
     Assert.notNullOrEmpty(controlName);

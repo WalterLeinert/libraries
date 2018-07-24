@@ -10,9 +10,6 @@ import {
 
 /**
  * Exportiert diverse zentrale Client-Services als Modul (hier wegen angular aot)
- *
- * @export
- * @class ClientServicesModule
  */
 @NgModule({
   imports: [

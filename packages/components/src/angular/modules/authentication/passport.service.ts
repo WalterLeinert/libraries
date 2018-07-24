@@ -31,11 +31,9 @@ export class PassportService extends ServiceCore {
   /**
    * Creates an instance of PassportService.
    *
-   * @param {Http} http
-   * @param {AppConfigService} configService
-   * @param {string} _topic - das Topic des Service
-   *
-   * @memberOf PassportService
+   * @param http
+   * @param configService
+   * @param _topic - das Topic des Service
    */
   constructor(http: HttpClient, configService: AppConfigService) {
     super(http, configService.config.url, 'passport');
@@ -49,10 +47,8 @@ export class PassportService extends ServiceCore {
   /**
    * Meldet den Benutzer mit Benutzernamen {username} beim System an.
    *
-   * @param {string} username
-   * @param {string} password
-   *
-   * @memberOf PassportService
+   * @param username
+   * @param password
    */
   public login(username: string, password: string, clientId: number): Observable<IUser> {
     Assert.notNullOrEmpty(username, 'username');
@@ -79,10 +75,8 @@ export class PassportService extends ServiceCore {
   /**
    * Registriert einen neuen Benutzer im System
    *
-   * @param {User} user
-   * @returns {Observable<User>}
-   *
-   * @memberOf PassportService
+   * @param user
+   * @returns
    */
   public signup(user: User): Observable<User> {
     Assert.notNull(user, 'user');
@@ -103,9 +97,7 @@ export class PassportService extends ServiceCore {
   /**
    * Meldet den aktuellen Benutzer ab
    *
-   * @returns {Observable<any>}
-   *
-   * @memberOf PassportService
+   * @returns
    */
   public logoff(): Observable<any> {
     return using(new XLog(PassportService.logger, levels.INFO, 'logoff'), (log) => {
@@ -127,11 +119,9 @@ export class PassportService extends ServiceCore {
   /**
    * Ändert das Passwort des aktuellen Benutzers.
    *
-   * @param {string} username - aktueller Username
-   * @param {string} password - aktuelles Passwort
-   * @param {string} passwordNew - neues Passwort
-   *
-   * @memberOf PassportService
+   * @param username - aktueller Username
+   * @param password - aktuelles Passwort
+   * @param passwordNew - neues Passwort
    */
   public changePassword(username: string, password: string, passwordNew: string): Observable<IUser> {
     Assert.notNullOrEmpty(password, 'password');

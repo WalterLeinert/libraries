@@ -23,7 +23,6 @@ import {
 import { Assert, Clone, Color, Core, Funktion, NotSupportedException, Types, Utility } from '@fluxgate/core';
 
 import { AutoformControlsComponent } from './autoform-controls/autoform-controls.component';
-import { IAutoform } from './autoform.interface';
 
 @Component({
   selector: 'flx-autoform',
@@ -101,15 +100,13 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   // >> Value Property
   /**
    * (von aussen) angebundenes Objekt.
-   *
-   * @type {*}
    */
   private _value: any;
 
   /**
    * dataChange Event: wird bei jeder SelektionÄänderung von data gefeuert.
    *
-   * Eventdaten: @type{any} - selektiertes Objekt.
+   * Eventdaten: selektiertes Objekt.
    */
   @Output() public valueChange = new EventEmitter<any>();
   // << Value Property
@@ -117,10 +114,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
   /**
    * Die durchzuführende Aktion (creae, edit, etc.)
-   *
-   * @private
-   * @type {FormAction}
-   * @memberOf AutoformComponent
    */
   @Input() public action: FormAction;
 
@@ -139,19 +132,8 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
   /**
    * erzeugt eine Instanz von @see{IAutoformConfig}
-   *
-   * @private
-   * @type {AutoformConfiguration}
    */
   private configurator: AutoformConfiguration;
-
-  /**
-   *
-   *
-   * @private
-   * @type {IAutoformConfig}
-   * @memberOf AutoformComponent
-   */
   private _config: IAutoformConfig;
 
   public configInternal: IAutoformConfig;
@@ -159,9 +141,6 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
   /**
    * die (intern) angebundene Modelinstanz
-   *
-   * @type {*}
-   * @memberOf AutoformComponent
    */
   public dataItem: any;
 
@@ -181,13 +160,13 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
   /**
    *
-   * @param {FormBuilder} fb
-   * @param {Router} router
-   * @param {ActivatedRoute} route
-   * @param {MessageService} messageService
-   * @param {Injector} injector
-   * @param {MetadataService} metadataService
-   * @param {ChangeDetectorRef} cdr
+   * @param fb
+   * @param router
+   * @param route
+   * @param messageService
+   * @param injector
+   * @param metadataService
+   * @param cdr
    */
   constructor(private fb: FormBuilder, router: Router, route: ActivatedRoute, messageService: MessageService, private injector: Injector,
     private metadataService: MetadataService, private cdr: ChangeDetectorRef) {
@@ -318,9 +297,9 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   /**
    * Liefert true, falls Feld zu @param{metadata} nicht anzuzeigen ist
    *
-   * @param {IControlDisplayInfo} info
+   * @param info
    * @param value
-   * @returns {boolean}
+   * @returns
    */
   public isHidden(info: IControlDisplayInfo, value: any): boolean {
     // Default: Anzeige, falls displayName im Model gesetzt ist
@@ -338,8 +317,8 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
   /**
    * Liefert true, falls die Daten nicht änderbar sind
    *
-   * @param {IControlDisplayInfo} info
-   * @returns {boolean}
+   * @param info
+   * @returns
    */
   public isReadonly(info: IControlDisplayInfo): boolean {
     return !info.editable || this.action === FormActions.VIEW;
@@ -421,18 +400,13 @@ export class AutoformComponent extends ServiceRequestsComponent<any, ICrudServic
 
   /**
    *
-   * @param {boolean} formResetRequired
-   * @memberof AutoformComponent
+   * @param formResetRequired
    */
   private doClose(formResetRequired: boolean) {
     this.close.emit(formResetRequired);
   }
 
 
-  /**
-   *
-   * @memberof AutoformComponent
-   */
   private doCancel() {
     this.cancel.emit();
   }

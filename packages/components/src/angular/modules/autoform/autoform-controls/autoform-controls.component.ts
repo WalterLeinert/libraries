@@ -25,10 +25,6 @@ import { IAutoform } from '../autoform.interface';
  * Fluxgate Controls-Komponente
  *
  * Erlaubt die dynamische Anbindung von Controls in Abhängigkeit des Datentyps.
- *
- * @export
- * @class AutoformControlsComponent
- * @implements {OnInit}
  */
 @Component({
   selector: 'flx-autoform-controls',
@@ -192,9 +188,9 @@ export class AutoformControlsComponent extends CoreComponent {
   /**
    * Liefert true, falls Feld zu @param{metadata} nicht anzuzeigen ist
    *
-   * @param {IControlDisplayInfo} info
+   * @param info
    * @param value
-   * @returns {boolean}
+   * @returns
    */
   public isHidden(info: IControlDisplayInfo, value: any): boolean {
     // Default: Anzeige, falls displayName im Model gesetzt ist
@@ -213,8 +209,8 @@ export class AutoformControlsComponent extends CoreComponent {
   /**
    * Liefert true, falls die Daten nicht änderbar sind
    *
-   * @param {IControlDisplayInfo} info
-   * @returns {boolean}
+   * @param info
+   * @returns
    */
   public isReadonly(info: IControlDisplayInfo): boolean {
     if (!this.parent) {
@@ -237,8 +233,8 @@ export class AutoformControlsComponent extends CoreComponent {
   /**
    * Liefert den Typ eines html-input Fields für die angegebene Info @see{info}
    *
-   * @param {IControlDisplayInfo} info
-   * @returns {string}
+   * @param info
+   * @returns
    */
   public getInputType(info: IControlDisplayInfo): string {
     if (!this.parent) {

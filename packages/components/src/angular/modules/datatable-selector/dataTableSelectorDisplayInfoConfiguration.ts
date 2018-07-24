@@ -14,11 +14,7 @@ import {
 import { TableMetadata } from '@fluxgate/common';
 
 /**
- * * Konfiguriert die DisplayInfos für @see{DataTableSelectorComponent}
- *
- * @export
- * @class DataTableSelectorDisplayInfoConfiguration
- * @extends {MetadataDisplayInfoConfiguration}
+ * Konfiguriert die DisplayInfos für @see{DataTableSelectorComponent}
  */
 export class DataTableSelectorDisplayInfoConfiguration extends MetadataDisplayInfoConfiguration {
   protected static readonly logger = getLogger(DataTableSelectorDisplayInfoConfiguration);
