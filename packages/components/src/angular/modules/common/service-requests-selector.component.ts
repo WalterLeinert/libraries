@@ -22,12 +22,6 @@ import { SelectorBaseComponent } from '../common/selectorBase.component';
 
 /**
  * abstrakte Basisklasse für Selektoren, die mit ServiceRequests arbeiten
- *
- * @export
- * @abstract
- * @class ServiceRequestsSelectorComponent
- * @extends {SelectorBaseComponent<T>}
- * @template T
  */
 export abstract class ServiceRequestsSelectorComponent<T extends IEntity<TId>, TId extends IToString>
   extends SelectorBaseComponent<any> {

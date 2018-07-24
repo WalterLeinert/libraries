@@ -24,18 +24,13 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    * angebundene Objektliste statt Liste von Entities aus DB.
    *
    * Hinweis: data und dataServiceRequests dürfen nicht gleichzeitig gesetzt sein!
-   *
-   * @type {any[]}
-   * @memberOf DataTableSelectorComponent
    */
   private _data: T[];
 
   /**
    * dataChange Event: wird bei jeder SelektionÄänderung von data gefeuert.
    *
-   * Eventdaten: @type{any} - selektiertes Objekt.
-   *
-   * @memberOf DataTableSelectorComponent
+   * Eventdaten: selektiertes Objekt.
    */
   @Output() public dataChange = new EventEmitter<T[]>();
 
@@ -44,9 +39,6 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    * die ServiceRequests zum Bereitstellen der Daten
    *
    * Hinweis: data und dataServiceRequests dürfen nicht gleichzeitig gesetzt sein!
-   *
-   * @type {ICrudServiceRequests}
-   * @memberOf DataTableSelectorComponent
    */
   private _dataServiceRequests: ICrudServiceRequests<IEntity<any>, any>;
 
@@ -54,27 +46,19 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    * die Service-Methode zum Bereitstellen der Daten. Muss eine Methode von @see{dataServiceRequests} sein.
    *
    * Hinweis: data und dataServiceRequests dürfen nicht gleichzeitig gesetzt sein!
-   *
-   * @type {IService}
-   * @memberOf DataTableSelectorComponent
    */
   private _dataServiceFunction: Funktion;
 
 
   /**
    * Index der initial zu selektierenden Zeile (0..n-1)
-   *
-   * @type {number}
-   * @memberOf DataTableSelectorComponent
    */
   private _selectedIndex: number = -1;
 
   /**
    * selectedIndexChange Event: wird bei jeder Änderung von selectedIndex gefeuert.
    *
-   * Eventdaten: @type{any} - selektiertes Objekt.
-   *
-   * @memberOf DataTableSelectorComponent
+   * Eventdaten: selektiertes Objekt.
    */
   @Output() public selectedIndexChange = new EventEmitter<number>();
 
@@ -121,9 +105,9 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
         .subscribe((items: any[]) => {
           this.initBoundData(items, tableMetadata);
         },
-        (error: Error) => {
-          this.handleError(error);
-        }));
+          (error: Error) => {
+            this.handleError(error);
+          }));
     }
   }
 
@@ -132,12 +116,6 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    * Setup des Databindings für die Liste @param{items} und der Spaltenkonfiguration.
    * Ist @param{tableMetadata} angegeben und keine Konfiguration von "aussen" gesetzt,
    * so wird über die Metadaten eine automatische Konfiguration durchgeführt.
-   *
-   * @protected
-   * @param {any[]} items
-   * @param {TableMetadata} tableMetadata
-   *
-   * @memberOf ListSelectorComponent
    */
   protected initBoundData(items: any[], tableMetadata: TableMetadata) {
     if (this.data) {
@@ -163,25 +141,12 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
 
   /**
    * Intialisiert die Daten fürs Databinding
-   *
-   * @protected
-   * @abstract
-   * @param {any[]} items
-   *
-   * @memberOf ListSelectorComponent
    */
   protected abstract setupData(items: any[]): void;
 
 
   /**
    * Initialisiert die Konfiguration der Anzeigewerte und Werte
-   *
-   * @protected
-   * @abstract
-   * @param {any[]} items
-   * @param {TableMetadatan} tableMetadata - Metadaten oder null/indefined
-   *
-   * @memberOf ListSelectorComponent
    */
   protected abstract setupConfig(items: any[], tableMetadata: TableMetadata): void;
 
@@ -189,12 +154,6 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    * Liefert den Index des Items (value) in der Wertelist
    *
    * TODO: Achtung: funktionert nicht nach Umsortierung der DataTable !!
-   *
-   * @protected
-   * @param {*} value
-   * @returns {number}
-   *
-   * @memberOf DropdownSelectorComponent
    */
   protected abstract indexOfValue(value: any): number;
 
@@ -202,37 +161,18 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
    * Liefert den Wert für das @param{item} der Liste. Der Wert ist das Item selbst oder eine entsprechende Property,
    * falls die valueField-Property einen entsprechenden Propertynamen enthält
    * (nur bei @see{DropdownSelectorComponent})
-   *
-   * @protected
-   * @abstract
-   * @param {*} item
-   * @returns {*}
-   *
-   * @memberOf ListSelectorComponent
    */
   protected abstract getValue(item: any): any;
 
 
   /**
    * Liefert true, falls im konkreten Control keine Daten angebunden sind oder die Liste keine Items enthält
-   *
-   * @readonly
-   * @protected
-   * @abstract
-   * @type {boolean}
-   * @memberOf ListSelectorComponent
    */
   protected abstract get isDataEmpty(): boolean;
 
 
   /**
    * Liefert die Anzahl der Data-Items beim konkreten Control
-   *
-   * @readonly
-   * @protected
-   * @abstract
-   * @type {number}
-   * @memberOf ListSelectorComponent
    */
   protected abstract get dataLength(): number;
 
@@ -240,13 +180,6 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
   /**
    * Liefert den Wert des Items an der Position @param{index}.
    * Hierbei wird ggf. die valueField-Property ausgewertet.
-   *
-   * @protected
-   * @abstract
-   * @param {number} index
-   * @returns {*}
-   *
-   * @memberOf ListSelectorComponent
    */
   protected abstract getDataValue(index: number): any;
 
@@ -255,10 +188,6 @@ export abstract class ListSelectorComponent<T> extends SelectorBaseComponent<T> 
   /**
    * Falls ein positiver und gültiger selectedIndex angegeben ist, wird der value auf des
    * entsprechende Item gesetzt.
-   *
-   * @private
-   *
-   * @memberOf DataTableSelectorComponent
    */
   protected preselectData() {
     const trueValue = true;

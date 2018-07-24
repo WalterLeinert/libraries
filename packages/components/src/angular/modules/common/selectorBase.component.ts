@@ -22,16 +22,12 @@ export abstract class SelectorBaseComponent<T> extends ControlBaseComponent<T> {
 
   /**
    * falls true, wird Debug-Info beim Control angezeigt
-   *
-   * @type {boolean}
    */
   @Input() public debug: boolean = false;
 
 
   /**
    * falls true, ist die Komponente editierbar
-   *
-   * @type {boolean}
    */
   private _editable: boolean = false;
 
@@ -40,8 +36,6 @@ export abstract class SelectorBaseComponent<T> extends ControlBaseComponent<T> {
 
   /**
    * locale-Property
-   *
-   * @type {string}
    */
   private _locale: string = 'en';
 
