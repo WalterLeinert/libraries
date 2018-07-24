@@ -18,10 +18,6 @@ import { Core } from '@fluxgate/core';
  * Fluxgate EnumValue-Komponente
  *
  * Erlaubt die Anzeige eines ausgewählten Enum-Werts,
- *
- * @export
- * @class DropdownSelectorComponent
- * @implements {OnInit}
  */
 @Component({
   selector: 'flx-enum-value',
@@ -39,36 +35,24 @@ export class EnumValueComponent extends CoreComponent {
    * die ServiceRequests zum Bereitstellen der Daten
    *
    * Hinweis: data und dataServiceRequests dürfen nicht gleichzeitig gesetzt sein!
-   *
-   * @type {ICrudServiceRequests}
-   * @memberOf DataTableSelectorComponent
    */
   private _dataServiceRequests: ICrudServiceRequests<IEntity<any>, any>;
 
 
   /**
    * Die Property in der angebundenen Werteliste, welche in der Dropbox angezeigt werden soll
-   *
-   * @type {string}
-   * @memberOf EnumValueComponent
    */
   @Input() public textField: string;
 
   /**
    * Die Property in der angebundenen Werteliste, welche nach Auswahl
    * als 'value' übernommen werden soll.
-   *
-   * @type {string}
-   * @memberOf EnumValueComponent
    */
   @Input() public valueField: string;
 
   /**
    * diese Property steuert, welches Enum-Item angezeigt werden soll. Der Werte
    * wird über @see{valueField} bestimmt.
-   *
-   * @type {string}
-   * @memberOf EnumValueComponent
    */
   private _itemSelector: any;
   @Output() public itemSelectorChange = new EventEmitter<any>();
@@ -77,7 +61,7 @@ export class EnumValueComponent extends CoreComponent {
   /**
    * itemChange Event: wird bei jeder Wertänderung gefeuert.
    *
-   * Eventdaten: @type{any} - Wert.
+   * Eventdaten: Wert.
    *
    */
   @Output() public itemChange = new EventEmitter<any>();
@@ -87,8 +71,6 @@ export class EnumValueComponent extends CoreComponent {
 
   /**
    * das @see{itemSelector} entsprechende Item.
-   *
-   * @type {any}
    */
   private _item: any;
 
