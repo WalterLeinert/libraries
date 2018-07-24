@@ -74,9 +74,7 @@
     "component-class-suffix": true,
     "directive-class-suffix": true,
     "import-destructuring-spacing": true,
-    "templates-use-public": true,
-    "no-access-missing-member": false,    // funktioniert sonst nicht für Members in Basisklassen
-    "invoke-injectable": true
+    "no-access-missing-member": false    // funktioniert sonst nicht für Members in Basisklassen
   },
   "jsRules": {
     //
