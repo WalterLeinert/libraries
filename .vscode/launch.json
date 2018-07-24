@@ -100,7 +100,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "components: build",
+      "name": "components: ng build",
       "program": "${workspaceRoot}/node_modules/@angular/cli/bin/ng",
       "args": [
         "build",
