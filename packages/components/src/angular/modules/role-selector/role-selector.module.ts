@@ -8,7 +8,7 @@ import { ConfirmationService } from 'primeng/components/common/api';
 import { AppConfigService, MessageService, MetadataService } from '@fluxgate/client';
 
 import { RoleSelectorServiceRequestsModule } from '../../redux/role-selector-service-requests';
-import { DropdownSelectorModule } from '../dropdown-selector';
+import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
 import { RoleSelectorComponent } from './role-selector.component';
 
 @NgModule({

@@ -7,7 +7,7 @@ import { ConfirmationService } from 'primeng/components/common/api';
 import { MessageService, MetadataService } from '@fluxgate/client';
 
 import { UserSelectorServiceRequestsModule } from '../../redux/user-selector-service-requests';
-import { DropdownSelectorModule } from '../dropdown-selector';
+import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
 import { UserSelectorComponent } from './user-selector.component';
 
 @NgModule({

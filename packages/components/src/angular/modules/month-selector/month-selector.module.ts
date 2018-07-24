@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { MessageService, MetadataService } from '@fluxgate/client';
 
-import { DropdownSelectorModule } from '../dropdown-selector';
+import { DropdownSelectorModule } from '../dropdown-selector/dropdown-selector.module';
 import { MonthSelectorComponent } from './month-selector.component';
 
 @NgModule({
