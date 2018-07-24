@@ -3,6 +3,46 @@
   "version": 1,
   "newProjectRoot": "packages",
   "projects": {
+    "client": {
+      "root": "packages/client",
+      "sourceRoot": "packages/client/src",
+      "projectType": "library",
+      "prefix": "clt",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "packages/client/tsconfig.lib.json",
+            "project": "packages/client/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "packages/client/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "packages/client/src/test.ts",
+            "tsConfig": "packages/client/tsconfig.lib.spec.json",
+            "karmaConfig": "packages/client/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "packages/client/tsconfig.lib.json",
+              "packages/client/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
     "components": {
       "root": "packages/components",
       "sourceRoot": "packages/components/src",
@@ -163,5 +203,5 @@
       }
     }
   },
-  "defaultProject": "app2"
+  "defaultProject": "starter"
 }
