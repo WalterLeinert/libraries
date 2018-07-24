@@ -24,5 +24,8 @@
   },
   "peerDependencies": {
     "@fluxgate/core": ">=2.6.0-beta.0"
+  },
+  "devDependencies": {
+    "@types/request": "^2.47.1"
   }
 }
