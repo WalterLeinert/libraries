@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Headers } from '@angular/http';
 
 import { Observable } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 
 // -------------------------------------- logging --------------------------------------------
@@ -11,23 +10,19 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import {
-  ColumnTypes, IPrinter, IPrintOptions, IPrintTask, ITableRow,
-  Printing, ServiceConstants, TableMetadata, TableType
-} from '@fluxgate/common';
-import { Assert, base64, Core } from '@fluxgate/core';
+import { IPrinter, IPrintTask, Printing } from '@fluxgate/common';
+import { base64 } from '@fluxgate/core';
 
 import { CoreService } from '../common/base/core-service';
 import { ServiceCore } from '../common/base/service-core';
 import { AppConfigService } from './app-config.service';
-import { MetadataService } from './metadata.service';
 
 
 @Injectable()
 export class PrintService extends ServiceCore {
   protected static readonly logger = getLogger(PrintService);
 
-  constructor(http: HttpClient, private metadataService: MetadataService, private configService: AppConfigService) {
+  constructor(http: HttpClient, private configService: AppConfigService) {
     super(http, configService.config.url, Printing.TOPIC);
   }
 

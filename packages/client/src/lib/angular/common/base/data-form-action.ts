@@ -1,4 +1,4 @@
-import { Assert, Funktion } from '@fluxgate/core';
+import { Assert } from '@fluxgate/core';
 
 import { IDataFormAction } from './data-form-action.interface';
 import { FormAction } from './form-action';

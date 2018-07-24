@@ -9,8 +9,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 
 
 import { CommonModule } from '@fluxgate/common';
-import { CoreInjector, CoreModule, DEFAULT_CATEGORY, FlxComponent, FlxModule, LOGGER } from '@fluxgate/core';
-import { PlatformModule } from '@fluxgate/platform';
+import { CoreInjector, DEFAULT_CATEGORY, FlxComponent, FlxModule, LOGGER } from '@fluxgate/core';
 
 
 @FlxComponent({

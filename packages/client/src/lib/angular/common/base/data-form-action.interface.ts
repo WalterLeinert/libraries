@@ -1,5 +1,3 @@
-import { Funktion } from '@fluxgate/core';
-
 import { FormAction } from './form-action';
 
 

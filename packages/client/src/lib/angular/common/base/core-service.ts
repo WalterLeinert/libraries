@@ -1,5 +1,4 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Headers, RequestOptions } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 

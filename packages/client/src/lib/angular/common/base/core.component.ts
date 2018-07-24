@@ -33,7 +33,7 @@ import { AppInjector } from '../../services/appInjector.service';
 import { CurrentUserService } from '../../services/current-user.service';
 import { MessageService } from '../../services/message.service';
 import { MetadataService } from '../../services/metadata.service';
-import { IAutoformConfig, IColumnGroupInfo } from './autoformConfig.interface';
+import { IColumnGroupInfo } from './autoformConfig.interface';
 import { FormGroupInfo, IMessageDict } from './formGroupInfo';
 
 
@@ -67,7 +67,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
   private formInfos: Dictionary<string, FormGroupInfo> = new Dictionary<string, FormGroupInfo>();
   // << Formvalidierung
   private subscriptions: Subscription[] = [];
-  private destroyed = false;
 
   private store: Store;
   private _confirmationService: ConfirmationService;
@@ -108,7 +107,6 @@ export abstract class CoreComponent extends UniqueIdentifiable implements OnInit
    */
   public ngOnDestroy() {
     using(new XLog(CoreComponent.logger, levels.INFO, 'ngOnDestroy', `class: ${this.constructor.name}`), (log) => {
-      this.destroyed = true;
 
       log.log(`unsubscribe store ${this.subscriptions.length} subscriptions`);
       from(this.subscriptions).subscribe((sub) => {
