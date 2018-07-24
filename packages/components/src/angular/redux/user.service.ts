@@ -8,10 +8,6 @@ import { TableService, User } from '@fluxgate/common';
 
 /**
  * Service für REST-Api für Entity @see{User}.
- *
- * @export
- * @class UserService
- * @extends {Service<User>}
  */
 @Injectable()
 @TableService(User)

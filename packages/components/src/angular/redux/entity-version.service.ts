@@ -9,10 +9,6 @@ import { ENTITY_VERSION_SERVICE, EntityVersion, TableService } from '@fluxgate/c
 
 /**
  * Service für REST-Api für Entity @see{EntityVersion}.
- *
- * @export
- * @class EntityVersionService
- * @extends {Service<EntityVersion>}
  */
 @Injectable()
 @TableService(EntityVersion)

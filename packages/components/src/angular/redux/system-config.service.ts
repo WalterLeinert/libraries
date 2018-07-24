@@ -8,10 +8,6 @@ import { SystemConfig, TableService } from '@fluxgate/common';
 
 /**
  * Service für REST-Api für Entity @see{SystemConfig}.
- *
- * @export
- * @class SystemConfigService
- * @extends {Service<SystemConfig>}
  */
 @Injectable()
 @TableService(SystemConfig)

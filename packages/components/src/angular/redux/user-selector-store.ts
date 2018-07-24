@@ -7,10 +7,6 @@ import {
 
 /**
  * CommandStore für einen User-Selector: hat zusätzlich zum UserStore noch currentItem
- *
- * @export
- * @class UserSelectorStore
- * @extends {CommandStore<IExtendedCrudServiceState<IUser, number>>}
  */
 @ReduxParentStore(UserStore)
 export class UserSelectorStore extends CommandStore<IExtendedCrudServiceState<IUser, number>> {

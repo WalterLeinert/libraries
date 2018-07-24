@@ -26,10 +26,6 @@ import { SystemConfigService } from './system-config.service';
  * Service für REST-Api für Entities mit der Basisklasse @see{ConfigBase}.
  *
  * Das Topic 'config' muss explizit angegeben werden, da ConfigBase nur eine abstrakte Klasse ist.
- *
- * @export
- * @class ConfigService
- * @extends {Service<ConfigBase, string>}
  */
 @Injectable()
 @TableService(ConfigBase)

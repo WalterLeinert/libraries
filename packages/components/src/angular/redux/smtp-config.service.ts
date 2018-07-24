@@ -16,10 +16,6 @@ import { SystemConfigService } from './system-config.service';
 
 /**
  * Service für REST-Api den Smtp-Configservice
- *
- * @export
- * @class SmtpConfigService
- * @extends {ConfigService<SmtpConfig>}
  */
 @Injectable()
 @TableService(ConfigBase)

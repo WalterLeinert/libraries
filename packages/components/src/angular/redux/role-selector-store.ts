@@ -7,10 +7,6 @@ import {
 
 /**
  * CommandStore für einen Role-Selector: hat zusätzlich zum RoleStore noch currentItem
- *
- * @export
- * @class RoleSelectorStore
- * @extends {CommandStore<IExtendedCrudServiceState<IRole, number>>}
  */
 @ReduxParentStore(RoleStore)
 export class RoleSelectorStore extends CommandStore<IExtendedCrudServiceState<IRole, number>> {
