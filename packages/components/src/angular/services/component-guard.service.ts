@@ -11,19 +11,12 @@ import { CoreComponent, MessageService, } from '@fluxgate/client';
 
 /**
  * Guard-Service: dient zur Abfrage für ungespeicherte Änderungen in einer zugehörigen Komponente
- *
- * @export
- * @class ComponentGuardService
- * @implements {CanActivate}
- * @implements {CanDeactivate<T>}
- * @template T
- * @template TService
  */
 @Injectable()
 export class ComponentGuardService<T extends CoreComponent> extends CoreComponent
   implements CanActivate, CanDeactivate<T>  {
 
-  constructor(private _router: Router, messageService: MessageService) {
+  constructor(messageService: MessageService) {
     super(messageService);
   }
 

@@ -6,10 +6,6 @@ import { CoreComponent, MessageService } from '@fluxgate/client';
 
 /**
  * Guard-Service, der sicher stellt, dass ein aktueller User existiert.
- *
- * @export
- * @class CurrentUserGuardService
- * @implements {CanActivate}
  */
 @Injectable()
 export class CurrentUserGuardService extends CoreComponent implements CanActivate {
