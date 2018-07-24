@@ -3,3 +3,4 @@
 // })();
 
 export * from './angular';
+export * from './testing';

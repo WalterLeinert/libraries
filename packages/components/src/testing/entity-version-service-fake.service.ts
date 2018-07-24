@@ -6,10 +6,6 @@ import { ENTITY_VERSION_SERVICE, EntityVersionServiceFake } from '@fluxgate/comm
  * Simuliert den EntityVersion-Service
  *
  * Für alle registrierten Entities (MetadataStorage) werden Items generiert
- *
- * @export
- * @class EntityVersionServiceFake
- * @extends {ServiceFake<EntityVersion, string>}
  */
 @Injectable()
 export class EntityVersionServiceFakeService extends EntityVersionServiceFake {
