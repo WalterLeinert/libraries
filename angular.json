@@ -100,7 +100,8 @@
             "tsConfig": "applications/starter/tsconfig.app.json",
             "assets": [
               "applications/starter/src/favicon.ico",
-              "applications/starter/src/assets"
+              "applications/starter/src/assets",
+              "applications/starter/src/app/config"
             ],
             "styles": [
               "applications/starter/src/styles.css"
