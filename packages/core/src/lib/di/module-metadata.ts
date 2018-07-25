@@ -6,16 +6,13 @@ import { using } from '../base/disposable';
 import { levels } from '../diagnostics/level';
 import { ILogger } from '../diagnostics/logger.interface';
 import { getLogger } from '../diagnostics/logging-core';
-import { XLog } from '../diagnostics/xlog';
+import { XLogInternal } from '../diagnostics/xlog-internal';
 // -------------------------------------- logging --------------------------------------------
 
 
 import { Assertion } from '../base/assertion';
 import { Funktion } from '../base/objectType';
-import { Core } from '../diagnostics/core';
 import { JsonDumper } from '../diagnostics/json-dumper';
-import { ClassMetadata } from '../metadata/class-metadata';
-import { Metadata } from '../metadata/metadata';
 import { Dictionary } from '../types/dictionary';
 import { Types } from '../types/types';
 
@@ -48,7 +45,7 @@ export class ModuleMetadata extends DiMetadata {
     private _options: IModuleOptions) {
     super(target, _options.providers);
 
-    using(new XLog(ModuleMetadata.logger, levels.INFO, 'ctor', `target = ${target.name}`), (log) => {
+    using(new XLogInternal(ModuleMetadata.logger, levels.INFO, 'ctor', `target = ${target.name}`), (log) => {
 
       if (this._options) {
 

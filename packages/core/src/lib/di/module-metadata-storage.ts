@@ -5,7 +5,7 @@ import { using } from '../base/disposable';
 import { levels } from '../diagnostics/level';
 import { ILogger } from '../diagnostics/logger.interface';
 import { getLogger } from '../diagnostics/logging-core';
-import { XLog } from '../diagnostics/xlog';
+import { XLogInternal } from '../diagnostics/xlog-internal';
 // -------------------------------------- logging --------------------------------------------
 
 import { Assertion } from '../base/assertion';
@@ -47,7 +47,7 @@ export class ModuleMetadataStorage {
   public addModuleMetadata(metadata: ModuleMetadata) {
     Assertion.notNull(metadata);
 
-    using(new XLog(ModuleMetadataStorage.logger, levels.DEBUG, 'addModuleMetadata',
+    using(new XLogInternal(ModuleMetadataStorage.logger, levels.DEBUG, 'addModuleMetadata',
       `targetName = ${metadata.targetName}`), (log) => {
         Assertion.that(!this.moduleDict.containsKey(metadata.target),
           `Module ${metadata.targetName} already registered.`);
@@ -68,7 +68,7 @@ export class ModuleMetadataStorage {
    * @memberof ModuleMetadataStorage
    */
   public addComponentMetadata(metadata: ComponentMetadata) {
-    using(new XLog(ModuleMetadataStorage.logger, levels.DEBUG, 'addComponentMetadata',
+    using(new XLogInternal(ModuleMetadataStorage.logger, levels.DEBUG, 'addComponentMetadata',
       `targetName = ${metadata.targetName}`), (log) => {
         Assertion.notNull(metadata);
 
@@ -114,7 +114,7 @@ export class ModuleMetadataStorage {
    * @memberof ModuleMetadataStorage
    */
   public bootstrapModule(module: Funktion) {
-    using(new XLog(ModuleMetadataStorage.logger, levels.INFO, 'bootstrapModule',
+    using(new XLogInternal(ModuleMetadataStorage.logger, levels.INFO, 'bootstrapModule',
       `model = ${module.name}`), (log) => {
         Assertion.notNull(module);
 
@@ -164,7 +164,7 @@ export class ModuleMetadataStorage {
    * @param parentInjector - der aktuelle Injector des Parent-Moduls
    */
   private createInjectorsRec(module: ModuleMetadata, parentInjector?: ReflectiveInjector) {
-    using(new XLog(ModuleMetadataStorage.logger, levels.INFO, 'createInjectorsRec',
+    using(new XLogInternal(ModuleMetadataStorage.logger, levels.INFO, 'createInjectorsRec',
       `model = ${module.targetName}`), (log) => {
 
         module.validate();
@@ -235,7 +235,7 @@ export class ModuleMetadataStorage {
    * @param parentInjector
    */
   private createComponentInjector(component: ComponentMetadata, parentInjector: ReflectiveInjector) {
-    using(new XLog(ModuleMetadataStorage.logger, levels.INFO, 'createComponentInjector',
+    using(new XLogInternal(ModuleMetadataStorage.logger, levels.INFO, 'createComponentInjector',
       `component = ${component.targetName}, ` +
       // tslint:disable-next-line:no-string-literal
       `parentInjector = ${parentInjector ? parentInjector['displayName'] : undefined}`), (log) => {
@@ -255,7 +255,7 @@ export class ModuleMetadataStorage {
    * @param parentInjector
    */
   private createModuleInjector(module: ModuleMetadata, parentInjector: ReflectiveInjector): ReflectiveInjector {
-    return using(new XLog(ModuleMetadataStorage.logger, levels.INFO, 'createModuleInjector',
+    return using(new XLogInternal(ModuleMetadataStorage.logger, levels.INFO, 'createModuleInjector',
       `model = ${module.targetName}, ` +
       // tslint:disable-next-line:no-string-literal
       `parentInjector = ${parentInjector ? parentInjector['displayName'] : undefined}`), (log) => {
@@ -309,7 +309,7 @@ export class ModuleMetadataStorage {
    * @param module
    */
   private dumpInjectors(rootModule: ModuleMetadata) {
-    using(new XLog(ModuleMetadataStorage.logger, levels.DEBUG, 'dumpInjectorsRec',
+    using(new XLogInternal(ModuleMetadataStorage.logger, levels.DEBUG, 'dumpInjectorsRec',
       `rootModule = ${rootModule.targetName}`), (log) => {
 
         this.dumpInjectorsRec(rootModule);
@@ -322,7 +322,7 @@ export class ModuleMetadataStorage {
    * @param module
    */
   private dumpInjectorsRec(module: ModuleMetadata) {
-    using(new XLog(ModuleMetadataStorage.logger, levels.DEBUG, 'dumpInjectorsRec',
+    using(new XLogInternal(ModuleMetadataStorage.logger, levels.DEBUG, 'dumpInjectorsRec',
       // tslint:disable-next-line:no-string-literal
       `model = ${module.targetName}, injector = ${module.__injector['displayName']}`), (log) => {
 

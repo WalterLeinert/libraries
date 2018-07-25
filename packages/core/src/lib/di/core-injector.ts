@@ -6,7 +6,7 @@ import { using } from '../base/disposable';
 import { levels } from '../diagnostics/level';
 import { ILogger } from '../diagnostics/logger.interface';
 import { getLogger } from '../diagnostics/logging-core';
-import { XLog } from '../diagnostics/xlog';
+import { XLogInternal } from '../diagnostics/xlog-internal';
 // -------------------------------------- logging --------------------------------------------
 
 import { Assertion } from '../base/assertion';
@@ -41,7 +41,7 @@ export class CoreInjector extends InjectorBase<Injector, OpaqueToken> {
 
 
   public getInstance<TInstance>(token: Funktion | OpaqueToken | any, notFoundValue?: any): TInstance {
-    return using(new XLog(CoreInjector.logger, levels.INFO, 'getInstance',
+    return using(new XLogInternal(CoreInjector.logger, levels.INFO, 'getInstance',
       `token = ${token}, notFoundValue = ${notFoundValue}`), (log) => {
 
         if (!this.getInjector() && Types.isPresent(notFoundValue)) {
