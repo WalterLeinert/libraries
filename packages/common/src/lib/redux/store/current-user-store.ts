@@ -8,7 +8,7 @@ import { SettingCurrentItemCommand } from '../command/setting-current-item-comma
 import { ReduxStore } from '../decorators/redux-store.decorator';
 import { CurrentItemServiceRequests } from '../service-requests/current-item-service-requests';
 import { ICurrentItemServiceState } from '../state/current-item-service-state.interface';
-import { CommandStore } from '../store';
+import { CommandStore } from '../store/command-store';
 
 
 /**

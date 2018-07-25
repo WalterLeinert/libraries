@@ -6,7 +6,7 @@ import { getLogger, ILogger } from '@fluxgate/platform';
 import { Core, ICacheManagerConfiguration } from '@fluxgate/core';
 import { IConfig } from '@fluxgate/platform';
 
-import { AppRegistry } from '../base';
+import { AppRegistry } from '../base/appRegistry';
 import { ProxyMode } from '../redux/cache/proxy-mode';
 
 
