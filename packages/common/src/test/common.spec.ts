@@ -3,13 +3,15 @@ import 'reflect-metadata';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { configure, getLogger, IConfig, ILogger, levels, using, XLog } from '@fluxgate/platform';
+import {
+  configure, getLogger, IConfig, ILogger, ILoggingConfigurationOptions,
+  levels, LoggingConfiguration, using, XLog
+} from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 import { Assert, fromEnvironment, Types, Utility } from '@fluxgate/core';
 
 import { CommonUnitTest } from '../lib/testing/unit-test';
-import { ILoggingConfigurationOptions, LoggingConfiguration } from '../lib/util/loggingConfiguration';
 
 
 /**

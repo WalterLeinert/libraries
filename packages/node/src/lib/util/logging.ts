@@ -1,9 +1,10 @@
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { configure, getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+import {
+  configure, getLogger, ILogger, ILoggingConfigurationOptions, levels, LoggingConfiguration, using, XLog
+} from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { ILoggingConfigurationOptions, LoggingConfiguration } from '@fluxgate/common';
 import { Assert, fromEnvironment, Types, Utility } from '@fluxgate/core';
 
 import { FileSystem } from './fileSystem';

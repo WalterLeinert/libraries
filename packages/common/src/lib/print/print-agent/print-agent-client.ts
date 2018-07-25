@@ -1,4 +1,5 @@
-import * as httpRequest from 'request';
+// TODO: request does not work in browser -> refactor
+// import * as httpRequest from 'request';
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
@@ -44,16 +45,18 @@ export class PrintAgentClient {
         const options = this.createOptions(log, this.printConfiguration, false, 'info', 'GetPrinters');
         log.log(`options = ${Core.stringify(options)}`);
 
-        httpRequest(options, (err, res, body) => {
-          if (err) {
-            log.error(err);
-            reject(err);
-          } else {
-            log.log(`body = ${body}`);
-            const rval = Printing.convertPrinterFromRemoteAgent(JSON.parse(body).printers);
-            resolve(rval);
-          }
-        });
+        throw new NotSupportedException(`request does not work in browser -> refactor`);
+
+        // httpRequest(options, (err, res, body) => {
+        //   if (err) {
+        //     log.error(err);
+        //     reject(err);
+        //   } else {
+        //     log.log(`body = ${body}`);
+        //     const rval = Printing.convertPrinterFromRemoteAgent(JSON.parse(body).printers);
+        //     resolve(rval);
+        //   }
+        // });
       });
     });
   }
@@ -76,15 +79,17 @@ export class PrintAgentClient {
         (options as any).body = printTask; // TODO
         log.log(`options = ${Core.stringify(options)}`);
 
-        httpRequest(options, (err, res, body) => {
-          if (err) {
-            log.error(err);
-            reject(err);
-          } else {
-            log.log(`body = ${Core.stringify(body)}`);
-            resolve(body);
-          }
-        });
+        throw new NotSupportedException(`request does not work in browser -> refactor`);
+
+        // httpRequest(options, (err, res, body) => {
+        //   if (err) {
+        //     log.error(err);
+        //     reject(err);
+        //   } else {
+        //     log.log(`body = ${Core.stringify(body)}`);
+        //     resolve(body);
+        //   }
+        // });
       });
     });
   }
@@ -108,15 +113,17 @@ export class PrintAgentClient {
         (options as any).body = report; // TODO
         log.log(`options = ${Core.stringify(options)}`);
 
-        httpRequest(options, (err, res, body) => {
-          if (err) {
-            log.error(err);
-            reject(err);
-          } else {
-            log.log(`body = ${Core.stringify(body)}`);
-            resolve(body);
-          }
-        });
+        throw new NotSupportedException(`request does not work in browser -> refactor`);
+
+        // httpRequest(options, (err, res, body) => {
+        //   if (err) {
+        //     log.error(err);
+        //     reject(err);
+        //   } else {
+        //     log.log(`body = ${Core.stringify(body)}`);
+        //     resolve(body);
+        //   }
+        // });
       });
     });
   }
@@ -164,7 +171,7 @@ export class PrintAgentClient {
       log.error(message);
     };
 
-    throw new NotSupportedException(`import FileSystem not usable here. It's only available on nodejs platorm.`);
+    throw new NotSupportedException(`import FileSystem not usable here. It's only available on nodejs platform.`);
 
     // const cert = FileSystem.readTextFile(errorLogger, printConfiguration.agentOptions.certPath, 'Zertifikat');
     // const key = FileSystem.readTextFile(errorLogger, printConfiguration.agentOptions.keyPath, 'Private Key');

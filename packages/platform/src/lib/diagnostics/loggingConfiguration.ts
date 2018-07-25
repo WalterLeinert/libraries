@@ -1,12 +1,15 @@
+// removeIf(browser)
+
 import path = require('path');
 import process = require('process');
 
 // -------------------------- logging -------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+import { getLogger } from '../diagnostics';
 // -------------------------- logging -------------------------------
 
-import { Core, fromEnvironment, StringBuilder, Types, Utility } from '@fluxgate/core';
+// tslint:disable-next-line:no-unused-variable
+import { Core, fromEnvironment, ILogger, levels, StringBuilder, Types, using, Utility, XLog } from '@fluxgate/core';
 
 
 /**
@@ -108,3 +111,5 @@ export class LoggingConfiguration {
     });
   }
 }
+
+// endRemoveIf(browser)
