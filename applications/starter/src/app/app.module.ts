@@ -1,5 +1,7 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+// import { YearSelectorModule } from '@fluxgate/components';
 
 import { AppComponent } from './app.component';
 
@@ -8,7 +10,8 @@ import { AppComponent } from './app.component';
     AppComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    // YearSelectorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
