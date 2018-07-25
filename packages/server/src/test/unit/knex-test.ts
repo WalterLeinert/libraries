@@ -14,7 +14,7 @@ import {
   IEntityGeneratorConfig, TableMetadata, ValueGenerator
 } from '@fluxgate/common';
 import { Activator, Core, Dictionary, fromEnvironment, Funktion, ICtor, IToString, Types } from '@fluxgate/core';
-import { JsonReader } from '@fluxgate/platform';
+import { JsonReader } from '@fluxgate/node';
 
 import { IBaseService, IBaseServiceRaw } from '../../lib/ts-express-decorators-flx/services/baseService.interface';
 import { ConfigService } from '../../lib/ts-express-decorators-flx/services/config.service';
