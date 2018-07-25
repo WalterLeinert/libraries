@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@fluxgate/core": "2.6.0-beta.0",
-    "@fluxgate/platform": "2.6.0-beta.0"
+    "@fluxgate/platform": "2.6.0-beta.0",
+    "dashdash": "^1.14.1"
   }
 }

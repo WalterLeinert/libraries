@@ -3,19 +3,21 @@
 
 import 'reflect-metadata';
 
-import { Injector } from 'injection-js';
+import { Injectable, InjectionToken, Injector } from 'injection-js';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
 import { configure, getLogger, IConfig, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
+import { ILoggingConfigurationOptions } from '@fluxgate/common';
 import {
   CoreInjector, DEFAULT_CATEGORY, FlxComponent, FlxModule,
-  LOG_EXCEPTIONS, LOGGER, LoggerRegistry, ModuleMetadataStorage, Types
+  fromEnvironment, LOG_EXCEPTIONS, LOGGER, ModuleMetadataStorage, Types
 } from '@fluxgate/core';
 
-import { CommonModule } from '../bootstrap';
+import { NodeModule } from '../bootstrap';
+import { Logging } from '../util/logging';
 
 
 // Logging-Konfiguration bevor Tests laufen
@@ -37,13 +39,13 @@ configure(config);
 
 @FlxComponent({
   providers: [
-    { provide: DEFAULT_CATEGORY, useValue: CommonTestComponent.logger.category },
-    { provide: LOGGER, useValue: CommonTestComponent.logger },
+    { provide: DEFAULT_CATEGORY, useValue: NodeTestComponent.logger.category },
+    { provide: LOGGER, useValue: NodeTestComponent.logger },
     { provide: LOG_EXCEPTIONS, useValue: false }
   ]
 })
-export class CommonTestComponent {
-  public static readonly logger = getLogger(CommonTestComponent);
+export class NodeTestComponent {
+  public static readonly logger = getLogger(NodeTestComponent);
 
   constructor(injector: Injector) {
     CoreInjector.instance.setInjector(injector, true);
@@ -58,16 +60,16 @@ export class CommonTestComponent {
  */
 @FlxModule({
   imports: [
-    CommonModule
+    NodeModule
   ],
   declarations: [
-    CommonTestComponent
+    NodeTestComponent
   ],
   bootstrap: [
-    CommonTestComponent
+    NodeTestComponent
   ]
 })
-export class CommonTestModule {
+export class NodeTestModule {
 }
 
 
@@ -80,19 +82,19 @@ export class CommonTestModule {
  *
  * @export
  * @abstract
- * @class CommonUnitTest
+ * @class NodeUnitTest
  */
-export abstract class CommonUnitTest {
+export abstract class NodeUnitTest {
 
-  protected static readonly logger = getLogger(CommonUnitTest);
+  protected static readonly logger = getLogger(NodeUnitTest);
 
 
   /**
    * wird einmal vor allen Tests ausgeführt
    */
   protected static before(done?: (err?: any) => void) {
-    using(new XLog(CommonUnitTest.logger, levels.DEBUG, 'static.before'), (log) => {
-      ModuleMetadataStorage.instance.bootstrapModule(CommonTestModule);
+    using(new XLog(NodeUnitTest.logger, levels.DEBUG, 'static.before'), (log) => {
+      ModuleMetadataStorage.instance.bootstrapModule(NodeTestModule);
       done();
     });
   }
@@ -100,19 +102,25 @@ export abstract class CommonUnitTest {
 
   protected static after(done?: (err?: any) => void) {
     // tslint:disable-next-line:no-empty
-    using(new XLog(CommonUnitTest.logger, levels.DEBUG, 'static.after'), (log) => {
+    using(new XLog(NodeUnitTest.logger, levels.DEBUG, 'static.after'), (log) => {
       done();
     });
   }
 
 
-  public static initializeLogging(packageName: string = 'testing', configuration?: IConfig) {
+  public static initializeLogging(packageName: string = 'testing',
+    configurationOptions?: ILoggingConfigurationOptions) {
 
-    using(new XLog(CommonUnitTest.logger, levels.DEBUG, 'initializeLogging',
-      `packageName = ${packageName}, configuration = ${configuration}`), (log) => {
-        if (configuration) {
-          LoggerRegistry.configure(configuration);
+    using(new XLog(NodeUnitTest.logger, levels.DEBUG, 'initializeLogging',
+      `packageName = ${packageName}, configuration = ${configurationOptions}`), (log) => {
+        if (!Types.isPresent(configurationOptions)) {
+          configurationOptions = {
+            systemMode: fromEnvironment('NODE_ENV', 'development'),
+            relativePath: 'test/config'
+          };
         }
+
+        Logging.configureLogging(packageName, configurationOptions);
       });
   }
 
@@ -120,8 +128,8 @@ export abstract class CommonUnitTest {
   protected before(done?: (err?: any) => void) {
 
     // tslint:disable-next-line:no-empty
-    using(new XLog(CommonUnitTest.logger, levels.DEBUG, 'before'), (log) => {
-      CommonUnitTest.initializeLogging();
+    using(new XLog(NodeUnitTest.logger, levels.DEBUG, 'before'), (log) => {
+      NodeUnitTest.initializeLogging();
 
       done();
     });
@@ -129,7 +137,7 @@ export abstract class CommonUnitTest {
 
   protected after(done?: (err?: any) => void) {
     // tslint:disable-next-line:no-empty
-    using(new XLog(CommonUnitTest.logger, levels.DEBUG, 'after'), (log) => {
+    using(new XLog(NodeUnitTest.logger, levels.DEBUG, 'after'), (log) => {
       done();
     });
   }

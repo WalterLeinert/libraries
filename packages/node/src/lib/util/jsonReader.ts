@@ -15,22 +15,9 @@ export class JsonReader {
     }
 
     try {
-      // removeIf(browser)
-      if (trueFlag) {
-        const fs = require('fs');
-        const data = fs.readFileSync(jsonPath);
-        return JSON.parse(data.toString()) as T;
-      }
-      // endRemoveIf(browser)
-
-      // removeIf(node)
-      if (trueFlag) {
-        throw new NotSupportedException();
-      }
-      // endRemoveIf(node)
-
-      return null;    // wird nie ausgeführt
-
+      const fs = require('fs');
+      const data = fs.readFileSync(jsonPath);
+      return JSON.parse(data.toString()) as T;
     } catch (err) {
       // console.error(`Die Json-Konfiguration ${jsonPath} ist kein gültiges JSON-Format.`)
       throw new ConfigurationException(`Die Json-Konfiguration ${jsonPath} ist kein gültiges JSON-Format.`);

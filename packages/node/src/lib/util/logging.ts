@@ -3,13 +3,10 @@
 import { configure, getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
+import { ILoggingConfigurationOptions, LoggingConfiguration } from '@fluxgate/common';
 import { Assert, fromEnvironment, Types, Utility } from '@fluxgate/core';
-import { FileSystem } from '@fluxgate/platform';
 
-
-// Fluxgate
-import { ILoggingConfigurationOptions, LoggingConfiguration } from './loggingConfiguration';
-
+import { FileSystem } from './fileSystem';
 
 export class Logging {
   protected static readonly logger = getLogger(Logging);

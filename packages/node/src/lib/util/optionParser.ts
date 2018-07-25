@@ -1,10 +1,9 @@
 // tslint:disable:max-classes-per-file
 
-import dashdash = require('dashdash');
+import * as dashdash from 'dashdash';
 import { format } from 'util';
 
-import { NotSupportedException } from '../exceptions';
-import { Types } from '../types/types';
+import { NotSupportedException, Types } from '@fluxgate/core';
 
 export enum OptionType {
   /**
