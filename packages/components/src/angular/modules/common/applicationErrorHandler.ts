@@ -14,6 +14,16 @@ interface INgDebugContext {
 }
 
 
+export interface ILoggingErrorHandlerOptions {
+  rethrowError: boolean;
+  unwrapError: boolean;
+}
+
+export const LOGGING_ERROR_HANDLER_OPTIONS: ILoggingErrorHandlerOptions = {
+  rethrowError: false,
+  unwrapError: false
+};
+
 @Injectable()
 export class ApplicationErrorHandler extends ErrorHandler {
   protected static readonly logger = getLogger(ApplicationErrorHandler);
