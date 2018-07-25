@@ -18,5 +18,6 @@ export * from './lib/angular/common/routing/index';
 export * from './lib/angular/redux/index';
 export * from './lib/angular/services/index';
 export * from './lib/base/displayConfiguration/index';
+export * from './lib/base/serializer';
 export * from './lib/primeng/adapter/index';
 export * from './lib/primeng/calendarLocale';
