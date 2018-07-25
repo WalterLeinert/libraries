@@ -1,7 +1,10 @@
+// removeIf(browser)
+
 import { Injectable } from 'injection-js';
 import { Logger } from 'log4js';
 
 import { ILevel, ILogger, Level, NotImplementedException, Types } from '@fluxgate/core';
+
 
 /**
  * Proxy für log4js bzw. @see{BrowserLogger}.
@@ -90,3 +93,5 @@ export class NodeLogger implements ILogger {
   }
 
 }
+
+// endRemoveIf(browser)
