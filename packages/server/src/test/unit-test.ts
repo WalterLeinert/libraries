@@ -11,13 +11,13 @@ import { configure, getLogger, IConfig, ILogger, levels, using, XLog } from '@fl
 // -------------------------------------- logging --------------------------------------------
 
 
-import { AppConfig, CommonModule, EntityStringifyer, ILoggingConfigurationOptions, Logging } from '@fluxgate/common';
+import { AppConfig, CommonModule, EntityStringifyer, ILoggingConfigurationOptions } from '@fluxgate/common';
 import {
   CoreInjector, CoreModule, DEFAULT_CATEGORY, FlxComponent, FlxModule,
   fromEnvironment, LOG_EXCEPTIONS, LOGGER, ModuleMetadataStorage, STRINGIFYER,
   Types
 } from '@fluxgate/core';
-import { PlatformModule } from '@fluxgate/platform';
+import { Logging } from '@fluxgate/node';
 
 
 

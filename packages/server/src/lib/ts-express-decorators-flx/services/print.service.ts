@@ -16,7 +16,7 @@ import {
   Printer, Printing, RestMethods
 } from '@fluxgate/common';
 import { base64, Core, NotImplementedException, StringBuilder, Types } from '@fluxgate/core';
-import { FileSystem } from '@fluxgate/platform';
+import { FileSystem } from '@fluxgate/node';
 
 import { ISessionRequest } from '../session/session-request.interface';
 import { ServerConfigurationService } from './server-configuration.service';

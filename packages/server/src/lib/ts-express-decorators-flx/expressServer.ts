@@ -11,7 +11,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import { AppConfig, IAppConfig } from '@fluxgate/common';
 import { Assert, ServerSystemException, Types } from '@fluxgate/core';
-import { FileSystem, JsonReader } from '@fluxgate/platform';
+import { FileSystem, JsonReader } from '@fluxgate/node';
 
 import { GlobalErrorHandler } from './middlewares/global-error-handler';
 // import {

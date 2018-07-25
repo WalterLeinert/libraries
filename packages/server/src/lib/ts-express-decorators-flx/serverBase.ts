@@ -26,7 +26,7 @@ import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // Fluxgate
 import { AppConfig } from '@fluxgate/common';
 import { Assert, Clone, ConfigurationException, Core, StringBuilder, Types, Utility } from '@fluxgate/core';
-import { FileSystem } from '@fluxgate/platform';
+import { FileSystem } from '@fluxgate/node';
 
 
 // lokale Komponenten
