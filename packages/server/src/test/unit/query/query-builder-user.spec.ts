@@ -30,7 +30,7 @@ import { KnexTest } from '../knex-test';
 
 
 
-@suite('server.query')
+@suite('server.query-builder-user')
 class QueryBuilderTest extends KnexTest<User, number> {
   protected static readonly logger = getLogger(QueryBuilderTest);
 
