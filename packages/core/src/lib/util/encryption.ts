@@ -2,34 +2,25 @@ import * as CryptoJS from 'crypto-js';
 
 
 export class Encryption {
-  private static LEN = 256;
+  private static KEY_SIZE = 128;
+  private static KEY_SIZE_DIVISOR = 32;
   private static SALT_LEN = 64;
-  private static ITERATIONS = 10000;
+  private static ITERATIONS = 1000;
   private static DIGEST = 'sha256';
 
+
+
   public static hashPassword(password: string, salt: string, callback?) {
-    const len = Encryption.LEN / 2;
+    const len = Encryption.KEY_SIZE / this.KEY_SIZE_DIVISOR;
 
-    if (3 === arguments.length) {
-      CryptoJS.PBKDF2(password, salt, Encryption.ITERATIONS, len, Encryption.DIGEST, (err, derivedKey) => {
-        if (err) {
-          return callback(err);
-        }
+    const encryptionOptions = { keySize: len, iterations: Encryption.ITERATIONS };
 
-        return callback(null, derivedKey.toString('hex'));
-      });
-    } else {
+    if (2 === arguments.length) {
       callback = salt;
-      const sltString = CryptoJS.lib.WordArray.random(Encryption.SALT_LEN / 2);
-
-      CryptoJS.PBKDF2(password, sltString, Encryption.ITERATIONS, len, Encryption.DIGEST,
-        (cryptErr, derivedKey) => {
-          if (cryptErr) {
-            return callback(cryptErr);
-          }
-
-          callback(null, derivedKey.toString('hex'), sltString);
-        });
+      salt = CryptoJS.lib.WordArray.random(Encryption.SALT_LEN);
     }
+
+    const output = CryptoJS.PBKDF2(password, salt, encryptionOptions);
+    callback(null, output.toString(CryptoJS.enc.Hex));
   }
 }
