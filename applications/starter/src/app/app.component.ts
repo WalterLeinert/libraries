@@ -3,10 +3,10 @@ import * as process from 'process';
 import { Component, OnInit } from '@angular/core';
 
 import { NotSupportedException } from '@fluxgate/core';
-// -------------------------------------- logging --------------------------------------------
+// --------------------------------------logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-// import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
-// -------------------------------------- logging --------------------------------------------
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// --------------------------------------logging --------------------------------------------
 
 @Component({
   selector: 'app-root',
@@ -14,7 +14,7 @@ import { NotSupportedException } from '@fluxgate/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  // protected static logger = getLogger(AppComponent);
+  protected static logger = getLogger(AppComponent);
 
   public title = 'app';
 
@@ -24,8 +24,8 @@ export class AppComponent implements OnInit {
   public selectedYear: number;
 
   public ngOnInit(): void {
-    // return using(new XLog(AppComponent.logger, levels.INFO, 'ngOnInit'), (log) => {
-    throw new NotSupportedException('test for module import');
-    // });
+    return using(new XLog(AppComponent.logger, levels.INFO, 'ngOnInit'), (log) => {
+      throw new NotSupportedException('test for module import');
+    });
   }
 }

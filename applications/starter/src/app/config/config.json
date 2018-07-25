@@ -1,0 +1,89 @@
+{
+  "deployurl": "https://server.fluxgate.de:8180/rest/",
+  "url": "https://localhost:8180/rest/",
+  "___url": "http://localhost:8100/rest/",
+  "printUrl": "https://localhost:8180/rest/",
+  "printTopic": "printer",
+  "___printUrl": "https://localhost:8280/rest/",
+  "___printTopic": "print",
+  "mode": "development",
+  "___proxyMode": "cache",
+  "proxyMode": "entityVersion",
+  "cacheManagerConfiguration": {
+    "default": {
+      "cacheType": "lru",
+      "options": {
+          "maxItems": 10
+        }
+    },
+    "configurations": [
+      {
+        "model": "SmtpConfig"
+      },
+      {
+        "model": "Role",
+        "options": {
+          "maxItems": 1
+        }
+      },
+      {
+        "model": "User",
+        "options": {
+          "maxItems": 1
+        }
+      },
+      {
+        "model": "Artikel",
+        "options": {
+          "maxItems": 5,
+          "maxAgeMilliSeconds": 5000
+        }
+      },
+       {
+        "model": "Car"
+      }
+    ]
+  },
+  "userCredentials": {
+    "username": "tester",
+    "password": "tester"
+  },
+  "logging": {
+    "appenders": [
+      {
+        "___comment": "z.Zt. nicht verwendet, es wird immer mit console gelogged",
+        "type": "console",
+        "levels": [
+          "DEBUG"
+        ],
+        "layout": {
+          "type": "pattern",
+          "pattern": "%d{ISO8601} [%[%-5p%]] %[%-20c%] %m"
+        }
+      }
+    ],
+    "levels": {
+      "[all]": "INFO",
+      "ApplicationErrorHandler": "DEBUG",
+      "ModuleMetadataStorage": "DEBUG",
+      "BootstrapCore": "INFO",
+      "BootstrapPlatform": "INFO",
+      "BootstrapCommon": "INFO",
+      "BootstrapClient": "INFO",
+      "BootstrapComponents": "INFO",
+      "BootstrapServer": "INFO",
+      "JsonSerializer": "WARN",
+      "CommandStore": "WARN",
+      "___EntityVersionProxy": "DEBUG",
+      "CoreComponent": "WARN",
+      "AutoformComponent": "DEBUG",
+      "PassportService": "WARN",
+      "PrintService": "INFO",
+      "ServiceProxy": "INFO",
+      "ArtikelListComponent": "INFO",
+      "ConfigurationComponent": "INFO",
+      "___CacheManager": "DEBUG",
+      "___LruCache": "DEBUG"
+    }
+  }
+}
