@@ -3,14 +3,14 @@
 
 import 'reflect-metadata';
 
-import { Injectable, InjectionToken, Injector } from 'injection-js';
+import { Injector } from 'injection-js';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { configure, getLogger, IConfig, ILogger, levels, using, XLog } from '../lib/diagnostics';
+import { configure, getLogger, IConfig, ILogger } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER, STRINGIFYER } from '@fluxgate/core';
+import { DEFAULT_CATEGORY, LOG_EXCEPTIONS, LOGGER } from '@fluxgate/core';
 import { CoreInjector, CoreModule, FlxComponent, FlxModule, ModuleMetadataStorage } from '@fluxgate/core';
 
 
@@ -48,7 +48,7 @@ export class PlatformTestComponent {
     PlatformTestComponent
   ]
 })
-export class PlatformTestModule {
+export class NodeTestModule {
 }
 
 
@@ -63,7 +63,7 @@ export class PlatformTestModule {
  * @abstract
  * @class UnitTest
  */
-export abstract class PlatformUnitTest {
+export abstract class NodeUnitTest {
 
   config: IConfig = {
     appenders: [
@@ -97,6 +97,6 @@ export abstract class PlatformUnitTest {
     };
 
     configure(config);
-    ModuleMetadataStorage.instance.bootstrapModule(PlatformTestModule);
+    ModuleMetadataStorage.instance.bootstrapModule(NodeTestModule);
   }
 }

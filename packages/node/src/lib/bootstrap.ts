@@ -1,0 +1,51 @@
+// tslint:disable:max-classes-per-file
+
+import { Injector } from 'injection-js';
+
+
+// -------------------------------------- logging --------------------------------------------
+// tslint:disable-next-line:no-unused-variable
+import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
+
+import { CoreInjector, CoreModule, DEFAULT_CATEGORY, FlxComponent, FlxModule, LOGGER } from '@fluxgate/core';
+import { PlatformModule } from '@fluxgate/platform';
+
+
+
+@FlxComponent({
+  providers: [
+    { provide: DEFAULT_CATEGORY, useValue: NodeComponent.logger.category },
+    { provide: LOGGER, useValue: NodeComponent.logger }
+  ],
+})
+export class NodeComponent {
+  public static readonly logger = getLogger(NodeComponent);
+
+  constructor(injector: Injector) {
+    using(new XLog(NodeComponent.logger, levels.INFO, 'ctor'), (log) => {
+      log.log(`initializing @fluxgate/node, setting injector`);
+      CoreInjector.instance.setInjector(injector);
+    });
+  }
+}
+
+
+
+@FlxModule({
+  imports: [
+    CoreModule,
+    PlatformModule
+  ],
+  declarations: [
+    NodeComponent
+  ],
+  exports: [
+    NodeComponent
+  ],
+  bootstrap: [
+    NodeComponent
+  ]
+})
+export class NodeModule {
+}

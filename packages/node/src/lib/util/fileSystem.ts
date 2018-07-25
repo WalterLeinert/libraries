@@ -1,6 +1,7 @@
-import { Assert, NotSupportedException } from '@fluxgate/core';
+import * as fs from 'fs';
 
-const trueFlag = true;
+import { Assert } from '@fluxgate/core';
+
 
 /**
  * Hilfsklasse für Filesystem-Operationen
@@ -13,20 +14,8 @@ export class FileSystem {
   public static fileExists(path: string): boolean {
     Assert.notNullOrEmpty(path);
     try {
-      // removeIf(browser)
-      if (trueFlag) {
-        const fs = require('fs');
-        fs.accessSync(path, fs.constants.R_OK);
-        return true;
-      }
-      // endRemoveIf(browser)
-
-      // removeIf(node)
-      if (trueFlag) {
-        throw new NotSupportedException();
-      }
-      // endRemoveIf(node)
-
+      fs.accessSync(path, fs.constants.R_OK);
+      return true;
     } catch (err) {
       return false;
     }
@@ -39,19 +28,7 @@ export class FileSystem {
     Assert.notNullOrEmpty(path);
 
     try {
-      // removeIf(browser)
-      if (trueFlag) {
-        const fs = require('fs');
-        return fs.statSync(path).isDirectory();
-      }
-      // endRemoveIf(browser)
-
-      // removeIf(node)
-      if (trueFlag) {
-        throw new NotSupportedException();
-      }
-      // endRemoveIf(node)
-
+      return fs.statSync(path).isDirectory();
     } catch (err) {
       if (err.code === 'ENOENT') {
         return false;
@@ -68,12 +45,10 @@ export class FileSystem {
    * ausgeben.
    *
    * @static
-   * @param {(message: string) => void} errorLogger
-   * @param {string} path
-   * @param {string} topic
-   * @returns {string} - undefined bei Fehler
-   *
-   * @memberOf FileSystem
+   * @param errorLogger
+   * @param path
+   * @param topic
+   * @returns - undefined bei Fehler
    */
   public static readTextFile(errorLogger: (message: string) => void, path: string, topic: string,
     encoding = 'utf8'): string {
@@ -87,19 +62,7 @@ export class FileSystem {
       errorLogger(`${topic} unter ${path} ist nicht lesbar oder existiert nicht.`);
     } else {
       try {
-        // removeIf(browser)
-        if (trueFlag) {
-          const fs = require('fs');
-          result = fs.readFileSync(path, encoding);
-        }
-        // endRemoveIf(browser)
-
-        // removeIf(node)
-        if (trueFlag) {
-          throw new NotSupportedException();
-        }
-        // endRemoveIf(node)
-
+        result = fs.readFileSync(path, encoding);
       } catch (err) {
         errorLogger(`${topic} unter ${path} kann nicht gelesen werden.`);
       }
