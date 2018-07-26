@@ -44,14 +44,14 @@
       "@fluxgate/core": [
         "dist/core"
       ],
-      "@fluxgate/node/*": [
-        "dist/node/*"
+      "@fluxgate/core/*": [
+        "dist/core/*"
       ],
       "@fluxgate/node": [
         "dist/node"
       ],
-      "@fluxgate/core/*": [
-        "dist/core/*"
+      "@fluxgate/node/*": [
+        "dist/node/*"
       ],
       "@fluxgate/platform": [
         "dist/platform"
