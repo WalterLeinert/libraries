@@ -17,7 +17,7 @@ import { ReduxBaseTest } from './redux-base-test';
 
 
 
-@ReduxParentStore((f: Funktion) => RoleStore)
+@ReduxParentStore(() => RoleStore)
 export class RoleSelectorStore1 extends CommandStore<IServiceState> {
   public static ID = 'roleSelector1';
 
