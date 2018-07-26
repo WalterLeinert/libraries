@@ -3,15 +3,15 @@
 
 import 'reflect-metadata';
 
-import { Injectable, InjectionToken, Injector } from 'injection-js';
+import { Injector } from 'injection-js';
 
 // -------------------------------------- logging --------------------------------------------
 // tslint:disable-next-line:no-unused-variable
-import { configure, getLogger, IConfig, ILogger, levels, using, XLog } from '@fluxgate/platform';
+import { getLogger, ILogger, ILoggingConfigurationOptions, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 
-import { AppConfig, CommonModule, EntityStringifyer, ILoggingConfigurationOptions } from '@fluxgate/common';
+import { AppConfig, CommonModule, EntityStringifyer } from '@fluxgate/common';
 import {
   CoreInjector, CoreModule, DEFAULT_CATEGORY, FlxComponent, FlxModule,
   fromEnvironment, LOG_EXCEPTIONS, LOGGER, ModuleMetadataStorage, STRINGIFYER,
