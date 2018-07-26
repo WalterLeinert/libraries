@@ -4,11 +4,14 @@ import {
   UserStore
 } from '@fluxgate/common';
 
+export function parentUserStore() {
+  return UserStore;
+}
 
 /**
  * CommandStore für einen User-Selector: hat zusätzlich zum UserStore noch currentItem
  */
-@ReduxParentStore(UserStore)
+@ReduxParentStore(parentUserStore)
 export class UserSelectorStore extends CommandStore<IExtendedCrudServiceState<IUser, number>> {
   public static ID = 'userSelector';
 
