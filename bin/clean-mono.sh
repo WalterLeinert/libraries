@@ -12,12 +12,14 @@ gulp_libs="core platform common node client server testing"
 	echo "cleaning project $(/bin/pwd)"
 
 	for lib in ${gulp_libs}; do
-		echo "performing gulp clean for $lib"
+		echo "performing gulp clean for $lib ..."
 		(cd packages/$lib && gulp clean)
 	done
 
+	echo "cleaning lerna ..."
 	lerna clean --yes
 
+	echo "removing root node_modules/dist ..."
 	rm -rf node_modules dist
 )
 
