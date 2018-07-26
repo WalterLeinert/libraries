@@ -14,19 +14,19 @@ gulp_libs="core platform common node client server testing"
 	npm i
 
 	echo "bootstrap lerna and hoisting dependencies ..."
-	lerna boostrap --hoist --concurrency 1
+	lerna bootstrap --hoist --concurrency 1
 
 	for lib in ${gulp_libs}; do
-		echo "performing gulp compile/test for $lib"
+		echo "performing gulp compile/test for $lib ..."
 		(cd packages/$lib && gulp test)
 	done
 
-	echo "building client"
+	echo "building client ..."
 	ng build client
 
-	echo "building components"
+	echo "building components ..."
 	ng build components
 
-	echo "building starter"
+	echo "building starter ..."
 	ng build starter
 )
