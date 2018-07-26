@@ -8,5 +8,6 @@
 <h2>Here are some links to help you start: </h2>
 
 
-<!-- <flx-year-selector [data]="years" [(value)]="year"></flx-year-selector>
- -->
+<flx-year-selector [lowerYear]="'2016'" [(ngModel)]="year" (valueChange)="onSelectedYearChange($event)" [debug]="false" [style]="{'width':'120px'}"
+  name="yearSelector">
+</flx-year-selector>

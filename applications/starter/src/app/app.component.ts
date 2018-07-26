@@ -25,7 +25,14 @@ export class AppComponent implements OnInit {
 
   public ngOnInit(): void {
     return using(new XLog(AppComponent.logger, levels.INFO, 'ngOnInit'), (log) => {
-      throw new NotSupportedException('test for module import');
+      // throw new NotSupportedException('test for module import');
+    });
+  }
+
+  public onSelectedYearChange(year: number) {
+    using(new XLog(AppComponent.logger, levels.DEBUG, 'onSelectedYearChange'), (log) => {
+      log.log(`year = ${JSON.stringify(year)}`);
+      // this.refreshOvertimes(this.clientuser);
     });
   }
 }
