@@ -10,10 +10,6 @@
     "tslint": "tslint ./src/**/*.ts",
     "debug_test": "node-debug _mocha -t 0 test/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "http://server.fluxgate.de:89/fluxgate/libraries.git"
-  },
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
   "devDependencies": {

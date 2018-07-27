@@ -9,10 +9,6 @@
     "test": "gulp test",
     "tslint": "tslint ./src/**/*.ts"
   },
-  "repository": {
-    "type": "git",
-    "url": "http://server.fluxgate.de:89/fluxgate/libraries.git"
-  },
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
   "devDependencies": {
