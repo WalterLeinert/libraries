@@ -1,14 +1,7 @@
 {
-  "extends": "../../tsconfig.json",
-
+  "extends": "../tsconfig.spec.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "declaration": true,
-    "inlineSources": true,
-    "types": [
-      "node",
-      "mocha"
-    ]
+    "outDir": "./dist"
   },
   "include": [
     "**/*.ts"
