@@ -25,6 +25,7 @@
     "tinycolor2": "^1.4.1"
   },
   "devDependencies": {
-    "@types/tinycolor2": "^1.4.0"
+    "@types/tinycolor2": "^1.4.0",
+    "reflect-metadata": "^0.1.12"
   }
 }
