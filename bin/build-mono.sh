@@ -2,8 +2,8 @@
 
 root_dir="$(dirname $0)/.."
 
-
-gulp_libs="core platform common node client server testing"
+# client built by ng (see below)
+gulp_libs="core platform common node server testing"
 
 (
 	cd $root_dir
