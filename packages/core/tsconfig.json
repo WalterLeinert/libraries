@@ -1,15 +1,6 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/core",
-    "target": "es5",
-    "module": "commonjs",
-    "declaration": true,
-    "types": [
-      "node"
-    ]
-  },
-  "exclude": [
-    "src/test/**"
-  ]
+    "outDir": "../../dist/core"
+  }
 }
