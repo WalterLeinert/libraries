@@ -25,7 +25,6 @@
     "tinycolor2": "^1.4.1"
   },
   "devDependencies": {
-    "@types/moment": "^2.13.0",
     "@types/tinycolor2": "^1.4.0"
   }
 }
