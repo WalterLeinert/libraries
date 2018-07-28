@@ -23,8 +23,8 @@ describe('RoleService: should find by entity status (deleted, archived, ...)', (
 
     AppConfig.register({
       url: 'unused',
-      printUrl: 'unused',
-      printTopic: 'unused',
+      // TODO: printUrl: 'unused',
+      // TODO: printTopic: 'unused',
       mode: 'development',
       proxyMode: 'entityVersion'
     });
