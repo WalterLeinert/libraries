@@ -1,7 +1,7 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/starter-common",
+    "outDir": "../../../dist/starter-common",
     "target": "es5",
     "module": "commonjs",
     "declaration": true,
