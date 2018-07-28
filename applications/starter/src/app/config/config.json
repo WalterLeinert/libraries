@@ -63,8 +63,7 @@
       }
     ],
     "levels": {
-      "[all]": "INFO",
-      "AppComponent": "DEBUG",
+      "[all]": "WARN",
       "ApplicationErrorHandler": "DEBUG",
       "ModuleMetadataStorage": "DEBUG",
       "BootstrapCore": "INFO",

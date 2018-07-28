@@ -12,14 +12,42 @@ import { ConfirmationService } from 'primeng/components/common/api';
 import { configure, getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
-import { APP_STORE, AppInjector, createStore, CurrentUserService } from '@fluxgate/client';
+// Fluxgate
+import { APP_STORE, AppInjector, createStore } from '@fluxgate/client';
 import { AppConfig, IAppConfig } from '@fluxgate/common';
-import { ENTITY_VERSION_SERVICE_PROVIDER, YearSelectorModule } from '@fluxgate/components';
+import {
+  ApplicationErrorHandlerModule,
+  AuthenticationModule, AuthenticationNavigation, AuthenticationNavigationToken, AuthenticationRoutingModule,
+  AutofocusModule, AutoformModule, ClientServicesModule, ConfirmationDialogModule,
+  ENTITY_VERSION_SERVICE_PROVIDER,
+  FocusModule, LOGGING_ERROR_HANDLER_OPTIONS, MessagesModule,
+  UserServiceRequestsModule
+} from '@fluxgate/components';
 import { ModuleMetadataStorage } from '@fluxgate/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClientModule } from './client.module';
+import { HomeComponent } from './home/home.component';
+
+// Artikel
+import { ArtikelModule } from './artikel/artikel.module';
+
+
+// Car
+// Artikel
+import { CarModule } from './car/car.module';
+import { ConfigurationModule } from './configuration/configuration.module';
+// import { SystemConfigModule } from './systemconfig/systemconfig.module';
+
+export function createAuthenticationNavigation(): AuthenticationNavigation {
+  return {
+    loginRedirectUrl: '/artikel',
+    // logoutRedirectUrl: '/',
+    // changePasswordRedirectUrl: '/'
+  };
+}
+
 
 
 
@@ -27,7 +55,8 @@ import { ClientModule } from './client.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -35,15 +64,37 @@ import { ClientModule } from './client.module';
     FormsModule,
     HttpModule,
 
-    YearSelectorModule,
+    // fluxgate/client
+    ApplicationErrorHandlerModule,
+    AutofocusModule,
+    AutoformModule,
+    ConfirmationDialogModule,
+    FocusModule,
+    ClientServicesModule,
+    MessagesModule,
+    UserServiceRequestsModule,
 
-    AppRoutingModule
+    // lokal
+    ArtikelModule,
+    CarModule,
+    ConfigurationModule,
+    AuthenticationModule,
+    AuthenticationRoutingModule,
+    AppRoutingModule,
   ],
   providers: [
-    ConfirmationService,
-    CurrentUserService,
     ENTITY_VERSION_SERVICE_PROVIDER,
     { provide: APP_STORE, useFactory: createStore },
+    {
+      provide: AuthenticationNavigationToken, useFactory: createAuthenticationNavigation
+    },
+    {
+      provide: LOGGING_ERROR_HANDLER_OPTIONS,
+      useValue: {
+        rethrowError: false,
+        unwrapError: false
+      }
+    }
   ],
   bootstrap: [AppComponent]
 })

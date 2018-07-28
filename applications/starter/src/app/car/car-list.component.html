@@ -1,0 +1,22 @@
+<flx-sidebar #sidebarmain>
+  <div flx-sidebar-icons>
+    <a class="btn btn-sm pull-right" data-toggle="tooltip" data-placement="right" title="new"><i class="fa fa-file-text-o fa-lg" ></i></a>
+    <a class="btn btn-sm pull-right" data-toggle="tooltip" data-placement="right" title="save"><i class="fa fa-floppy-o fa-lg"></i></a>
+    <a class="btn btn-sm pull-right" data-toggle="tooltip" data-placement="right" title="delete"><i class="fa fa-trash-o fa-lg"></i></a>
+  </div>
+
+  <div flx-sidebar-main>
+    <flx-selectionlist [fields]="fields" [datarecords]="cars" (onRecordSelect)="onSelectedValueChange($event)"></flx-selectionlist>
+  </div>
+
+  <div flx-sidebar-detail>
+    <div style='padding: 10px'>
+      <h1>{{selectedCarName || "&nbsp;"}}</h1>
+    </div>
+
+    <flx-tab [tabs]="tabs"></flx-tab>
+
+    <router-outlet name="detail"></router-outlet>
+  </div>
+
+</flx-sidebar>

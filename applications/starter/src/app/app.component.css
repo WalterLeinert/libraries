@@ -1,0 +1,79 @@
+.ng-sidebar {
+  enable-background: true;
+  background-color: black;
+  background-blend-mode: color-dodge;
+}
+
+.nav-tabs {
+border-bottom: 1px solid transparent;
+cursor: default;
+}
+.nav-tabs > li {
+float: left;
+margin-bottom: -1px;
+cursor: default;
+color: #555555;
+}
+.nav-tabs > li > a {
+cursor: default;
+color: #eeeeee;
+line-height: 0.9;
+background-color: rgba(0, 0, 0, 0.2);
+border: 0px solid transparent;
+}
+.nav-tabs > li > a:hover {
+cursor: default;
+background-color: rgba(255, 255, 255, 0.5);
+}
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+color: #555;
+cursor: default;
+background-color: #eee;
+border-bottom-color: transparent;
+}
+.nav-tabs.nav-justified {
+width: 100%;
+border-bottom: 0;
+}
+.nav-tabs.nav-justified > li {
+float: none;
+}
+.nav-tabs.nav-justified > li > a {
+margin-bottom: 5px;
+text-align: center;
+}
+.nav-tabs.nav-justified > .dropdown .dropdown-menu {
+top: auto;
+left: auto;
+}
+@media (min-width: 768px) {
+.nav-tabs.nav-justified > li {
+  display: table-cell;
+  width: 1%;
+}
+.nav-tabs.nav-justified > li > a {
+  margin-bottom: 0;
+}
+}
+.nav-tabs.nav-justified > li > a {
+margin-right: 0;
+border-radius: 2px;
+}
+.nav-tabs.nav-justified > .active > a,
+.nav-tabs.nav-justified > .active > a:hover,
+.nav-tabs.nav-justified > .active > a:focus {
+border: 1px solid #eee;
+}
+@media (min-width: 768px) {
+.nav-tabs.nav-justified > li > a {
+  border-bottom: 1px solid #eee;
+  border-radius: 2px 2px 0 0;
+}
+.nav-tabs.nav-justified > .active > a,
+.nav-tabs.nav-justified > .active > a:hover,
+.nav-tabs.nav-justified > .active > a:focus {
+  border-bottom-color: #fff;
+}
+}

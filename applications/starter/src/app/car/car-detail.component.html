@@ -1,0 +1,32 @@
+{{diagnostic}}
+<div style="background: #eeeeee; padding: 3px 3px 3px 3px; min-height: 35px">
+  <div class="pull-right">
+    <a class="btn btn-sm" data-toggle="tooltip" data-placement="right" title="save" (click)="submit()"><i class="fa fa-floppy-o fa-lg"></i></a>
+    <a class="btn btn-sm" data-toggle="tooltip" data-placement="right" title="delete" (click)="confirmDelete()"><i class="fa fa-trash-o fa-lg"></i></a>
+  </div>
+</div>
+
+<div class="container pull-left" style="padding: 25px 0 0 25px; width: 400px">
+  <div *ngIf="car">
+    <form [formGroup]="getForm()">
+
+      <div class="form-group">
+        <label class="control-label" for="name">Name:</label>
+        <input type="text" flxAutofocus class="form-control" id="name" required [(ngModel)]="car.name" name="name" formControlName="name">
+        <div *ngIf="getFormErrors('name')" class="alert alert-danger">
+          {{ getFormErrors('name') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label" for="color">Farbe:</label>
+        <input type="text" class="form-control" id="color" [(ngModel)]="car.color" name="color" formControlName="color">
+
+        <div *ngIf="getFormErrors('color')" class="alert alert-danger">
+          {{ getFormErrors('color') }}
+        </div>
+      </div>
+      <flx-confirmation-dialog></flx-confirmation-dialog>
+    </form>
+  </div>
+</div>

@@ -1,38 +1,57 @@
-import * as process from 'process';
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { Component, OnInit } from '@angular/core';
+// -------------------------------------- logging --------------------------------------------
+import { getLogger } from '@fluxgate/platform';
+// -------------------------------------- logging --------------------------------------------
 
-import { NotSupportedException } from '@fluxgate/core';
-// --------------------------------------logging --------------------------------------------
-// tslint:disable-next-line:no-unused-variable
-import { getLogger, ILogger, levels, using, XLog } from '@fluxgate/platform';
-// --------------------------------------logging --------------------------------------------
+
+import { AppConfigService, ExtendedCoreComponent, MessageService } from '@fluxgate/client';
+
+import { Tab } from './tab';
+
+
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
-  protected static logger = getLogger(AppComponent);
+export class AppComponent extends ExtendedCoreComponent {
+  protected static readonly logger = getLogger(AppComponent);
 
-  public title = 'app';
-
-  public years: number[] = [
+  public title = 'Fluxgate Starter Application';
+  public mode: string;
+  public tabs: Tab[] = [
+    {
+      header: 'Home',
+      route: './home',
+      status: ''
+    },
+    {
+      header: 'Artikel',
+      route: './artikel',
+      status: 'active'
+    },
+    {
+      header: 'Autos',
+      route: './car',
+      status: ''
+    }
   ];
 
-  public selectedYear: number;
 
-  public ngOnInit(): void {
-    return using(new XLog(AppComponent.logger, levels.INFO, 'ngOnInit'), (log) => {
-      // throw new NotSupportedException('test for module import');
-    });
+  constructor(router: Router, route: ActivatedRoute, messageService: MessageService,
+    configService: AppConfigService) {
+    super(router, route, messageService);
+
+    this.mode = configService.config.mode;
   }
 
-  public onSelectedYearChange(year: number) {
-    using(new XLog(AppComponent.logger, levels.DEBUG, 'onSelectedYearChange'), (log) => {
-      log.log(`year = ${JSON.stringify(year)}`);
-      // this.refreshOvertimes(this.clientuser);
-    });
+  public GoTo(route: string) {
+    this.router.navigate([route]);
   }
+
+
 }

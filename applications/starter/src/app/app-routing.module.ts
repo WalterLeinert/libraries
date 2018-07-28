@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 // import { ChangePasswordComponent, LoginComponent, LogoffComponent, RegisterComponent } from '@fluxgate/components';
 
+import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
   // {
@@ -11,7 +12,7 @@ const routes: Routes = [
   //   // canLoad: [AuthGuard]
   // },
 
-  // { path: 'home', component: HomeComponent },
+  { path: 'home', component: HomeComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login', pathMatch: 'full' }
 ];

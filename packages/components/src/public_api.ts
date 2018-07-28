@@ -11,6 +11,7 @@ export * from './lib/angular/modules/authentication/index';
 export * from './lib/angular/modules/autoform/index';
 export * from './lib/angular/modules/autoform/autoform-controls/autoform-controls.component';
 export * from './lib/angular/modules/autoform/autoform-controls/autoform-controls.module';
+export * from './lib/angular/modules/client-services.module';
 export * from './lib/angular/modules/common/index';
 export * from './lib/angular/modules/common/confirmation-dialog/confirmation-dialog.component';
 export * from './lib/angular/modules/common/popup/popup.component';

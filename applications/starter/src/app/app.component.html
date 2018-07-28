@@ -1,13 +1,37 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div class="container-flex" style="background-color: #0067a2">
+  <div class="row">
+    <div class="col col-xs-3" style="width: 230px;">
+      <img src="/assets/images/applogo.png">
+    </div>
+    <div class="col col-xs-6 pull-right" style="height:36px;">
+      <div class="pull-right" style="background-color: black; height:31px; min-width:85px;">
+        <div class="btn-group">
+          <a class="btn btn-sm pull-left dropdown-toggle" data-toggle="dropdown">{{ currentUser ? currentUser.fullName : 'nicht angemeldet' }}</a>
+
+          <ul *ngIf="currentUser" class="dropdown-menu" style="background: #eeeeee">
+            <li><a [routerLink]="['/changePassword']">Change Password</a></li>
+            <li><a [routerLink]="['/logout']">Logout</a></li>
+            <li *ngIf="currentUser && currentUser.isAdmin" role="separator" class="divider"></li>
+            <li *ngIf="currentUser && currentUser.isAdmin"><a [routerLink]="['/register']">Register</a></li>
+          </ul>
+        </div>
+        <a *ngIf="currentUser" class="btn btn-sm pull-right" [routerLink]="['/logout']"><i class="fa fa-sign-out fa-lg"></i></a>
+        <a *ngIf="currentUser && currentUser.isAdmin" class="btn btn-sm pull-right" [routerLink]="['/configuration']"><i class="fa fa-cog fa-lg"></i></a>
+      </div>
+    </div>
+    <div class="col col-xs-7 minheight child" style="min-width:550px;">
+      <ul *ngIf="currentUser" class="nav nav-tabs" role="tablist">
+        <li *ngFor="let tab of tabs" data-toggle="tab" role="tab" class="nav-panel {{tab.status}}"><a class="nav-link" (click)="GoTo(tab.route)">{{tab.header}}</a></li>
+      </ul>
+    </div>
+  </div>
 </div>
-<h2>Here are some links to help you start: </h2>
 
+<div style="height:10px; background-color: #eeeeee">
 
-<flx-year-selector [lowerYear]="'2016'" [(ngModel)]="year" (valueChange)="onSelectedYearChange($event)" [debug]="false" [style]="{'width':'120px'}"
-  name="yearSelector">
-</flx-year-selector>
+</div>
+
+<div style="height:calc(100vh - 80px)">
+  <flx-messages></flx-messages>
+  <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,38 @@
+{{diagnostic}}
+
+<div class="container">
+  <h1>{{pageTitle}}</h1>
+  <form class="form-horizontal" [formGroup]="getForm()">
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="name">Name</label>
+      <input type="text" flxAutofocus class="form-control" id="name" required [(ngModel)]="artikel.name" name="name" formControlName="name">
+
+      <div *ngIf="getFormErrors('name')" class="alert alert-danger">
+        {{ getFormErrors('name') }}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="nummer">Artikelnummer</label>
+      <input type="text" class="form-control" id="nummer" [(ngModel)]="artikel.nummer" name="nummer" formControlName="nummer">
+
+      <div *ngIf="getFormErrors('nummer')" class="alert alert-danger">
+        {{ getFormErrors('nummer') }}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="saison">Saison</label>
+      <input type="text" class="form-control" id="saison" [(ngModel)]="artikel.saison" name="saison" formControlName="saison">
+
+      <div *ngIf="getFormErrors('saison')" class="alert alert-danger">
+        {{ getFormErrors('saison') }}
+      </div>
+    </div>
+
+    <button pButton type="submit" class="btn btn-default" (click)='cancel()' label="Abbruch"></button>
+    <button pButton type="submit" class="btn btn-default" [disabled]="!form.dirty" (click)='submit()' label="Speichern"></button>
+    <button pButton type="submit" class="btn" (click)='confirmDelete()' icon="fa-trash-o" label="Löschen"></button>
+    
+    <flx-confirmation-dialog></flx-confirmation-dialog>
+  </form>
+</div>

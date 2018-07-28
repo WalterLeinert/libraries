@@ -1,0 +1,23 @@
+<div>
+  <div class="ui-widget-header" style="padding:4px 10px;border-top: 0 none;border-bottom: 0 none">
+    <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+    <input #gb type="text" pInputText size="20" placeholder="Filter">
+  </div>
+
+  <button type="button" class="btn btn-primary" id="print" (click)='print()'>
+    Print
+  </button>
+
+  <p-dataTable [value]="artikel" selectionMode="single" sortMode="single" [paginator]="true" [rows]="15" name="artikel" [selection]="selectedArtikel"
+    (selectionChange)="onSelectedValueChange($event)" (onRowDblclick)="onRowDblclick($event)" [globalFilter]="gb">
+    <p-column field="nummer" header="Nummer" sortable="true"></p-column>
+    <p-column field="name" header="Name" sortable="true"></p-column>
+    <p-column field="extrabarcode" header="Extrabarcode" sortable="true"></p-column>
+    <p-column field="saison" header="Saison" sortable="true"></p-column>
+    <p-column field="teil1" header="Teil 1" sortable="true"></p-column>
+    <p-column field="teil2" header="Teil 2" sortable="true"></p-column>
+    <p-column field="id_kollektion" header="Kollektion-Id" sortable="true"></p-column>
+  </p-dataTable>
+</div>
+
+<router-outlet></router-outlet>

@@ -1,0 +1,17 @@
+<nav class='navbar navbar-default'>
+  <div class='container-fluid'>
+
+    <ul class='nav navbar-nav navbar-left'>
+      <li *ngFor="let config of configurations" class="{{getActive(config)}}"><a (click)="setActive(config)" routerLink="{{config.id}}" routerLinkActive="active">{{config.id}}</a></li>
+    </ul>
+
+  </div>
+</nav>
+
+<div *ngIf="configurations && configurations.length > 0;else empty" class="col-md-6">
+  <router-outlet></router-outlet>
+</div>
+
+<ng-template #empty>
+  <h2>keine Systemkonfigurationen vorhanden</h2>
+</ng-template>
