@@ -65,6 +65,12 @@
       "@fluxgate/testing/*": [
         "dist/testing/*"
       ],
+      "@fluxgate/server": [
+        "dist/server"
+      ],
+      "@fluxgate/server/*": [
+        "dist/server/*"
+      ],
       "@fluxgate/starter-common": [
         "dist/starter-common"
       ],
