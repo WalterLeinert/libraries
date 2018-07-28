@@ -57,6 +57,27 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "node: run Mocha",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "dist/test/**/*.spec.js",
+        "--no-timeouts",
+        "-r", "ts-node/register",
+        "-r", "tsconfig-paths/register"
+      ],
+      "cwd": "${workspaceRoot}/packages/node",
+      "runtimeExecutable": null,
+      "outFiles": [
+      ],
+      "sourceMaps": true,
+      "stopOnEntry": false,
+      "env": {
+        "NODE_ENV": "debug"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "platform: run Mocha",
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
