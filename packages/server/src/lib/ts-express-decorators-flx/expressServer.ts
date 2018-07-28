@@ -22,10 +22,10 @@ import { IServerConfiguration } from './server-configuration.interface';
 import { ServerBase } from './serverBase';
 import { ServerConfigurationService } from './services/server-configuration.service';
 
-
-const appConfigPath = path.join(process.cwd(), 'app/config/config.json');
-const appConfig = JsonReader.readJsonSync<IAppConfig>(appConfigPath);
-AppConfig.register(appConfig);
+// TODO: obsolete??
+// const appConfigPath = path.join(process.cwd(), 'app/config/config.json');
+// const appConfig = JsonReader.readJsonSync<IAppConfig>(appConfigPath);
+// AppConfig.register(appConfig);
 
 // Server-Rootdir (zur Laufzeit)
 const rootDir = path.join(process.cwd());
