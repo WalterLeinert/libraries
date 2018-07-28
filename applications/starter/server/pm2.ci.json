@@ -1,0 +1,13 @@
+{
+  "apps": [
+    {
+      "name": "starter",
+      "script": "server.js",
+      "cwd": "dist/server/src",
+      "watch": false,
+      "env": {
+        "NODE_ENV": "ci"
+      }
+    }
+  ]
+}

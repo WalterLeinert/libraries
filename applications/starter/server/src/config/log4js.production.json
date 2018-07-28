@@ -1,0 +1,21 @@
+{
+    "appenders": [
+        {
+            "type": "console",
+            "levels": ["DEBUG"],
+            "layout": {
+                "type": "pattern",
+                "pattern": "%d{ISO8601} [%[%-5p%]] %[%-20c%] %m"
+            }
+        }
+    ],
+    "levels": {
+        "[all]": "WARN",
+        "BaseService": "INFO",
+        "PassportController": "INFO",
+        "PassportLocalService": "INFO",
+        "ArtikelController": "INFO",
+        "KollektionController": "INFO",
+        "ControllerBase": "INFO"
+    }
+}

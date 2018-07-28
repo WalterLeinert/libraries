@@ -1,0 +1,33 @@
+{
+  "cert": {
+    "certPath": "./cert.pem",
+    "keyPath": "./key.pem"
+  },
+  "express": {
+    "httpsPort": "8180",
+    "port": "8100"
+  },
+  "mail": {
+    "host": "smtp.1und1.de",
+    "port": 465,
+    "ssl": true,
+    "user": "smtp.nodejs@fluxgate.de",
+    "password": "Ds43q-Vb5AKpu98-Gbnd",
+    "from": "smtp.nodejs@fluxgate.de"
+  },
+  "knex": {
+    "debug": true,
+    "client": "mysql",
+    "connection": {
+      "host": "10.10.11.17",
+      "user": "starter",
+      "password": "cN6nwc96ccRU2dVN",
+      "port": 3306,
+      "database": "starter"
+    },
+    "pool": {
+      "min": 0,
+      "max": 7
+    }
+  }
+}
