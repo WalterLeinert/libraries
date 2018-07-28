@@ -152,6 +152,24 @@
       ],
       "sourceMaps": true,
       "stopOnEntry": false
-    }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "starter-server: debug",
+      "program": "${workspaceRoot}/applications/starter/server/dist/src/server.js",
+      "args": [
+        "-r", "tsconfig-paths/register"
+      ],
+      "cwd": "${workspaceRoot}/applications/starter/server/dist/src/",
+      "runtimeExecutable": null,
+       "outFiles": [
+      ],
+      "sourceMaps": true,
+      "stopOnEntry": false,
+      "env": {
+        "NODE_ENV": "local"
+      }
+    },
   ]
 }
