@@ -3,12 +3,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
 
-import {
-  BaseRequestOptions,
-  ConnectionBackend,
-  Http
-} from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
+// Http testing module and mocking controller
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+
+// Other imports
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 // PrimeNG
 import { DataTableModule } from 'primeng/components/datatable/datatable';
@@ -29,10 +28,13 @@ class RouterStub {
 describe('ArtikelListComponent', () => {
   const component: ArtikelListComponent = null;
   // let fixture: ComponentFixture<ArtikelListComponent>;
+  let httpClient: HttpClient;
+  let httpTestingController: HttpTestingController;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        HttpClientTestingModule,
         MessagesModule,
         DataTableModule,
         ArtikelServiceRequestsModule
@@ -40,22 +42,18 @@ describe('ArtikelListComponent', () => {
       declarations: [ArtikelListComponent],
       providers: [
         AppConfigService,
-        BaseRequestOptions,
-        MockBackend,
         {
-          provide: Http,
-          useFactory: (
-            backend: ConnectionBackend,
-            defaultOptions: BaseRequestOptions) => {
-            return new Http(backend, defaultOptions);
-          },
-          deps: [MockBackend, BaseRequestOptions]
+          provide: HttpClient
         },
         ArtikelFilterPipe,
         ARTIKEL_SERVICE_FAKE_PROVIDER,
         { provide: Router, useClass: RouterStub }]
     })
       .compileComponents();
+
+    // Inject the http service and test controller for each test
+    httpClient = TestBed.get(HttpClient);
+    httpTestingController = TestBed.get(HttpTestingController);
   }));
 
   it('should create the component', async(() => {
