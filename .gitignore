@@ -54,6 +54,6 @@ symbols.json
 /lib/
 /dts/
 /build/
-/dist/
+dist
 /client/dist
 .vscode
