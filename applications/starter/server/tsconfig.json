@@ -2,7 +2,7 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../dist/starter-server",
-    "target": "es5",
+    "target": "es2015",
     "module": "commonjs",
     "declaration": false,
     "types": [
