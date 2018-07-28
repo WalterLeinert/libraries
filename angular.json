@@ -85,7 +85,7 @@
     },
     "starter": {
       "root": "applications/starter/starter-client",
-      "sourceRoot": "applications/starter/starter-client/src",
+      "sourceRoot": "applications/starter/client/src",
       "projectType": "application",
       "prefix": "app",
       "schematics": {},
@@ -94,21 +94,21 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/starter",
-            "index": "applications/starter/starter-client/src/index.html",
-            "main": "applications/starter/starter-client/src/main.ts",
-            "polyfills": "applications/starter/starter-client/src/polyfills.ts",
-            "tsConfig": "applications/starter/starter-client/tsconfig.app.json",
+            "index": "applications/starter/client/src/index.html",
+            "main": "applications/starter/client/src/main.ts",
+            "polyfills": "applications/starter/client/src/polyfills.ts",
+            "tsConfig": "applications/starter/client/tsconfig.app.json",
             "assets": [
-              "applications/starter/starter-client/src/favicon.ico",
-              "applications/starter/starter-client/src/assets",
-              "applications/starter/starter-client/src/app/config"
+              "applications/starter/client/src/favicon.ico",
+              "applications/starter/client/src/assets",
+              "applications/starter/client/src/app/config"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/themes/omega/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "applications/starter/starter-client/src/styles.css"
+              "applications/starter/client/src/styles.css"
             ],
             "scripts": [
               "./node_modules/bootstrap/dist/js/bootstrap.bundle.js",
@@ -118,8 +118,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "applications/starter/starter-client/src/environments/environment.ts",
-                  "with": "applications/starter/starter-client/src/environments/environment.prod.ts"
+                  "replace": "applications/starter/client/src/environments/environment.ts",
+                  "with": "applications/starter/client/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -154,17 +154,17 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "applications/starter/starter-client/src/test.ts",
-            "polyfills": "applications/starter/starter-client/src/polyfills.ts",
-            "tsConfig": "applications/starter/starter-client/tsconfig.spec.json",
-            "karmaConfig": "applications/starter/starter-client/karma.conf.js",
+            "main": "applications/starter/client/src/test.ts",
+            "polyfills": "applications/starter/client/src/polyfills.ts",
+            "tsConfig": "applications/starter/client/tsconfig.spec.json",
+            "karmaConfig": "applications/starter/client/karma.conf.js",
             "styles": [
-              "applications/starter/starter-client/src/styles.css"
+              "applications/starter/client/src/styles.css"
             ],
             "scripts": [],
             "assets": [
-              "applications/starter/starter-client/src/favicon.ico",
-              "applications/starter/starter-client/src/assets"
+              "applications/starter/client/src/favicon.ico",
+              "applications/starter/client/src/assets"
             ]
           }
         },
@@ -172,8 +172,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "applications/starter/starter-client/tsconfig.app.json",
-              "applications/starter/starter-client/tsconfig.spec.json"
+              "applications/starter/client/tsconfig.app.json",
+              "applications/starter/client/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
