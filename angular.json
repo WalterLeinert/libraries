@@ -183,13 +183,13 @@
       }
     },
     "starter-e2e": {
-      "root": "applications/starter-e2e/",
+      "root": "applications/starter/client-e2e/",
       "projectType": "application",
       "architect": {
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
-            "protractorConfig": "applications/starter-e2e/protractor.conf.js",
+            "protractorConfig": "applications/starter/client-e2e/protractor.conf.js",
             "devServerTarget": "starter:serve"
           },
           "configurations": {
@@ -201,7 +201,7 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": "applications/starter-e2e/tsconfig.e2e.json",
+            "tsConfig": "applications/starter/client-e2e/tsconfig.e2e.json",
             "exclude": [
               "**/node_modules/**"
             ]
