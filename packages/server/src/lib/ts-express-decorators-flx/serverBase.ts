@@ -96,11 +96,11 @@ export abstract class ServerBase extends ServerLoader {
     return using(new XLog(ServerBase.logger, levels.INFO, 'Initialize'), (log) => {
 
       return new Promise<ServerBase>((resolve, reject) => {
-        const cwd = process.cwd();
-        log.info(`cwd = ${cwd}`);
+        const rootDir = path.resolve(__dirname);
+        log.info(`rootDir = ${rootDir}`);
 
         // interne Controller (wie UserController)
-        const serverControllers = path.join(cwd, '../../node_modules/@fluxgate/server/dist/src/**/controllers/*.js');
+        const serverControllers = path.join(rootDir, './**/controllers/*.js');
 
         const errorLogger = (message: string): void => {
           log.error(message);
