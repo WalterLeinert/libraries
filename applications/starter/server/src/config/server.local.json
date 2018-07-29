@@ -1,7 +1,7 @@
 {
   "dataName": "/data",
   "___dataDirectory": "config",
-  "dataDirectory": "C:\\Entwicklung\\christian-lehmeier\\master\\fluxgate\\starter",
+  "dataDirectory": "/c/temp",
   "cert": {
     "certPath": "./cert.pem",
     "keyPath": "./key.pem"
@@ -25,7 +25,7 @@
       "certPath": "printing/cert.pem",
       "keyPath": "printing/key.pem",
       "caPath": "printing/ca.pem",
-      "rejectUnauthorized": false  
+      "rejectUnauthorized": false
     }
   },
   "knex": {
