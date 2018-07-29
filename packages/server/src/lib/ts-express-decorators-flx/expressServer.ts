@@ -28,7 +28,7 @@ import { ServerConfigurationService } from './services/server-configuration.serv
 // AppConfig.register(appConfig);
 
 // Server-Rootdir (zur Laufzeit)
-const rootDir = path.join(process.cwd());
+const rootDir = path.join(__dirname);
 
 /**
  * Standardimplementierung für den Express-Server
