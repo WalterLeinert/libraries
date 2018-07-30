@@ -7,8 +7,8 @@
     "keyPath": "./key.pem"
   },
   "express": {
-    "httpsPort": "8180",
-    "port": "8100"
+    "httpsPort": "8280",
+    "port": "8200"
   },
   "mail": {
     "host": "smtp.1und1.de",
