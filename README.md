@@ -17,13 +17,15 @@ Die Library enthält grundlegende Funktionalitäten für alle anderen Libraries 
 
 ### Platform
 
-Die Library enthält (wenige) Funktionalitäten für die Plattformen Node (Server) und Browser (Client), die entweder auf beiden Plattformen unterschiedlich oder
-nur auf einer Plattform verfügbar sind.
-
+Die Library enthält (wenige) Funktionalitäten für die Plattformen Node (Server) und Browser (Client), die auf beiden Plattformen verfügbar sind.
   - Logging (XLog, log4js)
+  
+### Node
+
+Die Library enthält Funktionalitäten die nur auf der Plattform Node (Server) verfügbar sind.
   - einige Filesystem-Operationen
   - lesen von Json-Files
-
+  
 ### Common
 
 Die Library enthält Funktionalitäten, die in den Libraries server und client verwendet werden.
