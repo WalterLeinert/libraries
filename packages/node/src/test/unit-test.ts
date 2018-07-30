@@ -16,13 +16,13 @@ import { CoreInjector, CoreModule, FlxComponent, FlxModule, ModuleMetadataStorag
 
 @FlxComponent({
   providers: [
-    { provide: DEFAULT_CATEGORY, useValue: PlatformTestComponent.logger.category },
-    { provide: LOGGER, useValue: PlatformTestComponent.logger },
+    { provide: DEFAULT_CATEGORY, useValue: NodeTestComponent.logger.category },
+    { provide: LOGGER, useValue: NodeTestComponent.logger },
     { provide: LOG_EXCEPTIONS, useValue: false }
   ],
 })
-export class PlatformTestComponent {
-  public static readonly logger = getLogger(PlatformTestComponent);
+export class NodeTestComponent {
+  public static readonly logger = getLogger(NodeTestComponent);
 
   constructor(injector: Injector) {
     CoreInjector.instance.setInjector(injector, true);
@@ -39,13 +39,13 @@ export class PlatformTestComponent {
     CoreModule
   ],
   declarations: [
-    PlatformTestComponent
+    NodeTestComponent
   ],
   exports: [
-    PlatformTestComponent
+    NodeTestComponent
   ],
   bootstrap: [
-    PlatformTestComponent
+    NodeTestComponent
   ]
 })
 export class NodeTestModule {

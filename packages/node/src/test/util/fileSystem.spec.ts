@@ -15,7 +15,7 @@ import { NodeUnitTest } from '../unit-test';
 import { FileSystem } from '../../lib/util/fileSystem';
 
 
-@suite('platform.util.FileSystem')
+@suite('node.util.FileSystem')
 class FileSystemTest extends NodeUnitTest {
 
   @test 'should exist file'() {
