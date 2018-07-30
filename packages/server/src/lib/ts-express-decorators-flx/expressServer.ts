@@ -54,8 +54,8 @@ const rootDir = path.join(__dirname);
 export class ExpressServer extends ServerBase {
   protected static logger = getLogger(ExpressServer);
 
-  public constructor(configuration: IServerConfiguration) {
-    super(configuration);
+  public constructor(rootDirectory: string, configuration: IServerConfiguration) {
+    super(rootDirectory, configuration);
     // this.settings.set('debug', true);
   }
 

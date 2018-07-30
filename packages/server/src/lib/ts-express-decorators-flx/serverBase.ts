@@ -77,7 +77,7 @@ export abstract class ServerBase extends ServerLoader {
    * In your constructor set the global endpoint and configure the folder to scan the controllers.
    * You can start the http and https server.
    */
-  protected constructor(protected configuration: IServerConfiguration) {
+  protected constructor(protected rootDir: string, protected configuration: IServerConfiguration) {
     super();
 
     using(new XLog(ServerBase.logger, levels.INFO, 'ctor'), (log) => {
@@ -281,25 +281,25 @@ export abstract class ServerBase extends ServerLoader {
         }
 
         if (!path.isAbsolute(configuration.cert.certPath)) {
-          configuration.cert.certPath = path.join(process.cwd(), 'config', configuration.cert.certPath);
+          configuration.cert.certPath = path.join(this.rootDir, 'config', configuration.cert.certPath);
         }
         if (!path.isAbsolute(configuration.cert.keyPath)) {
-          configuration.cert.keyPath = path.join(process.cwd(), 'config', configuration.cert.keyPath);
+          configuration.cert.keyPath = path.join(this.rootDir, 'config', configuration.cert.keyPath);
         }
       }
 
       if (!path.isAbsolute(configuration.print.agentOptions.certPath)) {
-        configuration.print.agentOptions.certPath = path.join(process.cwd(), 'config',
+        configuration.print.agentOptions.certPath = path.join(this.rootDir, 'config',
           configuration.print.agentOptions.certPath);
       }
 
       if (!path.isAbsolute(configuration.print.agentOptions.keyPath)) {
-        configuration.print.agentOptions.keyPath = path.join(process.cwd(), 'config',
+        configuration.print.agentOptions.keyPath = path.join(this.rootDir, 'config',
           configuration.print.agentOptions.keyPath);
       }
 
       if (!path.isAbsolute(configuration.print.agentOptions.caPath)) {
-        configuration.print.agentOptions.caPath = path.join(process.cwd(), 'config',
+        configuration.print.agentOptions.caPath = path.join(this.rootDir, 'config',
           configuration.print.agentOptions.caPath);
       }
     });

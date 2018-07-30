@@ -2,7 +2,7 @@ import path = require('path');
 import 'reflect-metadata';
 
 // -------------------------------------- logging --------------------------------------------
-import { getLogger, levels, using, XLog } from '@fluxgate/platform';
+import { configure, getLogger, levels, using, XLog } from '@fluxgate/platform';
 // -------------------------------------- logging --------------------------------------------
 
 // Logging konfigurieren ...
@@ -11,7 +11,10 @@ import { ConfigurationException, Types } from '@fluxgate/core';
 import { Logging } from '@fluxgate/node';
 
 const systemMode = fromEnvironment('NODE_ENV', 'development');
-Logging.configureLogging('starter', systemMode);
+const loggingConfigPath = path.join(__dirname, `config/log4js.${systemMode}.json`);
+
+// Logging.configureLogging('starter', systemMode);
+configure(loggingConfigPath);
 
 
 // Fluxgate/bootstrap
@@ -21,11 +24,34 @@ ModuleMetadataStorage.instance.bootstrapModule(ServerModule);
 
 // Fluxgate
 import { JsonReader } from '@fluxgate/node';
-import { /* EmailService, */ ExpressServer, IServerConfiguration } from '@fluxgate/server';
+import { /* EmailService, */ ExpressServer, IServerConfiguration, ServerSettings } from '@fluxgate/server';
 
 
+const rootDir = path.join(__dirname);
 
 const logger = getLogger(ExpressServer);
+
+
+
+
+@ServerSettings({
+  debug: true,
+
+  rootDir: rootDir,
+  mount: {
+    '/rest': `${rootDir}/controllers/**/*.js`
+  },
+  componentsScan: [
+    `${rootDir}/services/**/*.js`,
+    `${rootDir}/middlewares/**/*.js`
+  ],
+  acceptMimes: ['application/json']  // add your custom configuration here
+})
+export class StarterServer extends ExpressServer {
+  constructor(configuration: IServerConfiguration) {
+    super(rootDir, configuration);
+  }
+}
 
 
 using(new XLog(logger, levels.INFO, 'Server-Initialisierung'), (log) => {
@@ -42,7 +68,10 @@ using(new XLog(logger, levels.INFO, 'Server-Initialisierung'), (log) => {
     throw new ConfigurationException(`Server configuration undefined.`);
   }
 
-  new ExpressServer(config).Initialize().then(() => {
+
+
+
+  new StarterServer(config).Initialize().then(() => {
     // const emailService = InjectorService.get<EmailService>(EmailService);
 
     // emailService.send({
