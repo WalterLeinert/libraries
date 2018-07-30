@@ -1,10 +1,10 @@
-# Fluxgate libraries core, platform, common, client, server, testing
+# Fluxgate libraries core, platform, node, common, client, server, testing
 
-### Walter Leinert: 2016, 2017
+### Walter Leinert: 2016, 2017, 2018
 
 
 ## Überblick
-Die Libraries stellen die Grundlage für die Implementierung von Projekten als Web-Anwendungen auf Basis von angular.io (angular 2), express und knex dar.
+Die Libraries stellen die Grundlage für die Implementierung von Projekten als Web-Anwendungen auf Basis von angular.io (aktuell: angular 6), express (ts-express-decorators) und knex dar.
 
 ### Core
 
@@ -40,11 +40,12 @@ Die Library enthält Funktionalitäten, die in den Libraries server und client v
 ### Server
 
 Die Library kapselt die generische Implementierung von Rest-APIs auf Basis von Express und die Datenbankzugriffe mit Hilfe von Knex.
-Dadurch ist es bei einer konkreten Anwendung sehr einfach, Rest-APIs für die entsprechenden Model-Klassen zu implementieren.
+Dadurch ist es bei einer konkreten Anwendung sehr einfach, Rest-APIs für die entsprechenden Model-Klassen zu implementieren. Es sind zur Zeit die Standard-CRUD Operationen implementiert.
 
 Unterstützt wird auch:
   - optimistic lock detection (über version column)
   - Mandantenfähigkeit (zusätzliche Spalte in Entities mit Mandanten-Id)
+  - entity versions (für jede Entity die Version der letztemn
 
 ### Client
 
