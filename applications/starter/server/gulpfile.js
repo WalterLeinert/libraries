@@ -10,7 +10,7 @@ const tsc = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
 const tslint = require('gulp-tslint');
-const nodemon = require('nodemon');
+// const nodemon = require('nodemon');
 const tsProject = tsc.createProject('tsconfig.json');
 const tsSpecProject = tsc.createProject('tsconfig.spec.json');
 
@@ -112,15 +112,15 @@ gulp.task('tslint', () => {
 /**
  * Startet den Server
  */
-gulp.task('run', function (cb) {
-  // execCommand('node server.js', 'dist/server/src', 1024 * 500, cb);
-  nodemon({
-    cwd: distPath + '/src',
-    script: 'server.js',
-    ext: 'js',
-    env: { 'NODE_ENV': 'local' }
-  })
-});
+// gulp.task('run', function (cb) {
+//   // execCommand('node server.js', 'dist/server/src', 1024 * 500, cb);
+//   nodemon({
+//     cwd: distPath + '/src',
+//     script: 'server.js',
+//     ext: 'js',
+//     env: { 'NODE_ENV': 'local' }
+//   })
+// });
 
 
 gulp.task('run-server', function (cb) {
