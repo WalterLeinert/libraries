@@ -64,7 +64,7 @@ CREATE TABLE `client` (
 
 LOCK TABLES `client` WRITE;
 /*!40000 ALTER TABLE `client` DISABLE KEYS */;
-INSERT INTO `client` VALUES 
+INSERT INTO `client` VALUES
   (1,'Mandant-1','Test für Mandantenfähigkeit (1)', 0, 0),
   (2,'Mandant-2','Test für Mandantenfähigkeit (2)', 0, 0);
 /*!40000 ALTER TABLE `client` ENABLE KEYS */;
@@ -96,7 +96,7 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES 
+INSERT INTO `role` VALUES
   (1,'admin','starter Administrator',1,0,0),
   (2,'user','starter Benutzer',1,0,0),
   (3,'guest','Externer Benutzer',1,0,0);
@@ -133,7 +133,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES 
+INSERT INTO `user` VALUES
   (1,'admin-firstname','admin-lastname','admin','admin@mail.com','8b2e1d35f095db1542e5f17b54f8cc9e8cbe4f9a90806fd9fbeb2318416b60ba2ae93a3e888cb128eeb7ef0eb78fa53748ac764baa163f67e3ec49b7add48defa6b0c5fffc7f9abb5278e3c06a8be4337b7ecbfd7fa6bfd4d373f7a9fea343537effc050e527e1ab854cbf96f66cc56e8da9aa5e326d917ce07c9a7c6ae284ca','n3pe97n4iW',1,1,0,0),
   (2,'tester-firstname','tester-lastname','tester','tester@mail.com','ff3d50632673e58f5cc04afd479aef2696658e1dfda78f3ad6bb1427143ca834eb8231a02fecc9c408c7b53fe830951558c18e8ace69a6d7b42994119f55167337ecd041e65524aa2302a03ed0e70a0dffc88dd769054ddcc9ffa5ef7cbdc5559eb86786682d0c774ea610f20fa0bd0ccf6a547515b474a7cbcc0d42407da143','mS2ebcvTuf',2,1,0,0),
   (3,'guest-firstname','guest-lastname','guest','guest@mail.com','992328ce46cd6680cf1d2ea74ef182c37fa0a00d0b090e802e7617bcae56630c70a00977548a0d01e0b3b5f7f012b2a9b0358860f9e5c7cff7a892bcb48d44caa2066a8d8159381dafbc13f8ed6a7c17c69fabab81333193c1a890ba826bc2eb814a103fe928c4949540c6942153f7823805ff203aed5f50d7fa7d3e278723fe','n3phSsFwAZ',3,1,0,0),
@@ -222,3 +222,6 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+ALTER USER 'root' IDENTIFIED WITH mysql_native_password BY 'root';
+FLUSH PRIVILEGES;
