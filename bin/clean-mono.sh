@@ -19,7 +19,21 @@ gulp_libs="core platform common node client server testing"
 	echo "cleaning lerna ..."
 	lerna clean --yes
 
+
+ # -----------------------------------------------------------------
+
+  echo "cleaning starter project $(/bin/pwd)"
+
+  gulp_starter="common server"
+
+  for part in ${gulp_starter}; do
+		echo "performing gulp clean for starter/$part ..."
+		(cd applications/starter/$part && gulp clean)
+	done
+
+
 	echo "removing root node_modules/dist ..."
 	rm -rf node_modules dist
+
 )
 
