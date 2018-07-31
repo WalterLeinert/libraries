@@ -129,7 +129,7 @@ gulp.task('run-server', function (cb) {
 
 gulp.task('deploy', ['copy-files'])
 
-gulp.task('test', function () {
+gulp.task('test', ['default'], function () {
   console.warn('*** echte Tests aktivieren, sobald Tests existieren');
   // TODO: echte Tests aktivieren, sobald Tests existieren
 });
@@ -145,5 +145,5 @@ gulp.task('npm-install', function (cb) {
 })
 
 
-gulp.task('build', gulpSequence('compile', 'deploy'))
+gulp.task('build', gulpSequence('clean', 'compile', 'deploy'))
 gulp.task('default', ['build'])

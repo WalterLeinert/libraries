@@ -105,16 +105,18 @@ gulp.task('compile:test', ['default'], function () {
 });
 
 
-gulp.task('test', ['set-env', 'compile:test'], function () {
-  gulp.src('./dist/test/**/*.spec.js', { read: false })
-    .pipe(mocha({
-      require: [
-        'ts-node/register',
-        'tsconfig-paths/register'
-      ],
-      reporter: 'spec'
-    }));
+gulp.task('test', ['set-env', 'default'], function () {
+  console.warn('*** echte Tests aktivieren, sobald Tests existieren');
+  // TODO: echte Tests aktivieren, sobald Tests existieren
 });
+
+// gulp.task('test', ['set-env', 'compile:test'], function () {
+//   gulp.src('./dist/test/**/*.spec.js', {read: false})
+//     .pipe(mocha({
+//       reporter: 'spec'
+//     }));
+// });
+
 
 gulp.task('update-fluxgate', function (cb) {
   execCommand('npm uninstall --save @fluxgate/core @fluxgate/platform && ' +
