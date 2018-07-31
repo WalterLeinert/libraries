@@ -27,6 +27,22 @@ gulp_libs="core platform common node server testing"
 	echo "building components ..."
 	ng build components
 
-	echo "building starter ..."
+
+  # -----------------------------------------------------------------
+
+  echo "building starter project $(/bin/pwd)"
+
+  gulp_starter="common server"
+
+  for part in ${gulp_starter}; do
+		echo "performing gulp compile/test for starter/$part ..."
+		(
+      cd applications/starter/$part \
+      && npm i \
+      && gulp test
+    )
+	done
+
+  echo "building starter client ..."
 	ng build starter
 )
