@@ -16,7 +16,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge2');
 const mocha = require('gulp-mocha');
 const tsProject = tsc.createProject('tsconfig.json');
-const tsSpecProject = tsc.createProject('tsconfig.spec.json');
+// const tsSpecProject = tsc.createProject('tsconfig.spec.json');
 
 const distPath = '../../../dist/starter-common';
 

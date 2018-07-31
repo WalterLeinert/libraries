@@ -12,7 +12,7 @@ const merge = require('merge2');
 const tslint = require('gulp-tslint');
 // const nodemon = require('nodemon');
 const tsProject = tsc.createProject('tsconfig.json');
-const tsSpecProject = tsc.createProject('tsconfig.spec.json');
+// const tsSpecProject = tsc.createProject('tsconfig.spec.json');
 
 const distPathClient = '../../../dist/starter';
 const distPath = '../../../dist/starter-server';
