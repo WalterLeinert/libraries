@@ -12,7 +12,7 @@ const merge = require('merge2');
 const tslint = require('gulp-tslint');
 // const nodemon = require('nodemon');
 const tsProject = tsc.createProject('tsconfig.json');
-const tsSpecProject = tsc.createProject('tsconfig.spec.json');
+// const tsSpecProject = tsc.createProject('tsconfig.spec.json');
 
 const distPathClient = '../../../dist/starter';
 const distPath = '../../../dist/starter-server';
@@ -129,7 +129,7 @@ gulp.task('run-server', function (cb) {
 
 gulp.task('deploy', ['copy-files'])
 
-gulp.task('test', function () {
+gulp.task('test', ['default'], function () {
   console.warn('*** echte Tests aktivieren, sobald Tests existieren');
   // TODO: echte Tests aktivieren, sobald Tests existieren
 });
@@ -145,5 +145,5 @@ gulp.task('npm-install', function (cb) {
 })
 
 
-gulp.task('build', gulpSequence('compile', 'deploy'))
+gulp.task('build', gulpSequence('clean', 'compile', 'deploy'))
 gulp.task('default', ['build'])
