@@ -27,7 +27,7 @@ export interface IRGB {
 // tslint:disable-next-line:max-classes-per-file
 export class Color {
   private static colorDict: Dictionary<string, Color> = new Dictionary<string, Color>();
-  private _color: tinycolorInstance;
+  private _color: TinyColor.Instance;
 
   /**
    * Creates an instance of Color.

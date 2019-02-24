@@ -51,7 +51,7 @@ export class FileSystem {
    * @returns - undefined bei Fehler
    */
   public static readTextFile(errorLogger: (message: string) => void, path: string, topic: string,
-    encoding = 'utf8'): string {
+    encoding = 'utf8'): string {      
 
     if (!path) {
       errorLogger(`Pfad auf ${topic} in Konfigration nicht gesetzt.`);

@@ -23,7 +23,7 @@ export class SerializerMetadataStorage {
 
   private classDict: Dictionary<string, ClassSerializerMetadata> = new Dictionary<string, ClassSerializerMetadata>();
   private classPropertyDict: Dictionary<string, PropertySerializerMetadata[]> =
-  new Dictionary<string, PropertySerializerMetadata[]>();
+    new Dictionary<string, PropertySerializerMetadata[]>();
 
   public static get instance(): SerializerMetadataStorage {
     return SerializerMetadataStorage._instance;
@@ -71,7 +71,7 @@ export class SerializerMetadataStorage {
         const pd = Reflect.getOwnPropertyDescriptor(prototype, prop);
 
         if (log.isDebugEnabled()) {
-          log.debug(`prop = ${prop}, pd = ${Core.stringify(pd)}`);
+          log.debug(`prop = ${String(prop)}, pd = ${Core.stringify(pd)}`);
         }
 
         if (!propertyDict.containsKey(prop.toString())) {
