@@ -26,7 +26,7 @@ class ComponentTest extends DiUnitTest {
 
   @test 'should test providers'() {
     expect(this.metadata.providers).to.exist;
-    expect(this.metadata.providers.length).to.be.empty;
+    expect(this.metadata.providers.length).to.equal(0);
   }
 
 

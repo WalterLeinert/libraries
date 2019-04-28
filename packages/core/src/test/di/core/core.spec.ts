@@ -58,7 +58,7 @@ class CoreTest extends DiUnitTest {
 
 
   @test 'should check imports'() {
-    expect(this.metadata.imports.length).to.be.empty;
+    expect(this.metadata.imports.length).to.equal(0);
   }
 
   @test 'should have one declaration'() {
