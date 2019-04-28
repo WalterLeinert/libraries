@@ -15,5 +15,7 @@ export class ServerSystemException extends ServerException {
 
   constructor(message: string, innerException?: Exception | Error) {
     super('ServerSystemException', message, innerException);
+    Object.setPrototypeOf(this, ServerSystemException.prototype);
+
   }
 }

@@ -16,6 +16,7 @@ import { PersistenceException } from './persistenceException';
 export class EntityNotFoundException extends PersistenceException {
   constructor(message: string, innerException?: Exception | Error) {
     super(message, innerException);
+    Object.setPrototypeOf(this, EntityNotFoundException.prototype);
     super.setKind('EntityNotFoundException');
   }
 }

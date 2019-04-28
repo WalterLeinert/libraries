@@ -6,5 +6,7 @@ import { FlxException } from './flxException.decorator';
 export class NotImplementedException extends Exception {
   constructor(message?: string, innerException?: Exception | Error) {
     super('NotImplementedException', message, innerException);
+    Object.setPrototypeOf(this, NotImplementedException.prototype);
+
   }
 }

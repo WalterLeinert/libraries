@@ -14,5 +14,6 @@ import { FlxException } from './flxException.decorator';
 export class ClientException extends Exception {
   constructor(message: string, innerException?: Exception | Error) {
     super('ClientException', message, innerException);
+    Object.setPrototypeOf(this, ClientException.prototype);
   }
 }

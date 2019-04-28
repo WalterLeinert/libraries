@@ -39,7 +39,7 @@ export function assert(condition: boolean, message?: string): void {
  * @class Exception
  * @extends {Error}
  */
-export abstract class Exception implements IException {
+export abstract class Exception extends Error implements IException {
   protected static readonly logger = new ConsoleLogger(Exception);
 
   private _nativeError: Error;
@@ -49,6 +49,9 @@ export abstract class Exception implements IException {
 
 
   protected constructor(private _kind: string, message: string, innerException?: IException | Error) {
+    super(message);
+    Object.setPrototypeOf(this, Exception.prototype);
+
     if (message === undefined) {
       this._nativeError = new Error('undefined');
     } else {

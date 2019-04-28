@@ -15,5 +15,6 @@ import { ServerException } from './serverException';
 export class ServerBusinessException extends ServerException {
   constructor(message: string, innerException?: Exception | Error) {
     super('ServerBusinessException', message, innerException);
+    Object.setPrototypeOf(this, ServerBusinessException.prototype);
   }
 }

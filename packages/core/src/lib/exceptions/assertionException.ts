@@ -21,6 +21,7 @@ export class AssertionException extends Exception {
    */
   constructor(message?: string, innerException?: Exception) {
     super('AssertionException', message, innerException);
+    Object.setPrototypeOf(this, AssertionException.prototype);
   }
 
 }

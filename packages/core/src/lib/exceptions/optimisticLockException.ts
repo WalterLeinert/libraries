@@ -14,6 +14,7 @@ import { ServerBusinessException } from './serverBusinessException';
 export class OptimisticLockException extends ServerBusinessException {
   constructor(message: string = 'not implemented', innerException?: Exception | Error) {
     super(message, innerException);
+    Object.setPrototypeOf(this, OptimisticLockException.prototype);
     super.setKind('OptimisticLockException');
   }
 }

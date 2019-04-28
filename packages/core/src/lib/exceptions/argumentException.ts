@@ -13,6 +13,7 @@ export class ArgumentException extends Exception {
 
   constructor(message: string, innerException?: Exception) {
     super('ArgumentException', message, innerException);
+    Object.setPrototypeOf(this, ArgumentException.prototype);
   }
 
 }

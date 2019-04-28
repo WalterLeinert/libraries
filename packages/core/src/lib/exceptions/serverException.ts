@@ -12,5 +12,6 @@ export abstract class ServerException extends Exception {
 
   protected constructor(kind: string, message: string, innerException?: Exception | Error) {
     super(kind, message, innerException);
+    Object.setPrototypeOf(this, ServerException.prototype);
   }
 }

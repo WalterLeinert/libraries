@@ -12,6 +12,7 @@ import { ServerSystemException } from './serverSystemException';
 export abstract class PersistenceException extends ServerSystemException {
   protected constructor(message: string, innerException?: Exception | Error) {
     super(message, innerException);
+    Object.setPrototypeOf(this, PersistenceException.prototype);
     super.setKind('PersistenceException');
   }
 }

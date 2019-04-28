@@ -5,5 +5,7 @@ import { FlxException } from './flxException.decorator';
 export class NotSupportedException extends Exception {
   constructor(message?: string, innerException?: Exception | Error) {
     super('NotSupportedException', message, innerException);
+    Object.setPrototypeOf(this, NotSupportedException.prototype);
+
   }
 }
