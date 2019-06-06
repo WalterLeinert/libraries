@@ -4,7 +4,7 @@ import { Authenticated, Controller, Delete, Get, PathParams, Request } from 'ts-
 
 // Fluxgate
 import {
-  CreateResult, DeleteResult, FindByIdResult, FindResult, QueryResult, UpdateResult
+  CreateResult, DeleteResult, FindByIdResult, FindResult, QueryResult, StatusFilter, UpdateResult
 } from '@fluxgate/common';
 import { IQuery } from '@fluxgate/core';
 import {
@@ -13,21 +13,21 @@ import {
 } from '@fluxgate/server';
 
 
-import { Artikel } from '@fluxgate/starter-common';
-import { ArtikelService } from '../../services/services';
+import { Car } from '@fluxgate/starter-common';
+import { CarService } from '../../services/services';
 
 
-@Controller('/' + Artikel.TABLE_NAME)
-export class ArtikelController extends ControllerBase<Artikel, number> {
-  constructor(service: ArtikelService) {
-    super(service, 'artikel', 'artikel_id');
+@Controller('/' + Car.TABLE_NAME)
+export class CarController extends ControllerBase<Car, number> {
+  constructor(service: CarService) {
+    super(service, 'car', 'car_id');
   }
 
   @Authenticated()
   @CreateMethod()
   public create(
-    @Request() request: IBodyRequest<Artikel>
-  ): Promise<CreateResult<Artikel, number>> {
+    @Request() request: IBodyRequest<Car>
+  ): Promise<CreateResult<Car, number>> {
     return super.createInternal(request);
   }
 
@@ -35,15 +35,15 @@ export class ArtikelController extends ControllerBase<Artikel, number> {
   @QueryMethod()
   public query(
     @Request() request: IBodyRequest<IQuery>
-  ): Promise<QueryResult<Artikel>> {
+  ): Promise<QueryResult<Car>> {
     return super.queryInternal(request);
   }
 
   @Authenticated()
   @FindMethod()
   public find(
-    @Request() request: ISessionRequest
-  ): Promise<FindResult<Artikel>> {
+    @Request() request: IBodyRequest<StatusFilter>
+  ): Promise<FindResult<Car>> {
     return super.findInternal(request);
   }
 
@@ -52,15 +52,15 @@ export class ArtikelController extends ControllerBase<Artikel, number> {
   public findById(
     @Request() request: ISessionRequest,
     @PathParams('id') id: number
-  ): Promise<FindByIdResult<Artikel, number>> {
+  ): Promise<FindByIdResult<Car, number>> {
     return super.findByIdInternal(request, id);
   }
 
   @Authenticated()
   @UpdateMethod()
   public update(
-    @Request() request: IBodyRequest<Artikel>
-  ): Promise<UpdateResult<Artikel, number>> {
+    @Request() request: IBodyRequest<Car>
+  ): Promise<UpdateResult<Car, number>> {
     return super.updateInternal(request);
   }
 

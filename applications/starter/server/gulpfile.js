@@ -98,7 +98,7 @@ gulp.task('copy-files', function () {
     .copy(distPathClient + '/**/*', distPath + '/app');
 
   gulp
-    .copy('src/config/**/*.*', distPath + '/src/config');
+    .copy('src/lib/config/**/*.*', distPath + '/src/lib/config');
 })
 
 

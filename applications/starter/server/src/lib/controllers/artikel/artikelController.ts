@@ -4,7 +4,7 @@ import { Authenticated, Controller, Delete, Get, PathParams, Request } from 'ts-
 
 // Fluxgate
 import {
-  CreateResult, DeleteResult, FindByIdResult, FindResult, QueryResult, UpdateResult
+  CreateResult, DeleteResult, FindByIdResult, FindResult, QueryResult, StatusFilter, UpdateResult
 } from '@fluxgate/common';
 import { IQuery } from '@fluxgate/core';
 import {
@@ -13,21 +13,21 @@ import {
 } from '@fluxgate/server';
 
 
-import { Car } from '@fluxgate/starter-common';
-import { CarService } from '../../services/services';
+import { Artikel } from '@fluxgate/starter-common';
+import { ArtikelService } from '../../services/services';
 
 
-@Controller('/' + Car.TABLE_NAME)
-export class CarController extends ControllerBase<Car, number> {
-  constructor(service: CarService) {
-    super(service, 'car', 'car_id');
+@Controller('/' + Artikel.TABLE_NAME)
+export class ArtikelController extends ControllerBase<Artikel, number> {
+  constructor(service: ArtikelService) {
+    super(service, 'artikel', 'artikel_id');
   }
 
   @Authenticated()
   @CreateMethod()
   public create(
-    @Request() request: IBodyRequest<Car>
-  ): Promise<CreateResult<Car, number>> {
+    @Request() request: IBodyRequest<Artikel>
+  ): Promise<CreateResult<Artikel, number>> {
     return super.createInternal(request);
   }
 
@@ -35,15 +35,15 @@ export class CarController extends ControllerBase<Car, number> {
   @QueryMethod()
   public query(
     @Request() request: IBodyRequest<IQuery>
-  ): Promise<QueryResult<Car>> {
+  ): Promise<QueryResult<Artikel>> {
     return super.queryInternal(request);
   }
 
   @Authenticated()
   @FindMethod()
   public find(
-    @Request() request: ISessionRequest
-  ): Promise<FindResult<Car>> {
+    @Request() request: IBodyRequest<StatusFilter>
+  ): Promise<FindResult<Artikel>> {
     return super.findInternal(request);
   }
 
@@ -52,15 +52,15 @@ export class CarController extends ControllerBase<Car, number> {
   public findById(
     @Request() request: ISessionRequest,
     @PathParams('id') id: number
-  ): Promise<FindByIdResult<Car, number>> {
+  ): Promise<FindByIdResult<Artikel, number>> {
     return super.findByIdInternal(request, id);
   }
 
   @Authenticated()
   @UpdateMethod()
   public update(
-    @Request() request: IBodyRequest<Car>
-  ): Promise<UpdateResult<Car, number>> {
+    @Request() request: IBodyRequest<Artikel>
+  ): Promise<UpdateResult<Artikel, number>> {
     return super.updateInternal(request);
   }
 

@@ -19,8 +19,8 @@ services:
       links:
         - mysql:libraries-mysql
       volumes:
-        - ./server/dist:/var/www/libraries
-        - ./server/node_modules:/var/www/libraries/node_modules
+        - ./packages/server/dist:/var/www/libraries
+        - ./node_modules:/var/www/libraries/node_modules
       env_file:
         - ./.docker/env/app.${APP_ENV}.env
       networks:

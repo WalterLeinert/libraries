@@ -183,6 +183,48 @@ Das Module ClientModule stellt die Wurzel der DI-Injection-Hierarchie für die P
 
 Die Softwareentwicklung erfolgt in Visual Studio Code (vscode).
 
+Die Projektstruktur wurde auf lerna umgestellt, welches einen monorepo-Ansatz realisiert.
+
+### Clean all
+
+```bash
+# rm all dist directories in applications and packages (TODO: gulp clean)
+find applications/ packages/ -maxdepth 3 -name dist | xargs rm -rf
+
+# let lerna clean node_modules directories
+lerna clean --yes
+
+# rm global dist directory
+rm -rf dist
+
+# rm global node_modules
+rm -rf node_modules
+
+```
+
+
+### Build all
+
+```bash
+
+# let lerna bootstrap and install all dependencies
+lerna bootstrap --hoist --concurrency 1
+
+# build all packages libraries (w/o client, components)
+
+for p in core platform common node testing server; do
+  (cd packages/$p && gulp test)
+done
+
+for p in client components; do
+  ng build $p
+done
+
+```
+
+
+ALT
+
 Abhängigkeiten zu @angular-Libraries und @fluxgate/libraries werden absolut angegeben, um Probleme durch automatische Updates bei
 "npm install" zu vermeiden.
 Also hat z.B. common eine Abhängigkeit zu core über: "@fluxgate/core": "2.2.7-beta.0" und nicht wie früher "@fluxgate/core": "\^2.2.7-beta.0".

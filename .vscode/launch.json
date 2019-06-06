@@ -151,7 +151,6 @@
         "build",
         "client"
       ],
-      "cwd": "${workspaceRoot}",
       "runtimeExecutable": null,
       "outFiles": [
       ],
@@ -162,11 +161,11 @@
       "type": "node",
       "request": "launch",
       "name": "starter-server: debug",
-      "program": "${workspaceRoot}/applications/starter/server/dist/src/server.js",
+      "program": "${workspaceRoot}/dist/starter-server/src/lib/server.js",
       "args": [
         "-r", "tsconfig-paths/register"
       ],
-      "cwd": "${workspaceRoot}/applications/starter/server/dist/src/",
+      "cwd": "${workspaceRoot}/dist/starter-server/src/lib/",
       "runtimeExecutable": null,
        "outFiles": [
       ],

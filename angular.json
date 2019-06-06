@@ -111,7 +111,7 @@
               "applications/starter/client/src/styles.css"
             ],
             "scripts": [
-              "./node_modules/bootstrap/dist/js/bootstrap.bundle.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.bundle.js"
             ]
           },
           "configurations": {
@@ -182,6 +182,41 @@
         }
       }
     },
+    "starter-server": {
+      "root": "applications/starter/server",
+      "sourceRoot": "applications/starter/server/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "applications/starter/server/tsconfig.lib.json",
+            "project": "applications/starter/server/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "applications/starter/server/src/test.ts",
+            "tsConfig": "applications/starter/server/tsconfig.spec.json",
+            "karmaConfig": "applications/starter/server/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "applications/starter/server/tsconfig.lib.json",
+              "applications/starter/server/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
     "starter-e2e": {
       "root": "applications/starter/client-e2e/",
       "projectType": "application",
@@ -202,6 +237,41 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "applications/starter/client-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "my-lib": {
+      "root": "packages/my-lib",
+      "sourceRoot": "packages/my-lib/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "packages/my-lib/tsconfig.lib.json",
+            "project": "packages/my-lib/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "packages/my-lib/src/test.ts",
+            "tsConfig": "packages/my-lib/tsconfig.spec.json",
+            "karmaConfig": "packages/my-lib/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "packages/my-lib/tsconfig.lib.json",
+              "packages/my-lib/tsconfig.spec.json"
+            ],
             "exclude": [
               "**/node_modules/**"
             ]

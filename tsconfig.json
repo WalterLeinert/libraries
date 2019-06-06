@@ -76,6 +76,18 @@
       ],
       "@fluxgate/starter-common/*": [
         "dist/starter-common/*"
+      ],
+      "@fluxgate/starter-server": [
+        "dist/starter-server"
+      ],
+      "@fluxgate/starter-server/*": [
+        "dist/starter-server/*"
+      ],
+      "my-lib": [
+        "dist/my-lib"
+      ],
+      "my-lib/*": [
+        "dist/my-lib/*"
       ]
     }
   }

@@ -12,13 +12,11 @@
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
   "dependencies": {
-    "moment": "^2.22.1"
+    "moment": "^2.24.0"
   },
-  "moment": "^2.22.1",
   "peerDependencies": {
     "@fluxgate/core": ">=2.6.0-beta.0",
     "@fluxgate/platform": ">=2.6.0-beta.0"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
