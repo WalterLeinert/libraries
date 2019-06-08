@@ -9,9 +9,17 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "clean": "lerna clean --yes && rimraf node_modules/ dist/ *-error.log",
+    "clean": "lerna clean --yes && rimraf dist/ *-error.log",
     "reallyclean": "npm run clean && rimraf node_modules/",
-    "build:all": "ng build core && ng build client && ng build components"
+    "build:core": "lerna --scope @fluxgate/core exec gulp test",
+    "build:platform": "lerna --scope @fluxgate/platform exec gulp test",
+    "build:common": "lerna --scope @fluxgate/common exec gulp test",
+    "build:node": "lerna --scope @fluxgate/node exec gulp test",
+    "build:testing": "lerna --scope @fluxgate/testing exec gulp test",
+    "build:server": "lerna --scope @fluxgate/server exec gulp test",
+    "build:client": "ng build client",
+    "build:components": "ng build components",
+    "build:all": "npm run build:core && npm run build:platform && npm run build:common && npm run build:node && npm run build:testing && npm run build:server && npm run build:client && npm run build:components"
   },
   "private": true,
   "repository": {
