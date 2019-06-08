@@ -193,14 +193,19 @@ This guide explains how to set up your environment for @fluxgate/libraries devel
 
 #### Prerequisites
 
-Before you begin, make sure your development environment includes Node.js® and an npm package manager.
+Before you begin, make sure your development environment includes tools like, Node.js®, npm package manager and docker.
 
-Node.js
+##### Node.js® and an npm package manager.
+
 Angular requires Node.js version 10.9.0 or later.
 
 To check your version, run node -v in a terminal/console window.
 
 To get Node.js, go to nodejs.org.
+
+##### Docker
+
+Get docker installed on your development platform.
 
 ##### Step 1: Install lerna
 
@@ -233,13 +238,19 @@ You may clean your workspace and remove all artifacts created by the build proce
 # run clean
 npm run clean
 
-
 # or clean all (runs clean and removes the top level node_modules folder)
 npm run reallyclean
-
 ```
 
-##### Step 4: Build all
+
+##### Step 4: Start docker containers for (server) tests
+
+```bash
+# let lerna bootstrap and install all dependencies
+docker-compose up -d
+```
+
+##### Step 5: Build all packages and run the tests
 
 ```bash
 # let lerna bootstrap and install all dependencies
@@ -247,7 +258,6 @@ npm run bootstrap
 
 # build all packages, run the tests. Packages will be built into the top level dist folder
 npm run build:all
-
 ```
 
 TODO: Build der Starter-Application
