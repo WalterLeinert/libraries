@@ -1,6 +1,6 @@
 # Fluxgate libraries core, platform, common, client, server, testing
 
-### Walter Leinert: 2016, 2017, 2018
+### Walter Leinert: 2016, 2017, 2018, 2019
 
 
 ## Überblick
@@ -185,42 +185,72 @@ Die Softwareentwicklung erfolgt in Visual Studio Code (vscode).
 
 Die Projektstruktur wurde auf lerna umgestellt, welches einen monorepo-Ansatz realisiert.
 
-### Clean all
+## Development
+
+This guide explains how to set up your environment for @fluxgate/libraries development based on angular.io. It includes information about prerequisites, installing the required tools, creating an initial workspace and starter app, and running that app locally to verify your setup.
+
+### Setting up the Local Environment and Workspace
+
+#### Prerequisites
+
+Before you begin, make sure your development environment includes Node.js® and an npm package manager.
+
+Node.js
+Angular requires Node.js version 10.9.0 or later.
+
+To check your version, run node -v in a terminal/console window.
+
+To get Node.js, go to nodejs.org.
+
+##### Step 1: Install lerna
+
+@fluxgate/libraries consists of multiple packages and is structured as a monorepo linke angular.io. [Lerna](https://github.com/lerna/lerna) is used to simplify management and build of this monorepo.
+
+Lerna must be installed globally:
 
 ```bash
-# rm all dist directories in applications and packages (TODO: gulp clean)
-find applications/ packages/ -maxdepth 3 -name dist | xargs rm -rf
+npm install --global lerna
+```
 
-# let lerna clean node_modules directories
-lerna clean --yes
+(Currently version 2.11.0 is used)
 
-# rm global dist directory
-rm -rf dist
+##### Step 2: Clone the github repository
 
-# rm global node_modules
-rm -rf node_modules
+Clone the github repository to your local workspace ```<workspace>```
+
+```bash
+#
+cd <workspace>
+git clone https://github.com/WalterLeinert/libraries.git
+cd libraries
+```
+
+##### Step 3: Clean your workspace
+
+You may clean your workspace and remove all artifacts created by the build process.
+
+```bash
+# run clean
+npm run clean
+
+
+# or clean all (runs clean and removes the top level node_modules folder)
+npm run reallyclean
 
 ```
 
-
-### Build all
+##### Step 4: Build all
 
 ```bash
-
 # let lerna bootstrap and install all dependencies
-lerna bootstrap --hoist --concurrency 1
+npm run bootstrap
 
-# build all packages libraries (w/o client, components)
-
-for p in core platform common node testing server; do
-  (cd packages/$p && gulp test)
-done
-
-for p in client components; do
-  ng build $p
-done
+# build all packages, run the tests. Packages will be built into the top level dist folder
+npm run build:all
 
 ```
+
+TODO: Build der Starter-Application
 
 
 ALT
