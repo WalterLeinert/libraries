@@ -19,7 +19,11 @@
     "build:server": "lerna --scope @fluxgate/server exec gulp test",
     "build:client": "ng build client",
     "build:components": "ng build components",
-    "build:all": "npm run build:core && npm run build:platform && npm run build:common && npm run build:node && npm run build:testing && npm run build:server && npm run build:client && npm run build:components"
+    "build:libraries": "npm run build:core && npm run build:platform && npm run build:common && npm run build:node && npm run build:testing && npm run build:server && npm run build:client && npm run build:components",
+    "build:starter:common": "lerna --scope @fluxgate/starter-common exec gulp test",
+    "build:starter:server": "lerna --scope @fluxgate/starter-server exec gulp test",
+    "build:starter": "npm run build:starter:common && npm run build:starter:server && ng build starter",
+    "build:all": "npm run build:libraries && npm run build:starter"
   },
   "private": true,
   "repository": {
@@ -95,6 +99,7 @@
     "tsconfig-paths": "^3.4.2",
     "tsickle": ">=0.25.5",
     "tslib": "^1.7.1",
-    "tslint": "~5.13.0"
+    "tslint": "~5.13.0",
+    "typescript": "~3.2.2"
   }
 }
