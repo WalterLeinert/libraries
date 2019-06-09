@@ -10,10 +10,14 @@
   },
   "author": "Walter Leinert <walter.leinert@outlook.com>",
   "license": "ISC",
+  "devDependencies": {
+    "@types/knex": "0.0.48"
+  },
   "dependencies": {
     "@fluxgate/common": ">=2.6.0-beta.0",
     "@fluxgate/core": ">=2.6.0-beta.0",
     "@fluxgate/platform": ">=2.6.0-beta.0",
-    "@fluxgate/server": ">=2.6.0-beta.0"
+    "@fluxgate/server": ">=2.6.0-beta.0",
+    "knex": "^0.12.6"
    }
 }
