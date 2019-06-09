@@ -83,12 +83,6 @@
       "@fluxgate/starter-server/*": [
         "dist/starter-server/*"
       ],
-      "my-lib": [
-        "dist/my-lib"
-      ],
-      "my-lib/*": [
-        "dist/my-lib/*"
-      ],
       "my-lib2": [
         "dist/my-lib2"
       ],
