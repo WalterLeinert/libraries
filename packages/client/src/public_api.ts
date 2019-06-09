@@ -12,6 +12,7 @@
 
 
 // workaround
+export * from './lib/bootstrap';
 export * from './lib/angular/common/adapter/index';
 export * from './lib/angular/common/base/index';
 export * from './lib/angular/common/routing/index';
