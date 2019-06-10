@@ -1,7 +1,7 @@
 {
   "dataName": "/data",
   "___dataDirectory": "config",
-  "dataDirectory": "/c/temp",
+  "dataDirectory": "C:/temp",
   "cert": {
     "certPath": "./cert.pem",
     "keyPath": "./key.pem"
