@@ -3,7 +3,7 @@
 import { Injectable } from 'injection-js';
 import { Logger } from 'log4js';
 
-import { ILevel, ILogger, Level, NotImplementedException, Types } from '@fluxgate/core';
+import { ILevel, ILogger, Level, Types } from '@fluxgate/core';
 
 
 /**
