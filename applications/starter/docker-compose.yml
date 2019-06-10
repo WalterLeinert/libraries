@@ -26,6 +26,8 @@ services:
         - ../../dist/node:/var/www/starter/node_modules/@fluxgate/node
         - ../../dist/common:/var/www/starter/node_modules/@fluxgate/common
         - ../../dist/server:/var/www/starter/node_modules/@fluxgate/server
+        - ../../dist/starter-common:/var/www/starter/node_modules/@fluxgate/starter-common
+        - ../../dist/starter-server:/var/www/starter/node_modules/@fluxgate/starter-server
       working_dir: /var/www/starter/
       env_file:
         - ./.docker/env/app.${APP_ENV}.env
