@@ -160,19 +160,23 @@
     {
       "type": "node",
       "request": "launch",
+      "protocol": "auto",
       "name": "starter-server: debug",
       "program": "${workspaceRoot}/dist/starter-server/src/lib/server.js",
       "args": [
-        "-r", "tsconfig-paths/register"
       ],
       "cwd": "${workspaceRoot}/dist/starter-server/src/lib/",
       "runtimeExecutable": null,
+      "runtimeArgs": [
+        "-r", "tsconfig-paths/register"
+      ],
        "outFiles": [
       ],
       "sourceMaps": true,
       "stopOnEntry": false,
       "env": {
-        "NODE_ENV": "local"
+        "NODE_ENV": "local",
+        "TS_NODE_PROJECT": "${workspaceRoot}/tsconfig.json"
       }
     },
   ]
