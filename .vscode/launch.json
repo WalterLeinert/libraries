@@ -66,11 +66,13 @@
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
         "dist/test/**/*.spec.js",
-        "--no-timeouts",
+        "--no-timeouts"
+      ],
+      "cwd": "${workspaceRoot}/packages/node",
+      "runtimeArgs": [
         "-r", "ts-node/register",
         "-r", "tsconfig-paths/register"
       ],
-      "cwd": "${workspaceRoot}/packages/node",
       "runtimeExecutable": null,
       "outFiles": [
       ],
