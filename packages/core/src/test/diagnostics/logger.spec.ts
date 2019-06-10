@@ -79,6 +79,12 @@ class LoggerTest extends CoreUnitTest {
     return expect(logger).to.be.not.null;
   }
 
+  @test 'should have right category'() {
+    const category = 'test';
+    const logger = getLogger(category);
+    return expect(logger.category).to.equal(category);
+  }
+
   @test 'should set level DEBUG'() {
     const logger = getLogger('test');
     logger.setLevel(levels.DEBUG);
