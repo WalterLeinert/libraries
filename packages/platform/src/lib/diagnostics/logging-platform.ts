@@ -1,7 +1,9 @@
 import { Funktion } from '@fluxgate/core';
 import { IConfig, ILogger } from '@fluxgate/core';
 
-let loggerFacade;
+import { LoggerFacade } from './logger-facade';
+
+let loggerFacade: LoggerFacade;
 
 // removeIf(node)
 import { BrowserLoggerFacade } from './browser-logger-facade';
@@ -10,6 +12,7 @@ loggerFacade = new BrowserLoggerFacade();
 
 // removeIf(browser)
 import { NodeLoggerFacade } from './node-logger-facade';
+
 loggerFacade = new NodeLoggerFacade();
 // endRemoveIf(browser)
 
