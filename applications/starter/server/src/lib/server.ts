@@ -84,5 +84,7 @@ using(new XLog(logger, levels.INFO, 'Server-Initialisierung'), (log) => {
     // }).then((res) => {
     //   // ok
     // });
+  }, (err) => {
+    log.error(err);
   });
 });
