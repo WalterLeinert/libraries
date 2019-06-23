@@ -23,7 +23,8 @@
     "build:starter:common": "lerna --scope @fluxgate/starter-common exec gulp test",
     "build:starter:server": "lerna --scope @fluxgate/starter-server exec gulp test",
     "build:starter": "npm run build:starter:common && npm run build:starter:server && ng build starter",
-    "build:all": "npm run build:libraries && npm run build:starter"
+    "build:all": "npm run build:libraries && npm run build:starter",
+    "rebuild:all": "npm run reallyclean && npm run bootstrap && npm run build:all"
   },
   "private": true,
   "repository": {
