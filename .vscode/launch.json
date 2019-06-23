@@ -4,6 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
       "type": "node",
       "request": "attach",
@@ -165,6 +166,28 @@
       "protocol": "auto",
       "name": "starter-server: debug",
       "program": "${workspaceRoot}/dist/starter-server/src/lib/server.js",
+      "args": [
+      ],
+      "cwd": "${workspaceRoot}/dist/starter-server/src/lib/",
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "-r", "tsconfig-paths/register"
+      ],
+       "outFiles": [
+      ],
+      "sourceMaps": true,
+      "stopOnEntry": false,
+      "env": {
+        "NODE_ENV": "local",
+        "TS_NODE_PROJECT": "${workspaceRoot}/tsconfig.json"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "protocol": "auto",
+      "name": "starter-server-new: debug",
+      "program": "${workspaceRoot}/dist/starter-server/src/lib/server-new.js",
       "args": [
       ],
       "cwd": "${workspaceRoot}/dist/starter-server/src/lib/",

@@ -1,4 +1,7 @@
+import * as Cors from 'cors';
 import * as Express from 'express';
+import * as ExpressSession from 'express-session';
+import * as Passport from 'passport';
 import * as path from 'path';
 import { InjectorService, ServerSettings } from 'ts-express-decorators';
 
@@ -85,10 +88,6 @@ export class ExpressServer extends ServerBase {
 
       super.$onMountingMiddlewares();
 
-      const session = require('express-session');
-      const cors = require('cors');
-      const passport = require('passport');
-
       let dataName = ServerBase.DEFAULT_SERVER_CONFIGURATION.dataName;
       if (!Types.isNullOrEmpty(this.configuration.dataName)) {
         dataName = this.configuration.dataName;
@@ -109,28 +108,28 @@ export class ExpressServer extends ServerBase {
 
       this
         // configure session used by passport
-        .use(session({
+        .use(ExpressSession({
           cookie: {
             httpOnly: true,
             maxAge: null,
             path: '/',
             secure: false
           },
-          maxAge: 36000,            // TODO: ggf. aus IServerConfiguration
+          // maxAge: 36000,            // TODO: ggf. aus IServerConfiguration
           resave: true,
           saveUninitialized: true,
           secret: 'mysecretkey'
         }))
 
-        .use(cors({ origin: '*' }))
+        .use(Cors({ origin: '*' }))
 
         .use(Express.static(path.join(process.cwd(), '/app'), { index: ['index.html', 'index.htm'] }))
         .use(dataName, Express.static(dataDirectory));
 
       // Configure passport JS
       this
-        .use(passport.initialize())
-        .use(passport.session());
+        .use(Passport.initialize())
+        .use(Passport.session());
 
       // this
       //   .use(GlobalSerializationRequestHandler);
