@@ -18,6 +18,6 @@
     "@fluxgate/core": ">=2.6.0-beta.0",
     "@fluxgate/platform": ">=2.6.0-beta.0",
     "@fluxgate/server": ">=2.6.0-beta.0",
-    "knex": "^0.12.6"
+    "knex": "^0.20.1"
    }
 }
